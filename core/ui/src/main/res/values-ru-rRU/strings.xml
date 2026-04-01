@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Выгружать (передавать данные) ГК в Nightscout</string>
     <string name="configbuilder_insulin">Инсулин</string>
     <string name="value_unavailable_short">н/д</string>
-    <string name="master_password">Главный пароль</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Экспорт пользовательских записей в Excel (csv)</string>
     <string name="confirm">Подтверждаю</string>
     <string name="pump">Помпа</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">г</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">Дежурный режим Watchdog</string>
-    <string name="btwatchdog_summary">Выключает bluetooth телефона на одну секунду, если подключение к помпе невозможно. Это помогает на тех телефонах, где зависает модуль bluetooth.</string>
     <string name="virtualpump_resultok">ОК</string>
     <string name="pump_time_updated">Время на помпе обновлено</string>
     <string name="exit">Выйти</string>
@@ -113,7 +111,6 @@
     <string name="calibration">калибровка</string>
     <string name="alarminxmin">Напомнить через %1$d мин</string>
     <string name="treatmentdeliveryerror">Возможная ошибка подачи болюса. Проверьте количество реально поданного инсулина и углеводов</string>
-    <string name="bolus_reminder">Напоминание о болюсе</string>
     <string name="duration_label">Длительность действия</string>
     <string name="shortgramm">грамм</string>
     <string name="pumpsuspended">Работа помпы остановлена</string>
@@ -137,18 +134,15 @@
     <string name="a11y_inrange">в диапазоне</string>
     <string name="a11y_low">низкий</string>
     <string name="average">Средний</string>
-    <string name="tir">Время в целевом диапазоне</string>
     <string name="none"><![CDATA[<отсутствует>]]></string>
     <string name="remove_label">УДАЛИТЬ</string>
     <string name="activate_profile">Активировать профиль</string>
-    <string name="reset">сброс</string>
     <string name="profileswitch_ismissing">Профиль не переключен. Переключите профиль или нажмите \"активировать профиль\" в LocalProfile.</string>
     <string name="profile">Профиль</string>
     <string name="select_for_removal">Выберите для удаления</string>
     <string name="confirm_remove_multiple_items">Вы уверены, что хотите удалить %1$d элемент</string>
     <string name="overview_treatment_label">Терапия</string>
     <string name="copytolocalprofile">Создать новый профиль из этого профиля?</string>
-    <string name="wear_wizard_settings">Настройки мастера</string>
     <string name="bg_trend_label">15 мин тренд</string>
     <string name="treatments_wizard_cob_label">АктУгл COB</string>
     <string name="bolus_iob_label">Болюс IOB</string>
@@ -204,6 +198,7 @@
     <string name="duration">Продолжительность</string>
     <string name="reason">Основание</string>
     <string name="nochangerequested">Именения не запрошены</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Недопустимый профиль: %1$s</string>
     <!--    Temptarget-->
@@ -308,7 +303,6 @@
     <string name="expweight">экспоненциально взвешенные TDD</string>
     <string name="basalrate">базал</string>
     <string name="bolus">Болюс</string>
-    <string name="tdd">TDD/общая суточная доза</string>
     <string name="ratio">коэффициент</string>
     <string name="amount_days">количество дней</string>
     <string name="weight">вес</string>
@@ -434,6 +428,7 @@
     <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">БОЛЮС %1$.2f ЕД</string>
     <string name="carbs_g">УГЛ %1$d г</string>
@@ -462,7 +457,6 @@
     <string name="sensitivity">Чувствительность</string>
     <string name="isf_for_carbs">ISF для калькулятора и усвоения углеводов: %1$.1f</string>
     <string name="autosens_long">Значение Autosens: %.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">Autosens в алгоритме: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">файл</string>
@@ -472,7 +466,6 @@
     <string name="autotune_tune_days">Настроено дней:</string>
     <string name="autotune_select_profile">Выберите профиль для изменения</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Использовать системные уведомления для предупреждений и уведомлений</string>
     <string name="urgent_alarm">Сигнал тревоги</string>
     <string name="info">ИНФОРМАЦИЯ</string>
     <!-- BolusWizard -->
@@ -480,8 +473,6 @@
     <string name="bolus_advisor_message">У вас высокая гликемия. Лучше подождать, чем есть сейчас. Хотите сделать болюс на коррекцию и установить напоминание о приеме пищи? В этом случае углеводы не будут записаны и после напоминания надо будет снова воспользоваться помощником.</string>
     <string name="cobvsiob">угл COB к инс IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
-    <string name="partialboluswizard">Подать эту часть рекомендации мастера болюса [%]</string>
-    <string name="partialboluswizard_reset_time">Пороговое время для устаревшей ГК [min]</string>
     <string name="bolus_constraint_applied_warn">Применено ограничение болюса: %1$.2f ед. до %2$.2f ед.</string>
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
     <string name="advisoralarm">Напомнить о еде</string>
@@ -558,7 +549,6 @@
     <string name="message">Сообщение</string>
     <string name="ok">OK</string>
     <string name="cancel">Отменить</string>
-    <string name="dismiss">УБРАТЬ</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="close">Закрыть</string>
@@ -571,12 +561,17 @@
     <string name="export_disabled">Отключено</string>
     <string name="export_failed">Сбой</string>
     <string name="export_alert">ВНИМАНИЕ</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Настройки экспортированы</string>
     <string name="export_result_message_failed">ОШИБКА экспорта настроек!</string>
     <string name="export_result_message_about_to_expire">Настройки были экспортированы: пароль скоро перестанет действовать. Экспортируйте их вручную и (заново) введите пароль.</string>
     <string name="export_result_message_expired">Экспорт настроек отменен: пароль перестал действовать. Экспортируйте их вручную и введите его заново!</string>
     <string name="export_result_message_disabled">Предупреждение (автоматизация): Экспорт настроек выключен!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
@@ -597,8 +592,10 @@
     <string name="location_not_found_message">Для обнаружения Bluetooth на новых устройствах необходимо включить геолокацию. AAPS не отслеживает ваше местоположение и может быть отключен после успешного сопряжения.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Настройки расширений</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Отсутствует смс разрешение</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Не останавливать приложение?</string>
     <string name="fabric_upload_disabled">Загрузка журналов сбоя на сервер отключена!</string>
@@ -650,4 +647,10 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Скорость</b>: %1$.2f ед/ч (%2$.2f%%) <br><b>Продолжительность</b>: %3$d мин<br>]]></string>
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS воспроизводит аудио"</string>
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
