@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Wähle die Einheit, in der die Werte angezeigt werden sollen.</string>
     <string name="next_button">Weiter</string>
     <string name="previous_button">Zurück</string>
-    <string name="nav_setupwizard">Einrichtungsassistent</string>
     <string name="setupwizard_finish">FERTIG</string>
     <string name="welcome">Willkommen</string>
     <string name="welcometosetupwizard">Willkommen im Setup-Assistenten. Er führt Dich durch den Setup-Prozess\n</string>
@@ -18,18 +17,13 @@
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="permission">Berechtigung</string>
     <string name="need_system_window_permission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
-    <string name="need_location_permission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
-    <string name="need_storage_permission">Die App benötigt Zugriffsrechte für den Speicher um Log-Dateien zu sichern und die Einstellungen zu exportieren.</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
-    <string name="need_whitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
     <string name="storedsettingsfound">Gespeicherte Einstellungen gefunden</string>
     <string name="master_password_summary">Das Master-Passwort wird für die Backup-Verschlüsselung und zur Außerkraftsetzung der Sicherheit in der Anwendung verwendet. Merke es Dir oder bewahre es an einem sicheren Ort auf.</string>
-    <string name="current_master_password">Aktuelles Master-Passwort</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
     <string name="syncinfotext">Synchronisiere Daten mit der Cloud. Du kannst diesen Teil jetzt überspringen, aber Du wirst keine Ziele überschreiten können, bis Du die Synchronisierung mit Nightscout oder Tidepool eingerichtet hast.</string>
     <string name="status">Status:</string>
-    <string name="patient_name">Name des Patienten</string>
-    <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profilwechsel durchführen</string>
@@ -51,25 +45,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfiguration</string>
-    <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Welche Pumpe möchtest Du mit AndroidAPS nutzen?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Welches Profil soll AndroidAPS nutzen?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Welcher APS-Algorithmus soll Therapieanpassungen vornehmen?</string>
-    <string name="configbuilder_general">Allgemein</string>
     <string name="configbuilder_general_description">Dies sind einige generelle Plugins, die Du vielleicht hilfreich findest.</string>
-    <string name="configbuilder_sync">Synchronisierung</string>
-    <string name="configbuilder_sync_description">Daten-Upload und -Synchronisierungs-Plugins.</string>
     <string name="configbuilder_constraints_description">Welche Beschränkungen werden angewendet?</string>
-    <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Nutze dies, um die Loop-Integration von AndroidAPS zu aktivieren.</string>
     <string name="configbuilder_insulin_description">Welchen Insulin-Typ verwendest Du?</string>
-    <string name="configbuilder_bgsource">BZ-Quelle</string>
     <string name="configbuilder_bgsource_description">Woher soll AndroidAPS seine Blutzuckerwerte beziehen?</string>
-    <string name="configbuilder_smoothing">Glättung</string>
     <string name="configbuilder_smoothing_description">Wähle Glättungsalgorithmus</string>
-    <string name="configbuilder_sensitivity">Sensitivitätserkennung</string>
     <string name="configbuilder_sensitivity_description">Welcher Sensitivitäts-Algorithmus soll verwendet werden?</string>
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
@@ -78,19 +62,18 @@
     <string name="nsclient_version_does_not_match">Die Versionen von NSClient und AndroidAPS passen nicht zueinander. Führe bitte ein Update durch.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Einstellungen</string>
-    <string name="password_preferences_encrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die exportierten Einstellungen verschlüsselt.</string>
-    <string name="preferences_export_canceled">Export abgebrochen! Einstellungen wurden NICHT exportiert!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Import abgebrochen! Einstellungen wurden NICHT importiert!</string>
     <string name="preferences_import_impossible">Einstellungen können nicht importiert werden!</string>
     <string name="check_preferences_details_btn">Beschreibe die Import-Probleme...</string>
     <string name="check_preferences_details_title">Details zu den Import-Problemen</string>
     <string name="check_preferences_import_btn">Importieren</string>
     <string name="check_preferences_import_anyway_btn">Trotzdem importieren (GEFÄHRLICH!)</string>
-    <string name="import_setting">Einstellungen importieren</string>
     <string name="check_preferences_before_import">Überprüfe die Einstellungen vor dem Import:</string>
     <string name="check_preferences_cannot_import">Einstellungen können nicht importiert werden!</string>
     <string name="check_preferences_dangerous_import">Einstellungen sollten nicht importiert werden!</string>
-    <string name="export_to">Einstellungen exportieren nach</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Importiere Einstellungen von</string>
     <string name="setting_imported">Einstellungen importiert</string>
     <string name="old_master_password">Altes Master-Passwort</string>
@@ -101,25 +84,12 @@
     <string name="goto_main_try_again">Bitte gehe zurück zur Startseite und versuche es erneut.</string>
     <string name="restartingapp">App wird beendet, um neue Einstellungen zu laden.</string>
     <string name="ue_exported">Benutzereinträge exportiert</string>
-    <string name="protection">Schutz</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Wartung</string>
     <string name="maintenance_shortname">WRTNG</string>
-    <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Logs oder Löschen dieser)</string>
-    <string name="database_cleanup">Datenbankbereinigung</string>
-    <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
     <string name="maintenance_email">E-Mail</string>
     <string name="maintenance_amount">Anzahl der zu sendenden Logs</string>
-    <string name="send_all_logs">Logs als E-Mail versenden</string>
-    <string name="delete_logs">Logs löschen</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
-    <string name="engineering_mode_enabled">Entwickler-Modus aktiviert</string>
-    <string name="log_files">Log Dateien</string>
-    <string name="nav_logsettings">Log-Einstellungen</string>
-    <string name="miscellaneous">Verschiedenes</string>
-    <string name="nav_resetdb">Datenbanken zurücksetzen</string>
-    <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">Vor %1$s Tagen exportiert</string>
     <string name="exported_at" comment="at placeholder we add export date">am %1$s exportiert</string>
@@ -142,8 +112,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Entschlüsselungsfehler. Das angegebene Passwort ist ungültig oder die Einstellungsdatei wurde verändert! Evtl. wurde die importierte Datei mit einem anderen Master-Passwort exportiert.</string>
     <string name="prefdecrypt_issue_wrong_format">Fehlende Verschlüsselungskonfiguration, Einstellungsformat ist ungültig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nicht unterstützter oder nicht angegebener Verschlüsselungsalgorithmus!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Eigene Watchface auswählen</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Dateiformat</string>
     <string name="metadata_label_created_at">Erstellt am</string>
@@ -154,6 +122,7 @@
     <string name="metadata_label_encryption">Dateiverschlüsselung</string>
     <string name="metadata_format_new">Neues verschlüsseltes Format</string>
     <string name="metadata_format_other">Unbekanntes Export-Format</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
