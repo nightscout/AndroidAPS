@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">配对中</string>
-    <string name="danars_no_device_available">迄今未找到任何设备</string>
-    <string name="danars_pairingok">配对成功</string>
     <string name="danars_pairingtimedout">配对超时</string>
-    <string name="danars_waitingforpairing">等待泵配对</string>
     <string name="danarspump">丹纳-i/RS</string>
     <string name="danarspump_shortname">丹纳泵</string>
     <string name="description_pump_dana_rs">与丹纳-RS或丹纳-i泵集成。</string>
@@ -82,7 +79,6 @@
     <string name="description_pump_dana_r_korean">与韩版丹纳R泵集成</string>
     <string name="description_pump_dana_r_v2">与升级了固件的丹纳Rv2泵集成</string>
     <string name="danarpump_shortname">丹纳泵</string>
-    <string name="nobtadapter">未找到蓝牙适配器</string>
     <string name="devicenotfound">找不到所选设备</string>
     <string name="danar_switchtouhmode">在泵上更改模式，从U/d 改为 U/h</string>
     <string name="danarkoreanpump">丹纳R 韩版</string>
@@ -91,14 +87,12 @@
     <string name="danarv2pump">丹纳Rv2</string>
     <string name="danar_disableeasymode">禁用泵中的 EasyUI 模式</string>
     <string name="profile_set_failed">设定基础率配置文件失败</string>
-    <string name="danar_bluetooth_status">蓝牙状态</string>
     <string name="firmware_label">固件</string>
     <string name="danar_pump_settings">DanaR 泵设置</string>
     <string name="time_format_12h">12小时制</string>
     <string name="time_format_24h">24小时制</string>
     <string name="option_on">开启</string>
     <string name="option_off">关闭</string>
-    <string name="danar_bt_name_title">丹纳R 蓝牙设备</string>
     <string name="danars_password_title">泵密码 (仅v1)</string>
     <string name="danar_password_title">泵密码</string>
     <string name="bolusspeed">大剂量输注速度</string>
@@ -113,5 +107,4 @@
     <string name="num1pin">1: (12位数字)</string>
     <string name="num2pin">2: (8位数字)</string>
     <string name="basal_bolus_step">基础率/大剂量步进</string>
-    <string name="carbs_store_error">碳水可能没有正确存储。如果需要，请手动检查并再次存储。</string>
 </resources>
