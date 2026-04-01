@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_wifi_ssids">SSID WiFi</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">Definições de ligação</string>
-    <string name="ns_wifi_allowed_ssids">SSIDs permitidos (separada por ponto e vírgula)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Permitir ligação em roaming</string>
     <string name="ns_create_announcements_from_errors_title">Criar anúncios dos erros</string>
     <string name="ns_create_announcements_from_carbs_req_title">Criar anúncios a partir dos alertas de hidratos necessários</string>
     <string name="ns_create_announcements_from_errors_summary">Criar um anúncio no Nightscout para caixas de diálogo de erro e alertas locais (também podem ser visualizados em Careportal sob tratamentos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Criar anúncios Nightscout para alertas de hidratos necessários</string>
     <string name="unsupported_ns_version">Versão sem suporte do Nightscout</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Reiniciar</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Administrar agora</string>
     <string name="queue">Fila de espera:</string>
     <string name="status">Estado:</string>
@@ -42,7 +44,6 @@
     <string name="ns_alarm_stale_data_value_label">Tempo limite para dados obsoletos [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="ns_log_app_started_event">Registar inicio da app no NS</string>
-    <string name="copy_existing_values">Copiar definições do NS (se existir)?</string>
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Utilizar servidores de integração (teste)</string>
     <string name="tidepool">Tidepool</string>
@@ -94,4 +95,5 @@
     <string name="hour_short">h</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Hoje</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
