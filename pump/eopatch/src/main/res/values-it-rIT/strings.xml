@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Preparazione per il fissaggio della patch</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Rimuovi il nastro adesivo e poi tocca \'Avanti\'.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Se un ago sporge, tocca \'Scarta\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Se la patch è bagnata o sporca, o il suo nastro adesivo è piegato, tocca \'Scarta\'.</string>
     <string name="patch_remove_protection_tape">Fissaggio della patch</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Pulisci e asciuga il sito di applicazione, quindi attacca la patch alla pelle.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Controllo di sicurezza…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Ci vogliono circa 30 secondi.</string>
-    <string name="patch_safety_check_desc_2">[Caution] Per un uso sicuro, non rimuovere la leva di azionamento dell\'ago fino al completamento del controllo di sicurezza!</string>
     <string name="patch_rotate_knob">Inserimento dell’ago</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Ruota la leva di azionamento dell\'ago a più di 100° per inserire l’ago e quindi ruota completamente per rimuoverlo</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Scarta/Cambia patch</string>
     <string name="string_activate_patch">Attiva patch</string>
     <string name="string_discard_patch">Scarta patch</string>
-    <string name="string_resume">Riprendi</string>
     <string name="discard">Scarta</string>
     <string name="string_communication_check">Verifica comunicazione</string>
-    <string name="string_suspend">Sospendi</string>
-    <string name="string_suspended">Sospeso</string>
     <string name="string_running">In esecuzione</string>
     <string name="cancel">Annulla</string>
     <string name="confirm">Conferma</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Cambio</string>
     <string name="string_in_progress">Elaborazione</string>
     <string name="retry">Riprova</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] NON rimuovere la protezione dell\'ago e il supporto adesivo sino a ulteriori istruzioni.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Sei sicuro di voler scartare la patch corrente?</string>
     <string name="needle_insertion_error_1">Errore inserimento ago.</string>
     <string name="needle_insertion_error_2">Controlla che la direzione del foro rimanente dopo aver girato la leva sia dritta, quindi tocca \'Riprova\'.</string>
     <string name="needle_insertion_error_3">Tocca \'Scarta\' per disattivare la patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Tempo sospensione basale</string>
     <string name="string_resume_insulin_delivery_title">Riprendi erogazione insulina</string>
-    <string name="string_resume_insulin_delivery_message">Fine sospensione insulina.\nTocca \'Conferma\' per riprendere l\'erogazione di insulina.\n\n[Caution]\nL\'erogazione di insulina non riprenderà fino a quando non tocchi \'Conferma\'.\nSe non tocchi \'Conferma\', potresti sviluppare iperglicemia.</string>
     <string name="string_suspended_insulin_delivery_message">L\'erogazione di insulina è sospesa.</string>
     <string name="string_resumed_insulin_delivery_message">L\'erogazione di insulina è ripresa.</string>
     <string name="finish">Fine</string>
     <string name="string_temp_basal_remained_hhmm">tempo rimanente: %1$s:%2$s</string>
     <string name="next">Avanti</string>
-    <string name="string_pause_failed">Sospensione fallita.</string>
     <string name="string_resume_failed">Ripresa fallita.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
+    <!-- Permission rationales -->
 </resources>
