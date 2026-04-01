@@ -20,7 +20,6 @@
         với lượng insulin đủ dùng cho 3 ngày.\n\nTrong quá trình đổ, hãy lắng nghe hai tiếng bíp từ Pod. Điều này cho biết đã nạp tối thiểu 80U.
 Hãy chắc chắn bơm hết toàn bộ lượng insulin trong ống tiêm, ngay cả sau khi nghe hai tiếng bíp.\n\nSau khi đổ insulin vào Pod, vui lòng nhấn<b> Tiếp theo</b>.\n\n<b>Lưu ý: </b>Đừng tháo nắp kim của Pod ở bước này.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Đang cố gắng ghép đôi với Pod mới và mồi nó.\n\nKhi quá trình khởi tạo đã hoàn tất thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Âm thanh khi thông báo tạm dừng tiêm được bật</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Không thể kết nối với pod</string>
     <string name="omnipod_dash_found_too_many_pods">Phát hiện quá nhiều Pod để kích hoạt</string>
