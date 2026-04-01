@@ -146,4 +146,6 @@
     <string name="newSmbMode">Chế độ SMB mới:</string>
     <string name="on">BẬT</string>
     <string name="off">TẮT</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>
