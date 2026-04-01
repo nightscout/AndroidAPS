@@ -19,6 +19,15 @@
     <string name="count_selected">選定 %1$d 項</string>
     <string name="sort_label">排序</string>
     <string name="search">搜尋</string>
+    <string name="use_compose_main_screen">使用 Compose 主畫面（實驗性）</string>
+    <string name="switch_to_compose_ui">切換至 Compose 使用者介面</string>
+    <string name="switch_to_classic_ui">切換至傳統使用者介面</string>
     <string name="select">選擇</string>
     <string name="set">設定</string>
+    <string name="migrating_preferences">正在移轉偏好設定…</string>
+    <string name="initializing_plugins">正在初始化外掛…</string>
+    <string name="initializing">正在初始化…</string>
+    <string name="migrating_profile_switches">正在移轉設定檔切換…</string>
+    <string name="migrating_effective_profile_switches">正在移轉生效的設定檔切換…</string>
+    <string name="migrating_boluses">正在移轉注射…</string>
 </resources>
