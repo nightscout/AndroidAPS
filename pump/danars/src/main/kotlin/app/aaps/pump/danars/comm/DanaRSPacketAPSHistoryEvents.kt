@@ -145,7 +145,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
         when (DanaPump.HistoryEntry.fromInt(recordCode)) {
             DanaPump.HistoryEntry.TEMP_START          -> {
                 val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(datetime, param1.toDouble())
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncTemporaryBasalWithPumpId(
                         timestamp = datetime,
                         rate = PumpRate(param1.toDouble()),
@@ -156,7 +156,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Ratio: $param1% Duration: ${param2}min"
@@ -165,14 +165,14 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
             }
 
             DanaPump.HistoryEntry.TEMP_STOP           -> {
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                         timestamp = datetime,
                         endPumpId = pumpId,
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT TEMP_STOP ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime)"
@@ -181,7 +181,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
             }
 
             DanaPump.HistoryEntry.EXTENDED_START      -> {
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncExtendedBolusWithPumpId(
                         timestamp = datetime,
                         rate = PumpRate(param1 / 100.0),
@@ -191,7 +191,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT EXTENDED_START ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Amount: ${param1 / 100.0}U Duration: ${param2}min"
@@ -200,14 +200,14 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
             }
 
             DanaPump.HistoryEntry.EXTENDED_STOP       -> {
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncStopExtendedBolusWithPumpId(
                         timestamp = datetime,
                         endPumpId = pumpId,
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT EXTENDED_STOP ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Delivered: ${param1 / 100.0}U RealDuration: ${param2}min"
@@ -217,7 +217,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
 
             DanaPump.HistoryEntry.BOLUS               -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncBolusWithPumpId(
                         timestamp = datetime,
                         amount = PumpInsulin(param1 / 100.0),
@@ -226,7 +226,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT BOLUS ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Bolus: ${param1 / 100.0}U "
@@ -240,7 +240,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
 
             DanaPump.HistoryEntry.DUAL_BOLUS          -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncBolusWithPumpId(
                         timestamp = datetime,
                         amount = PumpInsulin(param1 / 100.0),
@@ -249,7 +249,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT DUAL_BOLUS ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Bolus: ${param1 / 100.0}U Duration: ${param2}min"
@@ -262,7 +262,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
             }
 
             DanaPump.HistoryEntry.DUAL_EXTENDED_START -> {
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncExtendedBolusWithPumpId(
                         timestamp = datetime,
                         rate = PumpRate(param1 / 100.0),
@@ -272,7 +272,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT DUAL_EXTENDED_START ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Amount: ${param1 / 100.0}U Duration: ${param2}min"
@@ -281,14 +281,14 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
             }
 
             DanaPump.HistoryEntry.DUAL_EXTENDED_STOP  -> {
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncStopExtendedBolusWithPumpId(
                         timestamp = datetime,
                         endPumpId = pumpId,
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT DUAL_EXTENDED_STOP ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Delivered: ${param1 / 100.0}U RealDuration: ${param2}min"
@@ -314,7 +314,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
 
             DanaPump.HistoryEntry.REFILL              -> {
                 if (preferences.get(DanaBooleanKey.LogInsulinChange)) {
-                    val newRecord = runBlocking {
+                    val newRecord = runBlocking<Boolean?> {
                         pumpSync.insertTherapyEventIfNewWithTimestamp(
                             timestamp = datetime,
                             type = TE.Type.INSULIN_CHANGE,
@@ -322,7 +322,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                             pumpType = danaPump.pumpType(),
                             pumpSerial = danaPump.serialNumber
                         )
-                    }
+                    } == true
                     aapsLogger.debug(
                         LTag.PUMPCOMM,
                         "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT REFILL ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Amount: ${param1 / 100.0}U"
@@ -348,7 +348,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
             }
 
             DanaPump.HistoryEntry.CARBS               -> {
-                val newRecord = runBlocking {
+                val newRecord = runBlocking<Boolean?> {
                     pumpSync.syncCarbsWithTimestamp(
                         timestamp = datetime,
                         amount = param1.toDouble(),
@@ -356,7 +356,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
-                }
+                } == true
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT CARBS ($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Carbs: ${param1}g"
@@ -366,7 +366,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
 
             DanaPump.HistoryEntry.PRIME_CANNULA       -> {
                 if (preferences.get(DanaBooleanKey.LogCannulaChange)) {
-                    val newRecord = runBlocking {
+                    val newRecord = runBlocking<Boolean?> {
                         pumpSync.insertTherapyEventIfNewWithTimestamp(
                             timestamp = datetime,
                             type = TE.Type.CANNULA_CHANGE,
@@ -374,7 +374,7 @@ open class DanaRSPacketAPSHistoryEvents @Inject constructor(
                             pumpType = danaPump.pumpType(),
                             pumpSerial = danaPump.serialNumber
                         )
-                    }
+                    } == true
                     aapsLogger.debug(
                         LTag.PUMPCOMM,
                         "[$pumpId] ${if (newRecord) "**NEW** " else ""}EVENT PRIME_CANNULA($recordCode) ${dateUtil.dateAndTimeString(datetime)} ($datetime) Amount: ${param1 / 100.0}U"
