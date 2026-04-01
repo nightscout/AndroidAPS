@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Forberéd dig på vedhæftning af Patchen</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Fjern den klæbelige tape og tryk derefter på \'Næste\'.</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Hvis en nål stikker ud, skal du trykke på \'Kassér\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Hvis Patchen er våd eller beskidt, eller dens klæbetape er foldet, skal du trykke på \'Kassér\'.</string>
     <string name="patch_remove_protection_tape">Fastgøring af Patchen</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Rens og tør påføringsstedet, og sæt derefter Patchen på huden.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Sikkerhedstjek…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Det tager omkring 30 sekunder.</string>
-    <string name="patch_safety_check_desc_2">[Caution] For sikker brug må du ikke fjerne nåleaktionsgrebet før sikkerhedskontrollen er fuldført!</string>
     <string name="patch_rotate_knob">Indsætter nålen</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Drej nåleaktionsgrebet mere end 100 ° for at stikke nålen ind, og drej derefter helt for at fjerne den</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Kassér/Ændr Patch</string>
     <string name="string_activate_patch">Aktivér Patch</string>
     <string name="string_discard_patch">Kassér Patch</string>
-    <string name="string_resume">Genoptag</string>
     <string name="discard">Kassér</string>
     <string name="string_communication_check">Kommunikationstjek</string>
-    <string name="string_suspend">Suspendér</string>
-    <string name="string_suspended">Sat på pause</string>
     <string name="string_running">Kører</string>
     <string name="cancel">Annuller</string>
     <string name="confirm">Bekræft</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Lader</string>
     <string name="string_in_progress">Behandler</string>
     <string name="retry">Prøv igen</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] Fjern IKKE kanylehætten og bagsiden af klæbemidlet før yderligere instruktion.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Er du sikker på at du vil kassere den nuværende Patch?</string>
     <string name="needle_insertion_error_1">Nålindføringsfejl.</string>
     <string name="needle_insertion_error_2">Kontrollér at retningen af hullet efterladt er lige efter drejningen af håndtaget og tryk derefter på \'Prøv igen\'.</string>
     <string name="needle_insertion_error_3">Tryk på \'Kassér\' for at deaktivere Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal-suspenderingstid</string>
     <string name="string_resume_insulin_delivery_title">Genoptag insulintilførsel</string>
-    <string name="string_resume_insulin_delivery_message">Afslutning af insulinsuspension.\nTryk på \'Bekræft\' for at genoptage insulinleveringen.\n\n[Caution]\nInsulinleveringen vil ikke blive genoptaget, før du trykker på \'Bekræft\'.\nHvis du ikke trykker på \'Bekræft\', kan der opstå hyperglykæmi.</string>
     <string name="string_suspended_insulin_delivery_message">Insulintilførslen suspenderet.</string>
     <string name="string_resumed_insulin_delivery_message">Insulintilførsel genoptaget.</string>
     <string name="finish">Afslut</string>
     <string name="string_temp_basal_remained_hhmm">resterende tid: %1$s:%2$s</string>
     <string name="next">Næste</string>
-    <string name="string_pause_failed">Suspendering mislykkedes.</string>
     <string name="string_resume_failed">Genoptagelse mislykkedes.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, åååå tt:mm a</string>
+    <!-- Permission rationales -->
 </resources>
