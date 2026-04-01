@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Vælg enheder du vil vise værdier i</string>
     <string name="next_button">Næste</string>
     <string name="previous_button">Forrige</string>
-    <string name="nav_setupwizard">Installationsguide</string>
     <string name="setupwizard_finish">FÆRDIG</string>
     <string name="welcome">Velkommen</string>
     <string name="welcometosetupwizard">Velkommen til opsætningsguiden. Den vil guide dig gennem opsætningsprocessen\n</string>
@@ -18,18 +17,13 @@
     <string name="high_mark_comment">Øvre værdi for målområde (kun visning)</string>
     <string name="permission">Tilladelse</string>
     <string name="need_system_window_permission">Applikationen mangler system vindues tilladelse til notifikationer</string>
-    <string name="need_location_permission">Applikationen mangler lokations tilladelse til BT scanning og WIFI identifikation</string>
-    <string name="need_storage_permission">Applikationen mangler lagerstyrings tilladelse for at gemme logfiler og exporteringsindstillinger</string>
     <string name="askforpermission">Anmod om tilladelse</string>
-    <string name="need_whitelisting">%1$s har brug for batterioptimeringstilladelse for at opnå den rette ydeevne</string>
     <string name="storedsettingsfound">Gemte indstillinger fundet</string>
     <string name="master_password_summary">Hovedadgangskode bruges til backup kryptering og til at tilsidesætte sikkerhed i applikationen. Husk det eller gem et sikkert sted.</string>
-    <string name="current_master_password">Nuværende hovedadgangskode</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Brug værdien af den største mængde mad du plejer at indtage\n</string>
     <string name="syncinfotext">Synkronisér data til skyen. Du kan springe denne del nu, men du vil ikke være i stand til at passere mål, før du opretter en Nightscout- eller Tidepool-klient.</string>
     <string name="status">Status:</string>
-    <string name="patient_name">Patientens navn</string>
-    <string name="patient_name_summary">Angiv venligst patientnavn eller kaldenavn for at skelne mellem flere opsætninger</string>
     <string name="diawarning">Husk: nye insulinprofiler kræver DIA mindst 5 timer. DIA 5-6 timer på ny profil er lig med DIA 3 timer på gamle insulinprofiler.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Skift profil</string>
@@ -51,25 +45,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigurations bygger</string>
-    <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Hvilken pumpe vil du gerne bruge med AAPS?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Hvilken profil skal AAPS bruge?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Hvilken APS algoritme skal foretage terapi justeringer?</string>
-    <string name="configbuilder_general">Generelt</string>
     <string name="configbuilder_general_description">Disse er nogle generelle tilføjelser, som du måske kan finde nyttige.</string>
-    <string name="configbuilder_sync">Synkronisering</string>
-    <string name="configbuilder_sync_description">Data-upload og synkroniserings-plugins.</string>
     <string name="configbuilder_constraints_description">Hvilke begrænsninger er anvendt?</string>
-    <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Brug dette til at aktivere AAPS\' loop integration.</string>
     <string name="configbuilder_insulin_description">Hvilken type insulin bruger du?</string>
-    <string name="configbuilder_bgsource">BG kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
-    <string name="configbuilder_smoothing">Udjævning</string>
     <string name="configbuilder_smoothing_description">Vælg udjævningsalgoritme</string>
-    <string name="configbuilder_sensitivity">Detektering af følsomhed</string>
     <string name="configbuilder_sensitivity_description">Hvilken følsomhedsalgoritme skal anvendes?</string>
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
@@ -78,19 +62,18 @@
     <string name="nsclient_version_does_not_match">AAPSClient version matcher ikke AAPS version. Opdater venligst.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Indstillinger</string>
-    <string name="password_preferences_encrypt_prompt">Du bliver bedt om hovedadgangskode, som vil blive brugt til at kryptere eksporterede præferencer.</string>
-    <string name="preferences_export_canceled">Eksport annulleret! Indstillinger er IKKE eksporteret!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Import er annulleret! Præferencer er IKKE importeret!</string>
     <string name="preferences_import_impossible">Kan ikke importere præferencer!</string>
     <string name="check_preferences_details_btn">Forklar importproblemer…</string>
     <string name="check_preferences_details_title">Importeringsfejl detaljer</string>
     <string name="check_preferences_import_btn">Importer</string>
     <string name="check_preferences_import_anyway_btn">Importér alligevel (FARLIGT!)</string>
-    <string name="import_setting">Importer indstillinger</string>
     <string name="check_preferences_before_import">Tjek venligst præferencer før importering:</string>
     <string name="check_preferences_cannot_import">Præferencer kan ikke importeres!</string>
     <string name="check_preferences_dangerous_import">Præferencer bør ikke importeres!</string>
-    <string name="export_to">Eksporter indstillinger til</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Importer indstillinger fra</string>
     <string name="setting_imported">Indstillinger importeret</string>
     <string name="old_master_password">Gammel Hovedadgangskode</string>
@@ -101,26 +84,12 @@
     <string name="goto_main_try_again">Gå venligst tilbage til hovedskærmen og prøv igen.</string>
     <string name="restartingapp">Afslutter applikationen for at anvende indstillinger.</string>
     <string name="ue_exported">Brugerindtastninger exporteret</string>
-    <string name="protection">Beskyttelse</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Vedligeholdelse</string>
     <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">Giver flere funktioner til vedligeholdelse (f.eks. log afsendelse, log sletning).</string>
-    <string name="database_cleanup">Database-oprydning</string>
-    <string name="reset_db_confirm">Er du sikker på, at du vil nulstille databaserne?</string>
-    <string name="reset_aps_results_confirm">Er du sikker på, at du vil nulstille gemte APS-resultater?</string>
     <string name="maintenance_settings">Vedligeholdelses Indstillinger</string>
     <string name="maintenance_email">E-mail modtager</string>
     <string name="maintenance_amount">Antal logs at sende</string>
-    <string name="send_all_logs">Send logfiler via e-mail</string>
-    <string name="delete_logs">Slet logs</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="engineering_mode_enabled">Engineering mode aktiveret</string>
-    <string name="log_files">Logfiler</string>
-    <string name="nav_logsettings">Log indstillinger</string>
-    <string name="miscellaneous">Diverse</string>
-    <string name="nav_resetdb">Nulstil databaser</string>
-    <string name="resettodefaults">Nulstil til standardindstillinger</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksporteret %1$s siden</string>
     <string name="exported_at" comment="at placeholder we add export date">eksporteret ved %1$s</string>
@@ -143,8 +112,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfejl, det angivne kodeord er ugyldigt, eller indstillingsfilen er ændret. Det kan forekomme, at den importerede fil er eksporteret med et andet masterkodeord.</string>
     <string name="prefdecrypt_issue_wrong_format">Manglende krypteringskonfiguration, indstillingsformat er ugyldigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Vælg Brugerdefineret Urskive</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Filformat</string>
     <string name="metadata_label_created_at">Oprettet den</string>
@@ -155,6 +122,7 @@
     <string name="metadata_label_encryption">Filkryptering</string>
     <string name="metadata_format_new">Nyt krypteret format</string>
     <string name="metadata_format_other">Ukendt eksportformat</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
