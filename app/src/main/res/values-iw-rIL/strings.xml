@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">העדפות %1$s</string>
-    <string name="nav_exit">יציאה</string>
     <string name="delta">דלתא</string>
     <string name="save">שמירה</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">אודות</string>
     <string name="sensitivity_warning">בהפעלת פונקציית ה-Autosens יש לזכור שחייבים להזין למערכת את כל הפחמימות שנאכלו. אחרת פחמימות לא יזוהו נכון כשינוי ברגישות!</string>
     <string name="invalid">לא חוקי</string>
-    <string name="gradually_increase_notification_volume">הגבר את עוצמת הקול בהדרגה להתראות ולהודעות</string>
-    <string name="localalertsettings_title">התראות מקומיות</string>
-    <string name="enable_missed_bg_readings_alert">התראה אם לא התקבלו נתוני סוכר בדם</string>
-    <string name="enable_pump_unreachable_alert">התראה אם המשאבה בלתי נגישה</string>
     <string name="pump_unreachable_threshold">סף משאבה בלתי נגישה [min]</string>
-    <string name="enable_carbs_req_alert">התראה אם יש צורך בפחמימות</string>
-    <string name="open_navigation">פתח ניווט</string>
     <string name="close_navigation">סגור ניווט</string>
     <string name="remove_items">הסר פריטים</string>
     <string name="sort_items">מיין פריטים</string>
@@ -27,7 +19,6 @@
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
     <string name="search">חיפוש</string>
-    <string name="simple_mode">מצב פשוט</string>
     <string name="select">בחר</string>
     <string name="set">הגדר</string>
 </resources>
