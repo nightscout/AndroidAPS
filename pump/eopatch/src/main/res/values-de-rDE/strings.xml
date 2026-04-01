@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Bereite dich auf das Anhängen des Patches vor</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Entfernen Sie das Klebeband und tippen Sie dann auf \"Weiter\".</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Wenn eine Nadel aussticht, tippe auf \'Verwerfung\'.</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Wenn der Patch nass oder schmutzig ist oder sein Klebeband gefaltet ist, tippen Sie auf \'Verwerfung\'.</string>
     <string name="patch_remove_protection_tape">Den Patch anhängen</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Säubern und trocknen Sie die Stelle fürs Anlegen und befestigen Sie den Patch an der Haut.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Sicherheitsprüfung…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">Es dauert etwa 30 Sekunden.</string>
-    <string name="patch_safety_check_desc_2">[Caution] Für den sicheren Gebrauch, entferne nicht den Nadel-Aktionshebel bis die Sicherheitsüberprüfung abgeschlossen ist!</string>
     <string name="patch_rotate_knob">Einfügen der Nadel</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Drehen Sie den Aktionshebel der Nadel über 100 °, um die Nadel einzulegen und dann vollständig, um sie zu entfernen</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Patch verwerfen/ändern</string>
     <string name="string_activate_patch">Pod aktivieren</string>
     <string name="string_discard_patch">Pod verwerfen</string>
-    <string name="string_resume">Fortsetzen</string>
     <string name="discard">Verwerfen</string>
     <string name="string_communication_check">Kommunikationsüberprüfung</string>
-    <string name="string_suspend">Unterbrechungen</string>
-    <string name="string_suspended">Angehalten</string>
     <string name="string_running">In Betrieb</string>
     <string name="cancel">Abbrechen</string>
     <string name="confirm">Bestätigen</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Ändern</string>
     <string name="string_in_progress">Wird bearbeitet</string>
     <string name="retry">Erneut versuchen</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] Entfernen Sie die Nadelkappe und den Kleber NICHT bis zu einer weiteren Anweisung.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Sind Sie sicher, den aktuellen Patch zu verwerfen?</string>
     <string name="needle_insertion_error_1">Fehler beim Einfügen der Nadeln.</string>
     <string name="needle_insertion_error_2">Überprüfen Sie, dass die Richtung des Lochs nach dem Drehen des Hebels gerade ist und tippen Sie dann auf \"Wiederholen\".</string>
     <string name="needle_insertion_error_3">Tippe auf \'Verwerfen\', um Patch zu deaktivieren.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal Suspendierung Zeit</string>
     <string name="string_resume_insulin_delivery_title">Insulinabgabe fortsetzen</string>
-    <string name="string_resume_insulin_delivery_message">Ende der Insulinaussetzung.\nTippe auf \'Bestätigen\', um die Insulinlieferung fortzusetzen.\n\n[Caution]\nInsulinlieferung wird nicht fortgesetzt, bis Sie auf \'Bestätigen\' tippen.\nWenn du nicht auf \'Bestätigen\' tippst, kannst du eine Hyperglykämie entwickeln.</string>
     <string name="string_suspended_insulin_delivery_message">Insulinabgabe ist unterbrochen.</string>
     <string name="string_resumed_insulin_delivery_message">Insulinabgabe wieder aufgenommen.</string>
     <string name="finish">Beenden</string>
     <string name="string_temp_basal_remained_hhmm">verbleibende Zeit: %1$s:%2$s</string>
     <string name="next">Weiter</string>
-    <string name="string_pause_failed">Unterbrechung fehlgeschlagen.</string>
     <string name="string_resume_failed">Fortsetzen fehlgeschlagen.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
+    <!-- Permission rationales -->
 </resources>
