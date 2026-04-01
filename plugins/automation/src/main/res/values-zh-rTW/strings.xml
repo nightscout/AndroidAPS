@@ -146,4 +146,6 @@
     <string name="newSmbMode">新 SMB 模式：</string>
     <string name="on">開</string>
     <string name="off">關</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>
