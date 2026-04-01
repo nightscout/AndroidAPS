@@ -146,4 +146,6 @@
     <string name="newSmbMode">Nový režim SMB:</string>
     <string name="on">ZAP</string>
     <string name="off">VYP</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>
