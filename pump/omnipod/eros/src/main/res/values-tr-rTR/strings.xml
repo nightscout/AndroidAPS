@@ -57,7 +57,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink Durumu</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">RileyLink bağlantısı bekleniyor…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">RileyLink Yapılandırmasını Sıfırla</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Nabız Günlüğünü Oku</string>
     <string name="omnipod_eros_pod_management_button_reading_pulse_log">Nabız Günlüğü Okunuyor…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Nabız Günlüğü</string>
