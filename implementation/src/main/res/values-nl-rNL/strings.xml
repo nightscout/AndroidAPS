@@ -25,4 +25,6 @@
     <string name="short_status_reservoir">Reservoir: %1$dE</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pomp niet geïnitialiseerd</string>
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>
