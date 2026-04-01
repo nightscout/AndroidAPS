@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Preferences</string>
-    <string name="nav_exit">Έξοδος</string>
     <string name="delta">Διαφορά</string>
     <string name="save">Αποθήκευση</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">Σχετικά με</string>
     <string name="sensitivity_warning">Ενεργοποιώντας το autosense θυμηθείτε να εισάγετε όλους τους υδατάνθρακες. Διαφορετικά, οι αποκλίσεις των υδατανθράκων θα εντοπιστούν λανθασμένα ως αλλαγή ευαισθησίας!!</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>
-    <string name="gradually_increase_notification_volume">Σταδιακή αύξηση της έντασης για συναγερμούς και ειδοποιήσεις</string>
-    <string name="localalertsettings_title">Τοπικές Ειδοποιήσεις</string>
-    <string name="enable_missed_bg_readings_alert">Προειδοποίηση αν δεν ληφθούν δεδομένα μετρήσεων BG</string>
-    <string name="enable_pump_unreachable_alert">Προειδοποίηση αν η αντλία δεν είναι διαθέσιμη</string>
     <string name="pump_unreachable_threshold">Όριο για μη διαθεσιμότητα της αντλίας [λεπτά]</string>
-    <string name="enable_carbs_req_alert">Ειδοποίηση εάν απαιτούνται υδατάνθρακες</string>
-    <string name="open_navigation">Άνοιγμα μενού πλοήγησης</string>
     <string name="close_navigation">Κλείσιμο μενού πλοήγησης</string>
     <string name="remove_items">Αφαίρεση αντικειμένου</string>
     <string name="sort_items">Ταξινόμηση στοιχείων</string>
