@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="connection_settings_title">连接设置</string>
-    <string name="ns_wifi_allowed_ssids">允许的 SSIDs (分号分隔)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">允许在漫游中连接</string>
     <string name="ns_create_announcements_from_errors_title">创建错误公告</string>
     <string name="ns_create_announcements_from_carbs_req_title">从碳水需求警报创建NS公告</string>
@@ -12,13 +12,15 @@
     <string name="blocked_by_charging">被充电选项阻止</string>
     <string name="blocked_by_connectivity">被连接选项阻止</string>
     <string name="unsupported_ns_version">不支持的 Nightscout 版本</string>
-    <string name="openaps_short">OpenAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT 没有写权限。可能是NS的 API 密钥输错了？</string>
     <string name="ns_client_url">URL网址：</string>
-    <string name="restart">重新启动</string>
-    <string name="ns_client_url_title">Nightscout URL(网址)</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">立即输注</string>
     <string name="queue">队列：</string>
     <string name="status">状态:</string>
@@ -46,7 +48,6 @@
     <string name="ns_alarm_stale_data_value_label">陈旧数据阈值 [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">紧急陈旧数据阈值 [min]</string>
     <string name="ns_log_app_started_event">记录app启动事件到NS服务器</string>
-    <string name="copy_existing_values">复制 NS 设置(如果存在的话)？</string>
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">使用集成（测试）服务器</string>
     <string name="tidepool">Tidepool</string>
@@ -94,4 +95,5 @@
     <string name="last_run">上次运行</string>
     <string name="today">今天</string>
     <string name="weighted">权重</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
