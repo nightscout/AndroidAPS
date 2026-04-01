@@ -13,10 +13,7 @@
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Passwort und PIN Sperrung [s]</string>
     <string name="protection_timeout_summary">Zeit bis das Passwort oder die PIN eingegeben werden sollen</string>
-    <string name="biometric">Biometrisch</string>
-    <string name="custom_password">Benutzerdefiniertes Passwort</string>
-    <string name="custom_pin">Eigene PIN</string>
-    <string name="noprotection">Kein Schutz</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Unsicherer Fallback</string>
     <string name="unsecure_fallback_descriotion_biometric">Zur Absicherung braucht der biometrischer Schutz ein Masterpasswort als Fallback.\n\nBitte gib ein Master-Passwort ein!</string>
     <string name="password_set">Passwort festgelegt!</string>
@@ -26,6 +23,4 @@
     <string name="password_not_changed">Passwort nicht geändert</string>
     <string name="pin_not_changed">PIN nicht geändert</string>
     <string name="pin_cleared">PIN gelöscht!</string>
-    <string name="password_hint">Passwort hier eingeben</string>
-    <string name="pin_hint">PIN hier eintragen</string>
 </resources>
