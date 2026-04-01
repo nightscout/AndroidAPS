@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">Przygotuj się do założenia Patcha</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">Usuń taśmę samoprzylepną, a następnie naciśnij \"Dalej\".</string>
-    <string name="patch_remove_needle_cap_desc_2">[Caution1] Jeśli igła wystaje, naciśnij przycisk \"Odrzuć\".</string>
-    <string name="patch_remove_needle_cap_desc_3">[Caution2] Jeśli Patch jest wilgotny lub brudny, lub jego taśma samoprzylepna jest zagięta, naciśnij przycisk \"Odrzuć\".</string>
     <string name="patch_remove_protection_tape">Zakładanie Patcha</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">Oczyść i wysusz miejsce naklejenia, a następnie przymocuj Patch do skóry.</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">Kontrola bezpieczeństwa…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">To zajmuje około 30 sekund.</string>
-    <string name="patch_safety_check_desc_2">[Caution] W celu zapewnienia bezpieczeństwa nie należy usuwać dźwigni igły, dopóki kontrola bezpieczeństwa nie zostanie zakończona!</string>
     <string name="patch_rotate_knob">Wbijanie igły</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Obrócić dźwignię igły o więcej niż 100°, aby wbić igłę, a następnie całkowicie obróć dźwignię, aby ją wyjąć.</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">Odrzuć/zmień Patch</string>
     <string name="string_activate_patch">Aktywuj Patch</string>
     <string name="string_discard_patch">Odrzuć Patch</string>
-    <string name="string_resume">Wznów</string>
     <string name="discard">Odrzuć</string>
     <string name="string_communication_check">Sprawdzenie komunikacji</string>
-    <string name="string_suspend">Wstrzymaj</string>
-    <string name="string_suspended">Wstrzymany</string>
     <string name="string_running">W działaniu</string>
     <string name="cancel">Anuluj</string>
     <string name="confirm">Potwierdź</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">Zmienianie</string>
     <string name="string_in_progress">Przetwarzanie</string>
     <string name="retry">Ponów</string>
-    <string name="string_caution_not_remove_needle_cap">[Caution] NIE zdejmuj osłonki igły i zabezpieczeń samoprzylepnego plastra do czasu uzyskania dalszych instrukcji.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Czy na pewno chcesz odrzucić bieżący Patch?</string>
     <string name="needle_insertion_error_1">Błąd wkłuwania igły.</string>
     <string name="needle_insertion_error_2">Sprawdzić czy otwór po obróceniu dźwigni jest prosty i ma prawidłowy kierunek, a następnie kliknij \'Ponów\'.</string>
     <string name="needle_insertion_error_3">Naciśnij \"Odrzuć\", aby dezaktywować Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Czas zawieszenia bazy</string>
     <string name="string_resume_insulin_delivery_title">Wznów podawanie insuliny</string>
-    <string name="string_resume_insulin_delivery_message">Koniec zawieszenia podawania insuliny.\Kliknij \"Potwierdź\", aby wznowić podawanie insuliny.\n\n[Caution]\nPodawanie insuliny nie zostanie wznowione dopóki nie naciśniesz przycisku \'Potwierdź\'.\nJeśli nie klikniesz przycisku \"Potwierdź\", może rozwinąć się hiperglikemia!</string>
     <string name="string_suspended_insulin_delivery_message">Podawanie insuliny zawieszone.</string>
     <string name="string_resumed_insulin_delivery_message">Podawanie insuliny zostało wznowione.</string>
     <string name="finish">Zakończ</string>
     <string name="string_temp_basal_remained_hhmm">pozostały czas: %1$s:%2$s</string>
     <string name="next">Dalej</string>
-    <string name="string_pause_failed">Zawieszenie nie powiodło się.</string>
     <string name="string_resume_failed">Wznowienie nie powiodło się.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy HH:mm</string>
+    <!-- Permission rationales -->
 </resources>
