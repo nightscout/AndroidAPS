@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Subir datos de glucosa a Nightscout</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">Contraseña maestra</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Exportar entradas de usuario a Excel (csv)</string>
     <string name="confirm">Confirmar</string>
     <string name="pump">Bomba</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">Vigilante de BT</string>
-    <string name="btwatchdog_summary">Desconecta el bluetooth del teléfono móvil durante un instante, si no hay conexión con la bomba. Esto ayuda con algunos teléfonos móviles que tienen problemas para establecer una conexión bluetooth estable.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Hora actualizada en la bomba</string>
     <string name="exit">Salir</string>
@@ -113,7 +111,6 @@
     <string name="calibration">Calibración</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
     <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada y la cantidad de carbohidratos</string>
-    <string name="bolus_reminder">Recordatorio de bolo</string>
     <string name="duration_label">Duración</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Bomba parada</string>
@@ -137,18 +134,15 @@
     <string name="a11y_inrange">en rango</string>
     <string name="a11y_low">bajo</string>
     <string name="average">Promedio</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<ninguno>]]></string>
     <string name="remove_label">ELIMINAR</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
-    <string name="reset">restablecer</string>
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="profile">Perfil</string>
     <string name="select_for_removal">Selecciona para eliminar</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="copytolocalprofile">¿Deseas crear nuevo perfil con base en éste?</string>
-    <string name="wear_wizard_settings">Configuración del Asistente</string>
     <string name="bg_trend_label">Tendencia de los últimos 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">IOB de Bolo</string>
@@ -204,6 +198,7 @@
     <string name="duration">Duración</string>
     <string name="reason">Motivo</string>
     <string name="nochangerequested">Ningún cambio solicitado</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
     <!--    Temptarget-->
@@ -308,7 +303,6 @@
     <string name="expweight">TDD ampliada exponencialmente</string>
     <string name="basalrate">Dosis Basal</string>
     <string name="bolus">Bolo</string>
-    <string name="tdd">Dosis diaria</string>
     <string name="ratio">Ratio</string>
     <string name="amount_days"># Días</string>
     <string name="weight">Peso</string>
@@ -434,6 +428,7 @@
     <string name="valueoutofrange">»%1$s« está fuera del límite estricto</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de los límites estrictos</string>
     <string name="basal_value">Valor basal</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CARBOHIDRATOS %1$d g</string>
@@ -462,7 +457,6 @@
     <string name="sensitivity">Sensibilidad</string>
     <string name="isf_for_carbs">ISF para Calculadora y Absorción de Carbohidratos: %1$.1f</string>
     <string name="autosens_long">Valor de Autosens: %.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">Autosens en algoritmo: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">Archivo</string>
@@ -472,7 +466,6 @@
     <string name="autotune_tune_days">Días de ajuste:</string>
     <string name="autotune_select_profile">Selecciona el perfil para a ajustar</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Usa las notificaciones del sistema para las alarmas y las notificaciones</string>
     <string name="urgent_alarm">Alarma urgente</string>
     <string name="info">INFORMACIÓN</string>
     <!-- BolusWizard -->
@@ -480,8 +473,6 @@
     <string name="bolus_advisor_message">Tienes la glucosa alta. En lugar de comer ahora, se recomienda esperar a tener un mejor valor de glucosa. ¿Quieres poner un bolo de corrección ahora y recibir un aviso cuando sea un buen momento para comer? En este caso no se registrarán los carbohidratos y deberás utilizar el asistente de bolos después de recibir la notificación.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>¡Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Comprueba de nuevo el cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta!</font>]]></string>
-    <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
-    <string name="partialboluswizard_reset_time">Antiguo umbral de tiempo de glucemia [min]</string>
     <string name="bolus_constraint_applied_warn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">El bolo sólo se anotará (no será entregado por la bomba)</string>
     <string name="advisoralarm">Ejecutar alarma cuando sea hora de comer</string>
@@ -558,7 +549,6 @@
     <string name="message">Mensaje</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
-    <string name="dismiss">DESCARTAR</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="close">Cerrar</string>
@@ -571,12 +561,17 @@
     <string name="export_disabled">Desactivado</string>
     <string name="export_failed">Fallido</string>
     <string name="export_alert">ALERTA</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Ajustes exportados</string>
     <string name="export_result_message_failed">¡Exportación de configuraciónes FALLIDA!</string>
     <string name="export_result_message_about_to_expire">Configuración exportada: la contraseña expirará pronto. Exporta manualmente y (re)introduce la contraseña.</string>
     <string name="export_result_message_expired">Exportación de ajustes cancelada: contraseña caducada. Exporta manualmente y (re)introduzca!</string>
     <string name="export_result_message_disabled">Advertencia (automatización): Exportación de configuración no activada!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decremento %1$s por %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
@@ -597,8 +592,10 @@
     <string name="location_not_found_message">Para activar la visibilidad Bluetooth en nuevos dispositivos, la ubicación debe estar habilitada. AAPS no hace un seguimiento de su ubicación y se puede desactivar después de realizar la vinculación.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferencias del complemento</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Faltan permisos de SMS</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
     <string name="fabric_upload_disabled">¡Carga de registros de fallos desactivada!</string>
@@ -644,4 +641,10 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Ratio</b>: %1$.2f U/h (%2$.2f%%) <br><b>Duración</b>: %3$d min<br>]]></string>
     <!--    Playback-->
     <string name="audio_playback_attribution">"Reproducir audio de AAPS"</string>
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
