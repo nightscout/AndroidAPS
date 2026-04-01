@@ -25,4 +25,6 @@
     <string name="short_status_reservoir">Резерв: %1$dед</string>
     <string name="short_status_battery">Бат: %1$d%%</string>
     <string name="short_status_not_initialized">Помпа не иниц</string>
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>
