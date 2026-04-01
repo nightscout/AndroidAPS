@@ -19,6 +19,8 @@
     <string name="medtronic_pump_battery_lithium">Lithium (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Uitgebreide weergave)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batterij van de rileylink</string>
     <!-- MDT Errors -->
