@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Susiejimas</string>
-    <string name="danars_no_device_available">Nerasta jokio prietaiso</string>
-    <string name="danars_pairingok">Susieta OK</string>
     <string name="danars_pairingtimedout">Susiejimui skirtas laikas baigėsi</string>
-    <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
     <string name="danarspump">Dana-I/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS ir Dana-I pompų integracija</string>
@@ -82,7 +79,6 @@
     <string name="description_pump_dana_r_korean">DANA Diabecare R pompos, skirtos vietinei P. Korėjos rinkai, integracija</string>
     <string name="description_pump_dana_r_v2">DANA Diabecare R pompos su atnaujinta programine-aparatine įranga integracija</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Bluetooth adapteris nerastas</string>
     <string name="devicenotfound">Pasirinktas įrenginys nerastas</string>
     <string name="danar_switchtouhmode">Pakeisti pompoje vv/d režimą į vv/val</string>
     <string name="danarkoreanpump">DanaR Korean</string>
@@ -91,14 +87,12 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Išjungti pompos EasyUI režimą</string>
     <string name="profile_set_failed">Nepavyko nustatyti bazės profilio</string>
-    <string name="danar_bluetooth_status">Bluetooth statusas</string>
     <string name="firmware_label">Programinė įranga</string>
     <string name="danar_pump_settings">Dana pompos nustatymai</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">Įjungti</string>
     <string name="option_off">Išjungti</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth įrenginys</string>
     <string name="danars_password_title">Pompos slaptažodis (tik v1)</string>
     <string name="danar_password_title">Pompos slaptažodis</string>
     <string name="danar_useextended_title">Naudoti ištęstinį bolusą &gt;200%</string>
@@ -114,5 +108,4 @@
     <string name="num1pin">1: (12 skaitmenų)</string>
     <string name="num2pin">2: (8 skaitmenys)</string>
     <string name="basal_bolus_step">Bazės / boluso žingsnis</string>
-    <string name="carbs_store_error">AV nebuvo įrašyti tinkamai. Patikrinkite rankiniu būdu ir, jei reikia, išsaugokite.</string>
 </resources>
