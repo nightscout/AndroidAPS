@@ -12,4 +12,6 @@
     <string name="above" comment="above &quot;in range&quot;">上方</string>
     <string name="hba1c">糖化血红蛋白: </string>
     <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>
