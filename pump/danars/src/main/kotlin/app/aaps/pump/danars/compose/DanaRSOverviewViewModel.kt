@@ -36,7 +36,7 @@ import javax.inject.Inject
 @Stable
 class DanaRSOverviewViewModel @Inject constructor(
     aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    rh: ResourceHelper,
     rxBus: RxBus,
     aapsSchedulers: AapsSchedulers,
     commandQueue: CommandQueue,

@@ -65,7 +65,7 @@ sealed class DanaOverviewEvent {
 @Stable
 open class DanaOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    protected val rh: ResourceHelper,
     rxBus: RxBus,
     aapsSchedulers: AapsSchedulers,
     private val commandQueue: CommandQueue,
