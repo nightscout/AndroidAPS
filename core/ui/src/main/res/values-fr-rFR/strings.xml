@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Remonter les Gly vers NS</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="value_unavailable_short">n/d</string>
-    <string name="master_password">Mot de passe principal</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Exporter vers Excel (csv)</string>
     <string name="confirm">Confirmer</string>
     <string name="pump">Pompe</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Coupe le Bluetooth du téléphone une seconde si la connexion pompe n’est pas possible. Cela peut aider pour les téléphones dont la connexion Bluetooth se bloque.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
     <string name="exit">Quitter</string>
@@ -113,7 +111,6 @@
     <string name="calibration">Étalonnage</string>
     <string name="alarminxmin">Alerter dans %1$d min</string>
     <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée ainsi que les glucides actifs</string>
-    <string name="bolus_reminder">Rappel bolus</string>
     <string name="duration_label">Durée</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pompe arrêtée</string>
@@ -137,18 +134,15 @@
     <string name="a11y_inrange">dans la cible</string>
     <string name="a11y_low">bas</string>
     <string name="average">Moyenne</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<aucun>]]></string>
     <string name="remove_label">SUPPRIMER</string>
     <string name="activate_profile">Activer le profil</string>
-    <string name="reset">réinitialiser</string>
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
     <string name="profile">Profil</string>
     <string name="select_for_removal">Sélectionner pour suppression</string>
     <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="copytolocalprofile">Créer un nouveau profil à partir de ce profil ?</string>
-    <string name="wear_wizard_settings">Paramètres assistant</string>
     <string name="bg_trend_label">Delta 15 min</string>
     <string name="treatments_wizard_cob_label">GA</string>
     <string name="bolus_iob_label">IA Bolus</string>
@@ -204,6 +198,7 @@
     <string name="duration">Durée</string>
     <string name="reason">Raison</string>
     <string name="nochangerequested">Pas de changement demandé</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Profil incorrect : %1$s</string>
     <!--    Temptarget-->
@@ -308,7 +303,6 @@
     <string name="expweight">DTQ avec Pondération Exponentielle</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">DTQ</string>
     <string name="ratio">Ratio</string>
     <string name="amount_days">Nb Jours</string>
     <string name="weight">Pondération</string>
@@ -434,6 +428,7 @@
     <string name="valueoutofrange">\"%1$s\" est en dehors des limites</string>
     <string name="value_out_of_hard_limits">\"%1$s\" %2$.2f est en dehors des limites</string>
     <string name="basal_value">Valeur de Basal</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">GLUCIDES %1$d g</string>
@@ -462,7 +457,6 @@
     <string name="sensitivity">Sensibilité</string>
     <string name="isf_for_carbs">SI pour l\'Assistant et le calcul GA: %1$.1f</string>
     <string name="autosens_long">Valeur Autosens: %.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">Autosens dans l\'algorithme: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">fichier</string>
@@ -472,7 +466,6 @@
     <string name="autotune_tune_days">Nb jours :</string>
     <string name="autotune_select_profile">Sélectionnez le profil à optimiser</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Utiliser les notifications système pour les alertes et les notifications</string>
     <string name="urgent_alarm">Alarme d\'urgence</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -480,8 +473,6 @@
     <string name="bolus_advisor_message">Vous avez une glycémie élevée. Au lieu de manger maintenant, il est recommandé d\'attendre une meilleure glycémie. Voulez-vous faire un bolus de correction maintenant et avoir une alerte quand il sera temps de manger ? Dans ce cas, aucun glucide ne sera enregistré et vous devrez utiliser l\'assistant à nouveau lorsque nous vous le rappelons.</string>
     <string name="cobvsiob">GA vs IA</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée dans %2$d%% des cas. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors trop d\'insuline pourrait être injectée !!!!!</font>]]></string>
-    <string name="partialboluswizard">Injecter ce pourcentage du bolus calculé par l’assistant [%]</string>
-    <string name="partialboluswizard_reset_time">Durée limite après la dernière Gly reçue au. delà de laquelle le % de bolus n\'est plus appliqué [min]</string>
     <string name="bolus_constraint_applied_warn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
     <string name="bolus_recorded_only">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
@@ -558,7 +549,6 @@
     <string name="message">Message</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
-    <string name="dismiss">REJETER</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="close">Fermer</string>
@@ -571,12 +561,17 @@
     <string name="export_disabled">Désactivé</string>
     <string name="export_failed">Échec</string>
     <string name="export_alert">ALERTE</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Paramètres exportés</string>
     <string name="export_result_message_failed">Échec de l\'export des paramètres !</string>
     <string name="export_result_message_about_to_expire">Paramètres exportés : le mot de passe va bientôt expirer. Exportez manuellement et (re)entrez le mot de passe.</string>
     <string name="export_result_message_expired">Export des paramètres annulé : le mot de passe est expiré. Exporter manuellement et le (re)saisir !</string>
     <string name="export_result_message_disabled">Avertissement (automatisation): L\'export des paramètres n\'est pas activée !</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">réduire %1$s par %2$s</string>
     <string name="a11y_plus_button_description">incrémenter %1$s par %2$s</string>
@@ -597,8 +592,10 @@
     <string name="location_not_found_message">Afin que la recherche par Bluetooth puisse marcher sur les nouveaux appareils, la localisation doit être activée. AAPS ne trace pas votre position, sauf lorsque vous activez l\'option Message d\'Urgence.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Préférences du plugin</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
     <string name="fabric_upload_disabled">Téléchargement des logs de plantage désactivé !</string>
@@ -644,4 +641,10 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Débit</b>: %1$.2f U/h (%2$.2f%%) <br><b>Durée</b>: %3$d min<br>]]></string>
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS joue l'audio"</string>
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
