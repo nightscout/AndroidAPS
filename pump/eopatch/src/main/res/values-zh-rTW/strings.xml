@@ -12,6 +12,7 @@
     <string name="eopatch_wakeup_time">喚醒日期與時間</string>
     <string name="eopatch_expiration_time">過期時間</string>
     <string name="eopatch_status">狀態</string>
+    <string name="eopatch_not_activated">未註冊</string>
     <string name="eopatch_base_basal_rate">基礎胰島素速率</string>
     <string name="eopatch_temp_basal_rate">臨時基礎速率</string>
     <string name="eopatch_total_delivered">總輸送量</string>
@@ -47,6 +48,7 @@
     <string name="patch_wake_up_desc_1">將胰島素注入室溫的新貼片中。檢查注射器的角度。</string>
     <string name="patch_step_desc_2">2.</string>
     <string name="patch_wake_up_desc_2">檢查是否有一聲嗶聲。</string>
+    <string name="patch_wake_up_pairing_info">配對期間會出現兩個 Android 系統彈出視窗。您必須全部確認，才能完成藍牙配對。</string>
     <string name="patch_start_pairing">開始配對</string>
     <string name="patch_connect_new">貼片配對</string>
     <string name="patch_connect_new_step">2/6</string>
@@ -54,6 +56,8 @@
     <string name="patch_remove_needle_cap">準備貼片</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">移除膠帶，然後點擊“下一步”。</string>
+    <string name="patch_remove_needle_cap_desc_2">若有針頭外露，請點選「放棄」。</string>
+    <string name="patch_remove_needle_cap_desc_3">若貼片潮濕或髒污，或其黏著膠帶有摺痕，請點選「放棄」。</string>
     <string name="patch_remove_protection_tape">貼上貼片</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">清潔並乾燥應用部位，然後將貼片貼在皮膚上。</string>
@@ -62,6 +66,7 @@
     <string name="patch_safety_check">安全檢查…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">這大約需要30秒。</string>
+    <string name="patch_safety_check_desc_2">為了安全使用，在完成安全檢查之前請勿取下針頭操作桿！</string>
     <string name="patch_rotate_knob">植入針頭</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">旋轉針頭動作桿超過100°以植入針頭，然後完全旋轉以移除它</string>
@@ -75,6 +80,12 @@
     <string name="patch_activate_reminder_desc">貼片啟動未完成。\n繼續。</string>
     <string name="patch_communication_check_helper_1">將您的智慧設備靠近貼片。</string>
     <string name="patch_communication_check_helper_2">請移動到另一個位置並重試。</string>
+    <string name="patch_scan_failed_desc">無法找到貼片。請確認貼片在附近，然後再試一次。</string>
+    <string name="patch_bonding_failed_desc">無法與貼片配對。請再試一次。</string>
+    <string name="patch_get_info_failed_desc">無法取得貼片資訊。請再試一次。</string>
+    <string name="patch_self_test_failed_desc">貼片自我測試失敗。請再試一次。</string>
+    <string name="patch_safety_check_failed_desc">安全檢查失敗。請再試一次。</string>
+    <string name="patch_needle_sensing_failed_desc">針頭感測失敗。請再試一次。</string>
     <string name="patch_communication_failed">通訊錯誤</string>
     <string name="patch_communication_succeed">通訊成功</string>
     <string name="patch_communication_succeed_message">已與貼片連線。</string>
@@ -98,18 +109,27 @@
     <string name="string_changing">更換中</string>
     <string name="string_in_progress">處理中</string>
     <string name="retry">重試</string>
+    <string name="string_caution_not_remove_needle_cap">在進一步指示前，請勿移除針頭護蓋與背膠。</string>
     <string name="string_are_you_sure_to_discard_current_patch">您確定要放棄目前貼片嗎？</string>
     <string name="needle_insertion_error_1">針頭植入錯誤。</string>
     <string name="needle_insertion_error_2">檢查旋鈕旋轉後留下的孔洞方向是否正確，然後點擊“重試”。</string>
     <string name="needle_insertion_error_3">點擊“放棄”以停用貼片。</string>
     <string name="string_suspend_time_insulin_delivery_title">基礎速率暫停時間</string>
     <string name="string_resume_insulin_delivery_title">恢復胰島素供應</string>
+    <string name="string_resume_insulin_delivery_message">胰島素暫停結束。\n點選「確認」以恢復胰島素輸注。\n\n在您點選「確認」前，不會恢復胰島素輸注。\n若您未點選「確認」，可能導致高血糖。</string>
     <string name="string_suspended_insulin_delivery_message">胰島素供應已暫停。</string>
     <string name="string_resumed_insulin_delivery_message">胰島素供應已恢復。</string>
     <string name="finish">完成</string>
     <string name="string_temp_basal_remained_hhmm">剩餘時間：%1$s:%2$s</string>
     <string name="next">下一步</string>
+    <string name="string_pause_failed">暫停失敗。</string>
     <string name="string_resume_failed">恢復失敗。</string>
+    <string name="wizard_exit_activation_warning">要退出註冊嚮導嗎？貼片可能會處於未完成狀態，且可能需要新的貼片。</string>
+    <string name="wizard_exit_deactivation_warning">要退出取消註冊嚮導嗎？貼片可能仍保持啟動並持續輸注胰島素。</string>
+    <string name="patch_force_reset">強制重設</string>
+    <string name="patch_force_reset_confirm">這將在本機清除貼片狀態，不會向貼片發送指令。僅在一般取消註冊失敗時使用。貼片將持續輸注，直到電池耗盡或手動關閉。</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, yyyy 年 MMM d 日 hh:mm a</string>
     <!-- Permission rationales -->
+    <string name="permission_exact_alarm_title">精確鬧鐘</string>
+    <string name="permission_exact_alarm_description">應用程式需要排程精確鬧鐘的權限，以進行貼片管理</string>
 </resources>
