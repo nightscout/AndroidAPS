@@ -44,7 +44,7 @@
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_script_debug_data_label">Depanare script</string>
     <string name="openapsama_use_autosens">Folosește opțiunea de autosensibilitate</string>
-    <string name="openapsma_max_basal_title">Valoarea maximă în U/ora (unitati insulina/ora) a unei rate bazale temporare poate fi setată la</string>
+    <string name="openapsma_max_basal_title">Valoarea maximă în U/ora (unități insulina/ora) a unei rate bazale temporare poate fi setată la</string>
     <string name="openapsma_max_basal_summary">Această valoare este denumită bazală maximă în contextul OpenAPS</string>
     <string name="openapsma_max_iob_title">Maximul de bazală IOB pe care o poate livra OpenAPS[U]</string>
     <string name="openapsma_max_iob_summary">Această valoare este denumită Max IOB în contextul OpenAPS\nAceastă valoare este implicit nulă (0). După câteva zile sau săptămâni, în funcție de opțiunea dumneavoastră, puteți ajusta acest număr.</string>
@@ -136,7 +136,7 @@
     <string name="autotune_default_tune_days_title">Număr de zile de date</string>
     <string name="autotune_circadian_ic_isf_title">Aplică rezultatul mediu în circadian IC/ISF</string>
     <string name="autotune_circadian_ic_isf_summary">Autotune nu va corecta variațiile circadiene. Această opțiune aplică o reglare medie a IC și ISF la profilul circadian înregistrat</string>
-    <string name="autotune_additional_log_title">Include mai multe informaţii de jurnal pentru depanare</string>
+    <string name="autotune_additional_log_title">Include mai multe informații de jurnal pentru depanare</string>
     <string name="autotune_additional_log_summary">Activați numai dacă se solicită de către dezvoltator pentru a trimite mai multe informații în jurnal pentru a ajuta la depanarea pluginului Autotune</string>
     <string name="autotune_default_tune_days_summary">Numărul implicit de zile de date pentru a fi procesate automat (până la 30)</string>
     <string name="autotune_tunedprofile_name">Ajustat</string>
