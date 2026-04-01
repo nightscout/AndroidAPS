@@ -55,9 +55,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_quick_righty">Brzi desni</string>
-    <string name="pref_quick_lefty">Brzi levi</string>
-    <string name="pref_modern_sparse">Moderan prikaz</string>
     <string name="pref_big_numbers">Veliki Brojevi</string>
     <string name="pref_ring_history">Istorija u krugu</string>
     <string name="pref_light_ring_history">Svetla istorija u krugu</string>
