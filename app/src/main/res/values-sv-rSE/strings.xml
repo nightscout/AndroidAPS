@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">Inställningar för %1$s</string>
-    <string name="nav_exit">Avsluta</string>
     <string name="delta">Delta</string>
     <string name="save">Spara</string>
     <string name="wear">Klocka (Wear)</string>
-    <string name="nav_about">Om</string>
     <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
     <string name="invalid">OGILTIG</string>
-    <string name="gradually_increase_notification_volume">Öka volymen gradvis för larm och aviseringar</string>
-    <string name="localalertsettings_title">Lokala larm</string>
-    <string name="enable_missed_bg_readings_alert">Varna om BG-data saknas</string>
-    <string name="enable_pump_unreachable_alert">Varna om pumpen inte går att nå</string>
     <string name="pump_unreachable_threshold">Pumpen ses som ej nåbar efter [min]</string>
-    <string name="enable_carbs_req_alert">Varna om kolhydrater behövs</string>
-    <string name="open_navigation">Öppna menyn</string>
     <string name="close_navigation">Stäng menyn</string>
     <string name="remove_items">Ta bort objekt</string>
     <string name="sort_items">Sortera objekt</string>
