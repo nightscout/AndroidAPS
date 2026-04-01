@@ -18,6 +18,14 @@
     <string name="equil_stop">停止</string>
     <string name="equil_success">成功</string>
     <string name="equil_title_dressing">更換卡匣</string>
+    <string name="equil_title_assemble">組裝幫浦</string>
+    <string name="equil_title_serial">配對裝置</string>
+    <string name="equil_title_fill">排氣 / 注滿</string>
+    <string name="equil_title_attach">安裝幫浦</string>
+    <string name="equil_title_air">套管預充</string>
+    <string name="equil_title_confirm">確認</string>
+    <string name="equil_title_unpair_detach">移除幫浦</string>
+    <string name="equil_title_unpair_confirm">確認取消配對</string>
     <string name="equil_title_history_events">歷史事件</string>
     <string name="equil_tone">警報音</string>
     <string name="equil_tone_mode_mute">靜音</string>
@@ -26,6 +34,7 @@
     <string name="equil_tone_mode_tone_and_shake">聲音和震動</string>
     <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unit_u_hours">%1$s U/H</string>
+    <string name="equil_unbind_content">此操作將停止胰島素輸注，並將幫浦推桿退回至底部！同時也會刪除綁定狀態！</string>
     <string name="equil_ble_config_confirmation_title">配對Equil貼片幫浦</string>
     <string name="equil_error">連線錯誤</string>
     <string name="equil_change">更換幫浦</string>
@@ -82,6 +91,7 @@
     <string name="equil_command_connect_error">幫浦連線失敗</string>
     <string name="equil_command_connect_no_response">幫浦未回應</string>
     <string name="equil_command__unknown">命令的未知狀態</string>
+    <string name="equil_install">將幫浦置入體內</string>
     <string name="equil_settings_alarm_battery">低電量警報</string>
     <string name="equil_settings_alarm_insulin">胰島素劑量不足警報</string>
     <string name="equil_init_insulin_error">儲液盒初始化未完成</string>
@@ -133,12 +143,14 @@
         <item quantity="other">%1$d 天</item>
     </plurals>
     <string name="equil_support_error">韌體版本過低。不支援</string>
+    <string name="equil_password_tips">可選擇為與 Equil v5.3 幫浦配對設定密碼。此密碼未來也將用於取消配對，請務必記住。密碼規則：必須為 4 個字元，且只能從 ABCDEF0123456789 中選擇。</string>
     <string name="equil_set_pair_password">設定配對密碼</string>
     <string name="equil_hint1">安裝幫浦到底座後，選擇是否從駐留針頭中排除空氣。</string>
     <string name="equil_unbind">取消配對設備</string>
     <string name="equil_device_unpaired">裝置已解除配對</string>
     <string name="equil_assemble">請組裝幫浦、已填充的儲液盒和已充電的電池</string>
     <string name="equil_devices_number">輸入新幫浦ID</string>
+    <string name="equil_pair_password_title">輸入 %1$s 的密碼</string>
     <string name="equil_insert">請填充儲液盒，直到針尖有胰島素滴落</string>
     <string name="equil_insert2">幫浦不得在幫浦底座上。</string>
     <string name="equil_attach">請將幫浦附在底座上</string>
