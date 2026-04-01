@@ -50,7 +50,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         injector.androidInjector().inject(this)
     }
 
-    abstract fun shouldRun(): Boolean
+    abstract suspend fun shouldRun(): Boolean
     abstract fun dataJSON(): JSONObject
     abstract fun fromJSON(data: String): Trigger
 

@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -31,6 +32,7 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Provider
@@ -47,7 +49,8 @@ class DetermineBasalResult @Inject constructor(
     private val rh: ResourceHelper,
     private val decimalFormatter: DecimalFormatter,
     private val dateUtil: DateUtil,
-    private val apsResultProvider: Provider<APSResult>
+    private val apsResultProvider: Provider<APSResult>,
+    private val ch: ConcentrationHelper
 ) : APSResult {
 
     override var date: Long = 0
@@ -120,8 +123,8 @@ class DetermineBasalResult @Inject constructor(
             // rate
             var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.cancel_temp)} "
             else if (rate == -1.0) "${rh.gs(R.string.let_temp_basal_run)}\n"
-            else if (usePercent) "${rh.gs(R.string.percent_rate_duration, percent.toDouble(), percent * pump.baseBasalRate / 100.0, duration)} "
-            else "${rh.gs(R.string.rate_percent_duration, rate, rate / pump.baseBasalRate * 100.0, duration)} "
+            else if (usePercent) "${rh.gs(R.string.percent_rate_duration, percent.toDouble(), percent * ch.fromPump(pump.baseBasalRate) / 100.0, duration)} "
+            else "${rh.gs(R.string.rate_percent_duration, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)} "
 
             // smb
             if (smb != 0.0) ret += "SMB: ${decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep)} "
@@ -138,15 +141,16 @@ class DetermineBasalResult @Inject constructor(
         } else rh.gs(R.string.nochangerequested)
     }
 
-    override fun resultAsSpanned(): Spanned {
+    override fun resultAsSpanned(): Spanned = HtmlHelper.fromHtml(resultAsHtmlString())
+    override fun resultAsHtmlString(): String {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
             var ret: String =
                 if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>"
                 else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>"
-                else if (usePercent) rh.gs(R.string.percent_rate_duration_formatted, percent.toDouble(), percent * pump.baseBasalRate / 100.0, duration)
-                else rh.gs(R.string.rate_percent_duration_formatted, rate, rate / pump.baseBasalRate * 100.0, duration)
+                else if (usePercent) rh.gs(R.string.percent_rate_duration_formatted, percent.toDouble(), percent * ch.fromPump(pump.baseBasalRate) / 100.0, duration)
+                else rh.gs(R.string.rate_percent_duration_formatted, rate, rate / ch.fromPump(pump.baseBasalRate) * 100.0, duration)
 
             // smb
             if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep) + "<br>"
@@ -156,11 +160,10 @@ class DetermineBasalResult @Inject constructor(
 
             // reason
             ret += "<b>" + rh.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;")
-            return HtmlHelper.fromHtml(ret)
+            return ret
         }
-        return if (isCarbsRequired) {
-            HtmlHelper.fromHtml(carbsRequiredText)
-        } else HtmlHelper.fromHtml(rh.gs(R.string.nochangerequested))
+        return if (isCarbsRequired) carbsRequiredText
+        else rh.gs(R.string.nochangerequested)
     }
 
     override fun newAndClone(): APSResult = apsResultProvider.get().with(result)
@@ -273,7 +276,7 @@ class DetermineBasalResult @Inject constructor(
             val now = System.currentTimeMillis()
             val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
             val pump = activePlugin.activePump
-            val profile = profileFunction.getProfile()
+            val profile = runBlocking { profileFunction.getProfile() }
             if (profile == null) {
                 aapsLogger.error("FALSE: No Profile")
                 return false
@@ -307,7 +310,7 @@ class DetermineBasalResult @Inject constructor(
                 val highThreshold = 1 + percentMinChangeChange
                 var change = percent / 100.0
                 if (activeTemp != null) change = percent / activeTemp.convertedToPercent(now, profile).toDouble()
-                if (change < lowThreshold || change > highThreshold) {
+                if (change !in lowThreshold..highThreshold) {
                     aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
                     true
                 } else {
@@ -315,7 +318,7 @@ class DetermineBasalResult @Inject constructor(
                     false
                 }
             } else {
-                if (activeTemp == null && rate == pump.baseBasalRate) {
+                if (activeTemp == null && rate == ch.fromPump(pump.baseBasalRate)) {
                     aapsLogger.debug(LTag.APS, "FALSE: No temp running, asking cancel temp")
                     return false
                 }
@@ -343,7 +346,7 @@ class DetermineBasalResult @Inject constructor(
                 val highThreshold = 1 + percentMinChangeChange
                 var change = rate / profile.getBasal()
                 if (activeTemp != null) change = rate / activeTemp.convertedToAbsolute(now, profile)
-                if (change < lowThreshold || change > highThreshold) {
+                if (change !in lowThreshold..highThreshold) {
                     aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
                     true
                 } else {

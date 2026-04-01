@@ -16,6 +16,6 @@ interface PreferenceChangeDao {
     fun deleteOlderThan(than: Long): Int
 
     @Query("SELECT * FROM $TABLE_PREFERENCE_CHANGES WHERE timestamp > :since AND timestamp <= :until LIMIT :limit OFFSET :offset")
-    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<PreferenceChange>
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<PreferenceChange>
 
 }

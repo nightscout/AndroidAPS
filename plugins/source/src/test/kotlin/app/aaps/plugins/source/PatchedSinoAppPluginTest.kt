@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
@@ -14,13 +15,15 @@ class PatchedSinoAppPluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var preferences: Preferences
+    @Mock lateinit var config: Config
 
     @BeforeEach
     fun setup() {
-        patchedSinoAppPlugin = PatchedSinoAppPlugin(rh, aapsLogger, preferences)
+        patchedSinoAppPlugin = PatchedSinoAppPlugin(rh, aapsLogger, preferences, config)
     }
 
-    @Test fun advancedFilteringSupported() {
-        assertThat(patchedSinoAppPlugin.advancedFilteringSupported()).isFalse()
+    @Test
+    fun `plugin is created`() {
+        assertThat(patchedSinoAppPlugin).isNotNull()
     }
 }

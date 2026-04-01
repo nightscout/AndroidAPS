@@ -35,7 +35,6 @@ import app.aaps.pump.eopatch.ble.task.UpdateConnectionTask
 import app.aaps.pump.eopatch.code.BolusExDuration
 import app.aaps.pump.eopatch.code.DeactivationStatus
 import app.aaps.pump.eopatch.code.PatchLifecycle
-import app.aaps.pump.eopatch.core.Patch
 import app.aaps.pump.eopatch.core.api.BuzzerStop
 import app.aaps.pump.eopatch.core.api.GetTemperature
 import app.aaps.pump.eopatch.core.api.PublicKeySend
@@ -97,8 +96,18 @@ import java.util.concurrent.TimeUnit
 import javax.crypto.KeyAgreement
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.Any
+import kotlin.Boolean
+import kotlin.ByteArray
+import kotlin.Float
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.Throwable
+import kotlin.Throws
+import kotlin.check
+import kotlin.synchronized
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class PatchManagerExecutor @Inject constructor(
     private val pm: PreferenceManager,
@@ -109,22 +118,20 @@ class PatchManagerExecutor @Inject constructor(
     private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    private val START_BOND: StartBondTask,
-    private val GET_PATCH_INFO: GetPatchInfoTask,
-    private val SELF_TEST: SelfTestTask,
-    private val START_PRIMING: PrimingTask,
-    private val START_NEEDLE_CHECK: NeedleSensingTask
+    private val startBondTask: StartBondTask,
+    private val getPatchInfoTask: GetPatchInfoTask,
+    private val selfTestTask: SelfTestTask,
+    private val primingTask: PrimingTask,
+    private val needleSensingTask: NeedleSensingTask,
+    val patch: IBleDevice,
+    private val buzzerStop: BuzzerStop,
+    private val temperatureGet: GetTemperature,
+    private val alarmAlertErrorBeepStop: StopAeBeep,
+    private val publicKeySend: PublicKeySend,
+    private val sequenceGet: SequenceGet
 ) {
 
-    var patch: IBleDevice = Patch.getInstance()
-
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
-
-    private val BUZZER_STOP: BuzzerStop = BuzzerStop()
-    private val TEMPERATURE_GET: GetTemperature = GetTemperature()
-    private val ALARM_ALERT_ERROR_BEEP_STOP: StopAeBeep = StopAeBeep()
-    private val PUBLIC_KEY_SET: PublicKeySend = PublicKeySend()
-    private val SEQUENCE_GET: SequenceGet = SequenceGet()
 
     @Inject fun onInit() {
         patch.init(context)
@@ -134,11 +141,12 @@ class PatchManagerExecutor @Inject constructor(
         filter.addAction(Intent.ACTION_DATE_CHANGED)
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
 
-        val dateTimeChanged: Observable<Intent> = RxBroadcastReceiver.Companion.create(context, filter)
+        val dateTimeChanged: Observable<Intent> = RxBroadcastReceiver.create(context, filter)
 
         compositeDisposable.add(
-            Observable.combineLatest<Boolean, PatchLifecycle, Boolean>(patch.observeConnected(), pm.observePatchLifeCycle(),
-                                                                       BiFunction { connected: Boolean, lifeCycle: PatchLifecycle -> (connected && lifeCycle.isActivated) })
+            Observable.combineLatest<Boolean, PatchLifecycle, Boolean>(
+                patch.observeConnected(), pm.observePatchLifeCycle(),
+                BiFunction { connected: Boolean, lifeCycle: PatchLifecycle -> (connected && lifeCycle.isActivated) })
                 .subscribeOn(aapsSchedulers.io)
                 .filter(Predicate { ok: Boolean -> ok })
                 .observeOn(aapsSchedulers.io)
@@ -148,10 +156,11 @@ class PatchManagerExecutor @Inject constructor(
         )
 
         compositeDisposable.add(
-            Observable.combineLatest<Boolean, PatchLifecycle, Intent, Boolean>(patch.observeConnected(),
-                                                                               pm.observePatchLifeCycle().distinctUntilChanged(),
-                                                                               dateTimeChanged.startWith(Observable.just<Intent>(Intent())),
-                                                                               Function3 { connected: Boolean, lifeCycle: PatchLifecycle, value: Intent -> (connected && lifeCycle.isActivated) })
+            Observable.combineLatest<Boolean, PatchLifecycle, Intent, Boolean>(
+                patch.observeConnected(),
+                pm.observePatchLifeCycle().distinctUntilChanged(),
+                dateTimeChanged.startWith(Observable.just<Intent>(Intent())),
+                Function3 { connected: Boolean, lifeCycle: PatchLifecycle, value: Intent -> (connected && lifeCycle.isActivated) })
                 .subscribeOn(aapsSchedulers.io)
                 .doOnNext(Consumer { v: Boolean -> aapsLogger.debug(LTag.PUMP, "Has the date or time changed $v") })
                 .filter(Predicate { ok: Boolean -> ok })
@@ -169,8 +178,8 @@ class PatchManagerExecutor @Inject constructor(
 
         compositeDisposable.add(
             patchConfig.observe().doOnNext(Consumer { config: PatchConfig ->
-                val newKey = config.sharedKey
-                patch.updateEncryptionParam(newKey)
+                patch.updateEncryptionParam(config.sharedKey ?: ByteArray(0))
+                patch.setSeq(config.seq15)
             }).subscribe()
         )
 
@@ -209,7 +218,7 @@ class PatchManagerExecutor @Inject constructor(
 
         if (connected && activated && useEncryption) {
             compositeDisposable.add(
-                SEQUENCE_GET.get()
+                sequenceGet.get()
                     .map<Int>(Function { obj: KeyResponse -> obj.sequence })
                     .doOnSuccess(Consumer { sequence: Int ->
                         if (sequence >= 0) {
@@ -306,11 +315,11 @@ class PatchManagerExecutor @Inject constructor(
      * Fragment: fragment_patch_connect_new
      */
     fun startBond(mac: String): Single<Boolean> {
-        return START_BOND.start(mac)
+        return startBondTask.start(mac)
     }
 
     fun getPatchInfo(timeout: Long): Single<Boolean> {
-        return GET_PATCH_INFO.get().timeout(timeout, TimeUnit.MILLISECONDS)
+        return getPatchInfoTask.get().timeout(timeout, TimeUnit.MILLISECONDS)
     }
 
     /**
@@ -318,7 +327,7 @@ class PatchManagerExecutor @Inject constructor(
      * Fragment: fragment_patch_connect_new
      */
     fun selfTest(timeout: Long): Single<PatchSelfTestResult> {
-        return SELF_TEST.start().timeout(timeout, TimeUnit.MILLISECONDS)
+        return selfTestTask.start().timeout(timeout, TimeUnit.MILLISECONDS)
     }
 
     /**
@@ -326,11 +335,11 @@ class PatchManagerExecutor @Inject constructor(
      * Fragment: fragment_patch_priming
      */
     val temperature
-        get() = TEMPERATURE_GET.get()
+        get() = temperatureGet.get()
             .timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS)
 
     fun startPriming(timeout: Long, count: Long): Observable<Long> {
-        return START_PRIMING.start(count)
+        return primingTask.start(count)
             .timeout(timeout, TimeUnit.MILLISECONDS)
     }
 
@@ -339,7 +348,7 @@ class PatchManagerExecutor @Inject constructor(
      * Fragment: fragment_patch_rotate_knob
      */
     fun checkNeedleSensing(timeout: Long): Single<Boolean> {
-        return START_NEEDLE_CHECK.start()
+        return needleSensingTask.start()
             .timeout(timeout, TimeUnit.MILLISECONDS)
     }
 
@@ -347,10 +356,10 @@ class PatchManagerExecutor @Inject constructor(
      * Activation Process task #5 Activation Secure Key, Basal writing
      * Fragment: fragment_patch_check_patch
      */
-    @Inject lateinit var ACTIVATE: ActivateTask
+    @Inject lateinit var activateTask: ActivateTask
 
     fun patchActivation(timeout: Long): Single<Boolean> {
-        return ACTIVATE.start().timeout(timeout, TimeUnit.MILLISECONDS)
+        return activateTask.start().timeout(timeout, TimeUnit.MILLISECONDS)
             .flatMap<Boolean>(Function { sharedKey() })
             .flatMap<Boolean>(Function { getSequence() })
             .doOnSuccess(Consumer { success: Boolean ->
@@ -514,7 +523,7 @@ class PatchManagerExecutor @Inject constructor(
     }
 
     fun stopAeBeep(aeCode: Int): Single<PatchBooleanResponse> {
-        return ALARM_ALERT_ERROR_BEEP_STOP.stop(aeCode)
+        return alarmAlertErrorBeepStop.stop(aeCode)
     }
 
     @Synchronized fun fetchPatchState() {
@@ -540,7 +549,7 @@ class PatchManagerExecutor @Inject constructor(
     @Throws(Throwable::class) private fun onInfoNotification(notification: InfoNotification) {
         readBolusStatusFromNotification(notification)
         updateInjected(notification, false)
-        if (notification.isBolusDone) {
+        if (notification.isBolusDone()) {
             fetchPatchState()
         }
     }
@@ -558,8 +567,8 @@ class PatchManagerExecutor @Inject constructor(
         return genKeyPair().flatMap<Boolean>(Function { keyPair: KeyPair ->
             ECPublicToRawBytes(keyPair)
                 .flatMap<Boolean>(Function { bytes: ByteArray ->
-                    PUBLIC_KEY_SET.send(bytes)
-                        .map<ByteArray>(Function { obj: KeyResponse -> obj.getPublicKey() })
+                    publicKeySend.send(bytes)
+                        .map<ByteArray>(Function { obj: KeyResponse -> obj.publicKey!! })
                         .map<ECPublicKey>(Function { bytes2: ByteArray -> rawToEncodedECPublicKey(SECP256R1, bytes2) })
                         .map<ByteArray>(Function { publicKey: ECPublicKey -> generateSharedSecret(keyPair.private, publicKey) })
                         .doOnSuccess(Consumer { v: ByteArray -> this.saveShared(v) })
@@ -570,7 +579,7 @@ class PatchManagerExecutor @Inject constructor(
     }
 
     fun getSequence(): Single<Boolean> {
-        return SEQUENCE_GET.get()
+        return sequenceGet.get()
             .map<Int>(Function { obj: KeyResponse -> obj.sequence })
             .doOnSuccess(Consumer { sequence: Int ->
                 if (sequence >= 0) {

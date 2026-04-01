@@ -8,7 +8,7 @@ import app.aaps.database.entities.Carbs
 class SyncNsCarbsTransaction(private val carbs: List<Carbs>, private val nsClientMode: Boolean) :
     Transaction<SyncNsCarbsTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         for (carb in carbs) {

@@ -20,6 +20,10 @@ import app.aaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.DatasetReplyMessage
 import app.aaps.plugins.sync.tidepool.messages.OpenDatasetRequestMessage
 import app.aaps.plugins.sync.tidepool.messages.UploadReplyMessage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -45,6 +49,7 @@ class TidepoolUploader @Inject constructor(
 
     private val isAllowed get() = receiverDelegate.allowed
     private var wl: PowerManager.WakeLock? = null
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     companion object {
 
@@ -187,7 +192,7 @@ class TidepoolUploader @Inject constructor(
                                         aapsLogger, rxBus, session, "Open New Dataset",
                                         {
                                             authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED, "New dataset OK")
-                                            if (doUpload) doUpload("startSession openDataset")
+                                            if (doUpload) scope.launch { doUpload("startSession openDataset") }
                                             else releaseWakeLock()
                                         }, {
                                             authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.FAILED, "New dataset FAILED")
@@ -199,7 +204,7 @@ class TidepoolUploader @Inject constructor(
                                 // TODO: Wouldn't need to do this if we could block on the above `call.enqueue`.
                                 // ie, do the openDataSet conditionally, and then do `doUpload` either way.
                                 authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.SESSION_ESTABLISHED, "Appending to existing dataset")
-                                if (doUpload) doUpload("startSession existing dataset")
+                                if (doUpload) scope.launch { doUpload("startSession existing dataset") }
                                 else releaseWakeLock()
                             }
                         }, onFail = {
@@ -215,8 +220,7 @@ class TidepoolUploader @Inject constructor(
         }
     }
 
-    @Synchronized
-    fun doUpload(from: String?) {
+    suspend fun doUpload(from: String?) {
         //aapsLogger.debug(LTag.TIDEPOOL, "doUpload $from")
         if (!isAllowed) {
             authFlowOut.updateConnectionStatus(AuthFlowOut.ConnectionStatus.BLOCKED)
@@ -281,7 +285,7 @@ class TidepoolUploader @Inject constructor(
         if (uploadChunk.getLastEnd() < dateUtil.now() - T.hours(3).msecs() - T.mins(1).msecs()) {
             SystemClock.sleep(3000)
             aapsLogger.debug(LTag.TIDEPOOL, "Restarting doUpload. Last: " + dateUtil.dateAndTimeString(uploadChunk.getLastEnd()))
-            doUpload("uploadNext")
+            scope.launch { doUpload("uploadNext") }
         }
     }
 

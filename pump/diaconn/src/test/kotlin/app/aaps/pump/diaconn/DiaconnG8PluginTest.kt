@@ -2,13 +2,14 @@ package app.aaps.pump.diaconn
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
+import app.aaps.pump.diaconn.keys.DiaconnStringNonKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions
@@ -22,10 +23,10 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var diaconnHistoryDatabase: DiaconnHistoryDatabase
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
+    @Mock lateinit var blePreCheck: BlePreCheck
 
     lateinit var diaconnG8Pump: DiaconnG8Pump
 
@@ -43,7 +44,7 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         diaconnG8Plugin = DiaconnG8Plugin(
             aapsLogger, rh, preferences, commandQueue, rxBus, context, constraintChecker, diaconnG8Pump,
             pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil, aapsSchedulers,
-            uiInteraction, diaconnHistoryDatabase, pumpEnactResultProvider
+            notificationManager, diaconnHistoryDatabase, pumpEnactResultProvider, blePreCheck
         )
     }
 
@@ -100,6 +101,9 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
 
     @Test
     fun isInitializedShouldReturnTrueWhenPumpIsConnected() {
+        whenever(preferences.get(DiaconnStringNonKey.Address)).thenReturn("AA:BB:CC:DD:EE:FF")
+        whenever(preferences.get(DiaconnStringNonKey.Name)).thenReturn("TestPump")
+        diaconnG8Plugin.changePump()
         diaconnG8Pump.lastConnection = System.currentTimeMillis()
         diaconnG8Pump.maxBasal = 1.0
         assertThat(diaconnG8Plugin.isInitialized()).isTrue()

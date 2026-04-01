@@ -1,17 +1,18 @@
 package app.aaps.pump.danarkorean.services
 
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danarkorean.comm.MessageHashTableRKorean
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -29,7 +30,6 @@ class DanaRKoreanExecutionServiceTest : TestBaseWithProfile() {
     @Mock lateinit var profile: Profile
     @Mock lateinit var danaPump: DanaPump
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var uiInteraction: UiInteraction
 
     private lateinit var danaRKoreanExecutionService: DanaRKoreanExecutionService
 
@@ -47,14 +47,14 @@ class DanaRKoreanExecutionServiceTest : TestBaseWithProfile() {
         danaRKoreanExecutionService.aapsSchedulers = aapsSchedulers
         danaRKoreanExecutionService.pumpSync = pumpSync
         danaRKoreanExecutionService.activePlugin = activePlugin
-        danaRKoreanExecutionService.uiInteraction = uiInteraction
+        danaRKoreanExecutionService.notificationManager = notificationManager
         danaRKoreanExecutionService.pumpEnactResultProvider = pumpEnactResultProvider
         danaRKoreanExecutionService.constraintChecker = constraintChecker
         danaRKoreanExecutionService.danaRPlugin = danaRPlugin
         danaRKoreanExecutionService.danaRKoreanPlugin = danaRKoreanPlugin
         danaRKoreanExecutionService.commandQueue = commandQueue
         danaRKoreanExecutionService.messageHashTableRKorean = messageHashTableRKorean
-        danaRKoreanExecutionService.profileFunction = profileFunction
+        //danaRKoreanExecutionService.profileFunction = profileFunction
 
         `when`(rh.gs(anyInt())).thenReturn("test")
         `when`(rh.gs(anyInt(), any())).thenReturn("test")
@@ -128,7 +128,7 @@ class DanaRKoreanExecutionServiceTest : TestBaseWithProfile() {
 
     @Test
     fun testUpdateBasalsInPump_notConnected() {
-        `when`(profileFunction.getProfile()).thenReturn(profile)
+        runBlocking { `when`(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         `when`(profile.getBasal()).thenReturn(1.0)
 
         val result = danaRKoreanExecutionService.updateBasalsInPump(profile)
@@ -136,8 +136,8 @@ class DanaRKoreanExecutionServiceTest : TestBaseWithProfile() {
         assertThat(result).isFalse()
     }
 
-    private fun mockPumpDescription(): app.aaps.core.data.pump.defs.PumpDescription {
-        return app.aaps.core.data.pump.defs.PumpDescription().apply {
+    private fun mockPumpDescription(): PumpDescription {
+        return PumpDescription().apply {
             basalStep = 0.01
         }
     }

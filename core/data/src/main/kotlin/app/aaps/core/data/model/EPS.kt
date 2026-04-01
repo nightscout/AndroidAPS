@@ -25,6 +25,9 @@ data class EPS(
     var originalPercentage: Int, // 1 ~ XXX [%]
     var originalDuration: Long, // [milliseconds]
     var originalEnd: Long, // not used (calculated from duration)
+    /** ID of the ProfileSwitch that triggered this EPS (null for legacy/synced records) */
+    var originalPsId: Long? = null,
+    /** Applied insulin configuration */
     var iCfg: ICfg
 ) : HasIDs {
 
@@ -42,7 +45,9 @@ data class EPS(
             originalTimeshift == other.originalTimeshift &&
             originalPercentage == other.originalPercentage &&
             originalDuration == other.originalDuration &&
-            originalEnd == other.originalEnd
+            originalEnd == other.originalEnd &&
+            originalPsId == other.originalPsId &&
+            iCfg == other.iCfg
 
     fun onlyNsIdAdded(previous: EPS): Boolean =
         previous.id != id &&

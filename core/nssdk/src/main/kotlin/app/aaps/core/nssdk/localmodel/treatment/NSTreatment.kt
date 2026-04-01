@@ -1,8 +1,14 @@
 package app.aaps.core.nssdk.localmodel.treatment
 
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonClassDiscriminator
 
-interface NSTreatment {
+@OptIn(ExperimentalSerializationApi::class)
+@Serializable
+@JsonClassDiscriminator("__type")
+sealed interface NSTreatment {
     var date: Long?
     val device: String?
     val identifier: String?

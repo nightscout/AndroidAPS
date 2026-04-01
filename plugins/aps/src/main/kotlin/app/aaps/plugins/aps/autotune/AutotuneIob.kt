@@ -6,6 +6,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
@@ -28,6 +29,7 @@ import app.aaps.core.objects.extensions.toTemporaryBasal
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
+import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -54,7 +56,7 @@ open class AutotuneIob @Inject constructor(
     private var endBG: Long = 0
     private fun range(): Long = (60 * 60 * 1000L * dia + T.hours(2).msecs()).toLong()
 
-    fun initializeData(from: Long, to: Long, tunedProfile: ATProfile) {
+    suspend fun initializeData(from: Long, to: Long, tunedProfile: ATProfile) {
         dia = tunedProfile.dia
         startBG = from
         endBG = to
@@ -90,7 +92,7 @@ open class AutotuneIob @Inject constructor(
         boluses = ArrayList(boluses.toList().sortedWith { o1: BS, o2: BS -> if (o2.timestamp > o1.timestamp) 1 else -1 })
     }
 
-    private fun initializeBgReadings(from: Long, to: Long) {
+    private suspend fun initializeBgReadings(from: Long, to: Long) {
         glucose = persistenceLayer.getBgReadingsDataFromTimeToTime(from, to, false)
     }
 
@@ -101,7 +103,7 @@ open class AutotuneIob @Inject constructor(
             LTag.AUTOTUNE,
             "Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to)
         )
-        val tmpCarbs = persistenceLayer.getCarbsFromTimeToTimeExpanded(from, to, false)
+        val tmpCarbs = runBlocking { persistenceLayer.getCarbsFromTimeToTimeExpanded(from, to, false) }
         aapsLogger.debug(LTag.AUTOTUNE, "Nb treatments after query: " + tmpCarbs.size)
         var nbCarbs = 0
         for (i in tmpCarbs.indices) {
@@ -114,7 +116,7 @@ open class AutotuneIob @Inject constructor(
                     nbCarbs++
             }
         }
-        val tmpBolus = persistenceLayer.getBolusesFromTimeToTime(from, to, false)
+        val tmpBolus = runBlocking { persistenceLayer.getBolusesFromTimeToTime(from, to, false) }
         var nbSMB = 0
         var nbBolus = 0
         for (i in tmpBolus.indices) {
@@ -135,7 +137,7 @@ open class AutotuneIob @Inject constructor(
     }
 
     //nsTreatment is used only for export data
-    private fun initializeTempBasalData(from: Long, to: Long, tunedProfile: ATProfile) {
+    private suspend fun initializeTempBasalData(from: Long, to: Long, tunedProfile: ATProfile) {
         val tBRs = persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(from, to, false)
         //log.debug("D/AutotunePlugin tempBasal size before cleaning:" + tBRs.size);
         for (i in tBRs.indices) {
@@ -146,7 +148,7 @@ open class AutotuneIob @Inject constructor(
     }
 
     //nsTreatment is used only for export data
-    private fun initializeExtendedBolusData(from: Long, to: Long, tunedProfile: ATProfile) {
+    private suspend fun initializeExtendedBolusData(from: Long, to: Long, tunedProfile: ATProfile) {
         val extendedBoluses = persistenceLayer.getExtendedBolusesStartingFromTimeToTime(from, to, false)
         for (i in extendedBoluses.indices) {
             val eb = extendedBoluses[i]
@@ -164,8 +166,7 @@ open class AutotuneIob @Inject constructor(
 
     // addNeutralTempBasal will add a fake neutral TBR (100%) to have correct basal rate in exported file for periods without TBR running
     // to be able to compare results between oref0 algo and aaps
-    @Synchronized
-    private fun addNeutralTempBasal(from: Long, to: Long, tunedProfile: ATProfile) {
+    private suspend fun addNeutralTempBasal(from: Long, to: Long, tunedProfile: ATProfile) {
         var previousStart = to
         for (i in tempBasals.indices) {
             val newStart = tempBasals[i].timestamp + tempBasals[i].duration
@@ -199,8 +200,7 @@ open class AutotuneIob @Inject constructor(
 
     // toSplittedTimestampTB will split all TBR across hours in different TBR with correct absolute value to be sure to have correct basal rate
     // even if profile rate is not the same
-    @Synchronized
-    private fun toSplittedTimestampTB(tb: TB, tunedProfile: ATProfile) {
+    private suspend fun toSplittedTimestampTB(tb: TB, tunedProfile: ATProfile) {
         var splittedTimestamp = tb.timestamp
         val cutInMilliSec = T.mins(60).msecs()                  //30 min to compare with oref0, 60 min to improve accuracy
         var splittedDuration = tb.duration
@@ -287,7 +287,8 @@ open class AutotuneIob @Inject constructor(
                 ids = bolusInterfaceIDs,
                 timestamp = calcDate,
                 amount = tempBolusSize,
-                type = BS.Type.NORMAL
+                type = BS.Type.NORMAL,
+                iCfg = ICfg(insulinLabel = "unused within Autotune", peak = 0, dia = 0.0, concentration = 0.0)
             )
             result.add(tempBolusPart)
         }
@@ -317,7 +318,8 @@ open class AutotuneIob @Inject constructor(
                 ids = bolusInterfaceIDs,
                 timestamp = calcDate,
                 amount = tempBolusSize,
-                type = BS.Type.NORMAL
+                type = BS.Type.NORMAL,
+                iCfg = ICfg(insulinLabel = "unused within Autotune", peak = 0, dia = 0.0, concentration = 0.0)
             )
             result.add(tempBolusPart)
         }
@@ -467,7 +469,7 @@ open class AutotuneIob @Inject constructor(
             return when (eventType) {
                 TE.Type.TEMPORARY_BASAL  ->
                     temporaryBasal?.let { tbr ->
-                        val profile = profileFunction.getProfile(tbr.timestamp)
+                        val profile = runBlocking { profileFunction.getProfile(tbr.timestamp) }
                         profile?.let {
                             tbr.toJson(true, it, dateUtil)
                         }
@@ -475,7 +477,7 @@ open class AutotuneIob @Inject constructor(
 
                 TE.Type.COMBO_BOLUS      ->
                     extendedBolus?.let { ebr ->
-                        val profile = profileFunction.getProfile(ebr.timestamp)
+                        val profile = runBlocking { profileFunction.getProfile(ebr.timestamp) }
                         profile?.let {
                             ebr.toJson(true, it, dateUtil)
                         }

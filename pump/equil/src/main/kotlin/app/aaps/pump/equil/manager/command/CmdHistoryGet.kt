@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.utils.notify
 import app.aaps.pump.equil.database.EquilHistoryRecord
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.Utils
@@ -88,7 +89,7 @@ class CmdHistoryGet(
         aapsLogger.debug(LTag.PUMPCOMM, this.toString())
         synchronized(this) {
             cmdSuccess = true
-            (this as Object).notify()
+            notify()
         }
     }
 

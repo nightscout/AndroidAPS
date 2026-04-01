@@ -4,8 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.TABLE_APS_RESULTS
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
 
 @Dao
 internal interface APSResultDao : TraceableDao<APSResult> {
@@ -23,11 +21,11 @@ internal interface APSResultDao : TraceableDao<APSResult> {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT * FROM $TABLE_APS_RESULTS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<APSResult>
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<APSResult>
 
     @Query("SELECT * FROM $TABLE_APS_RESULTS WHERE timestamp > :since AND timestamp <= :until ORDER BY timestamp DESC LIMIT 1")
-    fun getApsResult(since: Long, until: Long): Maybe<APSResult>
+    suspend fun getApsResult(since: Long, until: Long): APSResult?
 
     @Query("SELECT * FROM $TABLE_APS_RESULTS WHERE timestamp >= :start AND timestamp <= :end ORDER BY timestamp ASC")
-    fun getApsResults(start: Long, end: Long): Single<List<APSResult>>
+    suspend fun getApsResults(start: Long, end: Long): List<APSResult>
 }

@@ -34,8 +34,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
         btDevice.value = triggerBTDevice.btDevice.value
     }
 
-    @Synchronized
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         if (eventExists()) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

@@ -5,6 +5,7 @@ import app.aaps.database.daos.BolusCalculatorResultDao
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class InsertOrUpdateBolusCalculatorResultTransactionTest {
     }
 
     @Test
-    fun `inserts new bolus calculator result when id not found`() {
+    fun `inserts new bolus calculator result when id not found`() = runTest {
         val result = createBolusCalculatorResult(id = 1, totalInsulin = 5.0)
 
         whenever(bolusCalculatorResultDao.findById(1)).thenReturn(null)
@@ -44,7 +45,7 @@ class InsertOrUpdateBolusCalculatorResultTransactionTest {
     }
 
     @Test
-    fun `updates existing bolus calculator result when id found`() {
+    fun `updates existing bolus calculator result when id found`() = runTest {
         val result = createBolusCalculatorResult(id = 1, totalInsulin = 7.5)
         val existing = createBolusCalculatorResult(id = 1, totalInsulin = 5.0)
 
@@ -63,7 +64,7 @@ class InsertOrUpdateBolusCalculatorResultTransactionTest {
     }
 
     @Test
-    fun `updates total insulin value`() {
+    fun `updates total insulin value`() = runTest {
         val existing = createBolusCalculatorResult(id = 1, totalInsulin = 3.0)
         val updated = createBolusCalculatorResult(id = 1, totalInsulin = 8.0)
 
@@ -78,7 +79,7 @@ class InsertOrUpdateBolusCalculatorResultTransactionTest {
     }
 
     @Test
-    fun `inserts bolus calculator result with carbs`() {
+    fun `inserts bolus calculator result with carbs`() = runTest {
         val result = createBolusCalculatorResult(id = 1, totalInsulin = 4.0, carbs = 50.0)
 
         whenever(bolusCalculatorResultDao.findById(1)).thenReturn(null)

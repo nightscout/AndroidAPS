@@ -16,5 +16,18 @@ enum class StringNonKey(
     ActivePumpType(key = "active_pump_type", defaultValue = ""),
     ActivePumpSerialNumber(key = "active_pump_serial_number", defaultValue = ""),
     SmsOtpSecret("smscommunicator_otp_secret", defaultValue = ""),
-    TotalBaseBasal("TBB", defaultValue = "10.00")
+    TotalBaseBasal("TBB", defaultValue = "10.00"),
+    PumpCommonBolusStorage(key = "pump_sync_storage_bolus", defaultValue = ""),
+    PumpCommonTbrStorage(key = "pump_sync_storage_tbr", defaultValue = ""),
+    TempTargetPresets(key = "temp_target_presets", defaultValue = "[]"),
+    QuickLaunchActions(key = "quick_launch_actions", defaultValue = "[{\"type\":\"wizard\"},{\"type\":\"quick_launch_config\"}]"),
+    InsulinConfiguration("insulin_configuration","{}"),
+
+    NotificationReaderPackages(key = "notification_reader_packages", defaultValue = ""),
+
+    // Google Drive settings (internal, no preferences UI)
+    GoogleDriveStorageType(key = "google_drive_storage_type", defaultValue = "local"),
+    GoogleDriveFolderId(key = "google_drive_folder_id", defaultValue = ""),
+    GoogleDriveRefreshToken(key = "google_drive_refresh_token", defaultValue = ""),
+
 }

@@ -271,7 +271,7 @@ class TransportLayerTest : TestBase() {
                 "Exception thrown by in packet receiver (this exception was expected by the test): $expectedError"
             )
             assertNotNull(expectedError)
-            assertIs<TransportLayer.ErrorResponseException>(expectedError!!.cause)
+            assertIs<TransportLayer.ErrorResponseException>(expectedError.cause)
 
             // At this point, the packet receiver is not running anymore
             // due to the exception. Attempts at sending and receiving

@@ -36,10 +36,10 @@ class AutotunePluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         val atProfileProvider = Provider {
-            ATProfile(activePlugin, preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger)
+            ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger)
         }
         autotunePlugin = AutotunePlugin(
-            aapsLogger, rh, preferences, rxBus, profileFunction, dateUtil, activePlugin,
+            aapsLogger, rh, preferences, rxBus, profileFunction, dateUtil, insulin, localProfileManager,
             autotuneFS, autotuneIob, autotunePrep, autotuneCore, config, uel, profileStoreProvider, atProfileProvider
         )
     }

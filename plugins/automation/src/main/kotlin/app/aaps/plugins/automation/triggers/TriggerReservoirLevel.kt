@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
 import android.widget.LinearLayout
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
@@ -14,8 +15,11 @@ import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.Optional
+import javax.inject.Inject
 
 class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
+
+    @Inject lateinit var insulin: Insulin
 
     var reservoirLevel: InputDouble = InputDouble(0.0, 0.0, 800.0, 1.0, DecimalFormat("1"))
     var comparator: Comparator = Comparator(rh)
@@ -35,8 +39,9 @@ class TriggerReservoirLevel(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
-        val actualReservoirLevel = activePlugin.activePump.reservoirLevel
+    override suspend fun shouldRun(): Boolean {
+        val iCfg = insulin.iCfg
+        val actualReservoirLevel = activePlugin.activePump.reservoirLevel.value.iU(iCfg.concentration)
         if (comparator.value.check(actualReservoirLevel, reservoirLevel.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

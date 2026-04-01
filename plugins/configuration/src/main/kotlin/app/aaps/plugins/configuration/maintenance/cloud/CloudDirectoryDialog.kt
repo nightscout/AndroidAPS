@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import app.aaps.core.ui.dialogs.AlertDialogHelper
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 
@@ -106,7 +105,7 @@ class CloudDirectoryDialog @Inject constructor(
             }
             if (wasCloud) {
                 MaterialAlertDialogBuilder(activity, app.aaps.core.ui.R.style.DialogTheme)
-                    .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, rh.gs(R.string.clear_cloud_settings)))
+                    .setTitle(rh.gs(R.string.clear_cloud_settings))
                     .setMessage(rh.gs(R.string.clear_cloud_settings_message))
                     .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.yes)) { _, _ -> proceedClear() }
                     .setNegativeButton(rh.gs(app.aaps.core.ui.R.string.no), null)
@@ -174,7 +173,7 @@ class CloudDirectoryDialog @Inject constructor(
     ) {
         activity.runOnUiThread {
             MaterialAlertDialogBuilder(activity, app.aaps.core.ui.R.style.DialogTheme)
-                .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, rh.gs(R.string.enable_cloud_export_title)))
+                .setTitle(rh.gs(R.string.enable_cloud_export_title))
                 .setMessage(rh.gs(R.string.enable_cloud_export_message))
                 .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.yes)) { _, _ ->
                     exportOptionsDialog.enableAllCloud()
@@ -292,10 +291,7 @@ class CloudDirectoryDialog @Inject constructor(
         onResult: (cancelled: Boolean) -> Unit
     ) {
         val dialog = MaterialAlertDialogBuilder(activity, app.aaps.core.ui.R.style.DialogTheme)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(
-                activity, 
-                rh.gs(R.string.cloud_authorization_title, providerName)
-            ))
+            .setTitle(rh.gs(R.string.cloud_authorization_title, providerName))
             .setMessage(rh.gs(R.string.cloud_authorization_message, providerName))
             .setNegativeButton(rh.gs(app.aaps.core.ui.R.string.cancel)) { _, _ ->
                 onResult(true)
@@ -318,10 +314,7 @@ class CloudDirectoryDialog @Inject constructor(
         onStorageChanged: () -> Unit
     ) {
         MaterialAlertDialogBuilder(activity, app.aaps.core.ui.R.style.DialogTheme)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(
-                activity, 
-                rh.gs(R.string.cloud_connection_failed)
-            ))
+            .setTitle(rh.gs(R.string.cloud_connection_failed))
             .setMessage(rh.gs(R.string.cloud_reauthorize_message))
             .setPositiveButton(rh.gs(R.string.reauthorize)) { _, _ ->
                 cloudStorageManager.clearAllCredentials()

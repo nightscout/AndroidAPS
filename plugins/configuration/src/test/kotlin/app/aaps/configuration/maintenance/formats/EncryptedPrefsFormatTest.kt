@@ -9,7 +9,7 @@ import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.implementation.protection.SecureEncryptImpl
 import app.aaps.plugins.configuration.maintenance.PrefsMetadataKeyImpl
 import app.aaps.plugins.configuration.maintenance.data.PrefFormatError
-import app.aaps.plugins.configuration.maintenance.data.Prefs
+import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
@@ -20,19 +21,18 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogTemptargetBinding
 import com.google.common.base.Joiner
 import com.google.common.collect.Lists
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.util.LinkedList
 import java.util.concurrent.TimeUnit
@@ -48,11 +48,11 @@ class TempTargetDialog : DialogFragmentWithDate() {
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var ctx: Context
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private lateinit var reasonList: List<String>
 
     private var queryingProtection = false
-    private val disposable = CompositeDisposable()
     private var _binding: DialogTemptargetBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -96,7 +96,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         // temp target
         context?.let { context ->
-            binding.targetCancel.visibility = (persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) != null).toVisibility()
+            binding.targetCancel.visibility = (runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) } != null).toVisibility()
 
             reasonList = Lists.newArrayList(
                 rh.gs(app.aaps.core.ui.R.string.manual),
@@ -157,7 +157,6 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        disposable.clear()
         _binding = null
     }
 
@@ -179,32 +178,35 @@ class TempTargetDialog : DialogFragmentWithDate() {
         if (eventTimeChanged)
             actions.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.temporary_target), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+        uiInteraction.showOkCancelDialog(
+            context = requireActivity(),
+            title = rh.gs(app.aaps.core.ui.R.string.temporary_target),
+            message = Joiner.on("<br/>").join(actions),
+            ok = {
                 val units = profileFunction.getUnits()
                 val listValues = when (reason) {
-                    rh.gs(app.aaps.core.ui.R.string.eatingsoon)     -> listOf(
+                    rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> listOf(
                         ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                         ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
                         ValueWithUnit.fromGlucoseUnit(target, units),
                         ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(app.aaps.core.ui.R.string.activity)       -> listOf(
+                    rh.gs(app.aaps.core.ui.R.string.activity) -> listOf(
                         ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                         ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
                         ValueWithUnit.fromGlucoseUnit(target, units),
                         ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(app.aaps.core.ui.R.string.hypo)           -> listOf(
+                    rh.gs(app.aaps.core.ui.R.string.hypo) -> listOf(
                         ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                         ValueWithUnit.TETTReason(TT.Reason.HYPOGLYCEMIA),
                         ValueWithUnit.fromGlucoseUnit(target, units),
                         ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(app.aaps.core.ui.R.string.manual)         -> listOf(
+                    rh.gs(app.aaps.core.ui.R.string.manual) -> listOf(
                         ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                         ValueWithUnit.TETTReason(TT.Reason.CUSTOM),
                         ValueWithUnit.fromGlucoseUnit(target, units),
@@ -213,40 +215,44 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
                     rh.gs(app.aaps.core.ui.R.string.stoptemptarget) -> listOf(ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
 
-                    else                                            -> listOf()
+                    else -> listOf()
                 }
                 if (target == 0.0 || duration == 0) {
-                    disposable += persistenceLayer.cancelCurrentTemporaryTargetIfAny(
-                        timestamp = eventTime,
-                        action = Action.TT,
-                        source = Sources.TTDialog,
-                        note = null,
-                        listValues = listOf()
-                    ).subscribe()
-                } else {
-                    disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                        TT(
+                    lifecycleScope.launch {
+                        persistenceLayer.cancelCurrentTemporaryTargetIfAny(
                             timestamp = eventTime,
-                            duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
-                            reason = when (reason) {
-                                rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> TT.Reason.EATING_SOON
-                                rh.gs(app.aaps.core.ui.R.string.activity)   -> TT.Reason.ACTIVITY
-                                rh.gs(app.aaps.core.ui.R.string.hypo)       -> TT.Reason.HYPOGLYCEMIA
-                                else                                        -> TT.Reason.CUSTOM
-                            },
-                            lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
-                            highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
-                        ),
-                        action = Action.TT,
-                        source = Sources.TTDialog,
-                        note = null,
-                        listValues = listValues.filterNotNull()
-                    ).subscribe()
+                            action = Action.TT,
+                            source = Sources.TTDialog,
+                            note = null,
+                            listValues = listOf()
+                        )
+                    }
+                } else {
+                    lifecycleScope.launch {
+                        persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                            TT(
+                                timestamp = eventTime,
+                                duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
+                                reason = when (reason) {
+                                    rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> TT.Reason.EATING_SOON
+                                    rh.gs(app.aaps.core.ui.R.string.activity)   -> TT.Reason.ACTIVITY
+                                    rh.gs(app.aaps.core.ui.R.string.hypo)       -> TT.Reason.HYPOGLYCEMIA
+                                    else                                        -> TT.Reason.CUSTOM
+                                },
+                                lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
+                                highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
+                            ),
+                            action = Action.TT,
+                            source = Sources.TTDialog,
+                            note = null,
+                            listValues = listValues.filterNotNull()
+                        )
+                    }
                 }
 
                 if (duration == 10) preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
-            })
-        }
+            }
+        )
         return true
     }
 

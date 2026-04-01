@@ -22,10 +22,6 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".maintenance.activities.CustomWatchfaceImportListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".activities.SingleFragmentActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />

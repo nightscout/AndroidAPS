@@ -4,7 +4,7 @@ import app.aaps.database.entities.RunningMode
 
 class InsertOrUpdateRunningModeTransaction(val runningMode: RunningMode) : Transaction<InsertOrUpdateRunningModeTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         val current = database.runningModeDao.findById(runningMode.id)

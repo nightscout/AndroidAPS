@@ -14,6 +14,8 @@ import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import org.json.JSONObject
 import javax.inject.Singleton
 
@@ -23,11 +25,12 @@ import javax.inject.Singleton
         ObjectivesModule::class
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 open class PluginsConstraintsModule {
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindVersionCheckerUtils(versionCheckerUtils: VersionCheckerUtilsImpl): VersionCheckerUtils

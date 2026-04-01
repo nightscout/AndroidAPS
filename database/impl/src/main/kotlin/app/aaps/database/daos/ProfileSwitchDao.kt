@@ -6,8 +6,6 @@ import app.aaps.database.daos.workaround.ProfileSwitchDaoWorkaround
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TABLE_PROFILE_SWITCHES
 import app.aaps.database.entities.data.checkSanity
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
 
 @Dao
 internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
@@ -25,38 +23,38 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
-    fun getLastId(): Long?
+    suspend fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp = :timestamp AND referenceId IS NULL")
-    fun findByTimestamp(timestamp: Long): ProfileSwitch?
+    suspend fun findByTimestamp(timestamp: Long): ProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
-    fun findByNSId(nsId: String): ProfileSwitch?
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
+    suspend fun findByNSId(nsId: String): ProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
-    fun getTemporaryProfileSwitchActiveAt(timestamp: Long): Maybe<ProfileSwitch>
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getTemporaryProfileSwitchActiveAt(timestamp: Long): ProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp <= :timestamp) AND unlikely(duration = 0) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
-    fun getPermanentProfileSwitchActiveAt(timestamp: Long): Maybe<ProfileSwitch>
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (timestamp <= :timestamp) AND (duration = 0) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getPermanentProfileSwitchActiveAt(timestamp: Long): ProfileSwitch?
 
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
-    fun getAllProfileSwitches(): Single<List<ProfileSwitch>>
+    suspend fun getAllProfileSwitches(): List<ProfileSwitch>
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
-    fun getProfileSwitchDataIncludingInvalidFromTime(timestamp: Long): Single<List<ProfileSwitch>>
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    suspend fun getProfileSwitchDataIncludingInvalidFromTime(timestamp: Long): List<ProfileSwitch>
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
-    fun getProfileSwitchDataFromTime(timestamp: Long): Single<List<ProfileSwitch>>
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
+    suspend fun getProfileSwitchDataFromTime(timestamp: Long): List<ProfileSwitch>
 
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id > :id ORDER BY id ASC limit 1")
-    fun getNextModifiedOrNewAfter(id: Long): Maybe<ProfileSwitch>
+    suspend fun getNextModifiedOrNewAfter(id: Long): ProfileSwitch?
 
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id = :referenceId")
-    fun getCurrentFromHistoric(referenceId: Long): Maybe<ProfileSwitch>
+    suspend fun getCurrentFromHistoric(referenceId: Long): ProfileSwitch?
 
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<ProfileSwitch>
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<ProfileSwitch>
 }
 
 internal fun ProfileSwitchDao.insertNewEntryImpl(entry: ProfileSwitch): Long {

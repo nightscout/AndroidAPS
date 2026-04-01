@@ -183,7 +183,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
     ) {
         this.profile = JSONObject()
         this.profile.put("max_iob", maxIob)
-        this.profile.put("dia", min(profile.dia, 3.0))
+        this.profile.put("dia", min(profile.iCfg?.dia ?: 3.0, 3.0))
         this.profile.put("type", "current")
         this.profile.put("max_daily_basal", profile.getMaxDailyBasal())
         this.profile.put("max_basal", maxBasal)

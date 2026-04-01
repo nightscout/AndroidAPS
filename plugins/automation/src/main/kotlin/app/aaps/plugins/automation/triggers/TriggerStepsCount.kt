@@ -16,19 +16,19 @@ import java.text.DecimalFormat
 import java.util.Optional
 
 class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
+
     var measurementDuration: InputDropdownMenu = InputDropdownMenu(rh, "5")
     var stepsCount: InputDouble = InputDouble(100.0, 0.0, 20000.0, 10.0, DecimalFormat("1"))
     var comparator: Comparator = Comparator(rh).apply {
         value = Comparator.Compare.IS_EQUAL_OR_GREATER
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.info(LTag.AUTOMATION, "Steps count ready, no limit set ${friendlyDescription()}")
             return true
         }
 
-        
         // Steps count entries update every 1-1.5 minutes on my watch,
         // so we must get some entries from the last 5 minutes.
         val start = dateUtil.now() - 5 * 60 * 1000L
@@ -40,13 +40,13 @@ class TriggerStepsCount(injector: HasAndroidInjector) : Trigger(injector) {
         }
 
         val lastStepsCount: Int? = when (measurementDuration.value) {
-            "5" -> lastSC.steps5min
-            "10" -> lastSC.steps10min
-            "15" -> lastSC.steps15min
-            "30" -> lastSC.steps30min
-            "60" -> lastSC.steps60min
+            "5"   -> lastSC.steps5min
+            "10"  -> lastSC.steps10min
+            "15"  -> lastSC.steps15min
+            "30"  -> lastSC.steps30min
+            "60"  -> lastSC.steps60min
             "180" -> lastSC.steps180min
-            else -> null
+            else  -> null
         }
 
         if (lastStepsCount == null) {

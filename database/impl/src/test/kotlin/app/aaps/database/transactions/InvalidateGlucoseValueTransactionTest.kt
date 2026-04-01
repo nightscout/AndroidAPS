@@ -5,6 +5,7 @@ import app.aaps.database.daos.GlucoseValueDao
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class InvalidateGlucoseValueTransactionTest {
     }
 
     @Test
-    fun `invalidates valid glucose value`() {
+    fun `invalidates valid glucose value`() = runTest {
         val gv = createGlucoseValue(id = 1, isValid = true)
 
         whenever(glucoseValueDao.findById(1)).thenReturn(gv)
@@ -42,7 +43,7 @@ class InvalidateGlucoseValueTransactionTest {
     }
 
     @Test
-    fun `does not update already invalid glucose value`() {
+    fun `does not update already invalid glucose value`() = runTest {
         val gv = createGlucoseValue(id = 1, isValid = false)
 
         whenever(glucoseValueDao.findById(1)).thenReturn(gv)
@@ -57,7 +58,7 @@ class InvalidateGlucoseValueTransactionTest {
     }
 
     @Test
-    fun `throws exception when glucose value not found`() {
+    fun `throws exception when glucose value not found`() = runTest {
         whenever(glucoseValueDao.findById(999)).thenReturn(null)
 
         val transaction = InvalidateGlucoseValueTransaction(id = 999)

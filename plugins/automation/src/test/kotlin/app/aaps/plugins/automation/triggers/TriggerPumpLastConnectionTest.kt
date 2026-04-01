@@ -3,6 +3,7 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -11,10 +12,10 @@ import org.skyscreamer.jsonassert.JSONAssert
 class TriggerPumpLastConnectionTest : TriggerTestBase() {
 
     @Test
-    fun shouldRunTest() {
+    fun shouldRunTest() = runTest {
 //        System.currentTimeMillis() is always 0
 //        and so is every last connection time
-        assertThat(testPumpPlugin.lastDataTime).isEqualTo(0L)
+        assertThat(testPumpPlugin.lastDataTime.value).isEqualTo(0L)
         whenever(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerPumpLastConnection(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.minutesAgo.value).isEqualTo(110)
@@ -31,7 +32,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse() // 420 == 0 -> FALSE
     }
 
-    @Test fun copyConstructorTest() {
+    @Test fun copyConstructorTest() = runTest {
         val t: TriggerPumpLastConnection = TriggerPumpLastConnection(injector).setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         val t1 = t.duplicate() as TriggerPumpLastConnection
         assertThat(t1.minutesAgo.value).isEqualTo(213)
@@ -39,24 +40,24 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     }
 
     private var lbJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"minutesAgo\":410},\"type\":\"TriggerPumpLastConnection\"}"
-    @Test fun toJSONTest() {
+    @Test fun toJSONTest() = runTest {
         val t: TriggerPumpLastConnection = TriggerPumpLastConnection(injector).setValue(410).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(lbJson, t.toJSON(), true)
     }
 
     @Test
-    fun fromJSONTest() {
+    fun fromJSONTest() = runTest {
         val t: TriggerPumpLastConnection = TriggerPumpLastConnection(injector).setValue(410).comparator(Comparator.Compare.IS_EQUAL)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerPumpLastConnection
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.minutesAgo.value).isEqualTo(410)
     }
 
-    @Test fun iconTest() {
+    @Test fun iconTest() = runTest {
         assertThat(TriggerPumpLastConnection(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_remove)
     }
 
-    @Test fun friendlyNameTest() {
+    @Test fun friendlyNameTest() = runTest {
         assertThat(TriggerPumpLastConnection(injector).friendlyName()).isEqualTo(R.string.automation_trigger_pump_last_connection_label)
     }
 }

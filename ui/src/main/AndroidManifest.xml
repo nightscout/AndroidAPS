@@ -33,25 +33,18 @@
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Translucent" />
         <activity
-            android:name=".activities.ErrorHelperActivity"
+            android:name=".activities.ConcentrationActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.MaterialComponents.Translucent" />
+        <activity
+            android:name=".activities.ErrorActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Translucent" />
         <activity
-            android:name=".activities.SurveyActivity"
+            android:name=".activities.ProfileViewerActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.StatsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.TreatmentsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.ProfileHelperActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
         <activity
             android:name="app.aaps.ui.activities.QuickWizardListActivity"
             android:exported="false"

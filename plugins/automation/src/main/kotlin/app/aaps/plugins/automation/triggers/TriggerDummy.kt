@@ -7,7 +7,7 @@ import java.util.Optional
 // Used for instantiation of other triggers only
 class TriggerDummy(injector: HasAndroidInjector, val shouldRun: Boolean = false) : Trigger(injector) {
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         return shouldRun
     }
 

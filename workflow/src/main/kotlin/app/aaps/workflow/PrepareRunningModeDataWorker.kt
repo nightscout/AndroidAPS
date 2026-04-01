@@ -43,7 +43,7 @@ class PrepareRunningModeDataWorker(
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareRunningModeData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_RUNNING_MODE_DATA, 0, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_RUNNING_MODE_DATA, 0, false))
         var endTime = data.overviewData.endTime
         val fromTime = data.overviewData.fromTime
         val modesSeriesArray: MutableList<RunningModeDataPoint> = ArrayList()
@@ -54,7 +54,7 @@ class PrepareRunningModeDataWorker(
         while (time < endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
-            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_RUNNING_MODE_DATA, progress.toInt(), null))
+            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_RUNNING_MODE_DATA, progress.toInt(), false))
             val mode = persistenceLayer.getRunningModeActiveAt(time)
             if (lastMode != mode.mode) {
                 if (lastMode != RM.Mode.RESUME)
@@ -67,7 +67,8 @@ class PrepareRunningModeDataWorker(
         modesSeriesArray.add(RunningModeDataPoint(lastMode, lastModeChange, time, rh))
         // create series
         data.overviewData.runningModesSeries = PointsWithLabelGraphSeries(Array(modesSeriesArray.size) { i -> modesSeriesArray[i] })
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_RUNNING_MODE_DATA, 100, null))
+
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_RUNNING_MODE_DATA, 100, false))
         return Result.success()
     }
 }

@@ -4,7 +4,7 @@ import app.aaps.database.entities.ProfileSwitch
 
 class InsertOrUpdateProfileSwitchTransaction(val profileSwitch: ProfileSwitch) : Transaction<InsertOrUpdateProfileSwitchTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         val current = database.profileSwitchDao.findById(profileSwitch.id)

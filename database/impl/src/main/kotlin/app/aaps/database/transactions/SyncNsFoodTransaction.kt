@@ -7,7 +7,7 @@ import app.aaps.database.entities.Food
  */
 class SyncNsFoodTransaction(private val foods: List<Food>) : Transaction<SyncNsFoodTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         for (food in foods) {

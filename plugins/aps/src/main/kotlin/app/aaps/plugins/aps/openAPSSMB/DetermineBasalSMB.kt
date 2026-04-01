@@ -796,10 +796,10 @@ class DetermineBasalSMB @Inject constructor(
             }, Target: ${convert_bg(target_bg)}, minPredBG ${convert_bg(minPredBG)}, minGuardBG ${convert_bg(minGuardBG)}, IOBpredBG ${convert_bg(lastIOBpredBG)}"
         )
         if (lastCOBpredBG != null) {
-            rT.reason.append(", COBpredBG " + convert_bg(lastCOBpredBG.toDouble()))
+            rT.reason.append(", COBpredBG " + convert_bg(lastCOBpredBG))
         }
         if (lastUAMpredBG != null) {
-            rT.reason.append(", UAMpredBG " + convert_bg(lastUAMpredBG.toDouble()))
+            rT.reason.append(", UAMpredBG " + convert_bg(lastUAMpredBG))
         }
         rT.reason.append("; ")
         // use naive_eventualBG if above 40, but switch to minGuardBG if both eventualBGs hit floor of 39

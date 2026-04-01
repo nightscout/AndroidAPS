@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.forEach
+import androidx.core.util.size
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -36,7 +37,6 @@ import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dragHelpers.ItemTouchHelperAdapter
 import app.aaps.core.ui.dragHelpers.OnStartDragListener
 import app.aaps.core.ui.dragHelpers.SimpleItemTouchHelperCallback
@@ -48,6 +48,7 @@ import app.aaps.ui.dialogs.EditQuickWizardDialog
 import app.aaps.ui.events.EventQuickWizardChange
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -131,25 +132,25 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             holder.binding.root.setOnLongClickListener {
                 if (actionHelper.isNoAction) {
                     val actualBg = iobCobCalculator.ads.actualBg()
-                    val profile = profileFunction.getProfile()
-                    val profileName = profileFunction.getProfileName()
+                    val profile = runBlocking { profileFunction.getProfile() }
+                    val profileName = runBlocking { profileFunction.getProfileName() }
                     val pump = activePlugin.activePump
                     val quickWizardEntry = quickWizard[position]
 
                     if (actualBg != null && profile != null) {
-                        val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
+                        val wizard = runBlocking { quickWizardEntry.doCalc(profile, profileName, actualBg) }
 
                         if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                             val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
                             if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
-                                OKDialog.show(
+                                uiInteraction.showOkDialog(
                                     it.context, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(
                                         R.string
                                             .change_your_input
                                     )
                                 )
                             }
-                            wizard.confirmAndExecute(it.context, quickWizardEntry)
+                            runBlocking { wizard.confirmAndExecute(this@QuickWizardListActivity, quickWizardEntry) }
                         }
                     }
                     return@setOnLongClickListener true
@@ -243,25 +244,30 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
     }
 
     private fun removeSelected(selectedItems: SparseArray<QuickWizardEntry>) {
-        OKDialog.showConfirmation(this, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
-            //fix for bug with removal of QuickWizardEntries. Everytime and item is deleted you have to shift the position of to-be-deleted QW to left
-            var shiftPositionToLeftFor = 0
-            selectedItems.forEach { _, item ->
-                quickWizard.remove(item.position - shiftPositionToLeftFor)
-                shiftPositionToLeftFor++
-                rxBus.send(EventQuickWizardChange())
+        uiInteraction.showOkCancelDialog(
+            context = this,
+            title = rh.gs(app.aaps.core.ui.R.string.removerecord),
+            message = getConfirmationText(selectedItems),
+            ok = {
+                //fix for bug with removal of QuickWizardEntries. Everytime and item is deleted you have to shift the position of to-be-deleted QW to left
+                var shiftPositionToLeftFor = 0
+                selectedItems.forEach { _, item ->
+                    quickWizard.remove(item.position - shiftPositionToLeftFor)
+                    shiftPositionToLeftFor++
+                    rxBus.send(EventQuickWizardChange())
+                }
+                actionHelper.finish()
             }
-            actionHelper.finish()
-        })
+        )
     }
 
     private fun getConfirmationText(selectedItems: SparseArray<QuickWizardEntry>): String {
-        if (selectedItems.size() == 1) {
+        if (selectedItems.size == 1) {
             val entry = selectedItems.valueAt(0)
             return "${rh.gs(app.aaps.core.ui.R.string.remove_button)} ${entry.buttonText()} ${rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs())}\n" +
                 "${dateUtil.timeString(entry.validFromDate())} - ${dateUtil.timeString(entry.validToDate())}"
         }
-        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size)
     }
 
 }

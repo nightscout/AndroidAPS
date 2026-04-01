@@ -13,20 +13,32 @@ import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.BooleanNonPreferenceKey
+import app.aaps.core.keys.interfaces.DoubleNonPreferenceKey
+import app.aaps.core.keys.interfaces.IntNonPreferenceKey
+import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.StringNonPreferenceKey
+import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
@@ -50,6 +62,7 @@ import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -80,10 +93,14 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var context: DaggerApplication
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var constraintsChecker: ConstraintsChecker
+    @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var theme: Resources.Theme
     @Mock lateinit var typedArray: TypedArray
     @Mock lateinit var sharedPreferences: SharedPreferences
     @Mock lateinit var sharedPreferencesEditor: SharedPreferences.Editor
+    @Mock lateinit var localProfileManager: LocalProfileManager
+    @Mock lateinit var insulin: Insulin
+    @Mock lateinit var ch: ConcentrationHelper
 
     lateinit var dateUtil: DateUtil
     lateinit var profileUtil: ProfileUtil
@@ -94,6 +111,8 @@ open class TestBaseWithProfile : TestBase() {
     lateinit var glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
     lateinit var deltaCalculator: DeltaCalculator
     lateinit var apsResultProvider: Provider<APSResult>
+
+    val someICfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
 
     val smbGlucoseStatusProvider = object : GlucoseStatusProvider {
         override val glucoseStatusData: GlucoseStatus?
@@ -150,6 +169,7 @@ open class TestBaseWithProfile : TestBase() {
     private lateinit var invalidProfileJSON: String
     lateinit var preferenceManager: PreferenceManager
     lateinit var validProfile: ProfileSealed.Pure
+    lateinit var effectiveProfile: ProfileSealed.EPS
     lateinit var effectiveProfileSwitch: EPS
     lateinit var profileSwitch: PS
     lateinit var testPumpPlugin: TestPumpPlugin
@@ -162,10 +182,10 @@ open class TestBaseWithProfile : TestBase() {
 
     @BeforeEach
     fun prepareMock() {
-        validProfileJSON = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
+        validProfileJSON = "{\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-        invalidProfileJSON = "{\"dia\":\"1\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
+        invalidProfileJSON = "{\"carbratio\":[{\"time\":\"00:00\",\"value\":\"200\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
 
@@ -186,16 +206,24 @@ open class TestBaseWithProfile : TestBase() {
         decimalFormatter = DecimalFormatterImpl(rh)
         profileUtil = ProfileUtilImpl(preferences, decimalFormatter)
         testPumpPlugin = TestPumpPlugin(rh)
+        hardLimits = HardLimitsMock(preferences, rh)
         whenever(context.applicationContext).thenReturn(context)
         whenever(context.androidInjector()).thenReturn(injector.androidInjector())
         whenever(context.theme).thenReturn(theme)
         whenever(context.obtainStyledAttributes(anyOrNull(), any(), any(), any())).thenReturn(typedArray)
         whenever(dateUtil.now()).thenReturn(now)
         whenever(activePlugin.activePump).thenReturn(testPumpPlugin)
+        whenever(insulin.iCfg).thenReturn(someICfg)
         whenever(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
+        whenever(preferences.observe(any<BooleanNonPreferenceKey>())).thenReturn(MutableStateFlow(false))
+        whenever(preferences.observe(any<StringNonPreferenceKey>())).thenReturn(MutableStateFlow(""))
+        whenever(preferences.observe(any<DoubleNonPreferenceKey>())).thenReturn(MutableStateFlow(0.0))
+        whenever(preferences.observe(any<UnitDoublePreferenceKey>())).thenReturn(MutableStateFlow(0.0))
+        whenever(preferences.observe(any<IntNonPreferenceKey>())).thenReturn(MutableStateFlow(0))
+        whenever(preferences.observe(any<LongNonPreferenceKey>())).thenReturn(MutableStateFlow(0L))
+        whenever(localProfileManager.profile).thenReturn(getValidProfileStore())
         deltaCalculator = DeltaCalculator(aapsLogger)
-        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider) }
-        hardLimits = HardLimitsMock(preferences, rh)
+        apsResultProvider = Provider { DetermineBasalResult(aapsLogger, constraintsChecker, preferences, activePlugin, processedTbrEbData, profileFunction, rh, decimalFormatter, dateUtil, apsResultProvider, ch) }
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),
@@ -210,8 +238,9 @@ open class TestBaseWithProfile : TestBase() {
             originalPercentage = 100,
             originalDuration = 0,
             originalEnd = 0,
-            iCfg = ICfg("", 0, 0)
+            iCfg = someICfg
         )
+        effectiveProfile = ProfileSealed.EPS(effectiveProfileSwitch, activePlugin)
         profileSwitch = PS(
             timestamp = dateUtil.now(),
             basalBlocks = validProfile.basalBlocks,
@@ -327,8 +356,16 @@ open class TestBaseWithProfile : TestBase() {
             String.format(rh.gs(string), arg1, arg2, arg3)
         }.whenever(rh).gs(anyInt(), anyString(), anyInt(), anyString())
         pumpEnactResultProvider = Provider { PumpEnactResultObject(rh) }
-        profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil) }
+        profileStoreProvider = Provider { ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil) }
         glucoseStatusCalculatorSMB = GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, DeltaCalculator(aapsLogger))
+
+        whenever(ch.bolusProgressString(any<PumpInsulin>(), any<Boolean>())).thenReturn("AnyString")
+        whenever(ch.fromPump(any<PumpRate>())).thenAnswer { invocation ->
+            (invocation.arguments[0] as PumpRate).cU
+        }
+        whenever(ch.fromPump(any<PumpInsulin>(), any<Boolean>())).thenAnswer { invocation ->
+            (invocation.arguments[0] as PumpInsulin).cU
+        }
     }
 
     @AfterEach
@@ -342,7 +379,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil).with(json)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(json)
     }
 
     fun getInvalidProfileStore1(): ProfileStore {
@@ -351,7 +388,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil).with(json)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(json)
     }
 
     fun getInvalidProfileStore2(): ProfileStore {
@@ -361,6 +398,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put("invalid", JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
-        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil).with(json)
+        return ProfileStoreObject(aapsLogger, activePlugin, config, rh, notificationManager, hardLimits, dateUtil).with(json)
     }
 }

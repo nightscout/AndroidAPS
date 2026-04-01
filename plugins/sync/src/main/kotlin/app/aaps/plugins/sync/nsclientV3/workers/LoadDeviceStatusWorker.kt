@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
@@ -20,11 +19,10 @@ class LoadDeviceStatusWorker(
 ) : LoggingWorker(context, params, Dispatchers.IO) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var context: Context
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
+    @Inject lateinit var nsClientRepository: NSClientRepository
 
     override suspend fun doWorkAndLog(): Result {
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
@@ -37,15 +35,15 @@ class LoadDeviceStatusWorker(
             val deviceStatuses = nsAndroidClient.getDeviceStatusModifiedSince(from)
             aapsLogger.debug("DEVICESTATUSES: $deviceStatuses")
             if (deviceStatuses.isNotEmpty()) {
-                rxBus.send(EventNSClientNewLog("◄ RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
+                nsClientRepository.addLog("◄ RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}")
                 nsDeviceStatusHandler.handleNewData(deviceStatuses.toTypedArray())
-                rxBus.send(EventNSClientNewLog("● DONE PROCESSING DS", ""))
+                nsClientRepository.addLog("● DONE PROCESSING DS", "")
             } else {
-                rxBus.send(EventNSClientNewLog("◄ RCV DS END", "No data from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
+                nsClientRepository.addLog("◄ RCV DS END", "No data from ${dateUtil.dateAndTimeAndSecondsString(from)}")
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
+            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
             nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }

@@ -3,8 +3,10 @@ package app.aaps.database.transactions
 import app.aaps.database.DelegatedAppDatabase
 import app.aaps.database.daos.BolusDao
 import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +28,7 @@ class SyncPumpBolusTransactionTest {
     }
 
     @Test
-    fun `inserts new bolus when not found by pump ids`() {
+    fun `inserts new bolus when not found by pump ids`() = runTest {
         val bolus = createBolus(pumpId = 100L, pumpType = InterfaceIDs.PumpType.DANA_I, pumpSerial = "ABC123", amount = 5.0)
 
         whenever(bolusDao.findByPumpIds(100L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
@@ -42,7 +44,7 @@ class SyncPumpBolusTransactionTest {
     }
 
     @Test
-    fun `updates existing bolus when found by pump ids`() {
+    fun `updates existing bolus when found by pump ids`() = runTest {
         val bolus = createBolus(pumpId = 100L, pumpType = InterfaceIDs.PumpType.DANA_I, pumpSerial = "ABC123", amount = 7.0, timestamp = 2000L)
         val existing = createBolus(pumpId = 100L, pumpType = InterfaceIDs.PumpType.DANA_I, pumpSerial = "ABC123", amount = 5.0, timestamp = 1000L)
 
@@ -62,7 +64,7 @@ class SyncPumpBolusTransactionTest {
     }
 
     @Test
-    fun `does not update when values are same`() {
+    fun `does not update when values are same`() = runTest {
         val bolus = createBolus(pumpId = 100L, pumpType = InterfaceIDs.PumpType.DANA_I, pumpSerial = "ABC123", amount = 5.0, timestamp = 1000L)
         val existing = createBolus(pumpId = 100L, pumpType = InterfaceIDs.PumpType.DANA_I, pumpSerial = "ABC123", amount = 5.0, timestamp = 1000L)
 
@@ -79,7 +81,7 @@ class SyncPumpBolusTransactionTest {
     }
 
     @Test
-    fun `updates bolus type when provided`() {
+    fun `updates bolus type when provided`() = runTest {
         val bolus = createBolus(pumpId = 100L, pumpType = InterfaceIDs.PumpType.DANA_I, pumpSerial = "ABC123", amount = 5.0, type = Bolus.Type.NORMAL)
         val existing = createBolus(pumpId = 100L, pumpType = InterfaceIDs.PumpType.DANA_I, pumpSerial = "ABC123", amount = 5.0, type = Bolus.Type.NORMAL)
 
@@ -108,6 +110,7 @@ class SyncPumpBolusTransactionTest {
             pumpId = pumpId,
             pumpType = pumpType,
             pumpSerial = pumpSerial
-        )
+        ),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0)
     )
 }

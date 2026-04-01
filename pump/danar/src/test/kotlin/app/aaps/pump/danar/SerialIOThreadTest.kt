@@ -1,6 +1,6 @@
 package app.aaps.pump.danar
 
-import android.bluetooth.BluetoothSocket
+import app.aaps.core.interfaces.pump.rfcomm.RfcommSocket
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MessageHashTableBase
@@ -18,7 +18,7 @@ import java.io.OutputStream
 
 class SerialIOThreadTest : TestBase() {
 
-    @Mock lateinit var rfCommSocket: BluetoothSocket
+    @Mock lateinit var rfCommSocket: RfcommSocket
     @Mock lateinit var hashTable: MessageHashTableBase
     @Mock lateinit var danaPump: DanaPump
     @Mock lateinit var messageBase: MessageBase

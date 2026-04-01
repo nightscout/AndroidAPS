@@ -6,7 +6,7 @@ import app.aaps.database.entities.RunningMode
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.end
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Maybe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -28,11 +28,11 @@ class CancelCurrentTemporaryRunningModeIfAnyTransactionTest {
     }
 
     @Test
-    fun `cancels running temporary running mode`() {
+    fun `cancels running temporary running mode`() = runTest {
         val timestamp = 31_000L
         val running = createRunningMode(timestamp = 1000L, duration = 60_000L)
 
-        whenever(runningModeDao.getTemporaryRunningModeActiveAt(31_000L)).thenReturn(Maybe.just(running))
+        whenever(runningModeDao.getTemporaryRunningModeActiveAt(31_000L)).thenReturn(running)
 
         val transaction = CancelCurrentTemporaryRunningModeIfAnyTransaction(timestamp)
         transaction.database = database
@@ -45,10 +45,10 @@ class CancelCurrentTemporaryRunningModeIfAnyTransactionTest {
     }
 
     @Test
-    fun `does not cancel when no running temporary running mode`() {
+    fun `does not cancel when no running temporary running mode`() = runTest {
         val timestamp = 31_000L
 
-        whenever(runningModeDao.getTemporaryRunningModeActiveAt(31_000L)).thenReturn(Maybe.empty())
+        whenever(runningModeDao.getTemporaryRunningModeActiveAt(31_000L)).thenReturn(null)
 
         val transaction = CancelCurrentTemporaryRunningModeIfAnyTransaction(timestamp)
         transaction.database = database

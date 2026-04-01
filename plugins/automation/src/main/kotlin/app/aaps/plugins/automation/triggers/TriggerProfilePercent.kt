@@ -40,7 +40,7 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val profile = profileFunction.getProfile()
         if (profileFunction.isProfileChangePending()) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + "Profile change is already pending: " + friendlyDescription())
@@ -56,12 +56,6 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
         }
         if (profile is ProfileSealed.EPS) {
             if (comparator.value.check(profile.value.originalPercentage, pct.value.roundToInt())) {
-                aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
-                return true
-            }
-        }
-        if (profile is ProfileSealed.Pure) {
-            if (comparator.value.check(100, pct.value.roundToInt())) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
                 return true
             }

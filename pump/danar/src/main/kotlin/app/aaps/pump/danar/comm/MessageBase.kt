@@ -2,8 +2,10 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
@@ -52,6 +54,8 @@ open class MessageBase(injector: HasAndroidInjector) {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var ch: ConcentrationHelper
 
     var injector: HasAndroidInjector
     var buffer = ByteArray(512)
@@ -165,7 +169,7 @@ open class MessageBase(injector: HasAndroidInjector) {
                 intFromBuff(buff, offset + 4, 1),
                 intFromBuff(buff, offset + 5, 1)
             ).millis
-        } catch (e: IllegalInstantException) {
+        } catch (_: IllegalInstantException) {
             // expect
             // org.joda.time.IllegalInstantException: Illegal instant due to time zone offset transition (daylight savings time 'gap')
             // add 1 hour

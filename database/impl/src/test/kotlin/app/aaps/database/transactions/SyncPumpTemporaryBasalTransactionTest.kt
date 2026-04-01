@@ -6,7 +6,7 @@ import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.end
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Maybe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -26,7 +26,7 @@ class SyncPumpTemporaryBasalTransactionTest {
     }
 
     @Test
-    fun `inserts new temporary basal when not found by pump ids`() {
+    fun `inserts new temporary basal when not found by pump ids`() = runTest {
         val tb = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 1.5, duration = 60_000L)
 
         whenever(temporaryBasalDao.findByPumpIds(100L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
@@ -42,7 +42,7 @@ class SyncPumpTemporaryBasalTransactionTest {
     }
 
     @Test
-    fun `updates existing temporary basal when found by pump ids`() {
+    fun `updates existing temporary basal when found by pump ids`() = runTest {
         val tb = createTemporaryBasal(pumpId = 100L, timestamp = 2000L, rate = 2.0, duration = 30_000L)
         val existing = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 1.5, duration = 60_000L)
 
@@ -61,7 +61,7 @@ class SyncPumpTemporaryBasalTransactionTest {
     }
 
     @Test
-    fun `does not update when values are same`() {
+    fun `does not update when values are same`() = runTest {
         val tb = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 1.5, duration = 60_000L)
         val existing = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 1.5, duration = 60_000L)
 
@@ -76,7 +76,7 @@ class SyncPumpTemporaryBasalTransactionTest {
     }
 
     @Test
-    fun `ends running temporary basal and inserts new when not found by pump id`() {
+    fun `ends running temporary basal and inserts new when not found by pump id`() = runTest {
         val tb = createTemporaryBasal(pumpId = 100L, timestamp = 5000L, rate = 2.0, duration = 30_000L)
         val running = createTemporaryBasal(pumpId = 50L, timestamp = 1000L, rate = 1.5, duration = 60_000L)
 
@@ -94,7 +94,7 @@ class SyncPumpTemporaryBasalTransactionTest {
     }
 
     @Test
-    fun `updates type when provided`() {
+    fun `updates type when provided`() = runTest {
         val tb = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 1.5, duration = 60_000L, type = TemporaryBasal.Type.NORMAL)
         val existing = createTemporaryBasal(pumpId = 100L, timestamp = 1000L, rate = 1.5, duration = 60_000L, type = TemporaryBasal.Type.NORMAL)
 

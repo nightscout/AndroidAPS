@@ -15,7 +15,7 @@ class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
 
     override fun isValid(): Boolean = true
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 

@@ -11,6 +11,7 @@ import app.aaps.database.AppDatabase
 import app.aaps.database.di.DatabaseModule
 import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TABLE_STEPS_COUNT
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,7 +19,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class StepsCountDaoTest {
 
-    private val context = ApplicationProvider.getApplicationContext<Context>()
+    private val context: Context by lazy { ApplicationProvider.getApplicationContext() }
     private fun createDatabase() =
         Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
 
@@ -72,7 +73,6 @@ class StepsCountDaoTest {
         Assert.assertFalse(getTableNames(supportDb).contains(TABLE_STEPS_COUNT))
         DatabaseModule().migrations.filter { m -> m.startVersion >= startVersion }.forEach { m -> m.migrate(supportDb) }
         Assert.assertTrue(getTableNames(supportDb).contains(TABLE_STEPS_COUNT))
-        Assert.assertTrue(getIndexNames(supportDb).contains("index_stepsCount_id"))
         Assert.assertTrue(getIndexNames(supportDb).contains("index_stepsCount_timestamp"))
     }
 
@@ -96,8 +96,9 @@ class StepsCountDaoTest {
     }
 
     @Test
-    fun getFromTime() {
-        createDatabase().also { db ->
+    fun getFromTime() = runTest {
+        val db = createDatabase()
+        try {
             val dao = db.stepsCountDao
             val timestamp = System.currentTimeMillis()
             val sc1 = createStepsCount(timestamp = timestamp, steps5Min = 80)
@@ -105,16 +106,18 @@ class StepsCountDaoTest {
             dao.insertNewEntry(sc1)
             dao.insertNewEntry(sc2)
 
-            Assert.assertEquals(listOf(sc1, sc2), dao.getFromTime(timestamp).blockingGet())
-            Assert.assertEquals(listOf(sc2), dao.getFromTime(timestamp + 1).blockingGet())
-            Assert.assertTrue(dao.getFromTime(timestamp + 2).blockingGet().isEmpty())
+            Assert.assertEquals(listOf(sc1, sc2), dao.getFromTime(timestamp))
+            Assert.assertEquals(listOf(sc2), dao.getFromTime(timestamp + 1))
+            Assert.assertTrue(dao.getFromTime(timestamp + 2).isEmpty())
+        } finally {
             db.close()
         }
     }
 
     @Test
-    fun getFromTimeToTime() {
-        createDatabase().also { db ->
+    fun getFromTimeToTime() = runTest {
+        val db = createDatabase()
+        try {
             val dao = db.stepsCountDao
             val timestamp = System.currentTimeMillis()
             val hr1 = createStepsCount(timestamp = timestamp, steps5Min = 80)
@@ -124,10 +127,11 @@ class StepsCountDaoTest {
             dao.insertNewEntry(hr2)
             dao.insertNewEntry(hr3)
 
-            Assert.assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2).blockingGet())
-            Assert.assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1).blockingGet())
-            Assert.assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1).blockingGet())
-            Assert.assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).blockingGet().isEmpty())
+            Assert.assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2))
+            Assert.assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1))
+            Assert.assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1))
+            Assert.assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).isEmpty())
+        } finally {
             db.close()
         }
     }

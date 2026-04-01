@@ -25,7 +25,7 @@ class LogSettingActivity : TranslatedDaggerAppCompatActivity() {
         binding = ActivityLogsettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(R.string.nav_logsettings)
+        title = rh.gs(app.aaps.core.ui.R.string.nav_logsettings)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 

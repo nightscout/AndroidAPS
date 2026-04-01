@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Circle 1: (1.714, 1.718) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillType="evenOdd"
+        android:pathData="M1.714,0C0.756,0 0,0.758 0,1.718C0,2.678 0.756,3.436 1.714,3.436C2.672,3.436 3.428,2.678 3.428,1.718C3.428,0.758 2.672,0 1.714,0Z" />
+    <!-- Circle 2: (6.856, 1.718) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillType="evenOdd"
+        android:pathData="M6.856,0C5.898,0 5.142,0.758 5.142,1.718C5.142,2.678 5.898,3.436 6.856,3.436C7.814,3.436 8.57,2.678 8.57,1.718C8.57,0.758 7.814,0 6.856,0Z" />
+    <!-- Circle 3: (11.998, 22.231) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillType="evenOdd"
+        android:pathData="M11.998,20.514C11.04,20.514 10.284,21.272 10.284,22.232C10.284,23.192 11.04,23.95 11.998,23.95C12.956,23.95 13.712,23.192 13.712,22.232C13.712,21.272 12.956,20.514 11.998,20.514Z" />
+    <!-- Blue line: L-shaped path (horizontal top + vertical left side) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillType="evenOdd"
+        android:pathData="M22.232,0.101H11.998C11.091,0.101 10.385,0.809 10.385,1.718V11.975C10.385,12.884 11.091,13.592 11.998,13.592C12.906,13.592 13.612,12.884 13.612,11.975V3.335H22.232C23.14,3.335 23.845,2.628 23.845,1.718C23.845,0.809 23.14,0.101 22.232,0.101Z" />
+</vector>

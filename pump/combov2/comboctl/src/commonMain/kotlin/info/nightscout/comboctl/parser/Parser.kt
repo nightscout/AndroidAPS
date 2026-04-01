@@ -19,6 +19,7 @@ import kotlin.reflect.KClassifier
  * Possible bolus types in the bolus data screen in the "My Data" bolus history.
  */
 enum class MyDataBolusType {
+
     STANDARD,
     MULTI_WAVE,
     EXTENDED
@@ -28,6 +29,7 @@ enum class MyDataBolusType {
  * Possible battery states in the main screens.
  */
 enum class BatteryState {
+
     NO_BATTERY,
     LOW_BATTERY,
     FULL_BATTERY
@@ -35,15 +37,16 @@ enum class BatteryState {
 
 private fun batteryStateFromSymbol(symbol: SmallSymbol?): BatteryState =
     when (symbol) {
-        SmallSymbol.NO_BATTERY -> BatteryState.NO_BATTERY
+        SmallSymbol.NO_BATTERY  -> BatteryState.NO_BATTERY
         SmallSymbol.LOW_BATTERY -> BatteryState.LOW_BATTERY
-        else -> BatteryState.FULL_BATTERY
+        else                    -> BatteryState.FULL_BATTERY
     }
 
 /**
  * Possible contents of [ParsedScreen.MainScreen].
  */
 sealed class MainScreenContent {
+
     data class Normal(
         val currentTime: LocalDateTime,
         val activeBasalProfileNumber: Int,
@@ -81,9 +84,11 @@ sealed class MainScreenContent {
  * Possible contents of alert (= warning/error) screens.
  */
 sealed class AlertScreenContent {
+
     enum class AlertScreenState {
         TO_SNOOZE,
         TO_CONFIRM,
+
         // Used when the alert is an error. The text in error screens is not
         // interpreted, since it is anyway fully up to the user to interpret it.
         ERROR_TEXT,
@@ -123,6 +128,7 @@ class AlertScreenException(val alertScreenContent: AlertScreenContent) :
  * at the moment in the phase when the contents aren't shown.
  */
 sealed class ParsedScreen(val isBlinkedOut: Boolean = false) {
+
     object UnrecognizedScreen : ParsedScreen()
 
     data class MainScreen(val content: MainScreenContent) : ParsedScreen()
@@ -159,6 +165,7 @@ sealed class ParsedScreen(val isBlinkedOut: Boolean = false) {
 
     data class TemporaryBasalRatePercentageScreen(val percentage: Int?, val remainingDurationInMinutes: Int?) :
         ParsedScreen(isBlinkedOut = (percentage == null))
+
     data class TemporaryBasalRateDurationScreen(val durationInMinutes: Int?) :
         ParsedScreen(isBlinkedOut = (durationInMinutes == null))
 
@@ -166,12 +173,16 @@ sealed class ParsedScreen(val isBlinkedOut: Boolean = false) {
 
     data class TimeAndDateSettingsHourScreen(val hour: Int?) :
         ParsedScreen(isBlinkedOut = (hour == null))
+
     data class TimeAndDateSettingsMinuteScreen(val minute: Int?) :
         ParsedScreen(isBlinkedOut = (minute == null))
+
     data class TimeAndDateSettingsYearScreen(val year: Int?) :
         ParsedScreen(isBlinkedOut = (year == null))
+
     data class TimeAndDateSettingsMonthScreen(val month: Int?) :
         ParsedScreen(isBlinkedOut = (month == null))
+
     data class TimeAndDateSettingsDayScreen(val day: Int?) :
         ParsedScreen(isBlinkedOut = (day == null))
 
@@ -315,6 +326,7 @@ class ParseContext(
     var currentIndex: Int,
     var topLeftTime: LocalDateTime? = null
 ) {
+
     fun hasMoreTokens() = (currentIndex < tokens.size)
 
     fun nextToken() = tokens[currentIndex]
@@ -328,6 +340,7 @@ class ParseContext(
  * @property isSuccess true if the result is considered a success.
  */
 sealed class ParseResult(val isSuccess: Boolean) {
+
     /** Used when the parser returns a value. This encapsulates  said value. */
     class Value<T>(val value: T) : ParseResult(true)
 
@@ -376,12 +389,13 @@ sealed class ParseResult(val isSuccess: Boolean) {
      * using @valueAtOrNull.
      */
     class Sequence(val values: List<ParseResult>) : ParseResult(true) {
+
         inline fun <reified T> valueAt(index: Int) = (values[index] as Value<*>).value as T
 
         inline fun <reified T> valueAtOrNull(index: Int): T? {
             return when (val value = values[index]) {
                 is Value<*> -> value.value as T
-                else -> null
+                else        -> null
             }
         }
 
@@ -397,6 +411,7 @@ sealed class ParseResult(val isSuccess: Boolean) {
  *           The main parser which doesn't do that is [SingleGlyphParser].
  */
 open class Parser(val returnsValue: Boolean = true) {
+
     fun parse(parseContext: ParseContext): ParseResult {
         if (!parseContext.hasMoreTokens())
             return ParseResult.EndOfTokens
@@ -432,6 +447,7 @@ open class Parser(val returnsValue: Boolean = true) {
  * [ParseResult.Failed] (when the glyph was not found).
  */
 class SingleGlyphParser(private val glyph: Glyph) : Parser(returnsValue = false) {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         return if (parseContext.nextToken().glyph == glyph) {
             parseContext.advance()
@@ -461,6 +477,7 @@ class SingleGlyphParser(private val glyph: Glyph) : Parser(returnsValue = false)
  * @property glyphType Type of the glyph to expect.
  */
 class SingleGlyphTypeParser(private val glyphType: KClassifier) : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val token = parseContext.nextToken()
 
@@ -480,6 +497,7 @@ class SingleGlyphTypeParser(private val glyphType: KClassifier) : Parser() {
  * Whitespaces are detected by measuring the distance between glyphs.
  */
 class StringParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         var parsedString = ""
         var lastToken: Token? = null
@@ -496,14 +514,14 @@ class StringParser : Parser() {
                 false
 
             val character = when (glyph) {
-                is Glyph.SmallCharacter -> glyph.character
-                Glyph.SmallSymbol(SmallSymbol.DOT) -> '.'
-                Glyph.SmallSymbol(SmallSymbol.SEPARATOR) -> ':'
-                Glyph.SmallSymbol(SmallSymbol.DIVIDE) -> '/'
-                Glyph.SmallSymbol(SmallSymbol.BRACKET_LEFT) -> '('
+                is Glyph.SmallCharacter                      -> glyph.character
+                Glyph.SmallSymbol(SmallSymbol.DOT)           -> '.'
+                Glyph.SmallSymbol(SmallSymbol.SEPARATOR)     -> ':'
+                Glyph.SmallSymbol(SmallSymbol.DIVIDE)        -> '/'
+                Glyph.SmallSymbol(SmallSymbol.BRACKET_LEFT)  -> '('
                 Glyph.SmallSymbol(SmallSymbol.BRACKET_RIGHT) -> ')'
-                Glyph.SmallSymbol(SmallSymbol.MINUS) -> '-'
-                else -> break
+                Glyph.SmallSymbol(SmallSymbol.MINUS)         -> '-'
+                else                                         -> break
             }
 
             if (prependWhitespace)
@@ -575,17 +593,19 @@ class IntegerParser(
                     when (parseMode) {
                         GlyphDigitParseMode.ALL_DIGITS,
                         GlyphDigitParseMode.SMALL_DIGITS_ONLY -> integer = integer * 10 + glyph.digit
-                        else -> break
+
+                        else                                  -> break
                     }
 
                 is Glyph.LargeDigit ->
                     when (parseMode) {
                         GlyphDigitParseMode.ALL_DIGITS,
                         GlyphDigitParseMode.LARGE_DIGITS_ONLY -> integer = integer * 10 + glyph.digit
-                        else -> break
+
+                        else                                  -> break
                     }
 
-                else -> break
+                else                -> break
             }
 
             foundDigits = true
@@ -616,6 +636,7 @@ class IntegerParser(
  * is treated as a decimal that only has an integer portion.
  */
 class DecimalParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         var integerPart = 0
         var fractionalPart = 0
@@ -626,8 +647,8 @@ class DecimalParser : Parser() {
             val token = parseContext.nextToken()
 
             when (val glyph = token.glyph) {
-                is Glyph.SmallDigit -> integerPart = integerPart * 10 + glyph.digit
-                is Glyph.LargeDigit -> integerPart = integerPart * 10 + glyph.digit
+                is Glyph.SmallDigit                -> integerPart = integerPart * 10 + glyph.digit
+                is Glyph.LargeDigit                -> integerPart = integerPart * 10 + glyph.digit
 
                 Glyph.SmallSymbol(SmallSymbol.DOT),
                 Glyph.LargeSymbol(LargeSymbol.DOT) -> {
@@ -636,7 +657,7 @@ class DecimalParser : Parser() {
                     break
                 }
 
-                else -> break
+                else                               -> break
             }
 
             foundDigits = true
@@ -660,7 +681,7 @@ class DecimalParser : Parser() {
                         numFractionalDigits++
                     }
 
-                    else -> break
+                    else                -> break
                 }
 
                 foundDigits = true
@@ -695,6 +716,7 @@ class DecimalParser : Parser() {
  * The result is a [DateTime] instance with the hour/minute/second fields set to zero.
  */
 class DateParser : Parser() {
+
     private val dateRegex = "(\\d\\d)([/\\.])(\\d\\d)([/\\.](\\d\\d))?".toRegex()
     private val asciiDigitOffset = '0'.code
 
@@ -710,16 +732,16 @@ class DateParser : Parser() {
 
             dateString += when (glyph) {
                 // Valid glyphs are converted to characters and added to the string.
-                is Glyph.SmallDigit -> (glyph.digit + asciiDigitOffset).toChar()
-                is Glyph.LargeDigit -> (glyph.digit + asciiDigitOffset).toChar()
-                is Glyph.SmallCharacter -> glyph.character
-                is Glyph.LargeCharacter -> glyph.character
+                is Glyph.SmallDigit                   -> Char(glyph.digit + asciiDigitOffset)
+                is Glyph.LargeDigit                   -> Char(glyph.digit + asciiDigitOffset)
+                is Glyph.SmallCharacter               -> glyph.character
+                is Glyph.LargeCharacter               -> glyph.character
                 Glyph.SmallSymbol(SmallSymbol.DIVIDE) -> '/'
-                Glyph.SmallSymbol(SmallSymbol.DOT) -> '.'
-                Glyph.LargeSymbol(LargeSymbol.DOT) -> '.'
+                Glyph.SmallSymbol(SmallSymbol.DOT)    -> '.'
+                Glyph.LargeSymbol(LargeSymbol.DOT)    -> '.'
 
                 // Invalid glyph -> the date string ended, stop scan.
-                else -> break
+                else                                  -> break
             }
 
             parseContext.advance()
@@ -769,6 +791,7 @@ class DateParser : Parser() {
  * The result is a [DateTime] instance with the year/month/day fields set to zero.
  */
 class TimeParser : Parser() {
+
     private val timeRegex = "(\\d\\d):?(\\d\\d)(AM|PM)?|(\\d\\d)(AM|PM)".toRegex()
     private val asciiDigitOffset = '0'.code
 
@@ -784,15 +807,15 @@ class TimeParser : Parser() {
 
             timeString += when (glyph) {
                 // Valid glyphs are converted to characters and added to the string.
-                is Glyph.SmallDigit -> (glyph.digit + asciiDigitOffset).toChar()
-                is Glyph.LargeDigit -> (glyph.digit + asciiDigitOffset).toChar()
-                is Glyph.SmallCharacter -> glyph.character
-                is Glyph.LargeCharacter -> glyph.character
+                is Glyph.SmallDigit                      -> Char(glyph.digit + asciiDigitOffset)
+                is Glyph.LargeDigit                      -> Char(glyph.digit + asciiDigitOffset)
+                is Glyph.SmallCharacter                  -> glyph.character
+                is Glyph.LargeCharacter                  -> glyph.character
                 Glyph.SmallSymbol(SmallSymbol.SEPARATOR) -> ':'
                 Glyph.LargeSymbol(LargeSymbol.SEPARATOR) -> ':'
 
                 // Invalid glyph -> the time string ended, stop scan.
-                else -> break
+                else                                     -> break
             }
 
             parseContext.advance()
@@ -880,6 +903,7 @@ class TimeParser : Parser() {
  * @property parseMode Parse mode. Useful for restricting the valid integer glyphs.
  */
 class DurationParser(private val parseMode: GlyphDigitParseMode = GlyphDigitParseMode.ALL_DIGITS) : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         var tokenCounter = 0
         val digits = mutableListOf<Int>()
@@ -888,20 +912,24 @@ class DurationParser(private val parseMode: GlyphDigitParseMode = GlyphDigitPars
         while (parseContext.hasMoreTokens() && (tokenCounter < 5)) {
             val token = parseContext.nextToken()
             when (val glyph = token.glyph) {
-                is Glyph.SmallDigit -> when (parseMode) {
+                is Glyph.SmallDigit                      -> when (parseMode) {
                     GlyphDigitParseMode.SMALL_DIGITS_ONLY,
                     GlyphDigitParseMode.ALL_DIGITS ->
                         digits.add(glyph.digit)
+
                     else                           ->
                         return ParseResult.Failed
                 }
-                is Glyph.LargeDigit -> when (parseMode) {
+
+                is Glyph.LargeDigit                      -> when (parseMode) {
                     GlyphDigitParseMode.LARGE_DIGITS_ONLY,
                     GlyphDigitParseMode.ALL_DIGITS ->
                         digits.add(glyph.digit)
+
                     else                           ->
                         return ParseResult.Failed
                 }
+
                 Glyph.SmallSymbol(SmallSymbol.SEPARATOR),
                 Glyph.LargeSymbol(LargeSymbol.SEPARATOR) -> {
                     if (tokenCounter != 2)
@@ -909,7 +937,8 @@ class DurationParser(private val parseMode: GlyphDigitParseMode = GlyphDigitPars
                     else
                         gotSeparator = true
                 }
-                else -> Unit
+
+                else                                     -> Unit
             }
             parseContext.advance()
             tokenCounter++
@@ -944,6 +973,7 @@ class DurationParser(private val parseMode: GlyphDigitParseMode = GlyphDigitPars
  * @property subParser Parser to parse tokens with.
  */
 class OptionalParser(private val subParser: Parser) : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = subParser.parse(parseContext)
 
@@ -968,6 +998,7 @@ class OptionalParser(private val subParser: Parser) : Parser() {
  * @property subParsers List of parsers to try to parse tokens with.
  */
 class FirstSuccessParser(private val subParsers: List<Parser>) : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         for (subParser in subParsers) {
             val parseResult = subParser.parse(parseContext)
@@ -1019,18 +1050,17 @@ class FirstSuccessParser(private val subParsers: List<Parser>) : Parser() {
  *           [ParseResult.EndOfTokens] is returned in that case.
  */
 class SequenceParser(private val subParsers: List<Parser>, private val allowIncompleteSequences: Boolean = false) : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResults = mutableListOf<ParseResult>()
         for (subParser in subParsers) {
-            val parseResult = subParser.parse(parseContext)
-
-            when (parseResult) {
+            when (val parseResult = subParser.parse(parseContext)) {
                 is ParseResult.Value<*> -> parseResults.add(parseResult)
                 is ParseResult.Sequence -> parseResults.add(parseResult)
-                ParseResult.NoValue -> Unit
-                ParseResult.Null -> parseResults.add(ParseResult.Null)
+                ParseResult.NoValue     -> Unit
+                ParseResult.Null        -> parseResults.add(ParseResult.Null)
                 ParseResult.EndOfTokens -> if (allowIncompleteSequences) break else return ParseResult.EndOfTokens
-                ParseResult.Failed -> return ParseResult.Failed
+                ParseResult.Failed      -> return ParseResult.Failed
             }
         }
 
@@ -1050,6 +1080,7 @@ class SequenceParser(private val subParsers: List<Parser>, private val allowInco
  * Instead, this is used by [parseDisplayFrame].
  */
 class ToplevelScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext) = FirstSuccessParser(
         listOf(
             TopLeftClockScreenParser(),
@@ -1068,10 +1099,9 @@ class ToplevelScreenParser : Parser() {
 fun parseDisplayFrame(displayFrame: DisplayFrame): ParsedScreen {
     val tokens = findTokens(displayFrame)
     val parseContext = ParseContext(tokens, 0)
-    val parseResult = ToplevelScreenParser().parse(parseContext)
-    return when (parseResult) {
+    return when (val parseResult = ToplevelScreenParser().parse(parseContext)) {
         is ParseResult.Value<*> -> parseResult.value as ParsedScreen
-        else -> ParsedScreen.UnrecognizedScreen
+        else                    -> ParsedScreen.UnrecognizedScreen
     }
 }
 
@@ -1080,6 +1110,7 @@ fun parseDisplayFrame(displayFrame: DisplayFrame): ParsedScreen {
  ******************************************/
 
 class TitleStringScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = StringParser().parse(parseContext)
 
@@ -1090,22 +1121,21 @@ class TitleStringScreenParser : Parser() {
 
         // Get an ID for the title. This ID is language independent
         // and thus much more useful for identifying the screen here.
-        val titleId = knownScreenTitles[titleString]
-
-        when (titleId) {
-            TitleID.QUICK_INFO -> return QuickinfoScreenParser().parse(parseContext)
+        when (val titleId = knownScreenTitles[titleString]) {
+            TitleID.QUICK_INFO     -> return QuickinfoScreenParser().parse(parseContext)
             TitleID.TBR_PERCENTAGE -> return TemporaryBasalRatePercentageScreenParser().parse(parseContext)
-            TitleID.TBR_DURATION -> return TemporaryBasalRateDurationScreenParser().parse(parseContext)
+            TitleID.TBR_DURATION   -> return TemporaryBasalRateDurationScreenParser().parse(parseContext)
             TitleID.HOUR,
             TitleID.MINUTE,
             TitleID.YEAR,
             TitleID.MONTH,
-            TitleID.DAY -> return TimeAndDateSettingsScreenParser(titleId).parse(parseContext)
-            TitleID.BOLUS_DATA -> return MyDataBolusDataScreenParser().parse(parseContext)
-            TitleID.ERROR_DATA -> return MyDataErrorDataScreenParser().parse(parseContext)
-            TitleID.DAILY_TOTALS -> return MyDataDailyTotalsScreenParser().parse(parseContext)
-            TitleID.TBR_DATA -> return MyDataTbrDataScreenParser().parse(parseContext)
-            else -> Unit
+            TitleID.DAY            -> return TimeAndDateSettingsScreenParser(titleId).parse(parseContext)
+
+            TitleID.BOLUS_DATA     -> return MyDataBolusDataScreenParser().parse(parseContext)
+            TitleID.ERROR_DATA     -> return MyDataErrorDataScreenParser().parse(parseContext)
+            TitleID.DAILY_TOTALS   -> return MyDataDailyTotalsScreenParser().parse(parseContext)
+            TitleID.TBR_DATA       -> return MyDataTbrDataScreenParser().parse(parseContext)
+            else                   -> Unit
         }
 
         // Further parsers follow that do not actually use
@@ -1124,24 +1154,25 @@ class TitleStringScreenParser : Parser() {
 }
 
 class MenuScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val lastGlyph = parseContext.tokens.last().glyph
 
         when (lastGlyph) {
-            Glyph.LargeSymbol(LargeSymbol.BOLUS) -> return ParseResult.Value(ParsedScreen.StandardBolusMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.EXTENDED_BOLUS) -> return ParseResult.Value(ParsedScreen.ExtendedBolusMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.MULTIWAVE_BOLUS) -> return ParseResult.Value(ParsedScreen.MultiwaveBolusMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.BOLUS)              -> return ParseResult.Value(ParsedScreen.StandardBolusMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.EXTENDED_BOLUS)     -> return ParseResult.Value(ParsedScreen.ExtendedBolusMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.MULTIWAVE_BOLUS)    -> return ParseResult.Value(ParsedScreen.MultiwaveBolusMenuScreen)
             Glyph.LargeSymbol(LargeSymbol.BLUETOOTH_SETTINGS) -> return ParseResult.Value(ParsedScreen.BluetoothSettingsMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.MENU_SETTINGS) -> return ParseResult.Value(ParsedScreen.MenuSettingsMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.MY_DATA) -> return ParseResult.Value(ParsedScreen.MyDataMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.BASAL) -> return ParseResult.Value(ParsedScreen.BasalRateProfileSelectionMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.PUMP_SETTINGS) -> return ParseResult.Value(ParsedScreen.PumpSettingsMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.REMINDER_SETTINGS) -> return ParseResult.Value(ParsedScreen.ReminderSettingsMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.MENU_SETTINGS)      -> return ParseResult.Value(ParsedScreen.MenuSettingsMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.MY_DATA)            -> return ParseResult.Value(ParsedScreen.MyDataMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.BASAL)              -> return ParseResult.Value(ParsedScreen.BasalRateProfileSelectionMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.PUMP_SETTINGS)      -> return ParseResult.Value(ParsedScreen.PumpSettingsMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.REMINDER_SETTINGS)  -> return ParseResult.Value(ParsedScreen.ReminderSettingsMenuScreen)
             Glyph.LargeSymbol(LargeSymbol.CALENDAR_AND_CLOCK) -> return ParseResult.Value(ParsedScreen.TimeAndDateSettingsMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.STOP) -> return ParseResult.Value(ParsedScreen.StopPumpMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.TBR) -> return ParseResult.Value(ParsedScreen.TemporaryBasalRateMenuScreen)
-            Glyph.LargeSymbol(LargeSymbol.THERAPY_SETTINGS) -> return ParseResult.Value(ParsedScreen.TherapySettingsMenuScreen)
-            else -> Unit
+            Glyph.LargeSymbol(LargeSymbol.STOP)               -> return ParseResult.Value(ParsedScreen.StopPumpMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.TBR)                -> return ParseResult.Value(ParsedScreen.TemporaryBasalRateMenuScreen)
+            Glyph.LargeSymbol(LargeSymbol.THERAPY_SETTINGS)   -> return ParseResult.Value(ParsedScreen.TherapySettingsMenuScreen)
+            else                                              -> Unit
         }
 
         // Special case: If the semi-last glyph is a LARGE_BASAL symbol,
@@ -1149,15 +1180,18 @@ class MenuScreenParser : Parser() {
         // basal rate programming menu screens.
         if ((parseContext.tokens.size >= 2) &&
             (lastGlyph is Glyph.LargeDigit) &&
-            (parseContext.tokens[parseContext.tokens.size - 2].glyph == Glyph.LargeSymbol(LargeSymbol.BASAL))) {
-            return ParseResult.Value(when (lastGlyph.digit) {
-                1 -> ParsedScreen.BasalRate1ProgrammingMenuScreen
-                2 -> ParsedScreen.BasalRate2ProgrammingMenuScreen
-                3 -> ParsedScreen.BasalRate3ProgrammingMenuScreen
-                4 -> ParsedScreen.BasalRate4ProgrammingMenuScreen
-                5 -> ParsedScreen.BasalRate5ProgrammingMenuScreen
-                else -> ParsedScreen.UnrecognizedScreen
-            })
+            (parseContext.tokens[parseContext.tokens.size - 2].glyph == Glyph.LargeSymbol(LargeSymbol.BASAL))
+        ) {
+            return ParseResult.Value(
+                when (lastGlyph.digit) {
+                    1    -> ParsedScreen.BasalRate1ProgrammingMenuScreen
+                    2    -> ParsedScreen.BasalRate2ProgrammingMenuScreen
+                    3    -> ParsedScreen.BasalRate3ProgrammingMenuScreen
+                    4    -> ParsedScreen.BasalRate4ProgrammingMenuScreen
+                    5    -> ParsedScreen.BasalRate5ProgrammingMenuScreen
+                    else -> ParsedScreen.UnrecognizedScreen
+                }
+            )
         }
 
         return ParseResult.Failed
@@ -1165,6 +1199,7 @@ class MenuScreenParser : Parser() {
 }
 
 class TopLeftClockScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1197,6 +1232,7 @@ class TopLeftClockScreenParser : Parser() {
  *****************************/
 
 class AlertScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1218,34 +1254,39 @@ class AlertScreenParser : Parser() {
             Glyph.LargeSymbol(LargeSymbol.WARNING) -> {
                 val stateString = parseResult.valueAt<String>(4)
                 val alertState = when (knownScreenTitles[stateString]) {
-                    TitleID.ALERT_TO_SNOOZE -> AlertScreenContent.AlertScreenState.TO_SNOOZE
+                    TitleID.ALERT_TO_SNOOZE  -> AlertScreenContent.AlertScreenState.TO_SNOOZE
                     TitleID.ALERT_TO_CONFIRM -> AlertScreenContent.AlertScreenState.TO_CONFIRM
-                    else -> return ParseResult.Failed
+                    else                     -> return ParseResult.Failed
                 }
-                ParseResult.Value(ParsedScreen.AlertScreen(
-                    AlertScreenContent.Warning(parseResult.valueAt(2), alertState)
-                ))
-            }
-
-            Glyph.LargeSymbol(LargeSymbol.ERROR) -> {
-                ParseResult.Value(ParsedScreen.AlertScreen(
-                    AlertScreenContent.Error(
-                        parseResult.valueAt(2),
-                        // We don't really care about the state string if an error is shown.
-                        // It's not like any logic here will interpret it; that text is
-                        // purely for the user. So, don't bother interpreting it here, and
-                        // just assign a generic ERROR_TEXT state value instead.
-                        AlertScreenContent.AlertScreenState.ERROR_TEXT
+                ParseResult.Value(
+                    ParsedScreen.AlertScreen(
+                        AlertScreenContent.Warning(parseResult.valueAt(2), alertState)
                     )
-                ))
+                )
             }
 
-            else -> ParseResult.Value(ParsedScreen.AlertScreen(AlertScreenContent.None))
+            Glyph.LargeSymbol(LargeSymbol.ERROR)   -> {
+                ParseResult.Value(
+                    ParsedScreen.AlertScreen(
+                        AlertScreenContent.Error(
+                            parseResult.valueAt(2),
+                            // We don't really care about the state string if an error is shown.
+                            // It's not like any logic here will interpret it; that text is
+                            // purely for the user. So, don't bother interpreting it here, and
+                            // just assign a generic ERROR_TEXT state value instead.
+                            AlertScreenContent.AlertScreenState.ERROR_TEXT
+                        )
+                    )
+                )
+            }
+
+            else                                   -> ParseResult.Value(ParsedScreen.AlertScreen(AlertScreenContent.None))
         }
     }
 }
 
 class QuickinfoScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1258,9 +1299,9 @@ class QuickinfoScreenParser : Parser() {
 
         val reservoirState = when (parseResult.valueAt<Glyph>(0)) {
             Glyph.LargeSymbol(LargeSymbol.RESERVOIR_EMPTY) -> ReservoirState.EMPTY
-            Glyph.LargeSymbol(LargeSymbol.RESERVOIR_LOW) -> ReservoirState.LOW
-            Glyph.LargeSymbol(LargeSymbol.RESERVOIR_FULL) -> ReservoirState.FULL
-            else -> return ParseResult.Failed
+            Glyph.LargeSymbol(LargeSymbol.RESERVOIR_LOW)   -> ReservoirState.LOW
+            Glyph.LargeSymbol(LargeSymbol.RESERVOIR_FULL)  -> ReservoirState.FULL
+            else                                           -> return ParseResult.Failed
         }
 
         val availableUnits = parseResult.valueAt<Int>(1)
@@ -1274,6 +1315,7 @@ class QuickinfoScreenParser : Parser() {
 }
 
 class BasalRateTotalScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1301,6 +1343,7 @@ class BasalRateTotalScreenParser : Parser() {
 }
 
 class TemporaryBasalRatePercentageScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1335,6 +1378,7 @@ class TemporaryBasalRatePercentageScreenParser : Parser() {
 }
 
 class TemporaryBasalRateDurationScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1358,6 +1402,7 @@ class TemporaryBasalRateDurationScreenParser : Parser() {
 }
 
 class NormalMainScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         require(parseContext.topLeftTime != null)
 
@@ -1397,6 +1442,7 @@ class NormalMainScreenParser : Parser() {
 }
 
 class TbrMainScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         require(parseContext.topLeftTime != null)
 
@@ -1450,6 +1496,7 @@ class TbrMainScreenParser : Parser() {
 }
 
 class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         require(parseContext.topLeftTime != null)
 
@@ -1479,16 +1526,17 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
         // At that location, only the extended and multiwave bolus symbols
         // are valid. Otherwise, this isn't an extended/multiwave bolus screen.
         val isExtendedBolus = when (parseResult.valueAt<Glyph.LargeSymbol>(1).symbol) {
-            LargeSymbol.EXTENDED_BOLUS -> true
+            LargeSymbol.EXTENDED_BOLUS  -> true
             LargeSymbol.MULTIWAVE_BOLUS -> false
-            else -> return ParseResult.Failed
+            else                        -> return ParseResult.Failed
         }
 
         val tbrIsActive = when (parseResult.valueAtOrNull<Glyph.SmallSymbol>(2)?.symbol) {
             SmallSymbol.UP,
             SmallSymbol.DOWN -> true
-            null -> false
-            else -> return ParseResult.Failed
+
+            null             -> false
+            else             -> return ParseResult.Failed
         }
 
         val batteryState = batteryStateFromSymbol(
@@ -1515,6 +1563,7 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
 }
 
 class StoppedMainScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         require(parseContext.topLeftTime != null)
 
@@ -1558,6 +1607,7 @@ class StoppedMainScreenParser : Parser() {
 }
 
 class BasalRateFactorSettingScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         require(parseContext.topLeftTime != null)
 
@@ -1593,6 +1643,7 @@ class BasalRateFactorSettingScreenParser : Parser() {
 }
 
 class TimeAndDateSettingsScreenParser(val titleId: TitleID) : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1619,10 +1670,12 @@ class TimeAndDateSettingsScreenParser(val titleId: TitleID) : Parser() {
         val expectedSymbol = when (titleId) {
             TitleID.HOUR,
             TitleID.MINUTE -> LargeSymbol.CLOCK
+
             TitleID.YEAR,
             TitleID.MONTH,
-            TitleID.DAY -> LargeSymbol.CALENDAR
-            else -> return ParseResult.Failed
+            TitleID.DAY    -> LargeSymbol.CALENDAR
+
+            else           -> return ParseResult.Failed
         }
 
         if (symbolGlyph.symbol != expectedSymbol)
@@ -1630,18 +1683,19 @@ class TimeAndDateSettingsScreenParser(val titleId: TitleID) : Parser() {
 
         return ParseResult.Value(
             when (titleId) {
-                TitleID.HOUR -> ParsedScreen.TimeAndDateSettingsHourScreen(quantity)
+                TitleID.HOUR   -> ParsedScreen.TimeAndDateSettingsHourScreen(quantity)
                 TitleID.MINUTE -> ParsedScreen.TimeAndDateSettingsMinuteScreen(quantity)
-                TitleID.YEAR -> ParsedScreen.TimeAndDateSettingsYearScreen(quantity)
-                TitleID.MONTH -> ParsedScreen.TimeAndDateSettingsMonthScreen(quantity)
-                TitleID.DAY -> ParsedScreen.TimeAndDateSettingsDayScreen(quantity)
-                else -> return ParseResult.Failed
+                TitleID.YEAR   -> ParsedScreen.TimeAndDateSettingsYearScreen(quantity)
+                TitleID.MONTH  -> ParsedScreen.TimeAndDateSettingsMonthScreen(quantity)
+                TitleID.DAY    -> ParsedScreen.TimeAndDateSettingsDayScreen(quantity)
+                else           -> return ParseResult.Failed
             }
         )
     }
 }
 
 class MyDataBolusDataScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1665,10 +1719,10 @@ class MyDataBolusDataScreenParser : Parser() {
 
         parseResult as ParseResult.Sequence
         val bolusType = when (parseResult.valueAt<Glyph.SmallSymbol>(0).symbol) {
-            SmallSymbol.BOLUS -> MyDataBolusType.STANDARD
+            SmallSymbol.BOLUS           -> MyDataBolusType.STANDARD
             SmallSymbol.MULTIWAVE_BOLUS -> MyDataBolusType.MULTI_WAVE
-            SmallSymbol.EXTENDED_BOLUS -> MyDataBolusType.EXTENDED
-            else -> return ParseResult.Failed
+            SmallSymbol.EXTENDED_BOLUS  -> MyDataBolusType.EXTENDED
+            else                        -> return ParseResult.Failed
         }
         val bolusAmount = parseResult.valueAt<Int>(1)
         val index = parseResult.valueAt<Int>(2)
@@ -1693,6 +1747,7 @@ class MyDataBolusDataScreenParser : Parser() {
 }
 
 class MyDataErrorDataScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1740,6 +1795,7 @@ class MyDataErrorDataScreenParser : Parser() {
 }
 
 class MyDataDailyTotalsScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
@@ -1775,6 +1831,7 @@ class MyDataDailyTotalsScreenParser : Parser() {
 }
 
 class MyDataTbrDataScreenParser : Parser() {
+
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(

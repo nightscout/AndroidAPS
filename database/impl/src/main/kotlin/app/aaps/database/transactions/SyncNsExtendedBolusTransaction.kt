@@ -10,7 +10,7 @@ import kotlin.math.abs
 class SyncNsExtendedBolusTransaction(private val extendedBoluses: List<ExtendedBolus>, private val nsClientMode: Boolean) :
     Transaction<SyncNsExtendedBolusTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         for (extendedBolus in extendedBoluses) {
@@ -59,7 +59,7 @@ class SyncNsExtendedBolusTransaction(private val extendedBoluses: List<ExtendedB
                 }
 
                 // Fallback: check by active extended bolus at timestamp
-                val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
+                val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp)
                 if (running != null && abs(running.timestamp - extendedBolus.timestamp) < 1000) { // allow missing milliseconds
                     // the same record, update nsId only
                     running.interfaceIDs.nightscoutId = extendedBolus.interfaceIDs.nightscoutId
@@ -82,7 +82,7 @@ class SyncNsExtendedBolusTransaction(private val extendedBoluses: List<ExtendedB
 
             } else {
                 // ending event
-                val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
+                val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp)
                 if (running != null) {
                     val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
                     running.amount *= pctRun

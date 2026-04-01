@@ -44,7 +44,7 @@ class PrepareTemporaryTargetDataWorker(
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareTemporaryTargetData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0, false))
         val profile = profileFunction.getProfile() ?: return Result.success(workDataOf("Error" to "missing profile"))
         var endTime = data.overviewData.endTime
         val fromTime = data.overviewData.fromTime
@@ -55,7 +55,7 @@ class PrepareTemporaryTargetDataWorker(
         while (time < endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
-            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt(), null))
+            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt(), false))
             val tt = persistenceLayer.getTemporaryTargetActiveAt(time)
             val value: Double = if (tt != null) {
                 profileUtil.fromMgdlToUnits(tt.target())
@@ -77,7 +77,7 @@ class PrepareTemporaryTargetDataWorker(
             it.color = rh.gac(ctx, app.aaps.core.ui.R.attr.tempTargetBackgroundColor)
             it.thickness = 2
         }
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 100, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 100, false))
         return Result.success()
     }
 }

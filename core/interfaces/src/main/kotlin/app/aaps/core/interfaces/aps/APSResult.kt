@@ -53,6 +53,7 @@ interface APSResult {
 
     fun resultAsString(): String
     fun resultAsSpanned(): Spanned
+    fun resultAsHtmlString(): String
     fun newAndClone(): APSResult
     fun json(): JSONObject?
     fun predictions(): Predictions?

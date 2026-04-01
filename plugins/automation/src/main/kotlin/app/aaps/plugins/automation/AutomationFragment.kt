@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.core.util.forEach
+import androidx.core.util.size
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
@@ -29,9 +30,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.ui.ActionModeHelper
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dragHelpers.ItemTouchHelperAdapter
 import app.aaps.core.ui.dragHelpers.OnStartDragListener
 import app.aaps.core.ui.dragHelpers.SimpleItemTouchHelperCallback
@@ -47,6 +48,9 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
@@ -58,6 +62,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var uiInteraction: UiInteraction
 
     companion object {
 
@@ -106,7 +111,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         if (actionHelper.onOptionsItemSelected(item)) true
         else when (item.itemId) {
             ID_MENU_RUN -> {
-                Thread { automationPlugin.processActions() }.start()
+                CoroutineScope(Dispatchers.IO).launch { automationPlugin.processActions() }
                 true
             }
 
@@ -285,24 +290,22 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
     }
 
     private fun getConfirmationText(selectedItems: SparseArray<AutomationEventObject>): String {
-        if (selectedItems.size() == 1) {
+        if (selectedItems.size == 1) {
             val event = selectedItems.valueAt(0)
             return rh.gs(app.aaps.core.ui.R.string.removerecord) + " " + event.title
         }
-        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size)
     }
 
     private fun removeSelected(selectedItems: SparseArray<AutomationEventObject>) {
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
-                selectedItems.forEach { _, event ->
-                    uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, event.title)
-                    automationPlugin.remove(event)
-                    rxBus.send(EventAutomationDataChanged())
-                }
-                actionHelper.finish()
-            })
-        }
+        uiInteraction.showOkCancelDialog(context = requireActivity(), title = rh.gs(app.aaps.core.ui.R.string.removerecord), message = getConfirmationText(selectedItems), ok = {
+            selectedItems.forEach { _, event ->
+                uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, event.title)
+                automationPlugin.remove(event)
+                rxBus.send(EventAutomationDataChanged())
+            }
+            actionHelper.finish()
+        })
     }
 
     private fun add() {

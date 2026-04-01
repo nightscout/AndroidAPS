@@ -8,10 +8,9 @@
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="time_offset">Time offset</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Remind to bolus later</string>
 
-    <string name="a11y_carb_reminder">set reminder</string>
+    <string name="a11y_carb_reminder">Set reminder to carbs time</string>
 
     <!--    Widget-->
     <string name="configure">Configure opacity</string>
@@ -19,18 +18,29 @@
 
     <!--     Activities-->
     <string name="activity_monitor">Activity monitor</string>
+    <string name="time_range">Time range</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Glucose Pentagon (CGP) — 14 days</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hyper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Mean</string>
+    <string name="cgp_reference">Healthy person</string>
+    <string name="cgp_patient">Patient</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Very low risk</string>
+    <string name="cgp_pgr_low">Low risk</string>
+    <string name="cgp_pgr_moderate">Moderate risk</string>
+    <string name="cgp_pgr_high">High risk</string>
+    <string name="cgp_pgr_extremely_high">Extremely high risk</string>
     <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
     <string name="do_you_want_recalculate_tdd_stats">Do you want to recalculate TDD stats?</string>
-    <string name="statistics">Statistics</string>
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="invalid_age">Invalid age entry</string>
     <string name="invalid_weight">Invalid weight entry</string>
-    <string name="id">ID:</string>
-    <string name="submit">Submit</string>
     <string name="age">Age</string>
     <string name="weight_label">Weight</string>
-    <string name="most_common_profile">Most common profile:</string>
-    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
 
 
     <string name="glucose_type">Glucose type</string>
@@ -54,26 +64,47 @@
     <string name="user_profile_description">User Profile Description is used to show most frequent sites available for a man, a woman or a child</string>
     <string name="site_management">Site Management Profile</string>
     <string name="site_management_description">You will set here if you want to manage Pump site, CGM site or both. This setting will be used to automatically send the site management dialog on each detected new entry</string>
-    <string name="select_site">Click below to select Site</string>
     <string name="record_site_change">Record Site Location</string>
+    <string name="update_site_change">Update Site Location</string>
     <string name="edit_site">Edit</string>
     <string name="record_site_location">Site Location: %1$s</string>
     <string name="record_site_arrow">Site Arrow: %1$s</string>
     <string name="record_site_note">Note: %1$s</string>
     <string name="delete_site_note">Note deleted</string>
+    <string name="site_filter_info">Select Therapy event type you want to see: Cannula Change and/or Sensor Change</string>
 
     <!-- FillDialog -->
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
     <string name="record_pump_site_change">Record pump site change</string>
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
+    <string name="fill_prime_amount">Prime amount</string>
+    <string name="fill_pump_units_note">Prime amount is in pump units</string>
+    <string name="fill_insulin_change">Switch insulin to: %1$s (profile switch will be applied)</string>
+    <string name="fill_current_insulin">Current insulin</string>
+    <string name="fill_change_insulin">Change insulin</string>
 
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
+
+    <!-- Insulin Management -->
+    <string name="missing_insulin_name">Missing Insulin Name</string>
+    <string name="insulin_name_exists">Insulin Name %1$s already exists, select a new name</string>
+    <string name="a11y_add_new_insulin">Add new insulin</string>
+    <string name="a11y_delete_current_insulin">Delete current insulin</string>
+    <string name="save_or_reset_changes_first">Save or reset current changes first</string>
+    <string name="activate_insulin_no_profile">No active profile found</string>
+    <string name="activate_insulin_new_insulin">New insulin: %1$s</string>
+    <string name="activate_insulin_remaining">Remaining: %1$d min</string>
+    <string name="activate_insulin_profile_switch">Profile switch will be created:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Load peak from</string>
+    <string name="cannot_delete_last_insulin">Cannot delete the last insulin</string>
+    <string name="cannot_delete_active_insulin">Cannot delete the active insulin</string>
 
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentage</string>
+    <string name="permanent_profile_switch">Permanent (0 = no duration limit)</string>
 
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
@@ -101,10 +132,14 @@
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="missing_carbs">Missing %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% immediate carbs, no extended carbs</string>
+    <string name="wizard_carbs_type_desc">Carbs reduced by %1$d%%, added eCarbs %2$d%% delayed %3$dmin for %4$dh</string>
+    <string name="wizard_include_info">Tap to include/exclude from calculation:\n• BG — blood glucose (ON at start)\n• TT — temp target (ON at start)\n• Trend — BG trend (last state remembered)\n• IOB — insulin on board (ON at start)\n• COB — carbs on board (last state remembered)</string>
+    <string name="wizard_bg_age">BG age: %1$d min</string>
     <string name="a11y_current_bg">current blood glucose</string>
     <string name="carb_time_label">Carb time</string>
     <string name="a11y_set_carb_timer">set carb timer alarm</string>
-    <string name="show_calculation">Show calcuation</string>
+    <string name="show_calculation">Show calculation</string>
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>
@@ -117,8 +152,6 @@
     <string name="meal_bolus">Meal</string>
     <string name="prime">Prime</string>
     <string name="carbs_and_bolus">Carbs and bolus</string>
-    <string name="show_invalidated_records">Show invalidated / removed records</string>
-    <string name="hide_invalidated_records">Hide invalidated / removed records</string>
     <string name="show_invalidated">Show invalidated</string>
     <string name="hide_invalidated">Hide invalidated</string>
     <string name="careportal_remove_started_events">Remove AAPS started entries</string>
@@ -126,17 +159,31 @@
     <string name="show_loop">Show loop</string>
     <string name="user_entry">User entry</string>
     <string name="clone_label">Clone</string>
-    <string name="show_loop_records">Show loop records</string>
-    <string name="show_hide_records">Hide loop records</string>
+    <string name="add_new_profile">Add new profile</string>
+    <string name="show_profile">Show profile</string>
+    <string name="edit_label">Edit</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="activate_label">Activate</string>
+    <string name="activate_profile">Activate profile</string>
+    <string name="remove_label">Remove</string>
+    <string name="active_profile_indicator">ACTIVE</string>
+    <string name="remaining_time_label">Remaining</string>
+    <string name="confirm_remove_profile">Remove profile \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Clone profile \"%1$s\"?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
 
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profile 1</string>
-    <string name="profile2">Profile 2</string>
     <string name="profile_type">Profile type</string>
+    <string name="profile_parameters">Profile Parameters</string>
+    <string name="active_profile">Active Profile</string>
+    <string name="available_profiles">Available Profiles</string>
+    <string name="profile_switches">Profile Switches</string>
     <string name="basal_pct_from_tdd_label">% of basal</string>
     <string name="selected_profile">Selected:</string>
-    <string name="compare_profile">Compare profiles</string>
-    <string name="nav_profile_helper">Profile helper</string>
+    <string name="comparation">Comparation</string>
     <string name="motol_default_profile">Default profile</string>
     <string name="current_profile">Current profile</string>
     <string name="available_profile">Available profile</string>
@@ -157,6 +204,9 @@
     <string name="a11y_only_on_phone">only on phone</string>
     <string name="quickwizard_settings">QuickWizard settings</string>
     <string name="overview_edit_quickwizard_button_text">Button text</string>
+    <string name="quick_wizard_mode_wizard">Wizard</string>
+    <string name="quick_wizard_mode_insulin">Insulin</string>
+    <string name="quick_wizard_mode_carbs">Carbs</string>
     <string name="overview_edit_quickwizard_valid">Valid:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Positive IOB only</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
@@ -164,8 +214,29 @@
     <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
     <string name="additional_ecarbs">Add eCarbs</string>
     <string name="overview_edit_quickwizard_useforcalculation">Use for calculation:</string>
+    <string name="calculator_options">Calculator Options</string>
+    <string name="use_bg">Use BG</string>
+    <string name="use_cob">Use COB</string>
+    <string name="use_iob">Use IOB</string>
+    <string name="use_trend">Use Trend</string>
+    <string name="trend_all">All</string>
+    <string name="trend_positive_only">Positive only</string>
+    <string name="trend_negative_only">Negative only</string>
+    <string name="use_temp_target">Use Temp Target</string>
+    <string name="use_alarm">Use Alarm</string>
+    <string name="device_selection">Device Selection</string>
+    <string name="show_on_phone">Show on Phone</string>
+    <string name="show_on_watch">Show on Watch</string>
+    <string name="ecarbs_additional">Additional Carbs</string>
+    <string name="valid_from_to">Valid Time Range</string>
+    <string name="carb_time">Carb Time</string>
+    <string name="no_quickwizard_entries">No QuickWizard entries. Tap + to add one.</string>
+    <string name="save_changes_question">Save changes to this entry?</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="change_your_input">Change your input!</string>
+    <string name="wizard_no_insulin_required">No insulin required</string>
+    <string name="carbs_constraint_violation">Carbs limited by constraints</string>
+    <string name="insulin_constraint_violation">Insulin limited by constraints</string>
     <string name="confirm_treatment">Please confirm treatment</string>
     <string name="recalculate">Recalculate</string>
 
@@ -175,10 +246,55 @@
     <string name="until_changed">Until changed</string>
     <string name="limitations">Limitations</string>
 
+    <!--    Permissions-->
+    <string name="permission_sheet_title">Permissions Required</string>
+    <string name="permission_sheet_subtitle">Some permissions are needed for the app to work correctly</string>
+    <string name="permission_grant">Grant</string>
+    <string name="permission_change">Change</string>
+    <string name="permission_denied_go_to_settings">Permission permanently denied. Please enable it in app settings.</string>
+    <string name="permission_open_settings">Settings</string>
+    <string name="permission_directory_picker_error">Unable to launch directory picker. Usually Android or Family Link issue.</string>
+    <string name="permission_nav_label">Permissions</string>
+
+    <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Cycle offset</string>
+    <string name="raw_tdd">Raw TDD</string>
+    <string name="cleaned_tdd">Cleaned TDD</string>
+    <string name="cleaned_tdd_explanation">TDD minus insulin for carbs.</string>
+    <string name="cycle_lines_legend">Individual cycles</string>
+    <string name="cycles_found">%1$d cycles (%2$d days)</string>
+    <string name="cycle_day1_date">Day 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Calculating… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Not enough data (need at least 56 days for 2 cycles)</string>
+
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Both</item>
         <item>Positive only</item>
         <item>Negative only</item>
     </string-array>
+
+    <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Selected actions</string>
+    <string name="quick_launch_available_actions">Available actions</string>
+    <string name="quick_launch_no_dynamic_items">No items available</string>
+    <string name="quick_launch_category_treatment">Treatment</string>
+    <string name="quick_launch_category_care">Care Portal</string>
+    <string name="quick_launch_category_profile">Profile</string>
+    <string name="quick_launch_category_temp_target">Temp Target Presets</string>
+    <string name="quick_launch_category_quick_wizard">Quick Wizard</string>
+    <string name="quick_launch_category_automation">Automation</string>
+    <string name="quick_launch_all_selected">All items selected</string>
+    <string name="quick_launch_no_quick_wizard">Add Quick Wizard entries to use them here</string>
+    <string name="quick_launch_no_automation">Create user automation actions to use them here</string>
+    <string name="quick_launch_no_tt_presets">Add Temp Target presets to use them here</string>
+    <string name="quick_launch_no_profiles">Create profiles in Local Profile to use them here</string>
+    <string name="quick_launch_edit_profile_preset">Edit profile preset</string>
+    <string name="quick_launch_profile_percentage">Percentage</string>
+    <string name="quick_launch_profile_duration">Duration</string>
+    <string name="quick_launch_profile_permanent">Permanent</string>
+    <string name="quick_launch_profile_confirm">Activate profile %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Select Arrow</string>
 
 </resources>

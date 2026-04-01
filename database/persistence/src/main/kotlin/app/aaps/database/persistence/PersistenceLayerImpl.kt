@@ -1,6 +1,5 @@
 package app.aaps.database.persistence
 
-import android.os.SystemClock
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -31,8 +30,22 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.AppRepository
-import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.DeviceStatus
+import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.Food
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.HeartRate
+import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.RunningMode
+import app.aaps.database.entities.StepsCount
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.UserEntry
 import app.aaps.database.persistence.converters.fromDb
 import app.aaps.database.persistence.converters.toDb
 import app.aaps.database.transactions.CancelCurrentTemporaryRunningModeIfAnyTransaction
@@ -41,7 +54,6 @@ import app.aaps.database.transactions.CgmSourceTransaction
 import app.aaps.database.transactions.CutCarbsTransaction
 import app.aaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.database.transactions.InsertBolusWithTempIdTransaction
-import app.aaps.database.transactions.InsertEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InsertIfNewByTimestampCarbsTransaction
 import app.aaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import app.aaps.database.transactions.InsertOrUpdateApsResultTransaction
@@ -49,6 +61,7 @@ import app.aaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransac
 import app.aaps.database.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.transactions.InsertOrUpdateCachedTotalDailyDoseTransaction
 import app.aaps.database.transactions.InsertOrUpdateCarbsTransaction
+import app.aaps.database.transactions.InsertOrUpdateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.transactions.InsertOrUpdateProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateRunningModeTransaction
@@ -106,14 +119,18 @@ import app.aaps.database.transactions.UserEntryTransaction
 import app.aaps.database.transactions.VersionChangeTransaction
 import dagger.Reusable
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.util.Collections.emptyList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.reflect.KClass
 
 @Reusable
 class PersistenceLayerImpl @Inject constructor(
@@ -124,1837 +141,2257 @@ class PersistenceLayerImpl @Inject constructor(
     private val apsResultProvider: Provider<APSResult>
 ) : PersistenceLayer {
 
-    @Suppress("unused")
-    private fun <S, D> Single<ValueWrapper<S>>.fromDb(converter: S.() -> D): Single<ValueWrapper<D>> =
-        this.map { wrapper ->
-            when (wrapper) {
-                is ValueWrapper.Existing -> ValueWrapper.Existing(wrapper.value.converter())
-                is ValueWrapper.Absent   -> ValueWrapper.Absent()
-            }
-        }
-
     private val compositeDisposable = CompositeDisposable()
-    private fun log(entries: List<UE>) {
+    private suspend fun log(entries: List<UE>) {
         if (config.AAPSCLIENT.not())
             if (entries.isNotEmpty()) {
-                compositeDisposable += insertUserEntries(entries).subscribe()
-                SystemClock.sleep(entries.size * 10L)
+                insertUserEntries(entries)
+                delay(entries.size * 10L)
             }
     }
 
     override fun clearDatabases() = repository.clearDatabases()
     override fun clearApsResults() = repository.clearApsResults()
-    override fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = repository.cleanupDatabase(keepDays, deleteTrackedChanges)
+    override suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = withContext(Dispatchers.IO) {
+        repository.cleanupDatabase(keepDays, deleteTrackedChanges)
+    }
+
+    // Flow-based change observation
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Any> observeChanges(type: Class<T>): Flow<List<T>> {
+        // Map database entity changes to domain types
+        return when (type) {
+            BS::class.java  -> repository.changesOfType<Bolus>()
+                .map { list -> list.map { it.fromDb() } }
+
+            CA::class.java  -> repository.changesOfType<Carbs>()
+                .map { list -> list.map { it.fromDb() } }
+
+            BCR::class.java -> repository.changesOfType<BolusCalculatorResult>()
+                .map { list -> list.map { it.fromDb() } }
+
+            EB::class.java  -> repository.changesOfType<ExtendedBolus>()
+                .map { list -> list.map { it.fromDb() } }
+
+            TB::class.java  -> repository.changesOfType<TemporaryBasal>()
+                .map { list -> list.map { it.fromDb() } }
+
+            TT::class.java  -> repository.changesOfType<TemporaryTarget>()
+                .map { list -> list.map { it.fromDb() } }
+
+            TE::class.java  -> repository.changesOfType<TherapyEvent>()
+                .map { list -> list.map { it.fromDb() } }
+
+            PS::class.java  -> repository.changesOfType<ProfileSwitch>()
+                .map { list -> list.map { it.fromDb() } }
+
+            EPS::class.java -> repository.changesOfType<EffectiveProfileSwitch>()
+                .map { list -> list.map { it.fromDb() } }
+
+            GV::class.java  -> repository.changesOfType<GlucoseValue>()
+                .map { list -> list.map { it.fromDb() } }
+
+            UE::class.java  -> repository.changesOfType<UserEntry>()
+                .map { list -> list.map { it.fromDb() } }
+
+            RM::class.java  -> repository.changesOfType<RunningMode>()
+                .map { list -> list.map { it.fromDb() } }
+
+            DS::class.java  -> repository.changesOfType<DeviceStatus>()
+                .map { list -> list.map { it.fromDb() } }
+
+            HR::class.java  -> repository.changesOfType<HeartRate>()
+                .map { list -> list.map { it.fromDb() } }
+
+            SC::class.java  -> repository.changesOfType<StepsCount>()
+                .map { list -> list.map { it.fromDb() } }
+
+            FD::class.java  -> repository.changesOfType<Food>()
+                .map { list -> list.map { it.fromDb() } }
+
+            else            -> throw IllegalArgumentException("Unsupported observation type: ${type.simpleName}")
+        } as Flow<List<T>>
+    }
+
+    override fun observeAnyChange(): Flow<Set<KClass<*>>> =
+        repository.changeFlow()
+            .map { changes ->
+                changes.mapNotNull { entry ->
+                    when (entry) {
+                        is Bolus                  -> BS::class
+                        is Carbs                  -> CA::class
+                        is BolusCalculatorResult  -> BCR::class
+                        is ExtendedBolus          -> EB::class
+                        is TemporaryBasal         -> TB::class
+                        is TemporaryTarget        -> TT::class
+                        is TherapyEvent           -> TE::class
+                        is ProfileSwitch          -> PS::class
+                        is EffectiveProfileSwitch -> EPS::class
+                        is GlucoseValue           -> GV::class
+                        is Food                   -> FD::class
+                        is UserEntry              -> UE::class
+                        is RunningMode            -> RM::class
+                        is DeviceStatus           -> DS::class
+                        is HeartRate              -> HR::class
+                        is StepsCount             -> SC::class
+                        else                      -> null
+                    }
+                }.toSet()
+            }
+            .filter { it.isNotEmpty() }
 
     // BS
-    override fun getNewestBolus(): BS? = repository.getNewestBolus().blockingGet()?.fromDb()
-    override fun getOldestBolus(): BS? = repository.getOldestBolus().blockingGet()?.fromDb()
+    override suspend fun getNewestBolus(): BS? = withContext(Dispatchers.IO) {
+        repository.getNewestBolus()?.fromDb()
+    }
 
-    override fun getNewestBolusOfType(type: BS.Type): BS? =
-        repository.getLastBolusRecordOfType(type.toDb()).blockingGet()?.fromDb()
+    override suspend fun getOldestBolus(): BS? = withContext(Dispatchers.IO) {
+        repository.getOldestBolus()?.fromDb()
+    }
 
-    override fun getLastBolusId(): Long? = repository.getLastBolusId()
-    override fun getBolusByNSId(nsId: String): BS? = repository.getBolusByNSId(nsId)?.fromDb()
+    override suspend fun getNewestBolusOfType(type: BS.Type): BS? = withContext(Dispatchers.IO) {
+        repository.getLastBolusRecordOfType(type.toDb())?.fromDb()
+    }
 
-    override fun getBolusesFromTime(startTime: Long, ascending: Boolean): Single<List<BS>> =
+    override suspend fun getLastBolusId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastBolusId()
+    }
+
+    override suspend fun getBoluses(): List<BS> =
+        repository.getBoluses()
+            .map { it.fromDb() }.toList()
+
+    override suspend fun getBolusByNSId(nsId: String): BS? = withContext(Dispatchers.IO) {
+        repository.getBolusByNSId(nsId)?.fromDb()
+    }
+
+    override suspend fun getBolusesFromTime(startTime: Long, ascending: Boolean): List<BS> = withContext(Dispatchers.IO) {
         repository.getBolusesDataFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }.toList()
+    }
 
-    override fun getBolusesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<BS> =
+    override suspend fun getBolusesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<BS> = withContext(Dispatchers.IO) {
         repository.getBolusesDataFromTimeToTime(startTime, endTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+            .map { it.fromDb() }.toList()
+    }
 
-    override fun getBolusesFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<BS>> =
+    override suspend fun getBolusesFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): List<BS> = withContext(Dispatchers.IO) {
         repository.getBolusesIncludingInvalidFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }.toList()
+    }
 
-    override fun getNextSyncElementBolus(id: Long): Maybe<Pair<BS, BS>> =
-        repository.getNextSyncElementBolus(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementBolus(id: Long): Pair<BS, BS>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementBolus(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String?): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(InsertOrUpdateBolusTransaction(bolus.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BS>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = action,
-                            source = source,
-                            note = it.notes ?: note ?: "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
-                        )
+    override suspend fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String?): PersistenceLayer.TransactionResult<BS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateBolusTransaction(bolus.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<BS>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = source,
+                        note = it.notes ?: note ?: "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = action,
-                            source = source,
-                            note = it.notes ?: note ?: "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
-                        )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.updated.forEach {
+                ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = source,
+                        note = it.notes ?: note ?: "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", e)
+            throw e
+        }
+    }
 
-    override fun insertBolusWithTempId(bolus: BS): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(InsertBolusWithTempIdTransaction(bolus.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BS>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun updateBolusNoLogging(bolus: BS): Unit = withContext(Dispatchers.IO) {
+        repository.runTransactionForResultSuspend(InsertOrUpdateBolusTransaction(bolus.toDb()))
+        Unit
+    }
+
+    override suspend fun insertBolusWithTempId(bolus: BS): PersistenceLayer.TransactionResult<BS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertBolusWithTempIdTransaction(bolus.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<BS>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it")
+                transactionResult.inserted.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", e)
+            throw e
+        }
+    }
 
-    override fun invalidateBolus(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(InvalidateBolusTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Bolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BS>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated Bolus from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun invalidateBolus(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<BS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateBolusTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<BS>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated Bolus from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating Bolus", e)
+            throw e
+        }
+    }
 
-    override fun syncPumpBolus(bolus: BS, type: BS.Type?): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(SyncPumpBolusTransaction(bolus.toDb(), type?.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BS>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun syncPumpBolus(bolus: BS, type: BS.Type?): PersistenceLayer.TransactionResult<BS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncPumpBolusTransaction(bolus.toDb(), type?.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<BS>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it")
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun syncPumpBolusWithTempId(bolus: BS, type: BS.Type?): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(SyncBolusWithTempIdTransaction(bolus.toDb(), type?.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BS>()
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", e)
+            throw e
+        }
+    }
 
-    override fun syncNsBolus(boluses: List<BS>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(SyncNsBolusTransaction(boluses.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BS>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.BOLUS,
-                            source = Sources.NSClient,
-                            note = it.notes ?: "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
-                        )
+    override suspend fun syncPumpBolusWithTempId(bolus: BS, type: BS.Type?): PersistenceLayer.TransactionResult<BS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncBolusWithTempIdTransaction(bolus.toDb(), type?.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<BS>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", e)
+            throw e
+        }
+    }
+
+    override suspend fun syncNsBolus(boluses: List<BS>, doLog: Boolean): PersistenceLayer.TransactionResult<BS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsBolusTransaction(boluses.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<BS>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.BOLUS,
+                        source = Sources.NSClient,
+                        note = it.notes ?: "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.BOLUS_REMOVED,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
-                        )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.invalidated.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.BOLUS_REMOVED,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of bolus $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated amount of bolus $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
-
-    override fun updateBolusesNsIds(boluses: List<BS>): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(UpdateNsIdBolusTransaction(boluses.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of Bolus failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BS>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Bolus $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of bolus $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated amount of bolus $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving bolus", e)
+            throw e
+        }
+    }
 
-    override fun getNewestCarbs(): CA? = repository.getLastCarbs().blockingGet()?.fromDb()
-    override fun getOldestCarbs(): CA? = repository.getOldestCarbs().blockingGet()?.fromDb()
+    override suspend fun updateBolusesNsIds(boluses: List<BS>): PersistenceLayer.TransactionResult<BS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdBolusTransaction(boluses.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<BS>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of Bolus $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of Bolus failed", e)
+            throw e
+        }
+    }
+
+    override suspend fun getNewestCarbs(): CA? = withContext(Dispatchers.IO) {
+        repository.getLastCarbs()?.fromDb()
+    }
+
+    override suspend fun getOldestCarbs(): CA? = withContext(Dispatchers.IO) {
+        repository.getOldestCarbs()?.fromDb()
+    }
 
     // CA
-    override fun getLastCarbsId(): Long? = repository.getLastCarbsId()
-    override fun getCarbsByNSId(nsId: String): CA? = repository.getCarbsByNSId(nsId)?.fromDb()
+    override suspend fun getLastCarbsId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastCarbsId()
+    }
 
-    override fun getCarbsFromTime(startTime: Long, ascending: Boolean): Single<List<CA>> =
+    override suspend fun getCarbsByNSId(nsId: String): CA? = withContext(Dispatchers.IO) {
+        repository.getCarbsByNSId(nsId)?.fromDb()
+    }
+
+    override suspend fun getCarbsFromTime(startTime: Long, ascending: Boolean): List<CA> = withContext(Dispatchers.IO) {
         repository.getCarbsDataFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }.toList()
+    }
 
-    override fun getCarbsFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<CA>> =
+    override suspend fun getCarbsFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): List<CA> = withContext(Dispatchers.IO) {
         repository.getCarbsIncludingInvalidFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }.toList()
+    }
 
-    override fun getCarbsFromTimeExpanded(startTime: Long, ascending: Boolean): List<CA> =
+    override suspend fun getCarbsFromTimeExpanded(startTime: Long, ascending: Boolean): List<CA> = withContext(Dispatchers.IO) {
         repository.getCarbsDataFromTimeExpanded(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+            .map { it.fromDb() }.toList()
+    }
 
-    override fun getCarbsFromTimeNotExpanded(startTime: Long, ascending: Boolean): Single<List<CA>> =
-        repository.getCarbsDataFromTimeNotExpanded(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getCarbsFromTimeNotExpanded(startTime: Long, ascending: Boolean): List<CA> = withContext(Dispatchers.IO) {
+        repository.getCarbsDataFromTimeNotExpanded(startTime, ascending).map { it.fromDb() }
+    }
 
-    override fun getCarbsFromTimeToTimeExpanded(startTime: Long, endTime: Long, ascending: Boolean): List<CA> =
+    override suspend fun getCarbsFromTimeToTimeExpanded(startTime: Long, endTime: Long, ascending: Boolean): List<CA> = withContext(Dispatchers.IO) {
         repository.getCarbsDataFromTimeToTimeExpanded(startTime, endTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+            .map { it.fromDb() }.toList()
+    }
 
-    override fun getNextSyncElementCarbs(id: Long): Maybe<Pair<CA, CA>> =
-        repository.getNextSyncElementCarbs(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementCarbs(id: Long): Pair<CA, CA>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementCarbs(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun insertOrUpdateCarbs(carbs: CA, action: Action, source: Sources, note: String?): Single<PersistenceLayer.TransactionResult<CA>> =
-        repository.runTransactionForResult(InsertOrUpdateCarbsTransaction(carbs.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Carbs", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<CA>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = action,
-                            source = source,
-                            note = note ?: "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
-                        )
+    override suspend fun insertOrUpdateCarbs(carbs: CA, action: Action, source: Sources, note: String?): PersistenceLayer.TransactionResult<CA> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateCarbsTransaction(carbs.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<CA>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = source,
+                        note = note ?: "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = action,
-                            source = source,
-                            note = note ?: "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
-                        )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.updated.forEach {
+                ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = source,
+                        note = note ?: "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving Carbs", e)
+            throw e
+        }
+    }
 
-    override fun insertPumpCarbsIfNewByTimestamp(carbs: CA): Single<PersistenceLayer.TransactionResult<CA>> =
-        repository.runTransactionForResult(InsertIfNewByTimestampCarbsTransaction(carbs.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Carbs", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<CA>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun insertPumpCarbsIfNewByTimestamp(carbs: CA): PersistenceLayer.TransactionResult<CA> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertIfNewByTimestampCarbsTransaction(carbs.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<CA>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
+                transactionResult.inserted.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving Carbs", e)
+            throw e
+        }
+    }
 
-    override fun invalidateCarbs(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<CA>> =
-        repository.runTransactionForResult(InvalidateCarbsTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Carbs", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<CA>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated Carbs from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun invalidateCarbs(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<CA> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateCarbsTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<CA>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated Carbs from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating Carbs", e)
+            throw e
+        }
+    }
 
-    override fun cutCarbs(id: Long, timestamp: Long): Single<PersistenceLayer.TransactionResult<CA>> =
-        repository.runTransactionForResult(CutCarbsTransaction(id, timestamp))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while cutting Carbs", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<CA>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated Carbs from $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated Carbs from $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun cutCarbs(id: Long, timestamp: Long): PersistenceLayer.TransactionResult<CA> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CutCarbsTransaction(id, timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<CA>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated Carbs from $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated Carbs from $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while cutting Carbs", e)
+            throw e
+        }
+    }
 
-    override fun syncNsCarbs(carbs: List<CA>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<CA>> =
-        repository.runTransactionForResult(SyncNsCarbsTransaction(carbs.asSequence().map { it.toDb() }.toList(), config.AAPSCLIENT))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<CA>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.CARBS,
-                            source = Sources.NSClient,
-                            note = it.notes ?: "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
-                        )
+    override suspend fun syncNsCarbs(carbs: List<CA>, doLog: Boolean): PersistenceLayer.TransactionResult<CA> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsCarbsTransaction(carbs.asSequence().map { it.toDb() }.toList(), config.AAPSCLIENT))
+            val transactionResult = PersistenceLayer.TransactionResult<CA>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.CARBS,
+                        source = Sources.NSClient,
+                        note = it.notes ?: "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.CARBS_REMOVED,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
-                        )
-                    )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.CARBS,
-                            source = Sources.NSClient,
-                            note = it.notes ?: "",
-                            values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
-                        )
-                    )
-                    aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun updateCarbsNsIds(carbs: List<CA>): Single<PersistenceLayer.TransactionResult<CA>> =
-        repository.runTransactionForResult(UpdateNsIdCarbsTransaction(carbs.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of Carbs failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<CA>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Carbs $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+            result.invalidated.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.CARBS_REMOVED,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
+                    )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
+            result.updated.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.CARBS,
+                        source = Sources.NSClient,
+                        note = it.notes ?: "",
+                        values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
+                    )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving carbs", e)
+            throw e
+        }
+    }
 
-    override fun getBolusCalculatorResultByNSId(nsId: String): BCR? = repository.findBolusCalculatorResultByNSId(nsId)?.fromDb()
+    override suspend fun updateCarbsNsIds(carbs: List<CA>): PersistenceLayer.TransactionResult<CA> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdCarbsTransaction(carbs.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<CA>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of Carbs $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of Carbs failed", e)
+            throw e
+        }
+    }
+
+    override suspend fun getBolusCalculatorResultByNSId(nsId: String): BCR? = withContext(Dispatchers.IO) {
+        repository.findBolusCalculatorResultByNSId(nsId)?.fromDb()
+    }
 
     // BCR
-    override fun getBolusCalculatorResultsFromTime(startTime: Long, ascending: Boolean): Single<List<BCR>> =
-        repository.getBolusCalculatorResultsDataFromTime(startTime, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getBolusCalculatorResultsFromTime(startTime: Long, ascending: Boolean): List<BCR> = withContext(Dispatchers.IO) {
+        repository.getBolusCalculatorResultsDataFromTime(startTime, ascending).map { it.fromDb() }.toList()
+    }
 
-    override fun getBolusCalculatorResultsIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<BCR>> =
-        repository.getBolusCalculatorResultsIncludingInvalidFromTime(startTime, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getBolusCalculatorResultsIncludingInvalidFromTime(startTime: Long, ascending: Boolean): List<BCR> = withContext(Dispatchers.IO) {
+        repository.getBolusCalculatorResultsIncludingInvalidFromTime(startTime, ascending).map { it.fromDb() }
+    }
 
-    override fun getNextSyncElementBolusCalculatorResult(id: Long): Maybe<Pair<BCR, BCR>> =
-        repository.getNextSyncElementBolusCalculatorResult(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementBolusCalculatorResult(id: Long): Pair<BCR, BCR>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementBolusCalculatorResult(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun getLastBolusCalculatorResultId(): Long? = repository.getLastBolusCalculatorResultId()
+    override suspend fun getLastBolusCalculatorResultId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastBolusCalculatorResultId()
+    }
 
-    override fun insertOrUpdateBolusCalculatorResult(bolusCalculatorResult: BCR): Single<PersistenceLayer.TransactionResult<BCR>> =
-        repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BCR>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated BolusCalculatorResult $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun insertOrUpdateBolusCalculatorResult(bolusCalculatorResult: BCR): PersistenceLayer.TransactionResult<BCR> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<BCR>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun syncNsBolusCalculatorResults(bolusCalculatorResults: List<BCR>): Single<PersistenceLayer.TransactionResult<BCR>> =
-        repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResults.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BCR>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated BolusCalculatorResult $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", e)
+            throw e
+        }
+    }
 
-    override fun updateBolusCalculatorResultsNsIds(bolusCalculatorResults: List<BCR>): Single<PersistenceLayer.TransactionResult<BCR>> =
-        repository.runTransactionForResult(UpdateNsIdBolusCalculatorResultTransaction(bolusCalculatorResults.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BCR>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun syncNsBolusCalculatorResults(bolusCalculatorResults: List<BCR>): PersistenceLayer.TransactionResult<BCR> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResults.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<BCR>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
+                transactionResult.inserted.add(it.fromDb())
             }
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
+                transactionResult.invalidated.add(it.fromDb())
+            }
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", e)
+            throw e
+        }
+    }
 
-    override fun invalidateBolusCalculatorResult(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<BCR>> =
-        repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BolusCalculatorResult", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<BCR>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun updateBolusCalculatorResultsNsIds(bolusCalculatorResults: List<BCR>): PersistenceLayer.TransactionResult<BCR> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdBolusCalculatorResultTransaction(bolusCalculatorResults.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<BCR>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", e)
+            throw e
+        }
+    }
+
+    override suspend fun invalidateBolusCalculatorResult(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<BCR> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateBolusCalculatorResultTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<BCR>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating BolusCalculatorResult", e)
+            throw e
+        }
+    }
 
     // GV
-    override fun getLastGlucoseValue(): GV? =
+    override suspend fun getLastGlucoseValue(): GV? = withContext(Dispatchers.IO) {
         repository.getLastGlucoseValue()?.fromDb()
+    }
 
-    override fun getLastGlucoseValueId(): Long? = repository.getLastGlucoseValueId()
+    override suspend fun getLastGlucoseValueId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastGlucoseValueId()
+    }
 
-    override fun getNextSyncElementGlucoseValue(id: Long): Maybe<Pair<GV, GV>> =
-        repository.getNextSyncElementGlucoseValue(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementGlucoseValue(id: Long): Pair<GV, GV>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementGlucoseValue(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun getBgReadingsDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): List<GV> =
-        repository.compatGetBgReadingsDataFromTime(start, end, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getBgReadingsDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): List<GV> = withContext(Dispatchers.IO) {
+        repository.compatGetBgReadingsDataFromTime(start, end, ascending).map { it.fromDb() }
+    }
 
-    override fun getBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GV>> =
-        repository.compatGetBgReadingsDataFromTime(timestamp, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): List<GV> = withContext(Dispatchers.IO) {
+        repository.compatGetBgReadingsDataFromTime(timestamp, ascending).map { it.fromDb() }
+    }
 
-    override fun getBgReadingByNSId(nsId: String): GV? =
+    override suspend fun getBgReadingByNSId(nsId: String): GV? = withContext(Dispatchers.IO) {
         repository.findBgReadingByNSId(nsId)?.fromDb()
+    }
 
-    override fun invalidateGlucoseValue(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<GV>> =
-        repository.runTransactionForResult(InvalidateGlucoseValueTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating GlucoseValue", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<GV>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated GlucoseValue from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun invalidateGlucoseValue(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<GV> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateGlucoseValueTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<GV>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated GlucoseValue from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating GlucoseValue", e)
+            throw e
+        }
+    }
 
     private fun PersistenceLayer.Calibration.toDb() = CgmSourceTransaction.Calibration(timestamp, value, glucoseUnit.toDb())
-    override fun insertCgmSourceData(caller: Sources, glucoseValues: List<GV>, calibrations: List<PersistenceLayer.Calibration>, sensorInsertionTime: Long?)
-        : Single<PersistenceLayer.TransactionResult<GV>> =
-        repository.runTransactionForResult(CgmSourceTransaction(glucoseValues.asSequence().map { it.toDb() }.toList(), calibrations.asSequence().map { it.toDb() }.toList(), sensorInsertionTime))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving cgm values from ${caller.name}", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<GV>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted GlucoseValue from ${caller.name} $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated GlucoseValue from ${caller.name} $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                result.sensorInsertionsInserted.forEach {
+    override suspend fun insertCgmSourceData(caller: Sources, glucoseValues: List<GV>, calibrations: List<PersistenceLayer.Calibration>, sensorInsertionTime: Long?)
+        : PersistenceLayer.TransactionResult<GV> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CgmSourceTransaction(glucoseValues.asSequence().map { it.toDb() }.toList(), calibrations.asSequence().map { it.toDb() }.toList(), sensorInsertionTime))
+            val transactionResult = PersistenceLayer.TransactionResult<GV>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted GlucoseValue from ${caller.name} $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated GlucoseValue from ${caller.name} $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            result.sensorInsertionsInserted.forEach {
+                ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.CAREPORTAL,
+                        source = caller,
+                        note = "",
+                        values = listOf(
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            ValueWithUnit.TEType(it.type.fromDb())
+                        )
+                    )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion from ${caller.name} $it")
+                transactionResult.sensorInsertionsInserted.add(it.fromDb())
+            }
+            result.calibrationsInserted.forEach { calibration ->
+                calibration.glucose?.let { glucoseValue ->
                     ueValues.add(
                         UE(
                             timestamp = dateUtil.now(),
-                            action = Action.CAREPORTAL,
+                            action = Action.CALIBRATION,
                             source = caller,
                             note = "",
                             values = listOf(
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                ValueWithUnit.TEType(it.type.fromDb())
+                                ValueWithUnit.Timestamp(calibration.timestamp),
+                                ValueWithUnit.TEType(calibration.type.fromDb()),
+                                ValueWithUnit.fromGlucoseUnit(glucoseValue, calibration.glucoseUnit.fromDb())
                             )
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion from ${caller.name} $it")
-                    transactionResult.sensorInsertionsInserted.add(it.fromDb())
                 }
-                result.calibrationsInserted.forEach { calibration ->
-                    calibration.glucose?.let { glucoseValue ->
-                        ueValues.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.CALIBRATION,
-                                source = caller,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(calibration.timestamp),
-                                    ValueWithUnit.TEType(calibration.type.fromDb()),
-                                    ValueWithUnit.fromGlucoseUnit(glucoseValue, calibration.glucoseUnit.fromDb())
-                                )
-                            )
-                        )
-                    }
-                    aapsLogger.debug(LTag.DATABASE, "Inserted calibration from ${caller.name} $calibration")
-                    transactionResult.calibrationsInserted.add(calibration.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                aapsLogger.debug(LTag.DATABASE, "Inserted calibration from ${caller.name} $calibration")
+                transactionResult.calibrationsInserted.add(calibration.fromDb())
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving cgm values from ${caller.name}", e)
+            throw e
+        }
+    }
 
-    override fun updateGlucoseValuesNsIds(glucoseValues: List<GV>): Single<PersistenceLayer.TransactionResult<GV>> =
-        repository.runTransactionForResult(UpdateNsIdGlucoseValueTransaction(glucoseValues.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of GlucoseValue failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<GV>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of GlucoseValue $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun updateGlucoseValuesNsIds(glucoseValues: List<GV>): PersistenceLayer.TransactionResult<GV> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdGlucoseValueTransaction(glucoseValues.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<GV>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of GlucoseValue $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of GlucoseValue failed", e)
+            throw e
+        }
+    }
 
-    override fun getOldestEffectiveProfileSwitch(): EPS? = repository.getOldestEffectiveProfileSwitchRecord().blockingGet()?.fromDb()
+    override suspend fun getOldestEffectiveProfileSwitch(): EPS? = withContext(Dispatchers.IO) {
+        repository.getOldestEffectiveProfileSwitchRecord()?.fromDb()
+    }
 
-    override fun updateExtendedBolusesNsIds(extendedBoluses: List<EB>): Single<PersistenceLayer.TransactionResult<EB>> =
-        repository.runTransactionForResult(UpdateNsIdExtendedBolusTransaction(extendedBoluses.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of ExtendedBolus failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EB>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of ExtendedBolus $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun updateExtendedBolusesNsIds(extendedBoluses: List<EB>): PersistenceLayer.TransactionResult<EB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdExtendedBolusTransaction(extendedBoluses.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<EB>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of ExtendedBolus $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of ExtendedBolus failed", e)
+            throw e
+        }
+    }
 
-    override fun syncPumpExtendedBolus(extendedBolus: EB): Single<PersistenceLayer.TransactionResult<EB>> =
-        repository.runTransactionForResult(SyncPumpExtendedBolusTransaction(extendedBolus.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing ExtendedBolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EB>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun syncPumpExtendedBolus(extendedBolus: EB): PersistenceLayer.TransactionResult<EB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncPumpExtendedBolusTransaction(extendedBolus.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<EB>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
+                transactionResult.inserted.add(it.fromDb())
             }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while syncing ExtendedBolus", e)
+            throw e
+        }
+    }
 
-    override fun syncPumpStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Single<PersistenceLayer.TransactionResult<EB>> =
-        repository.runTransactionForResult(SyncPumpCancelExtendedBolusIfAnyTransaction(timestamp, endPumpId, pumpType.toDb(), pumpSerial))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing ExtendedBolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EB>()
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun syncPumpStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): PersistenceLayer.TransactionResult<EB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncPumpCancelExtendedBolusIfAnyTransaction(timestamp, endPumpId, pumpType.toDb(), pumpSerial))
+            val transactionResult = PersistenceLayer.TransactionResult<EB>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while syncing ExtendedBolus", e)
+            throw e
+        }
+    }
 
     // EPS
-    override fun getEffectiveProfileSwitchActiveAt(timestamp: Long): EPS? =
-        repository.getEffectiveProfileSwitchActiveAt(timestamp).blockingGet()?.fromDb()
+    override suspend fun getEffectiveProfileSwitchActiveAt(timestamp: Long): EPS? = withContext(Dispatchers.IO) {
+        repository.getEffectiveProfileSwitchActiveAt(timestamp)?.fromDb()
+    }
 
-    override fun getEffectiveProfileSwitchByNSId(nsId: String): EPS? = repository.findEffectiveProfileSwitchByNSId(nsId)?.fromDb()
+    override suspend fun getEffectiveProfileSwitchByNSId(nsId: String): EPS? = withContext(Dispatchers.IO) {
+        repository.findEffectiveProfileSwitchByNSId(nsId)?.fromDb()
+    }
 
-    override fun getEffectiveProfileSwitchesFromTime(startTime: Long, ascending: Boolean): Single<List<EPS>> =
+    override suspend fun getEffectiveProfileSwitchesFromTime(startTime: Long, ascending: Boolean): List<EPS> = withContext(Dispatchers.IO) {
         repository.getEffectiveProfileSwitchesFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getEffectiveProfileSwitchesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<EPS>> =
+    override suspend fun getEffectiveProfileSwitchesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): List<EPS> = withContext(Dispatchers.IO) {
         repository.getEffectiveProfileSwitchesIncludingInvalidFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getEffectiveProfileSwitchesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EPS> =
-        repository.getEffectiveProfileSwitchesFromTimeToTime(startTime, endTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getEffectiveProfileSwitchesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EPS> = withContext(Dispatchers.IO) {
+        repository.getEffectiveProfileSwitchesFromTimeToTime(startTime, endTime, ascending).map { it.fromDb() }
+    }
 
-    override fun getNextSyncElementEffectiveProfileSwitch(id: Long): Maybe<Pair<EPS, EPS>> =
-        repository.getNextSyncElementEffectiveProfileSwitch(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementEffectiveProfileSwitch(id: Long): Pair<EPS, EPS>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementEffectiveProfileSwitch(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun getLastEffectiveProfileSwitchId(): Long? = repository.getLastEffectiveProfileSwitchId()
-    override fun insertEffectiveProfileSwitch(effectiveProfileSwitch: EPS): Single<PersistenceLayer.TransactionResult<EPS>> =
-        repository.runTransactionForResult(InsertEffectiveProfileSwitchTransaction(effectiveProfileSwitch.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while inserting EffectiveProfileSwitch", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EPS>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun getLastEffectiveProfileSwitchId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastEffectiveProfileSwitchId()
+    }
+
+    override suspend fun insertOrUpdateEffectiveProfileSwitch(effectiveProfileSwitch: EPS): PersistenceLayer.TransactionResult<EPS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateEffectiveProfileSwitchTransaction(effectiveProfileSwitch.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<EPS>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun invalidateEffectiveProfileSwitch(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<EPS>> =
-        repository.runTransactionForResult(InvalidateEffectiveProfileSwitchTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating EffectiveProfileSwitch", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EPS>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated EffectiveProfileSwitch $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while inserting EffectiveProfileSwitch", e)
+            throw e
+        }
+    }
 
-    override fun syncNsEffectiveProfileSwitches(effectiveProfileSwitches: List<EPS>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<EPS>> =
-        repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitches.map { it.toDb() }))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EPS>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    if (config.AAPSCLIENT.not())
-                        if (doLog) ueValues.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.PROFILE_SWITCH,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
+    override suspend fun updateEffectiveProfileSwitchNoLogging(effectiveProfileSwitch: EPS): Unit = withContext(Dispatchers.IO) {
+        repository.runTransactionForResultSuspend(InsertOrUpdateEffectiveProfileSwitchTransaction(effectiveProfileSwitch.toDb()))
+        Unit
+    }
+
+    override suspend fun invalidateEffectiveProfileSwitch(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<EPS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateEffectiveProfileSwitchTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<EPS>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating EffectiveProfileSwitch", e)
+            throw e
+        }
+    }
+
+    override suspend fun syncNsEffectiveProfileSwitches(effectiveProfileSwitches: List<EPS>, doLog: Boolean): PersistenceLayer.TransactionResult<EPS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitches.map { it.toDb() }))
+            val transactionResult = PersistenceLayer.TransactionResult<EPS>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                if (config.AAPSCLIENT.not())
+                    if (doLog) ueValues.add(
+                        UE(
+                            timestamp = dateUtil.now(),
+                            action = Action.PROFILE_SWITCH,
+                            source = Sources.NSClient,
+                            note = "",
+                            values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                         )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    if (config.AAPSCLIENT.not())
-                        if (doLog) ueValues.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.PROFILE_SWITCH_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
+                    )
+                aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.invalidated.forEach {
+                if (config.AAPSCLIENT.not())
+                    if (doLog) ueValues.add(
+                        UE(
+                            timestamp = dateUtil.now(),
+                            action = Action.PROFILE_SWITCH_REMOVED,
+                            source = Sources.NSClient,
+                            note = "",
+                            values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                         )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                    )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
-
-    override fun updateEffectiveProfileSwitchesNsIds(effectiveProfileSwitches: List<EPS>): Single<PersistenceLayer.TransactionResult<EPS>> =
-        repository.runTransactionForResult(UpdateNsIdEffectiveProfileSwitchTransaction(effectiveProfileSwitches.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EPS>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", e)
+            throw e
+        }
+    }
 
-    override fun getProfileSwitchActiveAt(timestamp: Long): PS? = repository.getProfileSwitchActiveAt(timestamp)?.fromDb()
-    override fun getProfileSwitchByNSId(nsId: String): PS? = repository.findProfileSwitchByNSId(nsId)?.fromDb()
+    override suspend fun updateEffectiveProfileSwitchesNsIds(effectiveProfileSwitches: List<EPS>): PersistenceLayer.TransactionResult<EPS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdEffectiveProfileSwitchTransaction(effectiveProfileSwitches.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<EPS>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch failed", e)
+            throw e
+        }
+    }
 
-    override fun getPermanentProfileSwitchActiveAt(timestamp: Long): PS? =
-        repository.getPermanentProfileSwitchActiveAt(timestamp).blockingGet()?.fromDb()
+    override suspend fun getProfileSwitchActiveAt(timestamp: Long): PS? = withContext(Dispatchers.IO) {
+        repository.getProfileSwitchActiveAt(timestamp)?.fromDb()
+    }
 
-    override fun getProfileSwitches(): List<PS> =
-        repository.getAllProfileSwitches()
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getEffectiveProfileSwitches(): List<EPS> =
+        repository.getAllEffectiveProfileSwitches().map { it.fromDb() }
+
+    override suspend fun getProfileSwitchByNSId(nsId: String): PS? = withContext(Dispatchers.IO) {
+        repository.findProfileSwitchByNSId(nsId)?.fromDb()
+    }
+
+    override suspend fun getPermanentProfileSwitchActiveAt(timestamp: Long): PS? = withContext(Dispatchers.IO) {
+        repository.getPermanentProfileSwitchActiveAt(timestamp)?.fromDb()
+    }
+
+    override suspend fun getProfileSwitches(): List<PS> = withContext(Dispatchers.IO) {
+        repository.getAllProfileSwitches().map { it.fromDb() }
+    }
 
     // RUNNING MODE
-    override fun getRunningModesFromTime(startTime: Long, ascending: Boolean): Single<List<RM>> =
+    override suspend fun getRunningModesFromTime(startTime: Long, ascending: Boolean): List<RM> = withContext(Dispatchers.IO) {
         repository.getRunningModesFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getRunningModesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<RM> =
-        repository.getRunningModesFromTimeToTime(startTime, endTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getRunningModesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<RM> = withContext(Dispatchers.IO) {
+        repository.getRunningModesFromTimeToTime(startTime, endTime, ascending).map { it.fromDb() }
+    }
 
-    override fun getRunningModesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<RM>> =
+    override suspend fun getRunningModesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): List<RM> = withContext(Dispatchers.IO) {
         repository.getRunningModesIncludingInvalidFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getNextSyncElementRunningMode(id: Long): Maybe<Pair<RM, RM>> =
-        repository.getNextSyncElementRunningMode(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementRunningMode(id: Long): Pair<RM, RM>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementRunningMode(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun getLastRunningModeId(): Long? = repository.getLastRunningModeId()
-    override fun insertOrUpdateRunningMode(runningMode: RM, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<RM>> =
-        repository.runTransactionForResult(InsertOrUpdateRunningModeTransaction(runningMode.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while inserting RunningMode", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<RM>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted RunningMode from ${source.name} $it")
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated RunningMode from ${source.name} $it")
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                    transactionResult.updated.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun getLastRunningModeId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastRunningModeId()
+    }
+
+    override suspend fun insertOrUpdateRunningMode(runningMode: RM, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateRunningModeTransaction(runningMode.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<RM>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted RunningMode from ${source.name} $it")
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun invalidateRunningMode(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<RM>> =
-        repository.runTransactionForResult(InvalidateRunningModeTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating RunningMode", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<RM>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated RunningMode from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated RunningMode from ${source.name} $it")
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+                transactionResult.updated.add(it.fromDb())
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while inserting RunningMode", e)
+            throw e
+        }
+    }
 
-    override fun cancelCurrentRunningMode(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<RM>> =
-        repository.runTransactionForResult(CancelCurrentTemporaryRunningModeIfAnyTransaction(timestamp))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while canceling RunningMode", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<RM>()
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated RunningMode from ${source.name} $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun invalidateRunningMode(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateRunningModeTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<RM>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated RunningMode from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating RunningMode", e)
+            throw e
+        }
+    }
 
-    override fun syncNsRunningModes(runningModes: List<RM>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<RM>> =
-        repository.runTransactionForResult(SyncNsRunningModeTransaction(runningModes.map { it.toDb() }))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving RunningMode", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<RM>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    if (config.AAPSCLIENT.not())
-                        if (doLog) ueValues.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.RUNNING_MODE,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
+    override suspend fun cancelCurrentRunningMode(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CancelCurrentTemporaryRunningModeIfAnyTransaction(timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<RM>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated RunningMode from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while canceling RunningMode", e)
+            throw e
+        }
+    }
+
+    override suspend fun syncNsRunningModes(runningModes: List<RM>, doLog: Boolean): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsRunningModeTransaction(runningModes.map { it.toDb() }))
+            val transactionResult = PersistenceLayer.TransactionResult<RM>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                if (config.AAPSCLIENT.not())
+                    if (doLog) ueValues.add(
+                        UE(
+                            timestamp = dateUtil.now(),
+                            action = Action.RUNNING_MODE,
+                            source = Sources.NSClient,
+                            note = "",
+                            values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                         )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted RunningMode $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    if (config.AAPSCLIENT.not())
-                        if (doLog) ueValues.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.RUNNING_MODE_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
-                        )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated RunningMode $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updatedDuration.forEach {
-                    if (config.AAPSCLIENT.not())
-                        if (doLog) ueValues.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.RUNNING_MODE_UPDATED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
-                        )
-                    aapsLogger.debug(LTag.DATABASE, "Updated duration RunningMode $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId RunningMode $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                    )
+                aapsLogger.debug(LTag.DATABASE, "Inserted RunningMode $it")
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun updateRunningModesNsIds(runningModes: List<RM>): Single<PersistenceLayer.TransactionResult<RM>> =
-        repository.runTransactionForResult(UpdateNsIdRunningModeTransaction(runningModes.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of RunningMode failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<RM>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of RunningMode $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+            result.invalidated.forEach {
+                if (config.AAPSCLIENT.not())
+                    if (doLog) ueValues.add(
+                        UE(
+                            timestamp = dateUtil.now(),
+                            action = Action.RUNNING_MODE_REMOVED,
+                            source = Sources.NSClient,
+                            note = "",
+                            values = listOf(ValueWithUnit.Timestamp(it.timestamp))
+                        )
+                    )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated RunningMode $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
+            result.updatedDuration.forEach {
+                if (config.AAPSCLIENT.not())
+                    if (doLog) ueValues.add(
+                        UE(
+                            timestamp = dateUtil.now(),
+                            action = Action.RUNNING_MODE_UPDATED,
+                            source = Sources.NSClient,
+                            note = "",
+                            values = listOf(ValueWithUnit.Timestamp(it.timestamp))
+                        )
+                    )
+                aapsLogger.debug(LTag.DATABASE, "Updated duration RunningMode $it")
+                transactionResult.invalidated.add(it.fromDb())
+            }
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId RunningMode $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving RunningMode", e)
+            throw e
+        }
+    }
 
-    override fun getRunningModeActiveAt(timestamp: Long): RM =
+    override suspend fun updateRunningModesNsIds(runningModes: List<RM>): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdRunningModeTransaction(runningModes.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<RM>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of RunningMode $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of RunningMode failed", e)
+            throw e
+        }
+    }
+
+    override suspend fun getRunningModeActiveAt(timestamp: Long): RM = withContext(Dispatchers.IO) {
         repository.getRunningModeActiveAt(timestamp)?.fromDb()
             ?: RM(timestamp = 0, mode = RM.DEFAULT_MODE, duration = 0)
+    }
 
-    override fun getRunningModeByNSId(nsId: String): RM? = repository.findRunningModeByNSId(nsId)?.fromDb()
+    override suspend fun getRunningModeByNSId(nsId: String): RM? = withContext(Dispatchers.IO) {
+        repository.findRunningModeByNSId(nsId)?.fromDb()
+    }
 
-    override fun getPermanentRunningModeActiveAt(timestamp: Long): RM =
-        repository.getPermanentRunningModeActiveAt(timestamp).blockingGet()?.fromDb()
+    override suspend fun getPermanentRunningModeActiveAt(timestamp: Long): RM = withContext(Dispatchers.IO) {
+        repository.getPermanentRunningModeActiveAt(timestamp)?.fromDb()
             ?: RM(timestamp = 0, mode = RM.DEFAULT_MODE, duration = 0)
+    }
 
-    override fun getRunningModes(): List<RM> =
-        repository.getAllRunningModes()
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getRunningModes(): List<RM> = withContext(Dispatchers.IO) {
+        repository.getAllRunningModes().map { it.fromDb() }
+    }
 
     // PS
-    override fun getProfileSwitchesFromTime(startTime: Long, ascending: Boolean): Single<List<PS>> =
+    override suspend fun getProfileSwitchesFromTime(startTime: Long, ascending: Boolean): List<PS> = withContext(Dispatchers.IO) {
         repository.getProfileSwitchesFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getProfileSwitchesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<PS>> =
+    override suspend fun getProfileSwitchesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): List<PS> = withContext(Dispatchers.IO) {
         repository.getProfileSwitchesIncludingInvalidFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getNextSyncElementProfileSwitch(id: Long): Maybe<Pair<PS, PS>> =
-        repository.getNextSyncElementProfileSwitch(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementProfileSwitch(id: Long): Pair<PS, PS>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementProfileSwitch(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun getLastProfileSwitchId(): Long? = repository.getLastProfileSwitchId()
-    override fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<PS>> =
-        repository.runTransactionForResult(InsertOrUpdateProfileSwitchTransaction(profileSwitch.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while inserting ProfileSwitch", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<PS>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch from ${source.name} $it")
-                    transactionResult.inserted.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch from ${source.name} $it")
-                    transactionResult.updated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun getLastProfileSwitchId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastProfileSwitchId()
+    }
+
+    override suspend fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateProfileSwitchTransaction(profileSwitch.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<PS>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch from ${source.name} $it")
+                transactionResult.inserted.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
-
-    override fun invalidateProfileSwitch(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<PS>> =
-        repository.runTransactionForResult(InvalidateProfileSwitchTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<PS>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while inserting ProfileSwitch", e)
+            throw e
+        }
+    }
 
-    override fun syncNsProfileSwitches(profileSwitches: List<PS>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<PS>> =
-        repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitches.map { it.toDb() }))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<PS>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    if (config.AAPSCLIENT.not())
-                        if (doLog) ueValues.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.PROFILE_SWITCH,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
+    override suspend fun updateProfileSwitchNoLogging(profileSwitch: PS): Unit = withContext(Dispatchers.IO) {
+        repository.runTransactionForResultSuspend(InsertOrUpdateProfileSwitchTransaction(profileSwitch.toDb()))
+        Unit
+    }
+
+    override suspend fun invalidateProfileSwitch(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateProfileSwitchTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<PS>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", e)
+            throw e
+        }
+    }
+
+    override suspend fun syncNsProfileSwitches(profileSwitches: List<PS>, doLog: Boolean): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsProfileSwitchTransaction(profileSwitches.map { it.toDb() }))
+            val transactionResult = PersistenceLayer.TransactionResult<PS>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                if (config.AAPSCLIENT.not())
+                    if (doLog) ueValues.add(
+                        UE(
+                            timestamp = dateUtil.now(),
+                            action = Action.PROFILE_SWITCH,
+                            source = Sources.NSClient,
+                            note = "",
+                            values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                         )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    if (config.AAPSCLIENT.not())
-                        if (doLog) ueValues.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.PROFILE_SWITCH_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
+                    )
+                aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.invalidated.forEach {
+                if (config.AAPSCLIENT.not())
+                    if (doLog) ueValues.add(
+                        UE(
+                            timestamp = dateUtil.now(),
+                            action = Action.PROFILE_SWITCH_REMOVED,
+                            source = Sources.NSClient,
+                            note = "",
+                            values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                         )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                    )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", e)
+            throw e
+        }
+    }
 
-    override fun updateProfileSwitchesNsIds(profileSwitches: List<PS>): Single<PersistenceLayer.TransactionResult<PS>> =
-        repository.runTransactionForResult(UpdateNsIdProfileSwitchTransaction(profileSwitches.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of ProfileSwitch failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<PS>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of ProfileSwitch $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun updateProfileSwitchesNsIds(profileSwitches: List<PS>): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdProfileSwitchTransaction(profileSwitches.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<PS>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of ProfileSwitch $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of ProfileSwitch failed", e)
+            throw e
+        }
+    }
 
     // TB
-    override fun getTemporaryBasalActiveAt(timestamp: Long): TB? =
-        repository.getTemporaryBasalActiveAt(timestamp).blockingGet()?.fromDb()
+    override suspend fun getTemporaryBasalActiveAt(timestamp: Long): TB? = withContext(Dispatchers.IO) {
+        repository.getTemporaryBasalActiveAt(timestamp)?.fromDb()
+    }
 
-    override fun getOldestTemporaryBasalRecord(): TB? =
-        repository.getOldestTemporaryBasalRecord().blockingGet()?.fromDb()
+    override suspend fun getOldestTemporaryBasalRecord(): TB? = withContext(Dispatchers.IO) {
+        repository.getOldestTemporaryBasalRecord()?.fromDb()
+    }
 
-    override fun getLastTemporaryBasalId(): Long? = repository.getLastTemporaryBasalId()
-    override fun getTemporaryBasalByNSId(nsId: String): TB? = repository.findTemporaryBasalByNSId(nsId)?.fromDb()
+    override suspend fun getLastTemporaryBasalId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastTemporaryBasalId()
+    }
 
-    override fun getTemporaryBasalsActiveBetweenTimeAndTime(startTime: Long, endTime: Long): List<TB> =
-        repository.getTemporaryBasalsActiveBetweenTimeAndTime(startTime, endTime).blockingGet().asSequence().map { it.fromDb() }.toList()
+    override suspend fun getTemporaryBasalByNSId(nsId: String): TB? = withContext(Dispatchers.IO) {
+        repository.findTemporaryBasalByNSId(nsId)?.fromDb()
+    }
 
-    override fun getTemporaryBasalsStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<TB> =
-        repository.getTemporaryBasalsStartingFromTimeToTime(startTime, endTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getTemporaryBasalsActiveBetweenTimeAndTime(startTime: Long, endTime: Long): List<TB> = withContext(Dispatchers.IO) {
+        repository.getTemporaryBasalsActiveBetweenTimeAndTime(startTime, endTime).map { it.fromDb() }
+    }
 
-    override fun getTemporaryBasalsStartingFromTime(startTime: Long, ascending: Boolean): Single<List<TB>> =
+    override suspend fun getTemporaryBasalsStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<TB> = withContext(Dispatchers.IO) {
+        repository.getTemporaryBasalsStartingFromTimeToTime(startTime, endTime, ascending).map { it.fromDb() }
+    }
+
+    override suspend fun getTemporaryBasalsStartingFromTime(startTime: Long, ascending: Boolean): List<TB> = withContext(Dispatchers.IO) {
         repository.getTemporaryBasalsStartingFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getTemporaryBasalsStartingFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<TB>> =
+    override suspend fun getTemporaryBasalsStartingFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): List<TB> = withContext(Dispatchers.IO) {
         repository.getTemporaryBasalsStartingFromTimeIncludingInvalid(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getNextSyncElementTemporaryBasal(id: Long): Maybe<Pair<TB, TB>> =
-        repository.getNextSyncElementTemporaryBasal(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementTemporaryBasal(id: Long): Pair<TB, TB>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementTemporaryBasal(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun invalidateTemporaryBasal(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun invalidateTemporaryBasal(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateTemporaryBasalTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", e)
+            throw e
+        }
+    }
 
-    override fun syncNsTemporaryBasals(temporaryBasals: List<TB>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasals.asSequence().map { it.toDb() }.toList(), config.AAPSCLIENT))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.TEMP_BASAL,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOf(
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                            )
+    override suspend fun syncNsTemporaryBasals(temporaryBasals: List<TB>, doLog: Boolean): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsTemporaryBasalTransaction(temporaryBasals.asSequence().map { it.toDb() }.toList(), config.AAPSCLIENT))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.TEMP_BASAL,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOf(
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.TEMP_BASAL_REMOVED,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOf(
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                            )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.invalidated.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.TEMP_BASAL_REMOVED,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOf(
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.ended.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.CANCEL_TEMP_BASAL,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOf(
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                            )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                transactionResult.invalidated.add(it.fromDb())
+            }
+            result.ended.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.CANCEL_TEMP_BASAL,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOf(
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
-                    transactionResult.ended.add(it.fromDb())
-                }
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                result.updatedDuration.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
-                    transactionResult.updatedDuration.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
+                transactionResult.ended.add(it.fromDb())
             }
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            result.updatedDuration.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
+                transactionResult.updatedDuration.add(it.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", e)
+            throw e
+        }
+    }
 
-    override fun updateTemporaryBasalsNsIds(temporaryBasals: List<TB>): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(UpdateNsIdTemporaryBasalTransaction(temporaryBasals.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryBasal failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryBasal $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun updateTemporaryBasalsNsIds(temporaryBasals: List<TB>): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdTemporaryBasalTransaction(temporaryBasals.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryBasal $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryBasal failed", e)
+            throw e
+        }
+    }
 
-    override fun syncPumpTemporaryBasal(temporaryBasal: TB, type: TB.Type?): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(SyncPumpTemporaryBasalTransaction(temporaryBasal.toDb(), type?.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
-                    transactionResult.updated.add(it.second.fromDb())
-                }
-                transactionResult
+    override suspend fun syncPumpTemporaryBasal(temporaryBasal: TB, type: TB.Type?): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncPumpTemporaryBasalTransaction(temporaryBasal.toDb(), type?.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
+                transactionResult.inserted.add(it.fromDb())
             }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
+                transactionResult.updated.add(it.second.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", e)
+            throw e
+        }
+    }
 
-    override fun syncPumpCancelTemporaryBasalIfAny(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(SyncPumpCancelTemporaryBasalIfAnyTransaction(timestamp, endPumpId, pumpType.toDb(), pumpSerial))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
-                    transactionResult.updated.add(it.second.fromDb())
-                }
-                transactionResult
+    override suspend fun syncPumpCancelTemporaryBasalIfAny(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncPumpCancelTemporaryBasalIfAnyTransaction(timestamp, endPumpId, pumpType.toDb(), pumpSerial))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
+                transactionResult.updated.add(it.second.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", e)
+            throw e
+        }
+    }
 
-    override fun syncPumpInvalidateTemporaryBasalWithTempId(temporaryId: Long): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(InvalidateTemporaryBasalWithTempIdTransaction(temporaryId))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun syncPumpInvalidateTemporaryBasalWithTempId(temporaryId: Long): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateTemporaryBasalWithTempIdTransaction(temporaryId))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", e)
+            throw e
+        }
+    }
 
-    override fun syncPumpInvalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(InvalidateTemporaryBasalTransactionWithPumpId(pumpId, pumpType.toDb(), pumpSerial))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun syncPumpInvalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateTemporaryBasalTransactionWithPumpId(pumpId, pumpType.toDb(), pumpSerial))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", e)
+            throw e
+        }
+    }
 
-    override fun syncPumpTemporaryBasalWithTempId(temporaryBasal: TB, type: TB.Type?): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(SyncTemporaryBasalWithTempIdTransaction(temporaryBasal.toDb(), type?.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
-                    transactionResult.updated.add(it.second.fromDb())
-                }
-                transactionResult
+    override suspend fun syncPumpTemporaryBasalWithTempId(temporaryBasal: TB, type: TB.Type?): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncTemporaryBasalWithTempIdTransaction(temporaryBasal.toDb(), type?.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
+                transactionResult.updated.add(it.second.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", e)
+            throw e
+        }
+    }
 
-    override fun insertTemporaryBasalWithTempId(temporaryBasal: TB): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(InsertTemporaryBasalWithTempIdTransaction(temporaryBasal.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TB>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun insertTemporaryBasalWithTempId(temporaryBasal: TB): PersistenceLayer.TransactionResult<TB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertTemporaryBasalWithTempIdTransaction(temporaryBasal.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<TB>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
+                transactionResult.inserted.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", e)
+            throw e
+        }
+    }
 
     // EB
-    override fun getExtendedBolusActiveAt(timestamp: Long): EB? =
-        repository.getExtendedBolusActiveAt(timestamp).blockingGet()?.fromDb()
+    override suspend fun getExtendedBolusActiveAt(timestamp: Long): EB? = withContext(Dispatchers.IO) {
+        repository.getExtendedBolusActiveAt(timestamp)?.fromDb()
+    }
 
-    override fun getOldestExtendedBolusRecord(): EB? =
-        repository.getOldestExtendedBolusRecord().blockingGet()?.fromDb()
+    override suspend fun getOldestExtendedBolusRecord(): EB? = withContext(Dispatchers.IO) {
+        repository.getOldestExtendedBolusRecord()?.fromDb()
+    }
 
-    override fun getLastExtendedBolusId(): Long? = repository.getLastExtendedBolusId()
-    override fun getExtendedBolusByNSId(nsId: String): EB? = repository.findExtendedBolusByNSId(nsId)?.fromDb()
+    override suspend fun getLastExtendedBolusId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastExtendedBolusId()
+    }
 
-    override fun getExtendedBolusesStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EB> =
-        repository.getExtendedBolusesStartingFromTimeToTime(startTime, endTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getExtendedBolusByNSId(nsId: String): EB? = withContext(Dispatchers.IO) {
+        repository.findExtendedBolusByNSId(nsId)?.fromDb()
+    }
 
-    override fun getExtendedBolusesStartingFromTime(startTime: Long, ascending: Boolean): Single<List<EB>> =
+    override suspend fun getExtendedBolusesStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EB> = withContext(Dispatchers.IO) {
+        repository.getExtendedBolusesStartingFromTimeToTime(startTime, endTime, ascending).map { it.fromDb() }
+    }
+
+    override suspend fun getExtendedBolusesStartingFromTime(startTime: Long, ascending: Boolean): List<EB> = withContext(Dispatchers.IO) {
         repository.getExtendedBolusesStartingFromTime(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getExtendedBolusStartingFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<EB>> =
+    override suspend fun getExtendedBolusStartingFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): List<EB> = withContext(Dispatchers.IO) {
         repository.getExtendedBolusStartingFromTimeIncludingInvalid(startTime, ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .map { it.fromDb() }
+    }
 
-    override fun getNextSyncElementExtendedBolus(id: Long): Maybe<Pair<EB, EB>> =
-        repository.getNextSyncElementExtendedBolus(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementExtendedBolus(id: Long): Pair<EB, EB>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementExtendedBolus(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun invalidateExtendedBolus(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<PersistenceLayer.TransactionResult<EB>> =
-        repository.runTransactionForResult(InvalidateExtendedBolusTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating ExtendedBolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EB>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun invalidateExtendedBolus(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<EB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateExtendedBolusTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<EB>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating ExtendedBolus", e)
+            throw e
+        }
+    }
 
-    override fun syncNsExtendedBoluses(extendedBoluses: List<EB>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<EB>> =
-        repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBoluses.asSequence().map { it.toDb() }.toList(), config.AAPSCLIENT))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving ExtendedBolus", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<EB>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.EXTENDED_BOLUS,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOf(
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                ValueWithUnit.Insulin(it.amount),
-                                ValueWithUnit.UnitPerHour(it.rate),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                            )
+    override suspend fun syncNsExtendedBoluses(extendedBoluses: List<EB>, doLog: Boolean): PersistenceLayer.TransactionResult<EB> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsExtendedBolusTransaction(extendedBoluses.asSequence().map { it.toDb() }.toList(), config.AAPSCLIENT))
+            val transactionResult = PersistenceLayer.TransactionResult<EB>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.EXTENDED_BOLUS,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOf(
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            ValueWithUnit.Insulin(it.amount),
+                            ValueWithUnit.UnitPerHour(it.rate),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted EB $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.EXTENDED_BOLUS_REMOVED,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOf(
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                ValueWithUnit.Insulin(it.amount),
-                                ValueWithUnit.UnitPerHour(it.rate),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                            )
-                        )
-                    )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated EB $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.ended.forEach {
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.CANCEL_EXTENDED_BOLUS,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOf(
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                ValueWithUnit.Insulin(it.amount),
-                                ValueWithUnit.UnitPerHour(it.rate),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                            )
-                        )
-                    )
-                    aapsLogger.debug(LTag.DATABASE, "Ended EB $it")
-                    transactionResult.ended.add(it.fromDb())
-                }
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId EB $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                result.updatedDuration.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated duration EB $it")
-                    transactionResult.updatedDuration.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted EB $it")
+                transactionResult.inserted.add(it.fromDb())
             }
+            result.invalidated.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.EXTENDED_BOLUS_REMOVED,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOf(
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            ValueWithUnit.Insulin(it.amount),
+                            ValueWithUnit.UnitPerHour(it.rate),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                        )
+                    )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated EB $it")
+                transactionResult.invalidated.add(it.fromDb())
+            }
+            result.ended.forEach {
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.CANCEL_EXTENDED_BOLUS,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOf(
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            ValueWithUnit.Insulin(it.amount),
+                            ValueWithUnit.UnitPerHour(it.rate),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                        )
+                    )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Ended EB $it")
+                transactionResult.ended.add(it.fromDb())
+            }
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId EB $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            result.updatedDuration.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated duration EB $it")
+                transactionResult.updatedDuration.add(it.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving ExtendedBolus", e)
+            throw e
+        }
+    }
 
     // TT
-    override fun getTemporaryTargetActiveAt(timestamp: Long): TT? =
-        repository.getTemporaryTargetActiveAt(timestamp).blockingGet()?.fromDb()
+    override suspend fun getTemporaryTargetActiveAt(timestamp: Long): TT? =
+        repository.getTemporaryTargetActiveAt(timestamp)?.fromDb()
 
-    override fun getLastTemporaryTargetId(): Long? = repository.getLastTempTargetId()
-    override fun getTemporaryTargetByNSId(nsId: String): TT? = repository.findTemporaryTargetByNSId(nsId)?.fromDb()
+    override suspend fun getLastTemporaryTargetId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastTempTargetId()
+    }
 
-    override fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
-        repository.getTemporaryTargetDataFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getTemporaryTargetByNSId(nsId: String): TT? = withContext(Dispatchers.IO) {
+        repository.findTemporaryTargetByNSId(nsId)?.fromDb()
+    }
 
-    override fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
-        repository.getTemporaryTargetDataIncludingInvalidFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): List<TT> = withContext(Dispatchers.IO) {
+        repository.getTemporaryTargetDataFromTime(timestamp, ascending)
+            .map { it.fromDb() }
+    }
 
-    override fun getNextSyncElementTemporaryTarget(id: Long): Maybe<Pair<TT, TT>> =
-        repository.getNextSyncElementTemporaryTarget(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<TT> = withContext(Dispatchers.IO) {
+        repository.getTemporaryTargetDataIncludingInvalidFromTime(timestamp, ascending)
+            .map { it.fromDb() }
+    }
 
-    override fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
-        : Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryTarget", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TT>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun getNextSyncElementTemporaryTarget(id: Long): Pair<TT, TT>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementTemporaryTarget(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
+
+    override suspend fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
+        : PersistenceLayer.TransactionResult<TT> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateTemporaryTargetTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<TT>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryTarget", e)
+            throw e
+        }
+    }
 
-    override fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
-        : Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(temporaryTarget.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while inserting TemporaryTarget", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TT>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget from ${source.name} $it")
-                    transactionResult.inserted.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget from ${source.name} $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
+        : PersistenceLayer.TransactionResult<TT> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertAndCancelCurrentTemporaryTargetTransaction(temporaryTarget.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<TT>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget from ${source.name} $it")
+                transactionResult.inserted.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
-
-    override fun cancelCurrentTemporaryTargetIfAny(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
-        : Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(timestamp))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while updating TemporaryTarget", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TT>()
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget from ${source.name} $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while inserting TemporaryTarget", e)
+            throw e
+        }
+    }
 
-    override fun syncNsTemporaryTargets(temporaryTargets: List<TT>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTargets.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryTarget", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TT>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach { tt ->
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.TT,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOfNotNull(
-                                ValueWithUnit.TETTReason(tt.reason.fromDb()),
-                                ValueWithUnit.fromGlucoseUnit(tt.lowTarget, GlucoseUnit.MGDL),
-                                ValueWithUnit.fromGlucoseUnit(tt.highTarget, GlucoseUnit.MGDL).takeIf { tt.lowTarget != tt.highTarget },
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                            )
+    override suspend fun cancelCurrentTemporaryTargetIfAny(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
+        : PersistenceLayer.TransactionResult<TT> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CancelCurrentTemporaryTargetIfAnyTransaction(timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<TT>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while updating TemporaryTarget", e)
+            throw e
+        }
+    }
+
+    override suspend fun syncNsTemporaryTargets(temporaryTargets: List<TT>, doLog: Boolean): PersistenceLayer.TransactionResult<TT> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsTemporaryTargetTransaction(temporaryTargets.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<TT>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach { tt ->
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.TT,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOfNotNull(
+                            ValueWithUnit.TETTReason(tt.reason.fromDb()),
+                            ValueWithUnit.fromGlucoseUnit(tt.lowTarget, GlucoseUnit.MGDL),
+                            ValueWithUnit.fromGlucoseUnit(tt.highTarget, GlucoseUnit.MGDL).takeIf { tt.lowTarget != tt.highTarget },
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget from ${Sources.NSClient.name} $tt")
-                    transactionResult.inserted.add(tt.fromDb())
-                }
-                result.invalidated.forEach { tt ->
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.TT_REMOVED,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOfNotNull(
-                                ValueWithUnit.TETTReason(tt.reason.fromDb()),
-                                ValueWithUnit.Mgdl(tt.lowTarget),
-                                ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                            )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget from ${Sources.NSClient.name} $tt")
+                transactionResult.inserted.add(tt.fromDb())
+            }
+            result.invalidated.forEach { tt ->
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.TT_REMOVED,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOfNotNull(
+                            ValueWithUnit.TETTReason(tt.reason.fromDb()),
+                            ValueWithUnit.Mgdl(tt.lowTarget),
+                            ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget from ${Sources.NSClient.name} $tt")
-                    transactionResult.invalidated.add(tt.fromDb())
-                }
-                result.ended.forEach { tt ->
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.CANCEL_TT,
-                            source = Sources.NSClient,
-                            note = "",
-                            values = listOfNotNull(
-                                ValueWithUnit.TETTReason(tt.reason.fromDb()),
-                                ValueWithUnit.Mgdl(tt.lowTarget),
-                                ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                            )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget from ${Sources.NSClient.name} $tt")
+                transactionResult.invalidated.add(tt.fromDb())
+            }
+            result.ended.forEach { tt ->
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.CANCEL_TT,
+                        source = Sources.NSClient,
+                        note = "",
+                        values = listOfNotNull(
+                            ValueWithUnit.TETTReason(tt.reason.fromDb()),
+                            ValueWithUnit.Mgdl(tt.lowTarget),
+                            ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Ended TemporaryTarget from ${Sources.NSClient.name} $tt")
-                    transactionResult.ended.add(tt.fromDb())
-                }
-                result.updatedNsId.forEach { tt ->
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget from ${Sources.NSClient.name} $tt")
-                    transactionResult.updatedNsId.add(tt.fromDb())
-                }
-                result.updatedDuration.forEach { tt ->
-                    aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget from ${Sources.NSClient.name} $tt")
-                    transactionResult.updatedDuration.add(tt.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Ended TemporaryTarget from ${Sources.NSClient.name} $tt")
+                transactionResult.ended.add(tt.fromDb())
             }
-
-    override fun updateTemporaryTargetsNsIds(temporaryTargets: List<TT>): Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(temporaryTargets.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while updating nsId TemporaryTarget", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TT>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryTarget $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+            result.updatedNsId.forEach { tt ->
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget from ${Sources.NSClient.name} $tt")
+                transactionResult.updatedNsId.add(tt.fromDb())
             }
+            result.updatedDuration.forEach { tt ->
+                aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget from ${Sources.NSClient.name} $tt")
+                transactionResult.updatedDuration.add(tt.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryTarget", e)
+            throw e
+        }
+    }
 
-    override fun getLastTherapyEventId(): Long? = repository.getLastTherapyEventId()
-    override fun getTherapyEventByNSId(nsId: String): TE? = repository.findTherapyEventByNSId(nsId)?.fromDb()
+    override suspend fun updateTemporaryTargetsNsIds(temporaryTargets: List<TT>): PersistenceLayer.TransactionResult<TT> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdTemporaryTargetTransaction(temporaryTargets.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<TT>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryTarget $it")
+                transactionResult.updatedNsId.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while updating nsId TemporaryTarget", e)
+            throw e
+        }
+    }
+
+    override suspend fun getLastTherapyEventId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastTherapyEventId()
+    }
+
+    override suspend fun getTherapyEventByNSId(nsId: String): TE? = withContext(Dispatchers.IO) {
+        repository.findTherapyEventByNSId(nsId)?.fromDb()
+    }
 
     // TE
-    override fun getLastTherapyRecordUpToNow(type: TE.Type): TE? =
-        repository.getLastTherapyRecordUpToNow(type.toDb()).blockingGet()?.fromDb()
+    override suspend fun getLastTherapyRecordUpToNow(type: TE.Type): TE? = withContext(Dispatchers.IO) {
+        repository.getLastTherapyRecordUpToNow(type.toDb())?.fromDb()
+    }
 
-    override fun getTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TE>> =
-        repository.compatGetTherapyEventDataFromToTime(from, to).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getTherapyEventDataFromToTime(from: Long, to: Long): List<TE> = withContext(Dispatchers.IO) {
+        repository.compatGetTherapyEventDataFromToTime(from, to).map { it.fromDb() }
+    }
 
-    override fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>> =
-        repository.getTherapyEventDataIncludingInvalidFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<TE> = withContext(Dispatchers.IO) {
+        repository.getTherapyEventDataIncludingInvalidFromTime(timestamp, ascending)
+            .map { it.fromDb() }
+    }
 
-    override fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>> =
-        repository.getTherapyEventDataFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): List<TE> = withContext(Dispatchers.IO) {
+        repository.getTherapyEventDataFromTime(timestamp, ascending)
+            .map { it.fromDb() }
+    }
 
-    override fun getTherapyEventDataFromTime(timestamp: Long, type: TE.Type, ascending: Boolean): List<TE> =
-        repository.getTherapyEventDataFromTime(timestamp, type.toDb(), ascending)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getTherapyEventDataFromTime(timestamp: Long, type: TE.Type, ascending: Boolean): List<TE> = withContext(Dispatchers.IO) {
+        repository.getTherapyEventDataFromTime(timestamp, type.toDb(), ascending).map { it.fromDb() }
+    }
 
-    override fun getNextSyncElementTherapyEvent(id: Long): Maybe<Pair<TE, TE>> =
-        repository.getNextSyncElementTherapyEvent(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    override suspend fun getNextSyncElementTherapyEvent(id: Long): Pair<TE, TE>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementTherapyEvent(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
 
-    override fun insertPumpTherapyEventIfNewByTimestamp(therapyEvent: TE, timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
-        : Single<PersistenceLayer.TransactionResult<TE>> =
-        repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent $therapyEvent", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TE>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent from ${source.name} $it")
-                    transactionResult.inserted.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun insertPumpTherapyEventIfNewByTimestamp(therapyEvent: TE, timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
+        : PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<TE>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent from ${source.name} $it")
+                transactionResult.inserted.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent $therapyEvent", e)
+            throw e
+        }
+    }
 
-    override fun insertOrUpdateTherapyEvent(therapyEvent: TE): Single<PersistenceLayer.TransactionResult<TE>> =
-        repository.runTransactionForResult(InsertOrUpdateTherapyEventTransaction(therapyEvent.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TE>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TherapyEvent $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun insertOrUpdateTherapyEvent(therapyEvent: TE): PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateTherapyEventTransaction(therapyEvent.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<TE>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $it")
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun invalidateTherapyEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
-        : Single<PersistenceLayer.TransactionResult<TE>> =
-        repository.runTransactionForResult(InvalidateTherapyEventTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TherapyEvent", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TE>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
-                }
-                log(ueValues)
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TherapyEvent $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate", e)
+            throw e
+        }
+    }
 
-    override fun invalidateTherapyEventsWithNote(note: String, action: Action, source: Sources): Single<PersistenceLayer.TransactionResult<TE>> =
-        repository.runTransactionForResult(InvalidateTherapyEventsWithNoteTransaction(note))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TherapyEvent", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TE>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note, values = emptyList()))
-                }
-                log(ueValues)
-                transactionResult
+    override suspend fun invalidateTherapyEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
+        : PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateTherapyEventTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<TE>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
             }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating TherapyEvent", e)
+            throw e
+        }
+    }
 
-    override fun syncNsTherapyEvents(therapyEvents: List<TE>, doLog: Boolean): Single<PersistenceLayer.TransactionResult<TE>> =
-        repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvents.asSequence().map { it.toDb() }.toList(), config.AAPSCLIENT))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TE>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach { therapyEvent ->
-                    val action = when (therapyEvent.type) {
-                        TherapyEvent.Type.CANNULA_CHANGE -> Action.SITE_CHANGE
-                        TherapyEvent.Type.INSULIN_CHANGE -> Action.RESERVOIR_CHANGE
-                        else                             -> Action.CAREPORTAL
-                    }
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = action,
-                            source = Sources.NSClient,
-                            note = therapyEvent.note ?: "",
-                            values = listOfNotNull(
-                                ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                ValueWithUnit.TEType(therapyEvent.type.fromDb()),
-                                ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.fromDb()).takeIf { therapyEvent.glucose != null }
-                            )
+    override suspend fun invalidateTherapyEventsWithNote(note: String, action: Action, source: Sources): PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateTherapyEventsWithNoteTransaction(note))
+            val transactionResult = PersistenceLayer.TransactionResult<TE>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note, values = emptyList()))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating TherapyEvent", e)
+            throw e
+        }
+    }
+
+    override suspend fun syncNsTherapyEvents(therapyEvents: List<TE>, doLog: Boolean): PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsTherapyEventTransaction(therapyEvents.asSequence().map { it.toDb() }.toList(), config.AAPSCLIENT))
+            val transactionResult = PersistenceLayer.TransactionResult<TE>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach { therapyEvent ->
+                val action = when (therapyEvent.type) {
+                    TherapyEvent.Type.CANNULA_CHANGE -> Action.SITE_CHANGE
+                    TherapyEvent.Type.INSULIN_CHANGE -> Action.RESERVOIR_CHANGE
+                    else                             -> Action.CAREPORTAL
+                }
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = Sources.NSClient,
+                        note = therapyEvent.note ?: "",
+                        values = listOfNotNull(
+                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                            ValueWithUnit.TEType(therapyEvent.type.fromDb()),
+                            ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.fromDb()).takeIf { therapyEvent.glucose != null }
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
-                    transactionResult.inserted.add(therapyEvent.fromDb())
-                }
-                result.invalidated.forEach { therapyEvent ->
-                    if (doLog) ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.CAREPORTAL_REMOVED,
-                            source = Sources.NSClient,
-                            note = therapyEvent.note ?: "",
-                            values = listOfNotNull(
-                                ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                ValueWithUnit.TEType(therapyEvent.type.fromDb()),
-                                ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.fromDb()).takeIf { therapyEvent.glucose != null }
-                            )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
+                transactionResult.inserted.add(therapyEvent.fromDb())
+            }
+            result.invalidated.forEach { therapyEvent ->
+                if (doLog) ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.CAREPORTAL_REMOVED,
+                        source = Sources.NSClient,
+                        note = therapyEvent.note ?: "",
+                        values = listOfNotNull(
+                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                            ValueWithUnit.TEType(therapyEvent.type.fromDb()),
+                            ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.fromDb()).takeIf { therapyEvent.glucose != null }
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
-                    transactionResult.invalidated.add(therapyEvent.fromDb())
-                }
-                result.updatedNsId.forEach { therapyEvent ->
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
-                    transactionResult.updatedNsId.add(therapyEvent.fromDb())
-                }
-                result.updatedDuration.forEach { therapyEvent ->
-                    aapsLogger.debug(LTag.DATABASE, "Updated duration TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
-                    transactionResult.updatedDuration.add(therapyEvent.fromDb())
-                }
-                result.updatedSite.forEach { therapyEvent ->
-                    aapsLogger.debug(LTag.DATABASE, "Updated Site Rotation TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
-                    transactionResult.updated.add(therapyEvent.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
+                transactionResult.invalidated.add(therapyEvent.fromDb())
             }
+            result.updatedNsId.forEach { therapyEvent ->
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
+                transactionResult.updatedNsId.add(therapyEvent.fromDb())
+            }
+            result.updatedDuration.forEach { therapyEvent ->
+                aapsLogger.debug(LTag.DATABASE, "Updated duration TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
+                transactionResult.updatedDuration.add(therapyEvent.fromDb())
+            }
+            result.updatedSite.forEach { therapyEvent ->
+                aapsLogger.debug(LTag.DATABASE, "Updated Site Rotation TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
+                transactionResult.updated.add(therapyEvent.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", e)
+            throw e
+        }
+    }
 
-    override fun updateTherapyEventsNsIds(therapyEvents: List<TE>): Single<PersistenceLayer.TransactionResult<TE>> =
-        repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(therapyEvents.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of TherapyEvent failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TE>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TherapyEvent $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun updateTherapyEventsNsIds(therapyEvents: List<TE>): PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdTherapyEventTransaction(therapyEvents.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<TE>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of TherapyEvent $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of TherapyEvent failed", e)
+            throw e
+        }
+    }
 
     // DS
-    override fun getNextSyncElementDeviceStatus(id: Long): Maybe<DS> =
-        repository.getNextSyncElementDeviceStatus(id).map { it.fromDb() }
+    override suspend fun getNextSyncElementDeviceStatus(id: Long): DS? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementDeviceStatus(id)?.fromDb()
+    }
 
-    override fun getLastDeviceStatusId(): Long? = repository.getLastDeviceStatusId()
+    override suspend fun getLastDeviceStatusId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastDeviceStatusId()
+    }
 
     override fun insertDeviceStatus(deviceStatus: DS) {
         repository.insert(deviceStatus.toDb())
         aapsLogger.debug(LTag.DATABASE, "Inserted DeviceStatus $deviceStatus")
     }
 
-    override fun updateDeviceStatusesNsIds(deviceStatuses: List<DS>): Single<PersistenceLayer.TransactionResult<DS>> =
-        repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatuses.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of DeviceStatus failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<DS>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of DeviceStatus $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun updateDeviceStatusesNsIds(deviceStatuses: List<DS>): PersistenceLayer.TransactionResult<DS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdDeviceStatusTransaction(deviceStatuses.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<DS>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of DeviceStatus $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of DeviceStatus failed", e)
+            throw e
+        }
+    }
 
     // HR
-    override fun getHeartRatesFromTime(startTime: Long): List<HR> =
-        repository.getHeartRatesFromTime(startTime).asSequence().map { it.fromDb() }.toList()
+    override suspend fun getHeartRatesFromTime(startTime: Long): List<HR> = withContext(Dispatchers.IO) {
+        repository.getHeartRatesFromTime(startTime).map { it.fromDb() }
+    }
 
-    override fun getHeartRatesFromTimeToTime(startTime: Long, endTime: Long): List<HR> =
-        repository.getHeartRatesFromTimeToTime(startTime, endTime)
-            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
-            .blockingGet()
+    override suspend fun getHeartRatesFromTimeToTime(startTime: Long, endTime: Long): List<HR> = withContext(Dispatchers.IO) {
+        repository.getHeartRatesFromTimeToTime(startTime, endTime).map { it.fromDb() }
+    }
 
-    override fun insertOrUpdateHeartRate(heartRate: HR): Single<PersistenceLayer.TransactionResult<HR>> =
-        repository.runTransactionForResult(InsertOrUpdateHeartRateTransaction(heartRate.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<HR>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted HeartRate $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated HeartRate $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun insertOrUpdateHeartRate(heartRate: HR): PersistenceLayer.TransactionResult<HR> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateHeartRateTransaction(heartRate.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<HR>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted HeartRate $it")
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun getFoods(): Single<List<FD>> =
-        repository.getFoodData().map { list -> list.asSequence().map { it.fromDb() }.toList() }
-
-    override fun getNextSyncElementFood(id: Long): Maybe<Pair<FD, FD>> =
-        repository.getNextSyncElementFood(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
-
-    override fun getLastFoodId(): Long? = repository.getLastFoodId()
-
-    override fun invalidateFood(id: Long, action: Action, source: Sources): Single<PersistenceLayer.TransactionResult<FD>> =
-        repository.runTransactionForResult(InvalidateFoodTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Food", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<FD>()
-                val ueValues = mutableListOf<UE>()
-                result.invalidated.forEach {
-                    ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = it.name, values = emptyList()))
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated Food from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated HeartRate $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate", e)
+            throw e
+        }
+    }
 
-    override fun syncNsFood(foods: List<FD>): Single<PersistenceLayer.TransactionResult<FD>> =
-        repository.runTransactionForResult(SyncNsFoodTransaction(foods.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Food", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<FD>()
-                val ueValues = mutableListOf<UE>()
-                result.inserted.forEach {
-                    ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.FOOD,
-                            source = Sources.NSClient,
-                            note = it.name,
-                            values = emptyList()
-                        )
+    override suspend fun getFoods(): List<FD> = withContext(Dispatchers.IO) {
+        repository.getFoodData().map { it.fromDb() }
+    }
+
+    override suspend fun getNextSyncElementFood(id: Long): Pair<FD, FD>? = withContext(Dispatchers.IO) {
+        repository.getNextSyncElementFood(id)?.let { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+    }
+
+    override suspend fun getLastFoodId(): Long? = withContext(Dispatchers.IO) {
+        repository.getLastFoodId()
+    }
+
+    override suspend fun invalidateFood(id: Long, action: Action, source: Sources): PersistenceLayer.TransactionResult<FD> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InvalidateFoodTransaction(id))
+            val transactionResult = PersistenceLayer.TransactionResult<FD>()
+            val ueValues = mutableListOf<UE>()
+            result.invalidated.forEach {
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = it.name, values = emptyList()))
+                aapsLogger.debug(LTag.DATABASE, "Invalidated Food from ${source.name} $it")
+                transactionResult.invalidated.add(it.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while invalidating Food", e)
+            throw e
+        }
+    }
+
+    override suspend fun syncNsFood(foods: List<FD>): PersistenceLayer.TransactionResult<FD> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncNsFoodTransaction(foods.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<FD>()
+            val ueValues = mutableListOf<UE>()
+            result.inserted.forEach {
+                ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.FOOD,
+                        source = Sources.NSClient,
+                        note = it.name,
+                        values = emptyList()
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Inserted Food $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.invalidated.forEach {
-                    ueValues.add(
-                        UE(
-                            timestamp = dateUtil.now(),
-                            action = Action.FOOD_REMOVED,
-                            source = Sources.NSClient,
-                            note = it.name,
-                            values = emptyList()
-                        )
+                )
+                aapsLogger.debug(LTag.DATABASE, "Inserted Food $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.invalidated.forEach {
+                ueValues.add(
+                    UE(
+                        timestamp = dateUtil.now(),
+                        action = Action.FOOD_REMOVED,
+                        source = Sources.NSClient,
+                        note = it.name,
+                        values = emptyList()
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated Food $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated Food $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                log(ueValues)
-                transactionResult
+                )
+                aapsLogger.debug(LTag.DATABASE, "Invalidated Food $it")
+                transactionResult.invalidated.add(it.fromDb())
             }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated Food $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving Food", e)
+            throw e
+        }
+    }
 
-    override fun updateFoodsNsIds(foods: List<FD>): Single<PersistenceLayer.TransactionResult<FD>> =
-        repository.runTransactionForResult(UpdateNsIdFoodTransaction(foods.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of Food failed", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<FD>()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Food $it")
-                    transactionResult.updatedNsId.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun updateFoodsNsIds(foods: List<FD>): PersistenceLayer.TransactionResult<FD> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UpdateNsIdFoodTransaction(foods.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<FD>()
+            result.updatedNsId.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated nsId of Food $it")
+                transactionResult.updatedNsId.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Updated nsId of Food failed", e)
+            throw e
+        }
+    }
 
     // UE
-    override fun insertUserEntries(entries: List<UE>): Single<PersistenceLayer.TransactionResult<UE>> =
-        repository.runTransactionForResult(UserEntryTransaction(entries.asSequence().map { it.toDb() }.toList()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving UserEntries $entries", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<UE>()
-                result.forEach {
-                    aapsLogger.debug("USER ENTRY: ${dateUtil.dateAndTimeAndSecondsString(it.timestamp)} ${it.action} ${it.source} ${it.note} ${it.values}")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun insertUserEntries(entries: List<UE>): PersistenceLayer.TransactionResult<UE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(UserEntryTransaction(entries.asSequence().map { it.toDb() }.toList()))
+            val transactionResult = PersistenceLayer.TransactionResult<UE>()
+            result.forEach {
+                aapsLogger.debug("USER ENTRY: ${dateUtil.dateAndTimeAndSecondsString(it.timestamp)} ${it.action} ${it.source} ${it.note} ${it.values}")
+                transactionResult.inserted.add(it.fromDb())
             }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving UserEntries $entries", e)
+            throw e
+        }
+    }
 
-    override fun getUserEntryDataFromTime(timestamp: Long): Single<List<UE>> =
-        repository.getUserEntryDataFromTime(timestamp).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getUserEntryDataFromTime(timestamp: Long): List<UE> = withContext(Dispatchers.IO) {
+        repository.getUserEntryDataFromTime(timestamp).map { it.fromDb() }.toList()
+    }
 
-    override fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UE>> =
-        repository.getUserEntryFilteredDataFromTime(timestamp).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+    override suspend fun getUserEntryFilteredDataFromTime(timestamp: Long): List<UE> = withContext(Dispatchers.IO) {
+        repository.getUserEntryFilteredDataFromTime(timestamp).map { it.fromDb() }.toList()
+    }
 
     // TDD
-    override fun clearCachedTddData(timestamp: Long) = repository.clearCachedTddData(timestamp)
-    override fun getLastTotalDailyDoses(count: Int, ascending: Boolean): List<TDD> =
-        repository.getLastTotalDailyDoses(count, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }.blockingGet()
+    override suspend fun clearCachedTddData(timestamp: Long) = withContext(Dispatchers.IO) { repository.clearCachedTddData(timestamp) }
 
-    override fun getCalculatedTotalDailyDose(timestamp: Long): TDD? =
-        repository.getCalculatedTotalDailyDose(timestamp).map { it.fromDb() }.blockingGet()
+    override suspend fun getLastTotalDailyDoses(count: Int, ascending: Boolean): List<TDD> = withContext(Dispatchers.IO) {
+        repository.getLastTotalDailyDoses(count, ascending).map { it.fromDb() }
+    }
 
-    override fun insertOrUpdateCachedTotalDailyDose(totalDailyDose: TDD): Single<PersistenceLayer.TransactionResult<TDD>> =
-        repository.runTransactionForResult(InsertOrUpdateCachedTotalDailyDoseTransaction(totalDailyDose.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TotalDailyDose $it") }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TDD>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                result.notUpdated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Not updated TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun getCalculatedTotalDailyDose(timestamp: Long): TDD? = withContext(Dispatchers.IO) {
+        repository.getCalculatedTotalDailyDose(timestamp)?.fromDb()
+    }
+
+    override suspend fun insertOrUpdateCachedTotalDailyDose(totalDailyDose: TDD): PersistenceLayer.TransactionResult<TDD> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateCachedTotalDailyDoseTransaction(totalDailyDose.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<TDD>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
+                transactionResult.inserted.add(it.fromDb())
             }
-
-    override fun insertOrUpdateTotalDailyDose(totalDailyDose: TDD): Single<PersistenceLayer.TransactionResult<TDD>> =
-        repository.runTransactionForResult(SyncPumpTotalDailyDoseTransaction(totalDailyDose.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TotalDailyDose $it") }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TDD>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TotalDailyDose $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
+                transactionResult.updated.add(it.fromDb())
             }
+            result.notUpdated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Not updated TotalDailyDose ${dateUtil.dateString(it.timestamp)} $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving TotalDailyDose $e")
+            throw e
+        }
+    }
+
+    override suspend fun insertOrUpdateTotalDailyDose(totalDailyDose: TDD): PersistenceLayer.TransactionResult<TDD> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(SyncPumpTotalDailyDoseTransaction(totalDailyDose.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<TDD>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted TotalDailyDose $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving TotalDailyDose $e")
+            throw e
+        }
+    }
 
     // SC
-    override fun getStepsCountFromTime(from: Long): List<SC> =
-        repository.getStepsCountFromTime(from).map { list -> list.asSequence().map { it.fromDb() }.toList() }.blockingGet()
+    override suspend fun getStepsCountFromTime(from: Long): List<SC> = withContext(Dispatchers.IO) {
+        repository.getStepsCountFromTime(from).map { it.fromDb() }
+    }
 
-    override fun getStepsCountFromTimeToTime(startTime: Long, endTime: Long): List<SC> =
-        repository.getStepsCountFromTimeToTime(startTime, endTime).map { list -> list.asSequence().map { it.fromDb() }.toList() }.blockingGet()
+    override suspend fun getStepsCountFromTimeToTime(startTime: Long, endTime: Long): List<SC> = withContext(Dispatchers.IO) {
+        repository.getStepsCountFromTimeToTime(startTime, endTime).map { it.fromDb() }
+    }
 
-    override fun getLastStepsCountFromTimeToTime(startTime: Long, endTime: Long): SC? =
-        repository.getLastStepsCountFromTimeToTime(startTime, endTime).blockingGet()?.fromDb()
+    override suspend fun getLastStepsCountFromTimeToTime(startTime: Long, endTime: Long): SC? = withContext(Dispatchers.IO) {
+        repository.getLastStepsCountFromTimeToTime(startTime, endTime)?.fromDb()
+    }
 
-    override fun insertOrUpdateStepsCount(stepsCount: SC): Single<PersistenceLayer.TransactionResult<SC>> =
-        repository.runTransactionForResult(InsertOrUpdateStepsCountTransaction(stepsCount.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving StepsCount $it") }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<SC>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted StepsCount $it")
-                    transactionResult.inserted.add(it.fromDb())
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated StepsCount $it")
-                    transactionResult.updated.add(it.fromDb())
-                }
-                transactionResult
+    override suspend fun insertOrUpdateStepsCount(stepsCount: SC): PersistenceLayer.TransactionResult<SC> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateStepsCountTransaction(stepsCount.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<SC>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted StepsCount $it")
+                transactionResult.inserted.add(it.fromDb())
             }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated StepsCount $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving StepsCount $e")
+            throw e
+        }
+    }
 
     // VersionChange
     override fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable =
         repository.runTransaction(VersionChangeTransaction(versionName, versionCode, gitRemote, commitHash))
 
-    override fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): NE =
+    override suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): NE = withContext(Dispatchers.IO) {
         repository.collectNewEntriesSince(since, until, limit, offset).fromDb()
+    }
 
-    override fun getApsResultCloseTo(timestamp: Long): APSResult? =
-        repository.getApsResultCloseTo(timestamp).blockingGet()?.fromDb(apsResultProvider)
+    override suspend fun getApsResultCloseTo(timestamp: Long): APSResult? = withContext(Dispatchers.IO) {
+        repository.getApsResultCloseTo(timestamp)?.fromDb(apsResultProvider)
+    }
 
-    override fun getApsResults(start: Long, end: Long): List<APSResult> =
-        repository.getApsResults(start, end).map { list -> list.asSequence().map { it.fromDb(apsResultProvider) }.toList() }.blockingGet()
+    override suspend fun getApsResults(start: Long, end: Long): List<APSResult> = withContext(Dispatchers.IO) {
+        repository.getApsResults(start, end).map { it.fromDb(apsResultProvider) }
+    }
 
-    override fun insertOrUpdateApsResult(apsResult: APSResult): Single<PersistenceLayer.TransactionResult<APSResult>> =
-        repository.runTransactionForResult(InsertOrUpdateApsResultTransaction(apsResult.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving APSResult", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<APSResult>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted APSResult $it")
-                    transactionResult.inserted.add(it.fromDb(apsResultProvider))
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated APSResult $it")
-                    transactionResult.updated.add(it.fromDb(apsResultProvider))
-                }
-                transactionResult
+    override suspend fun insertOrUpdateApsResult(apsResult: APSResult): PersistenceLayer.TransactionResult<APSResult> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateApsResultTransaction(apsResult.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<APSResult>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted APSResult $it")
+                transactionResult.inserted.add(it.fromDb(apsResultProvider))
             }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated APSResult $it")
+                transactionResult.updated.add(it.fromDb(apsResultProvider))
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while saving APSResult", e)
+            throw e
+        }
+    }
 }

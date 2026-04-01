@@ -3,6 +3,8 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,10 +14,13 @@ import org.skyscreamer.jsonassert.JSONAssert
 class TriggerProfilePercentTest : TriggerTestBase() {
 
     @BeforeEach fun mock() {
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        runBlocking {
+            whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+            whenever(profileFunction.isProfileChangePending()).thenReturn(false)
+        }
     }
 
-    @Test fun shouldRunTest() {
+    @Test fun shouldRunTest() = runTest {
         var t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(101.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         t = TriggerProfilePercent(injector).setValue(100.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -36,31 +41,31 @@ class TriggerProfilePercentTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
     }
 
-    @Test fun copyConstructorTest() {
+    @Test fun copyConstructorTest() = runTest {
         val t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         val t1 = t.duplicate() as TriggerProfilePercent
-        assertThat( t1.pct.value).isWithin(0.01).of(213.0)
+        assertThat(t1.pct.value).isWithin(0.01).of(213.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     private val bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"percentage\":110},\"type\":\"TriggerProfilePercent\"}"
-    @Test fun toJSONTest() {
+    @Test fun toJSONTest() = runTest {
         val t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(110.0).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(bgJson, t.toJSON(), true)
     }
 
-    @Test fun fromJSONTest() {
+    @Test fun fromJSONTest() = runTest {
         val t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(120.0).comparator(Comparator.Compare.IS_EQUAL)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerProfilePercent
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.pct.value).isWithin(0.01).of(120.0)
     }
 
-    @Test fun iconTest() {
+    @Test fun iconTest() = runTest {
         assertThat(TriggerProfilePercent(injector).icon().get()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch)
     }
 
-    @Test fun friendlyNameTest() {
+    @Test fun friendlyNameTest() = runTest {
         assertThat(TriggerProfilePercent(injector).friendlyName()).isEqualTo(R.string.profilepercentage) // not mocked
     }
 }

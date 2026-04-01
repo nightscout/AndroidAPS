@@ -21,12 +21,13 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -38,13 +39,14 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.objects.extensions.target
+import app.aaps.core.ui.compose.icons.IcPluginOpenAPS
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
@@ -53,8 +55,11 @@ import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
+import app.aaps.plugins.aps.keys.ApsIntentKey
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
-import org.json.JSONObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -67,7 +72,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,
     rh: ResourceHelper,
-    config: Config,
+    private val config: Config,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
@@ -76,22 +81,33 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val preferences: Preferences,
+    preferences: Preferences,
     private val determineBasalAMA: DetermineBasalAMA,
     private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
-    private val apsResultProvider: Provider<APSResult>
-) : PluginBase(
+    private val apsResultProvider: Provider<APSResult>,
+    private val ch: ConcentrationHelper
+) : PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.APS)
         .fragmentClass(OpenAPSFragment::class.java.name)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
+        .composeContent { plugin ->
+            app.aaps.plugins.aps.compose.OpenAPSComposeContent(
+                apsPlugin = plugin as APS,
+                rxBus = rxBus,
+                rh = rh,
+                dateUtil = dateUtil
+            )
+        }
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_calculator)
+        .icon(IcPluginOpenAPS)
         .pluginName(R.string.openapsama)
         .shortName(R.string.oaps_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .preferencesVisibleInSimpleMode(false)
         .showInList { config.APS }
         .description(R.string.description_ama),
-    aapsLogger, rh
+    ownPreferences = listOf(ApsIntentKey::class.java),
+    aapsLogger, rh, preferences
 ), APS, PluginConstraints {
 
     // last values
@@ -118,7 +134,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         }
     }
 
-    override fun invoke(initiator: String, tempBasalFallback: Boolean) {
+    override suspend fun invoke(initiator: String, tempBasalFallback: Boolean) = withContext(Dispatchers.Default) {
 
         aapsLogger.debug(LTag.APS, "invoke from $initiator tempBasalFallback: $tempBasalFallback")
         lastAPSResult = null
@@ -128,31 +144,31 @@ class OpenAPSAMAPlugin @Inject constructor(
         if (profile == null) {
             rxBus.send(EventResetOpenAPSGui(rh.gs(app.aaps.core.ui.R.string.no_profile_set)))
             aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.no_profile_set))
-            return
+            return@withContext
         }
         if (!isEnabled()) {
             rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openapsma_disabled)))
             aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_disabled))
-            return
+            return@withContext
         }
         if (glucoseStatus == null) {
             rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openapsma_no_glucose_data)))
             aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_no_glucose_data))
-            return
+            return@withContext
         }
         val inputConstraints = ConstraintObject(0.0, aapsLogger) // fake. only for collecting all results
 
-        if (!hardLimits.checkHardLimits(profile.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
+        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return@withContext
         if (!hardLimits.checkHardLimits(
                 profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()),
                 app.aaps.core.ui.R.string.profile_carbs_ratio_value,
                 hardLimits.minIC(),
                 hardLimits.maxIC()
             )
-        ) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("OpenAPSAMAPlugin"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
-        if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
-        if (!hardLimits.checkHardLimits(pump.baseBasalRate, app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
+        ) return@withContext
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("OpenAPSAMAPlugin"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return@withContext
+        if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return@withContext
+        if (!hardLimits.checkHardLimits(ch.fromPump(pump.baseBasalRate), app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return@withContext
 
         val now = dateUtil.now()
         val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
@@ -178,7 +194,7 @@ class OpenAPSAMAPlugin @Inject constructor(
                 val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
                 if (autosensData == null) {
                     rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
-                    return
+                    return@withContext
                 }
                 autosensData.autosensResult
             } else AutosensResult(sensResult = "autosens disabled")
@@ -187,7 +203,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
 
         val oapsProfile = OapsProfile(
-            dia = min(profile.dia, 3.0),
+            dia = min(profile.iCfg.dia, 3.0),
             min_5m_carbimpact = if (mealData.usedMinCarbsImpact > 0) mealData.usedMinCarbsImpact else preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact),
             max_iob = constraintsChecker.getMaxIOBAllowed().also { inputConstraints.copyReasons(it) }.value(),
             max_daily_basal = profile.getMaxDailyBasal(),
@@ -223,7 +239,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             maxUAMSMBBasalMinutes = 0, // not used
             bolus_increment = pump.pumpDescription.bolusStep, // not used
             carbsReqThreshold = 0, // not used
-            current_basal = activePlugin.activePump.baseBasalRate,
+            current_basal = ch.fromPump(activePlugin.activePump.baseBasalRate),
             temptargetSet = isTempTarget,
             autosens_max = preferences.get(DoubleKey.AutosensMax), // not used
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
@@ -308,9 +324,34 @@ class OpenAPSAMAPlugin @Inject constructor(
     }
 
     // Needed only for dynamic ISF so far
-    override fun configuration(): JSONObject = JSONObject()
-    override fun applyConfiguration(configuration: JSONObject) {}
+    override fun configuration(): JsonObject = JsonObject(emptyMap())
+    override fun applyConfiguration(configuration: JsonObject) {}
 
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "openapsma_settings",
+        titleResId = R.string.openapsama,
+        items = listOf(
+            DoubleKey.ApsMaxBasal,
+            DoubleKey.ApsAmaMaxIob,
+            BooleanKey.ApsUseAutosens,
+            BooleanKey.ApsAmaAutosensAdjustTargets,
+            DoubleKey.ApsAmaMin5MinCarbsImpact,
+            PreferenceSubScreenDef(
+                key = "absorption_ama_advanced",
+                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
+                items = listOf(
+                    ApsIntentKey.LinkToDocs,
+                    BooleanKey.ApsAlwaysUseShortDeltas,
+                    DoubleKey.ApsMaxDailyMultiplier,
+                    DoubleKey.ApsMaxCurrentBasalMultiplier,
+                    DoubleKey.ApsAmaBolusSnoozeDivisor
+                )
+            )
+        ),
+        icon = pluginDescription.icon
+    )
+
+    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null && requiredKey != "absorption_ama_advanced") return
         val category = PreferenceCategory(context)
@@ -330,7 +371,7 @@ class OpenAPSAMAPlugin @Inject constructor(
                 addPreference(
                     AdaptiveIntentPreference(
                         ctx = context,
-                        intentKey = IntentKey.ApsLinkToDocs,
+                        intentKey = ApsIntentKey.LinkToDocs,
                         intent = Intent().apply { action = Intent.ACTION_VIEW; data = rh.gs(R.string.openapsama_link_to_preference_json_doc).toUri() },
                         summary = R.string.openapsama_link_to_preference_json_doc_txt
                     )

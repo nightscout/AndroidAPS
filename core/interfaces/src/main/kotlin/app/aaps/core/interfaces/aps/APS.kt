@@ -84,7 +84,7 @@ interface APS : ConfigExportImport {
      * @param initiator caller
      * @param tempBasalFallback if true previous enact of SMB failed. Try calculation without SMB
      */
-    fun invoke(initiator: String, tempBasalFallback: Boolean)
+    suspend fun invoke(initiator: String, tempBasalFallback: Boolean)
 
     /**
      * Provide glucose status calculation

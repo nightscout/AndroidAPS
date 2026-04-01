@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.plugins.sync.R
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -33,7 +32,8 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override var openAPSData = ProcessedDeviceStatusData.OpenAPSData()
 
     // test warning level // color
-    override fun pumpStatus(nsSettingsStatus: NSSettingsStatus): Spanned {
+    override fun pumpStatus(nsSettingsStatus: NSSettingsStatus): Spanned = HtmlHelper.fromHtml(pumpStatusHtml(nsSettingsStatus))
+    override fun pumpStatusHtml(nsSettingsStatus: NSSettingsStatus): String {
 
         //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
         val string = StringBuilder()
@@ -41,7 +41,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             .append(rh.gs(app.aaps.core.ui.R.string.pump))
             .append(": </span>")
 
-        val pumpData = pumpData ?: return HtmlHelper.fromHtml(string.toString())
+        val pumpData = pumpData ?: return string.toString()
 
         // test warning level
         val level = when {
@@ -67,11 +67,11 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
         string.append(pumpData.status).append(" ")
         //string.append(device).append(" ")
         string.append("</span>") // color
-        return HtmlHelper.fromHtml(string.toString())
+        return string.toString()
     }
 
-    override val extendedPumpStatus: Spanned get() = pumpData?.extended ?: HtmlHelper.fromHtml("")
-    override val extendedOpenApsStatus: Spanned
+    override val extendedPumpStatusHtml: String get() = pumpData?.extended ?: ""
+    override val extendedOpenApsStatusHtml: String
         get() {
             val string = StringBuilder()
             val enacted = openAPSData.enacted
@@ -90,14 +90,15 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 .append("</b> ")
                 .append(suggested.reason)
                 .append("<br>")
-            return HtmlHelper.fromHtml(string.toString())
+            return string.toString()
         }
 
-    override val openApsStatus: Spanned
+    override val openApsStatus: Spanned get() = HtmlHelper.fromHtml(openApsStatusHtml)
+    override val openApsStatusHtml: String
         get() {
             val string = StringBuilder()
                 .append("<span style=\"color:${rh.gac(app.aaps.core.ui.R.attr.nsTitleColor)}\">")
-                .append(rh.gs(R.string.openaps_short))
+                .append(rh.gs(app.aaps.core.ui.R.string.openaps_short))
                 .append(": </span>")
 
             // test warning level
@@ -110,7 +111,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             string.append("<span style=\"color:${level.toColor()}\">")
             if (openAPSData.clockSuggested != 0L) string.append(dateUtil.minOrSecAgo(rh, openAPSData.clockSuggested)).append(" ")
             string.append("</span>") // color
-            return HtmlHelper.fromHtml(string.toString())
+            return string.toString()
         }
 
     override val openApsTimestamp: Long
@@ -131,12 +132,13 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             return "$minBattery%"
         }
 
-    override val uploaderStatusSpanned: Spanned
+    override val uploaderStatusSpanned: Spanned get() = HtmlHelper.fromHtml(uploaderStatusHtml)
+    override val uploaderStatusHtml: String
         get() {
             var isCharging = false
             val string = StringBuilder()
             string.append("<span style=\"color:${rh.gac(app.aaps.core.ui.R.attr.nsTitleColor)}\">")
-            string.append(rh.gs(R.string.uploader_short))
+            string.append(rh.gs(app.aaps.core.ui.R.string.uploader_short))
             string.append(": </span>")
             val iterator: Iterator<*> = uploaderMap.entries.iterator()
             var minBattery = 100
@@ -155,10 +157,10 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 string.append(minBattery)
                 string.append("%")
             }
-            return HtmlHelper.fromHtml(string.toString())
+            return string.toString()
         }
 
-    override val extendedUploaderStatus: Spanned
+    override val extendedUploaderStatusHtml: String
         get() {
             val string = StringBuilder()
             val iterator: Iterator<*> = uploaderMap.entries.iterator()
@@ -168,7 +170,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 val device = pair.key as String
                 string.append("<b>").append(device).append(":</b> ").append(uploader.battery).append("%<br>")
             }
-            return HtmlHelper.fromHtml(string.toString())
+            return string.toString()
         }
 
     private fun ProcessedDeviceStatusData.Levels.toColor(): String =

@@ -1,23 +1,29 @@
-package app.aaps.plugins.source
+﻿package app.aaps.plugins.source
 
 import android.content.Context
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.interfaces.NonPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 
 abstract class AbstractBgSourceWithSensorInsertLogPlugin(
     pluginDescription: PluginDescription,
+    ownPreferences: List<Class<out NonPreferenceKey>> = emptyList(),
     aapsLogger: AAPSLogger,
-    rh: ResourceHelper
-) : PluginBase(pluginDescription, aapsLogger, rh), BgSource {
+    rh: ResourceHelper,
+    preferences: Preferences,
+) : PluginBaseWithPreferences(pluginDescription, ownPreferences, aapsLogger, rh, preferences), BgSource {
 
+    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null) return
         val category = PreferenceCategory(context)
@@ -30,4 +36,15 @@ abstract class AbstractBgSourceWithSensorInsertLogPlugin(
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceCreateSensorChange, summary = R.string.bgsource_log_sensor_change_summary, title = R.string.bgsource_log_sensor_change_title))
         }
     }
+
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "bg_source_with_sensor_settings",
+        titleResId = pluginDescription.pluginName,
+        items = listOf(
+            BooleanKey.BgSourceUploadToNs,
+            BooleanKey.BgSourceCreateSensorChange
+
+        ),
+        icon = pluginDescription.icon
+    )
 }

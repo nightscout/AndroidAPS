@@ -38,7 +38,7 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val cobInfo = iobCobCalculator.getCobInfo("AutomationTriggerCOB")
         if (cobInfo.displayCob == null) {
             return if (comparator.value === Comparator.Compare.IS_NOT_AVAILABLE) {

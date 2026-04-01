@@ -2,8 +2,6 @@ package app.aaps.plugins.aps
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.Menu
@@ -14,6 +12,7 @@ import android.view.ViewGroup
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -28,6 +27,7 @@ import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.launch
 import org.apache.commons.lang3.ClassUtils
 import javax.inject.Inject
 import kotlin.reflect.full.declaredMemberProperties
@@ -48,7 +48,6 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
     private val ID_MENU_RUN = 503
 
     private var _binding: OpenapsFragmentBinding? = null
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -70,7 +69,9 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         )
         binding.swipeRefresh.setOnRefreshListener {
             binding.lastrun.text = rh.gs(R.string.executing)
-            handler.post { activePlugin.activeAPS.invoke("OpenAPS swipe refresh", false) }
+            lifecycleScope.launch {
+                activePlugin.activeAPS.invoke("OpenAPS swipe refresh", false)
+            }
         }
     }
 
@@ -83,7 +84,7 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                handler.post { activePlugin.activeAPS.invoke("OpenAPS menu", false) }
+                lifecycleScope.launch { activePlugin.activeAPS.invoke("OpenAPS menu", false) }
                 true
             }
 
@@ -110,14 +111,11 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        handler.removeCallbacksAndMessages(null)
     }
 
     @Synchronized
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
-        handler.looper.quitSafely()
     }
 
     @Synchronized

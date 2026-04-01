@@ -3,6 +3,7 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.time.T
 import app.aaps.core.graph.data.DataPointWithLabelInterface
 import app.aaps.core.graph.data.GlucoseValueDataPoint
@@ -12,10 +13,17 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
+import app.aaps.core.interfaces.overview.graph.BgDataPoint
+import app.aaps.core.interfaces.overview.graph.BgRange
+import app.aaps.core.interfaces.overview.graph.BgType
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.overview.graph.TimeRange
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +48,8 @@ class PreparePredictionsWorker(
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var overviewDataCache: OverviewDataCache
+    @Inject lateinit var preferences: Preferences
 
     class PreparePredictionsData(
         val overviewData: OverviewData
@@ -83,6 +93,46 @@ class PreparePredictionsWorker(
             for (prediction in predictions) if (prediction.data.value >= 40) bgListArray.add(prediction)
         }
         data.overviewData.predictionsGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })
+
+        // ========== Compose/Vico: Populate prediction BgDataPoints ==========
+        val highMarkInUnits = preferences.get(UnitDoubleKey.OverviewHighMark)
+        val lowMarkInUnits = preferences.get(UnitDoubleKey.OverviewLowMark)
+
+        val predictionDataPoints = apsResult?.predictionsAsGv
+            ?.filter { it.value >= 40 }
+            ?.map { gv ->
+                val valueInUnits = profileUtil.fromMgdlToUnits(gv.value)
+                BgDataPoint(
+                    timestamp = gv.timestamp,
+                    value = valueInUnits,
+                    range = when {
+                        valueInUnits > highMarkInUnits -> BgRange.HIGH
+                        valueInUnits < lowMarkInUnits  -> BgRange.LOW
+                        else                           -> BgRange.IN_RANGE
+                    },
+                    type = when (gv.sourceSensor) {
+                        SourceSensor.IOB_PREDICTION   -> BgType.IOB_PREDICTION
+                        SourceSensor.COB_PREDICTION   -> BgType.COB_PREDICTION
+                        SourceSensor.A_COB_PREDICTION -> BgType.A_COB_PREDICTION
+                        SourceSensor.UAM_PREDICTION   -> BgType.UAM_PREDICTION
+                        SourceSensor.ZT_PREDICTION    -> BgType.ZT_PREDICTION
+                        else                          -> BgType.IOB_PREDICTION
+                    }
+                )
+            }
+            ?.sortedBy { it.timestamp }
+            ?: emptyList()
+
+        overviewDataCache.updatePredictions(predictionDataPoints)
+
+        // Update time range with endTime that includes predictions
+        val currentTimeRange = overviewDataCache.timeRangeFlow.value
+        if (currentTimeRange != null) {
+            overviewDataCache.updateTimeRange(
+                currentTimeRange.copy(endTime = data.overviewData.endTime)
+            )
+        }
+
         return Result.success()
     }
 }

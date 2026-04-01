@@ -9,6 +9,7 @@ import androidx.core.app.RemoteInput
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -23,7 +24,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -34,6 +34,7 @@ import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.plugins.main.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -56,7 +57,8 @@ class PersistentNotificationPlugin @Inject constructor(
     private val iconsProvider: IconsProvider,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val config: Config,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val ch: ConcentrationHelper
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -95,10 +97,6 @@ class PersistentNotificationPlugin @Inject constructor(
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
@@ -108,11 +106,11 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun triggerNotificationUpdate() {
-        updateNotification()
+        runBlocking { updateNotification() }
         dummyServiceHelper.startService(context)
     }
 
-    private fun updateNotification() {
+    private suspend fun updateNotification() {
         if (!config.appInitialized) return
         val pump = activePlugins.activePump
         var line1: String?
@@ -148,24 +146,22 @@ class PersistentNotificationPlugin @Inject constructor(
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+            val cobInfo = iobCobCalculator.getCobInfo("PersistentNotificationPlugin")
             line2 =
                 rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + " " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
-                ) + ": " + iobCobCalculator.getCobInfo(
-                    "PersistentNotificationPlugin"
-                ).generateCOBString(decimalFormatter)
+                ) + ": " + cobInfo.generateCOBString(decimalFormatter)
             val line2aa =
                 rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + ". " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
-                ) + ": " + iobCobCalculator.getCobInfo(
-                    "PersistentNotificationPlugin"
-                ).generateCOBString(decimalFormatter) + "."
-            line3 = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, pump.baseBasalRate)
-            var line3aa = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, pump.baseBasalRate) + "."
-            line3 += " - " + profileFunction.getProfileName()
-            line3aa += " - " + profileFunction.getProfileName() + "."
+                ) + ": " + cobInfo.generateCOBString(decimalFormatter) + "."
+            line3 = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate))
+            var line3aa = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, ch.fromPump(pump.baseBasalRate)) + "."
+            val profileName = profileFunction.getProfileName()
+            line3 += " - $profileName"
+            line3aa += " - $profileName."
             /// For Android Auto
             val msgReadIntent = Intent()
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)

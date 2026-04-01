@@ -1,8 +1,8 @@
 package app.aaps.plugins.constraints.signatureVerifier
 
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionDefinition
 import app.aaps.core.keys.interfaces.Preferences
@@ -27,7 +27,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var config: Lazy<Config>
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var preferences: Preferences
 
     private fun generateSupportedVersions(): String =
@@ -48,7 +48,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
 
     @BeforeEach fun setup() {
         val definition = VersionDefinition { JSONObject(generateSupportedVersions()) }
-        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, dateUtil, uiInteraction, definition)
+        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, dateUtil, notificationManager, definition)
     }
 
     @Test

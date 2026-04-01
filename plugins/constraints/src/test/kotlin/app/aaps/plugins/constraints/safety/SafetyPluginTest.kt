@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profiling.Profiler
+import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.stats.TddCalculator
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -22,25 +22,25 @@ import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.GlucoseStatusCalculatorSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.source.GlimpPlugin
-import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
 
 class SafetyPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
-    @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
+    @Mock lateinit var pumpWithConcentration: PumpWithConcentration
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var profiler: Profiler
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var bgQualityCheck: BgQualityCheck
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var tddCalculator: TddCalculator
     @Mock lateinit var determineBasalAMA: DetermineBasalAMA
     @Mock lateinit var determineBasalSMB: DetermineBasalSMB
@@ -54,6 +54,11 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
+        // Mock persistenceLayer for OpenAPSSMBPlugin.onStart()
+        runTest {
+            whenever(persistenceLayer.getApsResults(any(), any())).thenReturn(emptyList())
+        }
+
         whenever(rh.gs(app.aaps.plugins.constraints.R.string.hardlimit)).thenReturn("hard limit")
         whenever(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         whenever(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
@@ -73,21 +78,21 @@ class SafetyPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.plugins.constraints.R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
         whenever(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn("Low Glucose Suspend")
 
-        whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        whenever(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
+        whenever(activePlugin.activePump).thenReturn(pumpWithConcentration)
+        whenever(pumpWithConcentration.pumpDescription).thenReturn(pumpDescription)
         whenever(config.APS).thenReturn(true)
-        safetyPlugin = SafetyPlugin(aapsLogger, rh, preferences, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter)
+        safetyPlugin = SafetyPlugin(aapsLogger, rh, preferences, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, notificationManager, decimalFormatter)
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
-                aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin, iobCobCalculator,
+                aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin, insulin, iobCobCalculator,
                 hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, glucoseStatusProvider, tddCalculator, bgQualityCheck,
-                uiInteraction, determineBasalSMB, profiler, GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), apsResultProvider
+                notificationManager, determineBasalSMB, profiler, GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), apsResultProvider, ch
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
                 aapsLogger, rxBus, constraintChecker, rh, config, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
                 hardLimits, dateUtil, persistenceLayer, glucoseStatusProvider, preferences, determineBasalAMA,
-                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), apsResultProvider
+                GlucoseStatusCalculatorSMB(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter, deltaCalculator), apsResultProvider, ch
             )
     }
 
@@ -127,8 +132,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun bgSourceShouldPreventSMBAlways() {
-        whenever(activePlugin.activeBgSource).thenReturn(glimpPlugin)
+    fun bgSourceShouldPreventSMBAlways() = runTest {
+        whenever(persistenceLayer.isAdvancedFilteringSupported()).thenReturn(false)
         val c = safetyPlugin.isAdvancedFilteringEnabled(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).isEqualTo("Safety: SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
         assertThat(c.value()).isFalse()

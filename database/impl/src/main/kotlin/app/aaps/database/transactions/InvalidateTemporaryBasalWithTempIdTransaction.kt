@@ -4,7 +4,7 @@ import app.aaps.database.entities.TemporaryBasal
 
 class InvalidateTemporaryBasalWithTempIdTransaction(val tempId: Long) : Transaction<InvalidateTemporaryBasalWithTempIdTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val temporaryBasal = database.temporaryBasalDao.findByTempId(tempId)
             ?: throw IllegalArgumentException("There is no such Temporary Basal with the specified temp ID.")

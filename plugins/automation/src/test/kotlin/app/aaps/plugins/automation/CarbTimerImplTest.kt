@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -40,6 +41,7 @@ class CarbTimerImplTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var preferences: Preferences
+    @Mock lateinit var receiverStatusStore: ReceiverStatusStore
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
@@ -60,7 +62,7 @@ class CarbTimerImplTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         timerUtil = TimerUtil(context)
         automationPlugin = AutomationPlugin(
-            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil
+            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore
         )
     }
 

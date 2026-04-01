@@ -10,7 +10,7 @@ class InsertOrUpdateCachedTotalDailyDoseTransaction(
     private val tdd: TotalDailyDose
 ) : Transaction<InsertOrUpdateCachedTotalDailyDoseTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         var current: TotalDailyDose? = null
         // search by timestamp

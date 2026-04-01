@@ -3,8 +3,11 @@ package app.aaps.pump.equil.di
 import app.aaps.pump.equil.manager.EquilManager
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class EquilServicesModule {
 

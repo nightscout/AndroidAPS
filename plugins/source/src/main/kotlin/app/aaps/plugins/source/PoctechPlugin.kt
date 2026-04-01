@@ -11,6 +11,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -19,7 +20,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.ui.compose.icons.IcPluginPocTec
 import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.plugins.source.compose.BgSourceComposeContent
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
@@ -30,18 +33,24 @@ import javax.inject.Singleton
 class PoctechPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    preferences: Preferences
+    preferences: Preferences,
+    config: Config,
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .fragmentClass(BGSourceFragment::class.java.name)
+        .composeContent { plugin ->
+            BgSourceComposeContent(
+                title = rh.gs(R.string.poctech)
+            )
+        }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_poctech)
+        .icon(IcPluginPocTec)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.poctech)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_poctech),
     ownPreferences = emptyList(),
-    aapsLogger, rh, preferences
+    aapsLogger, rh, preferences, config
 ), BgSource {
 
     // cannot be inner class because of needed injection
@@ -75,9 +84,11 @@ class PoctechPlugin @Inject constructor(
                         sourceSensor = SourceSensor.POCTECH_NATIVE
                     )
                 }
-                persistenceLayer.insertCgmSourceData(Sources.PocTech, glucoseValues, emptyList(), null)
-                    .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
-                    .blockingGet()
+                try {
+                    persistenceLayer.insertCgmSourceData(Sources.PocTech, glucoseValues, emptyList(), null)
+                } catch (e: Exception) {
+                    ret = Result.failure(workDataOf("Error" to e.toString()))
+                }
             } catch (e: JSONException) {
                 aapsLogger.error("Exception: ", e)
                 ret = Result.failure(workDataOf("Error" to e.toString()))

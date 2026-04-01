@@ -36,7 +36,7 @@ import javax.inject.Inject
 class InsightAlertService : DaggerService(), InsightConnectionService.StateCallback {
 
     private val localBinder: LocalBinder = LocalBinder()
-    private val alertLock = Object()
+    private val alertLock = Any()
     val alertLiveData = MutableLiveData<Alert?>()
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper

@@ -6,7 +6,7 @@ import kotlin.math.roundToInt
 
 class CutCarbsTransaction(val id: Long, val end: Long) : Transaction<CutCarbsTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val carbs = database.carbsDao.findById(id)
             ?: throw IllegalArgumentException("There is no such Carbs with the specified ID.")

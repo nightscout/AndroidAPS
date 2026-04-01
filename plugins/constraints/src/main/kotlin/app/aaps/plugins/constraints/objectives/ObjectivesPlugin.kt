@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginObjectives
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
@@ -37,6 +38,7 @@ class ObjectivesPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_graduation)
+        .icon(IcPluginObjectives)
         .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)
         .enableByDefault(config.APS)

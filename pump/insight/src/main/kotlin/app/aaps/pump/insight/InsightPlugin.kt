@@ -1,7 +1,6 @@
 package app.aaps.pump.insight
 
 import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -20,18 +19,23 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Insight
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpProfile
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.PumpState.TemporaryBasal
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
@@ -39,13 +43,14 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.withActivity
+import app.aaps.core.ui.compose.icons.IcPluginInsight
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
@@ -121,6 +126,9 @@ import app.aaps.pump.insight.keys.InsightIntentKey
 import app.aaps.pump.insight.keys.InsightLongNonKey
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -130,6 +138,7 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import android.app.NotificationManager as AndroidNotificationManager
 
 @Singleton
 class InsightPlugin @Inject constructor(
@@ -138,16 +147,17 @@ class InsightPlugin @Inject constructor(
     preferences: Preferences,
     commandQueue: CommandQueue,
     private val rxBus: RxBus,
-    private val profileFunction: ProfileFunction,
     private val context: Context,
     private val dateUtil: DateUtil,
     private val insightDbHelper: InsightDbHelper,
     private val pumpSync: PumpSync,
     private val insightDatabase: InsightDatabase,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val notificationManager: NotificationManager,
+    private val ch: ConcentrationHelper
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_insight_128)
+        .icon(IcPluginInsight)
         .pluginName(R.string.insight_local)
         .shortName(R.string.insightpump_shortname)
         .mainType(PluginType.PUMP)
@@ -163,9 +173,14 @@ class InsightPlugin @Inject constructor(
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }
     private val _bolusLock: Any = arrayOfNulls<Any>(0)
-    override var lastBolusAmount = 0.0
-        private set
+    private val _lastBolusAmount = MutableStateFlow<PumpInsulin?>(PumpInsulin(0.0))
+    override val lastBolusAmount: StateFlow<PumpInsulin?> = _lastBolusAmount
     var lastBolusTimestamp = 0L
+        private set(value) {
+            field = value
+            _lastBolusTime.value = value.takeIf { it > 0 }
+        }
+    var lastBolusType: BS.Type? = null
         private set
     private var alertService: InsightAlertService? = null
     var connectionService: InsightConnectionService? = null
@@ -198,9 +213,15 @@ class InsightPlugin @Inject constructor(
     var operatingMode: OperatingMode? = null
         private set
     var batteryStatus: BatteryStatus? = null
-        private set
+        private set(value) {
+            field = value
+            _batteryLevel.value = value?.batteryAmount
+        }
     var cartridgeStatus: CartridgeStatus? = null
-        private set
+        private set(value) {
+            field = value
+            _reservoirLevel.value = PumpInsulin(value?.remainingAmount ?: 0.0)
+        }
     var totalDailyDose: TotalDailyDose? = null
         private set
     var activeBasalRate: ActiveBasalRate? = null
@@ -219,14 +240,14 @@ class InsightPlugin @Inject constructor(
         context.bindService(Intent(context, InsightAlertService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         createNotificationChannel()
         lastBolusTimestamp = preferences.get(InsightLongNonKey.LastBolusTimestamp)
-        lastBolusAmount = preferences.get(InsightDoubleNonKey.LastBolusAmount)
+        _lastBolusAmount.value = PumpInsulin(preferences.get(InsightDoubleNonKey.LastBolusAmount))
     }
 
     private fun createNotificationChannel() {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(ALERT_CHANNEL_ID, rh.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH)
+        val systemNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
+        val channel = NotificationChannel(ALERT_CHANNEL_ID, rh.gs(R.string.insight_alert_notification_channel), AndroidNotificationManager.IMPORTANCE_HIGH)
         channel.setSound(null, null)
-        notificationManager.createNotificationChannel(channel)
+        systemNotificationManager.createNotificationChannel(channel)
     }
 
     override fun onStop() {
@@ -234,8 +255,11 @@ class InsightPlugin @Inject constructor(
         context.unbindService(serviceConnection)
     }
 
+    override fun isConfigured(): Boolean =
+        connectionService?.isPaired == true
+
     override fun isInitialized(): Boolean {
-        return connectionService?.let { alertService != null && it.isPaired } == true
+        return isConfigured() && connectionService?.let { alertService != null && it.isPaired } == true
     }
 
     override fun isSuspended(): Boolean {
@@ -289,6 +313,7 @@ class InsightPlugin @Inject constructor(
                 aapsLogger.error("Exception while fetching status", e)
             }
         }
+        _lastDataTime.value = if (connectionService == null || alertService == null) dateUtil.now() else connectionService?.lastDataTime ?: 0
     }
 
     @Throws(Exception::class) private fun updatePumpTimeIfNeeded() {
@@ -313,8 +338,7 @@ class InsightPlugin @Inject constructor(
                 val setDateTimeMessage = SetDateTimeMessage()
                 setDateTimeMessage.pumpTime = pumpTime
                 connectionService?.requestMessage(setDateTimeMessage)?.await()
-                val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, rh.gs(app.aaps.core.ui.R.string.pump_time_updated), Notification.INFO, 60)
-                rxBus.send(EventNewNotification(notification))
+                notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, app.aaps.core.ui.R.string.pump_time_updated, validMinutes = 60)
             }
         }
     }
@@ -404,9 +428,9 @@ class InsightPlugin @Inject constructor(
         }
     }
 
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
+    override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
-        rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
+        notificationManager.dismiss(NotificationId.PROFILE_NOT_SET_NOT_INITIALIZED)
         val profileBlocks: MutableList<BasalProfileBlock> = ArrayList()
         for (i in profile.getBasalValues().indices) {
             val basalValue = profile.getBasalValues()[i]
@@ -414,7 +438,7 @@ class InsightPlugin @Inject constructor(
             if (profile.getBasalValues().size > i + 1) nextValue = profile.getBasalValues()[i + 1]
             val profileBlock = BasalProfileBlock()
             profileBlock.basalAmount = if (basalValue.value > 5) (basalValue.value / 0.1).roundToLong() * 0.1 else (basalValue.value / 0.01).roundToLong() * 0.01
-            profileBlock.duration = ((nextValue?.timeAsSeconds ?: 24 * 60 * 60) - basalValue.timeAsSeconds) / 60
+            profileBlock.duration = ((nextValue?.timeAsSeconds ?: (24 * 60 * 60)) - basalValue.timeAsSeconds) / 60
             profileBlocks.add(profileBlock)
         }
         connectionService?.let { service ->
@@ -426,9 +450,8 @@ class InsightPlugin @Inject constructor(
                 val profileBlock: BRProfileBlock = BRProfile1Block()
                 profileBlock.profileBlocks = profileBlocks
                 ParameterBlockUtil.writeConfigurationBlock(service, profileBlock)
-                rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-                val notification = Notification(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
-                rxBus.send(EventNewNotification(notification))
+                notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
+                notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
                 result.success(true)
                     .enacted(true)
                     .comment(app.aaps.core.ui.R.string.virtualpump_resultok)
@@ -439,25 +462,22 @@ class InsightPlugin @Inject constructor(
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
-                rxBus.send(EventNewNotification(notification))
+                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: InsightException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName)
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
-                rxBus.send(EventNewNotification(notification))
+                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: Exception) {
                 aapsLogger.error("Exception while setting profile", e)
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
-                rxBus.send(EventNewNotification(notification))
+                notificationManager.post(NotificationId.FAILED_UPDATE_PROFILE, app.aaps.core.ui.R.string.failed_update_basal_profile, level = NotificationLevel.URGENT)
                 result.comment(ExceptionTranslator.getString(context, e))
             }
         }
         return result
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
+    override fun isThisProfileSet(profile: PumpProfile): Boolean {
         if (!isInitialized() || profileBlocks == null) return true
         profileBlocks?.let {
             if (profile.getBasalValues().size != it.size) return false
@@ -467,7 +487,7 @@ class InsightPlugin @Inject constructor(
                 val basalValue = profile.getBasalValues()[i]
                 var nextValue: Profile.ProfileValue? = null
                 if (profile.getBasalValues().size > i + 1) nextValue = profile.getBasalValues()[i + 1]
-                if (profileBlock.duration * 60 != (nextValue?.timeAsSeconds ?: 24 * 60 * 60) - basalValue.timeAsSeconds
+                if (profileBlock.duration * 60 != (nextValue?.timeAsSeconds ?: (24 * 60 * 60)) - basalValue.timeAsSeconds
                 ) return false
                 if (abs(profileBlock.basalAmount - basalValue.value) > (if (basalValue.value > 5) 0.051 else 0.0051)) return false
             }
@@ -475,16 +495,22 @@ class InsightPlugin @Inject constructor(
         return true
     }
 
-    override val lastDataTime: Long get() = if (connectionService == null || alertService == null) dateUtil.now() else connectionService?.lastDataTime ?: 0
-    override val lastBolusTime: Long? get() = lastBolusTimestamp
+    private val _lastDataTime = MutableStateFlow(0L)
+    override val lastDataTime: StateFlow<Long> = _lastDataTime
 
-    override val baseBasalRate: Double
+    private val _lastBolusTime = MutableStateFlow<Long?>(null)
+    override val lastBolusTime: StateFlow<Long?> = _lastBolusTime
+
+    override val baseBasalRate: PumpRate
         get() {
-            if (connectionService == null || alertService == null) return 0.0
-            return activeBasalRate?.activeBasalRate ?: 0.0
+            if (connectionService == null || alertService == null) return PumpRate(0.0)
+            return PumpRate(activeBasalRate?.activeBasalRate ?: 0.0)
         }
-    override val reservoirLevel: Double get() = cartridgeStatus?.remainingAmount ?: 0.0
-    override val batteryLevel: Int? get() = batteryStatus?.batteryAmount
+    private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))
+    override val reservoirLevel: StateFlow<PumpInsulin> = _reservoirLevel
+
+    private val _batteryLevel = MutableStateFlow<Int?>(null)
+    override val batteryLevel: StateFlow<Int?> = _batteryLevel
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         if (detailedBolusInfo.insulin.equals(0.0) || detailedBolusInfo.carbs > 0) {
@@ -506,7 +532,7 @@ class InsightPlugin @Inject constructor(
                         bolusCancelled = false
                     }
                     result.success(true).enacted(true)
-                    rxBus.send(EventOverviewBolusProgress(rh, 0.0, id = detailedBolusInfo.id))
+                    rxBus.send(EventOverviewBolusProgress(ch, PumpInsulin(0.0), id = detailedBolusInfo.id))
                     var trials = 0
                     val now = dateUtil.now()
                     val serial = serialNumber()
@@ -520,14 +546,18 @@ class InsightPlugin @Inject constructor(
                         )
                     )
                     insightDbHelper.getInsightBolusID(serial, bolusID, now)?.also {
-                        pumpSync.syncBolusWithPumpId(
-                            it.timestamp,
-                            detailedBolusInfo.insulin,
-                            detailedBolusInfo.bolusType,
-                            it.id,
-                            PumpType.ACCU_CHEK_INSIGHT,
-                            serialNumber()
-                        )
+                        lastBolusType = detailedBolusInfo.bolusType
+                        lastBolusTimestamp = it.timestamp
+                        runBlocking {
+                            pumpSync.syncBolusWithPumpId(
+                                it.timestamp,
+                                PumpInsulin(detailedBolusInfo.insulin),
+                                detailedBolusInfo.bolusType,
+                                it.id,
+                                PumpType.ACCU_CHEK_INSIGHT,
+                                serialNumber()
+                            )
+                        }
                     }
                     while (!bolusCancelled) {
                         val operatingMode = service.requestMessage(GetOperatingModeMessage()).await().operatingMode
@@ -544,12 +574,12 @@ class InsightPlugin @Inject constructor(
                         }
                         if (activeBolus != null) {
                             trials = -1
-                            rxBus.send(EventOverviewBolusProgress(rh, delivered = activeBolus.initialAmount - activeBolus.remainingAmount, id = detailedBolusInfo.id))
+                            rxBus.send(EventOverviewBolusProgress(ch, delivered = PumpInsulin(activeBolus.initialAmount - activeBolus.remainingAmount), id = detailedBolusInfo.id))
                         } else {
                             synchronized(_bolusLock) {
                                 if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                     if (!bolusCancelled) {
-                                        rxBus.send(EventOverviewBolusProgress(rh, delivered = insulin, id = detailedBolusInfo.id))
+                                        rxBus.send(EventOverviewBolusProgress(ch, delivered = PumpInsulin(insulin), id = detailedBolusInfo.id))
                                     }
                                 }
                             }
@@ -589,7 +619,7 @@ class InsightPlugin @Inject constructor(
                         bolusCancelled = true
                         confirmAlert(AlertType.WARNING_38)
                         alertService?.ignore(null)
-                        aapsLogger.info(LTag.PUMP, "XXXX Stop Thread end)")
+                        aapsLogger.info(LTag.PUMP, "Stop Thread end)")
                     }
                 } catch (e: AppLayerErrorException) {
                     aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
@@ -602,7 +632,7 @@ class InsightPlugin @Inject constructor(
         }.start()
     }
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         if (activeBasalRate?.activeBasalRate == 0.0) return result
         activeBasalRate?.let { activeBasalRate ->
@@ -614,7 +644,7 @@ class InsightPlugin @Inject constructor(
                         val cancelTBRResult = cancelTempBasalOnly()
                         if (cancelTBRResult.success) {
                             val ebResult = setExtendedBolusOnly(
-                                (absoluteRate - baseBasalRate) / 60.0 * durationInMinutes.toDouble(), durationInMinutes,
+                                (absoluteRate - baseBasalRate.cU) / 60.0 * durationInMinutes.toDouble(), durationInMinutes,
                                 preferences.get(InsightBooleanKey.DisableVibrationAuto)
                             )
                             if (ebResult.success) {
@@ -631,13 +661,13 @@ class InsightPlugin @Inject constructor(
                             result.comment(cancelTBRResult.comment)
                         }
                     } else {
-                        return setTempBasalPercent(percent.roundToInt(), durationInMinutes, profile, enforceNew, tbrType)
+                        return setTempBasalPercent(percent.roundToInt(), durationInMinutes, enforceNew, tbrType)
                     }
                 } else {
                     result.comment(cancelEBResult.comment)
                 }
             } else {
-                return setTempBasalPercent(percent.roundToInt(), durationInMinutes, profile, enforceNew, tbrType)
+                return setTempBasalPercent(percent.roundToInt(), durationInMinutes, enforceNew, tbrType)
             }
             try {
                 fetchStatus()
@@ -653,7 +683,7 @@ class InsightPlugin @Inject constructor(
         return result
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
         var percentage = (percent.toDouble() / 10.0).roundToInt() * 10
         if (percentage == 100) return cancelTempBasal(true) else if (percentage > 250) percentage = 250
@@ -1046,24 +1076,28 @@ class InsightPlugin @Inject constructor(
         for (temporaryBasal in temporaryBasals) {
             temporaryBasal.pumpId?.let { pumpId ->
                 if (temporaryBasal.duration == 0L) {                    // for Stop TBR event duration = 0L
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        timestamp = temporaryBasal.timestamp,
-                        endPumpId = pumpId,
-                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                        pumpSerial = serial
-                    )
+                    runBlocking {
+                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                            timestamp = temporaryBasal.timestamp,
+                            endPumpId = pumpId,
+                            pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                            pumpSerial = serial
+                        )
+                    }
                 }
                 if (temporaryBasal.rate != 100.0) {
-                    pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp = temporaryBasal.timestamp,
-                        rate = temporaryBasal.rate,
-                        duration = temporaryBasal.duration,
-                        isAbsolute = temporaryBasal.isAbsolute,
-                        type = temporaryBasal.type,
-                        pumpId = pumpId,
-                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                        pumpSerial = serial
-                    )
+                    runBlocking {
+                        pumpSync.syncTemporaryBasalWithPumpId(
+                            timestamp = temporaryBasal.timestamp,
+                            rate = PumpRate(temporaryBasal.rate),
+                            duration = temporaryBasal.duration,
+                            isAbsolute = temporaryBasal.isAbsolute,
+                            type = temporaryBasal.type,
+                            pumpId = pumpId,
+                            pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                            pumpSerial = serial
+                        )
+                    }
                 }
             }
         }
@@ -1110,15 +1144,17 @@ class InsightPlugin @Inject constructor(
         calendar[Calendar.YEAR] = event.totalYear
         calendar[Calendar.MONTH] = event.totalMonth - 1
         calendar[Calendar.DAY_OF_MONTH] = event.totalDay
-        pumpSync.createOrUpdateTotalDailyDose(
-            timestamp = dateUtil.now(),
-            bolusAmount = event.bolusTotal,
-            basalAmount = event.basalTotal,
-            totalAmount = 0.0,  // will be calculated automatically
-            pumpId = event.eventPosition,
-            pumpType = PumpType.ACCU_CHEK_INSIGHT,
-            pumpSerial = serial
-        )
+        runBlocking {
+            pumpSync.createOrUpdateTotalDailyDose(
+                timestamp = dateUtil.now(),
+                bolusAmount = event.bolusTotal,
+                basalAmount = event.basalTotal,
+                totalAmount = 0.0,  // will be calculated automatically
+                pumpId = event.eventPosition,
+                pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                pumpSerial = serial
+            )
+        }
     }
 
     private fun processTubeFilledEvent(event: TubeFilledEvent) {
@@ -1260,25 +1296,29 @@ class InsightPlugin @Inject constructor(
             insightBolusID.startID = event.eventPosition
             insightDbHelper.createOrUpdate(insightBolusID)
             if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
-                pumpSync.syncBolusWithPumpId(
-                    timestamp = timestamp,
-                    amount = event.immediateAmount,
-                    type = null,
-                    pumpId = insightBolusID.id,
-                    pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                    pumpSerial = serial
-                )
+                runBlocking {
+                    pumpSync.syncBolusWithPumpId(
+                        timestamp = timestamp,
+                        amount = PumpInsulin(event.immediateAmount),
+                        type = null,
+                        pumpId = insightBolusID.id,
+                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                        pumpSerial = serial
+                    )
+                }
             }
             if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
-                if (profileFunction.getProfile(insightBolusID.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp = timestamp,
-                    amount = event.extendedAmount,
-                    duration = T.mins(event.duration.toLong()).msecs(),
-                    isEmulatingTB = isFakingTempsByExtendedBoluses,
-                    pumpId = insightBolusID.id,
-                    pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                    pumpSerial = serial
-                )
+                if (runBlocking { pumpSync.isProfileRunning(insightBolusID.timestamp) }) runBlocking {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        timestamp = timestamp,
+                        rate = PumpRate(event.extendedAmount),
+                        duration = T.mins(event.duration.toLong()).msecs(),
+                        isEmulatingTB = isFakingTempsByExtendedBoluses,
+                        pumpId = insightBolusID.id,
+                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                        pumpSerial = serial
+                    )
+                }
             }
         }
     }
@@ -1306,29 +1346,33 @@ class InsightPlugin @Inject constructor(
         insightDbHelper.createOrUpdate(bolusID)
         insightDbHelper.getInsightBolusID(serial, event.bolusID, startTimestamp)?.also { insightBolusID ->
             if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
-                pumpSync.syncBolusWithPumpId(
-                    timestamp = insightBolusID.timestamp,
-                    amount = event.immediateAmount,
-                    type = null,
-                    pumpId = insightBolusID.id,
-                    pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                    pumpSerial = serial
-                )
+                runBlocking {
+                    pumpSync.syncBolusWithPumpId(
+                        timestamp = insightBolusID.timestamp,
+                        amount = PumpInsulin(event.immediateAmount),
+                        type = if (lastBolusTimestamp == insightBolusID.timestamp) lastBolusType else null,
+                        pumpId = insightBolusID.id,
+                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                        pumpSerial = serial
+                    )
+                }
                 lastBolusTimestamp = insightBolusID.timestamp
                 preferences.put(InsightLongNonKey.LastBolusTimestamp, lastBolusTimestamp)
-                lastBolusAmount = event.immediateAmount
-                preferences.put(InsightDoubleNonKey.LastBolusAmount, lastBolusAmount)
+                _lastBolusAmount.value = PumpInsulin(event.immediateAmount)
+                preferences.put(InsightDoubleNonKey.LastBolusAmount, _lastBolusAmount.value?.cU ?: 0.0)
             }
             if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
-                if (event.duration > 0 && profileFunction.getProfile(insightBolusID.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp = insightBolusID.timestamp,
-                    amount = event.extendedAmount,
-                    duration = timestamp - startTimestamp,
-                    isEmulatingTB = isFakingTempsByExtendedBoluses,
-                    pumpId = insightBolusID.id,
-                    pumpType = PumpType.ACCU_CHEK_INSIGHT,
-                    pumpSerial = serial
-                )
+                if (event.duration > 0 && runBlocking { pumpSync.isProfileRunning(insightBolusID.timestamp) }) runBlocking {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                        timestamp = insightBolusID.timestamp,
+                        rate = PumpRate(event.extendedAmount),
+                        duration = timestamp - startTimestamp,
+                        isEmulatingTB = isFakingTempsByExtendedBoluses,
+                        pumpId = insightBolusID.id,
+                        pumpType = PumpType.ACCU_CHEK_INSIGHT,
+                        pumpSerial = serial
+                    )
+                }
             }
         }
     }
@@ -1454,7 +1498,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun logNote(date: Long, note: String) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, TE.Type.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber())
+        runBlocking { pumpSync.insertTherapyEventIfNewWithTimestamp(date, TE.Type.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber()) }
     }
 
     private fun parseRelativeDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, relativeHour: Int, relativeMinute: Int, relativeSecond: Int): Long {
@@ -1469,7 +1513,7 @@ class InsightPlugin @Inject constructor(
     }
 
     private fun uploadCareportalEvent(date: Long, event: TE.Type) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber())
+        runBlocking { pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber()) }
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
@@ -1500,7 +1544,7 @@ class InsightPlugin @Inject constructor(
     override fun onStateChanged(state: InsightState?) {
         if (state == InsightState.CONNECTED) {
             statusLoaded = false
-            rxBus.send(EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE))
+            notificationManager.dismiss(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE)
         } else if (state == InsightState.NOT_PAIRED) {
             connectionService?.withdrawConnectionRequest(this)
             statusLoaded = false
@@ -1523,8 +1567,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun onTimeoutDuringHandshake() {
-        val notification = Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, rh.gs(R.string.timeout_during_handshake), Notification.URGENT)
-        rxBus.send(EventNewNotification(notification))
+        notificationManager.post(NotificationId.INSIGHT_TIMEOUT_DURING_HANDSHAKE, R.string.timeout_during_handshake, level = NotificationLevel.URGENT)
     }
 
     override fun canHandleDST(): Boolean {
@@ -1535,6 +1578,28 @@ class InsightPlugin @Inject constructor(
         insightDatabase.clearAllTables()
     }
 
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "insight_settings",
+        titleResId = R.string.insight_local,
+        items = listOf(
+            InsightIntentKey.InsightPairing.withActivity(InsightPairingInformationActivity::class.java),
+            InsightBooleanKey.LogReservoirChanges,
+            InsightBooleanKey.LogTubeChanges,
+            InsightBooleanKey.LogSiteChanges,
+            InsightBooleanKey.LogBatteryChanges,
+            InsightBooleanKey.LogOperatingModeChanges,
+            InsightBooleanKey.LogAlerts,
+            InsightBooleanKey.EnableTbrEmulation,
+            InsightBooleanKey.DisableVibration,
+            InsightBooleanKey.DisableVibrationAuto,
+            InsightIntKey.MinRecoveryDuration,
+            InsightIntKey.MaxRecoveryDuration,
+            InsightIntKey.DisconnectDelay
+        ),
+        icon = pluginDescription.icon
+    )
+
+    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null) return
 

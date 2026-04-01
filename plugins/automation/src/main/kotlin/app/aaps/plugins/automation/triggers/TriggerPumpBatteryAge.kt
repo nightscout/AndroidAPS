@@ -36,7 +36,7 @@ class TriggerPumpBatteryAge(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)
         val currentAgeHours = therapyEvent?.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)

@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Input Design</string>
-    <string name="pref_default">Default</string>
-    <string name="pref_quick_righty">Quick righty</string>
-    <string name="pref_quick_lefty">Quick lefty</string>
-    <string name="pref_modern_sparse">Modern Sparse</string>
     <string name="pref_big_numbers">Big Numbers</string>
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
@@ -90,7 +85,7 @@
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Duration\n[minutes]</string>
+    <string name="action_duration_minutes">Duration [min]</string>
     <string name="action_tempt_confirmation">Temp Target Requested</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard Requested</string>
     <string name="action_user_action_confirmation">User Action Requested</string>
@@ -100,16 +95,26 @@
     <string name="action_fill_confirmation">Fill Requested</string>
     <string name="action_ecarb_confirmation">Carbs Requested</string>
     <string name="action_profile_switch_confirmation">Profile Switch Requested</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Target\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Low\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">High\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Target [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Low [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">High [%s]</string>
     <string name="action_carbs">Carbs</string>
     <string name="action_carbs_gram">Carbs [g]</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage\n[%]</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
+    <string name="action_start_minutes_format">%1$d min</string>
     <string name="action_duration_h">Duration [h]</string>
     <string name="action_duration_hours">Duration\n[hours]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Time: %1$s</string>
+    <string name="ecarbs_confirm_duration">Duration: %1$d h</string>
+    <string name="action_confirm_reason">Reason: %1$s</string>
+    <string name="action_confirm_duration">Duration: %1$s</string>
+    <string name="action_confirm_timeshift">Timeshift: %1$s</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Preset 1</string>
@@ -229,7 +234,6 @@
     <string name="key_match_divider" translatable="false">match_divider</string>
     <string name="key_simplify_ui" translatable="false">simplify_ui</string>
     <string name="key_dark" translatable="false">dark</string>
-    <string name="key_input_design" translatable="false">input_design</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
     <string name="key_include_external" translatable="false">include_external</string>
@@ -253,7 +257,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">old</string>
     <string name="old_warning">!old!</string>
-    <string name="error">!err!</string>
+    <string name="error">Error</string>
     <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
     <string name="key_heart_rate_smoothing" translatable="false">heart_rate_smoothing</string>
@@ -288,15 +292,16 @@
     <string name="complication_iob_icon">IoB Icon</string>
     <string name="complication_iob_detailed">IoB Detailed</string>
     <string name="complication_uploader_phone_battery">Uploader/Phone Battery</string>
-    <string name="status_loop_state">Loop state</string>
-    <string name="key_loop_states_data" translatable="false">loop_states</string>
-    <string name="label_loop_state_title">AAPS(Loop state)</string>
-    <string name="action_loop_state_selected">Loop state requested</string>
+    <string name="status_running_mode">Running mode</string>
+    <string name="key_running_mode_data" translatable="false">loop_states</string>
+    <string name="label_running_mode_title">AAPS(Running mode)</string>
+    <string name="action_running_mode_selected">Running mode requested</string>
+    <string name="title_activity_disconnect_pump">Disconnect pump</string>
+    <string name="title_activity_suspend_loop">Suspend Loop</string>
     <string name="wizard_total_insulin">Total Insulin</string>
     <string name="wizard_calculation">Calculation</string>
     <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Swipe left to confirm</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">15\' trend</string>
@@ -308,7 +313,7 @@
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Corr. %1$d%%</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">Click to expand calculation details</string>
     <string name="wizard_confirmation_sent">Sent</string>
     <string name="tile_settings">Tile settings</string>
@@ -326,6 +331,8 @@
     <string name="loop_status_lgs">Low glucose suspend</string>
     <string name="loop_status_disabled">Loop disabled</string>
     <string name="loop_status_suspended">Loop suspended</string>
+    <string name="loop_status_pump_suspended">Pump suspended</string>
+    <string name="loop_status_dst_suspended">Suspended by DST</string>
     <string name="loop_status_disconnected">Pump disconnected</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Unknown</string>
@@ -342,4 +349,8 @@
     <string name="loop_status_target_range">Range</string>
     <string name="loop_status_target">Target</string>
     <string name="loop_status">Loop status</string>
+    <string name="loop_status_refresh">Refresh</string>
+    <string name="confirm">Confirm</string>
+    <string name="request">Request</string>
+    <string name="constraint_applied">Constraint applied!</string>
 </resources>

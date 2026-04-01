@@ -32,6 +32,14 @@ object Constants {
     const val MIN_TT_MMOL = 4.0
     const val MAX_TT_MMOL = 10.0
 
+    // Temp target preset defaults (target in mg/dL, duration in minutes)
+    const val DEFAULT_TT_EATING_SOON_TARGET = 90.0
+    const val DEFAULT_TT_EATING_SOON_DURATION = 45
+    const val DEFAULT_TT_ACTIVITY_TARGET = 140.0
+    const val DEFAULT_TT_ACTIVITY_DURATION = 90
+    const val DEFAULT_TT_HYPO_TARGET = 160.0
+    const val DEFAULT_TT_HYPO_DURATION = 60
+
     //NSClientInternal
     const val MAX_LOG_LINES = 90
 
@@ -63,6 +71,7 @@ object Constants {
 
     // Local profile
     const val LOCAL_PROFILE = "LocalProfile"
+    const val DEFAULT_PROFILE_ARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
 
     // One Time Password
     /**
@@ -79,4 +88,7 @@ object Constants {
      * so we add leeway to still accept given amount of older tokens
      */
     const val OTP_ACCEPT_OLD_TOKENS_COUNT = 1
+
+    // Graph time range
+    const val GRAPH_TIME_RANGE_HOURS = 24
 }

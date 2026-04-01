@@ -5,6 +5,7 @@ import app.aaps.database.daos.TemporaryTargetDao
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class UpdateNsIdTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `updates NS ID when different`() {
+    fun `updates NS ID when different`() = runTest {
         val newNsId = "new-ns-123"
         val current = createTemporaryTarget(id = 1, nsId = "old-ns")
         val update = createTemporaryTarget(id = 1, nsId = newNsId)
@@ -44,7 +45,7 @@ class UpdateNsIdTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `does not update when NS ID is same`() {
+    fun `does not update when NS ID is same`() = runTest {
         val sameNsId = "same-ns"
         val current = createTemporaryTarget(id = 1, nsId = sameNsId)
         val update = createTemporaryTarget(id = 1, nsId = sameNsId)
@@ -61,7 +62,7 @@ class UpdateNsIdTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `skips when temporary target not found`() {
+    fun `skips when temporary target not found`() = runTest {
         val update = createTemporaryTarget(id = 999, nsId = "new-ns")
 
         whenever(temporaryTargetDao.findById(999)).thenReturn(null)
@@ -76,7 +77,7 @@ class UpdateNsIdTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `updates multiple temporary targets`() {
+    fun `updates multiple temporary targets`() = runTest {
         val tt1 = createTemporaryTarget(id = 1, nsId = "old-1")
         val tt2 = createTemporaryTarget(id = 2, nsId = "old-2")
         val update1 = createTemporaryTarget(id = 1, nsId = "new-1")
@@ -98,7 +99,7 @@ class UpdateNsIdTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `handles empty list`() {
+    fun `handles empty list`() = runTest {
         val transaction = UpdateNsIdTemporaryTargetTransaction(emptyList())
         transaction.database = database
         val result = transaction.run()
@@ -109,7 +110,7 @@ class UpdateNsIdTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `updates from null to actual NS ID`() {
+    fun `updates from null to actual NS ID`() = runTest {
         val current = createTemporaryTarget(id = 1, nsId = null)
         val update = createTemporaryTarget(id = 1, nsId = "new-ns")
 

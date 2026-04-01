@@ -14,12 +14,13 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.VirtualPump
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -43,7 +44,8 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var activeInsulin: Insulin
+    @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var storeDataForDb: StoreDataForDb
     @Inject lateinit var profileUtil: ProfileUtil
 
@@ -72,7 +74,7 @@ class NSClientAddUpdateWorker(
                 latestDateInReceivedData = mills
 
             if (insulin > 0 && (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT)) {
-                BS.fromJson(json)?.let { bolus ->
+                BS.fromJson(json, activeInsulin)?.let { bolus ->
                     storeDataForDb.addToBoluses(bolus)
                 } ?: aapsLogger.error("Error parsing bolus json $json")
             }
@@ -90,7 +92,7 @@ class NSClientAddUpdateWorker(
                 json = ebJson
                 eventType = JsonHelper.safeGetString(json, "eventType")
 
-                activePlugin.activePump.let { if (it is VirtualPump) it.fakeDataDetected = true }
+                activePlugin.activePump.selectedActivePump().let { if (it is VirtualPump) it.fakeDataDetected = true }
             }
             when {
                 insulin > 0 || carbs > 0                                          -> Any()
@@ -103,7 +105,7 @@ class NSClientAddUpdateWorker(
 
                 eventType == TE.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
                     if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT) {
-                        EPS.fromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
+                        EPS.fromJson(json, dateUtil, activeInsulin)?.let { effectiveProfileSwitch ->
                             storeDataForDb.addToEffectiveProfileSwitches(effectiveProfileSwitch)
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
                     }
@@ -145,7 +147,7 @@ class NSClientAddUpdateWorker(
 
                 eventType == TE.Type.PROFILE_SWITCH.text                          ->
                     if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT) {
-                        PS.fromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
+                        PS.fromJson(json, dateUtil, localProfileManager, activeInsulin)?.let { profileSwitch ->
                             storeDataForDb.addToProfileSwitches(profileSwitch)
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }

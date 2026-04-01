@@ -14,8 +14,11 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.maintenance.ExportResult
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -23,6 +26,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginMaintenance
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
@@ -62,30 +67,32 @@ class MaintenancePlugin @Inject constructor(
     private val loggerUtils: LoggerUtils,
     private val uel: UserEntryLogger,
     private val cloudStorageManager: CloudStorageManager,
-    private val exportOptionsDialog: ExportOptionsDialog
+    private val exportOptionsDialog: ExportOptionsDialog,
+    private val sp: SP
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(MaintenanceFragment::class.java.name)
         .alwaysEnabled(true)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_maintenance)
-        .pluginName(R.string.maintenance)
+        .icon(IcPluginMaintenance)
+        .pluginName(app.aaps.core.ui.R.string.maintenance)
         .shortName(R.string.maintenance_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .preferencesVisibleInSimpleMode(false)
-        .description(R.string.description_maintenance),
+        .description(app.aaps.core.ui.R.string.description_maintenance),
     aapsLogger, rh
-) {
+), Maintenance {
 
-    fun sendLogs() {
+    override fun sendLogs() {
         val amount = preferences.get(IntKey.MaintenanceLogsAmount)
         val logs = getLogFiles(amount)
         val zipFile = fileListProvider.ensureTempDirExists()?.createFile("application/zip", constructName()) ?: return
         aapsLogger.debug("zipFile: ${zipFile.name}")
         val zip = zipLogs(zipFile, logs)
-        
+
         // Check export destination preference (master switch or individual setting)
-        if ((exportOptionsDialog.isLogCloudEnabled()) && 
+        if ((exportOptionsDialog.isLogCloudEnabled()) &&
             cloudStorageManager.isCloudStorageActive()) {
             // Send to Cloud Drive
             sendLogsToCloudDrive(zip)
@@ -99,7 +106,57 @@ class MaintenancePlugin @Inject constructor(
         }
     }
 
-    fun deleteLogs(keep: Int) {
+    override suspend fun executeSendLogs(): ExportResult {
+        val amount = preferences.get(IntKey.MaintenanceLogsAmount)
+        val logs = getLogFiles(amount)
+        val zipFile = fileListProvider.ensureTempDirExists()?.createFile("application/zip", constructName())
+            ?: return ExportResult(localSuccess = false)
+        val zip = zipLogs(zipFile, logs)
+
+        val logEmail = sp.getBoolean(ExportOptionsDialog.PREF_LOG_EMAIL_ENABLED, true)
+        val logCloud = sp.getBoolean(ExportOptionsDialog.PREF_LOG_CLOUD_ENABLED, false)
+        val isCloudActive = cloudStorageManager.isCloudStorageActive()
+        val cloudEnabled = logCloud && isCloudActive
+
+        var emailSuccess: Boolean? = null
+        var cloudSuccess: Boolean? = null
+
+        if (logEmail || !cloudEnabled) {
+            emailSuccess = try {
+                val recipient = preferences.get(StringKey.MaintenanceEmail)
+                val emailIntent = sendMail(zip.uri, recipient, "Log Export")
+                context.startActivity(emailIntent)
+                true
+            } catch (e: Exception) {
+                aapsLogger.error("Failed to launch email intent", e)
+                false
+            }
+        }
+
+        if (cloudEnabled) {
+            cloudSuccess = performCloudLogUpload(zip)
+        }
+
+        return ExportResult(localSuccess = emailSuccess, cloudSuccess = cloudSuccess)
+    }
+
+    private suspend fun performCloudLogUpload(zipFile: DocumentFile): Boolean {
+        return try {
+            val provider = cloudStorageManager.getActiveProvider() ?: return false
+            val bytes = context.contentResolver.openInputStream(zipFile.uri)?.use { it.readBytes() } ?: return false
+            provider.getOrCreateFolderPath(CloudConstants.CLOUD_PATH_LOGS)?.let { provider.setSelectedFolderId(it) }
+            var uploadedFileId = provider.uploadFileToPath(zipFile.name ?: "logs.zip", bytes, "application/zip", CloudConstants.CLOUD_PATH_LOGS)
+            if (uploadedFileId == null) {
+                uploadedFileId = provider.uploadFile(zipFile.name ?: "logs.zip", bytes, "application/zip")
+            }
+            uploadedFileId != null
+        } catch (e: Exception) {
+            aapsLogger.error("Cloud log upload failed", e)
+            false
+        }
+    }
+
+    override fun deleteLogs(keep: Int) {
         val logDir = File(loggerUtils.logDirectory)
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
@@ -216,8 +273,8 @@ class MaintenancePlugin @Inject constructor(
         builder.append("Build: " + config.BUILD_VERSION + System.lineSeparator())
         builder.append("Remote: " + config.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + config.FLAVOR + config.BUILD_TYPE + System.lineSeparator())
-        builder.append(rh.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getVersion() + System.lineSeparator())
-        if (config.isEngineeringMode()) builder.append(rh.gs(R.string.engineering_mode_enabled))
+        builder.append(rh.gs(app.aaps.core.ui.R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getVersion() + System.lineSeparator())
+        if (config.isEngineeringMode()) builder.append(rh.gs(app.aaps.core.ui.R.string.engineering_mode_enabled))
         return sendMail(attachmentUri, recipient, subject, builder.toString())
     }
 
@@ -335,6 +392,32 @@ class MaintenancePlugin @Inject constructor(
         }
     }
 
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "maintenance_settings",
+        titleResId = app.aaps.core.ui.R.string.maintenance,
+        items = listOf(
+            StringKey.MaintenanceEmail,
+            IntKey.MaintenanceLogsAmount,
+            PreferenceSubScreenDef(
+                key = "data_choice_setting",
+                titleResId = R.string.data_choices,
+                items = listOf(
+                    BooleanKey.MaintenanceEnableFabric,
+                    StringKey.MaintenanceIdentification
+                )
+            ),
+            PreferenceSubScreenDef(
+                key = "unattended_export_setting",
+                titleResId = R.string.unattended_settings_export,
+                items = listOf(
+                    BooleanKey.MaintenanceEnableExportSettingsAutomation
+                )
+            )
+        ),
+        icon = pluginDescription.icon
+    )
+
+    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null && !(requiredKey == "data_choice_setting" || requiredKey == "unattended_export_setting")) return
         val category = PreferenceCategory(context)
@@ -345,7 +428,7 @@ class MaintenancePlugin @Inject constructor(
             initialExpandedChildrenCount = 0
             addPreference(
                 AdaptiveStringPreference(
-                    ctx = context, stringKey = StringKey.MaintenanceEmail, dialogMessage = R.string.maintenance_email, title = R.string.maintenance_email,
+                    ctx = context, stringKey = StringKey.MaintenanceEmail, dialogMessage = app.aaps.core.keys.R.string.maintenance_email, title = app.aaps.core.keys.R.string.maintenance_email,
                     validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_EMAIL)
                 )
             )

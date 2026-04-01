@@ -2,15 +2,12 @@ package app.aaps.plugins.configuration.maintenance.data
 
 import androidx.annotation.DrawableRes
 import androidx.documentfile.provider.DocumentFile
-import app.aaps.core.interfaces.maintenance.PrefMetadata
+import app.aaps.core.interfaces.maintenance.PrefMetadataMap
+import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.PrefsStatus
 import app.aaps.plugins.configuration.R
 import kotlinx.parcelize.Parcelize
-
-typealias PrefMetadataMap = Map<PrefsMetadataKey, PrefMetadata>
-
-data class Prefs(val values: Map<String, String>, var metadata: PrefMetadataMap)
 
 interface PrefsFormat {
     companion object {
@@ -31,7 +28,11 @@ enum class PrefsStatusImpl(@DrawableRes override val icon: Int) : PrefsStatus {
     WARN(R.drawable.ic_meta_warning),
     ERROR(R.drawable.ic_meta_error),
     UNKNOWN(R.drawable.ic_meta_error),
-    DISABLED(R.drawable.ic_meta_error)
+    DISABLED(R.drawable.ic_meta_error);
+
+    override val isOk: Boolean get() = this == OK
+    override val isWarning: Boolean get() = this == WARN
+    override val isError: Boolean get() = this == ERROR
 }
 
 class PrefFileNotFoundError(message: String) : Exception(message)

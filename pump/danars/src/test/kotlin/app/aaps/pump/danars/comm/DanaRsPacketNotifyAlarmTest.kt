@@ -12,7 +12,7 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
 
     @Test
     fun runTest() {
-        val packet = DanaRSPacketNotifyAlarm(aapsLogger, rh, pumpSync, danaPump, uiInteraction)
+        val packet = DanaRSPacketNotifyAlarm(aapsLogger, rh, pumpSync, danaPump, notificationManager)
         // test params
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding

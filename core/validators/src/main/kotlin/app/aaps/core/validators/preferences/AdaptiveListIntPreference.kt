@@ -1,6 +1,7 @@
 package app.aaps.core.validators.preferences
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.ListPreference
@@ -89,4 +90,21 @@ open class AdaptiveListIntPreference(
             parent?.isEnabled = isEnabled
         }
     }
+
+    // Override to handle Int values stored by compose preferences
+    override fun getPersistedString(defaultReturnValue: String?): String {
+        val sharedPreferences: SharedPreferences = preferenceManager.sharedPreferences ?: return defaultReturnValue ?: ""
+        return try {
+            // Try to read as String first
+            sharedPreferences.getString(key, defaultReturnValue) ?: defaultReturnValue ?: ""
+        } catch (e: ClassCastException) {
+            // Value is stored as Int, convert to String
+            try {
+                sharedPreferences.getInt(key, defaultReturnValue?.toIntOrNull() ?: 0).toString()
+            } catch (e2: Exception) {
+                defaultReturnValue ?: ""
+            }
+        }
+    }
+
 }

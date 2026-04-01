@@ -35,7 +35,6 @@ import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
@@ -43,6 +42,7 @@ import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogLoopBinding
 import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class LoopDialog : DaggerDialogFragment() {
@@ -222,16 +222,16 @@ class LoopDialog : DaggerDialogFragment() {
             R.id.overview_disconnect_2h  -> description = rh.gs(R.string.disconnectpumpfor2h)
             R.id.overview_disconnect_3h  -> description = rh.gs(R.string.disconnectpumpfor3h)
         }
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.confirm), description, Runnable {
-                onClick(v)
-            })
-        }
+        uiInteraction.showOkCancelDialog(
+            context = requireActivity(),
+            message = description,
+            ok = { onClick(v) }
+        )
         return true
     }
 
     private fun onClick(v: View): Boolean {
-        val profile = profileFunction.getProfile() ?: return false
+        val profile = runBlocking { profileFunction.getProfile() } ?: return false
         when (v.id) {
             R.id.overview_closeloop                       -> {
                 loop.handleRunningModeChange(newRM = RM.Mode.CLOSED_LOOP, action = Action.CLOSED_LOOP_MODE, source = Sources.LoopDialog, profile = profile)

@@ -5,9 +5,10 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.interfaces.versionChecker.VersionDefinition
@@ -27,7 +28,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val config: Lazy<Config>,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction,
+    private val notificationManager: NotificationManager,
     versionDefinition: VersionDefinition
 ) : VersionCheckerUtils {
 
@@ -115,7 +116,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
         val now = dateUtil.now()
         if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(0)) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
-            uiInteraction.addNotification(Notification.NEW_VERSION_DETECTED, rh.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
+            notificationManager.post(NotificationId.NEW_VERSION_DETECTED, R.string.versionavailable, newVersion.toString(), level = NotificationLevel.LOW)
             preferences.put(VersionCheckerLongKey.LastVersionCheckWarning, now)
         }
         return true
@@ -127,10 +128,10 @@ class VersionCheckerUtilsImpl @Inject constructor(
             // store last notification time
             preferences.put(VersionCheckerLongKey.LastVersionCheckWarning, now)
             //notify
-            uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)
+            notificationManager.post(NotificationId.VERSION_EXPIRE, R.string.application_expired)
         } else if (dateUtil.isAfterNoon() && now > preferences.get(VersionCheckerLongKey.LastVersionCheckWarning) + warnEvery(endDate)) {
             aapsLogger.debug(LTag.CORE, rh.gs(R.string.version_expire, currentVersion, dateUtil.dateString(endDate)))
-            uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, dateUtil.dateString(endDate)), Notification.LOW)
+            notificationManager.post(NotificationId.VERSION_EXPIRE, R.string.version_expire, currentVersion, dateUtil.dateString(endDate), level = NotificationLevel.LOW)
             preferences.put(VersionCheckerLongKey.LastExpiredWarning, now)
         }
     }

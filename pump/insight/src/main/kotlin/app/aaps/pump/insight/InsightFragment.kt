@@ -57,7 +57,8 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
 
     @Synchronized override fun onResume() {
         super.onResume()
-        disposable.add(rxBus
+        disposable.add(
+            rxBus
                            .toObservable(EventLocalInsightUpdateGUI::class.java)
                            .observeOn(aapsSchedulers.main)
                            .subscribe({ updateGUI() }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
@@ -300,7 +301,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun getLastBolusItem() {
-        if (insightPlugin.lastBolusAmount.equals(0.0) || insightPlugin.lastBolusTimestamp == 0L) {
+        if (insightPlugin.lastBolusAmount.value?.cU?.equals(0.0) != false || insightPlugin.lastBolusTimestamp == 0L) {
             binding.lastBolusLine.visibility = View.GONE
             return
         }
@@ -313,7 +314,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
         } else {
             dateUtil.hourAgo(insightPlugin.lastBolusTimestamp, rh)
         }
-        binding.lastBolus.text = rh.gs(R.string.insight_last_bolus_formater, insightPlugin.lastBolusAmount, unit, ago)
+        binding.lastBolus.text = rh.gs(R.string.insight_last_bolus_formater, insightPlugin.lastBolusAmount.value?.cU ?: 0.0, unit, ago) // Todo: ConcentratedUnits to be formated with IU + CU in Fragment
     }
 
     private fun getBolusItems() {

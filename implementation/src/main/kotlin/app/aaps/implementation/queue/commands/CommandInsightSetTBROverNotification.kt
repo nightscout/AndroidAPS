@@ -30,7 +30,7 @@ class CommandInsightSetTBROverNotification(
     override val commandType: Command.CommandType = Command.CommandType.INSIGHT_SET_TBR_OVER_ALARM
 
     override fun execute() {
-        val pump = activePlugin.activePump
+        val pump = activePlugin.activePumpInternal
         if (pump is Insight) {
             val result = pump.setTBROverNotification(enabled)
             callback?.result(result)?.run()

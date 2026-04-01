@@ -1,7 +1,5 @@
 package app.aaps.core.interfaces.stats
 
-import android.content.Context
-import android.widget.TableLayout
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.TDD
@@ -66,11 +64,4 @@ interface TddCalculator {
      * @return [AverageTDD] or null if data is not available
      */
     fun averageTDD(tdds: LongSparseArray<TDD>?): AverageTDD?
-
-    /**
-     * Prepare TableLayout for displaying data of last 7 days. Missing data is allowed
-     * @param context android context
-     * @return TableLayout
-     */
-    fun stats(context: Context): TableLayout
 }

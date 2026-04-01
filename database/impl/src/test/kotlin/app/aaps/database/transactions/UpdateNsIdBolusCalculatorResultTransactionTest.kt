@@ -5,6 +5,7 @@ import app.aaps.database.daos.BolusCalculatorResultDao
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class UpdateNsIdBolusCalculatorResultTransactionTest {
     }
 
     @Test
-    fun `updates NS ID when different`() {
+    fun `updates NS ID when different`() = runTest {
         val newNsId = "new-ns-123"
         val current = createBolusCalculatorResult(id = 1, nsId = "old-ns")
         val update = createBolusCalculatorResult(id = 1, nsId = newNsId)
@@ -44,7 +45,7 @@ class UpdateNsIdBolusCalculatorResultTransactionTest {
     }
 
     @Test
-    fun `does not update when NS ID is same`() {
+    fun `does not update when NS ID is same`() = runTest {
         val sameNsId = "same-ns"
         val current = createBolusCalculatorResult(id = 1, nsId = sameNsId)
         val update = createBolusCalculatorResult(id = 1, nsId = sameNsId)
@@ -61,7 +62,7 @@ class UpdateNsIdBolusCalculatorResultTransactionTest {
     }
 
     @Test
-    fun `skips when bolus calculator result not found`() {
+    fun `skips when bolus calculator result not found`() = runTest {
         val update = createBolusCalculatorResult(id = 999, nsId = "new-ns")
 
         whenever(bolusCalculatorResultDao.findById(999)).thenReturn(null)

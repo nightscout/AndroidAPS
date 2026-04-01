@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.configuration.maintenance.cloud.CloudStorageManager
 import app.aaps.plugins.configuration.maintenance.cloud.ExportOptionsDialog
@@ -22,12 +23,13 @@ class MaintenancePluginTest : TestBaseWithProfile() {
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var cloudStorageManager: CloudStorageManager
     @Mock lateinit var exportOptionsDialog: ExportOptionsDialog
+    @Mock lateinit var sp: SP
 
     private lateinit var sut: MaintenancePlugin
 
     @BeforeEach
     fun mock() {
-        sut = MaintenancePlugin(context, rh, preferences, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils, uel, cloudStorageManager, exportOptionsDialog)
+        sut = MaintenancePlugin(context, rh, preferences, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils, uel, cloudStorageManager, exportOptionsDialog, sp)
         whenever(loggerUtils.suffix).thenReturn(".log.zip")
         whenever(loggerUtils.logDirectory).thenReturn("src/test/assets/logger")
         // Unknown solution after scoped access

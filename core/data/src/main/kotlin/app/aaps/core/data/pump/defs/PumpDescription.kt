@@ -32,7 +32,7 @@ class PumpDescription {
     var needsManualTDDLoad = false
     var hasCustomUnreachableAlertCheck = false
     var isPatchPump = false
-    var maxResorvoirReading = 50
+    var maxReservoirReading = 50
     var useHardwareLink = false
 
     fun resetSettings() {
@@ -65,6 +65,42 @@ class PumpDescription {
         hasCustomUnreachableAlertCheck = false
         useHardwareLink = false
     }
+
+    fun clone(): PumpDescription =
+        PumpDescription().also { it ->
+            it.pumpType = this.pumpType
+            it.isBolusCapable = this.isBolusCapable
+            it.bolusStep = this.bolusStep
+            it.isExtendedBolusCapable = this.isExtendedBolusCapable
+            it.extendedBolusStep = this.extendedBolusStep
+            it.extendedBolusDurationStep = this.extendedBolusDurationStep
+            it.extendedBolusMaxDuration = this.extendedBolusMaxDuration
+            it.isTempBasalCapable = this.isTempBasalCapable
+            it.tempBasalStyle = this.tempBasalStyle
+            it.maxTempPercent = this.maxTempPercent
+            it.tempPercentStep = this.tempPercentStep
+            it.maxTempAbsolute = this.maxTempAbsolute
+            it.tempAbsoluteStep = this.tempAbsoluteStep
+            it.tempDurationStep = this.tempDurationStep
+            it.tempDurationStep15mAllowed = this.tempDurationStep15mAllowed
+            it.tempDurationStep30mAllowed = this.tempDurationStep30mAllowed
+            it.tempMaxDuration = this.tempMaxDuration
+            it.isSetBasalProfileCapable = this.isSetBasalProfileCapable
+            it.basalStep = this.basalStep
+            it.basalMinimumRate = this.basalMinimumRate
+            it.basalMaximumRate = this.basalMaximumRate
+            it.isRefillingCapable = this.isRefillingCapable
+            it.isBatteryReplaceable = this.isBatteryReplaceable
+
+            //it.storesCarbInfo = this.storesCarbInfo
+            it.is30minBasalRatesCapable = this.is30minBasalRatesCapable
+            it.supportsTDDs = this.supportsTDDs
+            it.needsManualTDDLoad = this.needsManualTDDLoad
+            it.hasCustomUnreachableAlertCheck = this.hasCustomUnreachableAlertCheck
+            it.isPatchPump = this.isPatchPump
+            it.maxReservoirReading = this.maxReservoirReading
+            it.useHardwareLink = this.useHardwareLink
+        }
 
     companion object {
 

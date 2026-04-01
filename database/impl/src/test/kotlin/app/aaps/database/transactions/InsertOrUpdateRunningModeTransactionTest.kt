@@ -5,6 +5,7 @@ import app.aaps.database.daos.RunningModeDao
 import app.aaps.database.entities.RunningMode
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class InsertOrUpdateRunningModeTransactionTest {
     }
 
     @Test
-    fun `inserts new running mode when id not found`() {
+    fun `inserts new running mode when id not found`() = runTest {
         val runningMode = createRunningMode(id = 1, mode = RunningMode.Mode.OPEN_LOOP)
 
         whenever(runningModeDao.findById(1)).thenReturn(null)
@@ -44,7 +45,7 @@ class InsertOrUpdateRunningModeTransactionTest {
     }
 
     @Test
-    fun `updates existing running mode when id found`() {
+    fun `updates existing running mode when id found`() = runTest {
         val runningMode = createRunningMode(id = 1, mode = RunningMode.Mode.CLOSED_LOOP)
         val existing = createRunningMode(id = 1, mode = RunningMode.Mode.OPEN_LOOP)
 
@@ -63,7 +64,7 @@ class InsertOrUpdateRunningModeTransactionTest {
     }
 
     @Test
-    fun `updates running mode type`() {
+    fun `updates running mode type`() = runTest {
         val existing = createRunningMode(id = 1, mode = RunningMode.Mode.OPEN_LOOP)
         val updated = createRunningMode(id = 1, mode = RunningMode.Mode.CLOSED_LOOP)
 
@@ -78,7 +79,7 @@ class InsertOrUpdateRunningModeTransactionTest {
     }
 
     @Test
-    fun `inserts running mode with duration`() {
+    fun `inserts running mode with duration`() = runTest {
         val runningMode = createRunningMode(id = 1, mode = RunningMode.Mode.OPEN_LOOP, duration = 60_000L)
 
         whenever(runningModeDao.findById(1)).thenReturn(null)

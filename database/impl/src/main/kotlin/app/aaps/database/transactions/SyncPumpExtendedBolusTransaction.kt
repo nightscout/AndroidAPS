@@ -8,7 +8,7 @@ import app.aaps.database.entities.interfaces.end
  */
 class SyncPumpExtendedBolusTransaction(private val extendedBolus: ExtendedBolus) : Transaction<SyncPumpExtendedBolusTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         extendedBolus.interfaceIDs.pumpId ?: extendedBolus.interfaceIDs.pumpType
         ?: extendedBolus.interfaceIDs.pumpSerial
         ?: throw IllegalStateException("Some pump ID is null")

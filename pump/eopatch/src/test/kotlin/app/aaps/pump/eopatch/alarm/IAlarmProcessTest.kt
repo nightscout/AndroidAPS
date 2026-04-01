@@ -11,11 +11,6 @@ class IAlarmProcessTest {
     }
 
     @Test
-    fun `ALARM_PAUSE constant should be 1`() {
-        assertThat(IAlarmProcess.ALARM_PAUSE).isEqualTo(1)
-    }
-
-    @Test
     fun `ALARM_HANDLED constant should be 2`() {
         assertThat(IAlarmProcess.ALARM_HANDLED).isEqualTo(2)
     }
@@ -29,18 +24,9 @@ class IAlarmProcessTest {
     fun `all constants should be distinct`() {
         val constants = setOf(
             IAlarmProcess.ALARM_UNHANDLED,
-            IAlarmProcess.ALARM_PAUSE,
             IAlarmProcess.ALARM_HANDLED,
             IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP
         )
-
-        assertThat(constants).hasSize(4)
-    }
-
-    @Test
-    fun `constants should be in sequential order`() {
-        assertThat(IAlarmProcess.ALARM_UNHANDLED).isLessThan(IAlarmProcess.ALARM_PAUSE)
-        assertThat(IAlarmProcess.ALARM_PAUSE).isLessThan(IAlarmProcess.ALARM_HANDLED)
-        assertThat(IAlarmProcess.ALARM_HANDLED).isLessThan(IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP)
+        assertThat(constants).hasSize(3)
     }
 }

@@ -42,10 +42,15 @@ project.afterEvaluate {
         val classes = HashSet<ConfigurableFileTree>()
         subprojects.forEach { proj ->
             variants.forEach { variant ->
-                val path1 = proj.layout.buildDirectory.dir("intermediates/javac/$variant/classes").get()
-                classes.add(fileTree(path1) { exclude(excludes) })
-                val path2 = proj.layout.buildDirectory.dir("tmp/kotlin-classes/$variant").get()
-                classes.add(fileTree(path2) { exclude(excludes) })
+                // Use variant directory as base - fileTree recurses into subdirectories
+                // This avoids hardcoding exact task-name subdirectories that may vary between AGP versions
+                val javaPath = proj.layout.buildDirectory.dir("intermediates/javac/$variant").get()
+                classes.add(fileTree(javaPath) { exclude(excludes); include("**/*.class") })
+                val kotlinPath = proj.layout.buildDirectory.dir("intermediates/built_in_kotlinc/$variant").get()
+                classes.add(fileTree(kotlinPath) { exclude(excludes); include("**/*.class") })
+                // Fallback for older AGP versions
+                val kotlinLegacyPath = proj.layout.buildDirectory.dir("tmp/kotlin-classes/$variant").get()
+                classes.add(fileTree(kotlinLegacyPath) { exclude(excludes); include("**/*.class") })
             }
         }
         classDirectories.setFrom(files(listOf(classes)))

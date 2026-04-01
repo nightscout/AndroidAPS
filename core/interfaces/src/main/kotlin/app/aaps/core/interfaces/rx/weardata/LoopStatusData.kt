@@ -20,6 +20,8 @@ data class LoopStatusData(
         LGS,
         DISABLED,
         SUSPENDED,
+        PUMP_SUSPENDED,
+        DST_SUSPENDED,
         DISCONNECTED,
         SUPERBOLUS,
         UNKNOWN

@@ -31,7 +31,7 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.common.R
 import app.aaps.pump.common.databinding.PumpBleConfigActivityBinding
@@ -53,6 +53,7 @@ open class PumpBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var context: Context
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private lateinit var binding: PumpBleConfigActivityBinding
     lateinit var bleSelector: PumpBLESelector
@@ -145,11 +146,11 @@ open class PumpBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
         }
 
         binding.pumpBleConfigButtonRemove.setOnClickListener {
-            OKDialog.showConfirmation(
-                this@PumpBLEConfigActivity,
-                bleSelector.getText(PumpBLESelectorText.REMOVE_TITLE),
-                bleSelector.getText(PumpBLESelectorText.REMOVE_TEXT),
-                Runnable {
+            uiInteraction.showOkCancelDialog(
+                context = this@PumpBLEConfigActivity,
+                title = bleSelector.getText(PumpBLESelectorText.REMOVE_TITLE),
+                message = bleSelector.getText(PumpBLESelectorText.REMOVE_TEXT),
+                ok = {
                     val deviceAddress: String = binding.pumpBleConfigCurrentlySelectedPumpAddress.text.toString()
                     aapsLogger.debug(TAG, "Removing device as selected: $deviceAddress")
                     if (devicesMap.containsKey(deviceAddress)) {

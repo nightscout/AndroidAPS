@@ -21,6 +21,8 @@ import app.aaps.workflow.iob.IobCobOrefWorker
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Suppress("unused")
 @Module(
@@ -28,9 +30,11 @@ import dagger.android.ContributesAndroidInjector
         WorkflowModule.WorkflowBindings::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 abstract class WorkflowModule {
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface WorkflowBindings {
 
         @Binds fun bindCalculationWorkflow(calculationWorkflow: CalculationWorkflowImpl): CalculationWorkflow

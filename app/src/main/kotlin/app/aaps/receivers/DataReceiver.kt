@@ -15,7 +15,6 @@ import app.aaps.core.utils.extensions.copyLong
 import app.aaps.core.utils.extensions.copyString
 import app.aaps.core.utils.receivers.BundleLogger
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
@@ -25,6 +24,7 @@ import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.SyaiPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import dagger.android.DaggerBroadcastReceiver
 import javax.inject.Inject
 

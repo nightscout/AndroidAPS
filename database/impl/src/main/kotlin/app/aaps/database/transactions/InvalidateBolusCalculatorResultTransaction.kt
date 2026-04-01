@@ -4,7 +4,7 @@ import app.aaps.database.entities.BolusCalculatorResult
 
 class InvalidateBolusCalculatorResultTransaction(val id: Long) : Transaction<InvalidateBolusCalculatorResultTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val bolusCalculatorResult = database.bolusCalculatorResultDao.findById(id)
             ?: throw IllegalArgumentException("There is no such BolusCalculatorResult with the specified ID.")

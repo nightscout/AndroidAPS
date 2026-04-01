@@ -41,7 +41,7 @@ class SWEditEncryptedPassword @Inject constructor(aapsLogger: AAPSLogger, rh: Re
         button.setText(R.string.unlock_settings)
         button.setOnClickListener {
             context.scanForActivity()?.let { activity ->
-                passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, {
+                passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, {
                     button.visibility = View.GONE
                     editText?.visibility = View.VISIBLE
                     editText2?.visibility = View.VISIBLE

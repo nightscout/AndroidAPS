@@ -37,7 +37,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     override fun isValid(): Boolean = true // empty alarm will show app name
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(config.appName))
         callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()

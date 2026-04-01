@@ -29,7 +29,7 @@ class CommandDeactivate(
     override val commandType: Command.CommandType = Command.CommandType.DEACTIVATE
 
     override fun execute() {
-        val pump = activePlugin.activePump
+        val pump = activePlugin.activePumpInternal
 
         if (pump is Medtrum) {
             val medtrumPump = pump as Medtrum

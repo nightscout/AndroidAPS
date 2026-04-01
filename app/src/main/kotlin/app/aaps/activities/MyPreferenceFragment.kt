@@ -24,23 +24,21 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.protection.PasswordCheck
-import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.BIOMETRIC
-import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
-import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.ProtectionType.BIOMETRIC
+import app.aaps.core.keys.ProtectionType.CUSTOM_PASSWORD
+import app.aaps.core.keys.ProtectionType.CUSTOM_PIN
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.DoublePreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.PreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.extensions.safeGetSerializable
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
@@ -53,8 +51,8 @@ import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
-import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.skins.SkinProvider
+import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import dagger.android.support.AndroidSupportInjection
 import java.util.Vector
 import javax.inject.Inject
@@ -77,6 +75,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
     @Inject lateinit var skinProvider: SkinProvider
     @Inject lateinit var overview: Overview
+    @Inject lateinit var uiInteraction: UiInteraction
 
     companion object {
 
@@ -145,9 +144,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activePlugin.getSpecificPluginsList(PluginType.LOOP).forEach { addPreferencesIfEnabled(it, rootKey, config.APS) }
             addPreferencesIfEnabled(activePlugin.activeAPS as PluginBase, rootKey, config.APS)
             addPreferencesIfEnabled(activePlugin.activeSensitivity as PluginBase, rootKey)
-            addPreferencesIfEnabled(activePlugin.activePump as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activePumpInternal as PluginBase, rootKey)
             addPumpScreen(rootKey)
-            addPreferencesIfEnabled(activePlugin.activeInsulin as PluginBase, rootKey)
             activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { addPreferencesIfEnabled(it, rootKey) }
             addPreferencesIfEnabled(smsCommunicatorPlugin, rootKey)
             addPreferencesIfEnabled(automationPlugin, rootKey)
@@ -166,23 +164,17 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         key ?: return
-        rxBus.send(EventPreferenceChange(key))
         if (key == StringKey.GeneralLanguage.key) {
             rxBus.send(EventRebuildTabs(true))
             //recreate() does not update language so better close settings
             activity?.finish()
-        }
-        if (key == BooleanKey.OverviewShortTabTitles.key || key == BooleanKey.GeneralSimpleMode.key) {
-            rxBus.send(EventRebuildTabs())
         }
         if (key == StringKey.GeneralUnits.key || key == BooleanKey.GeneralSimpleMode.key || preferences.getDependingOn(key).isNotEmpty()) {
             activity?.recreate()
             return
         }
         if (key == BooleanKey.ApsUseAutosens.key && preferences.get(BooleanKey.ApsUseAutosens)) {
-            activity?.let {
-                OKDialog.show(it, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
-            }
+            uiInteraction.showOkDialog(context = requireActivity(), title = app.aaps.core.ui.R.string.configbuilder_sensitivity, message = R.string.sensitivity_warning)
         }
         // Preference change can be triggered inside AAPS on [NonPreferenceKey] too
         // check if it's [PreferenceKey]
@@ -211,25 +203,19 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         // Biometric protection activated without set master password
         if ((IntKey.ProtectionTypeSettings == key || IntKey.ProtectionTypeApplication == key || IntKey.ProtectionTypeBolus == key) &&
             preferences.get(StringKey.ProtectionMasterPassword) == "" &&
-            preferences.get(key as IntKey) == BIOMETRIC.ordinal
+            preferences.get(key) == BIOMETRIC.ordinal
         ) {
-            activity?.let {
-                val title = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_biometric)
-                val message = rh.gs(app.aaps.plugins.configuration.R.string.master_password_missing, rh.gs(app.aaps.plugins.configuration.R.string.protection))
-                OKDialog.show(it, title = title, message = message)
-            }
+            val title = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_biometric)
+            val message = rh.gs(app.aaps.core.ui.R.string.master_password_missing, rh.gs(app.aaps.core.ui.R.string.protection))
+            uiInteraction.showOkDialog(context = requireActivity(), title = title, message = message)
         }
 
         // Master password erased with activated Biometric protection
         val isBiometricActivated = preferences.get(IntKey.ProtectionTypeSettings) == BIOMETRIC.ordinal ||
             preferences.get(IntKey.ProtectionTypeApplication) == BIOMETRIC.ordinal ||
             preferences.get(IntKey.ProtectionTypeBolus) == BIOMETRIC.ordinal
-        if (StringKey.ProtectionMasterPassword == key && preferences.get(key as StringKey) == "" && isBiometricActivated) {
-            activity?.let {
-                val title = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_biometric)
-                val message = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_descriotion_biometric)
-                OKDialog.show(it, title = title, message = message)
-            }
+        if (StringKey.ProtectionMasterPassword == key && preferences.get(key) == "" && isBiometricActivated) {
+            uiInteraction.showOkDialog(context = requireActivity(), title = app.aaps.core.ui.R.string.unsecure_fallback_biometric, message = app.aaps.core.ui.R.string.unsecure_fallback_descriotion_biometric)
         }
     }
 
@@ -380,43 +366,23 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             skinEntries.addElement(context.getString(skin.description))
         }
 
-        val darkModeEntries = arrayOf<CharSequence>(
-            rh.gs(app.aaps.plugins.main.R.string.dark_theme),
-            rh.gs(app.aaps.plugins.main.R.string.light_theme),
-            rh.gs(app.aaps.plugins.main.R.string.follow_system_theme),
-        )
-        val darkModeValues = arrayOf<CharSequence>(
-            rh.gs(app.aaps.plugins.main.R.string.value_dark_theme),
-            rh.gs(app.aaps.plugins.main.R.string.value_light_theme),
-            rh.gs(app.aaps.plugins.main.R.string.value_system_theme),
-        )
-
         val category = PreferenceCategory(context)
         rootScreen.addPreference(category)
         category.apply {
             key = "general_settings"
-            title = rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_general)
+            title = rh.gs(app.aaps.core.ui.R.string.configbuilder_general)
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.GeneralUnits, title = R.string.unitsnosemicolon, entries = unitsEntries, entryValues = unitsValues))
             addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.GeneralLanguage, title = R.string.language, entries = languageEntries, entryValues = languageValues))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.GeneralSimpleMode, title = R.string.simple_mode))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.GeneralSimpleMode, title = app.aaps.core.keys.R.string.pref_title_simple_mode))
+            // GeneralInsulinConcentration is handled in Compose preferences only (requires change guard)
             addPreference(
                 AdaptiveStringPreference(
-                    ctx = context, stringKey = StringKey.GeneralPatientName, summary = app.aaps.plugins.configuration.R.string.patient_name_summary, title = app.aaps.plugins.configuration.R.string.patient_name,
+                    ctx = context, stringKey = StringKey.GeneralPatientName, summary = app.aaps.core.keys.R.string.pref_summary_patient_name, title = app.aaps.core.keys.R.string.pref_title_patient_name,
                     validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_PERSONNAME)
                 )
             )
             addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.GeneralSkin, title = app.aaps.plugins.main.R.string.skin, entries = skinEntries.toTypedArray(), entryValues = skinValues.toTypedArray()))
-            addPreference(
-                AdaptiveListPreference(
-                    ctx = context,
-                    stringKey = StringKey.GeneralDarkMode,
-                    entries = darkModeEntries,
-                    entryValues = darkModeValues,
-                    title = app.aaps.plugins.main.R.string.app_color_scheme,
-                    summary = app.aaps.plugins.main.R.string.theme_switcher_summary
-                )
-            )
         }
     }
 
@@ -427,11 +393,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         val rootScreen = preferenceScreen ?: preferenceManager.createPreferenceScreen(context).also { preferenceScreen = it }
 
         val protectionTypeEntries = arrayOf<CharSequence>(
-            rh.gs(app.aaps.core.ui.R.string.noprotection),
-            rh.gs(app.aaps.core.ui.R.string.biometric),
-            rh.gs(app.aaps.core.ui.R.string.master_password),
-            rh.gs(app.aaps.core.ui.R.string.custom_password),
-            rh.gs(app.aaps.core.ui.R.string.custom_pin),
+            rh.gs(app.aaps.core.keys.R.string.noprotection),
+            rh.gs(app.aaps.core.keys.R.string.biometric),
+            rh.gs(app.aaps.core.keys.R.string.master_password),
+            rh.gs(app.aaps.core.keys.R.string.custom_password),
+            rh.gs(app.aaps.core.keys.R.string.custom_pin),
         )
         val protectionTypeValues = arrayOf<CharSequence>("0", "1", "2", "3", "4")
 
@@ -439,68 +405,75 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         rootScreen.addPreference(category)
         category.apply {
             key = "protection_settings"
-            title = rh.gs(app.aaps.plugins.configuration.R.string.protection)
+            title = rh.gs(app.aaps.core.ui.R.string.protection)
             initialExpandedChildrenCount = 0
             addPreference(
-                AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionMasterPassword, title = app.aaps.core.ui.R.string.master_password,
-                                        onPreferenceClickListener = {
-                                            passwordCheck.queryPassword(context, app.aaps.plugins.configuration.R.string.current_master_password, StringKey.ProtectionMasterPassword, {
-                                                passwordCheck.setPassword(context, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword)
-                                            })
-                                            true
-                                        }
+                AdaptiveClickPreference(
+                    ctx = context, stringKey = StringKey.ProtectionMasterPassword, title = app.aaps.core.keys.R.string.master_password,
+                    onPreferenceClickListener = {
+                        passwordCheck.queryPassword(context, app.aaps.core.ui.R.string.current_master_password, StringKey.ProtectionMasterPassword, {
+                            passwordCheck.setPassword(context, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword)
+                        })
+                        true
+                    }
                 )
             )
             addPreference(AdaptiveListIntPreference(ctx = context, intKey = IntKey.ProtectionTypeSettings, title = app.aaps.core.ui.R.string.settings_protection, entries = protectionTypeEntries, entryValues = protectionTypeValues))
             addPreference(
-                AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionSettingsPassword, title = app.aaps.core.ui.R.string.settings_password,
-                                        onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_password, StringKey.ProtectionSettingsPassword)
-                                            true
-                                        },
-                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeSettings) == CUSTOM_PASSWORD.ordinal })
+                AdaptiveClickPreference(
+                    ctx = context, stringKey = StringKey.ProtectionSettingsPassword, title = app.aaps.core.ui.R.string.settings_password,
+                    onPreferenceClickListener = {
+                        passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_password, StringKey.ProtectionSettingsPassword)
+                        true
+                    },
+                    calculatedVisibility = { preferences.get(IntKey.ProtectionTypeSettings) == CUSTOM_PASSWORD.ordinal })
             )
             addPreference(
-                AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionSettingsPin, title = app.aaps.core.ui.R.string.settings_pin,
-                                        onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_pin, StringKey.ProtectionSettingsPin, pinInput = true)
-                                            true
-                                        },
-                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeSettings) == CUSTOM_PIN.ordinal })
+                AdaptiveClickPreference(
+                    ctx = context, stringKey = StringKey.ProtectionSettingsPin, title = app.aaps.core.ui.R.string.settings_pin,
+                    onPreferenceClickListener = {
+                        passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_pin, StringKey.ProtectionSettingsPin, pinInput = true)
+                        true
+                    },
+                    calculatedVisibility = { preferences.get(IntKey.ProtectionTypeSettings) == CUSTOM_PIN.ordinal })
             )
             addPreference(AdaptiveListIntPreference(ctx = context, intKey = IntKey.ProtectionTypeApplication, title = app.aaps.core.ui.R.string.application_protection, entries = protectionTypeEntries, entryValues = protectionTypeValues))
             addPreference(
-                AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionApplicationPassword, title = app.aaps.core.ui.R.string.application_password,
-                                        onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_password, StringKey.ProtectionApplicationPassword)
-                                            true
-                                        },
-                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeApplication) == CUSTOM_PASSWORD.ordinal })
+                AdaptiveClickPreference(
+                    ctx = context, stringKey = StringKey.ProtectionApplicationPassword, title = app.aaps.core.ui.R.string.application_password,
+                    onPreferenceClickListener = {
+                        passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_password, StringKey.ProtectionApplicationPassword)
+                        true
+                    },
+                    calculatedVisibility = { preferences.get(IntKey.ProtectionTypeApplication) == CUSTOM_PASSWORD.ordinal })
             )
             addPreference(
-                AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionApplicationPin, title = app.aaps.core.ui.R.string.application_pin,
-                                        onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_pin, StringKey.ProtectionApplicationPin, pinInput = true)
-                                            true
-                                        },
-                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeApplication) == CUSTOM_PIN.ordinal })
+                AdaptiveClickPreference(
+                    ctx = context, stringKey = StringKey.ProtectionApplicationPin, title = app.aaps.core.ui.R.string.application_pin,
+                    onPreferenceClickListener = {
+                        passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_pin, StringKey.ProtectionApplicationPin, pinInput = true)
+                        true
+                    },
+                    calculatedVisibility = { preferences.get(IntKey.ProtectionTypeApplication) == CUSTOM_PIN.ordinal })
             )
             addPreference(AdaptiveListIntPreference(ctx = context, intKey = IntKey.ProtectionTypeBolus, title = app.aaps.core.ui.R.string.bolus_protection, entries = protectionTypeEntries, entryValues = protectionTypeValues))
             addPreference(
-                AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionBolusPassword, title = app.aaps.core.ui.R.string.bolus_password,
-                                        onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_password, StringKey.ProtectionBolusPassword)
-                                            true
-                                        },
-                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeBolus) == CUSTOM_PASSWORD.ordinal })
+                AdaptiveClickPreference(
+                    ctx = context, stringKey = StringKey.ProtectionBolusPassword, title = app.aaps.core.ui.R.string.bolus_password,
+                    onPreferenceClickListener = {
+                        passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_password, StringKey.ProtectionBolusPassword)
+                        true
+                    },
+                    calculatedVisibility = { preferences.get(IntKey.ProtectionTypeBolus) == CUSTOM_PASSWORD.ordinal })
             )
             addPreference(
-                AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionBolusPin, title = app.aaps.core.ui.R.string.bolus_pin,
-                                        onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_pin, StringKey.ProtectionBolusPin, pinInput = true)
-                                            true
-                                        },
-                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeBolus) == CUSTOM_PIN.ordinal })
+                AdaptiveClickPreference(
+                    ctx = context, stringKey = StringKey.ProtectionBolusPin, title = app.aaps.core.ui.R.string.bolus_pin,
+                    onPreferenceClickListener = {
+                        passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_pin, StringKey.ProtectionBolusPin, pinInput = true)
+                        true
+                    },
+                    calculatedVisibility = { preferences.get(IntKey.ProtectionTypeBolus) == CUSTOM_PIN.ordinal })
             )
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.ProtectionTimeout, title = app.aaps.core.ui.R.string.protection_timeout_title, summary = app.aaps.core.ui.R.string.protection_timeout_summary))
         }
@@ -518,7 +491,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             key = "pump_settings"
             title = rh.gs(app.aaps.core.ui.R.string.pump)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.PumpBtWatchdog, title = app.aaps.core.ui.R.string.btwatchdog_title, summary = app.aaps.core.ui.R.string.btwatchdog_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.PumpBtWatchdog, title = app.aaps.core.keys.R.string.pref_title_bt_watchdog, summary = app.aaps.core.keys.R.string.pref_summary_bt_watchdog))
         }
     }
 
@@ -532,15 +505,15 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         rootScreen.addPreference(category)
         category.apply {
             key = "local_alerts_settings"
-            title = rh.gs(R.string.localalertsettings_title)
+            title = rh.gs(app.aaps.core.ui.R.string.localalertsettings_title)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertMissedBgReading, title = R.string.enable_missed_bg_readings_alert))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertMissedBgReading, title = app.aaps.core.keys.R.string.pref_title_alert_missed_bg_reading))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.AlertsStaleDataThreshold, title = app.aaps.plugins.sync.R.string.ns_alarm_stale_data_value_label))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertPumpUnreachable, title = R.string.enable_pump_unreachable_alert))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertPumpUnreachable, title = app.aaps.core.keys.R.string.pref_title_alert_pump_unreachable))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.AlertsPumpUnreachableThreshold, title = R.string.pump_unreachable_threshold))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertCarbsRequired, title = R.string.enable_carbs_req_alert))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertUrgentAsAndroidNotification, title = app.aaps.core.ui.R.string.raise_notifications_as_android_notifications))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertIncreaseVolume, title = R.string.gradually_increase_notification_volume))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertCarbsRequired, title = app.aaps.core.keys.R.string.pref_title_alert_carbs_required))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertUrgentAsAndroidNotification, title = app.aaps.core.keys.R.string.pref_title_alert_urgent_as_android_notification))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertIncreaseVolume, title = app.aaps.core.keys.R.string.pref_title_alert_increase_volume))
         }
     }
 }

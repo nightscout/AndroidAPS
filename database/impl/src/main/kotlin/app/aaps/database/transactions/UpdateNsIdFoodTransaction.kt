@@ -6,7 +6,7 @@ class UpdateNsIdFoodTransaction(private val foods: List<Food>) : Transaction<Upd
 
     val result = TransactionResult()
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         for (food in foods) {
             val current = database.foodDao.findById(food.id)
             if (current != null && current.interfaceIDs.nightscoutId != food.interfaceIDs.nightscoutId) {

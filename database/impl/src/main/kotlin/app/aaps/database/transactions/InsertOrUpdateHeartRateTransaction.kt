@@ -5,7 +5,7 @@ import app.aaps.database.entities.HeartRate
 class InsertOrUpdateHeartRateTransaction(private val heartRate: HeartRate) :
     Transaction<InsertOrUpdateHeartRateTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val existing = if (heartRate.id == 0L) null else database.heartRateDao.findById(heartRate.id)
         return if (existing == null) {
             database.heartRateDao.insertNewEntry(heartRate).let {

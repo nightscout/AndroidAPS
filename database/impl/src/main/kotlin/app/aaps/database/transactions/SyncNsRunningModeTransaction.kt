@@ -7,7 +7,7 @@ import app.aaps.database.entities.RunningMode
  */
 class SyncNsRunningModeTransaction(private val runningModes: List<RunningMode>) : Transaction<SyncNsRunningModeTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         for (runningMode in runningModes) {

@@ -1,12 +1,11 @@
 package app.aaps.plugins.main.general.overview
 
 import android.app.Activity
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -18,16 +17,17 @@ class OverviewPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var overviewData: OverviewData
     @Mock lateinit var overviewMenus: OverviewMenus
-    @Mock lateinit var notificationStore: NotificationStore
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var nsSettingsStatus: NSSettingsStatus
+    @Mock lateinit var uel: UserEntryLogger
 
     private lateinit var overviewPlugin: OverviewPlugin
 
     @BeforeEach fun prepare() {
         overviewPlugin = OverviewPlugin(
-            aapsLogger, rh, preferences, notificationStore, fabricPrivacy, rxBus,
-            aapsSchedulers, overviewData, overviewMenus, context, constraintsChecker, uiInteraction, nsSettingsStatus, config, activePlugin
+            aapsLogger, rh, preferences, fabricPrivacy, rxBus,
+            aapsSchedulers, overviewData, overviewMenus, context, constraintsChecker, uiInteraction, nsSettingsStatus, config, activePlugin,
+            uel, notificationManager
         )
         whenever(uiInteraction.quickWizardListActivity).thenReturn(Activity::class.java)
     }

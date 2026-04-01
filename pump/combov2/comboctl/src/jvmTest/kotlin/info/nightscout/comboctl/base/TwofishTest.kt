@@ -18,26 +18,26 @@ class TwofishTest : TestBase() {
 
         val key = byteArrayOfInts(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
         val expectedSubKeys = intArrayOf(
-            0x52C54DDE.toInt(), 0x11F0626D.toInt(), // Input whiten
-            0x7CAC9D4A.toInt(), 0x4D1B4AAA.toInt(),
-            0xB7B83A10.toInt(), 0x1E7D0BEB.toInt(), // Output whiten
+            0x52C54DDE, 0x11F0626D, // Input whiten
+            0x7CAC9D4A, 0x4D1B4AAA,
+            0xB7B83A10.toInt(), 0x1E7D0BEB, // Output whiten
             0xEE9C341F.toInt(), 0xCFE14BE4.toInt(),
             0xF98FFEF9.toInt(), 0x9C5B3C17.toInt(), // Round subkeys
-            0x15A48310.toInt(), 0x342A4D81.toInt(),
-            0x424D89FE.toInt(), 0xC14724A7.toInt(),
-            0x311B834C.toInt(), 0xFDE87320.toInt(),
-            0x3302778F.toInt(), 0x26CD67B4.toInt(),
-            0x7A6C6362.toInt(), 0xC2BAF60E.toInt(),
-            0x3411B994.toInt(), 0xD972C87F.toInt(),
+            0x15A48310, 0x342A4D81,
+            0x424D89FE, 0xC14724A7.toInt(),
+            0x311B834C, 0xFDE87320.toInt(),
+            0x3302778F, 0x26CD67B4,
+            0x7A6C6362, 0xC2BAF60E.toInt(),
+            0x3411B994, 0xD972C87F.toInt(),
             0x84ADB1EA.toInt(), 0xA7DEE434.toInt(),
-            0x54D2960F.toInt(), 0xA2F7CAA8.toInt(),
+            0x54D2960F, 0xA2F7CAA8.toInt(),
             0xA6B8FF8C.toInt(), 0x8014C425.toInt(),
-            0x6A748D1C.toInt(), 0xEDBAF720.toInt(),
-            0x928EF78C.toInt(), 0x0338EE13.toInt(),
+            0x6A748D1C, 0xEDBAF720.toInt(),
+            0x928EF78C.toInt(), 0x0338EE13,
             0x9949D6BE.toInt(), 0xC8314176.toInt(),
-            0x07C07D68.toInt(), 0xECAE7EA7.toInt(),
-            0x1FE71844.toInt(), 0x85C05C89.toInt(),
-            0xF298311E.toInt(), 0x696EA672.toInt()
+            0x07C07D68, 0xECAE7EA7.toInt(),
+            0x1FE71844, 0x85C05C89.toInt(),
+            0xF298311E.toInt(), 0x696EA672
         )
 
         val keyObject = Twofish.processKey(key)

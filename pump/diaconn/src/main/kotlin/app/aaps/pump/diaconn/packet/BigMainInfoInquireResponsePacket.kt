@@ -64,8 +64,8 @@ class BigMainInfoInquireResponsePacket(
         diaconnG8Pump.second = getByteToInt(bufferData) // 초 (0~59)
 
         //4. pump system info
-        diaconnG8Pump.country = getByteToInt(bufferData).toChar().toString().toInt() // ASCII
-        diaconnG8Pump.productType = getByteToInt(bufferData).toChar().toString().toInt() // ASCII
+        diaconnG8Pump.country = Char(getByteToInt(bufferData)).toString().toInt() // ASCII
+        diaconnG8Pump.productType = Char(getByteToInt(bufferData)).toString().toInt() // ASCII
         diaconnG8Pump.makeYear = getByteToInt(bufferData)
         diaconnG8Pump.makeMonth = getByteToInt(bufferData)
         diaconnG8Pump.makeDay = getByteToInt(bufferData)

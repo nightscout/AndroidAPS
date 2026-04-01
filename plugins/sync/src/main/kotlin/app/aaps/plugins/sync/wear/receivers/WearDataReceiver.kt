@@ -36,8 +36,8 @@ open class WearDataReceiver : DaggerBroadcastReceiver() {
                 }
                 // Check for allowed configuration
                 if (
-                    config.AAPSCLIENT1 && client == 2 ||
-                    (config.APS || config.PUMPCONTROL) && (client == 1 || client == 2)
+                    config.AAPSCLIENT1 && (client == 2 || client == 3) ||
+                    (config.APS || config.PUMPCONTROL) && (client == 1 || client == 2 || client == 3)
                 ) {
                     // Send to phone
                     val eventData = EventData.deserialize(data)

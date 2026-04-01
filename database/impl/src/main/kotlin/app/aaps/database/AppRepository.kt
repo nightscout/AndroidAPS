@@ -1,5 +1,6 @@
 package app.aaps.database
 
+import androidx.room.withTransaction
 import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
@@ -23,11 +24,22 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntry
 import app.aaps.database.transactions.Transaction
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.io.Closeable
 import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -37,41 +49,135 @@ import kotlin.math.roundToInt
 @Singleton
 class AppRepository @Inject internal constructor(
     internal val database: AppDatabase
-) {
+) : Closeable {
 
+    // ========== RXJAVA SUPPORT (EXISTING) ==========
     private val changeSubject = PublishSubject.create<List<DBEntry>>()
 
     fun changeObservable(): Observable<List<DBEntry>> = changeSubject.subscribeOn(Schedulers.io())
 
+    // ========== FLOW SUPPORT (NEW) ==========
+
     /**
-     * Executes a transaction ignoring its result
+     * Coroutine scope for Flow emissions
+     * Using SupervisorJob so failures don't cancel the entire scope
+     */
+    private val repositoryScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    /**
+     * SharedFlow for broadcasting database changes
+     * - replay = 0: No replay, only new changes
+     * - extraBufferCapacity = 64: Buffer fast emissions
+     * - onBufferOverflow = DROP_OLDEST: Drop old events if buffer full
+     */
+    private val _changeFlow = MutableSharedFlow<List<DBEntry>>(
+        replay = 0,
+        extraBufferCapacity = 64,
+        onBufferOverflow = kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST
+    )
+
+    /**
+     * Observe ALL database changes as Flow
+     */
+    fun changeFlow(): Flow<List<DBEntry>> = _changeFlow.asSharedFlow()
+
+    /**
+     * Observe database changes filtered by entity type
+     * Example: repository.changesOfType<TemporaryBasal>()
+     */
+    inline fun <reified T : DBEntry> changesOfType(): Flow<List<T>> =
+        changeFlow()
+            .map { changes -> changes.filterIsInstance<T>() }
+            .filter { it.isNotEmpty() }
+
+    /**
+     * Executes a transaction ignoring its result (coroutine version)
+     * Uses Room's suspend withTransaction API for proper coroutine support
+     * Emits to BOTH RxJava (existing) AND Flow (new)
+     */
+    suspend fun <T> runTransactionSuspend(transaction: Transaction<T>) {
+        val changes = mutableListOf<DBEntry>()
+        database.withTransaction {
+            transaction.database = DelegatedAppDatabase(changes, database)
+            transaction.run()
+        }
+        // Emit to RxJava (existing) - for backwards compatibility
+        changeSubject.onNext(changes)
+
+        // Emit to Flow (new)
+        if (changes.isNotEmpty()) {
+            _changeFlow.emit(changes)
+        }
+    }
+
+    /**
+     * Executes a transaction and returns its result (coroutine version)
+     * Uses Room's suspend withTransaction API for proper coroutine support
+     * Emits to BOTH RxJava (existing) AND Flow (new)
+     */
+    suspend fun <T : Any> runTransactionForResultSuspend(transaction: Transaction<T>): T {
+        val changes = mutableListOf<DBEntry>()
+        val result = database.withTransaction {
+            transaction.database = DelegatedAppDatabase(changes, database)
+            transaction.run()
+        }
+        // Emit to RxJava (existing) - for backwards compatibility
+        changeSubject.onNext(changes)
+
+        // Emit to Flow (new)
+        if (changes.isNotEmpty()) {
+            _changeFlow.emit(changes)
+        }
+        return result
+    }
+
+    /**
+     * Executes a transaction ignoring its result (RxJava version)
      * Runs on IO scheduler
+     * Emits to BOTH RxJava (existing) AND Flow (new)
      */
     fun <T> runTransaction(transaction: Transaction<T>): Completable {
         val changes = mutableListOf<DBEntry>()
         return Completable.fromCallable {
             database.runInTransaction {
                 transaction.database = DelegatedAppDatabase(changes, database)
-                transaction.run()
+                runBlocking { transaction.run() }
             }
         }.subscribeOn(Schedulers.io()).doOnComplete {
+            // Emit to RxJava (existing) - for backwards compatibility
             changeSubject.onNext(changes)
+
+            // Emit to Flow (new)
+            if (changes.isNotEmpty()) {
+                repositoryScope.launch {
+                    _changeFlow.emit(changes)
+                }
+            }
         }
     }
 
     /**
-     * Executes a transaction and returns its result
+     * Executes a transaction and returns its result (RxJava version)
      * Runs on IO scheduler
+     * Emits to BOTH RxJava (existing) AND Flow (new)
      */
     fun <T : Any> runTransactionForResult(transaction: Transaction<T>): Single<T> {
         val changes = mutableListOf<DBEntry>()
         return Single.fromCallable {
             database.runInTransaction(Callable {
                 transaction.database = DelegatedAppDatabase(changes, database)
-                transaction.run()
+                runBlocking { transaction.run() }
             })
         }.subscribeOn(Schedulers.io()).doOnSuccess {
+            // Emit to RxJava (existing) - for backwards compatibility
             changeSubject.onNext(changes)
+
+            // Emit to Flow (new)
+            if (changes.isNotEmpty()) {
+                repositoryScope.launch {
+                    _changeFlow.emit(changes)
+                }
+            }
         }
     }
 
@@ -79,7 +185,7 @@ class AppRepository @Inject internal constructor(
 
     fun clearApsResults() = database.apsResultDao.deleteAllEntries()
 
-    fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
+    suspend fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
         val than = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(keepDays)
         val removed = mutableListOf<Pair<String, Int>>()
         removed.add(Pair("APSResult", database.apsResultDao.deleteOlderThan(than)))
@@ -93,7 +199,7 @@ class AppRepository @Inject internal constructor(
         removed.add(Pair("TemporaryTarget", database.temporaryTargetDao.deleteOlderThan(than)))
         removed.add(Pair("BolusCalculatorResult", database.bolusCalculatorResultDao.deleteOlderThan(than)))
         // keep at least one EPS
-        if (database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(than + 1).blockingGet().isNotEmpty())
+        if (database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(than + 1).isNotEmpty())
             removed.add(Pair("EffectiveProfileSwitch", database.effectiveProfileSwitchDao.deleteOlderThan(than)))
         removed.add(Pair("ProfileSwitch", database.profileSwitchDao.deleteOlderThan(than)))
         removed.add(Pair("ApsResult", database.apsResultDao.deleteOlderThan(than)))
@@ -132,32 +238,24 @@ class AppRepository @Inject internal constructor(
         return ret.toString()
     }
 
-    fun clearCachedTddData(from: Long) {
-        database.totalDailyDoseDao.deleteNewerThan(from, InterfaceIDs.PumpType.CACHE)
-    }
+    suspend fun clearCachedTddData(from: Long) = database.totalDailyDoseDao.deleteNewerThan(from, InterfaceIDs.PumpType.CACHE)
 
     //BG READINGS -- only valid records
-    fun compatGetBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GlucoseValue>> =
-        database.glucoseValueDao.compatGetBgReadingsDataFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun compatGetBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): List<GlucoseValue> =
+        database.glucoseValueDao.compatGetBgReadingsDataFromTime(timestamp).reversedIf(!ascending)
 
-    fun compatGetBgReadingsDataFromTime(start: Long, end: Long, ascending: Boolean): Single<List<GlucoseValue>> =
-        database.glucoseValueDao.compatGetBgReadingsDataFromTime(start, end)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun compatGetBgReadingsDataFromTime(start: Long, end: Long, ascending: Boolean): List<GlucoseValue> =
+        database.glucoseValueDao.compatGetBgReadingsDataFromTime(start, end).reversedIf(!ascending)
 
     //BG READINGS -- including invalid/history records
-    fun findBgReadingByNSId(nsId: String): GlucoseValue? =
+    suspend fun findBgReadingByNSId(nsId: String): GlucoseValue? =
         database.glucoseValueDao.findByNSId(nsId)
 
-    fun getLastGlucoseValueId(): Long? =
+    suspend fun getLastGlucoseValueId(): Long? =
         database.glucoseValueDao.getLastId()
 
-    fun getLastGlucoseValue(): GlucoseValue? =
+    suspend fun getLastGlucoseValue(): GlucoseValue? =
         database.glucoseValueDao.getLast()
-            .subscribeOn(Schedulers.io())
-            .blockingGet()
 
     /*
        * returns a Pair of the next entity to sync and the ID of the "update".
@@ -166,20 +264,19 @@ class AppRepository @Inject internal constructor(
        *
        * It is a Maybe as there might be no next element.
        * */
-    fun getNextSyncElementGlucoseValue(id: Long): Maybe<Pair<GlucoseValue, GlucoseValue>> =
-        database.glucoseValueDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.glucoseValueDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementGlucoseValue(id: Long): Pair<GlucoseValue, GlucoseValue>? {
+        val nextIdElement = database.glucoseValueDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.glucoseValueDao.getCurrentFromHistoric(nextIdElemReferenceId) ?: return null
+            historic to nextIdElement
+        }
+    }
 
     // TEMP TARGETS
-    fun findTemporaryTargetByNSId(nsId: String): TemporaryTarget? =
+    suspend fun findTemporaryTargetByNSId(nsId: String): TemporaryTarget? =
         database.temporaryTargetDao.findByNSId(nsId)
 
     /*
@@ -189,158 +286,126 @@ class AppRepository @Inject internal constructor(
        *
        * It is a Maybe as there might be no next element.
        * */
-    fun getNextSyncElementTemporaryTarget(id: Long): Maybe<Pair<TemporaryTarget, TemporaryTarget>> =
-        database.temporaryTargetDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.temporaryTargetDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementTemporaryTarget(id: Long): Pair<TemporaryTarget, TemporaryTarget>? {
+        val nextIdElement = database.temporaryTargetDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.temporaryTargetDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryTarget>> =
-        database.temporaryTargetDao.getTemporaryTargetDataFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): List<TemporaryTarget> =
+        database.temporaryTargetDao.getTemporaryTargetDataFromTime(timestamp).reversedIf(!ascending)
 
-    fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryTarget>> =
-        database.temporaryTargetDao.getTemporaryTargetDataIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<TemporaryTarget> =
+        database.temporaryTargetDao.getTemporaryTargetDataIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getTemporaryTargetActiveAt(timestamp: Long): Maybe<TemporaryTarget> =
+    suspend fun getTemporaryTargetActiveAt(timestamp: Long): TemporaryTarget? =
         database.temporaryTargetDao.getTemporaryTargetActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun getLastTempTargetId(): Long? =
+    suspend fun getLastTempTargetId(): Long? =
         database.temporaryTargetDao.getLastId()
 
     // USER ENTRY
-    fun getUserEntryDataFromTime(timestamp: Long): Single<List<UserEntry>> =
+    suspend fun getUserEntryDataFromTime(timestamp: Long): List<UserEntry> =
         database.userEntryDao.getUserEntryDataFromTime(timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UserEntry>> =
+    suspend fun getUserEntryFilteredDataFromTime(timestamp: Long): List<UserEntry> =
         database.userEntryDao.getUserEntryFilteredDataFromTime(UserEntry.Sources.Loop, timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun insert(word: UserEntry) {
+    suspend fun insert(word: UserEntry) {
         database.userEntryDao.insert(word)
         changeSubject.onNext(mutableListOf(word)) // Not TraceableDao
     }
 
     // PROFILE SWITCH
 
-    fun findProfileSwitchByNSId(nsId: String): ProfileSwitch? =
+    suspend fun findProfileSwitchByNSId(nsId: String): ProfileSwitch? =
         database.profileSwitchDao.findByNSId(nsId)
 
-    fun getNextSyncElementProfileSwitch(id: Long): Maybe<Pair<ProfileSwitch, ProfileSwitch>> =
-        database.profileSwitchDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.profileSwitchDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementProfileSwitch(id: Long): Pair<ProfileSwitch, ProfileSwitch>? {
+        val nextIdElement = database.profileSwitchDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.profileSwitchDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getProfileSwitchActiveAt(timestamp: Long): ProfileSwitch? {
+    suspend fun getProfileSwitchActiveAt(timestamp: Long): ProfileSwitch? {
         val tps = database.profileSwitchDao.getTemporaryProfileSwitchActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
-            .blockingGet()
         val ps = database.profileSwitchDao.getPermanentProfileSwitchActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
-            .blockingGet()
         if (tps != null && ps != null)
             return if (ps.timestamp > tps.timestamp) ps else tps
         if (ps == null) return tps
         return ps // if (tps == null)
     }
 
-    fun getPermanentProfileSwitchActiveAt(timestamp: Long): Maybe<ProfileSwitch> =
+    suspend fun getPermanentProfileSwitchActiveAt(timestamp: Long): ProfileSwitch? =
         database.profileSwitchDao.getPermanentProfileSwitchActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun getAllProfileSwitches(): Single<List<ProfileSwitch>> =
+    suspend fun getAllProfileSwitches(): List<ProfileSwitch> =
         database.profileSwitchDao.getAllProfileSwitches()
-            .subscribeOn(Schedulers.io())
 
-    fun getProfileSwitchesFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
-        database.profileSwitchDao.getProfileSwitchDataFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getProfileSwitchesFromTime(timestamp: Long, ascending: Boolean): List<ProfileSwitch> =
+        database.profileSwitchDao.getProfileSwitchDataFromTime(timestamp).reversedIf(!ascending)
 
-    fun getProfileSwitchesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
-        database.profileSwitchDao.getProfileSwitchDataIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getProfileSwitchesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<ProfileSwitch> =
+        database.profileSwitchDao.getProfileSwitchDataIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getLastProfileSwitchId(): Long? =
+    suspend fun getLastProfileSwitchId(): Long? =
         database.profileSwitchDao.getLastId()
 
     // RUNNING MODE
 
-    fun findRunningModeByNSId(nsId: String): RunningMode? =
+    suspend fun findRunningModeByNSId(nsId: String): RunningMode? =
         database.runningModeDao.findByNSId(nsId)
 
-    fun getNextSyncElementRunningMode(id: Long): Maybe<Pair<RunningMode, RunningMode>> =
-        database.runningModeDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.runningModeDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementRunningMode(id: Long): Pair<RunningMode, RunningMode>? {
+        val nextIdElement = database.runningModeDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.runningModeDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getRunningModeActiveAt(timestamp: Long): RunningMode? {
+    suspend fun getRunningModeActiveAt(timestamp: Long): RunningMode? {
         val trm = database.runningModeDao.getTemporaryRunningModeActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
-            .blockingGet()
         val prm = database.runningModeDao.getPermanentRunningModeActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
-            .blockingGet()
         if (trm != null && prm != null)
             return if (prm.timestamp > trm.timestamp) prm else trm
         if (prm == null) return trm
         return prm // if (trm == null)
     }
 
-    fun getPermanentRunningModeActiveAt(timestamp: Long): Maybe<RunningMode> =
+    suspend fun getPermanentRunningModeActiveAt(timestamp: Long): RunningMode? =
         database.runningModeDao.getPermanentRunningModeActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun getAllRunningModes(): Single<List<RunningMode>> =
+    suspend fun getAllRunningModes(): List<RunningMode> =
         database.runningModeDao.getAllRunningModes()
-            .subscribeOn(Schedulers.io())
 
-    fun getRunningModesFromTime(timestamp: Long, ascending: Boolean): Single<List<RunningMode>> =
-        database.runningModeDao.getRunningModeDataFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getRunningModesFromTime(timestamp: Long, ascending: Boolean): List<RunningMode> =
+        database.runningModeDao.getRunningModeDataFromTime(timestamp).reversedIf(!ascending)
 
-    fun getRunningModesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): Single<List<RunningMode>> =
-        database.runningModeDao.getRunningModeDataFromTimeToTime(startTime, endTime)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getRunningModesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<RunningMode> =
+        database.runningModeDao.getRunningModeDataFromTimeToTime(startTime, endTime).reversedIf(!ascending)
 
-    fun getRunningModesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<RunningMode>> =
-        database.runningModeDao.getRunningModeDataIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getRunningModesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<RunningMode> =
+        database.runningModeDao.getRunningModeDataIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getLastRunningModeId(): Long? =
+    suspend fun getLastRunningModeId(): Long? =
         database.runningModeDao.getLastId()
 
     // EFFECTIVE PROFILE SWITCH
-    fun findEffectiveProfileSwitchByNSId(nsId: String): EffectiveProfileSwitch? =
+    suspend fun findEffectiveProfileSwitchByNSId(nsId: String): EffectiveProfileSwitch? =
         database.effectiveProfileSwitchDao.findByNSId(nsId)
 
     /*
@@ -350,43 +415,37 @@ class AppRepository @Inject internal constructor(
        *
        * It is a Maybe as there might be no next element.
        * */
-    fun getNextSyncElementEffectiveProfileSwitch(id: Long): Maybe<Pair<EffectiveProfileSwitch, EffectiveProfileSwitch>> =
-        database.effectiveProfileSwitchDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.effectiveProfileSwitchDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementEffectiveProfileSwitch(id: Long): Pair<EffectiveProfileSwitch, EffectiveProfileSwitch>? {
+        val nextIdElement = database.effectiveProfileSwitchDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.effectiveProfileSwitchDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getOldestEffectiveProfileSwitchRecord(): Maybe<EffectiveProfileSwitch> =
+    suspend fun getOldestEffectiveProfileSwitchRecord(): EffectiveProfileSwitch? =
         database.effectiveProfileSwitchDao.getOldestEffectiveProfileSwitchRecord()
-            .subscribeOn(Schedulers.io())
 
-    fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Maybe<EffectiveProfileSwitch> =
+    suspend fun getEffectiveProfileSwitchActiveAt(timestamp: Long): EffectiveProfileSwitch? =
         database.effectiveProfileSwitchDao.getEffectiveProfileSwitchActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun getEffectiveProfileSwitchesFromTime(timestamp: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
-        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getEffectiveProfileSwitchesFromTime(timestamp: Long, ascending: Boolean): List<EffectiveProfileSwitch> =
+        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(timestamp).reversedIf(!ascending)
 
-    fun getEffectiveProfileSwitchesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
-        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getEffectiveProfileSwitchesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<EffectiveProfileSwitch> =
+        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getEffectiveProfileSwitchesFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
-        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTimeToTime(start, end)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getEffectiveProfileSwitchesFromTimeToTime(start: Long, end: Long, ascending: Boolean): List<EffectiveProfileSwitch> =
+        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTimeToTime(start, end).reversedIf(!ascending)
 
-    fun getLastEffectiveProfileSwitchId(): Long? =
+    suspend fun getLastEffectiveProfileSwitchId(): Long? =
         database.effectiveProfileSwitchDao.getLastId()
+
+    suspend fun getAllEffectiveProfileSwitches(): List<EffectiveProfileSwitch> =
+        database.effectiveProfileSwitchDao.getAllEffectiveProfileSwitches()
 
     // THERAPY EVENT
     /*
@@ -396,45 +455,36 @@ class AppRepository @Inject internal constructor(
        *
        * It is a Maybe as there might be no next element.
        * */
-    fun findTherapyEventByNSId(nsId: String): TherapyEvent? =
+    suspend fun findTherapyEventByNSId(nsId: String): TherapyEvent? =
         database.therapyEventDao.findByNSId(nsId)
 
-    fun getNextSyncElementTherapyEvent(id: Long): Maybe<Pair<TherapyEvent, TherapyEvent>> =
-        database.therapyEventDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.therapyEventDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementTherapyEvent(id: Long): Pair<TherapyEvent, TherapyEvent>? {
+        val nextIdElement = database.therapyEventDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.therapyEventDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TherapyEvent>> =
-        database.therapyEventDao.getTherapyEventDataFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): List<TherapyEvent> =
+        database.therapyEventDao.getTherapyEventDataFromTime(timestamp).reversedIf(!ascending)
 
-    fun getTherapyEventDataFromTime(timestamp: Long, type: TherapyEvent.Type, ascending: Boolean): Single<List<TherapyEvent>> =
-        database.therapyEventDao.getTherapyEventDataFromTime(timestamp, type)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getTherapyEventDataFromTime(timestamp: Long, type: TherapyEvent.Type, ascending: Boolean): List<TherapyEvent> =
+        database.therapyEventDao.getTherapyEventDataFromTime(timestamp, type).reversedIf(!ascending)
 
-    fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TherapyEvent>> =
-        database.therapyEventDao.getTherapyEventDataIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<TherapyEvent> =
+        database.therapyEventDao.getTherapyEventDataIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): Maybe<TherapyEvent> =
+    suspend fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): TherapyEvent? =
         database.therapyEventDao.getLastTherapyRecord(type, System.currentTimeMillis())
-            .subscribeOn(Schedulers.io())
 
-    fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TherapyEvent>> =
+    suspend fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): List<TherapyEvent> =
         database.therapyEventDao.compatGetTherapyEventDataFromToTime(from, to)
-            .subscribeOn(Schedulers.io())
 
-    fun getLastTherapyEventId(): Long? =
+    suspend fun getLastTherapyEventId(): Long? =
         database.therapyEventDao.getLastId()
 
     // FOOD
@@ -445,27 +495,26 @@ class AppRepository @Inject internal constructor(
        *
        * It is a Maybe as there might be no next element.
        * */
-    fun getNextSyncElementFood(id: Long): Maybe<Pair<Food, Food>> =
-        database.foodDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.foodDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementFood(id: Long): Pair<Food, Food>? {
+        val nextIdElement = database.foodDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.foodDao.getCurrentFromHistoric(nextIdElemReferenceId) ?: return null
+            historic to nextIdElement
+        }
+    }
 
-    fun getFoodData(): Single<List<Food>> =
-        database.foodDao.getFoodData()
-            .subscribeOn(Schedulers.io())
+    suspend fun getFoodData(): List<Food> {
+        return database.foodDao.getFoodData()
+    }
 
-    fun getLastFoodId(): Long? =
+    suspend fun getLastFoodId(): Long? =
         database.foodDao.getLastId()
 
     // BOLUS
-    fun getBolusByNSId(nsId: String): Bolus? =
+    suspend fun getBolusByNSId(nsId: String): Bolus? =
         database.bolusDao.getByNSId(nsId)
 
     /*
@@ -475,50 +524,43 @@ class AppRepository @Inject internal constructor(
       *
       * It is a Maybe as there might be no next element.
       * */
-    fun getNextSyncElementBolus(id: Long): Maybe<Pair<Bolus, Bolus>> =
-        database.bolusDao.getNextModifiedOrNewAfterExclude(id, Bolus.Type.PRIMING)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.bolusDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementBolus(id: Long): Pair<Bolus, Bolus>? {
+        val nextIdElement = database.bolusDao.getNextModifiedOrNewAfterExclude(id, Bolus.Type.PRIMING) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.bolusDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getNewestBolus(): Maybe<Bolus> =
+    suspend fun getNewestBolus(): Bolus? =
         database.bolusDao.getLastBolusRecord()
-            .subscribeOn(Schedulers.io())
 
-    fun getLastBolusRecordOfType(type: Bolus.Type): Maybe<Bolus> =
+    suspend fun getLastBolusRecordOfType(type: Bolus.Type): Bolus? =
         database.bolusDao.getLastBolusRecordOfType(type)
-            .subscribeOn(Schedulers.io())
 
-    fun getOldestBolus(): Maybe<Bolus> =
+    suspend fun getOldestBolus(): Bolus? =
         database.bolusDao.getOldestBolusRecord()
-            .subscribeOn(Schedulers.io())
 
-    fun getBolusesDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
-        database.bolusDao.getBolusesFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getBoluses(): List<Bolus> =
+        database.bolusDao.getAllBoluses()
 
-    fun getBolusesDataFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<Bolus>> =
-        database.bolusDao.getBolusesFromTime(from, to)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getBolusesDataFromTime(timestamp: Long, ascending: Boolean): List<Bolus> =
+        database.bolusDao.getBolusesFromTime(timestamp).reversedIf(!ascending)
 
-    fun getBolusesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
-        database.bolusDao.getBolusesIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getBolusesDataFromTimeToTime(from: Long, to: Long, ascending: Boolean): List<Bolus> =
+        database.bolusDao.getBolusesFromTime(from, to).reversedIf(!ascending)
 
-    fun getLastBolusId(): Long? =
+    suspend fun getBolusesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<Bolus> =
+        database.bolusDao.getBolusesIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
+
+    suspend fun getLastBolusId(): Long? =
         database.bolusDao.getLastId()
     // CARBS
 
-    fun getCarbsByNSId(nsId: String): Carbs? =
+    suspend fun getCarbsByNSId(nsId: String): Carbs? =
         database.carbsDao.getByNSId(nsId)
 
     private fun expandCarbs(carbs: Carbs): List<Carbs> =
@@ -535,11 +577,6 @@ class AppRepository @Inject internal constructor(
             }.filter { it.amount != 0.0 }
         }
 
-    private fun Single<List<Carbs>>.expand() = this.map { it.map(::expandCarbs).flatten() }
-    private fun Single<List<Carbs>>.fromTo(from: Long, to: Long) = this.map { it.filter { c -> c.timestamp in from..to } }
-    private fun Single<List<Carbs>>.from(start: Long) = this.map { it.filter { c -> c.timestamp >= start } }
-    private fun Single<List<Carbs>>.sort() = this.map { it.sortedBy { c -> c.timestamp } }
-
     /*
       * returns a Pair of the next entity to sync and the ID of the "update".
       * The update id might either be the entry id itself if it is a new entry - or the id
@@ -547,61 +584,52 @@ class AppRepository @Inject internal constructor(
       *
       * It is a Maybe as there might be no next element.
       * */
-    fun getNextSyncElementCarbs(id: Long): Maybe<Pair<Carbs, Carbs>> =
-        database.carbsDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.carbsDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementCarbs(id: Long): Pair<Carbs, Carbs>? {
+        val nextIdElement = database.carbsDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.carbsDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getLastCarbs(): Maybe<Carbs> =
-        database.carbsDao.getLastCarbsRecordMaybe()
-            .subscribeOn(Schedulers.io())
+    suspend fun getLastCarbs(): Carbs? =
+        database.carbsDao.getLastCarbsRecord()
 
-    fun getOldestCarbs(): Maybe<Carbs> =
+    suspend fun getOldestCarbs(): Carbs? =
         database.carbsDao.getOldestCarbsRecord()
-            .subscribeOn(Schedulers.io())
 
-    fun getCarbsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getCarbsDataFromTime(timestamp: Long, ascending: Boolean): List<Carbs> =
+        database.carbsDao.getCarbsFromTime(timestamp).reversedIf(!ascending)
 
-    fun getCarbsDataFromTimeExpanded(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsFromTimeExpandable(timestamp)
-            .expand()
-            .from(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getCarbsDataFromTimeExpanded(timestamp: Long, ascending: Boolean): List<Carbs> {
+        val data = database.carbsDao.getCarbsFromTimeExpandable(timestamp)
+        val expanded = data.map(::expandCarbs).flatten()
+        val filtered = expanded.filter { it.timestamp >= timestamp }
+        return filtered.reversedIf(!ascending)
+    }
 
-    fun getCarbsDataFromTimeNotExpanded(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsFromTimeExpandable(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getCarbsDataFromTimeNotExpanded(timestamp: Long, ascending: Boolean): List<Carbs> {
+        return database.carbsDao.getCarbsFromTimeExpandable(timestamp).reversedIf(!ascending)
+    }
 
-    fun getCarbsDataFromTimeToTimeExpanded(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
+    suspend fun getCarbsDataFromTimeToTimeExpanded(from: Long, to: Long, ascending: Boolean): List<Carbs> =
         database.carbsDao.getCarbsFromTimeToTimeExpandable(from, to)
-            .expand()
-            .fromTo(from, to)
-            .sort()
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+            .map(::expandCarbs).flatten()
+            .filter { it.timestamp in from..to }
+            .sortedBy { it.timestamp }
+            .reversedIf(!ascending)
 
-    fun getCarbsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getCarbsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<Carbs> =
+        database.carbsDao.getCarbsIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getLastCarbsId(): Long? =
+    suspend fun getLastCarbsId(): Long? =
         database.carbsDao.getLastId()
 
     // BOLUS CALCULATOR RESULT
-    fun findBolusCalculatorResultByNSId(nsId: String): BolusCalculatorResult? =
+    suspend fun findBolusCalculatorResultByNSId(nsId: String): BolusCalculatorResult? =
         database.bolusCalculatorResultDao.findByNSId(nsId)
 
     /*
@@ -611,29 +639,24 @@ class AppRepository @Inject internal constructor(
       *
       * It is a Maybe as there might be no next element.
       * */
-    fun getNextSyncElementBolusCalculatorResult(id: Long): Maybe<Pair<BolusCalculatorResult, BolusCalculatorResult>> =
-        database.bolusCalculatorResultDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.bolusCalculatorResultDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementBolusCalculatorResult(id: Long): Pair<BolusCalculatorResult, BolusCalculatorResult>? {
+        val nextIdElement = database.bolusCalculatorResultDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.bolusCalculatorResultDao.getCurrentFromHistoric(nextIdElemReferenceId) ?: return null
+            historic to nextIdElement
+        }
+    }
 
-    fun getBolusCalculatorResultsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<BolusCalculatorResult>> =
-        database.bolusCalculatorResultDao.getBolusCalculatorResultsFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getBolusCalculatorResultsDataFromTime(timestamp: Long, ascending: Boolean): List<BolusCalculatorResult> =
+        database.bolusCalculatorResultDao.getBolusCalculatorResultsFromTime(timestamp).reversedIf(!ascending)
 
-    fun getBolusCalculatorResultsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<BolusCalculatorResult>> =
-        database.bolusCalculatorResultDao.getBolusCalculatorResultsIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getBolusCalculatorResultsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): List<BolusCalculatorResult> =
+        database.bolusCalculatorResultDao.getBolusCalculatorResultsIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getLastBolusCalculatorResultId(): Long? =
+    suspend fun getLastBolusCalculatorResultId(): Long? =
         database.bolusCalculatorResultDao.getLastId()
 
     // DEVICE STATUS
@@ -650,15 +673,14 @@ class AppRepository @Inject internal constructor(
        * It is a Maybe as there might be no next element.
        * */
 
-    fun getNextSyncElementDeviceStatus(id: Long): Maybe<DeviceStatus> =
+    suspend fun getNextSyncElementDeviceStatus(id: Long): DeviceStatus? =
         database.deviceStatusDao.getNextModifiedOrNewAfter(id)
-            .subscribeOn(Schedulers.io())
 
-    fun getLastDeviceStatusId(): Long? =
+    suspend fun getLastDeviceStatusId(): Long? =
         database.deviceStatusDao.getLastId()
 
     // TEMPORARY BASAL
-    fun findTemporaryBasalByNSId(nsId: String): TemporaryBasal? =
+    suspend fun findTemporaryBasalByNSId(nsId: String): TemporaryBasal? =
         database.temporaryBasalDao.findByNSId(nsId)
 
     /*
@@ -669,50 +691,40 @@ class AppRepository @Inject internal constructor(
         * It is a Maybe as there might be no next element.
         * */
 
-    fun getNextSyncElementTemporaryBasal(id: Long): Maybe<Pair<TemporaryBasal, TemporaryBasal>> =
-        database.temporaryBasalDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.temporaryBasalDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementTemporaryBasal(id: Long): Pair<TemporaryBasal, TemporaryBasal>? {
+        val nextIdElement = database.temporaryBasalDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.temporaryBasalDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getTemporaryBasalActiveAt(timestamp: Long): Maybe<TemporaryBasal> =
+    suspend fun getTemporaryBasalActiveAt(timestamp: Long): TemporaryBasal? =
         database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun getTemporaryBasalsActiveBetweenTimeAndTime(from: Long, to: Long): Single<List<TemporaryBasal>> =
+    suspend fun getTemporaryBasalsActiveBetweenTimeAndTime(from: Long, to: Long): List<TemporaryBasal> =
         database.temporaryBasalDao.getTemporaryBasalActiveBetweenTimeAndTime(from, to)
-            .subscribeOn(Schedulers.io())
 
-    fun getTemporaryBasalsStartingFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
-        database.temporaryBasalDao.getTemporaryBasalDataFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getTemporaryBasalsStartingFromTime(timestamp: Long, ascending: Boolean): List<TemporaryBasal> =
+        database.temporaryBasalDao.getTemporaryBasalDataFromTime(timestamp).reversedIf(!ascending)
 
-    fun getTemporaryBasalsStartingFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
-        database.temporaryBasalDao.getTemporaryBasalStartingFromTimeToTime(from, to)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getTemporaryBasalsStartingFromTimeToTime(from: Long, to: Long, ascending: Boolean): List<TemporaryBasal> =
+        database.temporaryBasalDao.getTemporaryBasalStartingFromTimeToTime(from, to).reversedIf(!ascending)
 
-    fun getTemporaryBasalsStartingFromTimeIncludingInvalid(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
-        database.temporaryBasalDao.getTemporaryBasalDataIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getTemporaryBasalsStartingFromTimeIncludingInvalid(timestamp: Long, ascending: Boolean): List<TemporaryBasal> =
+        database.temporaryBasalDao.getTemporaryBasalDataIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getOldestTemporaryBasalRecord(): Maybe<TemporaryBasal> =
+    suspend fun getOldestTemporaryBasalRecord(): TemporaryBasal? =
         database.temporaryBasalDao.getOldestRecord()
-            .subscribeOn(Schedulers.io())
 
-    fun getLastTemporaryBasalId(): Long? =
+    suspend fun getLastTemporaryBasalId(): Long? =
         database.temporaryBasalDao.getLastId()
 
     // EXTENDED BOLUS
-    fun findExtendedBolusByNSId(nsId: String): ExtendedBolus? =
+    suspend fun findExtendedBolusByNSId(nsId: String): ExtendedBolus? =
         database.extendedBolusDao.findByNSId(nsId)
 
     /*
@@ -723,76 +735,60 @@ class AppRepository @Inject internal constructor(
        * It is a Maybe as there might be no next element.
        * */
 
-    fun getNextSyncElementExtendedBolus(id: Long): Maybe<Pair<ExtendedBolus, ExtendedBolus>> =
-        database.extendedBolusDao.getNextModifiedOrNewAfter(id)
-            .flatMap { nextIdElement ->
-                val nextIdElemReferenceId = nextIdElement.referenceId
-                if (nextIdElemReferenceId == null) {
-                    Maybe.just(nextIdElement to nextIdElement)
-                } else {
-                    database.extendedBolusDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement }
-                }
-            }
+    suspend fun getNextSyncElementExtendedBolus(id: Long): Pair<ExtendedBolus, ExtendedBolus>? {
+        val nextIdElement = database.extendedBolusDao.getNextModifiedOrNewAfter(id) ?: return null
+        val nextIdElemReferenceId = nextIdElement.referenceId
+        return if (nextIdElemReferenceId == null) {
+            nextIdElement to nextIdElement
+        } else {
+            val historic = database.extendedBolusDao.getCurrentFromHistoric(nextIdElemReferenceId)
+            historic?.let { it to nextIdElement }
+        }
+    }
 
-    fun getExtendedBolusActiveAt(timestamp: Long): Maybe<ExtendedBolus> =
+    suspend fun getExtendedBolusActiveAt(timestamp: Long): ExtendedBolus? =
         database.extendedBolusDao.getExtendedBolusActiveAt(timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun getExtendedBolusesStartingFromTime(timestamp: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
-        database.extendedBolusDao.getExtendedBolusesStartingFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getExtendedBolusesStartingFromTime(timestamp: Long, ascending: Boolean): List<ExtendedBolus> =
+        database.extendedBolusDao.getExtendedBolusesStartingFromTime(timestamp).reversedIf(!ascending)
 
-    fun getExtendedBolusesStartingFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
-        database.extendedBolusDao.getExtendedBolusDataFromTimeToTime(start, end)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getExtendedBolusesStartingFromTimeToTime(start: Long, end: Long, ascending: Boolean): List<ExtendedBolus> =
+        database.extendedBolusDao.getExtendedBolusDataFromTimeToTime(start, end).reversedIf(!ascending)
 
-    fun getExtendedBolusStartingFromTimeIncludingInvalid(timestamp: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
-        database.extendedBolusDao.getExtendedBolusDataIncludingInvalidFromTime(timestamp)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getExtendedBolusStartingFromTimeIncludingInvalid(timestamp: Long, ascending: Boolean): List<ExtendedBolus> =
+        database.extendedBolusDao.getExtendedBolusDataIncludingInvalidFromTime(timestamp).reversedIf(!ascending)
 
-    fun getOldestExtendedBolusRecord(): Maybe<ExtendedBolus> =
+    suspend fun getOldestExtendedBolusRecord(): ExtendedBolus? =
         database.extendedBolusDao.getOldestRecord()
-            .subscribeOn(Schedulers.io())
 
-    fun getLastExtendedBolusId(): Long? =
+    suspend fun getLastExtendedBolusId(): Long? =
         database.extendedBolusDao.getLastId()
 
     // TotalDailyDose
-    fun getLastTotalDailyDoses(count: Int, ascending: Boolean): Single<List<TotalDailyDose>> =
-        database.totalDailyDoseDao.getLastTotalDailyDoses(count)
-            .map { if (!ascending) it.reversed() else it }
-            .subscribeOn(Schedulers.io())
+    suspend fun getLastTotalDailyDoses(count: Int, ascending: Boolean): List<TotalDailyDose> =
+        database.totalDailyDoseDao.getLastTotalDailyDoses(count).reversedIf(!ascending)
 
-    fun getCalculatedTotalDailyDose(timestamp: Long): Maybe<TotalDailyDose> =
+    suspend fun getCalculatedTotalDailyDose(timestamp: Long): TotalDailyDose? =
         database.totalDailyDoseDao.findByTimestamp(timestamp, InterfaceIDs.PumpType.CACHE)
-            .subscribeOn(Schedulers.io())
 
-    // HEART RATES
+// HEART RATES
 
-    fun getHeartRatesFromTime(timeMillis: Long): List<HeartRate> =
+    suspend fun getHeartRatesFromTime(timeMillis: Long): List<HeartRate> =
         database.heartRateDao.getFromTime(timeMillis)
-            .subscribeOn(Schedulers.io())
-            .blockingGet()
 
-    fun getHeartRatesFromTimeToTime(startMillis: Long, endMillis: Long): Single<List<HeartRate>> =
+    suspend fun getHeartRatesFromTimeToTime(startMillis: Long, endMillis: Long): List<HeartRate> =
         database.heartRateDao.getFromTimeToTime(startMillis, endMillis)
-            .subscribeOn(Schedulers.io())
 
-    fun getStepsCountFromTime(timeMillis: Long): Single<List<StepsCount>> =
+    suspend fun getStepsCountFromTime(timeMillis: Long): List<StepsCount> =
         database.stepsCountDao.getFromTime(timeMillis)
-            .subscribeOn(Schedulers.io())
 
-    fun getStepsCountFromTimeToTime(startMillis: Long, endMillis: Long) =
+    suspend fun getStepsCountFromTimeToTime(startMillis: Long, endMillis: Long): List<StepsCount> =
         database.stepsCountDao.getFromTimeToTime(startMillis, endMillis)
 
-    fun getLastStepsCountFromTimeToTime(startMillis: Long, endMillis: Long) =
+    suspend fun getLastStepsCountFromTimeToTime(startMillis: Long, endMillis: Long): StepsCount? =
         database.stepsCountDao.getLastStepsCountFromTimeToTime(startMillis, endMillis)
 
-    fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
+    suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
         apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),
         bolusCalculatorResults = database.bolusCalculatorResultDao.getNewEntriesSince(since, until, limit, offset),
         boluses = database.bolusDao.getNewEntriesSince(since, until, limit, offset),
@@ -812,18 +808,31 @@ class AppRepository @Inject internal constructor(
         stepsCount = database.stepsCountDao.getNewEntriesSince(since, until, limit, offset),
     )
 
-    fun getApsResultCloseTo(timestamp: Long): Maybe<APSResult> =
+    suspend fun getApsResultCloseTo(timestamp: Long): APSResult? =
         database.apsResultDao.getApsResult(timestamp - 5 * 60 * 1000, timestamp)
-            .subscribeOn(Schedulers.io())
 
-    fun getApsResults(start: Long, end: Long): Single<List<APSResult>> =
+    suspend fun getApsResults(start: Long, end: Long): List<APSResult> =
         database.apsResultDao.getApsResults(start, end)
-            .subscribeOn(Schedulers.io())
 
+    /**
+     * Clean up Flow scope and release resources
+     *
+     * NOTE: AppRepository is a singleton that typically lives for the entire app lifecycle.
+     * This method is primarily useful for:
+     * - Unit/integration tests to properly clean up between test runs
+     * - Explicit app shutdown scenarios
+     *
+     * The scope will be automatically cleaned up when the app process terminates.
+     *   @Test
+     *   fun myTest() {
+     *       repository.use { repo ->
+     *           // test code
+     *       } // automatically calls close()
+     *   }
+     */
+    override fun close() {
+        repositoryScope.cancel()
+    }
+
+    fun <T> Iterable<T>.reversedIf(reverse: Boolean): List<T> = if (reverse) this.reversed() else this.toList()
 }
-
-@Suppress("USELESS_CAST", "unused")
-inline fun <reified T : Any> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>> =
-    this.map { ValueWrapper.Existing(it) as ValueWrapper<T> }
-        .switchIfEmpty(Maybe.just(ValueWrapper.Absent()))
-        .toSingle()

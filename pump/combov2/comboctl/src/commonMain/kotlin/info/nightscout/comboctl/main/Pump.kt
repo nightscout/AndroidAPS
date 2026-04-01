@@ -1358,8 +1358,7 @@ class Pump(
         // the TBR was actually set, and if so, whether it was set correctly.
         // If not, throw an exception, since this is an error.
 
-        val mainScreen = waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)
-        val mainScreenContent = when (mainScreen) {
+        val mainScreenContent = when (val mainScreen = waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)) {
             is ParsedScreen.MainScreen -> mainScreen.content
             else                       -> throw NoUsableRTScreenException()
         }
@@ -2660,7 +2659,7 @@ class Pump(
             // be ahead of the current time. In such cases, compensate
             // for that by using the current time instead.
             val now = Clock.System.now()
-            val bolusTimestamp = lastBolusInfusionTimestamp!!.let {
+            val bolusTimestamp = lastBolusInfusionTimestamp.let {
                 if (now < it) now else it
             }
 
@@ -3486,16 +3485,12 @@ class Pump(
     }
 
     private suspend fun updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary: Boolean) {
-        val mainScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, pumpSuspended)
-
-        val mainScreenContent = when (mainScreen) {
+        val mainScreenContent = when (val mainScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, pumpSuspended)) {
             is ParsedScreen.MainScreen -> mainScreen.content
             else                       -> throw NoUsableRTScreenException()
         }
 
-        val quickinfoScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, pumpSuspended)
-
-        val quickinfo = when (quickinfoScreen) {
+        val quickinfo = when (val quickinfoScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, pumpSuspended)) {
             is ParsedScreen.QuickinfoMainScreen -> {
                 // After parsing the quickinfo screen, exit back to the main screen by pressing BACK.
                 rtNavigationContext.shortPressButton(RTNavigationButton.BACK)

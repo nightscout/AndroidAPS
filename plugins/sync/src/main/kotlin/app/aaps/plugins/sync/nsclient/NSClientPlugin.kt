@@ -8,82 +8,95 @@ import android.os.IBinder
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
-import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSAlarm
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toJson
+import app.aaps.core.ui.compose.icons.IcPluginNsClient
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
-import app.aaps.plugins.sync.nsShared.NSClientFragment
-import app.aaps.plugins.sync.nsShared.events.EventNSClientStatus
-import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiData
-import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
+import app.aaps.plugins.sync.nsShared.compose.NSClientComposeContent
 import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.nsclient.services.NSClientService
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NSClientPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     rh: ResourceHelper,
     private val context: Context,
-    private val fabricPrivacy: FabricPrivacy,
     private val preferences: Preferences,
     private val receiverDelegate: ReceiverDelegate,
     private val dataSyncSelectorV1: DataSyncSelectorV1,
     private val dateUtil: DateUtil,
     private val profileUtil: ProfileUtil,
     private val nsSettingsStatus: NSSettingsStatus,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val nsClientRepository: NSClientRepository,
+    private val persistenceLayer: PersistenceLayer,
+    private val uel: UserEntryLogger,
+    private val activePlugin: ActivePlugin,
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .fragmentClass(NSClientFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
+        .icon(IcPluginNsClient)
         .pluginName(R.string.ns_client_title)
         .shortName(R.string.ns_client_short_name)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .description(R.string.description_ns_client),
+        .description(R.string.description_ns_client)
+        .composeContent { plugin ->
+            NSClientComposeContent(
+                dateUtil = dateUtil,
+                aapsLogger = aapsLogger,
+                persistenceLayer = persistenceLayer,
+                uel = uel,
+                nsClientRepository = nsClientRepository,
+                nsClient = plugin as NsClient,
+                title = rh.gs(R.string.ns_client_title)
+            )
+        },
     aapsLogger, rh
 ) {
 
-    private val disposable = CompositeDisposable()
-    override val listLog: MutableList<EventNSClientNewLog> = ArrayList()
+    private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     override val dataSyncSelector: DataSyncSelector get() = dataSyncSelectorV1
     override var status = ""
     var nsClientService: NSClientService? = null
@@ -96,32 +109,16 @@ class NSClientPlugin @Inject constructor(
         context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
         receiverDelegate.grabReceiversState()
-        disposable += rxBus
-            .toObservable(EventNSClientStatus::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           status = event.getStatus(context)
-                           rxBus.send(EventNSClientUpdateGuiStatus())
-                           // Pass to setup wizard
-                           rxBus.send(EventSWSyncStatus(event.getStatus(context)))
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ if (nsClientService != null) context.unbindService(mConnection) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNSClientNewLog::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventNSClientNewLog ->
-                           addToLog(event)
-                           aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
-                       }, fabricPrivacy::logException)
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        rxBus.toFlow(EventAppExit::class.java)
+            .onEach { if (nsClientService != null) context.unbindService(mConnection) }
+            .launchIn(scope)
     }
 
     override fun onStop() {
         nsClientService?.destroy()
         if (nsClientService != null) context.unbindService(mConnection)
-        disposable.clear()
+        scope.cancel()
         super.onStop()
     }
 
@@ -143,24 +140,12 @@ class NSClientPlugin @Inject constructor(
 
     override fun detectedNsVersion(): String = nsSettingsStatus.getVersion()
 
-    private fun addToLog(ev: EventNSClientNewLog) {
-        synchronized(listLog) {
-            listLog.add(0, ev)
-            // remove the first line if log is too large
-            if (listLog.size >= Constants.MAX_LOG_LINES) {
-                listLog.removeAt(listLog.size - 1)
-            }
-            rxBus.send(EventNSClientUpdateGuiData())
-        }
-    }
-
     override fun resend(reason: String) {
         nsClientService?.resend(reason)
     }
 
     override fun pause(newState: Boolean) {
         preferences.put(NsclientBooleanKey.NsPaused, newState)
-        rxBus.send(EventPreferenceChange(NsclientBooleanKey.NsPaused.key))
     }
 
     override val address: String get() = nsClientService?.nsURL ?: ""
@@ -187,7 +172,7 @@ class NSClientPlugin @Inject constructor(
         nsClientService?.let { if (latestReceived > it.latestDateInReceivedData) it.latestDateInReceivedData = latestReceived }
     }
 
-    override fun resetToFullSync() {
+    override suspend fun resetToFullSync() {
         dataSyncSelector.resetToNextFullSync()
     }
 
@@ -205,7 +190,7 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(true, profile, dateUtil)
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(true, dateUtil, decimalFormatter)
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairRunningMode -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairRunningMode            -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairProfileStore           -> dataPair.value
             else                                           -> null
         }?.let { data ->
@@ -250,6 +235,66 @@ class NSClientPlugin @Inject constructor(
         return true
     }
 
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "ns_client_settings",
+        titleResId = R.string.ns_client_title,
+        items = listOf(
+            StringKey.NsClientUrl,
+            StringKey.NsClientApiSecret,
+            PreferenceSubScreenDef(
+                key = "ns_client_synchronization",
+                titleResId = R.string.ns_sync_options,
+                items = listOf(
+                    BooleanKey.NsClientUploadData,
+                    BooleanKey.BgSourceUploadToNs,
+                    BooleanKey.NsClientAcceptCgmData,
+                    BooleanKey.NsClientAcceptProfileStore,
+                    BooleanKey.NsClientAcceptTempTarget,
+                    BooleanKey.NsClientAcceptProfileSwitch,
+                    BooleanKey.NsClientAcceptInsulin,
+                    BooleanKey.NsClientAcceptCarbs,
+                    BooleanKey.NsClientAcceptTherapyEvent,
+                    BooleanKey.NsClientAcceptRunningMode,
+                    BooleanKey.NsClientAcceptTbrEb
+                )
+            ),
+            PreferenceSubScreenDef(
+                key = "ns_client_alarm_options",
+                titleResId = R.string.ns_alarm_options,
+                items = listOf(
+                    BooleanKey.NsClientNotificationsFromAlarms,
+                    BooleanKey.NsClientNotificationsFromAnnouncements,
+                    IntKey.NsClientAlarmStaleData,
+                    IntKey.NsClientUrgentAlarmStaleData
+                )
+            ),
+            PreferenceSubScreenDef(
+                key = "ns_client_connection_options",
+                titleResId = R.string.connection_settings_title,
+                items = listOf(
+                    BooleanKey.NsClientUseCellular,
+                    BooleanKey.NsClientUseRoaming,
+                    BooleanKey.NsClientUseWifi,
+                    StringKey.NsClientWifiSsids,
+                    BooleanKey.NsClientUseOnBattery,
+                    BooleanKey.NsClientUseOnCharging
+                )
+            ),
+            PreferenceSubScreenDef(
+                key = "ns_client_advanced",
+                titleResId = app.aaps.core.ui.R.string.advanced_settings_title,
+                items = listOf(
+                    BooleanKey.NsClientLogAppStart,
+                    BooleanKey.NsClientCreateAnnouncementsFromErrors,
+                    BooleanKey.NsClientCreateAnnouncementsFromCarbsReq,
+                    BooleanKey.NsClientSlowSync
+                )
+            )
+        ),
+        icon = pluginDescription.icon
+    )
+
+    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null && requiredKey != "ns_client_synchronization" && requiredKey != "ns_client_alarm_options" && requiredKey != "ns_client_connection_options" && requiredKey != "ns_client_advanced") return
         val category = PreferenceCategory(context)
@@ -260,13 +305,13 @@ class NSClientPlugin @Inject constructor(
             initialExpandedChildrenCount = 0
             addPreference(
                 AdaptiveStringPreference(
-                    ctx = context, stringKey = StringKey.NsClientUrl, dialogMessage = R.string.ns_client_url_dialog_message, title = R.string.ns_client_url_title,
+                    ctx = context, stringKey = StringKey.NsClientUrl, dialogMessage = app.aaps.core.keys.R.string.ns_client_url_summary, title = app.aaps.core.keys.R.string.ns_client_url_title,
                     validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_HTTPS_URL)
                 )
             )
             addPreference(
                 AdaptiveStringPreference(
-                    ctx = context, stringKey = StringKey.NsClientApiSecret, dialogMessage = R.string.ns_client_secret_dialog_message, title = R.string.ns_client_secret_title,
+                    ctx = context, stringKey = StringKey.NsClientApiSecret, dialogMessage = app.aaps.core.keys.R.string.ns_client_secret_summary, title = app.aaps.core.keys.R.string.ns_client_secret_title,
                     validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_MIN_LENGTH, minLength = 12)
                 )
             )
@@ -301,7 +346,7 @@ class NSClientPlugin @Inject constructor(
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseWifi, title = R.string.ns_wifi))
                 addPreference(
                     AdaptiveStringPreference(
-                        ctx = context, stringKey = StringKey.NsClientWifiSsids, dialogMessage = R.string.ns_wifi_allowed_ssids, title = R.string.ns_wifi_ssids,
+                        ctx = context, stringKey = StringKey.NsClientWifiSsids, dialogMessage = app.aaps.core.keys.R.string.ns_wifi_ssids_summary, title = app.aaps.core.keys.R.string.ns_wifi_ssids,
                         validatorParams = DefaultEditTextValidator.Parameters(emptyAllowed = true)
                     )
                 )

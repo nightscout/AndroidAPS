@@ -12,6 +12,7 @@ enum class Sources {
     LoopDialog,
     TempBasalDialog,
     CalibrationDialog,
+    ConcentrationDialog,
     FillDialog,
     SiteRotationDialog,
     BgCheck,
@@ -37,10 +38,12 @@ enum class Sources {
     Glunovo,
     Intelligo,
     Xdrip,
+    Insulin,            //From Insulin plugin
     Ottai,              //From Ottai Plugin
     SyaiTag,
     SiBionic,
     Sino,
+    NotificationReader,
     LocalProfile,       //From LocalProfile plugin
     Loop,               //From Loop plugin
     Maintenance,        //From Maintenance plugin

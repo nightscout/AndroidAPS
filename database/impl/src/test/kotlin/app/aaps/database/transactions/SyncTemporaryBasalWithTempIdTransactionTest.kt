@@ -5,6 +5,7 @@ import app.aaps.database.daos.TemporaryBasalDao
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class SyncTemporaryBasalWithTempIdTransactionTest {
     }
 
     @Test
-    fun `updates existing temporary basal when found by temp id`() {
+    fun `updates existing temporary basal when found by temp id`() = runTest {
         val tb = createTemporaryBasal(tempId = 500L, pumpId = 100L, rate = 2.0, duration = 30_000L, timestamp = 2000L)
         val existing = createTemporaryBasal(tempId = 500L, pumpId = null, rate = 1.5, duration = 60_000L, timestamp = 1000L)
 
@@ -37,7 +38,7 @@ class SyncTemporaryBasalWithTempIdTransactionTest {
         val result = transaction.run()
 
         assertThat(result.updated).hasSize(1)
-        val (old, updated) = result.updated[0]
+        val (_, updated) = result.updated[0]
         assertThat(updated.timestamp).isEqualTo(2000L)
         assertThat(updated.rate).isEqualTo(2.0)
         assertThat(updated.duration).isEqualTo(30_000L)
@@ -47,7 +48,7 @@ class SyncTemporaryBasalWithTempIdTransactionTest {
     }
 
     @Test
-    fun `does not update when not found by temp id`() {
+    fun `does not update when not found by temp id`() = runTest {
         val tb = createTemporaryBasal(tempId = 500L, pumpId = 100L, rate = 2.0, duration = 30_000L, timestamp = 2000L)
 
         whenever(temporaryBasalDao.findByPumpTempIds(500L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
@@ -62,7 +63,7 @@ class SyncTemporaryBasalWithTempIdTransactionTest {
     }
 
     @Test
-    fun `updates type when provided`() {
+    fun `updates type when provided`() = runTest {
         val tb = createTemporaryBasal(tempId = 500L, pumpId = 100L, rate = 1.5, duration = 60_000L, timestamp = 1000L, type = TemporaryBasal.Type.NORMAL)
         val existing = createTemporaryBasal(tempId = 500L, pumpId = null, rate = 1.5, duration = 60_000L, timestamp = 1000L, type = TemporaryBasal.Type.NORMAL)
 

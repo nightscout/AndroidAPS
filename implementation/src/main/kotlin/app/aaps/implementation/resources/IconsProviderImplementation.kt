@@ -11,6 +11,7 @@ class IconsProviderImplementation @Inject constructor(private val config: Config
 
     override fun getIcon(): Int =
         when {
+            config.AAPSCLIENT3 -> app.aaps.core.ui.R.mipmap.ic_greenowl
             config.AAPSCLIENT2 -> app.aaps.core.ui.R.mipmap.ic_blueowl
             config.AAPSCLIENT1 -> app.aaps.core.ui.R.mipmap.ic_yellowowl
             config.PUMPCONTROL -> app.aaps.core.ui.R.mipmap.ic_pumpcontrol

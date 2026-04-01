@@ -3,11 +3,11 @@ package app.aaps.implementation.profile
 import androidx.collection.ArrayMap
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.pureProfileFromJson
@@ -22,7 +22,7 @@ class ProfileStoreObject @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val config: Config,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus,
+    private val notificationManager: NotificationManager,
     private val hardLimits: HardLimits,
     private val dateUtil: DateUtil
 ) : ProfileStore {
@@ -107,6 +107,6 @@ class ProfileStoreObject @Inject constructor(
         get() = getProfileList()
             .asSequence()
             .map { profileName -> getSpecificProfile(profileName.toString()) }
-            .map { pureProfile -> pureProfile?.let { ProfileSealed.Pure(pureProfile, activePlugin).isValid("allProfilesValid", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } }
+            .map { pureProfile -> pureProfile?.let { ProfileSealed.Pure(pureProfile, activePlugin).isValid("allProfilesValid", activePlugin.activePump, config, rh, notificationManager, hardLimits, false) } }
             .all { it?.isValid == true }
 }

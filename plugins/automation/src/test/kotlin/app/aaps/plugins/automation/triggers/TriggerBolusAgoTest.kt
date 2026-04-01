@@ -3,6 +3,7 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.data.model.BS
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -12,13 +13,14 @@ import org.skyscreamer.jsonassert.JSONAssert
 class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Test
-    fun shouldRunTest() {
+    fun shouldRunTest() = runTest {
         // Set last bolus time to now
         whenever(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
             BS(
                 timestamp = now,
                 amount = 0.0,
-                type = BS.Type.NORMAL
+                type = BS.Type.NORMAL,
+                iCfg = someICfg
             )
         )
         whenever(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
@@ -48,7 +50,8 @@ class TriggerBolusAgoTest : TriggerTestBase() {
             BS(
                 timestamp = 0,
                 amount = 0.0,
-                type = BS.Type.NORMAL
+                type = BS.Type.NORMAL,
+                iCfg = someICfg
             )
         )
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)

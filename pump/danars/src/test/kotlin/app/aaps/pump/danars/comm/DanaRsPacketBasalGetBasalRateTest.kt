@@ -8,7 +8,7 @@ class DanaRsPacketBasalGetBasalRateTest : DanaRSTestBase() {
 
     @Test
     fun runTest() {
-        val packet = DanaRSPacketBasalGetBasalRate(aapsLogger, uiInteraction, rxBus, rh, danaPump)
+        val packet = DanaRSPacketBasalGetBasalRate(aapsLogger, notificationManager, danaPump)
         // test message decoding
         // rate is 0.01
         val array = ByteArray(100)

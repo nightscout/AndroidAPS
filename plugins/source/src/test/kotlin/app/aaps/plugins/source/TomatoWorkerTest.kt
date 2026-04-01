@@ -9,8 +9,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.shared.tests.TestBaseWithProfile
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,7 +52,7 @@ class TomatoWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When plugin disabled then do nothing`() {
-        runBlocking {
+        runTest {
             whenever(tomatoPlugin.isEnabled()).thenReturn(false)
 
             val result = worker.doWork()
@@ -65,9 +64,9 @@ class TomatoWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When plugin enabled then insert data`() {
-        runBlocking {
+        runTest {
             whenever(tomatoPlugin.isEnabled()).thenReturn(true)
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
 
             val result = worker.doWork()
 

@@ -1,6 +1,8 @@
 package app.aaps.core.interfaces.plugin
 
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -9,6 +11,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.interfaces.PreferenceItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,8 +36,10 @@ abstract class PluginBase(
     private var state = State.NOT_INITIALIZED
     private var fragmentVisible = false
 
+    @Deprecated("use icon")
     open val menuIcon: Int
         get() = pluginDescription.pluginIcon
+    @Deprecated("use icon2")
     open val menuIcon2: Int
         get() = pluginDescription.pluginIcon2
 
@@ -71,6 +76,20 @@ abstract class PluginBase(
 
     fun hasFragment(): Boolean {
         return pluginDescription.fragmentClass != null
+    }
+
+    fun hasComposeContent(): Boolean {
+        return pluginDescription.composeContentProvider != null
+    }
+
+    /**
+     * Returns the compose content provider for this plugin's main UI.
+     *
+     * @return ComposablePluginContent instance or null. Typed as Any? to avoid Compose dependency in core:interfaces.
+     *         Caller should cast to ComposablePluginContent from core:ui module.
+     */
+    fun getComposeContent(): Any? {
+        return pluginDescription.composeContentProvider?.invoke(this)
     }
 
     fun isDefault() = pluginDescription.defaultPlugin
@@ -160,4 +179,31 @@ abstract class PluginBase(
      * Plugin can provide either this method or [preferencesId] XML
      */
     open fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {}
+
+    /**
+     * Add compose preference screen content
+     *
+     * Plugin can override this to provide compose-based preference UI using PreferenceSubScreenDef.
+     * This provides a declarative, type-safe way to define preference screens.
+     *
+     * @return PreferenceItem (typically PreferenceSubScreenDef) or null if not implemented
+     */
+    open fun getPreferenceScreenContent(): PreferenceItem? = null
+
+    /**
+     * Runtime permissions this plugin requires.
+     * Override in subclasses to declare permissions.
+     */
+    open fun requiredPermissions(): List<PermissionGroup> = emptyList()
+
+    /**
+     * Returns [requiredPermissions] that are not yet granted.
+     * Special permission groups are excluded — they need dedicated checks.
+     */
+    fun missingPermissions(context: Context): List<PermissionGroup> =
+        requiredPermissions().filter { group ->
+            !group.special && group.permissions.any { permission ->
+                ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED
+            }
+        }
 }

@@ -11,6 +11,7 @@
     <string name="pump_status_pump_unreachable">Pump unreachable</string>
     <string name="pump_status_invalid_config">Invalid configuration</string>
 
+    <string name="medtronic_pump_encoding_title">Medtronic Encoding</string>
     <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Encoding</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Encoding</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>

@@ -5,6 +5,7 @@ import app.aaps.database.daos.RunningModeDao
 import app.aaps.database.entities.RunningMode
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class InvalidateRunningModeTransactionTest {
     }
 
     @Test
-    fun `invalidates valid running mode`() {
+    fun `invalidates valid running mode`() = runTest {
         val rm = createRunningMode(id = 1, isValid = true)
 
         whenever(runningModeDao.findById(1)).thenReturn(rm)
@@ -42,7 +43,7 @@ class InvalidateRunningModeTransactionTest {
     }
 
     @Test
-    fun `does not update already invalid running mode`() {
+    fun `does not update already invalid running mode`() = runTest {
         val rm = createRunningMode(id = 1, isValid = false)
 
         whenever(runningModeDao.findById(1)).thenReturn(rm)
@@ -57,7 +58,7 @@ class InvalidateRunningModeTransactionTest {
     }
 
     @Test
-    fun `throws exception when running mode not found`() {
+    fun `throws exception when running mode not found`() = runTest {
         whenever(runningModeDao.findById(999)).thenReturn(null)
 
         val transaction = InvalidateRunningModeTransaction(id = 999)

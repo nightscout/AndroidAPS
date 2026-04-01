@@ -29,9 +29,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.pump.common.hw.rileylink.R
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
@@ -54,6 +54,7 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var context: Context
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
@@ -107,11 +108,11 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
             }
         }
         binding.rileyLinkBleConfigButtonRemoveRileyLink.setOnClickListener {
-            OKDialog.showConfirmation(
-                this@RileyLinkBLEConfigActivity,
-                rh.gs(R.string.riley_link_ble_config_remove_riley_link_confirmation_title),
-                rh.gs(R.string.riley_link_ble_config_remove_riley_link_confirmation),
-                {
+            uiInteraction.showOkCancelDialog(
+                context = this@RileyLinkBLEConfigActivity,
+                title = R.string.riley_link_ble_config_remove_riley_link_confirmation_title,
+                message = R.string.riley_link_ble_config_remove_riley_link_confirmation,
+                ok = {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect)
                     preferences.remove(RileyLinkStringPreferenceKey.MacAddress)
                     preferences.remove(RileyLinkStringKey.Name)

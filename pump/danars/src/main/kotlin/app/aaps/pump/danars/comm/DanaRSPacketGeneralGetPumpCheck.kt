@@ -2,18 +2,16 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
 
 class DanaRSPacketGeneralGetPumpCheck @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
     private val danaPump: DanaPump,
-    private val uiInteraction: UiInteraction
+    private val notificationManager: NotificationManager
 ) : DanaRSPacket() {
 
     init {
@@ -40,7 +38,7 @@ class DanaRSPacketGeneralGetPumpCheck @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaPump.protocol))
         aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaPump.productCode))
         if (danaPump.productCode < 2) {
-            uiInteraction.addNotification(Notification.UNSUPPORTED_FIRMWARE, rh.gs(app.aaps.pump.dana.R.string.unsupportedfirmware), Notification.URGENT)
+            notificationManager.post(NotificationId.UNSUPPORTED_FIRMWARE, app.aaps.pump.dana.R.string.unsupportedfirmware)
         }
     }
 

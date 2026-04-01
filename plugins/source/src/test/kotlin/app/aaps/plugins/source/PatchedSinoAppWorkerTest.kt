@@ -10,8 +10,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.keys.BooleanKey
 import app.aaps.shared.tests.TestBaseWithProfile
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
@@ -48,7 +47,7 @@ class PatchedSinoAppWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When plugin disabled then return success`() {
-        runBlocking {
+        runTest {
             whenever(patchedSinoAppPlugin.isEnabled()).thenReturn(false)
 
             val result = worker.doWork()
@@ -61,10 +60,10 @@ class PatchedSinoAppWorkerTest : TestBaseWithProfile() {
     @Test
     fun `When plugin enabled then insert data`() {
         val timestamp = (now - 60000)
-        runBlocking {
+        runTest {
             whenever(patchedSinoAppPlugin.isEnabled()).thenReturn(true)
             whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf(
                     "collection" to "entries",
@@ -101,7 +100,7 @@ class PatchedSinoAppWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When collection is missing then return failure`() {
-        runBlocking {
+        runTest {
             whenever(patchedSinoAppPlugin.isEnabled()).thenReturn(true)
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf("wrong" to "data")
@@ -115,7 +114,7 @@ class PatchedSinoAppWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When no entries return failure`() {
-        runBlocking {
+        runTest {
             whenever(patchedSinoAppPlugin.isEnabled()).thenReturn(true)
             whenever(workerParameters.inputData).thenReturn(
                 workDataOf("collection" to "something_else")

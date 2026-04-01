@@ -8,15 +8,17 @@ import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
@@ -27,8 +29,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -78,6 +79,14 @@ import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -95,7 +104,6 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var context: Context
     @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
@@ -109,9 +117,12 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var diaconnLogUploader: DiaconnLogUploader
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject lateinit var ch: ConcentrationHelper
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
     private val mBinder: IBinder = LocalBinder()
     private var lastApproachingDailyLimit: Long = 0
 
@@ -119,20 +130,17 @@ class DiaconnG8Service : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ stopSelf() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           if (it.isChanged(DiaconnIntKey.BolusSpeed.key)) {
-                               diaconnG8Pump.bolusSpeed = preferences.get(DiaconnIntKey.BolusSpeed)
-                               diaconnG8Pump.speed = preferences.get(DiaconnIntKey.BolusSpeed)
-                               updateBolusSpeedInPump = true
-                           }
-                       }, fabricPrivacy::logException)
+        preferences.observe(DiaconnIntKey.BolusSpeed).drop(1).onEach {
+            diaconnG8Pump.bolusSpeed = preferences.get(DiaconnIntKey.BolusSpeed)
+            diaconnG8Pump.speed = preferences.get(DiaconnIntKey.BolusSpeed)
+            updateBolusSpeedInPump = true
+        }.launchIn(newScope)
     }
 
     inner class LocalBinder : Binder() {
@@ -150,6 +158,8 @@ class DiaconnG8Service : DaggerService() {
     }
 
     override fun onDestroy() {
+        scope?.cancel()
+        scope = null
         disposable.clear()
         super.onDestroy()
     }
@@ -201,12 +211,12 @@ class DiaconnG8Service : DaggerService() {
 
             diaconnG8Pump.lastConnection = System.currentTimeMillis()
 
-            val profile = profileFunction.getProfile()
+            val profile = runBlocking { pumpSync.expectedPumpState() }.profile
             if (profile != null && abs(diaconnG8Pump.baseAmount - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpsettings)))
 
-                if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
-                    rxBus.send(EventProfileSwitchChanged())
+                if (!diaconnG8Plugin.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
+                    rxBus.send(EventProfileChangeRequested())
                 }
             }
 
@@ -263,13 +273,15 @@ class DiaconnG8Service : DaggerService() {
             if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    uiInteraction.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT)
-                    pumpSync.insertAnnouncement(
-                        rh.gs(R.string.approachingdailylimit) + ": " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits + "U",
-                        null,
-                        PumpType.DIACONN_G8,
-                        diaconnG8Pump.serialNo.toString()
-                    )
+                    notificationManager.post(NotificationId.APPROACHING_DAILY_LIMIT, R.string.approachingdailylimit)
+                    runBlocking {
+                        pumpSync.insertAnnouncement(
+                            rh.gs(R.string.approachingdailylimit) + ": " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits + "U",
+                            null,
+                            PumpType.DIACONN_G8,
+                            diaconnG8Pump.serialNo.toString()
+                        )
+                    }
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
@@ -517,7 +529,7 @@ class DiaconnG8Service : DaggerService() {
         if (diaconnG8Pump.isReadyToBolus) {
             while (!diaconnG8Pump.bolusDone) {
                 if (diaconnG8Pump.isPumpVersionGe3_53) {
-                    rxBus.send(EventOverviewBolusProgress(rh, delivered = diaconnG8Pump.bolusingInjAmount, id = detailedBolusInfo.id))
+                    rxBus.send(EventOverviewBolusProgress(ch, delivered = PumpInsulin(diaconnG8Pump.bolusingInjAmount), id = detailedBolusInfo.id))
                 } else {
                     var progressPercent = 0
                     val waitTime = (expectedEnd - System.currentTimeMillis()) / 1000

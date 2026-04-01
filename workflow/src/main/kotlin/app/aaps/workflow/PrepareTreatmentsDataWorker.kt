@@ -37,6 +37,7 @@ class PrepareTreatmentsDataWorker(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
+    // MIGRATION: KEEP - Core dependencies needed for calculation
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
@@ -47,8 +48,9 @@ class PrepareTreatmentsDataWorker(
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var preferences: Preferences
 
+    // MIGRATION: DELETE - Remove after OverviewFragment converted to Compose
     class PrepareTreatmentsData(
-        val overviewData: OverviewData
+        val overviewData: OverviewData // DELETE: This parameter goes away
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -58,7 +60,10 @@ class PrepareTreatmentsDataWorker(
 
         val endTime = data.overviewData.endTime
         val fromTime = data.overviewData.fromTime
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, null))
+
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, false))
+
+        // ========== MIGRATION: DELETE - Start GraphView-specific code ==========
         data.overviewData.maxTreatmentsValue = 0.0
         data.overviewData.maxTherapyEventValue = 0.0
         data.overviewData.maxEpsValue = 0.0
@@ -100,7 +105,7 @@ class PrepareTreatmentsDataWorker(
         }
 
         // Careportal
-        persistenceLayer.getTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
+        persistenceLayer.getTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime)
             .map { TherapyEventDataPoint(it, rh, profileUtil, translator) }
             .filterTimeframe(fromTime, endTime)
             .forEach {
@@ -129,15 +134,17 @@ class PrepareTreatmentsDataWorker(
             persistenceLayer.getStepsCountFromTimeToTime(fromTime, endTime)
                 .map { steps -> StepsDataPoint(steps, rh) }
                 .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.stepsColor) }
+        // ========== MIGRATION: DELETE - End GraphView-specific code ==========
 
-
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, false))
         return Result.success()
     }
 
+    // MIGRATION: DELETE - Only used by old GraphView code
     private fun addUpperChartMargin(maxBgValue: Double) =
         if (profileUtil.units == GlucoseUnit.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
 
+    // MIGRATION: DELETE - Only used by old GraphView code
     private fun getNearestBg(overviewData: OverviewData, date: Long): Double {
         overviewData.bgReadingsArray.let { bgReadingsArray ->
             for (reading in bgReadingsArray) {
@@ -149,6 +156,7 @@ class PrepareTreatmentsDataWorker(
         }
     }
 
+    // MIGRATION: DELETE - Only used by old GraphView code
     private fun <E : DataPointWithLabelInterface> List<E>.filterTimeframe(fromTime: Long, endTime: Long): List<E> =
         filter { it.x + it.duration >= fromTime && it.x <= endTime }
 }

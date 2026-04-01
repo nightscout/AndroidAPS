@@ -1,22 +1,18 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
 }
 
 android {
     compileSdk = Versions.compileSdk
     defaultConfig {
         minSdk = Versions.minSdk
-        @Suppress("DEPRECATION")
-        targetSdk = Versions.targetSdk
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         named("release") {
             isMinifyEnabled = false
-            setProguardFiles(listOf(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"))
+            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
         }
         named("debug") {
             enableUnitTestCoverage = true
@@ -26,17 +22,13 @@ android {
 
     sourceSets {
         named("main") {
-            jniLibs.srcDirs(listOf("src/main/jniLibs"))
+            jniLibs.directories.add("src/main/jniLibs")
         }
     }
 
     compileOptions {
         sourceCompatibility = Versions.javaVersion
         targetCompatibility = Versions.javaVersion
-    }
-
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.time.ExperimentalTime"
     }
 
     lint {
@@ -58,6 +50,9 @@ android {
             dimension = "standard"
         }
         create("aapsclient2") {
+            dimension = "standard"
+        }
+        create("aapsclient3") {
             dimension = "standard"
         }
     }

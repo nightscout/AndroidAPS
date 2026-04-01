@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="app.aaps.weardata.permission" />
 
@@ -11,6 +18,17 @@
         android:protectionLevel="signature" />
 
     <application>
+
+        <activity
+            android:name=".smsCommunicator.activities.SmsCommunicatorOtpActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="app.aaps.plugins.sync.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".nsclient.services.NSClientService"
@@ -25,8 +43,7 @@
             android:name=".openhumans.ui.OHLoginActivity"
             android:exported="true"
             android:label="Setup Open Humans"
-            android:launchMode="singleTop"
-            android:theme="@style/OpenHumans">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

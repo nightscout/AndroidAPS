@@ -4,6 +4,7 @@ import android.location.Location
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputLocationMode
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -16,7 +17,7 @@ class TriggerLocationTest : TriggerTestBase() {
         whenever(locationDataContainer.lastLocation).thenReturn(mockedLocation())
     }
 
-    @Test fun copyConstructorTest() {
+    @Test fun copyConstructorTest() = runTest {
         val t = TriggerLocation(injector)
         t.latitude.setValue(213.0)
         t.longitude.setValue(212.0)
@@ -29,7 +30,7 @@ class TriggerLocationTest : TriggerTestBase() {
         assertThat(t1.modeSelected.value).isEqualTo(InputLocationMode.Mode.INSIDE)
     }
 
-    @Test fun shouldRunTest() {
+    @Test fun shouldRunTest() = runTest {
         var t = TriggerLocation(injector)
         t.latitude.setValue(213.0)
         t.longitude.setValue(212.0)
@@ -59,7 +60,7 @@ class TriggerLocationTest : TriggerTestBase() {
     }
 
     private var locationJson = "{\"data\":{\"mode\":\"OUTSIDE\",\"distance\":2,\"latitude\":213,\"name\":\"\",\"longitude\":212},\"type\":\"TriggerLocation\"}"
-    @Test fun toJSONTest() {
+    @Test fun toJSONTest() = runTest {
         val t = TriggerLocation(injector)
         t.latitude.setValue(213.0)
         t.longitude.setValue(212.0)
@@ -82,15 +83,15 @@ class TriggerLocationTest : TriggerTestBase() {
         assertThat(t2.modeSelected.value).isEqualTo(t.modeSelected.value)
     }
 
-    @Test fun friendlyNameTest() {
+    @Test fun friendlyNameTest() = runTest {
         assertThat(TriggerLocation(injector).friendlyName()).isEqualTo(R.string.location)
     }
 
-    @Test fun friendlyDescriptionTest() {
-        assertThat(TriggerLocation(injector).friendlyDescription()).isNull() //not mocked    }
+    @Test fun friendlyDescriptionTest() = runTest {
+        assertThat(TriggerLocation(injector).friendlyDescription()).isNull() //not mocked
     }
 
-    @Test fun iconTest() {
+    @Test fun iconTest() = runTest {
         assertThat(TriggerLocation(injector).icon().get()).isEqualTo(R.drawable.ic_location_on)
     }
 

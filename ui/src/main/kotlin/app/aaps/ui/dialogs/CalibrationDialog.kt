@@ -13,8 +13,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.XDripBroadcast
-import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.core.utils.HtmlHelper
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.ui.databinding.DialogCalibrationBinding
 import com.google.common.base.Joiner
 import java.text.DecimalFormat
@@ -28,6 +27,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
     @Inject lateinit var xDripBroadcast: XDripBroadcast
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var _binding: DialogCalibrationBinding? = null
 
@@ -81,16 +81,21 @@ class CalibrationDialog : DialogFragmentWithDate() {
         val bg = binding.bg.value
         actions.add(rh.gs(app.aaps.core.ui.R.string.bg_label) + ": " + profileUtil.stringInCurrentUnitsDetect(bg) + " " + unitLabel)
         if (bg > 0) {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            uiInteraction.showOkCancelDialog(
+                context = requireActivity(),
+                title = rh.gs(app.aaps.core.ui.R.string.calibration),
+                message = Joiner.on("<br/>").join(actions),
+                ok = {
                     uel.log(action = Action.CALIBRATION, source = Sources.CalibrationDialog, value = ValueWithUnit.fromGlucoseUnit(bg, units))
                     xDripBroadcast.sendCalibration(bg)
-                })
-            }
+                }
+            )
         } else
-            activity?.let { activity ->
-                OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.calibration), rh.gs(app.aaps.core.ui.R.string.no_action_selected))
-            }
+            uiInteraction.showOkDialog(
+                context = requireActivity(),
+                title = rh.gs(app.aaps.core.ui.R.string.calibration),
+                message = rh.gs(app.aaps.core.ui.R.string.no_action_selected)
+            )
         return true
     }
 }

@@ -1,7 +1,9 @@
 package app.aaps.core.nssdk.localmodel.food
 
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class NSFood(
     val date: Long,
     val device: String? = null,

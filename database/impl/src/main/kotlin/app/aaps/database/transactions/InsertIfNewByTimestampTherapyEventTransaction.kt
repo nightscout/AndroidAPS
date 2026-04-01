@@ -6,7 +6,7 @@ class InsertIfNewByTimestampTherapyEventTransaction(
     val therapyEvent: TherapyEvent
 ) : Transaction<InsertIfNewByTimestampTherapyEventTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val current = database.therapyEventDao.findByTimestamp(therapyEvent.type, therapyEvent.timestamp)
         if (current == null) {

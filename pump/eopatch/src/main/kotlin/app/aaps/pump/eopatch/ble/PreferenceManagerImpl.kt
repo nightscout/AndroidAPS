@@ -82,8 +82,8 @@ class PreferenceManagerImpl @Inject constructor() : PreferenceManager {
 
         try {
             val jsonStr = preferences.get(EopatchStringNonKey.TempBasal)
-            val tempBasalManager = GsonHelper.sharedGson().fromJson(jsonStr, TempBasalManager::class.java)
-            tempBasalManager.update(tempBasalManager)
+            val loadedTempBasalManager = GsonHelper.sharedGson().fromJson(jsonStr, TempBasalManager::class.java)
+            tempBasalManager.update(loadedTempBasalManager)
         } catch (ex: Exception) {
             aapsLogger.error(LTag.PUMP, ex.message ?: "TempBasal load error")
         }

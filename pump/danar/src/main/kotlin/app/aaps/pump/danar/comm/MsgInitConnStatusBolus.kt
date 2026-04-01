@@ -1,8 +1,7 @@
 package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.notifications.NotificationId
 import dagger.android.HasAndroidInjector
 
 class MsgInitConnStatusBolus(
@@ -29,9 +28,9 @@ class MsgInitConnStatusBolus(
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus increment: " + danaPump.bolusStep)
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus max: " + danaPump.maxBolus)
         if (!danaPump.isExtendedBolusEnabled) {
-            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(app.aaps.pump.dana.R.string.danar_enableextendedbolus), Notification.URGENT)
+            notificationManager.post(NotificationId.EXTENDED_BOLUS_DISABLED, app.aaps.pump.dana.R.string.danar_enableextendedbolus)
         } else {
-            rxBus.send(EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED))
+            notificationManager.dismiss(NotificationId.EXTENDED_BOLUS_DISABLED)
         }
     }
 }

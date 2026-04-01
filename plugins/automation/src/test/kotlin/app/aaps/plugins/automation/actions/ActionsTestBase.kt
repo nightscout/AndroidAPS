@@ -7,6 +7,9 @@ import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.tests.TestBaseWithProfile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
@@ -21,6 +24,8 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
+    private val testScope = CoroutineScope(Dispatchers.Unconfined)
+
     init {
         addInjector {
             if (it is Action) {
@@ -31,6 +36,7 @@ ActionsTestBase : TestBaseWithProfile() {
             if (it is ActionStopTempTarget) {
                 it.dateUtil = dateUtil
                 it.persistenceLayer = persistenceLayer
+                it.appScope = testScope
             }
             if (it is ActionStartTempTarget) {
                 it.activePlugin = activePlugin
@@ -38,14 +44,16 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.profileFunction = profileFunction
                 it.dateUtil = dateUtil
                 it.profileUtil = profileUtil
+                it.appScope = testScope
             }
             if (it is ActionSendSMS) {
                 it.smsCommunicator = smsCommunicator
             }
             if (it is ActionProfileSwitch) {
-                it.activePlugin = activePlugin
+                it.insulin = insulin
                 it.profileFunction = profileFunction
                 it.dateUtil = dateUtil
+                it.localProfileManager = localProfileManager
             }
             if (it is ActionProfileSwitchPercent) {
                 it.profileFunction = profileFunction
@@ -61,6 +69,10 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.persistenceLayer = persistenceLayer
                 it.dateUtil = dateUtil
                 it.profileFunction = profileFunction
+                it.appScope = testScope
+            }
+            if (it is ActionSettingsExport) {
+                it.appScope = testScope
             }
             if (it is Trigger) {
                 it.rh = rh
@@ -72,9 +84,8 @@ ActionsTestBase : TestBaseWithProfile() {
     @BeforeEach
     fun mock() {
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         whenever(activePlugin.activeProfileSource).thenReturn(profilePlugin)
-        whenever(profilePlugin.profile).thenReturn(getValidProfileStore())
         whenever(loop.handleRunningModeChange(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyInt(), anyOrNull())).thenReturn(true)
 
         whenever(rh.gs(app.aaps.core.ui.R.string.ok)).thenReturn("OK")

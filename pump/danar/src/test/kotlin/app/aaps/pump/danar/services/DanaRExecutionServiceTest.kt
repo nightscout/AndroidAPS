@@ -4,13 +4,13 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danar.comm.MessageHashTableR
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -27,7 +27,6 @@ class DanaRExecutionServiceTest : TestBaseWithProfile() {
     @Mock lateinit var profile: Profile
     @Mock lateinit var danaPump: DanaPump
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var uiInteraction: UiInteraction
 
     private lateinit var danaRExecutionService: DanaRExecutionService
 
@@ -45,13 +44,13 @@ class DanaRExecutionServiceTest : TestBaseWithProfile() {
         danaRExecutionService.aapsSchedulers = aapsSchedulers
         danaRExecutionService.pumpSync = pumpSync
         danaRExecutionService.activePlugin = activePlugin
-        danaRExecutionService.uiInteraction = uiInteraction
+        danaRExecutionService.notificationManager = notificationManager
         danaRExecutionService.pumpEnactResultProvider = pumpEnactResultProvider
         danaRExecutionService.danaRPlugin = danaRPlugin
         danaRExecutionService.danaRKoreanPlugin = danaRKoreanPlugin
         danaRExecutionService.commandQueue = commandQueue
         danaRExecutionService.messageHashTableR = messageHashTableR
-        danaRExecutionService.profileFunction = profileFunction
+        //danaRExecutionService.profileFunction = profileFunction
 
         `when`(rh.gs(anyInt())).thenReturn("test")
         `when`(rh.gs(anyInt(), any())).thenReturn("test")
@@ -111,7 +110,7 @@ class DanaRExecutionServiceTest : TestBaseWithProfile() {
 
     @Test
     fun testUpdateBasalsInPump_notConnected() {
-        `when`(profileFunction.getProfile()).thenReturn(profile)
+        runBlocking { `when`(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         `when`(profile.getBasal()).thenReturn(1.0)
 
         val result = danaRExecutionService.updateBasalsInPump(profile)
