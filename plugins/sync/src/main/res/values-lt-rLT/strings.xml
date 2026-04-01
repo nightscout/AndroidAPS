@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Naudoti mobiliuosius duomenis</string>
     <string name="ns_wifi">Naudoti WiFi</string>
-    <string name="ns_wifi_ssids">WiFi pavadinimas</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Įkrovimo metu</string>
     <string name="ns_battery">Naudojant akumuliatorių</string>
     <string name="connection_settings_title">Ryšio nustatymai</string>
-    <string name="ns_wifi_allowed_ssids">Leidžiami tinklai (atskirti kabliataškiais)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Leisti sujungimą tarptinkliniu ryšiu</string>
     <string name="ns_create_announcements_from_errors_title">Kurti klaidų pranešimus</string>
     <string name="ns_create_announcements_from_carbs_req_title">Kurti pranešimus apie būtinų angliavandenių įspėjimus</string>
@@ -19,20 +19,17 @@
     <string name="blocked_by_connectivity">Užblokuota dėl ryšio parinkčių</string>
     <string name="no_connectivity">Nėra ryšio</string>
     <string name="unsupported_ns_version">Nepalaikoma Nightscout versija</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">Siunt</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT neturi įrašymo teisių. Ar teisingai įvedėte API secret?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Paleisti iš naujo</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Įveskite savo Nightscout adresą (pvz., https://jusu_svetaine.jusu_platforma.com)</string>
-    <string name="ns_client_secret_title">Nightscout API slaptažodis</string>
-    <string name="ns_client_secret_dialog_message">Įveskite savo Nightscout API slaptažodį (mažiausiai 12 simbolių slaptažodis, įrašytas jūsų Nightscout nustatymuose)</string>
-    <string name="nsclient_token_title">Nightscout prieigos raktas</string>
-    <string name="nsclient_token_dialog_message">Įveskite savo administratoriaus prieigos raktą, sugeneruotą Nightscout administravimo įrankiuose (mažiausiai 17 simbolių, ne jūsų API slaptažodis!)</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Suleisti dabar</string>
     <string name="queue">Eilė:</string>
     <string name="status">Statusas:</string>
@@ -60,7 +57,6 @@
     <string name="ns_alarm_stale_data_value_label">Seni duomenys, riba [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Kritiškai seni duomenys, riba [min]</string>
     <string name="ns_log_app_started_event">Siųsti programos paleidimo žymę į NS</string>
-    <string name="copy_existing_values">Kopijuoti NS nustatymus (jei yra)?</string>
     <string name="ns_use_ws_title">Prisijungti per WebSocket</string>
     <string name="ns_use_ws_summary">Įgalinimas reiškia: greitesni atnaujinimai, įspėjimų ir pranešimų gavimas ir didesnis baterijos eikvojimas, panašus į v1. Visi kiti įkėlėjai į NS turi naudoti v3 protokolą.</string>
     <!-- Tidepool -->
@@ -159,4 +155,5 @@
     <string name="today">Šiandien</string>
     <string name="weighted">svertinis</string>
     <string name="full_xdrip_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai laiko ir kol ji nebus užbaigta, nematysite atnaujintų xDrip+.</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
