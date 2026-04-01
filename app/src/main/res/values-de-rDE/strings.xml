@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s-Einstellungen</string>
-    <string name="nav_exit">Schließen</string>
     <string name="delta">Delta</string>
     <string name="save">Speichern</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">Über</string>
     <string name="sensitivity_warning">Stelle bei aktivierter Autosens-Funktion sicher, dass du alle eingenommenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrat-Abweichungen zu falschen Sensitivitätswerten führen!</string>
     <string name="invalid">Ungültig</string>
-    <string name="gradually_increase_notification_volume">Lautstärke für Alarme und Benachrichtigungen schrittweise erhöhen</string>
-    <string name="localalertsettings_title">Lokale Alarme</string>
-    <string name="enable_missed_bg_readings_alert">Alarm, wenn keine Glukose-Daten empfangen werden</string>
-    <string name="enable_pump_unreachable_alert">Alarm, wenn die Pumpe nicht erreichbar ist</string>
     <string name="pump_unreachable_threshold">Grenzwert Pumpe ist nicht erreichbar [min]</string>
-    <string name="enable_carbs_req_alert">Warnung, wenn Kohlenhydrate nötig sind</string>
-    <string name="open_navigation">Menü öffnen</string>
     <string name="close_navigation">Menü schließen</string>
     <string name="remove_items">Objekte entfernen</string>
     <string name="sort_items">Einträge sortieren</string>
@@ -27,5 +19,4 @@
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
     <string name="search">Suche</string>
-    <string name="simple_mode">Einfacher Modus</string>
 </resources>
