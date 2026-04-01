@@ -13,4 +13,6 @@
     <string name="day_tir">Dnevni TIR</string>
     <string name="night_tir">Noćni TIR</string>
     <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>
