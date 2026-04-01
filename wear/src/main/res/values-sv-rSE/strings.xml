@@ -40,11 +40,6 @@
     <string name="pref_3_hours">3 timmar</string>
     <string name="pref_4_hours">4 timmar</string>
     <string name="pref_5_hours">5 timmar</string>
-    <string name="pref_input_design">Inmatningsdesign</string>
-    <string name="pref_default">Standardinställning</string>
-    <string name="pref_quick_righty">Snabb höger</string>
-    <string name="pref_quick_lefty">Snabb vänster</string>
-    <string name="pref_modern_sparse">Modern Sparse</string>
     <string name="pref_big_numbers">Stora siffror</string>
     <string name="pref_ring_history">Ringhistorik</string>
     <string name="pref_light_ring_history">Ljus ringhistorik</string>
@@ -166,6 +161,5 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">gammal</string>
     <string name="old_warning">gammal!</string>
-    <string name="error">fel!</string>
     <string name="pref_heartRateSampling">Hjärtfrekvens</string>
 </resources>
