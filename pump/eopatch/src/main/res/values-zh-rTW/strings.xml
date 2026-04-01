@@ -54,8 +54,6 @@
     <string name="patch_remove_needle_cap">準備貼片</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_needle_cap_desc_1">移除膠帶，然後點擊“下一步”。</string>
-    <string name="patch_remove_needle_cap_desc_2">[注意1] 如果針頭突出，請點擊“放棄”。</string>
-    <string name="patch_remove_needle_cap_desc_3">[注意2] 如果貼片濕或髒，或膠帶折疊，請點擊“放棄”。</string>
     <string name="patch_remove_protection_tape">貼上貼片</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">清潔並乾燥應用部位，然後將貼片貼在皮膚上。</string>
@@ -64,7 +62,6 @@
     <string name="patch_safety_check">安全檢查…</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_safety_check_desc_1">這大約需要30秒。</string>
-    <string name="patch_safety_check_desc_2">[注意] 為了安全使用，在完成安全檢查之前不要移除針頭動作桿！</string>
     <string name="patch_rotate_knob">植入針頭</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">旋轉針頭動作桿超過100°以植入針頭，然後完全旋轉以移除它</string>
@@ -91,11 +88,8 @@
     <string name="string_change_patch">放棄/更換貼片</string>
     <string name="string_activate_patch">啟動貼片</string>
     <string name="string_discard_patch">放棄貼片</string>
-    <string name="string_resume">恢復</string>
     <string name="discard">放棄</string>
     <string name="string_communication_check">通訊檢查</string>
-    <string name="string_suspend">暫停</string>
-    <string name="string_suspended">已暫停</string>
     <string name="string_running">運行中</string>
     <string name="cancel">取消</string>
     <string name="confirm">確認</string>
@@ -104,20 +98,18 @@
     <string name="string_changing">更換中</string>
     <string name="string_in_progress">處理中</string>
     <string name="retry">重試</string>
-    <string name="string_caution_not_remove_needle_cap">[注意] 在進一步指示之前不要移除針頭蓋和膠帶。</string>
     <string name="string_are_you_sure_to_discard_current_patch">您確定要放棄目前貼片嗎？</string>
     <string name="needle_insertion_error_1">針頭植入錯誤。</string>
     <string name="needle_insertion_error_2">檢查旋鈕旋轉後留下的孔洞方向是否正確，然後點擊“重試”。</string>
     <string name="needle_insertion_error_3">點擊“放棄”以停用貼片。</string>
     <string name="string_suspend_time_insulin_delivery_title">基礎速率暫停時間</string>
     <string name="string_resume_insulin_delivery_title">恢復胰島素供應</string>
-    <string name="string_resume_insulin_delivery_message">胰島素中止結束。\n點擊“確認”以恢復胰島素供應。\n\n[注意]\n在您點擊“確認”之前，胰島素供應將不會恢復。\n如果您不點擊“確認”，您可能會發生高血糖。</string>
     <string name="string_suspended_insulin_delivery_message">胰島素供應已暫停。</string>
     <string name="string_resumed_insulin_delivery_message">胰島素供應已恢復。</string>
     <string name="finish">完成</string>
     <string name="string_temp_basal_remained_hhmm">剩餘時間：%1$s:%2$s</string>
     <string name="next">下一步</string>
-    <string name="string_pause_failed">暫停失敗。</string>
     <string name="string_resume_failed">恢復失敗。</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, yyyy 年 MMM d 日 hh:mm a</string>
+    <!-- Permission rationales -->
 </resources>
