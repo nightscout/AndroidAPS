@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Siųsti glikemijos duomenis į NS</string>
     <string name="configbuilder_insulin">Insulinas</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">Pagrindinis slaptažodis</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Eksportuoti naudotojo įrašus į Excel (csv)</string>
     <string name="confirm">Patvirtinti</string>
     <string name="pump">Pompa</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Vienai sekundei išjungia telefono bluetooth, jei ryšys su pompa nutrūksta. Gali būti veiksminga kai kuriems telefonų modeliams, turintiems BT problemų.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
     <string name="exit">Išeiti</string>
@@ -111,7 +109,6 @@
     <string name="calibration">Kalibravimas</string>
     <string name="alarminxmin">Pranešti po %1$d min</string>
     <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą insulino kiekį ir įvestą angliavandenių skaičių</string>
-    <string name="bolus_reminder">Priminimas apie bolusą</string>
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pompa sustabdyta</string>
@@ -133,18 +130,15 @@
     <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
     <string name="average">Vidurkis</string>
-    <string name="tir">LTR</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">PAŠALINTI</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
-    <string name="reset">atstatyti</string>
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="profile">Profilis</string>
     <string name="select_for_removal">Pasirinkite pašalinimui</string>
     <string name="confirm_remove_multiple_items">Ar tikrai norite pašalinti %1$d elementus</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
-    <string name="wear_wizard_settings">Skaičiuotuvo nustatymai</string>
     <string name="bg_trend_label">15 min tendencija</string>
     <string name="treatments_wizard_cob_label">AAO</string>
     <string name="bolus_iob_label">Bolusų AIO</string>
@@ -195,6 +189,7 @@
     <string name="duration">Trukmė</string>
     <string name="reason">Priežastis</string>
     <string name="nochangerequested">Pakeitimai nereikalingi</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Netinkamas profilis: %1$s</string>
     <!--    Temptarget-->
@@ -263,7 +258,6 @@
     <string name="expweight">Eksponentiškai svertinė BPD</string>
     <string name="basalrate">Valandinė bazė</string>
     <string name="bolus">Bolusas</string>
-    <string name="tdd">BPD</string>
     <string name="ratio">Vertė</string>
     <string name="amount_days"># d.</string>
     <string name="weight">Svoris</string>
@@ -382,6 +376,7 @@
     <string name="valueoutofrange">»%1$s« viršija griežtą limitą</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f viršija griežtą limitą</string>
     <string name="basal_value">Valandinė bazė</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUSAS %1$.2f vv</string>
     <string name="carbs_g">AV %1$d g</string>
@@ -410,7 +405,6 @@
     <string name="sensitivity">Jautrumas insulinui</string>
     <string name="isf_for_carbs">JIF skaičiuotuvui ir AV įsisavinimui: %1$.1f</string>
     <string name="autosens_long">Autosens vertė: %.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">Autosens algoritme: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">failas</string>
@@ -420,7 +414,6 @@
     <string name="autotune_tune_days">Dienų sk :</string>
     <string name="autotune_select_profile">Pasirinkite profilį tikslinimui</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Naudoti sistemos perspėjimus aliarmams ir įspėjimams</string>
     <string name="urgent_alarm">Kritiniai perspėjimai</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -428,8 +421,6 @@
     <string name="bolus_advisor_message">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
     <string name="cobvsiob">AAO prieš AIO</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Nustatytas lėtas angliavandenių įsisavinimas: %2$d%% laiko. Dar karą patikrinkite savo skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino!!!!!</font>]]></string>
-    <string name="partialboluswizard">Suleisti šią boluso skaičiuoklės rezultato dalį [%]</string>
-    <string name="partialboluswizard_reset_time">Senų glikemijos duomenų riba [min]</string>
     <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
@@ -506,7 +497,6 @@
     <string name="message">Pranešimas</string>
     <string name="ok">OK</string>
     <string name="cancel">Atšaukti</string>
-    <string name="dismiss">ATMESTI</string>
     <string name="yes">Taip</string>
     <string name="no">Ne</string>
     <string name="close">Uždaryti</string>
@@ -519,12 +509,17 @@
     <string name="export_disabled">Išjungta</string>
     <string name="export_failed">Nepavyko</string>
     <string name="export_alert">DĖMESIO</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Nustatymai eksportuoti</string>
     <string name="export_result_message_failed">Nustatymų eksportas NEPAVYKO!</string>
     <string name="export_result_message_about_to_expire">Nustatymai eksportuoti: slaptažodis greitai baigs galioti. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite slaptažodį.</string>
     <string name="export_result_message_expired">Nustatymų eksportavimas atšauktas: slaptažodis pasibaigęs. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite!</string>
     <string name="export_result_message_disabled">Įspėjimas (automatizacija): Nustatymų eksportavimas neįjungtas!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">sumažinimas %1$s per %2$s</string>
     <string name="a11y_plus_button_description">padidinimas %1$s per %2$s</string>
@@ -545,8 +540,10 @@
     <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių susiejimo.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Pradžios ekrano nustatymai</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
@@ -597,4 +594,10 @@
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f%% (%2$.2f vv/val.)<br><b>Trukmė</b>: %3$d min<br>]]></string>
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f vv/val. (%2$.2f%%) <br><b>Trukmė</b>: %3$d min<br>]]></string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
