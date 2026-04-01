@@ -13,10 +13,7 @@
     <string name="bolus_pin">Boluso PIN</string>
     <string name="protection_timeout_title">Slaptažodžio ir PIN įvedimo laikas [s]</string>
     <string name="protection_timeout_summary">Laikas, per kurį turi būti įvestas slaptažodis ar PIN kodas</string>
-    <string name="biometric">Biometrika</string>
-    <string name="custom_password">Pasirinktinis slaptažodis</string>
-    <string name="custom_pin">Pasirinktinis PIN</string>
-    <string name="noprotection">Apsaugos nėra</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Nesaugus atsarginis įrašas</string>
     <string name="unsecure_fallback_descriotion_biometric">Saugumui užtikrinti, biometrinei apsaugai reikia pagrindinio slaptažodžio atsarginiam įrašui.\n\nĮveskite pagrindinį slaptažodį!</string>
     <string name="password_set">Slaptažodis nustatytas!</string>
@@ -27,8 +24,6 @@
     <string name="password_not_changed">Slaptažodis nepakeistas</string>
     <string name="pin_not_changed">PIN nepakeistas</string>
     <string name="pin_cleared">PIN kodas išvalytas!</string>
-    <string name="password_hint">Įveskite slaptažodį čia</string>
-    <string name="pin_hint">Įveskite PIN čia</string>
     <string name="master_password_not_set">Pagrindinis slaptažodis nenustatytas</string>
     <string name="aaps_directory_not_selected">Neparinktas AAPS katalogas</string>
 </resources>
