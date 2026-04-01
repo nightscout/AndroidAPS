@@ -13,7 +13,7 @@
     <string name="invalidpairing">Informații de asociere invalide. Se solicită o nouă asociere</string>
     <string name="gettingpumpsettings">Se obțin setările pompei</string>
     <string name="gettingpumptime">Se citește ora pompei</string>
-    <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai multe de 1.5 ore.\nCorectati manual ora din pompă și asigurați-vă că sincronizarea cu datele din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și inactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
+    <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai multe de 1.5 ore.\nCorectați manual ora din pompă și asigurați-vă că sincronizarea cu datele din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și inactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
     <string name="largetimedifftitle">Diferență majoră de timp Titlu</string>
     <string name="approachingdailylimit">Se apropie de limita zilnică de insulină</string>
     <string name="startingbolus">Pornire livrare bolus</string>
@@ -123,10 +123,10 @@
     <string name="diaconn_g8_errorcode_13">Nu se poate injecta deoarece depășește limita.</string>
     <string name="diaconn_g8_errorcode_14">Injecția nu poate fi injectată deoarece depășește volumul injectării în prezent.</string>
     <string name="diaconn_g8_errorcode_15">După finalizarea configurării ratei bazale, se poate injecta bazala.</string>
-    <string name="diaconn_g8_logtubechange_title">Înregistrează schimbarea furtunului</string>
-    <string name="diaconn_g8_logtubechange_summary">Adăugare eveniment \"Schimbare furtun\" în Nota atunci când este detectat în istoric</string>
+    <string name="diaconn_g8_logtubechange_title">Înregistrează schimbarea canulei</string>
+    <string name="diaconn_g8_logtubechange_summary">Adăugare eveniment \"Schimbare canulă\" în Notă atunci când este detectat în istoric</string>
     <string name="diaconn_g8_logtempstart">Start bazală temporară</string>
-    <string name="diaconn_g8_errorcode_32">În timpul rulării LGS, injectarea este restricţionată.</string>
+    <string name="diaconn_g8_errorcode_32">În timpul rulării LGS, injectarea este restricționată.</string>
     <string name="diaconn_g8_errorcode_33">Starea LGS este activ, comanda de activare este refuzată.</string>
     <string name="diaconn_g8_errorcode_34">Starea LGS este inactiv, comanda de inactivare este refuzată.</string>
     <string name="diaconn_g8_errorcode_35">Pornirea bazalei temporare este respinsă atunci când se execută bazala temporară</string>
