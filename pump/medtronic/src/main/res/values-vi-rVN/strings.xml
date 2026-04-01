@@ -12,7 +12,6 @@
     <string name="medtronic_pump_encoding">Mã hóa Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Đánh thức và tinh chỉnh</string>
     <string name="medtronic_custom_action_clear_bolus_block">Xóa chặn bolus</string>
-    <string name="medtronic_custom_action_reset_rileylink">Đặt lại cấu hình RileyLink</string>
     <string name="medtronic_pump_battery_select">Loại pin (xem nguồn)</string>
     <string name="medtronic_pump_battery_no">Chưa chọn (xem đơn giản)</string>
     <string name="medtronic_pump_battery_alkaline">Pin Alkaline (xem mở rộng)</string>
