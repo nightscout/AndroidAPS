@@ -1,5 +1,6 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.data.model.PS
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
@@ -44,7 +45,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() = runTest {
-        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(mock())
+        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
         sut.pct = InputPercent(110.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         sut.doAction(object : Callback() {
