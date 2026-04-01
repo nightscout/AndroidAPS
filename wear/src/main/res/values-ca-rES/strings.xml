@@ -32,11 +32,6 @@
     <string name="pref_3_hours">3 hores</string>
     <string name="pref_4_hours">4 hores</string>
     <string name="pref_5_hours">5 hores</string>
-    <string name="pref_input_design">Disseny entrada</string>
-    <string name="pref_default">Per defecte</string>
-    <string name="pref_quick_righty">Ràpid dreta</string>
-    <string name="pref_quick_lefty">Ràpid esquerra</string>
-    <string name="pref_modern_sparse">Dispers modern</string>
     <string name="pref_big_numbers">Números grossos</string>
     <string name="pref_ring_history">Historial Ring</string>
     <string name="pref_light_ring_history">Historial Ring Light</string>
