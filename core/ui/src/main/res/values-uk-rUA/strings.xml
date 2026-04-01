@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <!-- master_password moved to core/keys/strings.xml -->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
     <!--    APSResult-->
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
@@ -15,6 +17,7 @@
     <!--    Ntp-->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <!-- Autotune -->
     <!-- Alerts -->
@@ -26,14 +29,22 @@
     <!--    Dialogs-->
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    BlePreCheck-->
     <!--    Preferences -->
-    <!-- SmsCommunicator -->
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <!--    Maintenance-->
     <!--    Weekday-->
@@ -41,4 +52,10 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2f од</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>
