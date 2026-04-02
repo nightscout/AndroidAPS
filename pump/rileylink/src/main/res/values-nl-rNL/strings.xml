@@ -7,32 +7,17 @@
     <string name="pump_status_active">Actief</string>
     <string name="pump_status_error_comm">Communicatiefout</string>
     <string name="pump_status_timeout_comm">Time-out op de communicatie</string>
-    <string name="pump_status_pump_unreachable">Pomp niet bereikbaar</string>
     <string name="pump_status_invalid_config">Ongeldige configuratie</string>
     <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b codering</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b codering</string>
     <string name="medtronic_pump_frequency_us_ca">VS &amp; Canada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Wereldwijd (868 Mhz)</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Scannen</string>
-    <string name="riley_link_ble_config_scan_stop">Stop</string>
-    <string name="riley_link_ble_config_scan_selected">Geselecteerd</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink Scan</string>
     <string name="riley_link_ble_config_scan_scanning">Aan het scannen</string>
-    <string name="riley_link_ble_config_scan_finished">Scannen voltooid</string>
-    <string name="riley_link_ble_config_scan_error">Scanfout: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Nooit</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Geselecteerde RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">Verwijder</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Weet u zeker dat u uw RileyLink wilt verwijderen?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">RileyLink verwijderen</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Geen RileyLink geselecteerd</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Instellingen</string>
-    <string name="rileylink_settings_tab2">Geschiedenis</string>
     <string name="rileylink_status">RileyLink Status</string>
     <string name="medtronic_pump_status">Pompstatus</string>
-    <string name="title_activity_rileylink_settings">RileyLink Instellingen</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adres:</string>
     <string name="rileylink_name">Naam:</string>
@@ -69,7 +54,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth is uitgeschakeld</string>
     <string name="rileylink_error_no_bt_adapter">Geen Bluetooth Adapter</string>
     <string name="rileylink_error_tuneup_failed">Verbinding maken mislukt</string>
-    <string name="rileylink_error_pump_unreachable">Pomp niet beschikbaar</string>
     <string name="rileylink_error_pod_unreachable">Pod niet bereikbaar</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
@@ -87,5 +71,4 @@
     </plurals>
     <string name="orange_use_scanning_level">Gebruik scannen</string>
     <string name="orange_use_scanning_level_summary">Scan voordat u verbinding maakt met OrangeLink, het zou de verbindingen moeten verbeteren (kan ook worden gebruikt met andere RileyLink klonen, indien nodig)</string>
-    <string name="rileylink_configuration">RileyLink configuratie</string>
 </resources>
