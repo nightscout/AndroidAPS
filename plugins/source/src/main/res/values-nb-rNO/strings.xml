@@ -41,4 +41,5 @@
     <string name="description_source_patched_sino_app">Motta BS-verdier fra den patchede appen Sino.</string>
     <!-- Notification Reader -->
     <!-- Permission rationales -->
+    <string name="permission_notification_listener_description">Kreves for å lese blodsukkerverdier fra CGM-appens notifikasjoner</string>
 </resources>
