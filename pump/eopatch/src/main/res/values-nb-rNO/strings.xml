@@ -75,6 +75,8 @@
     <string name="patch_activate_reminder_desc">Patch aktiveringen er ikke fullført.\n Fortsett.</string>
     <string name="patch_communication_check_helper_1">Flytt smartenheten din nærmere Patch.</string>
     <string name="patch_communication_check_helper_2">Gå til en annen lokasjon og prøv på nytt.</string>
+    <string name="patch_safety_check_failed_desc">Sikkerhetssjekken mislyktes. Prøv på nytt.</string>
+    <string name="patch_needle_sensing_failed_desc">Nålregistrering mislyktes. Prøv på nytt.</string>
     <string name="patch_communication_failed">Kommunikasjonsfeil</string>
     <string name="patch_communication_succeed">Kommunikasjon vellykket</string>
     <string name="patch_communication_succeed_message">Sammenkoblet med Patch.</string>
@@ -98,18 +100,27 @@
     <string name="string_changing">Endrer</string>
     <string name="string_in_progress">Behandler</string>
     <string name="retry">Prøv igjen</string>
+    <string name="string_caution_not_remove_needle_cap">IKKE fjern nålehetten og den selvklebende baksiden før du får ytterligere instruksjoner.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Er du sikker på at du vil forkaste plasteret?</string>
     <string name="needle_insertion_error_1">Feil ved innsetting av kanyle.</string>
     <string name="needle_insertion_error_2">Sjekk om hullet er rett når du dreier spaken, og trykk på «Prøv på nytt».</string>
     <string name="needle_insertion_error_3">Trykk på \'Discard\' for å deaktivere plasteret.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basal pausetid</string>
     <string name="string_resume_insulin_delivery_title">Gjenoppta insulinlevering</string>
+    <string name="string_resume_insulin_delivery_message">Slutt på pause av insulintilførsel.\nTrykk på «Bekreft» for å gjenoppta insulintilførselen.\n\nInsulintilførselen vil ikke gjenopptas før du trykker på «Bekreft».\nHvis du ikke trykker på «Bekreft», kan du utvikle hyperglykemi.</string>
     <string name="string_suspended_insulin_delivery_message">Insulinlevering er pauset.</string>
     <string name="string_resumed_insulin_delivery_message">Insulinlevering er gjenopptatt.</string>
     <string name="finish">Fullfør</string>
     <string name="string_temp_basal_remained_hhmm">gjenstående tid: %1$s:%2$s</string>
     <string name="next">Neste</string>
+    <string name="string_pause_failed">Pausing mislyktes.</string>
     <string name="string_resume_failed">Gjenopptakelse feilet.</string>
+    <string name="wizard_exit_activation_warning">Vil du avslutte aktiveringsveiviseren? Patchen kan være ufullstendig og kreve en ny patch.</string>
+    <string name="wizard_exit_deactivation_warning">Avslutt deaktiveringsveiviseren? Patch kan forbli aktiv og fortsette å tilføre insulin.</string>
+    <string name="patch_force_reset">Tving tilbakestilling</string>
+    <string name="patch_force_reset_confirm">Dette vil fjerne patch-statusen lokalt uten å sende kommandoer til patchen. Bruk den kun hvis normal deaktivering mislykkes. Patchen vil fortsette å levere til batteriet går tomt eller den slås av manuelt.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy h:mm a</string>
     <!-- Permission rationales -->
+    <string name="permission_exact_alarm_title">Eksakte alarmer</string>
+    <string name="permission_exact_alarm_description">Appen trenger tillatelse til å planlegge nøyaktige alarmer for patchadministrasjon</string>
 </resources>
