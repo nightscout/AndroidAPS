@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="treatments">Tratamientos</string>
+    <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
+    <string name="nav_configuration">Configuración</string>
+    <string name="nav_configuration_desc">Configure sus dispositivos (MCG, bomba, ...) y active las funciones</string>
+    <string name="count_selected">%1$d seleccionado</string>
+    <string name="delete">Borrar</string>
+    <string name="show_invalidated">Mostrar invalidados</string>
+    <string name="hide_invalidated">Ocultar invalidados</string>
+    <string name="more_options">Más opciones</string>
     <string name="refresh">Actualizar</string>
+    <string name="no_history_records">No se encontraron registros</string>
     <string name="error">Error</string>
     <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
     <string name="invalid_input">Datos inválidos</string>
+    <string name="invalid_number">Número no válido</string>
     <string name="constraint_applied">¡Restricción aplicada!</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
     <string name="tt_label">OT</string>
     <string name="pump_unreachable">Bomba no alcanzable</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
     <string name="pump_not_initialized_profile_not_set">Bomba no inicializada, ¡perfil no establecido!</string>
     <string name="failed_update_basal_profile">Error al actualizar el perfil basal</string>
     <string name="no_valid_basal_rate">Tasa basal no válida leída en la bomba</string>
@@ -152,6 +164,8 @@
     <string name="logout">Cerrar sesión</string>
     <string name="prime_fill">Cebar/Llenar</string>
     <string name="site_rotation">Rotación del sitio</string>
+    <string name="pick_site">Elegir zona</string>
+    <string name="select_site_location">Seleccionar ubicación de la zona</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Detener objetivo temporal</string>
     <string name="closedloop">Lazo cerrado</string>
