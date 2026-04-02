@@ -4,12 +4,9 @@
     <string name="equil_pump_description">Bơm Patch Equil 5.3 trở lên </string>
     <!--  start  -->
     <string name="equil_basal_speed">Liều nền cơ bản</string>
-    <string name="equil_date_device">Kết nối lần cuối</string>
     <string name="equil_dressing">Thay Insulin</string>
     <string name="equil_dressing_onkey_msg">Tự động di chuyển pít-tông đến đáy ống chứa. Quá trình sẽ tự dừng khi pít-tông chạm đáy. Nhấn \'Dừng\' để ngắt nếu cần.</string>
-    <string name="equil_finish">Kết thúc</string>
     <string name="equil_hint_dressing">Thao tác này sẽ dừng việc truyền insulin và khiến piston bơm rút về đáy!</string>
-    <string name="equil_history">Lịch sử</string>
     <string name="equil_insulin_reservoir">Bình chứa Insulin</string>
     <string name="equil_mode">Chế độ đang chạy</string>
     <string name="equil_mode_running">Đang chạy</string>
@@ -26,7 +23,6 @@
     <string name="equil_tone_mode_tone">Chỉ âm báo</string>
     <string name="equil_tone_mode_tone_and_shake">Rung và âm báo</string>
     <string name="equil_unit_u">%1$s U</string>
-    <string name="equil_unit_u_hours">%1$s U/H</string>
     <string name="equil_ble_config_confirmation_title">Ghép nối bơm Patch Equil</string>
     <string name="equil_error">Lỗi kết nối</string>
     <string name="equil_change">Thay Bơm</string>
@@ -43,18 +39,15 @@
     <string name="equil_pump_not_run">Bơm không chạy</string>
     <string name="equil_pair">Ghép đôi</string>
     <string name="equil_pair_error">Lỗi ghép đôi</string>
-    <string name="equil_retry">Thử lại</string>
     <string name="equil_fill">Prime/Fill</string>
     <string name="equil_air">Đuổi khí</string>
     <string name="equil_temp_basal_rate">Liều liều nền tạm thời</string>
     <string name="equil_total_delivered">Tổng lượng đã tiêm</string>
-    <string name="equil_last_bolus">Liều bolus trước</string>
     <string name="equil_firmware_version">Phiên bản phần mềm</string>
     <string name="equil_shutdown_be">Equil sẽ tự động tắt</string>
     <string name="equil_shutdown">Equil tự động tắt</string>
     <string name="equil_common_history_tbr_value">Tỷ lệ: %1$.2f U, thời lượng: %2$d phút</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
-    <string name="equil_history_type">Loại:</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Đặt liều Bolus</string>
     <string name="equil_common_cmd_cancel_bolus">Hủy liều bolus</string>
@@ -67,7 +60,6 @@
     <string name="equil_common_cmd_pair">Ghép đôi Equil</string>
     <string name="equil_common_cmd_insert_cannula">Gắn Cannula</string>
     <string name="equil_common_cmd_unpair">Hủy ghép đôi Equil</string>
-    <string name="equil_common_cmd_alarm">Cảnh báo</string>
     <string name="equil_common_cmd_set_extended_bolus">Đặt liều Bolus kéo dài</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Hủy liều Bolus kéo dài</string>
     <!--    推杆回退-->
@@ -120,8 +112,6 @@
     <string name="equil_common_less_than_a_minute_ago">Chưa đầy một phút trước</string>
     <string name="equil_common_time_ago">%1$s trước</string>
     <string name="equil_common_composite_time">%1$s và %2$s</string>
-    <string name="equil_common_wizard_button_finish">Kết thúc</string>
-    <string name="equil_common_wizard_button_next">Tiếp theo</string>
     <string name="equil_common_wizard_exit_confirmation_text">Bạn chưa hoàn tất tất cả các bước. Bạn có chắc chắn muốn thoát không?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Thoát</string>
     <plurals name="equil_common_minutes">
@@ -144,7 +134,6 @@
     <string name="equil_insert2">Bơm không được đặt trên đế bơm.</string>
     <string name="equil_attach">Vui lòng gắn bơm vào đế</string>
     <string name="equil_hint2">Mồi ống dẫn (cannula)</string>
-    <string name="equil_unpair">Vô hiệu hóa bơm cũ %1$s?</string>
     <string name="equil_pump_updated">Đã đồng bộ Bơm</string>
     <string name="equil_replace_reservoir">Ống chứa trống. Vui lòng thay ống chứa mới</string>
     <string name="error_mustbe6hexadidits">Phải gồm 6 ký tự, chọn từ ABCDEF0123456789</string>
