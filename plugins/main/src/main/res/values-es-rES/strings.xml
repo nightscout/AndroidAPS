@@ -28,6 +28,8 @@
     <!-- manage moved to core:ui module -->
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
     <string name="actions_shortname">ACC</string>
+    <string name="status">Estado</string>
+    <string name="pump_actions">Acciones de la bomba</string>
     <string name="tempbasal_button">Basal temporal</string>
     <string name="extended_bolus_button">Bolo extendido</string>
     <string name="extended_bolus_cancel_button">Cancelar bolo extendido</string>
