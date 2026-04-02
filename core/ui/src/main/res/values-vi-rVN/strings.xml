@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="treatments">Điều trị</string>
+    <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
+    <string name="nav_configuration">Cấu hình</string>
+    <string name="nav_configuration_desc">Thiết lập cấu hình (CGM, bơm insulin, ...) và bật các tính năng</string>
+    <string name="count_selected">Đã chọn %1$d</string>
+    <string name="delete">Xóa</string>
+    <string name="show_invalidated">Hiển thị các mục không hợp lệ</string>
+    <string name="hide_invalidated">Ẩn các mục không hợp lệ</string>
+    <string name="more_options">Thêm tuỳ chọn</string>
     <string name="refresh">Làm mới</string>
+    <string name="no_history_records">Không tìm thấy bản ghi nào</string>
     <string name="error">Lỗi</string>
     <string name="profile_set_ok">Đã cập nhật Hồ sơ liều nền trong bơm</string>
     <string name="invalid_input">Dữ liệu đầu vào không hợp lệ</string>
+    <string name="invalid_number">Số không hợp lệ</string>
     <string name="constraint_applied">Đã áp dụng giới hạn!</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Không thể kết nối với bơm</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
     <string name="pump_not_initialized_profile_not_set">Bơm chưa được khởi tạo, Hồ sơ chưa được thiết lập!</string>
     <string name="failed_update_basal_profile">Không thể cập nhật Hồ sơ liều nền</string>
     <string name="no_valid_basal_rate">Không đọc được liều basal hợp lệ từ bơm</string>
@@ -21,7 +33,12 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Lưu</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="switch_to_edit">Sửa</string>
     <string name="snooze">Nhắc sau</string>
+    <string name="snooze_15m">Hoãn 15 phút</string>
+    <string name="snooze_30m">Hoãn 30 phút</string>
+    <string name="snooze_60m">Hoãn 60 phút</string>
     <string name="virtual_pump">Bơm mô phỏng</string>
     <string name="constraints">Giới hạn</string>
     <string name="superbolus">Superbolus</string>
@@ -30,14 +47,37 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Người dùng</string>
     <string name="result">Kết quả</string>
     <string name="settings">Cài đặt</string>
+    <string name="simple_mode">Chế độ đơn giản</string>
+    <string name="expand">Mở rộng</string>
+    <string name="collapse">Thu gọn</string>
+    <string name="no_compose_preferences">Plugin này không có cài đặt Compose</string>
+    <string name="plugin_no_preferences">Plugin không hỗ trợ cài đặt</string>
+    <string name="confirm_password_hint">Xác nhận mật khẩu</string>
+    <string name="confirm_pin_hint">Xác nhận mã PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Đèn báo trạng thái</string>
+    <string name="copy_existing_values">Sao chép cài đặt NS (nếu có)?</string>
     <string name="do_ns_upload_title">Tải dữ liệu đường huyết lên NS</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <string name="configbuilder_bgsource">Nguồn Đường huyết</string>
+    <string name="configbuilder_smoothing">Làm mượt</string>
+    <string name="configbuilder_pump">Bơm Insulin</string>
+    <string name="configbuilder_sensitivity">Phát hiện độ nhạy insulin</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Vòng lặp</string>
+    <string name="configbuilder_sync">Giao tiếp</string>
+    <string name="configbuilder_general">Cài đặt chung</string>
+    <string name="protection">Bảo mật</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Xuất dữ liệu sang Excel (csv)</string>
     <string name="confirm">Xác nhận</string>
     <string name="pump">Bơm</string>
+    <string name="pump_management">Quản lý bơm insulin</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">Tải lên</string>
+    <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Thiếu dữ liệu đường huyết</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Tắt trong 5 phút</string>
@@ -48,6 +88,9 @@
     <string name="aps_mode_title">Chế độ APS</string>
     <string name="extended_bolus">Liều Bolus kéo dài</string>
     <string name="paused">Đã tạm dừng</string>
+    <string name="running">Đang chạy</string>
+    <string name="open_menu">Mở Menu</string>
+    <string name="close_menu">Đóng menu</string>
     <string name="tdd_total">Tổng TDD</string>
     <string name="tdd_old_data">Dữ liệu cũ</string>
     <string name="goingtodeliver">Đang tiêm %1$.2f U Insulin</string>
@@ -66,6 +109,11 @@
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Ngày</string>
     <string name="units_label">Đơn vị</string>
+    <string name="insulin_name_label">Tên Insulin</string>
+    <string name="insulin_nickname_label">Tên gọi insulin</string>
+    <string name="concentration_label">Tập trung</string>
+    <string name="format_concentration">U%1$.0f</string>
+    <string name="peak_label">Đỉnh (Peak)</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -102,6 +150,7 @@
     <string name="time">Thời gian</string>
     <string name="ns_wifi_ssids">Tên Wi-Fi</string>
     <string name="loading">Đang tải…</string>
+    <string name="waiting_for_pump">Đang chờ phản hồi từ Bơm…</string>
     <string name="notes_label">Ghi chú</string>
     <string name="remove_button">Xóa</string>
     <string name="add_new">Thêm mới</string>
