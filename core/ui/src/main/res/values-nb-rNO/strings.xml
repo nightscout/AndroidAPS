@@ -33,7 +33,12 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Lagre</string>
+    <string name="skip">Hopp over</string>
+    <string name="switch_to_edit">Rediger</string>
     <string name="snooze">Slumre</string>
+    <string name="snooze_15m">Slumre 15m</string>
+    <string name="snooze_30m">Slumre 30m</string>
+    <string name="snooze_60m">Slumre 60m</string>
     <string name="virtual_pump">Virtuell pumpe</string>
     <string name="constraints">Begrensninger</string>
     <string name="superbolus">Superbolus</string>
@@ -42,9 +47,23 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="result">Resultat</string>
     <string name="settings">Innstillinger</string>
+    <string name="simple_mode">Enkelmodus</string>
+    <string name="expand">Utvid</string>
+    <string name="collapse">Kollaps</string>
+    <string name="no_compose_preferences">Ingen Compose-innstillinger tilgjengelig for denne plugin</string>
+    <string name="plugin_no_preferences">Plugin støtter ikke innstillinger</string>
+    <string name="confirm_password_hint">Bekreft passord</string>
+    <string name="confirm_pin_hint">Bekreft PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Statuslys</string>
+    <string name="copy_existing_values">Kopier NS-innstillinger (hvis det finnes)?</string>
     <string name="do_ns_upload_title">Last opp BS-data til NS</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <string name="configbuilder_bgsource">BS-kilde</string>
+    <string name="configbuilder_smoothing">Utjevning</string>
+    <string name="configbuilder_pump">Pumpe</string>
+    <string name="configbuilder_sensitivity">Sensitivitetsdeteksjon</string>
+    <string name="configbuilder_aps">APS</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
