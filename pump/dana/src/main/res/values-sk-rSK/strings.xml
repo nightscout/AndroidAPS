@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Párovanie</string>
     <string name="danars_pairingtimedout">Vypršal časový limit pre párovanie</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
@@ -56,7 +55,6 @@
     <string name="danar_history_bolus">Bolusy</string>
     <string name="danar_history_carbohydrates">Sacharidy</string>
     <string name="danar_history_dailyinsulin">Denný inzulín</string>
-    <string name="danar_history_errors">Chyby</string>
     <string name="danar_history_glucose">Glykémia</string>
     <string name="danar_history_refill">Plnenie</string>
     <string name="danar_history_syspend">Pozastavenia</string>
@@ -65,7 +63,6 @@
     <string name="danar_time_display">Formát času</string>
     <string name="danar_button_scroll">Posun pri stlačení tlačidla</string>
     <string name="danar_beep">Zvuk pri stlačení tlačidla</string>
-    <string name="danar_pump_alarm">Alarm</string>
     <string name="danar_pump_alarm_sound">Zvuk</string>
     <string name="danar_pump_alarm_vibrate">Vibrácie</string>
     <string name="danar_pump_alarm_both">Oboje</string>
@@ -87,7 +84,6 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Deaktivovať v pumpe režim EasyUI</string>
     <string name="profile_set_failed">Nastavenie bazálneho profilu zlyhalo</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Nastavenie pumpy Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
@@ -96,14 +92,11 @@
     <string name="danars_password_title">Heslo pumpy (iba v1)</string>
     <string name="danar_password_title">Heslo do pumpy</string>
     <string name="danar_useextended_title">Použiť predĺžené bolusy pre &gt;200%</string>
-    <string name="bolusspeed">Rýchlosť bolusu</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="rs_loginsulinchange_title">Zaznamenať výmenu zásobníka</string>
     <string name="rs_loginsulinchange_summary">Pridať udalosť \"Výmena inzulínu\" do portálu starostlivosti, pokiaľ je zistená v histórii</string>
     <string name="rs_logcanulachange_title">Zaznamenať výmenu kanyly</string>
     <string name="rs_logcanulachange_summary">Pridať udalosť \"Výmena setu\" do portálu starostlivosti, pokiaľ je zistená v histórii</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Stlačte OK na pumpe\na zadajte 2 zobrazené čísla\nUdržujte display na pumpe zapnutý stlačením tlačítka mínus, kým nedokončíte zadanie kódu.</string>
     <string name="num1pin">1: (12 číslic)</string>
     <string name="num2pin">2: (8 číslic)</string>
