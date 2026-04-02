@@ -104,13 +104,13 @@ fun ConfigurationScreen(
                 val isExpanded = expandedTypeOrdinal == category.type.ordinal
 
                 item(key = "cat_${category.type}") {
-                    val singleEnabled = category.plugins.singleOrNull { it.isEnabled }
+                    val singlePlugin = category.plugins.singleOrNull()?.takeIf { it.isEnabled }
 
                     CategoryRow(
                         category = category,
                         isExpanded = isExpanded,
-                        onRowClick = if (singleEnabled != null) {
-                            { onNavigate(NavigationRequest.Plugin(singleEnabled.id)) }
+                        onRowClick = if (singlePlugin != null) {
+                            { onNavigate(NavigationRequest.Plugin(singlePlugin.id)) }
                         } else {
                             { expandedTypeOrdinal = if (isExpanded) -1 else category.type.ordinal }
                         },
