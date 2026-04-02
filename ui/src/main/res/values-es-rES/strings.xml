@@ -9,11 +9,14 @@
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
     <string name="time_offset">Retardo</string>
     <string name="remind_to_bolus_later">Recordar ejecutar el bolo más tarde</string>
+    <string name="a11y_carb_reminder">Establecer recordatorio para la hora de los hidratos</string>
     <!--    Widget-->
     <string name="configure">Configurar la opacidad</string>
     <string name="widget_description">Widget de AAPS</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor de actividad</string>
+    <string name="time_range">Rango de tiempo</string>
+    <string name="dexcom_tir">TIR de Dexcom</string>
     <string name="do_you_want_reset_stats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="do_you_want_recalculate_tdd_stats">¿Quieres recalcular las estadísticas de TDD?</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
@@ -103,10 +106,19 @@
     <string name="show_loop">Mostrar bucle</string>
     <string name="user_entry">Registro por parte del usuario</string>
     <string name="clone_label">Duplicar</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tipo de perfil</string>
+    <string name="profile_parameters">Parámetros del perfil</string>
+    <string name="active_profile">Perfil activo</string>
+    <string name="available_profiles">Perfiles disponibles</string>
+    <string name="profile_switches">Cambios de perfil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Seleccionado:</string>
+    <string name="comparation">Comparación</string>
     <string name="motol_default_profile">Perfil predeterminado</string>
     <string name="current_profile">Perfil actual</string>
     <string name="available_profile">Perfil disponible</string>
@@ -124,6 +136,9 @@
     <string name="a11y_only_on_phone">sólo en teléfono</string>
     <string name="quickwizard_settings">Configuración del asistente de configuración</string>
     <string name="overview_edit_quickwizard_button_text">Botón texto</string>
+    <string name="quick_wizard_mode_wizard">Asistente</string>
+    <string name="quick_wizard_mode_insulin">Insulina</string>
+    <string name="quick_wizard_mode_carbs">Carbohidratos</string>
     <string name="overview_edit_quickwizard_valid">Válido:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Sólo IOB positiva</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
@@ -131,8 +146,29 @@
     <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
     <string name="additional_ecarbs">Añadir eCarbs</string>
     <string name="overview_edit_quickwizard_useforcalculation">Usado para el cálculo:</string>
+    <string name="calculator_options">Opciones de la calculadora</string>
+    <string name="use_bg">Usar glucemia</string>
+    <string name="use_cob">Usar COB</string>
+    <string name="use_iob">Usar IOB</string>
+    <string name="use_trend">Usar tendencia</string>
+    <string name="trend_all">Todo</string>
+    <string name="trend_positive_only">Solo valores positivos</string>
+    <string name="trend_negative_only">Solo valores negativos</string>
+    <string name="use_temp_target">Usar objetivo temporal</string>
+    <string name="use_alarm">Usar alarma</string>
+    <string name="device_selection">Selección de dispositivo</string>
+    <string name="show_on_phone">Mostrar en el teléfono</string>
+    <string name="show_on_watch">Mostrar en el reloj</string>
+    <string name="ecarbs_additional">Carbohidratos adicionales</string>
+    <string name="valid_from_to">Rango de tiempo válido</string>
+    <string name="carb_time">Hora de la ingesta</string>
+    <string name="no_quickwizard_entries">Sin entradas en QuickWizard. Toca + para añadir una.</string>
+    <string name="save_changes_question">¿Guardar los cambios de esta entrada?</string>
     <string name="constraints_violation">Violación de restricciones</string>
     <string name="change_your_input">Cambiar datos de entrada</string>
+    <string name="wizard_no_insulin_required">No se requiere insulina</string>
+    <string name="carbs_constraint_violation">Carbohidratos limitados por restricciones</string>
+    <string name="insulin_constraint_violation">Insulina limitada por restricciones</string>
     <string name="confirm_treatment">Por favor, confirma el tratamiento</string>
     <string name="recalculate">Recalcular</string>
     <!--    Widget-->
@@ -141,7 +177,24 @@
     <string name="until_changed">Hasta el cambio</string>
     <string name="limitations">Limitaciones</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Permisos necesarios</string>
+    <string name="permission_sheet_subtitle">Se necesitan algunos permisos para que la aplicación funcione correctamente</string>
+    <string name="permission_grant">Conceder</string>
+    <string name="permission_change">Cambiar</string>
+    <string name="permission_denied_go_to_settings">Permiso denegado permanentemente. Por favor, actívalo en los ajustes de la aplicación.</string>
+    <string name="permission_open_settings">Ajustes</string>
+    <string name="permission_directory_picker_error">No se pudo abrir el selector de directorios. Normalmente es un problema de Android o de Family Link.</string>
+    <string name="permission_nav_label">Permisos</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Desfase de ciclo</string>
+    <string name="raw_tdd">TDD Bruta</string>
+    <string name="cleaned_tdd">TDD Limpia</string>
+    <string name="cleaned_tdd_explanation">TDD menos insulina para carbohidratos</string>
+    <string name="cycle_lines_legend">Ciclos individuales</string>
+    <string name="cycles_found">%1$d ciclos (%2$d días)</string>
+    <string name="cycle_day1_date">Día 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Calculando… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">No hay datos suficientes (se necesitan al menos 56 días para 2 ciclos)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambos</item>
         <item>Sólo positivo</item>
