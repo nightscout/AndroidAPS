@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_title">Pod Yönetimi</string>
-    <string name="omnipod_common_pod_management_heading_actions">Eylemler</string>
-    <string name="omnipod_common_pod_management_heading_tools">Araçlar</string>
     <string name="omnipod_common_pod_management_button_activate_pod">Pod Etkinleştir</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Pod\'u Devre Dışı Bırak</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Pod\'u Çıkart</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Pod\'u çıkartırsanız, artık onunla iletişim kuramazsınız. Bunu yalnızca Pod ile tüm iletişim sürekli olarak başarısız olduğunda yapmalısınız. Hala Pod ile iletişim kurabiliyorsanız, lütfen <b>Pod\'u Devre Dışı Bırak</b> seçeneğini kullanın.\n\nDevam etmek istiyorsanız, lütfen Pod\'u vücudunuzdan çıkardığınızdan emin olun!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Test Bip Sesi Çal</string>
-    <string name="omnipod_common_pod_management_button_playing_test_beep">Test Bip Sesi Çalınıyor…</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod Geçmişi</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">Aktif Pod Yok</string>
@@ -33,17 +29,12 @@
     <string name="omnipod_common_error_time_out_of_sync">Pod\'daki saat senkronize değil. Lütfen Omnipod sekmesindeki saati güncelleyin.</string>
     <string name="omnipod_common_error_unexpected_exception">Beklenmedik bir hata oluştu. Lütfen raporlayın! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation">Onay</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod alarm yapılandırması güncellendi.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod saati güncellendi.</string>
-    <string name="omnipod_common_confirmation_suspended_delivery">Tüm insülin iletimi durduruldu.</string>
-    <string name="omnipod_common_confirmation_silenced_alerts">Etkin alarmlar susturuldu.</string>
-    <string name="omnipod_common_confirmation_delivery_resumed">İnsülin iletimi yeniden başlatıldı.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Saati ayarla</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Duraklat</string>
     <string name="omnipod_common_overview_button_resume_delivery">İletime devam et</string>
-    <string name="omnipod_common_overview_button_pod_management">Pod Yntm</string>
     <string name="omnipod_common_overview_button_silence_alerts">Alarmları Sustur</string>
     <string name="omnipod_common_overview_pod_status">Pod Durumu</string>
     <string name="omnipod_common_overview_total_delivered">Toplam İletilen</string>
@@ -56,22 +47,12 @@
     <string name="omnipod_common_overview_last_bolus">Son Bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Geçici Bazal Oranı</string>
     <string name="omnipod_common_overview_base_basal_rate">Bazal Oranı</string>
-    <string name="omnipod_common_overview_reservoir">Rezervuar</string>
     <string name="omnipod_common_overview_pod_active_alerts">Etkin Pod Alarmları</string>
     <string name="omnipod_common_overview_firmware_version">Firmware versiyonu</string>
     <string name="omnipod_common_overview_time_on_pod">Pod saati</string>
-    <string name="omnipod_common_overview_temp_basal_value">%1$.2fÜ/s @%2$s (%3$d/%4$d dakika)</string>
-    <string name="omnipod_common_overview_reservoir_value">%1$.2f Ü kaldı</string>
-    <string name="omnipod_common_overview_reservoir_value_over50">50 Ü üzeri</string>
-    <string name="omnipod_common_overview_errors">Hatalar</string>
     <string name="omnipod_common_uncertain">belirsiz</string>
     <!-- Omnipod - Wizard Base -->
-    <string name="omnipod_common_wizard_button_cancel">İptal</string>
-    <string name="omnipod_common_wizard_button_finish">Bitti</string>
-    <string name="omnipod_common_wizard_button_next">İleri</string>
-    <string name="omnipod_common_wizard_button_retry">Tekrar dene</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">Pod\'u Devre Dışı Bırak</string>
-    <string name="omnipod_common_wizard_button_discard_pod">Pod\'u Çıkart</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Henüz tüm adımları tamamlamadınız. Çıkmak istediğinize emin misin?</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">Çıkış</string>
     <!-- Omnipod - Pod Activation Wizard -->
@@ -123,50 +104,36 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Kurulum devam ediyor (Pod aktivasyonu bekleniyor)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Kurulum devam ediyor (kanül yerleştirme bekleniyor)</string>
     <string name="omnipod_common_pod_status_running">Çalışıyor</string>
-    <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Askıya Alındı</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod Hatası</string>
     <string name="omnipod_common_pod_status_inactive">İnaktif</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Hatası: %1$03d %2$s</string>
-    <!-- Omnipod - Commands -->
-    <string name="omnipod_common_cmd_deactivate_pod">Pod\'u Devre Dışı Bırak</string>
-    <string name="omnipod_common_cmd_discard_pod">Pod\'u Çıkart</string>
-    <string name="omnipod_common_cmd_set_bolus">Bolusu Ayarla</string>
-    <string name="omnipod_common_cmd_cancel_bolus">Bolusu İptal Et</string>
-    <string name="omnipod_common_cmd_set_tbr">Geçici Bazalı Ayarla</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Geçici Bazal\'i İptal Et (dahili olarak sürücü tarafından)</string>
-    <string name="omnipod_common_cmd_cancel_tbr">Geçici Bazalı İptal Et</string>
-    <string name="omnipod_common_cmd_set_basal_schedule">Bazal Planı Ayarla</string>
-    <string name="omnipod_common_cmd_get_pod_status">Pod Durumu</string>
-    <string name="omnipod_common_cmd_get_pod_info">Pod Bilgisi</string>
-    <string name="omnipod_common_cmd_set_time">Saati Ayarla</string>
-    <string name="omnipod_common_cmd_configure_alerts">Alarmları Yapılandır</string>
-    <string name="omnipod_common_cmd_silence_alerts">Alarmları Sustur</string>
-    <string name="omnipod_common_cmd_suspend_delivery">İletimi Askıya Al</string>
-    <string name="omnipod_common_cmd_resume_delivery">İletime devam et</string>
-    <string name="omnipod_common_cmd_unknown_entry">Bilinmeyen Giriş</string>
-    <string name="omnipod_common_cmd_initialize_pod">Pod\'u Başlat</string>
-    <string name="omnipod_common_cmd_insert_cannula">Kanül Yerleştir</string>
-    <string name="omnipod_common_cmd_read_pulse_log">Nabız Kaydını Oku</string>
-    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Pod askıya alındığından sahte geçici bazal ayarlayın</string>
-    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Sahte geçici bazalı iptal edin</string>
-    <string name="omnipod_common_cmd_split_tbr">İptaldeki belirsiz başarısızlık nedeniyle geçici bazal bölünmüş</string>
-    <string name="omnipod_common_cmd_play_test_beep">Test Bip Sesi Çal</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">Eşleştirme hatırlatıcısını bitir</string>
-    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Kurulum hatırlatıcısını bitir</string>
     <string name="omnipod_common_alert_expiration">Pod yakında sona erecek</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod yakında sona erecek</string>
     <string name="omnipod_common_alert_shutdown_imminent">Her an kapanabilir</string>
     <string name="omnipod_common_alert_low_reservoir">Düşük Rezervuar</string>
     <string name="omnipod_common_alert_unknown_alert">Bilinmeyen Alarm</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_initialize_pod">Pod\'u Başlat</string>
+    <string name="omnipod_common_cmd_insert_cannula">Kanül Yerleştir</string>
+    <string name="omnipod_common_cmd_deactivate_pod">Pod\'u Devre Dışı Bırak</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Bazal Planı Ayarla</string>
+    <string name="omnipod_common_cmd_set_bolus">Bolusu Ayarla</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Bolusu İptal Et</string>
+    <string name="omnipod_common_cmd_discard_pod">Pod\'u Çıkart</string>
+    <string name="omnipod_common_cmd_get_pod_status">Pod Durumu</string>
+    <string name="omnipod_common_cmd_set_time">Saati Ayarla</string>
+    <string name="omnipod_common_cmd_configure_alerts">Alarmları Yapılandır</string>
+    <string name="omnipod_common_cmd_silence_alerts">Alarmları Sustur</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Nabız Kaydını Oku</string>
+    <string name="omnipod_common_cmd_suspend_delivery">İletimi Askıya Al</string>
+    <string name="omnipod_common_cmd_resume_delivery">İletime devam et</string>
+    <string name="omnipod_common_cmd_get_pod_info">Pod Bilgisi</string>
+    <string name="omnipod_common_cmd_play_test_beep">Test Bip Sesi Çal</string>
+    <string name="omnipod_common_cmd_unknown_entry">Bilinmeyen Giriş</string>
+    <!-- Omnipod - Alerts -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_common_yes">Evet</string>
-    <string name="omnipod_common_no">Hayır</string>
-    <string name="omnipod_common_ok">Tamam</string>
-    <string name="omnipod_common_cancel">İptal</string>
-    <string name="omnipod_common_warning">Uyarı</string>
-    <string name="omnipod_common_disable_suspend_alerts">ASKIYA ALMA UYARILARINI DEVRE DIŞI BIRAK</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Dakika önce</string>
     <string name="omnipod_common_less_than_a_minute_ago">Bir dakikadan az bir süre önce</string>
