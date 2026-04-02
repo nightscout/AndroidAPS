@@ -64,11 +64,20 @@
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_sensitivity">Sensitivitetsdeteksjon</string>
     <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_sync">Kommunikasjon</string>
+    <string name="configbuilder_general">Generelt</string>
+    <string name="protection">Beskyttelse</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
     <string name="confirm">Bekreft</string>
     <string name="pump">Pumpe</string>
+    <string name="pump_management">Pumpestyring</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">Opplaster</string>
+    <string name="uploader_short">OPPL</string>
     <string name="missed_bg_readings">Mangler BS-målinger</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Demp i 5 minutter</string>
@@ -79,6 +88,9 @@
     <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Forlenget bolus</string>
     <string name="paused">Pauset</string>
+    <string name="running">Kjører</string>
+    <string name="open_menu">Åpne meny</string>
+    <string name="close_menu">Lukk meny</string>
     <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">Gammel data</string>
     <string name="goingtodeliver">Leverer %1$.2f enheter</string>
@@ -97,6 +109,11 @@
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Dato</string>
     <string name="units_label">Enheter</string>
+    <string name="insulin_name_label">Insulinnavn</string>
+    <string name="insulin_nickname_label">Kallenavn for insulin</string>
+    <string name="concentration_label">Konsentrasjon</string>
+    <string name="format_concentration">E%1$.0f</string>
+    <string name="peak_label">Topp</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IK</string>
     <string name="isf_label">ISF</string>
@@ -133,6 +150,8 @@
     <string name="time">Tid</string>
     <string name="ns_wifi_ssids">WiFi nettverksnavn</string>
     <string name="loading">Laster…</string>
+    <string name="waiting_for_pump">Venter på pumpen…</string>
+    <string name="initialization_failed">Initialiseringen mislyktes</string>
     <string name="notes_label">Merknader</string>
     <string name="remove_button">Fjern</string>
     <string name="add_new">Legg til ny</string>
@@ -140,8 +159,10 @@
     <string name="wrong_pump_data">Data kommer fra forskjellige pumper. Bytt pumpevalg for å nullstille pumpens tilstand.</string>
     <string name="bg_label">BS</string>
     <string name="calibration">Kalibrering</string>
+    <string name="cgm">CGM</string>
     <string name="alarminxmin">Aktiver alarm om %1$d min</string>
     <string name="treatmentdeliveryerror">Det er registrert en feil med boluslevering. Sjekk manuelt om den er levert og hvor mye</string>
+    <string name="bolus_reminder">Påminnelse om bolus når BS kommer seg igjen</string>
     <string name="duration_label">Varighet</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pumpen er pauset</string>
@@ -165,15 +186,20 @@
     <string name="a11y_inrange">i målområdet</string>
     <string name="a11y_low">lavt</string>
     <string name="average">Gjennomsnitt</string>
+    <string name="tir_short">TIR</string>
+    <string name="tir">Tid i målområde</string>
     <string name="none"><![CDATA[<ingen>]]></string>
     <string name="remove_label">FJERN</string>
     <string name="activate_profile">Aktiver profil</string>
+    <string name="activate_insulin">Aktiver insulin</string>
+    <string name="reset">Tilbakestill</string>
     <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
     <string name="profile">Profil</string>
     <string name="select_for_removal">Velg hva som skal fjernes</string>
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
+    <string name="wear_wizard_settings">Innstillinger for boluskalkulator på klokken</string>
     <string name="bg_trend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -183,6 +209,14 @@
     <string name="logout">Logg ut</string>
     <string name="prime_fill">Prime/fylling</string>
     <string name="site_rotation">Rotasjon av sted</string>
+    <string name="edit_site">Rediger</string>
+    <string name="select_arrow">Velg pil</string>
+    <string name="site_filter_info">Velg hvilken type behandlingshendelse du vil se: Kanylebytte og/eller sensorbytte</string>
+    <string name="selected_location">Valgt: %1$s</string>
+    <string name="last_site_location">Siste sted: %1$s</string>
+    <string name="pick_site">Velg sted</string>
+    <string name="select_site_location">Velg stedplassering</string>
+    <string name="site_location">Stedplassering</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Avbryt midlertidig mål</string>
     <string name="closedloop">Lukket Loop</string>
@@ -190,8 +224,17 @@
     <string name="lowglucosesuspend">Stopp ved lavt BS</string>
     <string name="pump_disconnected">Pumpe frakoblet</string>
     <string name="pump_suspended">Pumpe pauset</string>
+    <string name="pump_suspend">Pause pumpe</string>
+    <string name="pump_resume">Gjenoppta pumpe</string>
     <string name="mode_reverted">Modus tilbakestilt</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="select_insulin">Velg insulin</string>
+    <string name="select_pump_insulin">Velg pumpeinsulin</string>
+    <string name="select_pen_insulin">Velg insulin</string>
+    <string name="insulin_template">Mal</string>
     <string name="dia">DIA</string>
+    <string name="peak">Topp</string>
+    <string name="concentration">Konsentrasjon</string>
     <string name="ic_short">IK</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Kunne ikke avbryte midlertidig basal</string>
@@ -208,6 +251,7 @@
     <string name="extended_bolus_medium">%1$.2f E/t %2$s/%3$s\'</string>
     <string name="nav_export">Eksporter innstillinger</string>
     <string name="location_permission_not_granted">Lokasjonstillatelse er ikke gitt. Tillat i android-innstillinger.</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout-versjon:</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
     <string name="wrongpin">Feil PIN-kode</string>
@@ -282,6 +326,7 @@
     <string name="automation">Automatisering</string>
     <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
+    <string name="add_new_preset">Legg til ny forhåndsinnstilling</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Registrer</string>
@@ -334,6 +379,8 @@
     <string name="expweight">Eksponentielt vektet TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Total daglig dose</string>
     <string name="ratio">Ratio</string>
     <string name="amount_days"># Dager</string>
     <string name="weight">Vekt</string>
@@ -440,6 +487,11 @@
     <string name="ue_none">Ingen enhet</string>
     <string name="uel_loop_change">LOOP ENDRET</string>
     <string name="uel_loop_removed">LOOP FJERNET</string>
+    <string name="uel_new_insulin">NYTT INSULIN</string>
+    <string name="uel_change_pump_insulin">ENDRE PUMPEINSULIN</string>
+    <string name="uel_store_insulin">LAGRE INSULIN</string>
+    <string name="uel_change_insulin_concentration">ENDRE INSULINKONSENTRASJON</string>
+    <string name="uel_insulin_removed">INSULIN FJERNET</string>
     <string name="uel_other">ANNET</string>
     <string name="uel_running_mode">KJØREMODUS</string>
     <string name="uel_running_mode_removed">KJØREMODUS SLETTET</string>
@@ -451,6 +503,8 @@
     <string name="temp_target_high_target">Øvre grense for midlertidig mål</string>
     <string name="temp_target_value">Midlertidig målverdi</string>
     <string name="profile_dia">Profil DIA verdi</string>
+    <string name="insulin_dia">Insulin DIA-verdi</string>
+    <string name="insulin_peak">Insulin toppverdi</string>
     <string name="profile_sensitivity_value">Profilens insulinfølsomhet</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
     <string name="current_basal_value">Nåværende basalverdi</string>
@@ -460,6 +514,16 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
     <string name="basal_value">Basalverdi</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Ingen profil valgt</string>
+    <string name="missing_profile_name">Mangler profilnavn</string>
+    <string name="error_in_ic_values">Feil i IK-forholdstallet</string>
+    <string name="error_in_isf_values">Feil i ISF-verdien</string>
+    <string name="error_in_basal_values">Feil i basalverdiene</string>
+    <string name="error_in_target_values">Feil i målverdier</string>
+    <string name="profile_name_contains_dot">Noen av profilnavnene inneholder punktum.\nDette støttes ikke av NS.\nProfiler lastes ikke opp til NS.</string>
+    <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
+    <string name="errors">Feil</string>
+    <string name="view">Vis</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
     <string name="carbs_g">KARBO %1$d g</string>
@@ -488,6 +552,7 @@
     <string name="sensitivity">Sensitivitet</string>
     <string name="isf_for_carbs">ISF for kalkulator og karboabsorpsjon: %1$.1f</string>
     <string name="autosens_long">Autosens-verdi: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Algoritmens sensitivitet: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">fil</string>
@@ -504,11 +569,33 @@
     <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjonsbolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke boluskalkulatoren igjen når vi gir deg en påminnelse.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Advarsel: Oppdaget treg absorpsjon av karbohydrater: %2$d%% av tiden. Dobbeltsjekk din beregning. COB kan være misvisende og du risikerer å få for mye insulin !!</font>]]></string>
+    <string name="slowabsorptiondetected_plain">!!!!! Langsom karboabsorpsjon oppdaget: %1$d%% av tiden. Dobbeltsjekk beregningen din. COB kan overestimeres, og dermed kan mer insulin gis !!!!!</string>
     <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
+    <string name="wizard_bg_label">BS</string>
+    <string name="wizard_correction">Korreksjon</string>
+    <string name="wizard_subtotal">Delsum</string>
+    <string name="carbs_type_bread">Brød, bakverk, yoghurt, frukt (eple, banan, pære), poteter, ris, bokhvete, havregryn, langsom og lavkarbo mat, grønnsaker</string>
+    <string name="carbs_type_cake">Dumplings, pasta, asiatisk mat rik på karbohydrater og fett, søt gjærbakst, frokostblandinger, grøt med korn, honning, syltetøy</string>
+    <string name="carbs_type_pizza">Lasagne, pizza, hamburgere, pommes frites, bakte poteter, chips og lignende snacks</string>
+    <string name="wizard_ecarbs">eKarbo %1$dg / %2$dt (+%3$dmin)</string>
+    <string name="wizard_total">Total</string>
+    <string name="wizard_carb_time">Karbotid</string>
+    <string name="carb_time_now">Nå</string>
+    <string name="change">Endre</string>
+    <string name="wizard_set_alarm">Sett alarm</string>
+    <string name="wizard_use_percentage">Bruk prosent</string>
+    <string name="wizard_include_bg">Inkluder BS</string>
+    <string name="wizard_include_tt">Inkluder midlertidig mål</string>
+    <string name="wizard_include_trend">Inkluder trend</string>
+    <string name="wizard_include_iob">Inkluder IOB</string>
+    <string name="wizard_include_cob">Inkluder COB</string>
+    <string name="wizard_advanced">Avansert</string>
+    <string name="wizard_calculation">Beregning</string>
     <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
     <string name="carb_equal_zero_no_action">Karbo = 0. Ingen handling utført!</string>
+    <string name="bolus_equal_zero_no_action">Bolus = 0. Ingen handling utført!</string>
     <string name="wizard_no_insulin_required">Insulin er ikke nødvendig!</string>
     <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
     <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
@@ -521,12 +608,14 @@
     <string name="wizard_explain_iob">IOB: %1$.2fE</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
+    <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_explain_percent">Prosent: %1$.2fE x %2$d%% ≈ %3$.2fE</string>
     <string name="wizard_constraint_bolus_size">Insulinbegrensning nådd!\nKan ikke levere %1$.2fE</string>
     <string name="wizard_explain_tt">Midl. mål: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s til %2$s</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
     <string name="quickwizard">Hurtigknapp</string>
+    <string name="quickwizard_managemnt">Hurtigknapp-administrasjon</string>
     <!--    Preferences-->
     <string name="child">Barn</string>
     <string name="teenage">Tenåring</string>
@@ -548,6 +637,7 @@
     <string name="tempbasal_label">Midlertidig basal</string>
     <string name="extended_bolus_label">Forlenget bolus</string>
     <string name="serial_number">Serienummer</string>
+    <string name="last_bolus_format">%1$.2f E %2$s</string>
     <string name="disconnected">Frakoblet</string>
     <string name="connecting">Kobler til</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Trykket på koble til pumpen</string>
@@ -561,6 +651,7 @@
     <string name="device_changed" comment="26 characters max for translation">Enheten er endret</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Feil ved levering av midlertidig basal</string>
+    <string name="ebstopsloop">Bruk av funksjonen Forlenget bolus vil stoppe lukket loop mens den forlengede bolusen kjører. Vil du virkelig at den skal brukes?</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="pump_busy">Pumpen er opptatt</string>
     <string name="connection_error">Tilkoblingsfeil til pumpe</string>
@@ -585,7 +676,9 @@
     <string name="confirmation">Bekreftelse</string>
     <string name="message">Melding</string>
     <string name="ok">OK</string>
+    <string name="next">Neste</string>
     <string name="cancel">Avbryt</string>
+    <string name="dismiss">Forkast</string>
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
     <string name="close">Lukk</string>
@@ -599,6 +692,7 @@
     <string name="export_failed">Mislyktes</string>
     <string name="export_alert">Varsel</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Hovedpassord er ikke angitt!\n\nAngi hovedpassordet ditt i innstillingene (%1$s)</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Innstillinger eksportert</string>
     <string name="export_result_message_failed">Eksport av innstillinger MISLYKTES!</string>
@@ -625,11 +719,31 @@
     <string name="ble_not_supported">Lavenergi Bluetooth er ikke støttet.</string>
     <string name="ble_not_supported_or_not_paired">Lavenergi Bluetooth er ikke støttet eller enheten er ikke sammenkoblet.</string>
     <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
+    <string name="ble_permissions_missing">Bluetooth-tillatelser er ikke gitt. Gi dem tilgang i appinnstillingene.</string>
     <string name="location_not_found_title">Stedstjeneste er ikke aktivert</string>
     <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Innstillinger for plugin</string>
     <!-- Navigation -->
+    <string name="nav_about">Om</string>
+    <string name="nav_about_desc">Se appversjon og informasjon</string>
+    <string name="nav_exit">Avslutt</string>
+    <string name="open_navigation">Åpne meny</string>
+    <string name="nav_history_browser">Historikkleser</string>
+    <string name="nav_history_browser_desc">Bla gjennom historiske data og grafer</string>
+    <string name="overview">Oversikt</string>
+    <string name="appearance">Utseende</string>
+    <string name="manage">Administrer</string>
+    <string name="localprofile">Profil</string>
+    <string name="nav_setupwizard">Oppsettveiviser</string>
+    <string name="nav_setupwizard_desc">Konfigurer AAPS trinn for trinn</string>
+    <string name="statistics">Statistikk</string>
+    <string name="statistics_desc">Se statistikk og rapporter</string>
+    <string name="tdd_cycle_pattern">TDD-syklusmønster</string>
+    <string name="tdd_cycle_pattern_desc">Legg daglige insulintotaler over hverandre i 28-dagers sykluser for å oppdage tilbakevendende mønstre</string>
+    <string name="nav_profile_helper">Profilhjelper</string>
+    <string name="nav_profile_helper_desc">Bygg din profil basert på vekt eller TDD</string>
+    <string name="quick_launch_configure">Konfigurer Hurtigstart</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
     <!-- Site Rotation -->
