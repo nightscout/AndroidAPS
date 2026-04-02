@@ -122,6 +122,9 @@ prin apăsarea manuală a portului de oprire a alarmei de pe plasture așa cum s
     <string name="wizard_exit_activation_warning">Ieșiți din ghidul de activare? Plasturele poate fi lăsat într-o stare incompletă și poate fi nevoie de un nou plasture.</string>
     <string name="wizard_exit_deactivation_warning">Ieșiți din asistentul de dezactivare? Plasturele poate rămâne activ și ar putea continua să administreze insulină.</string>
     <string name="patch_force_reset">Resetare forțată</string>
+    <string name="patch_force_reset_confirm">Aceasta va curăța starea locală a plasturelui fără a trimite comenzi în plasture. Utilizați numai dacă dezactivarea normală eșuează. Plasturele va continua să livreze până când bateria nu mai este descărcată sau este imediat oprită.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
     <!-- Permission rationales -->
+    <string name="permission_exact_alarm_title">Alarme exacte</string>
+    <string name="permission_exact_alarm_description">Aplicația are nevoie de permisiunea de a programa alarmele exacte pentru gestionarea plasturelui</string>
 </resources>
