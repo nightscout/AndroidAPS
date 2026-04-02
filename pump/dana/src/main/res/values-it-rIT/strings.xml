@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Associazione</string>
     <string name="danars_pairingtimedout">Time out associazione</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
@@ -56,7 +55,6 @@
     <string name="danar_history_bolus">Boli</string>
     <string name="danar_history_carbohydrates">Carboidrati</string>
     <string name="danar_history_dailyinsulin">Insulina giornaliera</string>
-    <string name="danar_history_errors">Errori</string>
     <string name="danar_history_glucose">Glicemia</string>
     <string name="danar_history_refill">Riempimento</string>
     <string name="danar_history_syspend">Sospensione</string>
@@ -65,7 +63,6 @@
     <string name="danar_time_display">Formato dell\'ora</string>
     <string name="danar_button_scroll">Scorrimento (tasto)</string>
     <string name="danar_beep">Suono alla pressione del tasto</string>
-    <string name="danar_pump_alarm">Allarme</string>
     <string name="danar_pump_alarm_sound">Suono</string>
     <string name="danar_pump_alarm_vibrate">Vibrazione</string>
     <string name="danar_pump_alarm_both">Entrambi</string>
@@ -87,7 +84,6 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Disabilita modalità EasyUI nel micro</string>
     <string name="profile_set_failed">Impostazione profilo basale fallita</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Impostazioni micro Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
@@ -96,14 +92,11 @@
     <string name="danars_password_title">Password micro (solo v1)</string>
     <string name="danar_password_title">Password micro</string>
     <string name="danar_useextended_title">Usa boli estesi per &gt;200%</string>
-    <string name="bolusspeed">Velocità bolo</string>
     <string name="selectedpump">Micro selezionato</string>
     <string name="rs_loginsulinchange_title">Registra cambio serbatorio</string>
     <string name="rs_loginsulinchange_summary">Aggiungi evento \"cambio insulina\" al portale quando rilevato nello storico</string>
     <string name="rs_logcanulachange_title">Registra cambio cannula</string>
     <string name="rs_logcanulachange_summary">Aggiungi evento \"cambio posizione\" al portale quando rilevato nello storico</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Premi OK sul micro\ne inserisci i 2 numeri visualizzati\nMantieni acceso il display del micro premendo il tasto col simbolo del meno sino a che non hai finito di inserire il codice.</string>
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
