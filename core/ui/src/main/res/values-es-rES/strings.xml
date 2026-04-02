@@ -576,8 +576,26 @@
     <string name="wizard_bg_label">Glucemia</string>
     <string name="wizard_correction">Corrección</string>
     <string name="wizard_subtotal">Subtotal</string>
+    <string name="carbs_type_bread">Pan, pastas saladas, yogurt, fruta (manzana, plátano, pera), patatas, arroz, trigo sarraceno, avena, alimentos de absorción lenta y bajos en carbohidratos, verduras</string>
+    <string name="carbs_type_cake">Empanadillas, pasta, cocina asiática rica en hidratos y grasas, bollería dulce y de masa fermentada (cruasanes, brioches, donuts), cereales, gachas de cereales, miel, mermelada</string>
+    <string name="carbs_type_pizza">Lasaña, pizza, hamburguesas, patatas fritas, patatas de bolsa y snacks similares</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="wizard_total">Total</string>
+    <string name="wizard_carb_time">Hora de los carbohidratos</string>
+    <string name="carb_time_now">Ahora</string>
+    <string name="change">Cambiar</string>
+    <string name="wizard_set_alarm">Establecer alarma</string>
+    <string name="wizard_use_percentage">Porcentaje de uso</string>
+    <string name="wizard_include_bg">Incluir glucosa</string>
+    <string name="wizard_include_tt">Incluir objetivo temporal</string>
+    <string name="wizard_include_trend">Incluir tendencia</string>
+    <string name="wizard_include_iob">Incluir IOB</string>
+    <string name="wizard_include_cob">Incluir COB</string>
+    <string name="wizard_advanced">Avanzado</string>
+    <string name="wizard_calculation">Cálculos</string>
     <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. ¡No se toma ningua acción!</string>
+    <string name="bolus_equal_zero_no_action">Bolo = 0. ¡No se ha realizado ninguna acción!</string>
     <string name="wizard_no_insulin_required">¡No se requiere insulina!</string>
     <string name="wizard_no_actual_bg">¡No hay valor de glucosa reciente en el que basar el cálculo!</string>
     <string name="wizard_no_active_profile">¡No hay perfil activo!</string>
@@ -590,12 +608,14 @@
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
     <string name="wizard_explain_trend">Tendencia 15\': %1$.2fU</string>
+    <string name="wizard_trend_detail">Tendencia 15 min (%1$s %2$s)</string>
     <string name="wizard_explain_percent">Porcentaje: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">¡Violación de restricciones de insulina!\nNo se puede entregar %1$.2fU</string>
     <string name="wizard_explain_tt">BasalT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">¡No hay bomba disponible!</string>
     <string name="quickwizard">Asistente rápido</string>
+    <string name="quickwizard_managemnt">Gestión del Asistente Rápido (QuickWizard)</string>
     <!--    Preferences-->
     <string name="child">Menor de edad</string>
     <string name="teenage">Adolescente</string>
@@ -617,6 +637,7 @@
     <string name="tempbasal_label">Basal temporal</string>
     <string name="extended_bolus_label">Bolo extendido</string>
     <string name="serial_number">Número de serie</string>
+    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">Desconectado</string>
     <string name="connecting">Conectando</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Presiona conectar con la bomba</string>
@@ -630,6 +651,7 @@
     <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolo Correcto</string>
     <string name="temp_basal_delivery_error">Error en la entrega de la basal temporal</string>
+    <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de lazo cerrado (Closed Loop) mientras el bolo esté en curso. ¿Realmente quieres hacerlo?</string>
     <string name="not_set_short">No establecido</string>
     <string name="pump_busy">Bomba ocupada</string>
     <string name="connection_error">Error de conexión de la bomba</string>
@@ -648,7 +670,9 @@
     <string name="confirmation">Confirmación</string>
     <string name="message">Mensaje</string>
     <string name="ok">Ok</string>
+    <string name="next">Siguiente</string>
     <string name="cancel">Cancelar</string>
+    <string name="dismiss">Descartar</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="close">Cerrar</string>
@@ -662,6 +686,10 @@
     <string name="export_failed">Fallido</string>
     <string name="export_alert">ALERTA</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">¡La contraseña maestra no está establecida!\n\nPor favor, establece tu contraseña maestra en Preferencias (%1$s)</string>
+    <string name="export_to">Exportar ajustes a</string>
+    <string name="password_preferences_encrypt_prompt">Se te pedirá la contraseña maestra, que se utilizará para cifrar las preferencias exportadas.</string>
+    <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Ajustes exportados</string>
     <string name="export_result_message_failed">¡Exportación de configuraciónes FALLIDA!</string>
@@ -695,9 +723,44 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferencias del complemento</string>
     <!-- Navigation -->
+    <string name="nav_history_browser">Explorador de historial</string>
+    <string name="nav_history_browser_desc">Explorar datos históricos y gráficas</string>
+    <string name="overview">Resumen</string>
+    <string name="appearance">Apariencia</string>
+    <string name="manage">Administrar</string>
+    <string name="localprofile">Perfil</string>
+    <string name="nav_setupwizard">Asistente de configuración</string>
+    <string name="nav_setupwizard_desc">Configurar AAPS paso a paso</string>
+    <string name="statistics">Estadísticas</string>
+    <string name="statistics_desc">Ver estadísticas e informes</string>
+    <string name="tdd_cycle_pattern">Patrón de Ciclo de Insulina Total Diaria</string>
+    <string name="tdd_cycle_pattern_desc">Superponer totales diarios de insulina en ciclos de 28 días para detectar patrones recurrentes</string>
+    <string name="nav_profile_helper">Ayudante de Perfil</string>
+    <string name="nav_profile_helper_desc">Crea tu perfil basándote en el peso o en la TDD (Dosis Diaria Total)</string>
+    <string name="quick_launch_configure">Configurar Lanzamiento Rápido</string>
+    <string name="quick_launch_configure_desc">Personalizar botones de acción rápida en la vista general</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Alertas locales</string>
     <!-- Actions Screen -->
+    <string name="add">Añadir</string>
+    <string name="remove">Eliminar</string>
+    <string name="reorder">Reordenar</string>
+    <string name="actions">Acciones</string>
+    <string name="status">Estado</string>
+    <string name="pump_actions">Acciones de la bomba</string>
+    <string name="tempbasal_button">Basal temporal</string>
+    <string name="extended_bolus_button">Bolo extendido</string>
+    <string name="tools">Herramientas</string>
+    <string name="device_maintenance">Mantenimiento del dispositivo</string>
+    <string name="from_label">Desde</string>
+    <string name="to_label">Hasta</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulina</string>
+    <string name="pb_label">Batería de la bomba</string>
+    <string name="cannula">Cánula</string>
+    <string name="patch_pump">Bomba parche</string>
     <!-- Site Rotation -->
+    <string name="select_location">Haz clic abajo para seleccionar la zona</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
     <string name="fabric_upload_disabled">¡Carga de registros de fallos desactivada!</string>
@@ -718,6 +781,8 @@
     <string name="cleanup_db_confirm">¿Deseas limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos de más de 3 meses</string>
     <string name="cleanup_db_confirm_sync">¿Deseas limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos de más de 3 meses.\nAl hacerlo, la sincronización completa se acelerará drásticamente</string>
     <string name="cleared_entries">Entradas eliminadas</string>
+    <string name="reset_db_confirm">¿Realmente quieres restablecer las bases de datos?</string>
+    <string name="reset_aps_results_confirm">¿Realmente quieres restablecer los resultados de APS almacenados?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">Dom</string>
     <string name="weekday_saturday_short">Sab</string>
@@ -737,6 +802,7 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Ratio: %1$.2f%% (%2$.2f U/h) Duración: %3$d min</string>
     <string name="rate_percent_duration">Ratio: %1$.2f U/h (%2$.2f%%) Duración: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Ratio</b>: %1$.2f%% (%2$.2f U/h)<br><b>Duración</b>: %3$d min<br>]]></string>
@@ -744,9 +810,21 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"Reproducir audio de AAPS"</string>
     <!-- ProfileEditor -->
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
+    <string name="target_short">OBJ</string>
+    <string name="profile_name">Nombre del perfil:</string>
+    <string name="edit_profile_name">Editar nombre del perfil</string>
+    <string name="units_colon">Unidades:</string>
+    <string name="unsaved_changes">Cambios sin guardar</string>
+    <string name="unsaved_changes_message">Tienes cambios sin guardar. ¿Qué te gustaría hacer?</string>
+    <string name="discard">Descartar</string>
     <string name="ic_dynamic_label_warning">Su algoritmo puede proporcionar un cálculo dinámico del IC. Los valores a continuación solo se utilizarán como reserva en caso de falta de datos o únicamente como valor de referencia</string>
     <string name="isf_dynamic_label_warning">Su algoritmo puede proporcionar un cálculo dinámico del ISF. Los valores a continuación solo se utilizarán como reserva en caso de falta de datos o únicamente como valor de referencia</string>
     <string name="add_time_block">Añadir tramo horario</string>
+    <string name="remove_entry">Eliminar entrada</string>
+    <string name="target_low_label">Bajo</string>
+    <string name="target_high_label">Alto</string>
     <!--    Search-->
     <string name="wiki_search_offline">La búsqueda en la documentación requiere conexión a internet</string>
     <!--    Log Settings-->
@@ -755,4 +833,5 @@
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="ble_scan_select_pump">Seleccione su bomba de la lista a continuación</string>
+    <string name="ble_scan_scanning">Buscando dispositivos…</string>
 </resources>
