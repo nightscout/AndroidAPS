@@ -65,20 +65,4 @@
     <string name="ble_config_remove">Verwijderen</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dagen</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d uur</item>
-        <item quantity="other">%1$d uren</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d uur geleden</item>
-        <item quantity="other">%1$d uur geleden</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d dag geleden</item>
-        <item quantity="other">%1$d dagen geleden</item>
-    </plurals>
 </resources>
