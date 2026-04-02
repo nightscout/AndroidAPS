@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Împerechere</string>
     <string name="danars_pairingtimedout">Conectare nereușită</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
@@ -56,7 +55,6 @@
     <string name="danar_history_bolus">Bolusuri</string>
     <string name="danar_history_carbohydrates">Carbohidrați</string>
     <string name="danar_history_dailyinsulin">Insulină zilnică</string>
-    <string name="danar_history_errors">Erori</string>
     <string name="danar_history_glucose">Glicemie</string>
     <string name="danar_history_refill">Reumplere</string>
     <string name="danar_history_syspend">Suspendare</string>
@@ -65,7 +63,6 @@
     <string name="danar_time_display">Formatul de afișare a timpului</string>
     <string name="danar_button_scroll">Buton derulare</string>
     <string name="danar_beep">Sunet la apăsarea butonului</string>
-    <string name="danar_pump_alarm">Alarmă</string>
     <string name="danar_pump_alarm_sound">Sunet</string>
     <string name="danar_pump_alarm_vibrate">Vibrație</string>
     <string name="danar_pump_alarm_both">Ambele</string>
@@ -87,7 +84,6 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Dezactivează modul EasyUI în pompă</string>
     <string name="profile_set_failed">Setarea profilului bazalei a eșuat</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Setări pompă Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
@@ -96,7 +92,6 @@
     <string name="danars_password_title">Parolă pompă (numai versiunea 1)</string>
     <string name="danar_password_title">Parola pompei</string>
     <string name="danar_useextended_title">Utilizați bolusuri extinse pentru &gt;200%</string>
-    <string name="bolusspeed">Viteză bolusare</string>
     <string name="bolus_speed_12">12 s/U</string>
     <string name="bolus_speed_30">30 s/U</string>
     <string name="bolus_speed_60">60 s/U</string>
@@ -105,15 +100,10 @@
     <string name="rs_loginsulinchange_summary">Adăugare eveniment \"Schimbare insulină\" în NS/Careportal când este detectat în istoric</string>
     <string name="rs_logcanulachange_title">Înregistrează schimbarea canulei</string>
     <string name="rs_logcanulachange_summary">Adăugare eveniment \"Schimbare set\" în portal de îngrijire când este detectat în istoric</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Apăsați OK pe pompă\nşi introduceți cele 2 numere afişate\nPăstraţi ecranul pompei ACTIV apăsând butonul minus până când terminați introducerea codului.</string>
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
     <string name="basal_bolus_step">Etapa bazală/bolus</string>
-    <string name="unpair">Dezasociază</string>
-    <string name="scanning_for_devices">Se scanează pentru dispozitive…</string>
-    <string name="select_your_pump">Selectați-vă pompa din lista de mai jos</string>
     <string name="connecting_to_pump">Conectarea la pompa…</string>
     <string name="pairing_successful">Asociere reușită!</string>
 </resources>
