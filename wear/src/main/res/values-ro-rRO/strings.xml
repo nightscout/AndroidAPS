@@ -274,6 +274,8 @@
     <string name="loop_status_lgs">Suspendare la hipoglicemie</string>
     <string name="loop_status_disabled">Buclă dezactivată</string>
     <string name="loop_status_suspended">Buclă suspendată</string>
+    <string name="loop_status_pump_suspended">Pompă suspendată</string>
+    <string name="loop_status_dst_suspended">Bucla suspendată din cauza orei de vară</string>
     <string name="loop_status_disconnected">Pompă deconectată</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Necunoscut</string>
@@ -290,4 +292,8 @@
     <string name="loop_status_target_range">Interval</string>
     <string name="loop_status_target">Țintă</string>
     <string name="loop_status">Stare buclă</string>
+    <string name="loop_status_refresh">Reîncarcă</string>
+    <string name="confirm">Confirmă</string>
+    <string name="request">Cerință</string>
+    <string name="constraint_applied">Constrângere aplicată!</string>
 </resources>
