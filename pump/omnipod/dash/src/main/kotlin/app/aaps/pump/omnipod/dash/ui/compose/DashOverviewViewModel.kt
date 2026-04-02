@@ -72,6 +72,7 @@ import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Inject
 import app.aaps.pump.omnipod.common.R as CommonR
+import app.aaps.core.ui.R as CoreUiR
 
 @Stable
 @HiltViewModel
@@ -188,10 +189,10 @@ class DashOverviewViewModel @Inject constructor(
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_base_basal_rate), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_temp_basal_rate), value = PLACEHOLDER, visible = false))
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_reservoir), value = PLACEHOLDER))
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.reservoir_label), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_total_delivered), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_active_alerts), value = PLACEHOLDER))
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_errors), value = PLACEHOLDER))
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.errors), value = PLACEHOLDER))
         } else {
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_unique_id), value = podStateManager.uniqueId.toString()))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_lot_number), value = podStateManager.lotNumber.toString()))
@@ -264,7 +265,7 @@ class DashOverviewViewModel @Inject constructor(
 
             // Reservoir
             val (reservoirText, reservoirLevel) = buildReservoir()
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_reservoir), value = reservoirText, level = reservoirLevel))
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.reservoir_label), value = reservoirText, level = reservoirLevel))
 
             // Total delivered
             val totalDelivered = if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
@@ -286,7 +287,7 @@ class DashOverviewViewModel @Inject constructor(
             }
             val errorsText = if (errors.isEmpty()) PLACEHOLDER else errors.joinToString("\n")
             val errorsLevel = if (errors.isEmpty()) StatusLevel.NORMAL else StatusLevel.CRITICAL
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_errors), value = errorsText, level = errorsLevel))
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.errors), value = errorsText, level = errorsLevel))
         }
     }
 
@@ -391,7 +392,7 @@ class DashOverviewViewModel @Inject constructor(
             if (profile == null) {
                 _events.tryEmit(
                     OmnipodOverviewEvent.ShowDialog(
-                        rh.gs(CommonR.string.omnipod_common_warning),
+                        rh.gs(CoreUiR.string.warning),
                         rh.gs(CommonR.string.omnipod_common_error_failed_to_set_profile_empty_profile)
                     )
                 )
@@ -564,7 +565,7 @@ class DashOverviewViewModel @Inject constructor(
             } else {
                 _events.tryEmit(
                     OmnipodOverviewEvent.ShowErrorDialog(
-                        rh.gs(CommonR.string.omnipod_common_warning),
+                        rh.gs(CoreUiR.string.warning),
                         rh.gs(CommonR.string.omnipod_common_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment)
                     )
                 )

@@ -266,7 +266,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         // Primary actions
         val primaryActions = listOf(
             PumpAction(
-                label = rh.gs(R.string.refresh_label),
+                label = rh.gs(app.aaps.core.ui.R.string.refresh),
                 iconRes = app.aaps.core.ui.R.drawable.ic_refresh,
                 category = ActionCategory.PRIMARY,
                 enabled = canRefresh,

@@ -83,7 +83,7 @@ class MedtronicComposeContent(
             }
         }
 
-        val rlStatsTitle = stringResource(app.aaps.pump.common.hw.rileylink.R.string.rileylink_settings_tab1)
+        val rlStatsTitle = stringResource(app.aaps.core.ui.R.string.settings)
         val rlStatsNavIcon: @Composable () -> Unit = {
             IconButton(onClick = { showRileyLinkStats = false }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))

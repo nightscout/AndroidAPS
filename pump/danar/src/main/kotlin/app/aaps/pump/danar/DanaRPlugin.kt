@@ -418,8 +418,8 @@ class DanaRPlugin @Inject constructor(
                 AdaptiveListIntPreference(
                     ctx = context,
                     intKey = DanaIntKey.BolusSpeed,
-                    title = app.aaps.pump.dana.R.string.bolusspeed,
-                    dialogTitle = app.aaps.pump.dana.R.string.bolusspeed,
+                    title = app.aaps.core.ui.R.string.bolusspeed,
+                    dialogTitle = app.aaps.core.ui.R.string.bolusspeed,
                     entries = speedEntries,
                     entryValues = speedValues
                 )

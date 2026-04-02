@@ -183,7 +183,7 @@ class MedtronicOverviewViewModel @Inject constructor(
         // Errors
         val errorsText = medtronicPumpStatus.errorInfo
         val errorsLevel = if (errorsText != PLACEHOLDER) StatusLevel.CRITICAL else StatusLevel.NORMAL
-        add(PumpInfoRow(label = rh.gs(R.string.medtronic_errors), value = errorsText, level = errorsLevel))
+        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.errors), value = errorsText, level = errorsLevel))
     }
 
     private fun buildPumpStatusText(): String {
@@ -394,7 +394,7 @@ class MedtronicOverviewViewModel @Inject constructor(
     private fun emitNotConfiguredDialog() {
         _events.tryEmit(
             MedtronicOverviewEvent.ShowDialog(
-                rh.gs(R.string.medtronic_warning),
+                rh.gs(app.aaps.core.ui.R.string.warning),
                 rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration)
             )
         )

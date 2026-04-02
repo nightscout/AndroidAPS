@@ -33,7 +33,7 @@ internal fun AttachStepContent(
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.next),
+            text = stringResource(app.aaps.core.ui.R.string.next),
             onClick = onNext
         ),
         secondaryButton = WizardButton(

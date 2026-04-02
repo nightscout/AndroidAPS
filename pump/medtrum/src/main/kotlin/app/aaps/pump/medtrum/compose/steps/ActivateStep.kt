@@ -77,8 +77,8 @@ internal fun ActivateStepContent(
 ) {
     WizardStepLayout(
         primaryButton = when (state) {
-            ActivateState.ACTIVATING -> WizardButton(text = stringResource(R.string.next), onClick = {}, loading = true)
-            ActivateState.ERROR      -> WizardButton(text = stringResource(R.string.retry), onClick = onRetry)
+            ActivateState.ACTIVATING -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = {}, loading = true)
+            ActivateState.ERROR      -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.retry), onClick = onRetry)
             ActivateState.COMPLETE   -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.ok), onClick = onComplete)
         },
         secondaryButton = if (state != ActivateState.COMPLETE) WizardButton(

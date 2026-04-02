@@ -62,7 +62,7 @@ class DanaHistoryViewModel @Inject constructor(
             add(PumpHistoryType(RecordTypes.RECORD_TYPE_CARBO, rh.gs(R.string.danar_history_carbohydrates)))
             add(PumpHistoryType(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.danar_history_dailyinsulin)))
             add(PumpHistoryType(RecordTypes.RECORD_TYPE_GLUCOSE, rh.gs(R.string.danar_history_glucose)))
-            if (!isKorean && !isRS) add(PumpHistoryType(RecordTypes.RECORD_TYPE_ERROR, rh.gs(R.string.danar_history_errors)))
+            if (!isKorean && !isRS) add(PumpHistoryType(RecordTypes.RECORD_TYPE_ERROR, rh.gs(app.aaps.core.ui.R.string.errors)))
             if (isRS) add(PumpHistoryType(RecordTypes.RECORD_TYPE_PRIME, rh.gs(R.string.danar_history_prime)))
             if (!isKorean) {
                 add(PumpHistoryType(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.danar_history_refill)))

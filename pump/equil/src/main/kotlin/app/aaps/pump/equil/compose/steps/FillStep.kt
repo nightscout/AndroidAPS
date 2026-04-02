@@ -60,7 +60,7 @@ private fun FillStepContent(
 ) {
     WizardStepLayout(
         primaryButton = if (fillComplete) WizardButton(
-            text = stringResource(R.string.equil_common_wizard_button_next),
+            text = stringResource(app.aaps.core.ui.R.string.next),
             onClick = onNext
         ) else null,
         secondaryButton = WizardButton(

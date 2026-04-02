@@ -93,12 +93,12 @@ fun EopatchOverviewScreen(
                     showSuspendConfirmDialog = false
                     showSuspendTimePicker = true
                 }) {
-                    Text(stringResource(R.string.confirm))
+                    Text(stringResource(app.aaps.core.ui.R.string.confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showSuspendConfirmDialog = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(app.aaps.core.ui.R.string.cancel))
                 }
             }
         )
@@ -139,7 +139,7 @@ fun EopatchOverviewScreen(
                     viewModel.pauseBasal(suspendDurations[selectedDurationIndex])
                     selectedDurationIndex = 0
                 }) {
-                    Text(stringResource(R.string.confirm))
+                    Text(stringResource(app.aaps.core.ui.R.string.confirm))
                 }
             },
             dismissButton = {
@@ -147,7 +147,7 @@ fun EopatchOverviewScreen(
                     showSuspendTimePicker = false
                     selectedDurationIndex = 0
                 }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(app.aaps.core.ui.R.string.cancel))
                 }
             }
         )
@@ -164,12 +164,12 @@ fun EopatchOverviewScreen(
                     showResumeDialog = false
                     viewModel.resumeBasal()
                 }) {
-                    Text(stringResource(R.string.confirm))
+                    Text(stringResource(app.aaps.core.ui.R.string.confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showResumeDialog = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(app.aaps.core.ui.R.string.cancel))
                 }
             }
         )

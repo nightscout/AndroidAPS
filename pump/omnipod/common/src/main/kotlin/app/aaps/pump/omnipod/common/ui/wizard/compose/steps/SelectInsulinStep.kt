@@ -15,8 +15,8 @@ import app.aaps.core.data.model.ICfg
 import app.aaps.core.ui.compose.insulin.SelectInsulin
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
-import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * Insulin selection step — shown when more than one insulin is configured.
@@ -33,17 +33,17 @@ fun SelectInsulinStep(
 
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.omnipod_common_wizard_button_next),
+            text = stringResource(CoreUiR.string.next),
             onClick = { viewModel.moveToNext() },
             enabled = selectedInsulin != null
         ),
         secondaryButton = WizardButton(
-            text = stringResource(R.string.omnipod_common_cancel),
+            text = stringResource(CoreUiR.string.cancel),
             onClick = onCancel
         )
     ) {
         Text(
-            text = stringResource(app.aaps.core.ui.R.string.select_insulin_description),
+            text = stringResource(CoreUiR.string.select_insulin_description),
             style = MaterialTheme.typography.bodyLarge
         )
 

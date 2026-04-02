@@ -413,7 +413,7 @@ class DanaRv2Plugin @Inject constructor(
             key = "danar_v2_settings"
             title = rh.gs(R.string.danar_pump_settings)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.BolusSpeed, title = R.string.bolusspeed, dialogTitle = R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.BolusSpeed, title = app.aaps.core.ui.R.string.bolusspeed, dialogTitle = app.aaps.core.ui.R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
         }
     }
 }

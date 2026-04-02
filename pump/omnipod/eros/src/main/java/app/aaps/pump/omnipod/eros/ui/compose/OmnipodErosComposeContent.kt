@@ -91,7 +91,7 @@ class OmnipodErosComposeContent(
             } else if (showRileyLinkStats) {
                 setToolbarConfig(
                     ToolbarConfig(
-                    title = context.getString(app.aaps.pump.common.hw.rileylink.R.string.rileylink_settings_tab1),
+                    title = context.getString(app.aaps.core.ui.R.string.settings),
                     navigationIcon = {
                         IconButton(onClick = { showRileyLinkStats = false }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))

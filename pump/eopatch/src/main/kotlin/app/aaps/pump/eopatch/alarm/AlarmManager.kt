@@ -146,7 +146,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
 
         // Critical alarms trigger the global alarm sound overlay
         if (isCritical) {
-            uiInteraction.runAlarm(alarmMsg, resourceHelper.gs(R.string.string_alarm), app.aaps.core.ui.R.raw.error)
+            uiInteraction.runAlarm(alarmMsg, resourceHelper.gs(app.aaps.core.ui.R.string.alarm), app.aaps.core.ui.R.raw.error)
         }
 
         notificationManager.post(
@@ -158,8 +158,8 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             actions = listOf(NotificationAction(
                 when (alarmCode) {
                     B001            -> app.aaps.core.ui.R.string.pump_resume
-                    AlarmCode.A007  -> R.string.retry
-                    else            -> R.string.confirm
+                    AlarmCode.A007  -> app.aaps.core.ui.R.string.retry
+                    else            -> app.aaps.core.ui.R.string.confirm
                 }
             ) {
                 compositeDisposable.add(

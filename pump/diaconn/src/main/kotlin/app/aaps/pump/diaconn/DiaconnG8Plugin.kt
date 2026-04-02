@@ -565,7 +565,7 @@ class DiaconnG8Plugin @Inject constructor(
             key = "diaconn_settings"
             title = rh.gs(R.string.diaconn_g8_pump)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DiaconnIntKey.BolusSpeed, title = R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DiaconnIntKey.BolusSpeed, title = app.aaps.core.ui.R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogInsulinChange, title = R.string.diaconn_g8_loginsulinchange_title, summary = R.string.diaconn_g8_loginsulinchange_summary))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogCannulaChange, title = R.string.diaconn_g8_logcanulachange_title, summary = R.string.diaconn_g8_logcanulachange_summary))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DiaconnBooleanKey.LogTubeChange, title = R.string.diaconn_g8_logtubechange_title, summary = R.string.diaconn_g8_logtubechange_summary))

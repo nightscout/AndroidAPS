@@ -44,12 +44,12 @@ fun RileyLinkStatusScreen(
             Tab(
                 selected = pagerState.currentPage == 0,
                 onClick = { scope.launch { pagerState.animateScrollToPage(0) } },
-                text = { Text(stringResource(R.string.rileylink_settings_tab1)) }
+                text = { Text(stringResource(app.aaps.core.ui.R.string.settings)) }
             )
             Tab(
                 selected = pagerState.currentPage == 1,
                 onClick = { scope.launch { pagerState.animateScrollToPage(1) } },
-                text = { Text(stringResource(R.string.rileylink_settings_tab2)) }
+                text = { Text(stringResource(app.aaps.core.ui.R.string.history)) }
             )
         }
 

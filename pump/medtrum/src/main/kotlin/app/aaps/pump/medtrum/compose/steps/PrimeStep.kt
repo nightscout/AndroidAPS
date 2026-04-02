@@ -84,10 +84,10 @@ internal fun PrimeStepContent(
 ) {
     WizardStepLayout(
         primaryButton = when (state) {
-            PrimeState.READY    -> WizardButton(text = stringResource(R.string.next), onClick = onStartPrime)
-            PrimeState.PRIMING  -> WizardButton(text = stringResource(R.string.next), onClick = {}, loading = true)
-            PrimeState.ERROR    -> WizardButton(text = stringResource(R.string.retry), onClick = onRetry)
-            PrimeState.COMPLETE -> WizardButton(text = stringResource(R.string.next), onClick = onNext)
+            PrimeState.READY    -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onStartPrime)
+            PrimeState.PRIMING  -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = {}, loading = true)
+            PrimeState.ERROR    -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.retry), onClick = onRetry)
+            PrimeState.COMPLETE -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onNext)
         },
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),

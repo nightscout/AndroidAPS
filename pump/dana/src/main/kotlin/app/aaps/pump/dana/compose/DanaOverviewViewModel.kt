@@ -199,7 +199,7 @@ open class DanaOverviewViewModel @Inject constructor(
         if (isConfigured) {
             add(
                 PumpAction(
-                    label = rh.gs(R.string.unpair),
+                    label = rh.gs(app.aaps.core.ui.R.string.pump_unpair),
                     icon = Icons.Filled.Bluetooth,
                     category = ActionCategory.MANAGEMENT,
                     onClick = { onUnpairClick() }
@@ -208,7 +208,7 @@ open class DanaOverviewViewModel @Inject constructor(
         } else {
             add(
                 PumpAction(
-                    label = rh.gs(R.string.danars_pairing),
+                    label = rh.gs(app.aaps.core.ui.R.string.pairing),
                     icon = Icons.Filled.Bluetooth,
                     category = ActionCategory.MANAGEMENT,
                     onClick = { onPairClick() }
@@ -358,7 +358,7 @@ open class DanaOverviewViewModel @Inject constructor(
             if (pump.hwModel != 0) {
                 add(
                     PumpInfoRow(
-                        label = rh.gs(R.string.firmware_label),
+                        label = rh.gs(app.aaps.core.ui.R.string.firmware),
                         value = rh.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
                     )
                 )

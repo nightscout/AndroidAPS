@@ -14,7 +14,7 @@ import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
 fun RemoveStep(viewModel: EopatchPatchViewModel) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.confirm),
+            text = stringResource(app.aaps.core.ui.R.string.confirm),
             onClick = { viewModel.onConfirm() }
         )
     ) {
@@ -34,7 +34,7 @@ fun RemoveStep(viewModel: EopatchPatchViewModel) {
 private fun RemoveStepPreview() {
     MaterialTheme {
         WizardStepLayout(
-            primaryButton = WizardButton(text = stringResource(R.string.confirm), onClick = {})
+            primaryButton = WizardButton(text = stringResource(app.aaps.core.ui.R.string.confirm), onClick = {})
         ) {
             Text(text = stringResource(R.string.patch_discard_complete_title), style = MaterialTheme.typography.titleLarge)
             Text(text = stringResource(R.string.patch_discard_complete_desc), style = MaterialTheme.typography.bodyMedium)

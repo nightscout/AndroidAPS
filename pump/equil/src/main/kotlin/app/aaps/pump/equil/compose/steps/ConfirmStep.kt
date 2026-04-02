@@ -46,7 +46,7 @@ private fun ConfirmStepContent(
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.equil_common_wizard_button_finish),
+            text = stringResource(app.aaps.core.ui.R.string.finish),
             onClick = onFinish,
             loading = isLoading
         ),

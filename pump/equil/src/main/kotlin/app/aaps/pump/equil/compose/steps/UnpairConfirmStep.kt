@@ -51,7 +51,7 @@ private fun UnpairConfirmStepContent(
     if (unpairResult != null) {
         WizardStepLayout(
             primaryButton = WizardButton(
-                text = stringResource(R.string.equil_common_wizard_button_finish),
+                text = stringResource(app.aaps.core.ui.R.string.finish),
                 onClick = onDismissResult
             )
         ) {
@@ -63,7 +63,7 @@ private fun UnpairConfirmStepContent(
     } else {
         WizardStepLayout(
             primaryButton = WizardButton(
-                text = stringResource(R.string.equil_common_wizard_button_finish),
+                text = stringResource(app.aaps.core.ui.R.string.finish),
                 onClick = onConfirm,
                 loading = isLoading
             ),

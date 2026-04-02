@@ -76,7 +76,7 @@ internal fun ConfirmDeactivateContent(
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.next),
+            text = stringResource(app.aaps.core.ui.R.string.next),
             onClick = onNext
         ),
         secondaryButton = WizardButton(
@@ -130,10 +130,10 @@ internal fun DeactivatingContent(
 ) {
     WizardStepLayout(
         primaryButton = if (isError) WizardButton(
-            text = stringResource(R.string.discard),
+            text = stringResource(app.aaps.core.ui.R.string.discard),
             onClick = onDiscard
         ) else WizardButton(
-            text = stringResource(R.string.next),
+            text = stringResource(app.aaps.core.ui.R.string.next),
             onClick = {},
             loading = true
         ),
@@ -170,7 +170,7 @@ internal fun DeactivateCompleteContent(
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.next),
+            text = stringResource(app.aaps.core.ui.R.string.next),
             onClick = onNewPatch
         ),
         secondaryButton = WizardButton(

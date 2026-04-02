@@ -171,9 +171,9 @@ class EopatchPatchViewModel @Inject constructor(
     val commCheckCancelLabel: String
         get() = rh.gs(
             when (_patchStep.value) {
-                PatchStep.CONNECT_NEW       -> isBonded.takeOne(R.string.cancel, R.string.patch_cancel_pairing)
+                PatchStep.CONNECT_NEW       -> isBonded.takeOne(app.aaps.core.ui.R.string.cancel, R.string.patch_cancel_pairing)
                 PatchStep.SAFE_DEACTIVATION -> R.string.patch_forced_discard
-                else                        -> R.string.cancel
+                else                        -> app.aaps.core.ui.R.string.cancel
             }
         )
 

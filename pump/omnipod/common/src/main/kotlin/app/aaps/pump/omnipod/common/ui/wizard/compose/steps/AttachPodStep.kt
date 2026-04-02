@@ -13,6 +13,7 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.omnipod.common.R
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * AttachPod info step with a confirmation dialog before proceeding to cannula insertion.
@@ -59,11 +60,11 @@ internal fun AttachPodStepContent(
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.omnipod_common_wizard_button_next),
+            text = stringResource(CoreUiR.string.next),
             onClick = onNext
         ),
         secondaryButton = WizardButton(
-            text = stringResource(R.string.omnipod_common_cancel),
+            text = stringResource(CoreUiR.string.cancel),
             onClick = onCancel
         )
     ) {

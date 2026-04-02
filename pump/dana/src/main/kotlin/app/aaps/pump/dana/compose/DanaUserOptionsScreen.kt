@@ -143,7 +143,7 @@ private fun DanaUserOptionsContent(
                     // Alarm mode
                     Column(modifier = itemModifier) {
                         Text(
-                            text = stringResource(R.string.danar_pump_alarm),
+                            text = stringResource(app.aaps.core.ui.R.string.alarm),
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )

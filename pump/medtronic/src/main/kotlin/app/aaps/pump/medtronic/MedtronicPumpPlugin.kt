@@ -625,7 +625,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Set time on pump.", timeDiff))
                 rileyLinkMedtronicService?.medtronicUIComm?.executeCommand(MedtronicCommandType.SetRealTimeClock)
                 if (clock.timeDifference == 0) {
-                    notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, R.string.pump_time_updated, validMinutes = 60)
+                    notificationManager.post(NotificationId.INSIGHT_DATE_TIME_UPDATED, app.aaps.core.ui.R.string.pump_time_updated, validMinutes = 60)
                 }
             } else {
                 if (clock.localDeviceTime.year > 2015) {
@@ -694,7 +694,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread {
                         SystemClock.sleep(2000)
-                        uiInteraction.runAlarm(rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), app.aaps.core.ui.R.raw.boluserror)
+                        uiInteraction.runAlarm(rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(app.aaps.core.ui.R.string.warning), app.aaps.core.ui.R.raw.boluserror)
                     }.start()
                 }
                 val now = System.currentTimeMillis()
@@ -726,7 +726,7 @@ class MedtronicPumpPlugin @Inject constructor(
         setRefreshButtonEnabled(true)
         if (isBolus) bolusDeliveryType = BolusDeliveryType.Idle
         return if (success) pumpEnactResultProvider.get().success(true).enacted(false)
-        else pumpEnactResultProvider.get().success(false).enacted(false).comment(R.string.medtronic_pump_status_pump_unreachable)
+        else pumpEnactResultProvider.get().success(false).enacted(false).comment(app.aaps.core.ui.R.string.pump_unreachable)
     }
 
     override fun stopBolusDelivering() {
@@ -746,7 +746,7 @@ class MedtronicPumpPlugin @Inject constructor(
             return pumpEnactResultProvider.get() //
                 .success(false) //
                 .enacted(false) //
-                .comment(R.string.medtronic_pump_status_pump_unreachable)
+                .comment(app.aaps.core.ui.R.string.pump_unreachable)
         }
         medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable)
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: ${absoluteRate}, duration= $durationInMinutes")
@@ -1058,7 +1058,7 @@ class MedtronicPumpPlugin @Inject constructor(
             return pumpEnactResultProvider.get() //
                 .success(false) //
                 .enacted(false) //
-                .comment(R.string.medtronic_pump_status_pump_unreachable)
+                .comment(app.aaps.core.ui.R.string.pump_unreachable)
         }
         medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable)
         setRefreshButtonEnabled(false)
@@ -1152,7 +1152,7 @@ class MedtronicPumpPlugin @Inject constructor(
             return pumpEnactResultProvider.get() //
                 .success(false) //
                 .enacted(false) //
-                .comment(R.string.medtronic_pump_status_pump_unreachable)
+                .comment(app.aaps.core.ui.R.string.pump_unreachable)
         }
         medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable)
         val basalProfile = convertProfileToMedtronicProfile(profile)

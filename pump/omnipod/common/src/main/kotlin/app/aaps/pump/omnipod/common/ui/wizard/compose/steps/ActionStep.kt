@@ -14,6 +14,7 @@ import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActionState
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardViewModel
 
 /**
@@ -76,13 +77,13 @@ internal fun ActionStepContent(
         primaryButton = when (actionState) {
             is ActionState.Idle,
             is ActionState.Executing -> WizardButton(
-                text = stringResource(R.string.omnipod_common_wizard_button_next),
+                text = stringResource(CoreUiR.string.next),
                 onClick = {},
                 loading = true
             )
 
             is ActionState.Success   -> WizardButton(
-                text = stringResource(R.string.omnipod_common_wizard_button_next),
+                text = stringResource(CoreUiR.string.next),
                 onClick = onNext
             )
 
@@ -93,7 +94,7 @@ internal fun ActionStepContent(
                 )
             } else {
                 WizardButton(
-                    text = stringResource(R.string.omnipod_common_wizard_button_retry),
+                    text = stringResource(CoreUiR.string.retry),
                     onClick = onRetry
                 )
             }
@@ -101,7 +102,7 @@ internal fun ActionStepContent(
         secondaryButton = when (actionState) {
             is ActionState.Success -> null
             else                   -> WizardButton(
-                text = stringResource(R.string.omnipod_common_cancel),
+                text = stringResource(CoreUiR.string.cancel),
                 onClick = onCancel,
                 enabled = actionState !is ActionState.Executing
             )
