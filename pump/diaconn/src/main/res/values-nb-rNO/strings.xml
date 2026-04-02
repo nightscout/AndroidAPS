@@ -128,4 +128,13 @@
     <string name="diaconn_g8_errorcode_36">Stopp av midlertidig basal avslått siden det ikke kjøres en midlertidig basal</string>
     <string name="diaconn_g8_cloudsend_summary">Send pumpe logger til Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
+    <string name="bolus_speed_1">1 E/min</string>
+    <string name="bolus_speed_2">2 E/min</string>
+    <string name="bolus_speed_3">3 E/min</string>
+    <string name="bolus_speed_4">4 E/min</string>
+    <string name="bolus_speed_5">5 E/min</string>
+    <string name="bolus_speed_6">6 E/min</string>
+    <string name="bolus_speed_7">7 E/min</string>
+    <string name="bolus_speed_8">8 E/min</string>
+    <string name="diaconn_pairing_successful">Paringen er vellykket!</string>
 </resources>
