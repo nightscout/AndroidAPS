@@ -201,11 +201,24 @@
     <string name="use_cob">Bruk COB</string>
     <string name="use_iob">Bruk IOB</string>
     <string name="use_trend">Bruk trend</string>
-    <string name="trend_all">Alt</string>
+    <string name="trend_all">Alle</string>
     <string name="trend_positive_only">Kun positiv</string>
     <string name="trend_negative_only">Kun negativ</string>
+    <string name="use_temp_target">Bruk midlertidig mål</string>
+    <string name="use_alarm">Bruk alarm</string>
+    <string name="device_selection">Enhetsvalg</string>
+    <string name="show_on_phone">Vis på telefon</string>
+    <string name="show_on_watch">Vis på klokke</string>
+    <string name="ecarbs_additional">Ekstra karbo</string>
+    <string name="valid_from_to">Gyldig tidsperiode</string>
+    <string name="carb_time">Karbotid</string>
+    <string name="no_quickwizard_entries">Ingen Hurtigknapp-oppføringer. Trykk på + for å legge til en.</string>
+    <string name="save_changes_question">Lagre endringer i denne oppføringen?</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="change_your_input">Endre dine inndata!</string>
+    <string name="wizard_no_insulin_required">Insulin er ikke nødvendig</string>
+    <string name="carbs_constraint_violation">Karbo begrenset av begrensninger</string>
+    <string name="insulin_constraint_violation">Insulin begrenset av begrensninger</string>
     <string name="confirm_treatment">Bekreft behandling</string>
     <string name="recalculate">Rekalkuler</string>
     <!--    Widget-->
@@ -214,7 +227,20 @@
     <string name="until_changed">Inntil endret</string>
     <string name="limitations">Begrensninger</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Tillatelser kreves</string>
+    <string name="permission_sheet_subtitle">Noen tillatelser er nødvendige for at appen skal fungere ordentlig</string>
+    <string name="permission_grant">Tillat</string>
+    <string name="permission_change">Endre</string>
+    <string name="permission_denied_go_to_settings">Tillatelse nektet permanent. Vennligst aktiver det i appinnstillingene.</string>
+    <string name="permission_open_settings">Innstillinger</string>
+    <string name="permission_directory_picker_error">Kan ikke starte mappe-velgeren. Vanligvis et problem med Android eller Family Link.</string>
+    <string name="permission_nav_label">Tillatelser</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Syklusforskyvning</string>
+    <string name="raw_tdd">Rå TDD</string>
+    <string name="cleaned_tdd">Renset TDD</string>
+    <string name="cleaned_tdd_explanation">TDD minus insulin for karbo.</string>
+    <string name="cycle_lines_legend">Individuelle sykluser</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Begge</item>
         <item>Kun positiv</item>
