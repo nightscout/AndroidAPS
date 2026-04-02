@@ -24,6 +24,10 @@
     <string name="password_not_changed">Passordet er ikke endret</string>
     <string name="pin_not_changed">PIN-koden er ikke endret</string>
     <string name="pin_cleared">PIN-kode fjernet!</string>
+    <string name="protection_password_hint">Skriv inn passordet her</string>
+    <string name="protection_pin_hint">Skriv inn PIN-koden her</string>
+    <string name="auth_hint_master_password">Skriv inn hovedpassordet</string>
+    <string name="auth_hint_master_or_pin">Skriv inn hovedpassordet eller PIN-kode</string>
     <string name="master_password_not_set">Hovedpassord ikke satt</string>
     <string name="aaps_directory_not_selected">AAPS-mappe ikke valgt</string>
 </resources>
