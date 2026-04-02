@@ -109,4 +109,13 @@
     <string name="pairing_successful_message">Pumpen din er nå tilkoblet og klar til bruk.</string>
     <string name="cancel_pairing_title">Avbryte paring?</string>
     <string name="cancel_pairing_message">Paringsprosessen vil bli avbrutt.</string>
+    <string name="done">Ferdig</string>
+    <string name="open_bluetooth_settings">Åpne Bluetooth-innstillinger</string>
+    <string name="enter_pump_password">Skriv inn pumpepassordet</string>
+    <string name="select_paired_device">Velg paret enhet</string>
+    <string name="no_paired_devices">Ingen parkoblede Dana-enheter funnet. Par først pumpen i Android Bluetooth-innstillingene.</string>
+    <string name="password_hint">4-siffer passord (0–9999)</string>
+    <string name="connecting_verifying">Kobler til og verifiserer passord…</string>
+    <string name="password_ok">Passord verifisert!</string>
+    <string name="password_wrong">Feil passord. Gå tilbake og korriger det.</string>
 </resources>
