@@ -252,6 +252,10 @@
     <string name="nav_export">Eksporter innstillinger</string>
     <string name="location_permission_not_granted">Lokasjonstillatelse er ikke gitt. Tillat i android-innstillinger.</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-versjon:</string>
+    <string name="not_available_full">Ikke tilgjengelig</string>
+    <string name="engineering_mode_enabled">Engineering mode aktivert</string>
+    <string name="back">Bakside</string>
+    <string name="show_hide_records">Skjul loop-poster</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
     <string name="wrongpin">Feil PIN-kode</string>
@@ -274,6 +278,16 @@
     <string name="reason">Årsak</string>
     <string name="nochangerequested">Ingen endring behøves</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Insulin %1$s bekreftet</string>
+    <string name="current_insulin">Aktiv for øyeblikket</string>
+    <string name="change_insulin">Endre</string>
+    <string name="select_insulin_description">Velg insulinet du fyller pumpen med. Et profilbytte vil bli brukt etter aktivering/priming.</string>
+    <string name="bolus_delivered">%1$.2f E / %2$.2f E</string>
+    <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
+    <string name="pump_insulin_cu">%1$.2f CU</string>
+    <string name="pump_insulin_cu1">%1$.1f CU</string>
+    <string name="selected_insulin">Valgt insulin: %1$s</string>
+    <string name="record_insulin_hint">Hvis du registrerer insulin som gis med penn, velg riktig insulintype nedenfor. Dosen er alltid i internasjonale enheter.</string>
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
     <!--    Temptarget-->
@@ -301,6 +315,7 @@
     <string name="careportal_dad_alert">Logg varsel fra diabetes-hund</string>
     <string name="careportal_insulin_cartridge_change">Bytte insulinreservoar</string>
     <string name="careportal_profileswitch">Profilbytte</string>
+    <string name="profile_management">Profiladministrasjon</string>
     <string name="careportal_snackbolus">Mellommåltidsbolus</string>
     <string name="careportal_mealbolus">Måltidsbolus</string>
     <string name="careportal_correctionbolus">Korreksjonsbolus</string>
@@ -311,10 +326,39 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Bytte pumpebatteri</string>
     <string name="temporary_target">Midlertidig mål</string>
+    <string name="temporary_targets">Midlertidige mål</string>
     <string name="running_mode">Kjøremodus</string>
     <string name="careportal_temporarytargetvalue">Midlertidig målverdi</string>
     <string name="careportal_temporarytargetcancel">Avbryt midlertidig mål</string>
     <string name="boluswizard">Boluskalkulator</string>
+    <string name="treatment_desc">Registrer insulin og karbo sammen</string>
+    <string name="treatment_insulin_desc">Lever bolus manuelt</string>
+    <string name="treatment_carbs_desc">Registrer karbo uten insulin</string>
+    <string name="treatment_calculator_desc">Beregn bolus</string>
+    <string name="insulin_management">Administrasjon av insulin</string>
+    <string name="manage_insulin_desc">Administrer og aktiver insulinkonfigurasjoner</string>
+    <string name="concentration_disable_blocked">Kan ikke deaktivere konsentrasjonsstøtte mens ikke-U100-insuliner finnes. Fjern alle ikke-U100-insulinkonfigurasjoner og bytt til en U100-profil først.</string>
+    <string name="simple_mode_blocked_by_concentration">Kan ikke aktivere Enkelmodus når du bruker insulin som ikke er U100. Bytt til U100-insulin først.</string>
+    <string name="manage_profile_desc">Administrer og aktiver profiler</string>
+    <string name="manage_temp_target_desc">Administrer og sett midlertidige mål</string>
+    <string name="manage_temp_basal_desc">Start midlertidig basal</string>
+    <string name="manage_extended_bolus_desc">Start levering av forlenget bolus</string>
+    <string name="manage_site_rotation_desc">Spor og roter infusjonssteder</string>
+    <string name="manage_quickwizard_desc">Administrer forhåndsinnstillinger for hurtigknapper</string>
+    <string name="treatment_note_desc">Legg til et notat i postene dine</string>
+    <string name="treatment_question_desc">Logg et spørsmål for omsorgsteamet</string>
+    <string name="treatment_cgm_desc">Åpne CGM-app</string>
+    <string name="treatment_calibration_desc">Kalibrer CGM-sensor</string>
+    <string name="treatment_bg_check_desc">Registrer blodsukkermåling</string>
+    <string name="treatment_exercise_desc">Logg treningsaktivitet</string>
+    <string name="treatment_announcement_desc">Publiser melding</string>
+    <string name="treatment_sensor_insert_desc">Registrer innsetting av CGM-sensor</string>
+    <string name="treatment_battery_change_desc">Registrer batteribytte i pumpen</string>
+    <string name="treatment_cannula_change_desc">Registrer bytte av kanyle/infusjonssett</string>
+    <string name="treatment_fill_desc">Prime og fylle kanylen</string>
+    <string name="temp_basal">Midlertidig basal</string>
+    <string name="user_entry">Brukeroppføring</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
@@ -326,6 +370,12 @@
     <string name="automation">Automatisering</string>
     <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
+    <string name="preset_settings">Forhåndsinnstilte innstillinger</string>
+    <string name="activation">Aktivering</string>
+    <string name="temp_target_management">Administrasjon av midlertidig mål</string>
+    <string name="revert_to_defaults">Tilbakestill til standardinnstillinger</string>
+    <string name="confirm_remove_preset">Fjerne forhåndsinnstillingen %1$s?</string>
+    <string name="confirm_cancel_temp_target">Avbryt aktivt midlertidig mål?</string>
     <string name="add_new_preset">Legg til ny forhåndsinnstilling</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -693,6 +743,9 @@
     <string name="export_alert">Varsel</string>
     <!-- Export dialog strings -->
     <string name="master_password_missing">Hovedpassord er ikke angitt!\n\nAngi hovedpassordet ditt i innstillingene (%1$s)</string>
+    <string name="export_to">Eksporter innstillinger til</string>
+    <string name="password_preferences_encrypt_prompt">Du vil bli bedt om å oppgi hovedpassordet, som vil brukes til å kryptere eksporterte innstillinger.</string>
+    <string name="preferences_export_canceled">Eksporten ble avbrutt! Innstillingene ble IKKE eksportert!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Innstillinger eksportert</string>
     <string name="export_result_message_failed">Eksport av innstillinger MISLYKTES!</string>
@@ -700,8 +753,36 @@
     <string name="export_result_message_expired">Eksport av innstillinger avbrutt: passord utløpt. Eksporter manuelt og skriv inn passord på nytt!</string>
     <string name="export_result_message_disabled">Advarsel (automatisering): Eksport av innstillinger er ikke aktivert!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Skyeksporten var vellykket</string>
+    <string name="export_cloud_failed">Skyeksport MISLYKKET!</string>
+    <string name="csv_exported">Brukeroppføringer eksportert</string>
+    <string name="csv_export_failed">Eksport av brukeroppføringer MISLYKKET!</string>
+    <string name="logs_sent">Logger sendt via e-post</string>
+    <string name="logs_send_failed">Kunne ikke sende logger</string>
+    <string name="export_options">Eksportalternativer</string>
+    <string name="cloud_directory">Skymappe</string>
+    <string name="export_settings_local">Eksporter innstillinger (lokalt)</string>
+    <string name="export_settings_cloud">Eksporter innstillinger (sky)</string>
+    <string name="export_settings_both">Eksporter innstillinger (lokalt + sky)</string>
+    <string name="import_settings_local">Importer innstillinger (lokalt)</string>
+    <string name="import_settings_cloud">Importer innstillinger (sky)</string>
+    <string name="import_settings_both">Importer innstillinger (lokalt/sky)</string>
+    <string name="send_logs_to_cloud">Eksporter logger til skyen</string>
+    <string name="export_csv_to_cloud">Eksporter brukeroppføringer til skyen (CSV)</string>
+    <string name="export_csv_to_local">Eksporter brukeroppføringer lokalt (CSV)</string>
+    <string name="setup_cloud_directory_first">Sett opp skymappe først for å bruke Eksportinnstillinger</string>
+    <string name="cloud_token_expired_or_invalid">Autorisasjonen for skylagring er utløpt eller ugyldig. Godkjenn på nytt.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Lokal</string>
+    <string name="chip_cloud">Sky</string>
+    <string name="chip_email">E-post</string>
+    <string name="send_logs">Send logger</string>
+    <string name="file_management">Filbehandling</string>
+    <string name="database_management">Databasebehandling</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Konfigurer loggnivåer</string>
+    <string name="maintenance_send_logs_desc">Del loggfiler for feilsøking</string>
+    <string name="maintenance_delete_logs_desc">Fjern gamle loggfiler</string>
     <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
@@ -744,9 +825,29 @@
     <string name="nav_profile_helper">Profilhjelper</string>
     <string name="nav_profile_helper_desc">Bygg din profil basert på vekt eller TDD</string>
     <string name="quick_launch_configure">Konfigurer Hurtigstart</string>
+    <string name="quick_launch_configure_desc">Tilpass hurtigstartsknapper i oversikten</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Lokale varsler</string>
     <!-- Actions Screen -->
+    <string name="add">Legg til</string>
+    <string name="remove">Fjern</string>
+    <string name="reorder">Endre rekkefølge</string>
+    <string name="actions">Handlinger</string>
+    <string name="status">Status</string>
+    <string name="pump_actions">Pumpehandlinger</string>
+    <string name="tempbasal_button">Midlertidig basal</string>
+    <string name="extended_bolus_button">Forlenget bolus</string>
+    <string name="tools">Verktøy</string>
+    <string name="device_maintenance">Enhetsvedlikehold</string>
+    <string name="from_label">Fra</string>
+    <string name="to_label">Til</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="pb_label">Pumpebatteri</string>
+    <string name="cannula">Kanyle</string>
+    <string name="patch_pump">Patchpumpe</string>
     <!-- Site Rotation -->
+    <string name="select_location">Klikk nedenfor for å velge stedsplassering</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Ikke steng appen min?</string>
     <string name="fabric_upload_disabled">Opplast av krasjlogger er deaktivert!</string>
@@ -767,6 +868,8 @@
     <string name="cleanup_db_confirm">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.</string>
     <string name="cleanup_db_confirm_sync">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.\nÅ gjøre dette vil øke hastigheten på synkronisering betydelig.</string>
     <string name="cleared_entries">Fjernet oppføringer</string>
+    <string name="reset_db_confirm">Vil du virkelig tilbakestille databasene?</string>
+    <string name="reset_aps_results_confirm">Vil du virkelig tilbakestille lagrede APS-resultater?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">Søn</string>
     <string name="weekday_saturday_short">Lør</string>
@@ -786,6 +889,7 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f E</string>
     <string name="format_insulin_units">%1$.2f E</string>
+    <string name="format_insulin_units_signed">%1$+.2f E</string>
     <string name="percent_rate_duration">Dose: %1$.2f%% (%2$.2f E/t) Varighet: %3$d min</string>
     <string name="rate_percent_duration">Dose: %1$.2f E/t (%2$.2f%%) Varighet: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Dose</b>: %1$.2f%% (%2$.2f E/t)<br><b>Varighet</b>: %3$d min<br>]]></string>
@@ -793,9 +897,75 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS spiller av lyd"</string>
     <!-- ProfileEditor -->
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
+    <string name="target_short">MÅL</string>
+    <string name="profile_name">Profilnavn:</string>
+    <string name="edit_profile_name">Rediger profilnavn</string>
+    <string name="units_colon">Enheter:</string>
+    <string name="unsaved_changes">Ulagrede endringer</string>
+    <string name="isf_dynamic_label_warning">Algoritmen din kan gi dynamisk beregning av ISF. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data eller bare som en referanseverdi</string>
+    <string name="add_time_block">Legg til tidsblokk</string>
+    <string name="remove_entry">Fjern oppføring</string>
+    <string name="target_low_label">Lav</string>
+    <string name="target_high_label">Høy</string>
+    <string name="select_profile">Velg profil du vil redigere</string>
+    <string name="a11y_add_new_profile">legg til ny profil</string>
+    <string name="a11y_clone_profile">klone gjeldende profil</string>
+    <string name="a11y_delete_current_profile">slett gjeldende profil</string>
     <!--    Search-->
+    <string name="search">Søk</string>
+    <string name="search_preferences">Søk i innstillinger</string>
+    <string name="clear">Tøm</string>
+    <string name="search_category_categories">Innstillingskategorier</string>
+    <string name="search_category_preferences">Innstillinger</string>
+    <string name="search_category_dialogs">Dialoger</string>
+    <string name="search_category_plugins">Plugins</string>
+    <string name="search_category_wiki">Dokumentasjon</string>
+    <string name="wiki_search_offline">Søk etter dokumentasjon krever internettforbindelse</string>
+    <string name="no_search_results">Ingen resultater funnet</string>
+    <string name="search_plugin_disabled">Plugin %1$s deaktivert</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Logginnstillinger</string>
+    <string name="resettodefaults">Tilbakestill til standardinnstillinger</string>
     <!--    Maintenance-->
+    <string name="maintenance">Vedlikehold</string>
+    <string name="description_maintenance">Tilbyr flere funksjoner for vedlikehold (f.eks. loggsending, loggsletting).</string>
+    <string name="log_files">Loggfiler</string>
+    <string name="send_all_logs">Send logger via e-post</string>
+    <string name="delete_logs">Slett logger</string>
+    <string name="logs_deleted">Logger slettet</string>
+    <string name="aaps_directory">AAPS-mappe</string>
+    <string name="import_setting">Importer innstillinger</string>
+    <string name="miscellaneous">Annet</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Dekrypter &amp; Gjennomgå</string>
+    <string name="import_decrypt">Dekrypter</string>
+    <string name="import_master_password">Hovedpassord</string>
+    <string name="import_decryption_password">Dekrypteringspassord</string>
+    <string name="import_different_password_hint">Filen ble kryptert med et annet passord</string>
+    <string name="import_wrong_password">Feil passord</string>
+    <string name="import_btn">Import</string>
+    <string name="import_anyway_btn">Importer uansett</string>
+    <string name="import_restart_title">Innstillinger importert</string>
+    <string name="import_restart_message">Innstillingene er importert. Appen må startes på nytt.</string>
+    <string name="import_file_details">Fildetaljer</string>
+    <string name="import_source_local">Lokal</string>
+    <string name="import_source_cloud">Sky</string>
+    <string name="import_load_more">Last inn mer</string>
+    <string name="import_no_files">Ingen innstillingsfiler funnet</string>
+    <string name="import_review_summary">Sammendrag av import</string>
+    <string name="import_decrypt_ok">Dekryptering vellykket. Klar til import.</string>
+    <string name="import_decrypt_warn">Dekrypteringen var vellykket, men det finnes advarsler.</string>
+    <string name="import_decrypt_error">Dekrypteringen var vellykket, men importen er ikke mulig.</string>
+    <string name="import_check_before">Vennligst sjekk innstillingene før importering:</string>
+    <string name="import_check_dangerous">Innstillinger skal ikke importeres!</string>
+    <string name="import_check_cannot">Innstillingene kan ikke importeres!</string>
+    <string name="import_explain_issues">Forklar importproblemer\u2026</string>
+    <string name="reset_aps_results">Tilbakestill APS-resultater</string>
+    <string name="database_cleanup">Opprydding av databasen</string>
+    <string name="nav_resetdb">Tilbakestill databaser</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="ble_scan_select_pump">Velg pumpen din fra listen nedenfor</string>
+    <string name="ble_scan_scanning">Skanner etter enheter…</string>
 </resources>
