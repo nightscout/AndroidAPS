@@ -3,12 +3,9 @@
     <string name="equil_pump_description">Equil 5.3 nebo novější pumpa </string>
     <!--  start  -->
     <string name="equil_basal_speed">Základní bazál</string>
-    <string name="equil_date_device">Poslední připojení</string>
     <string name="equil_dressing">Vyměnit zásobník</string>
     <string name="equil_dressing_onkey_msg">Automatické přetáčení pístu do výchozí polohy. Po dosažení dna se automaticky zastaví. V případě potřeby akci přerušte kliknutím na tlačítko \"Stop\".</string>
-    <string name="equil_finish">Dokončit</string>
     <string name="equil_hint_dressing">Tato operace zastaví vydávání inzulínu, a způsobí přetočení pístu do výchozí polohy!</string>
-    <string name="equil_history">Historie</string>
     <string name="equil_insulin_reservoir">Zásobník inzulínu</string>
     <string name="equil_mode">Spuštěný režim</string>
     <string name="equil_mode_running">Spuštěno</string>
@@ -25,7 +22,6 @@
     <string name="equil_tone_mode_tone">Pouze zvuky</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrace a zvuky</string>
     <string name="equil_unit_u">%1$s U</string>
-    <string name="equil_unit_u_hours">%1$s U/h</string>
     <string name="equil_ble_config_confirmation_title">Spárovat Equil patch pumpu</string>
     <string name="equil_error">Chyba připojení</string>
     <string name="equil_change">Vyměnit pumpu</string>
@@ -42,18 +38,15 @@
     <string name="equil_pump_not_run">Pumpa neběží</string>
     <string name="equil_pair">Párovat</string>
     <string name="equil_pair_error">Chyba párování</string>
-    <string name="equil_retry">Opakovat</string>
     <string name="equil_fill">Plnění/doplňování</string>
     <string name="equil_air">Odstranit vzduch</string>
     <string name="equil_temp_basal_rate">Dočasný bazál</string>
     <string name="equil_total_delivered">Celkem vydáno</string>
-    <string name="equil_last_bolus">Poslední bolus</string>
     <string name="equil_firmware_version">Verze firmwaru</string>
     <string name="equil_shutdown_be">Equil bude automaticky vypnuta</string>
     <string name="equil_shutdown">Equil auto off</string>
     <string name="equil_common_history_tbr_value">Rychlost： %1$.2f U/h，trvání： %2$d minut</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
-    <string name="equil_history_type">Typ：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Poslat bolus</string>
     <string name="equil_common_cmd_cancel_bolus">Zrušit bolus</string>
@@ -66,7 +59,6 @@
     <string name="equil_common_cmd_pair">Párovat Equil</string>
     <string name="equil_common_cmd_insert_cannula">Vložit kanylu</string>
     <string name="equil_common_cmd_unpair">Zrušit párování Equil</string>
-    <string name="equil_common_cmd_alarm">Alarm</string>
     <string name="equil_common_cmd_set_extended_bolus">Nastavit prodloužený bolus</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Zrušit prodloužený bolus</string>
     <!--    推杆回退-->
@@ -119,8 +111,6 @@
     <string name="equil_common_less_than_a_minute_ago">Před méně než minutou</string>
     <string name="equil_common_time_ago">před %1$s</string>
     <string name="equil_common_composite_time">%1$s a %2$s</string>
-    <string name="equil_common_wizard_button_finish">Dokončit</string>
-    <string name="equil_common_wizard_button_next">Další</string>
     <string name="equil_common_wizard_exit_confirmation_text">Dosud jste nedokončili všechny kroky. Jste si jisti, že chcete skončit?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Odejít</string>
     <plurals name="equil_common_minutes">
@@ -152,7 +142,6 @@
     <string name="equil_insert2">Pumpa nesmí být připojena k základně.</string>
     <string name="equil_attach">Připojte pumpu k základně</string>
     <string name="equil_hint2">Naplnit kanylu</string>
-    <string name="equil_unpair">Deaktivivat starou pumpu %1$s?</string>
     <string name="equil_pump_updated">Pumpa aktualizována</string>
     <string name="equil_replace_reservoir">Zásobník je prázdný. Prosím vyměňte zásobník</string>
     <string name="error_mustbe6hexadidits">Musí mít 6 znaků z ABCDEF0123456789</string>
