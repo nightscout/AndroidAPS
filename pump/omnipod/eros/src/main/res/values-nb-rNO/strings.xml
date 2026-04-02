@@ -44,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">En midlertidig basal utføres på Pod, men AAPS har ingen informasjon om denne midlertidige basalen. Vennligst avbryt midlertidig basal manuelt.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink statistikk</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Tilbakestill RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Les Pulslogg</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulslogg</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulslogg (kopiert til utklippstavlen)</string>
