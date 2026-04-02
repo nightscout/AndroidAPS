@@ -188,4 +188,32 @@
     <string name="garmin_request_key">Solicitar clave</string>
     <string name="garmin_request_key_summary">Clave opcional para securizar la comunicación HTTP entre el dispositivo Garmin y AAPS.</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicador por SMS</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Control remoto de AAPS mediante comandos SMS.</string>
+    <string name="smscommunicator_code_verify_info">El código de verificación consta de los 6 dígitos que muestra la aplicación Authenticator (conocido como OTP), seguidos de los 3 o más dígitos del PIN obligatorio.</string>
+    <string name="smscommunicator_otp_reset_prompt">¿Está seguro de que desea restablecer la clave del Authenticator? Esto invalidará todos los autenticadores configurados actualmente y deberá configurarlos de nuevo.</string>
+    <string name="smscommunicator_otp_reset_successful">¡Se ha generado una nueva clave del Authenticator! Por favor, utilice el código QR actualizado para configurar los authenticators.</string>
+    <string name="smscommunicator_otp_export_title">Exportando la clave secreta OTP</string>
+    <string name="smscommunicator_otp_export_prompt">¿Está seguro de que desea copiar la clave secreta OTP al portapapeles?\n\nEs posible que solo necesite esto si su aplicación de autenticación tiene problemas para escanear el código QR, si desea introducirla manualmente o si desea configurar un token OTP físico (hardware) mediante una aplicación dedicada.</string>
+    <string name="smscommunicator_temptarget_cancel">Para cancelar el Objetivo Temporal, responda con el código %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Para desactivar el Servicio Remoto por SMS, responda con el código %1$s.\n\nTenga en cuenta que solo podrá reactivarlo directamente desde el teléfono principal de AAPS.</string>
+    <string name="smscommunicator_stopped_sms">Servicio remoto por SMS detenido. Para reactivarlo, utilice AAPS en el teléfono principal.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Para enviar la calibración %1$.2f responda con el código %2$s</string>
+    <string name="smscommunicator_bolus_failed">Fallo en el bolo. ¡Verifique el estado real antes de enviar otro comando!</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Número mínimo de minutos que deben transcurrir entre un bolo remoto y el siguiente</string>
+    <string name="smscommunicator_remote_bolus_min_distance">Minutos mínimos que deben transcurrir entre un bolo y el siguiente. Por su seguridad, para editar esta preferencia debe añadir al menos 2 números de teléfono. De lo contrario, se utilizarán 15 min.</string>
+    <string name="smscommunicator_bolus_delivered">Bolo de %1$.2f U administrado con éxito</string>
+    <string name="smscommunicator_meal_bolus_delivered">Bolo de comida de %1$.2f U administrado con éxito</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Objetivo de %1$s por %2$d minutos</string>
+    <string name="smscommunicator_tt_set">Objetivo de %1$s por %2$d minutos establecido con éxito</string>
+    <string name="smscommunicator_tt_canceled">Objetivo temporal cancelado con éxito</string>
+    <string name="sms_last_bg">Última glucemia:</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolo:</string>
+    <string name="sms_basal">Basal:</string>
+    <string name="sms_min_ago">hace %1$d min</string>
+    <string name="sms_loop_suspended_for">Suspendido (%1$d min)</string>
+    <string name="permission_sms_title">SMS</string>
 </resources>
