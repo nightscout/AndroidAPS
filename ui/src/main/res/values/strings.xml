@@ -184,6 +184,8 @@
     <string name="basal_pct_from_tdd_label">% of basal</string>
     <string name="selected_profile">Selected:</string>
     <string name="comparation">Comparation</string>
+    <string name="profile_tab_1">Profile 1</string>
+    <string name="profile_tab_2">Profile 2</string>
     <string name="motol_default_profile">Default profile</string>
     <string name="current_profile">Current profile</string>
     <string name="available_profile">Available profile</string>
