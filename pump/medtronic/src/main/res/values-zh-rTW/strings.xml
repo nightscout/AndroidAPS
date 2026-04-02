@@ -12,6 +12,7 @@
     <string name="medtronic_pump_encoding">Medtronic 編碼</string>
     <string name="medtronic_custom_action_wake_and_tune">喚醒並調整</string>
     <string name="medtronic_custom_action_clear_bolus_block">清除注射阻塞</string>
+    <string name="medtronic_custom_action_reset_rileylink">重設 RileyLink</string>
     <string name="medtronic_pump_battery_select">電池類型（電源檢視）</string>
     <string name="medtronic_pump_battery_no">未選擇（簡易檢視）</string>
     <string name="medtronic_pump_battery_alkaline">鹼性電池（延長檢視）</string>
