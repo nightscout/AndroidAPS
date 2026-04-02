@@ -169,6 +169,8 @@
     <string name="basal_pct_from_tdd_label">% av basal</string>
     <string name="selected_profile">Valgt:</string>
     <string name="comparation">Sammenligning</string>
+    <string name="profile_tab_1">Profil 1</string>
+    <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Standard profil</string>
     <string name="current_profile">Gjeldende profil</string>
     <string name="available_profile">Tilgjengelige profiler</string>
