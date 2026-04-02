@@ -97,6 +97,9 @@
     <string name="danar_password_title">Parola pompei</string>
     <string name="danar_useextended_title">Utilizați bolusuri extinse pentru &gt;200%</string>
     <string name="bolusspeed">Viteză bolusare</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Pompa selectată</string>
     <string name="rs_loginsulinchange_title">Înregistrează schimbarea rezervorului</string>
     <string name="rs_loginsulinchange_summary">Adăugare eveniment \"Schimbare insulină\" în NS/Careportal când este detectat în istoric</string>
@@ -108,4 +111,9 @@
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
     <string name="basal_bolus_step">Etapa bazală/bolus</string>
+    <string name="unpair">Dezasociază</string>
+    <string name="scanning_for_devices">Se scanează pentru dispozitive…</string>
+    <string name="select_your_pump">Selectați-vă pompa din lista de mai jos</string>
+    <string name="connecting_to_pump">Conectarea la pompa…</string>
+    <string name="pairing_successful">Asociere reușită!</string>
 </resources>
