@@ -3,11 +3,9 @@
     <string name="equil_pump_description">Equil Patch 5.3 ar naujesnė pompa </string>
     <!--  start  -->
     <string name="equil_basal_speed">Bazinis insulinas</string>
-    <string name="equil_date_device">Paskutinis prisijungimas</string>
     <string name="equil_dressing">Rezervuaro keitimas</string>
     <string name="equil_dressing_onkey_msg">Stūmoklis automatiškai perkeliamas į rezervuaro dugną. Pasiekus dugną, jis automatiškai sustos. Jei reikia, spustelėkite „Stop“, kad nutrauktumėte veiksmą.</string>
     <string name="equil_hint_dressing">Ši operacija sustabdys insulino leidimą ir inicijuos pompos stūmoklio atitraukimą iki apačios!</string>
-    <string name="equil_history">Istorija</string>
     <string name="equil_insulin_reservoir">Insulino rezervuaras</string>
     <string name="equil_mode">Darbinis režimas</string>
     <string name="equil_mode_running">Vykdoma</string>
@@ -24,7 +22,6 @@
     <string name="equil_tone_mode_tone">Tik garsas</string>
     <string name="equil_tone_mode_tone_and_shake">Vibracija ir garsas</string>
     <string name="equil_unit_u">%1$s vv</string>
-    <string name="equil_unit_u_hours">%1$s vv/val.</string>
     <string name="equil_ble_config_confirmation_title">Suporuoti Equil patch pompą</string>
     <string name="equil_error">Sujungimo klaida</string>
     <string name="equil_change">Pakeisti pompą</string>
@@ -41,18 +38,15 @@
     <string name="equil_pump_not_run">Pompa neaktyvi</string>
     <string name="equil_pair">Poravimas</string>
     <string name="equil_pair_error">Poravimo klaida</string>
-    <string name="equil_retry">Kartoti</string>
     <string name="equil_fill">Užpildymas</string>
     <string name="equil_air">Išleisti orą</string>
     <string name="equil_temp_basal_rate">Laikina bazė</string>
     <string name="equil_total_delivered">Iš viso suleista</string>
-    <string name="equil_last_bolus">Paskutinis bolusas</string>
     <string name="equil_firmware_version">Programinės įrangos versija</string>
     <string name="equil_shutdown_be">Equil atsijungs automatiškai</string>
     <string name="equil_shutdown">Equil automatinis atsijungimas</string>
     <string name="equil_common_history_tbr_value">Dydis： %1$.2f vv/val，trukmė： %2$d minutės</string>
     <string name="equil_common_history_bolus_value">%1$.2f vv</string>
-    <string name="equil_history_type">Tipas：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Nustatyti bolusą</string>
     <string name="equil_common_cmd_cancel_bolus">Atšaukti bolusą</string>
@@ -65,7 +59,6 @@
     <string name="equil_common_cmd_pair">Suporuoti Equil</string>
     <string name="equil_common_cmd_insert_cannula">Įvesti kaniulę</string>
     <string name="equil_common_cmd_unpair">Panaikinti Equil suporavimą</string>
-    <string name="equil_common_cmd_alarm">Aliarmas</string>
     <string name="equil_common_cmd_set_extended_bolus">Nustatyti ištęstą bolusą</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Atšaukti ištęstą bolusą</string>
     <!--    推杆回退-->
@@ -118,8 +111,6 @@
     <string name="equil_common_less_than_a_minute_ago">Mažiau nei prieš minutę</string>
     <string name="equil_common_time_ago">prieš %1$s</string>
     <string name="equil_common_composite_time">%1$s ir %2$s</string>
-    <string name="equil_common_wizard_button_finish">Užbaigti</string>
-    <string name="equil_common_wizard_button_next">Toliau</string>
     <string name="equil_common_wizard_exit_confirmation_text">Dar nesate užbaigę visų žingsnių. Ar tikrai norite išeiti?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Išeiti</string>
     <plurals name="equil_common_minutes">
@@ -150,7 +141,6 @@
     <string name="equil_insert2">Pompa neturi būti ant pompos pagrindo.</string>
     <string name="equil_attach">Prijunkite pompą prie jos pagrindo</string>
     <string name="equil_hint2">Užpildyti kaniulę</string>
-    <string name="equil_unpair">Deaktyvuoti seną pompą%1$s?</string>
     <string name="equil_pump_updated">Pompa atnaujinta</string>
     <string name="equil_replace_reservoir">Rezervuaras tuščias. Pakeiskite rezervuarą</string>
     <string name="error_mustbe6hexadidits">Turi būti 6 simboliai iš ABCDEF0123456789</string>
