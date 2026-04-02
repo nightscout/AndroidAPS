@@ -137,4 +137,5 @@
     <string name="bolus_speed_7">7 E/min</string>
     <string name="bolus_speed_8">8 E/min</string>
     <string name="diaconn_pairing_successful">Paringen er vellykket!</string>
+    <string name="diaconn_pairing_successful_message">Pumpen din er nå tilkoblet og klar til bruk.</string>
 </resources>
