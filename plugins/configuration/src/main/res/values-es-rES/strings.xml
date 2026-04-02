@@ -59,6 +59,7 @@
     <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_aps_description">¿Qué algoritmo APS quieres usar para ajustar tu tratamiento?</string>
     <string name="configbuilder_general_description">Algunos ajustes generales que pueden ser de utilidad</string>
+    <string name="configbuilder_sync_description">Complementos de carga de datos, sincronización y comunicación.</string>
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
     <string name="configbuilder_loop_description">Usa esto para habilitar la integración de bucle de AAPS.</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
