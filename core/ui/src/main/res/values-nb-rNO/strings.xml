@@ -785,7 +785,22 @@
     <string name="maintenance_delete_logs_desc">Fjern gamle loggfiler</string>
     <string name="maintenance_aaps_directory_desc">Velg lokal lagringsmappe</string>
     <string name="maintenance_cloud_directory_desc">Sett opp skylagring (Google Drive)</string>
+    <string name="maintenance_export_desc">Lagre sikkerhetskopi av krypterte innstillinger</string>
+    <string name="maintenance_import_desc">Gjenopprett innstillinger fra sikkerhetskopi</string>
+    <string name="maintenance_export_csv_desc">Eksporter behandlingshistorikk som regneark</string>
+    <string name="maintenance_cleanup_db_desc">Fjern gamle oppføringer fra databasen</string>
+    <string name="maintenance_reset_aps_results_desc">Fjern lagrede algoritmeresultater</string>
+    <string name="maintenance_reset_db_desc">Slett alle databaser og start på nytt</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Velg lagringstype</string>
+    <string name="clear_cloud_action">Tøm innstillinger</string>
+    <string name="clear_cloud_settings">Tøm skyinnstillinger</string>
+    <string name="clear_cloud_settings_message">Dette vil bytte til lokal lagring og fjerne autorisasjon. Fortsette?</string>
+    <string name="cloud_connection_failed">Tilkobling til skylagring mislyktes</string>
+    <string name="cloud_reauthorize_message">Tilkobling til skylagring mislyktes. Vil du autentisere på nytt?</string>
+    <string name="reauthorize">Autentiser på nytt</string>
+    <string name="cloud_auth_success">Autentisering av skylagring vellykket</string>
+    <string name="authorization_status">Autorisasjonsstatus</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
@@ -797,6 +812,8 @@
     <string name="need_connect_permission">Appen trenger bluetooth-tillatelse</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Brukerforespørsel</string>
+    <string name="pump_pair">Paring</string>
+    <string name="pump_unpair">Opphev paring</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Lavenergi Bluetooth er ikke støttet.</string>
@@ -906,6 +923,9 @@
     <string name="edit_profile_name">Rediger profilnavn</string>
     <string name="units_colon">Enheter:</string>
     <string name="unsaved_changes">Ulagrede endringer</string>
+    <string name="unsaved_changes_message">Du har ulagrede endringer. Hva vil du gjøre?</string>
+    <string name="discard">Forkast</string>
+    <string name="ic_dynamic_label_warning">Algoritmen din kan gi dynamisk beregning av IK. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data eller bare som en referanseverdi</string>
     <string name="isf_dynamic_label_warning">Algoritmen din kan gi dynamisk beregning av ISF. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data eller bare som en referanseverdi</string>
     <string name="add_time_block">Legg til tidsblokk</string>
     <string name="remove_entry">Fjern oppføring</string>
