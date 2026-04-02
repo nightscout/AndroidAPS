@@ -241,10 +241,36 @@
     <string name="cleaned_tdd">Renset TDD</string>
     <string name="cleaned_tdd_explanation">TDD minus insulin for karbo.</string>
     <string name="cycle_lines_legend">Individuelle sykluser</string>
+    <string name="cycles_found">%1$d sykluser (%2$d dager)</string>
+    <string name="cycle_day1_date">Dag 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Beregner… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Ikke nok data (trenger minst 56 dager for 2 sykluser)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Begge</item>
         <item>Kun positiv</item>
         <item>Kun negativ</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Valgte handlinger</string>
+    <string name="quick_launch_available_actions">Tilgjengelige handlinger</string>
+    <string name="quick_launch_no_dynamic_items">Ingen ting tilgjengelig</string>
+    <string name="quick_launch_category_treatment">Behandling</string>
+    <string name="quick_launch_category_care">Helseportal</string>
+    <string name="quick_launch_category_profile">Profil</string>
+    <string name="quick_launch_category_temp_target">Forhåndsinnstilte midlertidig mål</string>
+    <string name="quick_launch_category_quick_wizard">Hurtigknapp</string>
+    <string name="quick_launch_category_automation">Automasjon</string>
+    <string name="quick_launch_all_selected">Alle elementer valgt</string>
+    <string name="quick_launch_no_quick_wizard">Legg til hurtigknapp-oppføringer for å bruke dem her</string>
+    <string name="quick_launch_no_automation">Legg til automasjon-brukerhandlinger for å bruke dem her</string>
+    <string name="quick_launch_no_tt_presets">Legg til forhåndsinnstillinger for midlertidige mål for å bruke dem her</string>
+    <string name="quick_launch_no_profiles">Opprett profiler i Lokal profil for å bruke dem her</string>
+    <string name="quick_launch_edit_profile_preset">Rediger forhåndsinnstilling for profil</string>
+    <string name="quick_launch_profile_percentage">Prosent</string>
+    <string name="quick_launch_profile_duration">Varighet</string>
+    <string name="quick_launch_profile_permanent">Permanent</string>
+    <string name="quick_launch_profile_confirm">Aktiver profil %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Velg pil</string>
 </resources>
