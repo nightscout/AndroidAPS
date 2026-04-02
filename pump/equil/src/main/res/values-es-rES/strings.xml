@@ -15,6 +15,8 @@
     <string name="equil_stop">Detener</string>
     <string name="equil_success">Éxito</string>
     <string name="equil_title_dressing">Cambiar cartucho</string>
+    <string name="equil_title_serial">Emparejar dispositivo</string>
+    <string name="equil_title_fill">Cebado / Llenado</string>
     <string name="equil_title_history_events">Historial de eventos</string>
     <string name="equil_tone">Tono de alerta</string>
     <string name="equil_tone_mode_mute">Silenciar</string>
@@ -22,6 +24,7 @@
     <string name="equil_tone_mode_tone">Sólo sonido</string>
     <string name="equil_tone_mode_tone_and_shake">Vibración y sonido</string>
     <string name="equil_unit_u">%1$s U</string>
+    <string name="equil_unbind_content">¡Esta operación detendrá la infusión de insulina y retraerá el émbolo de la bomba hasta el fondo! ¡Además, eliminará el estado de vinculación!</string>
     <string name="equil_ble_config_confirmation_title">Emparejar bomba parche Equil</string>
     <string name="equil_error">Error de conexión</string>
     <string name="equil_change">Cambiar bomba</string>
@@ -74,6 +77,7 @@
     <string name="equil_command_connect_error">Error de conexión de la bomba</string>
     <string name="equil_command_connect_no_response">Sin respuesta de la bomba</string>
     <string name="equil_command__unknown">Estado desconocido para el comando</string>
+    <string name="equil_install">Colocar la bomba en el cuerpo</string>
     <string name="equil_settings_alarm_battery">Alarma de batería baja</string>
     <string name="equil_settings_alarm_insulin">Alarma de reservorio bajo</string>
     <string name="equil_init_insulin_error">La inicialización del reservorio no se ha completado</string>
@@ -126,6 +130,7 @@
         <item quantity="other">%1$d días</item>
     </plurals>
     <string name="equil_support_error">Versión del firmware demasiado baja. No compatible</string>
+    <string name="equil_password_tips">Opcionalmente, establezca una contraseña para el emparejamiento con la bomba Equil v5.3. Esta contraseña también se usará para desvincularla en el futuro, así que asegúrese de recordarla. Regla de la contraseña: Debe tener 4 caracteres, elegidos entre ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Establecer la contraseña de emparejamiento</string>
     <string name="equil_hint1">Después de instalar la bomba en su base, selecciona si deseas purgar el aire de la aguja.</string>
     <string name="equil_unbind">Desemparejar dispositivo</string>
