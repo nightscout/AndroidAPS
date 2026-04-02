@@ -9,11 +9,28 @@
     <string name="start_hypo_tt">Start Țintă Temporară hipoglicemie</string>
     <string name="time_offset">Decalaj</string>
     <string name="remind_to_bolus_later">Amintește-mi să fac bolus mai târziu</string>
+    <string name="a11y_carb_reminder">Setează memento pentru timpul carbohidraților</string>
     <!--    Widget-->
     <string name="configure">Configurați opacitatea</string>
     <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor activitate</string>
+    <string name="time_range">Interval de timp</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Pentagon glicemie (CGP) - 14 zile</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Medie</string>
+    <string name="cgp_reference">Persoană sănătoasă</string>
+    <string name="cgp_patient">Pacient</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Risc foarte scăzut</string>
+    <string name="cgp_pgr_low">Risc scăzut</string>
+    <string name="cgp_pgr_moderate">Risc moderat</string>
+    <string name="cgp_pgr_high">Risc ridicat</string>
+    <string name="cgp_pgr_extremely_high">Risc extrem de ridicat</string>
     <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
     <string name="do_you_want_recalculate_tdd_stats">Doriți să recalculați statisticile DZT?</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
@@ -41,15 +58,20 @@
     <string name="site_management">Profil Administrare Loc Inserție</string>
     <string name="site_management_description">Veți seta aici dacă doriți să gestionați locul de inserție al pompei, al CGM-ului sau ambele. Această setare va fi folosită pentru a trimite automat dialogul de administrare al locului de inserție la fiecare intrare detectată nouă</string>
     <string name="record_site_change">Înregistrați locul de inserție</string>
+    <string name="update_site_change">Actualizați locul de inserție</string>
     <string name="edit_site">Editează</string>
     <string name="record_site_location">Locul de inserție: %1$s</string>
     <string name="record_site_arrow">Săgeata locului de inserție: %1$s</string>
     <string name="record_site_note">Notă: %1$s</string>
     <string name="delete_site_note">Notă ștearsă</string>
+    <string name="site_filter_info">Selectați tipul de eveniment de tratament pe care doriți să îl vedeți: Schimbare de Canulă și/sau Schimbare de Senzor</string>
     <!-- FillDialog -->
     <string name="fill_warning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
     <string name="record_pump_site_change">Înregistrare schimbare a locului pompei</string>
     <string name="record_insulin_cartridge_change">Înregistrare schimbare rezervor insulină</string>
+    <string name="fill_prime_amount">Cantitate de amorsare</string>
+    <string name="fill_pump_units_note">Cantitatea de amorsare este în unitățile pompei</string>
+    <string name="fill_insulin_change">Comutați insulina la: %1$s (se va aplica schimbarea profilului)</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
     <!-- Insulin Management -->
