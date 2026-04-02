@@ -3,12 +3,9 @@
     <string name="equil_pump_description">Equil 5.3 eller nyere patchpumpe </string>
     <!--  start  -->
     <string name="equil_basal_speed">Grunnbasal</string>
-    <string name="equil_date_device">Siste tilkobling</string>
     <string name="equil_dressing">Bytt reservoar</string>
     <string name="equil_dressing_onkey_msg">Beveger automatisk stempel til bunnen av reservoaret. Den stopper automatisk når bunnen nås. Klikk \"Stopp\" for å avbryte om nødvendig.</string>
-    <string name="equil_finish">Fullfør</string>
     <string name="equil_hint_dressing">Denne operasjonen stopper insulininfusjonen og fører til at pumpestempelet trekker seg tilbake til bunnen!</string>
-    <string name="equil_history">Historikk</string>
     <string name="equil_insulin_reservoir">Insulinreservoar</string>
     <string name="equil_mode">Kjøremodus</string>
     <string name="equil_mode_running">Kjører</string>
@@ -25,7 +22,6 @@
     <string name="equil_tone_mode_tone">Kun lyd</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrering og lyd</string>
     <string name="equil_unit_u">%1$s E</string>
-    <string name="equil_unit_u_hours">%1$s E/t</string>
     <string name="equil_ble_config_confirmation_title">Sammenkoble Equil-patchpumpe</string>
     <string name="equil_error">Tilkoblingsfeil</string>
     <string name="equil_change">Bytt pumpe</string>
@@ -42,18 +38,15 @@
     <string name="equil_pump_not_run">Pumpen kjører ikke</string>
     <string name="equil_pair">Paring</string>
     <string name="equil_pair_error">Paringsfeil</string>
-    <string name="equil_retry">Prøv igjen</string>
     <string name="equil_fill">Prime/fylling</string>
     <string name="equil_air">Tøm luft</string>
     <string name="equil_temp_basal_rate">Midlertidig basal</string>
     <string name="equil_total_delivered">Totalt levert</string>
-    <string name="equil_last_bolus">Siste bolus</string>
     <string name="equil_firmware_version">Fastvareversjon</string>
     <string name="equil_shutdown_be">Equil vil bli skrudd av automatisk</string>
     <string name="equil_shutdown">Equil auto-av</string>
     <string name="equil_common_history_tbr_value">Dose： %1$.2f E/t，varighet： %2$d minutter</string>
     <string name="equil_common_history_bolus_value">%1$.2f E</string>
-    <string name="equil_history_type">Type：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Angi bolus</string>
     <string name="equil_common_cmd_cancel_bolus">Avbryt bolus</string>
@@ -66,7 +59,6 @@
     <string name="equil_common_cmd_pair">Koble til Equil</string>
     <string name="equil_common_cmd_insert_cannula">Sett inn kanyle</string>
     <string name="equil_common_cmd_unpair">Koble fra Equil</string>
-    <string name="equil_common_cmd_alarm">Alarm</string>
     <string name="equil_common_cmd_set_extended_bolus">Angi forlenget bolus</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Avbryt forlenget bolus</string>
     <!--    推杆回退-->
@@ -119,8 +111,6 @@
     <string name="equil_common_less_than_a_minute_ago">Mindre enn ett minutt siden</string>
     <string name="equil_common_time_ago">%1$s siden</string>
     <string name="equil_common_composite_time">%1$s og %2$s</string>
-    <string name="equil_common_wizard_button_finish">Fullfør</string>
-    <string name="equil_common_wizard_button_next">Neste</string>
     <string name="equil_common_wizard_exit_confirmation_text">Du har ikke fullført alle trinn ennå. Er du sikker på at du vil avslutte?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Avslutt</string>
     <plurals name="equil_common_minutes">
@@ -146,7 +136,6 @@
     <string name="equil_insert2">Pumpen må ikke være på pumpebasen.</string>
     <string name="equil_attach">Vennligst fest pumpen til basen</string>
     <string name="equil_hint2">Prime kanylen</string>
-    <string name="equil_unpair">Deaktiver den gamle pumpen %1$s?</string>
     <string name="equil_pump_updated">Pumpe oppdatert</string>
     <string name="equil_replace_reservoir">Reservoaret er tomt. Vennligst bytt ut reservoaret</string>
     <string name="error_mustbe6hexadidits">Må være 6 tegn av ABCDEF0123456789</string>
