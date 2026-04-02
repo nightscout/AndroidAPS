@@ -76,6 +76,11 @@ prin apăsarea manuală a portului de oprire a alarmei de pe plasture așa cum s
     <string name="patch_activate_reminder_desc">Activarea plasturelui nu este completă..\nContinuă.</string>
     <string name="patch_communication_check_helper_1">Apropiați telefonul inteligent de plasture.</string>
     <string name="patch_communication_check_helper_2">Vă rugăm să schimbați locația și să reîncercați.</string>
+    <string name="patch_bonding_failed_desc">Nu s-a reușit asocierea cu plasturele. Vă rugăm să încercați din nou.</string>
+    <string name="patch_get_info_failed_desc">Nu s-a reușit obținerea informațiilor plasturelui. Încercați din nou.</string>
+    <string name="patch_self_test_failed_desc">Testarea automată plasturelui a eșuat. Vă rugăm să încercați din nou.</string>
+    <string name="patch_safety_check_failed_desc">Verificarea siguranței a eșuat. Vă rugăm să încercați din nou.</string>
+    <string name="patch_needle_sensing_failed_desc">Detectarea acului a eșuat. Vă rugăm să încercați din nou.</string>
     <string name="patch_communication_failed">Eroare de comunicare</string>
     <string name="patch_communication_succeed">Comunicare reușită</string>
     <string name="patch_communication_succeed_message">Conectat cu plasturele.</string>
@@ -99,18 +104,24 @@ prin apăsarea manuală a portului de oprire a alarmei de pe plasture așa cum s
     <string name="string_changing">Schimbare</string>
     <string name="string_in_progress">Se procesează</string>
     <string name="retry">Încearcă din nou</string>
+    <string name="string_caution_not_remove_needle_cap">NU scoateți capacul acului și folia adezivă de protecție până la instrucțiuni ulterioare.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Sunteți sigur că renunțați la plasturele curent?</string>
     <string name="needle_insertion_error_1">Eroare la inserarea acului.</string>
     <string name="needle_insertion_error_2">Verificați că direcția orificiului rămas după ce rotiți pârghia este dreaptă și apoi apăsați \'Reîncearcă\'.</string>
     <string name="needle_insertion_error_3">Atingeți \'Dezactivează\' pentru a dezactiva plasturele.</string>
     <string name="string_suspend_time_insulin_delivery_title">Timp de suspendare bazală</string>
     <string name="string_resume_insulin_delivery_title">Reia livrarea insulinei</string>
+    <string name="string_resume_insulin_delivery_message">Suspendarea administrării de insulină s-a încheiat.\nAtingeți „Confirmă” pentru a relua administrarea de insulină.\n\nAdministrarea de insulină nu se va relua până când nu atingeți „Confirmă”.\nDacă nu atingeți „Confirmă”, puteți dezvolta hiperglicemie.</string>
     <string name="string_suspended_insulin_delivery_message">Administrarea insulinei este suspendată.</string>
     <string name="string_resumed_insulin_delivery_message">Administrarea insulinei este reluată.</string>
     <string name="finish">Finalizare</string>
     <string name="string_temp_basal_remained_hhmm">timp rămas: %1$s:%2$s</string>
     <string name="next">Următor</string>
+    <string name="string_pause_failed">Suspendarea a eșuat.</string>
     <string name="string_resume_failed">Reluarea a eșuat.</string>
+    <string name="wizard_exit_activation_warning">Ieșiți din ghidul de activare? Plasturele poate fi lăsat într-o stare incompletă și poate fi nevoie de un nou plasture.</string>
+    <string name="wizard_exit_deactivation_warning">Ieșiți din asistentul de dezactivare? Plasturele poate rămâne activ și ar putea continua să administreze insulină.</string>
+    <string name="patch_force_reset">Resetare forțată</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
     <!-- Permission rationales -->
 </resources>
