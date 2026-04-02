@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Parowanie</string>
     <string name="danars_pairingtimedout">Przekroczono limit czasu parowania</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
@@ -56,7 +55,6 @@
     <string name="danar_history_bolus">Bolusy</string>
     <string name="danar_history_carbohydrates">Węglowodany</string>
     <string name="danar_history_dailyinsulin">Insulina dzienna</string>
-    <string name="danar_history_errors">Błędy</string>
     <string name="danar_history_glucose">Glukoza</string>
     <string name="danar_history_refill">Napełnij</string>
     <string name="danar_history_syspend">Wstrzymaj</string>
@@ -65,7 +63,6 @@
     <string name="danar_time_display">Format wyświetlanego czasu</string>
     <string name="danar_button_scroll">Przycisk przewijania</string>
     <string name="danar_beep">Dźwięk po przyciśnięciu przycisku</string>
-    <string name="danar_pump_alarm">Alarm</string>
     <string name="danar_pump_alarm_sound">Dźwięk</string>
     <string name="danar_pump_alarm_vibrate">Wibracja</string>
     <string name="danar_pump_alarm_both">Obie opcje</string>
@@ -87,7 +84,6 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Wyłącz tryb EasyUI w pompie</string>
     <string name="profile_set_failed">Ustawienie profilu bazy nie powiodło się</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Ustawienia pompy Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
@@ -96,14 +92,11 @@
     <string name="danars_password_title">Hasło pompy (tylko v1)</string>
     <string name="danar_password_title">Hasło pompy</string>
     <string name="danar_useextended_title">Używaj przedłużonych bolusów dla &gt;200%</string>
-    <string name="bolusspeed">Szybkość podawania bolusa</string>
     <string name="selectedpump">Wybrana pompa</string>
     <string name="rs_loginsulinchange_title">Zapisz zmianę zbiorniczka</string>
     <string name="rs_loginsulinchange_summary">Dodaj zdarzenie \"Zmiana zasobnika insuliny\" do portalu opieki Nightscout, gdy wykryto je w historii pompy</string>
     <string name="rs_logcanulachange_title">Zapisz zmianę wkłucia</string>
     <string name="rs_logcanulachange_summary">Dodaj zdarzenie \"Zmiana miejsca wkłucia\" do portalu opieki Nightscout, gdy wykryto je w historii pompy</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Naciśnij OK na pompie\ni wpisz 2 wyświetlone numery\nUtrzymuj wyświetlacz pompy włączony poprzez naciskanie przycisku minus, aż do momentu zakończenia przepisywania kodu.</string>
     <string name="num1pin">1: (12 cyfr)</string>
     <string name="num2pin">2: (8 cyfr)</string>
