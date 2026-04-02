@@ -783,6 +783,8 @@
     <string name="maintenance_log_settings_desc">Konfigurer loggnivåer</string>
     <string name="maintenance_send_logs_desc">Del loggfiler for feilsøking</string>
     <string name="maintenance_delete_logs_desc">Fjern gamle loggfiler</string>
+    <string name="maintenance_aaps_directory_desc">Velg lokal lagringsmappe</string>
+    <string name="maintenance_cloud_directory_desc">Sett opp skylagring (Google Drive)</string>
     <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
