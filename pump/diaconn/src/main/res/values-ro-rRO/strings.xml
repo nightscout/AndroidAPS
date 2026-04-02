@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Resetează împerecherea</string>
-    <string name="diaconn_no_device_available">Niciun dispozitiv disponibil</string>
     <string name="diaconn_pairing">Asocierea pompei Diaconn</string>
-    <string name="pumperror">Eroare pompă</string>
     <string name="diaconn_g8_history_alarm">Alarme</string>
     <string name="diaconn_g8_history_basalhours">Ore rate bazale</string>
     <string name="diaconn_g8_history_bolus">Bolusuri</string>
     <string name="diaconn_g8_history_dailyinsulin">Insulină zilnică</string>
     <string name="diaconn_g8_history_refill">Reumplere</string>
     <string name="diaconn_g8_history_suspend">Suspendare</string>
-    <string name="invalidpairing">Informații de asociere invalide. Se solicită o nouă asociere</string>
     <string name="gettingpumpsettings">Se obțin setările pompei</string>
     <string name="gettingpumptime">Se citește ora pompei</string>
     <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai multe de 1.5 ore.\nCorectați manual ora din pompă și asigurați-vă că sincronizarea cu datele din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și inactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Eroare de viteză</string>
     <string name="insulinlimitviolation">Încălcare a limitei de insulină</string>
     <string name="boluserrorcode">Solicitat: %1$.2fU Livrat: %2$.2fU Cod eroare: %3$s</string>
-    <string name="bolusspeed">Viteză bolusare</string>
     <string name="selectedpump">Pompa selectată</string>
     <string name="diaconn_g8_bluetooth_status">Stare Bluetooth</string>
     <string name="bolus_step">Pas bolus</string>
     <string name="basal_step">Pas bazală</string>
-    <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">OPȚIUNI UTILIZATOR</string>
     <string name="pairfirst">Vă rog să asociați pompa cu telefonul!</string>
     <string name="processinghistory">"Se procesează evenimentul "</string>
