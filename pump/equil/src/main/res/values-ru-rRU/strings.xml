@@ -3,12 +3,9 @@
     <string name="equil_pump_description">Помпа Equil Patch 5.3 или новее </string>
     <!--  start  -->
     <string name="equil_basal_speed">Базовая скорость базала</string>
-    <string name="equil_date_device">Прошлое соединение</string>
     <string name="equil_dressing">Замена резервуара</string>
     <string name="equil_dressing_onkey_msg">Плунжер автоматически перемещается в нижнюю часть резервуара. По достижении нижней части он остановится автоматически. Нажмите \'Остановить\', чтобы прервать при необходимости.</string>
-    <string name="equil_finish">Готово</string>
     <string name="equil_hint_dressing">Эта операция прекратит инфузию инсулина и переместит плунжер помпы на дно!</string>
-    <string name="equil_history">Журнал</string>
     <string name="equil_insulin_reservoir">Резервуар инсулина</string>
     <string name="equil_mode">Рабочий режим</string>
     <string name="equil_mode_running">Выполняется</string>
@@ -25,7 +22,6 @@
     <string name="equil_tone_mode_tone">Только звук</string>
     <string name="equil_tone_mode_tone_and_shake">Вибрация и звук</string>
     <string name="equil_unit_u">%1$s ед</string>
-    <string name="equil_unit_u_hours">%1$s ед/ч</string>
     <string name="equil_ble_config_confirmation_title">Выполнить сопряжение с помпой Equil Patch</string>
     <string name="equil_error">Ошибка соединения</string>
     <string name="equil_change">Заменить помпу</string>
@@ -42,18 +38,15 @@
     <string name="equil_pump_not_run">Помпа не запущена</string>
     <string name="equil_pair">Выполнить сопряжение</string>
     <string name="equil_pair_error">Ошибка сопряжения</string>
-    <string name="equil_retry">Повторить</string>
     <string name="equil_fill">Прайм / Заполнение</string>
     <string name="equil_air">Выгнать воздух</string>
     <string name="equil_temp_basal_rate">Временный базал</string>
     <string name="equil_total_delivered">Всего введено</string>
-    <string name="equil_last_bolus">Предыдущий болюс</string>
     <string name="equil_firmware_version">Версия прошивки</string>
     <string name="equil_shutdown_be">Equil выключится автоматически</string>
     <string name="equil_shutdown">Автоматическое отключение Equil</string>
     <string name="equil_common_history_tbr_value">Баз Скорость: %1$.2f ед/ч, Продолжительность: %2$d мин</string>
     <string name="equil_common_history_bolus_value">%1$.2f ед</string>
-    <string name="equil_history_type">Тип：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Настроить болюс</string>
     <string name="equil_common_cmd_cancel_bolus">Отменить болюс</string>
@@ -66,7 +59,6 @@
     <string name="equil_common_cmd_pair">Выполнить сопряжение с Equil</string>
     <string name="equil_common_cmd_insert_cannula">Вставить катетер</string>
     <string name="equil_common_cmd_unpair">Выполнить разъединение с Equil</string>
-    <string name="equil_common_cmd_alarm">Оповещение</string>
     <string name="equil_common_cmd_set_extended_bolus">Настроить пролонгированный болюс</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Отменить пролонгированный болюс</string>
     <!--    推杆回退-->
@@ -119,8 +111,6 @@
     <string name="equil_common_less_than_a_minute_ago">Менее минуты назад</string>
     <string name="equil_common_time_ago">%1$s назад</string>
     <string name="equil_common_composite_time">%1$s и %2$s</string>
-    <string name="equil_common_wizard_button_finish">Завершить</string>
-    <string name="equil_common_wizard_button_next">Далее</string>
     <string name="equil_common_wizard_exit_confirmation_text">Еще Не выполнены все шаги. Действительно хотите выйти?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Выйти</string>
     <plurals name="equil_common_minutes">
@@ -152,7 +142,6 @@
     <string name="equil_insert2">Помпа не должна находиться на платформе.</string>
     <string name="equil_attach">Присоедините помпу к платформе</string>
     <string name="equil_hint2">Заполните катетер</string>
-    <string name="equil_unpair">Деактивировать старую помпу %1$s?</string>
     <string name="equil_pump_updated">Помпа обновлена</string>
     <string name="equil_replace_reservoir">Резервуар пуст. Замените резервуар</string>
     <string name="error_mustbe6hexadidits">Должно быть 6 символов: из этих: ABCDEF0123456789</string>
