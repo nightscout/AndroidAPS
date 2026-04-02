@@ -16,7 +16,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.SnackbarMessage
+import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -207,6 +209,26 @@ class RunningModeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Get toolbar configuration for current state
+     */
+    fun getToolbarConfig(onNavigateBack: () -> Unit, onDeleteClick: () -> Unit): ToolbarConfig {
+        val state = uiState.value
+        return SelectableListToolbar(
+            isRemovingMode = state.isRemovingMode,
+            selectedCount = state.selectedItems.size,
+            onExitRemovingMode = { exitSelectionMode() },
+            onNavigateBack = onNavigateBack,
+            onDelete = {
+                if (state.selectedItems.isNotEmpty()) {
+                    onDeleteClick()
+                }
+            },
+            rh = rh,
+            showInvalidated = state.showInvalidated,
+            onToggleInvalidated = { toggleInvalidated() }
+        )
+    }
 }
 
 /**
