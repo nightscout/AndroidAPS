@@ -18,26 +18,14 @@
     <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
 
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Scan</string>
-    <string name="riley_link_ble_config_scan_stop">Stop</string>
-    <string name="riley_link_ble_config_scan_selected">Selected</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink Scan</string>
     <string name="riley_link_ble_config_scan_scanning">Scanning</string>
-    <string name="riley_link_ble_config_scan_finished">Scanning finished</string>
-    <string name="riley_link_ble_config_scan_error">Scanning error: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Never</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Currently Selected RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">Remove</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Are you sure that you want to remove your RileyLink?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Remove RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">No RileyLink selected</string>
 
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Settings</string>
     <string name="rileylink_settings_tab2">History</string>
     <string name="rileylink_status">RileyLink Status</string>
     <string name="medtronic_pump_status">Pump Status</string>
-    <string name="title_activity_rileylink_settings">RileyLink Settings</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Address:</string>
     <string name="rileylink_name">Name:</string>
