@@ -41,4 +41,7 @@
     <string name="description_source_patched_sino_app">Recibir los valores de glucosa de la aplicación parcheada Sino</string>
     <!-- Notification Reader -->
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">MCG Dexcom</string>
+    <string name="permission_dexcom_description">La aplicación necesita permiso para recibir datos del CGM desde la aplicación Dexcom</string>
+    <string name="permission_notification_listener_title">Acceso a notificaciones</string>
 </resources>
