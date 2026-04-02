@@ -54,6 +54,7 @@
     <string name="retry">Prøv igjen</string>
     <string name="step_prepare_patch">Aktivere patch</string>
     <string name="step_prepare_patch_connect">Koble til og fyll</string>
+    <string name="step_select_insulin">Velg insulin</string>
     <string name="step_prime">Prime</string>
     <string name="step_priming">Primer</string>
     <string name="step_priming_complete">Priming ferdig</string>
@@ -101,8 +102,17 @@
     <string name="pump_unreachable_threshold_minutes_summary">Anbefales å sette til 30 minutter, fordi Medtrum-patching kan mislykkes og bli utilgjengelig.</string>
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_invalid">Ugyldig serienummer!</string>
+    <string name="change_sn">Endre</string>
     <string name="alarm_setting_title">Alarminnstillinger</string>
     <string name="alarm_setting_summary">Velg dine foretrukne alarminnstillinger.</string>
+    <string name="alarm_setting_light_vibrate_beep">Lys, vibrering og piping</string>
+    <string name="alarm_setting_light_vibrate">Lys og vibrer</string>
+    <string name="alarm_setting_light_beep">Lys og piping</string>
+    <string name="alarm_setting_light">Lys</string>
+    <string name="alarm_setting_vibrate_beep">Vibrering og piping</string>
+    <string name="alarm_setting_vibrate">Vibrering</string>
+    <string name="alarm_setting_beep">Piping</string>
+    <string name="alarm_setting_silent">Stille</string>
     <string name="pump_warning_notification_title">Varsel om pumpeadvarsel</string>
     <string name="pump_warning_notification_summary">Vis varsel om ikke-kritisk pumpeadvarsel: lavt batteri, lavt reservoar (20 enheter) og utløper snart. Anbefales og la være aktivert når pumpealarmer er satt til stillemodus.</string>
     <string name="pump_warning_expiry_hour_title">Utløpsvarsel om pumpe</string>
