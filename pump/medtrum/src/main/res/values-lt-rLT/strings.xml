@@ -14,21 +14,16 @@
     <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
     <string name="pump_sync_error">Klaida įkeliant pompos istoriją, įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar rezervuarą.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">BLE statusas</string>
     <string name="last_connection_label">Pask. prijungimas</string>
     <string name="active_bolus_label">Aktyvus bolusas</string>
     <string name="pump_state_label">Pompos būsena</string>
     <string name="active_alarms_label">Aktyvūs aliarmai</string>
-    <string name="reservoir_level"> %.2f V</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Bazės tipas</string>
     <string name="basal_rate_label">Bazės dydis</string>
-    <string name="current_basal_rate"> %.2f V/val.</string>
     <string name="pump_type_label">Pompos tipas</string>
     <string name="fw_version_label">FW versija</string>
     <string name="patch_no_label">Rezervuaro nr.</string>
     <string name="patch_expiry_label">Rezerv. gal. baigsis</string>
-    <string name="refresh_label">Atnaujinti</string>
     <string name="reset_alarms_label">Atstatyti aliarmus</string>
     <string name="change_patch_label">Keisti rezerv.</string>
     <string name="requested_by_user" comment="26 characters max for translation">Inicijuota naudotojo</string>
@@ -56,8 +51,6 @@
     <string name="bolus_error">Boluso klaida</string>
     <!-- wizard-->
     <string name="retry">Kartoti</string>
-    <string name="next">Toliau</string>
-    <string name="discard">Išjungti</string>
     <string name="step_prepare_patch">Įjungti rezervuarą</string>
     <string name="step_prepare_patch_connect">Prijungti ir užpildyti</string>
     <string name="step_prime">Pildyti</string>
@@ -72,8 +65,6 @@
     <string name="step_retry_activation">Įjungiama</string>
     <string name="unexpected_state">Netikėta būsena: %1$s</string>
     <string name="no_profile_selected">Nepasirinktas profilis. Pasirinkite profilį ir bandykite dar kartą.</string>
-    <string name="no_sn_in_settings">Nežinomas SN. Įveskite pompos pagrindo serijos numerį nustatymuose ir bandykite vėl.</string>
-    <string name="base_serial">Pompos pagrindo SN: %1$X</string>
     <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Toliau</b> ir pradėkite aktyvavimą.</string>
     <string name="patch_not_active_note">Neprijunkite pagrindo prie rezervuaro iki kito žingsnio!</string>
     <string name="connect_pump_base">Prijunkite pompos pagrindą prie naujo rezervuaro, pašalinkite orą ir užpildykite insulinu, tada spauskite <b>Toliau</b>.</string>
@@ -107,9 +98,7 @@
     <string name="enable_pump_unreachable_alert_summary">Nepasiekiamumo įspėjimas priverstinai įjungtas, nes Medtrum pompa gali tapti nepasiekiama.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Rekomenduotina nustatyti į 30 minučių, nes Medtrum pompa gali tapti nepasiekiama.</string>
     <string name="sn_input_title">Serijos numeris</string>
-    <string name="sn_input_summary">Įveskite pompos pagrindo serijos numerį.</string>
     <string name="sn_input_invalid">Neteisingas serijos numeris!</string>
-    <string name="pump_unsupported">Pompa netestuota: %1$s! Susisiekite su mumis Discord arba Github kanalais</string>
     <string name="alarm_setting_title">Aliarmų nustatymai</string>
     <string name="alarm_setting_summary">Pasirinkite pompos aliarmų nustatymus</string>
     <string name="pump_warning_notification_title">Pompos pranešimas apie įspėjimą</string>
