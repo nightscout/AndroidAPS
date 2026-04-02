@@ -569,6 +569,12 @@
     <string name="pairing">Sammenkobler</string>
     <string name="initializing">Initialiserer...</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Advarsel</string>
+    <string name="retry" comment="Button label to retry a failed operation">Prøv på nytt</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Fullfør</string>
+    <string name="firmware" comment="Pump firmware version label">Fastvare</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Bolushastighet</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Historikk</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basaldose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
