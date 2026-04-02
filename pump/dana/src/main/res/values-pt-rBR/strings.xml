@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">A emparelhar</string>
     <string name="danars_pairingtimedout">Tempo emparelhamento excedido</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
@@ -56,7 +55,6 @@
     <string name="danar_history_bolus">Bolus</string>
     <string name="danar_history_carbohydrates">Carboidratos</string>
     <string name="danar_history_dailyinsulin">Insulina diária</string>
-    <string name="danar_history_errors">Erros</string>
     <string name="danar_history_glucose">Glicose</string>
     <string name="danar_history_refill">Reabastecimento</string>
     <string name="danar_history_syspend">Suspender</string>
@@ -65,7 +63,6 @@
     <string name="danar_time_display">Formato hora</string>
     <string name="danar_button_scroll">Botão rolamento</string>
     <string name="danar_beep">Sinal ao pressionar botão</string>
-    <string name="danar_pump_alarm">Alarme</string>
     <string name="danar_pump_alarm_sound">Som</string>
     <string name="danar_pump_alarm_vibrate">Vibrar</string>
     <string name="danar_pump_alarm_both">Ambos</string>
@@ -87,7 +84,6 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Desativar modo EasyUI na bomba</string>
     <string name="profile_set_failed">Não foi possivel configurar o perfil de basal</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Configurações da bomba Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
@@ -95,14 +91,11 @@
     <string name="option_off">Desligado</string>
     <string name="danars_password_title">Senha da bomba (apenas v1)</string>
     <string name="danar_password_title">Senha da bomba</string>
-    <string name="bolusspeed">Velocidade Bólus</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="rs_loginsulinchange_title">Mudança do reservatório do log</string>
     <string name="rs_loginsulinchange_summary">Adicionar evento \"Mudança de Insulina\" ao portal de cuidados, quando detectado no histórico</string>
     <string name="rs_logcanulachange_title">Mudança do log da cânula</string>
     <string name="rs_logcanulachange_summary">Adicionar evento \"Mudança de local\" ao portal de cuidados, quando detectado no histórico</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Pressione OK na bomba\ne digite 2 números exibidos\nMantenha a exibição ligada na bomba pressionando o botão menos até terminar de digitar o código.</string>
     <string name="num1pin">1: (12 dígitos)</string>
     <string name="num2pin">2: (8 dígitos)</string>
