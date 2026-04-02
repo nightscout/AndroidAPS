@@ -22,6 +22,7 @@
     <string name="pump_unreachable">Pumpe er utilgjengelig</string>
     <string name="insulin_unit_shortname">E</string>
     <string name="pump_base_basal_rate">%1$.2f E/t</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s E/t</string>
     <string name="pump_not_initialized_profile_not_set">Pumpen er ikke startet, ingen profil valgt!</string>
     <string name="failed_update_basal_profile">Klarte ikke å oppdatere basalprofil</string>
     <string name="no_valid_basal_rate">Ingen gyldige basaldoser ble lest fra pumpen</string>
