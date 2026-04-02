@@ -72,9 +72,20 @@
     <string name="fill_prime_amount">Cantitate de amorsare</string>
     <string name="fill_pump_units_note">Cantitatea de amorsare este în unitățile pompei</string>
     <string name="fill_insulin_change">Comutați insulina la: %1$s (se va aplica schimbarea profilului)</string>
+    <string name="fill_current_insulin">Insulina actuală</string>
+    <string name="fill_change_insulin">Schimbă insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Lipsă nume insulină</string>
+    <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>
+    <string name="a11y_add_new_insulin">Adăugați o nouă insulină</string>
+    <string name="a11y_delete_current_insulin">Ștergeți insulina curentă</string>
+    <string name="save_or_reset_changes_first">Salvează sau resetează modificările curente mai întâi</string>
+    <string name="activate_insulin_no_profile">Niciun profil activ găsit</string>
+    <string name="activate_insulin_new_insulin">Noua insulină: %1$s</string>
+    <string name="activate_insulin_remaining">Rămase: %1$d min</string>
+    <string name="activate_insulin_profile_switch">Schimbarea profilului va fi creată:\n\n<b>%1$s</b></string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalare</string>
@@ -155,6 +166,9 @@
     <string name="overview_edit_quickwizard_useforcalculation">Utilizați pentru calcul:</string>
     <string name="constraints_violation">Încălcarea constrângerilor</string>
     <string name="change_your_input">Schimbați-vă intrarea!</string>
+    <string name="wizard_no_insulin_required">Nu este necesară insulină</string>
+    <string name="carbs_constraint_violation">Carbohidrații limitați de constrângeri</string>
+    <string name="insulin_constraint_violation">Insulină limitată de constrângeri</string>
     <string name="confirm_treatment">Vă rugăm să confirmați tratamentul</string>
     <string name="recalculate">Recalculați</string>
     <!--    Widget-->
@@ -163,11 +177,50 @@
     <string name="until_changed">Până la schimbare</string>
     <string name="limitations">Limitări</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Permisiuni necesare</string>
+    <string name="permission_sheet_subtitle">Unele permisiuni sunt necesare pentru ca aplicația să funcționeze corect</string>
+    <string name="permission_grant">Acordați</string>
+    <string name="permission_change">Schimbă</string>
+    <string name="permission_denied_go_to_settings">Permisiune refuzată definitiv. Vă rugăm să o activați în setările aplicației.</string>
+    <string name="permission_open_settings">Setări</string>
+    <string name="permission_directory_picker_error">Nu se poate lansa selectorul de dosare. De obicei o problemă legată de Android sau legată de Family Link.</string>
+    <string name="permission_nav_label">Permisiuni</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Decalaj de ciclu</string>
+    <string name="raw_tdd">DTZ (Doza totală zilnică) brută</string>
+    <string name="cleaned_tdd">DTZ (Doza totală zilnică) curățată</string>
+    <string name="cleaned_tdd_explanation">DTZ (doza totală zilnică) minus insulina pentru carbohidrați.</string>
+    <string name="cycle_lines_legend">Cicluri individuale</string>
+    <string name="cycles_found">%1$d cicluri (%2$d zile)</string>
+    <string name="cycle_day1_date">Ziua 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Se calculează… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Date insuficiente (necesită cel puțin 56 de zile pentru 2 cicluri)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambele</item>
         <item>Doar pozitiv</item>
         <item>Doar negativ</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Acțiuni selectate</string>
+    <string name="quick_launch_available_actions">Acțiuni disponibile</string>
+    <string name="quick_launch_no_dynamic_items">Niciun element disponibil</string>
+    <string name="quick_launch_category_treatment">Tratament</string>
+    <string name="quick_launch_category_care">Care Portal</string>
+    <string name="quick_launch_category_profile">Profil</string>
+    <string name="quick_launch_category_temp_target">Ținte Temporare Presetate</string>
+    <string name="quick_launch_category_quick_wizard">Asistent Rapid</string>
+    <string name="quick_launch_category_automation">Automatizare</string>
+    <string name="quick_launch_all_selected">Toate articolele selectate</string>
+    <string name="quick_launch_no_quick_wizard">Adaugă intrările de Asistent rapid pentru a le folosi aici</string>
+    <string name="quick_launch_no_automation">Creați acțiuni automatizate ale utilizatorilor pentru a le folosi aici</string>
+    <string name="quick_launch_no_tt_presets">Adaugă Țintele Temporare presetate pentru a le folosi aici</string>
+    <string name="quick_launch_no_profiles">Creează profiluri în Profilul Local pentru a le folosi aici</string>
+    <string name="quick_launch_edit_profile_preset">Editează presetarea profilului</string>
+    <string name="quick_launch_profile_percentage">Procentaj</string>
+    <string name="quick_launch_profile_duration">Durată</string>
+    <string name="quick_launch_profile_permanent">Permanent</string>
+    <string name="quick_launch_profile_confirm">Activați profilul %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Selectați Săgeată</string>
 </resources>
