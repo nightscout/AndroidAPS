@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Sammenkobling</string>
     <string name="danars_pairingtimedout">Sammenkobling ble tidsavbrutt</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
@@ -56,7 +55,6 @@
     <string name="danar_history_bolus">Boluser</string>
     <string name="danar_history_carbohydrates">Karbohydrater</string>
     <string name="danar_history_dailyinsulin">Daglig insulin</string>
-    <string name="danar_history_errors">Feil</string>
     <string name="danar_history_glucose">Glukose</string>
     <string name="danar_history_refill">Påfyll</string>
     <string name="danar_history_syspend">Pauset</string>
@@ -65,7 +63,6 @@
     <string name="danar_time_display">Format for visning av tid</string>
     <string name="danar_button_scroll">Knapprulling</string>
     <string name="danar_beep">Pip ved knappetrykking</string>
-    <string name="danar_pump_alarm">Alarm</string>
     <string name="danar_pump_alarm_sound">Lyd</string>
     <string name="danar_pump_alarm_vibrate">Vibrer</string>
     <string name="danar_pump_alarm_both">Begge</string>
@@ -87,7 +84,6 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Deaktiver EasyUI modus i pumpe</string>
     <string name="profile_set_failed">Innstilling av basalprofil mislyktes</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Innstillinger for Danapumpe</string>
     <string name="time_format_12h">12t</string>
     <string name="time_format_24h">24t</string>
@@ -96,7 +92,6 @@
     <string name="danars_password_title">Pumpepassord (kun v1)</string>
     <string name="danar_password_title">Pumpepassord</string>
     <string name="danar_useextended_title">Bruk forlenget bolus for &gt;200%</string>
-    <string name="bolusspeed">Bolushastighet</string>
     <string name="bolus_speed_12">12 s/E</string>
     <string name="bolus_speed_30">30 s/E</string>
     <string name="bolus_speed_60">60 s/E</string>
@@ -105,15 +100,10 @@
     <string name="rs_loginsulinchange_summary">Legg til \"Insulinbytte\" i Helseportal når den oppdages i historikken</string>
     <string name="rs_logcanulachange_title">Logg kanylebytte</string>
     <string name="rs_logcanulachange_summary">Legg til \"Kanylebytte\" i Helseportal når den oppdages i historikken</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Trykk OK på pumpen\nog skriv inn de 2 viste tallene\nHold skjermen på pumpen PÅ ved å trykke minus knappen til du fullfører inntastingen.</string>
     <string name="num1pin">1: (12 tall)</string>
     <string name="num2pin">2: (8 tall)</string>
     <string name="basal_bolus_step">Basal/bolus trinn</string>
-    <string name="unpair">Opphev paring</string>
-    <string name="scanning_for_devices">Skanner etter enheter…</string>
-    <string name="select_your_pump">Velg pumpen din fra listen nedenfor</string>
     <string name="connecting_to_pump">Kobler til pumpen…</string>
     <string name="pairing_successful">Paringen er vellykket!</string>
     <string name="pairing_successful_message">Pumpen din er nå tilkoblet og klar til bruk.</string>
