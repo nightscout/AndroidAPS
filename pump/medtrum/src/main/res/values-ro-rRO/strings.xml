@@ -14,22 +14,17 @@
     <string name="pump_setting_failed">Setarea setărilor utilizatorului pe pompă a eșuat!</string>
     <string name="pump_sync_error">Eroare la sincronizarea istoricului de la pompă, o înregistrare a fost omisă. Verifică fila de tratament pentru a vedea dacă bolusul este sincronizat corect. Amână alarma și, dacă eroarea reapare, schimbă plasturele sau baza pompei.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Stare BLE</string>
     <string name="last_connection_label">Ultima conexiune</string>
     <string name="active_bolus_label">Bolus activ</string>
     <string name="pump_state_label">Stare pompă</string>
     <string name="active_alarms_label">Alarme active</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Tip bazală</string>
     <string name="basal_rate_label">Rată bazală</string>
-    <string name="current_basal_rate"> %.2f U/o</string>
     <string name="pump_type_label">Tip pompă</string>
     <string name="fw_version_label">Versiune FW</string>
     <string name="patch_no_label">Plasture nr.</string>
     <string name="patch_expiry_label">Plasturele expiră</string>
     <string name="patch_activation_time_label">Activare</string>
-    <string name="refresh_label">Reîncarcă</string>
     <string name="reset_alarms_label">Resetare alarme</string>
     <string name="change_patch_label">Schimbați plasturele</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitat de utilizator</string>
@@ -57,8 +52,6 @@
     <string name="bolus_error">Eroare bolus</string>
     <!-- wizard-->
     <string name="retry">Încearcă din nou</string>
-    <string name="next">Înainte</string>
-    <string name="discard">Renunțare</string>
     <string name="step_prepare_patch">Activează patch-ul</string>
     <string name="step_prepare_patch_connect">Conectare și umplere</string>
     <string name="step_prime">Amorsare</string>
@@ -73,8 +66,6 @@
     <string name="step_retry_activation">Activare în curs</string>
     <string name="unexpected_state">Stare neașteptată: %1$s</string>
     <string name="no_profile_selected">Niciun profil selectat. Selectează un profil și încearcă din nou.</string>
-    <string name="no_sn_in_settings">Niciun număr de serie cunoscut. Te rog să introduci serialul pompei în setări și încerci din nou.</string>
-    <string name="base_serial">Numărul de serie al pompei: %1$X</string>
     <string name="patch_begin_activation">Niciun patch activ. Apasă <b>Înainte</b> pentru a începe procesul de activare.</string>
     <string name="patch_not_active_note">Baza pompei nu trebuie conectată la plasture până la pasul următor!</string>
     <string name="connect_pump_base">Conectează baza pompei la un nou plasture, elimină aerul rezidual și umple cu insulină, apoi apasă <b>Înainte</b>.</string>
@@ -109,9 +100,7 @@
     <string name="enable_pump_unreachable_alert_summary">Alertă de inaccesibilitate activată forțat, deoarece plasturele Medtrum poate eșua și să nu fie accesibil.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Recomandat să se seteze la 30 de minute, deoarece plasturele Medtrum poate eșua și să nu fie accesibil.</string>
     <string name="sn_input_title">Număr de serie</string>
-    <string name="sn_input_summary">Introdu numărul de serie al bazei pompei.</string>
     <string name="sn_input_invalid">Număr de serie invalid!</string>
-    <string name="pump_unsupported">Pompă netestată: %1$s! Te rugăm să ne contactezi pe Discord sau GitHub pentru asistență</string>
     <string name="alarm_setting_title">Setări alarmă</string>
     <string name="alarm_setting_summary">Selectează setările preferate pentru alarma pompei.</string>
     <string name="pump_warning_notification_title">Notificare la avertizarea pompei</string>
