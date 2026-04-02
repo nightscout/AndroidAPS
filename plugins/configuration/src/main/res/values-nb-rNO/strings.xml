@@ -59,6 +59,7 @@
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps_description">Hvilken algoritme skal APS benytte for behandlinger?</string>
     <string name="configbuilder_general_description">Det er noen generelle plugins som kan være nyttige.</string>
+    <string name="configbuilder_sync_description">Plugins for dataopplasting, synkronisering og kommunikasjon.</string>
     <string name="configbuilder_constraints_description">Hvilke begrensninger brukes?</string>
     <string name="configbuilder_loop_description">Bruk denne for å aktivere AAPS\' loopintegrasjon.</string>
     <string name="configbuilder_insulin_description">Hvilken type insulin bruker du?</string>
