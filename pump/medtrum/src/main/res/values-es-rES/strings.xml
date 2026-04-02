@@ -103,6 +103,7 @@
     <string name="press_next_or_OK">Presiona <b>OK</b> para volver a la pantalla principal. Presiona <b>Siguiente</b> para iniciar la activación de un nuevo parche.</string>
     <string name="activation_in_progress">¡Ups! Algo ha ido mal, parece que hay una activación en curso.</string>
     <string name="press_retry_or_discard">Presiona <b>Siguiente</b> para reanudar la activación o <b>Descartar</b> para restablecer el estado de activación.</string>
+    <string name="retry_activation_filled_error">No se puede reanudar la activación. Se ha perdido el estado de la bomba. NO realices un purgado (cebado), ya que el parche podría estar insertado. Por favor, desecha el parche y comienza una nueva activación.</string>
     <string name="reading_activation_status">Por favor, espera, leyendo el estado de activación de la bomba.</string>
     <!-- settings-->
     <string name="enable_pump_unreachable_alert_summary">Se ha habilitado la alerta de \"Inaccesible forzada\" debido a la posibilidad de que el parche de Medtrum falle y no pueda ser contactado.</string>
