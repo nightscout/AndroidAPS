@@ -12,21 +12,16 @@
     <string name="patch_not_active">Μη ενεργοποιημένο Patch</string>
     <string name="pump_setting_failed">Η ρύθμιση των ρυθμίσεων χρήστη στην αντλία απέτυχε!</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Κατάσταση BLE</string>
     <string name="last_connection_label">Τελευταία σύνδεση</string>
     <string name="active_bolus_label">Ενεργό bolus</string>
     <string name="pump_state_label">Κατάσταση Αντλίας</string>
     <string name="active_alarms_label">Ενεργοί συναγερμοί</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Τύπος Βασικού</string>
     <string name="basal_rate_label">Βασικός Ρυθμός</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Τύπος Αντλίας</string>
     <string name="fw_version_label">Έκδοση FW</string>
     <string name="patch_no_label">Patch no</string>
     <string name="patch_expiry_label">Το Patch λήγει</string>
-    <string name="refresh_label">Ανανέωση</string>
     <string name="reset_alarms_label">Επαναφορά συναγερμών</string>
     <string name="change_patch_label">Αλλαγή Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Ζητήθηκε από το χρήστη</string>
@@ -53,8 +48,6 @@
     <string name="pump_time_update_failed">Αποτυχία ενημέρωσης της ζώνης ώρας της αντλίας, αναβολή μηνυμάτων και ανανεώστε με μη αυτόματο τρόπο.</string>
     <!-- wizard-->
     <string name="retry">Επανάληψη</string>
-    <string name="next">Επόμενο</string>
-    <string name="discard">Απόρριψη</string>
     <string name="step_prepare_patch">Ενεργοποίηση Patch</string>
     <string name="step_prepare_patch_connect">Σύνδεση και γέμισμα</string>
     <string name="step_prime">Πλήρωση</string>
@@ -69,7 +62,6 @@
     <string name="step_retry_activation">Ενεργοποίηση σε εξέλιξη</string>
     <string name="unexpected_state">Μη αναμενόμενη κατάσταση: %1$s</string>
     <string name="no_profile_selected">Δεν επιλέχθηκε προφίλ. Παρακαλώ επιλέξτε προφίλ και προσπαθήστε ξανά.</string>
-    <string name="base_serial">Σειριακός Βάσης Αντλίας: %1$X</string>
     <string name="patch_begin_activation">Δεν υπάρχει ενεργό patch. Πατήστε <b>Επόμενο</b> για να ξεκινήσετε τη διαδικασία ενεργοποίησης.</string>
     <string name="patch_not_active_note">Η βάση αντλίας δεν πρέπει να συνδεθεί με το patch μέχρι το επόμενο βήμα!</string>
     <string name="connect_pump_base">Συνδέστε τη βάση της αντλίας σε ένα νέο patch, αφαιρέστε τον υπολειπόμενο αέρα και γεμίστε με ινσουλίνη, στη συνέχεια πατήστε <b>Επόμενο</b>.</string>
@@ -99,7 +91,6 @@
     <string name="reading_activation_status">Παρακαλώ περιμένετε, ανάγνωση κατάστασης ενεργοποίησης από την αντλία.</string>
     <!-- settings-->
     <string name="sn_input_title">Σειριακός Αριθμός</string>
-    <string name="sn_input_summary">Εισάγετε τον σειριακό αριθμό της βάσης της αντλίας σας.</string>
     <string name="sn_input_invalid">Μη έγκυρος σειριακός αριθμός!</string>
     <string name="alarm_setting_title">Ρυθμίσεις συναγερμού</string>
     <string name="alarm_setting_summary">Επιλέξτε τις προτιμώμενες ρυθμίσεις συναγερμού της αντλίας σας.</string>
