@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Confirmación</string>
     <!--    Events-->
     <string name="bolus_delivering">Entregando %1$.2fU</string>
     <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU entregado</string>
@@ -91,7 +92,14 @@
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Para siempre</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">La aplicación necesita permiso de Bluetooth para comunicarse con la bomba</string>
     <!-- Insulin -->
+    <string name="insulin_plugin">Insulina</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="unknown">Desconocido</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u40">U40</string>
