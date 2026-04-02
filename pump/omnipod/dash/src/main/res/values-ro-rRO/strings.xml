@@ -2,15 +2,7 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Integrarea pompei pentru Omnipod Dash (modelul nou, cu Bluetooth, cu un capac de ac albastru).</string>
-    <!-- Omnipod Dash - History -->
-    <string name="omnipod_dash_history_title">Istoric Pod</string>
-    <string name="omnipod_dash_history_item_description">Descriere</string>
-    <string name="omnipod_dash_history_item_amount">Cantitate</string>
-    <string name="omnipod_dash_history_item_source">Sursă</string>
-    <string name="omnipod_dash_history_item_date">Data</string>
-    <string name="omnipod_dash_history_type">Tip:</string>
     <!-- Omnipod Dash - Overview -->
-    <string name="omnipod_dash_overview_bluetooth_status">Stare Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Adresă Bluetooth</string>
     <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Calitatea conexiunii</string>
@@ -20,9 +12,6 @@
         cu suficientă insulină pentru 3 zile.\n\nSe vor auzi două semnale sonore de la pompă în timpul umplerii. Acestea indică că cantitatea minima de 80u a fost introdusă. Asigurați-vă că ați golit complet seringa de umplere, chiar și după ce ați auzit cele două semnale sonore.\n\nDupă ce ați umplut pompa, vă rog să apăsați <b>Următor</b>.\n\n<b>Nota:</b> nu scoateți capacul protector al acului în acest timp.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Se încearcă asocierea și amorsarea unei noi pompe.\n\nCând procesul de inițializare a fost finalizat cu succes, puteți apasă pe <b>Următor</b>.</string>
     <!-- Exceptions -->
-    <string name="omnipod_dash_failed_to_connect">Nu s-a putut realiza conexiunea cu pompa</string>
-    <string name="omnipod_dash_found_too_many_pods">S-au găsit prea multe pompe de activat</string>
-    <string name="omnipod_dash_scan_failed">Nu s-a putut găsi o pompă pentru activare</string>
     <string name="omnipod_dash_generic_error">Eroare generică: %1$s</string>
     <string name="omnipod_dash_failed_to_send">Nu s-a reușit trimiterea comenzii</string>
     <string name="omnipod_dash_command_not_sent">Comanda nu a fost trimisă</string>
@@ -32,7 +21,6 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Administrarea insulinei este suspendată</string>
     <string name="omnipod_common_history_total_delivered">Total livrat: %1$.2f U</string>
-    <string name="omnipod_dash_connection_lost">S-a pierdut conexiunea la pompă</string>
     <string name="omnipod_dash_bolus_already_in_progress">Un alt bolus este în curs de livrare</string>
     <string name="omnipod_dash_not_enough_insulin">Nu a rămas suficientă insulină în rezervor</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comandă neconfirmată</string>
