@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
@@ -77,10 +76,10 @@ class TddCalculatorImpl @Inject constructor(
     @ApplicationScope private val appScope: CoroutineScope
 ) : TddCalculator {
 
-    override fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? =
+    override suspend fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? =
         calculate(dateUtil.now(), days, allowMissingDays)
 
-    override fun calculate(timestamp: Long, days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? {
+    override suspend fun calculate(timestamp: Long, days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? {
         var startTime = MidnightTime.calcDaysBack(timestamp, days)
         val endTime = Instant.ofEpochMilli(startTime).atZone(ZoneId.systemDefault())
             .plusDays(days)
@@ -92,7 +91,7 @@ class TddCalculatorImpl @Inject constructor(
         // Try to load cached values
         while (startTime < endTime) {
             aapsLogger.debug(LTag.APS, "Looking for cached TotalDailyDose for ${dateUtil.dateString(startTime)}")
-            runBlocking { persistenceLayer.getCalculatedTotalDailyDose(startTime) }?.let {
+            persistenceLayer.getCalculatedTotalDailyDose(startTime)?.let {
                 result.put(startTime, it)
                 aapsLogger.debug(LTag.APS, "Loaded cached TotalDailyDose for ${dateUtil.dateString(it.timestamp)} $it")
             } ?: break
@@ -121,16 +120,16 @@ class TddCalculatorImpl @Inject constructor(
         return null
     }
 
-    override fun calculateToday(): TDD? {
+    override suspend fun calculateToday(): TDD? {
         val startTime = MidnightTime.calc(dateUtil.now())
         val endTime = dateUtil.now()
         return calculateInterval(startTime, endTime, allowMissingData = true)
     }
 
-    override fun calculateDaily(startHours: Long, endHours: Long): TDD? =
+    override suspend fun calculateDaily(startHours: Long, endHours: Long): TDD? =
         calculateDaily(dateUtil.now(), startHours, endHours)
 
-    override fun calculateDaily(timestamp: Long, startHours: Long, endHours: Long): TDD? {
+    override suspend fun calculateDaily(timestamp: Long, startHours: Long, endHours: Long): TDD? {
         assert(startHours < 0)
         assert(endHours <= 0)
         val startTime = timestamp + T.hours(hour = startHours).msecs()
@@ -138,19 +137,19 @@ class TddCalculatorImpl @Inject constructor(
         return calculateInterval(startTime, endTime, allowMissingData = false)
     }
 
-    override fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? {
+    override suspend fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? {
         val startTimeAligned = startTime - startTime % (5 * 60 * 1000)
         val endTimeAligned = endTime - endTime % (5 * 60 * 1000)
         val tdd = TDD(timestamp = startTimeAligned)
         var tbrFound = false
-        runBlocking { persistenceLayer.getBolusesFromTimeToTime(startTime, endTime, true) }
+        persistenceLayer.getBolusesFromTimeToTime(startTime, endTime, true)
             .filter { it.type != BS.Type.PRIMING }
             .forEach { t ->
                 tdd.bolusAmount += t.amount
             }
-        runBlocking { persistenceLayer.getCarbsFromTimeToTimeExpanded(startTime, endTime, true) }.forEach { t ->
+        persistenceLayer.getCarbsFromTimeToTimeExpanded(startTime, endTime, true).forEach { t ->
             tdd.carbs += t.amount
-            val profile = runBlocking { profileFunction.getProfile(t.timestamp) }
+            val profile = profileFunction.getProfile(t.timestamp)
             if (profile != null) {
                 val ic = profile.getIc(t.timestamp)
                 if (ic > 0) tdd.carbInsulin += t.amount / ic
@@ -159,14 +158,14 @@ class TddCalculatorImpl @Inject constructor(
         val calculationStep = T.mins(5).msecs()
         for (t in startTimeAligned until endTimeAligned step calculationStep) {
 
-            val profile = runBlocking { profileFunction.getProfile(t) } ?: if (allowMissingData) continue else return null
+            val profile = profileFunction.getProfile(t) ?: if (allowMissingData) continue else return null
             val tbr = iobCobCalculator.getBasalData(profile, t)
             if (tbr.isTempBasalRunning) tbrFound = true
             val absoluteRate = tbr.tempBasalAbsolute
             tdd.basalAmount += absoluteRate / 60.0 * 5.0
 
             if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                val eb = runBlocking { persistenceLayer.getExtendedBolusActiveAt(t) }
+                val eb = persistenceLayer.getExtendedBolusActiveAt(t)
                 val absoluteEbRate = eb?.rate ?: 0.0
                 tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
             }

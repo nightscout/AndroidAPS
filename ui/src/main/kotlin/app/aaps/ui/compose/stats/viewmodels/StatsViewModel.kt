@@ -1,6 +1,6 @@
 package app.aaps.ui.compose.stats.viewmodels
 
-import android.content.Context
+import androidx.collection.LongSparseArray
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -17,11 +17,9 @@ import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.ui.R
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.activityMonitor.ActivityStats
 import app.aaps.ui.compose.stats.CycleSeries
@@ -49,7 +47,6 @@ class StatsViewModel @Inject constructor(
     private val activityMonitor: ActivityMonitor,
     private val persistenceLayer: PersistenceLayer,
     val rh: ResourceHelper,
-    val uiInteraction: UiInteraction,
     private val uel: UserEntryLogger,
     val dateUtil: DateUtil,
     val profileUtil: ProfileUtil,
@@ -182,29 +179,52 @@ class StatsViewModel @Inject constructor(
         cycleLoadJob?.cancel()
         cycleLoadJob = viewModelScope.launch {
             val tddList = mutableListOf<TDD>()
-            val totalChunks = 6
-            // Fetch in 28-day chunks (6 × 28 = 168 days) to report progress
-            for (chunk in 0 until totalChunks) {
+            val now = dateUtil.now()
+            val dayMs = 24 * 3600 * 1000L
+
+            // Phase 1: Load recent 56 days in 7-day chunks (8 chunks) — show graph ASAP
+            val phase1Chunks = 8
+            val totalChunks = phase1Chunks + 4 // 8 + 4 = 12 total
+            for (chunk in 0 until phase1Chunks) {
                 val chunkTdds = withContext(Dispatchers.IO) {
-                    (chunk + 1).toLong() * 28
-                    val timestamp = dateUtil.now() - chunk.toLong() * 28 * 24 * 3600 * 1000
-                    tddCalculator.calculate(timestamp, 28, allowMissingDays = true)
+                    val timestamp = now - chunk.toLong() * 7 * dayMs
+                    tddCalculator.calculate(timestamp, 7, allowMissingDays = true)
                 }
-                if (chunkTdds != null) {
-                    for (i in 0 until chunkTdds.size()) {
-                        val tdd = chunkTdds.valueAt(i)
-                        if (tddList.none { it.timestamp == tdd.timestamp }) {
-                            tddList.add(tdd)
-                        }
-                    }
-                }
+                addUniqueTdds(tddList, chunkTdds)
                 uiState.update { it.copy(tddCycleProgress = (chunk + 1).toFloat() / totalChunks) }
             }
-            tddList.sortByDescending { it.timestamp }
-            cachedDailyTdds = tddList
-            val data = computeCycleData(tddList, uiState.value.tddCycleOffset)
-            uiState.update { it.copy(tddCyclePatternData = data, tddCycleLoading = false) }
+            // Show graph after phase 1 (56 days = 2 cycles minimum)
+            updateCycleGraph(tddList)
+
+            // Phase 2: Load older data in 28-day chunks (4 × 28 = 112 more days, total 168)
+            for (chunk in 0 until 4) {
+                val chunkTdds = withContext(Dispatchers.IO) {
+                    val timestamp = now - (56 + chunk.toLong() * 28) * dayMs
+                    tddCalculator.calculate(timestamp, 28, allowMissingDays = true)
+                }
+                addUniqueTdds(tddList, chunkTdds)
+                uiState.update { it.copy(tddCycleProgress = (phase1Chunks + chunk + 1).toFloat() / totalChunks) }
+                updateCycleGraph(tddList)
+            }
+            uiState.update { it.copy(tddCycleLoading = false) }
         }
+    }
+
+    private fun addUniqueTdds(target: MutableList<TDD>, source: LongSparseArray<TDD>?) {
+        source ?: return
+        for (i in 0 until source.size()) {
+            val tdd = source.valueAt(i)
+            if (target.none { it.timestamp == tdd.timestamp }) {
+                target.add(tdd)
+            }
+        }
+    }
+
+    private fun updateCycleGraph(tddList: MutableList<TDD>) {
+        tddList.sortByDescending { it.timestamp }
+        cachedDailyTdds = tddList.toList()
+        val data = computeCycleData(cachedDailyTdds, uiState.value.tddCycleOffset)
+        uiState.update { it.copy(tddCyclePatternData = data) }
     }
 
     private fun computeCycleData(dailyTdds: List<TDD>, offset: Int): TddCyclePatternData? {
@@ -251,32 +271,38 @@ class StatsViewModel @Inject constructor(
         )
     }
 
-    fun recalculateTdd(context: Context) {
-        uiInteraction.showOkCancelDialog(
-            context = context,
-            message = rh.gs(R.string.do_you_want_recalculate_tdd_stats),
-            ok = {
-                uel.log(Action.STAT_RESET, Sources.Stats)
-                viewModelScope.launch {
-                    persistenceLayer.clearCachedTddData(0)
-                    loadTddStats()
-                }
-            }
-        )
+    fun showRecalculateDialog() {
+        uiState.update { it.copy(showRecalculateDialog = true) }
     }
 
-    fun resetActivityStats(context: Context) {
-        uiInteraction.showOkCancelDialog(
-            context = context,
-            message = rh.gs(R.string.do_you_want_reset_stats),
-            ok = {
-                uel.log(Action.STAT_RESET, Sources.Stats)
-                viewModelScope.launch(Dispatchers.IO) {
-                    activityMonitor.reset()
-                    loadActivityStats()
-                }
-            }
-        )
+    fun dismissRecalculateDialog() {
+        uiState.update { it.copy(showRecalculateDialog = false) }
+    }
+
+    fun confirmRecalculateTdd() {
+        uiState.update { it.copy(showRecalculateDialog = false) }
+        uel.log(Action.STAT_RESET, Sources.Stats)
+        viewModelScope.launch {
+            persistenceLayer.clearCachedTddData(0)
+            loadTddStats()
+        }
+    }
+
+    fun showResetActivityDialog() {
+        uiState.update { it.copy(showResetActivityDialog = true) }
+    }
+
+    fun dismissResetActivityDialog() {
+        uiState.update { it.copy(showResetActivityDialog = false) }
+    }
+
+    fun confirmResetActivityStats() {
+        uiState.update { it.copy(showResetActivityDialog = false) }
+        uel.log(Action.STAT_RESET, Sources.Stats)
+        viewModelScope.launch(Dispatchers.IO) {
+            activityMonitor.reset()
+            loadActivityStats()
+        }
     }
 }
 
@@ -301,5 +327,7 @@ data class StatsUiState(
     val dexcomTirExpanded: Boolean = false,
     val activityExpanded: Boolean = false,
     val tddCycleExpanded: Boolean = false,
-    val tddCycleOffset: Int = 0
+    val tddCycleOffset: Int = 0,
+    val showRecalculateDialog: Boolean = false,
+    val showResetActivityDialog: Boolean = false
 )
