@@ -29,6 +29,8 @@ import app.aaps.core.ui.compose.pump.PumpOverviewScreen
 import app.aaps.pump.common.compose.RileyLinkPairWizardEvent
 import app.aaps.pump.common.compose.RileyLinkPairWizardScreen
 import app.aaps.pump.common.compose.RileyLinkPairWizardViewModel
+import app.aaps.pump.common.compose.RileyLinkStatusScreen
+import app.aaps.pump.common.compose.RileyLinkStatusViewModel
 import app.aaps.pump.omnipod.common.ui.compose.PodImage
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActivationType
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodOverviewEvent
@@ -55,6 +57,7 @@ class OmnipodErosComposeContent(
         var showWizard by remember { mutableStateOf(false) }
         var showHistory by remember { mutableStateOf(false) }
         var showRileyLinkPairWizard by remember { mutableStateOf(false) }
+        var showRileyLinkStats by remember { mutableStateOf(false) }
         var wizardActivationType by remember { mutableStateOf<ActivationType?>(null) }
         var isDeactivation by remember { mutableStateOf(false) }
 
@@ -82,9 +85,20 @@ class OmnipodErosComposeContent(
         }
 
         // Restore overview toolbar when not in wizard
-        LaunchedEffect(showWizard, showRileyLinkPairWizard) {
-            if (!showWizard && !showRileyLinkPairWizard) {
+        LaunchedEffect(showWizard, showRileyLinkPairWizard, showRileyLinkStats) {
+            if (!showWizard && !showRileyLinkPairWizard && !showRileyLinkStats) {
                 setToolbarConfig(ToolbarConfig(title = pluginName, navigationIcon = overviewNavIcon, actions = settingsAction))
+            } else if (showRileyLinkStats) {
+                setToolbarConfig(
+                    ToolbarConfig(
+                    title = context.getString(app.aaps.pump.common.hw.rileylink.R.string.rileylink_settings_tab1),
+                    navigationIcon = {
+                        IconButton(onClick = { showRileyLinkStats = false }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                        }
+                    },
+                    actions = {}
+                ))
             }
         }
 
@@ -133,6 +147,10 @@ class OmnipodErosComposeContent(
                         showRileyLinkPairWizard = true
                     }
 
+                    is OmnipodOverviewEvent.ShowRileyLinkStats      -> {
+                        showRileyLinkStats = true
+                    }
+
                     is OmnipodOverviewEvent.ShowSnackbar            -> {
                         snackbarHostState.showSnackbar(event.message)
                     }
@@ -162,27 +180,37 @@ class OmnipodErosComposeContent(
         // Content: overview, wizard, history, or RL pair
         when {
             showRileyLinkPairWizard -> {
-                BlePreCheckHost(
-                    blePreCheck = blePreCheck,
-                    onFailed = { showRileyLinkPairWizard = false }
-                )
+                var bleCheckPassed by remember { mutableStateOf(false) }
 
-                val rlWizardViewModel: RileyLinkPairWizardViewModel = hiltViewModel()
+                if (!bleCheckPassed) {
+                    BlePreCheckHost(
+                        blePreCheck = blePreCheck,
+                        onReady = { bleCheckPassed = true },
+                        onFailed = { showRileyLinkPairWizard = false }
+                    )
+                } else {
+                    val rlWizardViewModel: RileyLinkPairWizardViewModel = hiltViewModel()
 
-                LaunchedEffect(rlWizardViewModel) {
-                    rlWizardViewModel.events.collect { event ->
-                        when (event) {
-                            is RileyLinkPairWizardEvent.Finish ->
-                                showRileyLinkPairWizard = false
+                    LaunchedEffect(rlWizardViewModel) {
+                        rlWizardViewModel.events.collect { event ->
+                            when (event) {
+                                is RileyLinkPairWizardEvent.Finish ->
+                                    showRileyLinkPairWizard = false
+                            }
                         }
                     }
-                }
 
-                RileyLinkPairWizardScreen(
-                    viewModel = rlWizardViewModel,
-                    onFinish = { showRileyLinkPairWizard = false },
-                    onCancel = { showRileyLinkPairWizard = false }
-                )
+                    RileyLinkPairWizardScreen(
+                        viewModel = rlWizardViewModel,
+                        onFinish = { showRileyLinkPairWizard = false },
+                        onCancel = { showRileyLinkPairWizard = false }
+                    )
+                }
+            }
+
+            showRileyLinkStats      -> {
+                val rlStatusViewModel: RileyLinkStatusViewModel = hiltViewModel()
+                RileyLinkStatusScreen(viewModel = rlStatusViewModel)
             }
 
             showWizard              -> {

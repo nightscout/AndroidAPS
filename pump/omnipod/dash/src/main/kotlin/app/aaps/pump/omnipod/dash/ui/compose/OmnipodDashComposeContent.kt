@@ -125,6 +125,7 @@ class OmnipodDashComposeContent(
                     }
 
                     is OmnipodOverviewEvent.ShowRileyLinkPairWizard -> Unit // Not applicable for Dash
+                    is OmnipodOverviewEvent.ShowRileyLinkStats      -> Unit // Not applicable for Dash
                     is OmnipodOverviewEvent.ShowSnackbar            -> Unit // Not used by Dash
                 }
             }

@@ -1,7 +1,6 @@
 package app.aaps.pump.omnipod.eros.ui.compose
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Delete
@@ -43,7 +42,6 @@ import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import app.aaps.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
@@ -353,7 +351,7 @@ class ErosOverviewViewModel @Inject constructor(
                 visible = omnipodManager.isRileylinkStatsButtonEnabled,
                 onClick = {
                     if (omnipodErosPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                        _events.tryEmit(OmnipodOverviewEvent.StartActivity(Intent(context, RileyLinkStatusActivity::class.java)))
+                        _events.tryEmit(OmnipodOverviewEvent.ShowRileyLinkStats)
                     }
                 }
             ),

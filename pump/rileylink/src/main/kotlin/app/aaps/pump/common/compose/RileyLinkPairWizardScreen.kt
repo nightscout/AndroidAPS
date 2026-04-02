@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.pump.BleScanStep
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardScreen
@@ -71,7 +72,7 @@ fun RileyLinkPairWizardScreen(
                             .fillMaxWidth()
                             .padding(vertical = 32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(AapsSpacing.extraLarge)
                     ) {
                         Icon(
                             imageVector = Icons.Filled.CheckCircle,

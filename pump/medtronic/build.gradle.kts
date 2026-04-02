@@ -22,6 +22,8 @@ dependencies {
     implementation(project(":pump:common"))
     implementation(project(":pump:rileylink"))
 
+    implementation(libs.androidx.hilt.navigation.compose)
+
     testImplementation(project(":core:keys"))
     testImplementation(project(":shared:tests"))
 
