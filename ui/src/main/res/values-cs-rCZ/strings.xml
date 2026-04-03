@@ -117,8 +117,6 @@
     <string name="invalid_pct">Neplatný vstup %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Bazál</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STISKNUTO STOP</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">pouze na hodinkách</string>
     <string name="a11y_only_on_phone">pouze na telefonu</string>
