@@ -179,8 +179,6 @@
     <string name="invalid_pct">Entrada % inválida</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Tasa basal</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">DETENER PRESIONADO</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">sólo en reloj</string>
     <string name="a11y_only_on_phone">sólo en teléfono</string>
