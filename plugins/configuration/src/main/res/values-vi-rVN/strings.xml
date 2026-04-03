@@ -59,6 +59,7 @@
     <string name="configbuilder_profile">Hồ sơ</string>
     <string name="configbuilder_aps_description">Thuật toán APS nào sẽ thực hiện điều chỉnh điều trị?</string>
     <string name="configbuilder_general_description">Đây là một số Tiện ích chung mà bạn có thể thấy hữu ích.</string>
+    <string name="configbuilder_sync_description">Các plugin tải lên dữ liệu, đồng bộ hóa và giao tiếp.</string>
     <string name="configbuilder_constraints_description">Những giới hạn nào đang được áp dụng?</string>
     <string name="configbuilder_loop_description">Sử dụng tùy chọn này để kích hoạt tích hợp vòng lặp của AAPS.</string>
     <string name="configbuilder_insulin_description">Bạn đang dùng loại insulin gì?</string>
