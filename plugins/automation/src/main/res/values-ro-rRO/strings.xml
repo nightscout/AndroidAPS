@@ -147,5 +147,11 @@
     <string name="on">PORNIT</string>
     <string name="off">OPRIT</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Alegeți de pe hartă</string>
+    <string name="tap_to_select_location">Apăsați pe hartă pentru a selecta un loc</string>
+    <string name="selected_coords">Selectat: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Locație</string>
+    <string name="permission_location_description">Necesar pentru declanșarea automatizării bazate pe locație și identificarea rețelei Wi-Fi</string>
+    <string name="permission_background_location_description">Necesar pentru declanșatorii automatizărilor să funcționeze atunci când aplicația este în fundal</string>
 </resources>
