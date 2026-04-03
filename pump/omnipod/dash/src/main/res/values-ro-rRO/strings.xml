@@ -12,7 +12,11 @@
         cu suficientă insulină pentru 3 zile.\n\nSe vor auzi două semnale sonore de la pompă în timpul umplerii. Acestea indică că cantitatea minima de 80u a fost introdusă. Asigurați-vă că ați golit complet seringa de umplere, chiar și după ce ați auzit cele două semnale sonore.\n\nDupă ce ați umplut pompa, vă rog să apăsați <b>Următor</b>.\n\n<b>Nota:</b> nu scoateți capacul protector al acului în acest timp.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Se încearcă asocierea și amorsarea unei noi pompe.\n\nCând procesul de inițializare a fost finalizat cu succes, puteți apasă pe <b>Următor</b>.</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Conectare nereușită</string>
+    <string name="omnipod_dash_found_too_many_pods">Au fost găsite prea multe pompe</string>
+    <string name="omnipod_dash_scan_failed">Scanare nereușită</string>
     <string name="omnipod_dash_generic_error">Eroare generică: %1$s</string>
+    <string name="omnipod_dash_connection_lost">Conexiune pierdută</string>
     <string name="omnipod_dash_failed_to_send">Nu s-a reușit trimiterea comenzii</string>
     <string name="omnipod_dash_command_not_sent">Comanda nu a fost trimisă</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Comanda nu a fost primită de pompă</string>
