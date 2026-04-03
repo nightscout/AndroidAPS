@@ -181,8 +181,6 @@
     <string name="invalid_pct">Intrare % invalidă</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Rată bazală</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP APĂSAT</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">numai pe ceas</string>
     <string name="a11y_only_on_phone">numai pe telefon</string>
