@@ -179,8 +179,6 @@
     <string name="invalid_pct">無效的百分比輸入</string>
     <!-- Other dialogs -->
     <string name="basal_rate">基礎率</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">已按下停止</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">僅在手錶上</string>
     <string name="a11y_only_on_phone">僅在手機上</string>
