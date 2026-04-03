@@ -101,8 +101,6 @@
     <string name="invalid_pct">Μη Έγκυρη Καταχώρηση %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Βασικός Ρυθμός</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">Πιέστε STOP</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">μόνο στο ρολόι</string>
     <string name="a11y_only_on_phone">μόνο στο τηλέφωνο</string>
