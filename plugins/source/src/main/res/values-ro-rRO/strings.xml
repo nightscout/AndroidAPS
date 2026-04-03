@@ -23,7 +23,7 @@
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Înregistrează valorile glicemiei din aplicația Tomato (dispozitiv MiaoMIao)</string>
     <string name="random_bg">Glicemie aleatoare</string>
-    <string name="description_source_random_bg">Generează glicemie aleatoare (doar mod Demo)</string>
+    <string name="description_source_random_bg">Generează glicemie aleatoare (doar mod demonstrativ)</string>
     <string name="random_bg_short">Glicemie</string>
     <string name="bgsource_settings">Setări sursă glicemie</string>
     <string name="bgsource_log_sensor_change_title">Acceptați pornirea senzorului</string>
