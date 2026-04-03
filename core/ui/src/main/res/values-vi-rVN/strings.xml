@@ -370,6 +370,13 @@
     <string name="automation">Automation</string>
     <string name="settingsexport">Xuất cài đặt</string>
     <string name="custom">Tuỳ chỉnh</string>
+    <string name="preset_settings">Thiết lập cài đặt sẵn</string>
+    <string name="activation">Kích hoạt</string>
+    <string name="temp_target_management">Quản lý mục tiêu tạm thời</string>
+    <string name="revert_to_defaults">Khôi phục về mặc định</string>
+    <string name="confirm_remove_preset">Xóa cài đặt sẵn %1$s?</string>
+    <string name="confirm_cancel_temp_target">Hủy mục tiêu tạm thời đang hoạt động?</string>
+    <string name="add_new_preset">Thêm mẫu cài đặt mới</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -422,6 +429,8 @@
     <string name="expweight">Tổng liều hằng ngày theo cấp số nhân</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Tổng liều hàng ngày</string>
     <string name="ratio">Tỷ lệ</string>
     <string name="amount_days"># Ngày</string>
     <string name="weight">Trọng lượng</string>
@@ -528,6 +537,11 @@
     <string name="ue_none">Không có đơn vị</string>
     <string name="uel_loop_change">VÒNG LẶP ĐÃ THAY ĐỔI</string>
     <string name="uel_loop_removed">VÒNG LẶP ĐÃ BỊ XOÁ</string>
+    <string name="uel_new_insulin">INSULIN MỚI</string>
+    <string name="uel_change_pump_insulin">THAY INSULIN CHO BƠM</string>
+    <string name="uel_store_insulin">LƯU INSULIN</string>
+    <string name="uel_change_insulin_concentration">THAY ĐỔI NỒNG ĐỘ INSULIN</string>
+    <string name="uel_insulin_removed">INSULIN ĐÃ ĐƯỢC LOẠI BỎ</string>
     <string name="uel_other">KHÁC</string>
     <string name="uel_running_mode">RUNNING MODE</string>
     <string name="uel_running_mode_removed">ĐÃ XÓA CHẾ ĐỘ THỂ DỤC</string>
@@ -539,6 +553,8 @@
     <string name="temp_target_high_target">Giá trị cao của mục tiêu tạm thời</string>
     <string name="temp_target_value">Giá trị mục tiêu tạm thời</string>
     <string name="profile_dia">Hồ sơ giá trị DIA</string>
+    <string name="insulin_dia">Thời gian tác dụng của insulin</string>
+    <string name="insulin_peak">Thời điểm đạt đỉnh của insulin</string>
     <string name="profile_sensitivity_value">Giá trị độ nhạy insulin trong Hồ sơ</string>
     <string name="profile_max_daily_basal_value">Giá trị liều nền tối đa trong Hồ sơ</string>
     <string name="current_basal_value">Giá trị liều nền hiện tại</string>
@@ -548,6 +564,16 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f nằm ngoài giới hạn an toàn</string>
     <string name="basal_value">Giá trị liều liều nền</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Chưa chọn hồ sơ</string>
+    <string name="missing_profile_name">Thiếu tên hồ sơ</string>
+    <string name="error_in_ic_values">Lỗi trong giá trị IC</string>
+    <string name="error_in_isf_values">Lỗi trong giá trị IC</string>
+    <string name="error_in_basal_values">Lỗi ở các giá trị liều nền</string>
+    <string name="error_in_target_values">Lỗi ở các giá trị mục tiêu</string>
+    <string name="profile_name_contains_dot">Một số tên hồ sơ chứa dấu chấm (.). Điều này không được NS hỗ trợ. Các hồ sơ sẽ không được tải lên NS.</string>
+    <string name="invalid_profile_not_accepted">Hồ sơ %1$s không hợp lệ, không được chấp nhận từ NS</string>
+    <string name="errors">Lỗi</string>
+    <string name="view">Xem</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">CARBS %1$d g</string>
@@ -576,6 +602,7 @@
     <string name="sensitivity">Độ nhạy</string>
     <string name="isf_for_carbs">ISF dùng cho tính toán và hấp thụ carb: %1$.1f</string>
     <string name="autosens_long">Giá trị Autosens: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens trong thuật toán: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">tập tin</string>
@@ -592,11 +619,33 @@
     <string name="bolus_advisor_message">Bạn đang có đường huyết cao. Thay vì ăn ngay, nên chờ đến khi đường huyết ổn định hơn. Bạn có muốn thực hiện bolus chỉnh sửa ngay và được nhắc khi đến giờ ăn? Trong trường hợp này, không có carbs nào được ghi nhận và bạn sẽ phải sử dụng wizard một lần nữa khi được nhắc.</string>
     <string name="cobvsiob">COB với IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Phát hiện hấp thụ carb chậm: %2$d%% thời gian. Kiểm tra lại tính toán của bạn. COB có thể bị đánh giá quá cao, dẫn đến việc bơm insulin nhiều hơn !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected_plain">!!!!! Phát hiện hấp thu carb chậm trong %1$d%% thời gian. Hãy kiểm tra lại phép tính của bạn. COB có thể bị ước tính cao, do đó có thể dẫn đến việc cung cấp nhiều insulin hơn !!!!!</string>
     <string name="bolus_constraint_applied_warn">Giới hạn bolus đã áp dụng: %1$.2f U đến %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus chỉ được ghi lại (không tiêm qua pump)</string>
     <string name="advisoralarm">Chạy báo thức khi đến giờ ăn</string>
+    <string name="wizard_bg_label">BG</string>
+    <string name="wizard_correction">Hiệu chỉnh</string>
+    <string name="wizard_subtotal">Tổng phụ</string>
+    <string name="carbs_type_bread">Bánh mì, bánh mặn, sữa chua, trái cây (táo, chuối, lê), khoai tây, cơm, kiều mạch, bột yến mạch, thực phẩm giàu carb chậm và thấp, rau củ</string>
+    <string name="carbs_type_cake">Bánh bao, mì ống, ẩm thực châu Á giàu carb và chất béo, bánh ngọt và bánh men, ngũ cốc, cháo từ ngũ cốc, mật ong, mứt</string>
+    <string name="carbs_type_pizza">Lasagna, pizza, hamburger, khoai tây chiên, khoai tây nướng, snack như khoai tây lát chiên và các món tương tự</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="wizard_total">Tổng cộng</string>
+    <string name="wizard_carb_time">Thời gian ăn tinh bột</string>
+    <string name="carb_time_now">Bây giờ</string>
+    <string name="change">Thay đổi</string>
+    <string name="wizard_set_alarm">Đặt báo thức</string>
+    <string name="wizard_use_percentage">Sử dụng phần trăm</string>
+    <string name="wizard_include_bg">Bao gồm BG</string>
+    <string name="wizard_include_tt">Bao gồm Mục tiêu tạm thời</string>
+    <string name="wizard_include_trend">Bao gồm xu hướng BG</string>
+    <string name="wizard_include_iob">Bao gồm IOB</string>
+    <string name="wizard_include_cob">Bao gồm COB</string>
+    <string name="wizard_advanced">Nâng cao</string>
+    <string name="wizard_calculation">Tính toán</string>
     <string name="no_action_selected">Không có hành động nào được chọn, sẽ không có gì xảy ra</string>
     <string name="carb_equal_zero_no_action">Carb = 0. Không có hành động nào được thực hiện!</string>
+    <string name="bolus_equal_zero_no_action">Bolus = 0. Không thực hiện hành động nào!</string>
     <string name="wizard_no_insulin_required">Không cần insulin!</string>
     <string name="wizard_no_actual_bg">Chưa có BG gần đây để tính toán!</string>
     <string name="wizard_no_active_profile">Chưa có Hồ sơ nào hoạt động!</string>
@@ -609,12 +658,14 @@
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">Xu hướng 15\': %1$.2fU</string>
+    <string name="wizard_trend_detail">Xu hướng 15 phút (%1$s %2$s)</string>
     <string name="wizard_explain_percent">Tỷ lệ/Phần trăm: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Vượt giới hạn insulin!\nKhông thể tiêm %1$.2fU</string>
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">Không có bơm khả dụng!</string>
     <string name="quickwizard">QuickWizard</string>
+    <string name="quickwizard_managemnt">Quản lý Quick Wizar</string>
     <!--    Preferences-->
     <string name="child">Trẻ em</string>
     <string name="teenage">Thanh thiếu niên</string>
@@ -636,6 +687,7 @@
     <string name="tempbasal_label">Liều nền tạm thời</string>
     <string name="extended_bolus_label">Liều Bolus kéo dài</string>
     <string name="serial_number">Số sê-ri</string>
+    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">Ngắt kết nối</string>
     <string name="connecting">Đang kết nối</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Đã nhấn kết nối với Bơm</string>
@@ -649,6 +701,7 @@
     <string name="device_changed" comment="26 characters max for translation">Thiết bị đã thay đổi</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus thành công</string>
     <string name="temp_basal_delivery_error">Lỗi khi tiêm liều nền tạm thời</string>
+    <string name="ebstopsloop">Dùng Bolus kéo dài sẽ tạm dừng vòng lặp kín trong thời gian thực hiện. Bạn có muốn tiếp tục không?</string>
     <string name="not_set_short">Chưa đặt</string>
     <string name="pump_busy">Bơm đang bận</string>
     <string name="connection_error">Lỗi kết nối bơm</string>
@@ -657,6 +710,12 @@
     <string name="pairing">Đang ghép đôi</string>
     <string name="initializing">Đang khởi tạo...</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Cảnh báo</string>
+    <string name="retry" comment="Button label to retry a failed operation">Thử lại</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Kết thúc</string>
+    <string name="firmware" comment="Pump firmware version label">Phần mềm</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Tốc độ liều Bolus</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Lịch sử</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Giới hạn tỷ lệ nền tối đa ở %1$.2f U/h do %2$s</string>
     <string name="pumplimit">giới hạn Bơm</string>
@@ -667,7 +726,9 @@
     <string name="confirmation">Xác nhận</string>
     <string name="message">Nội dụng tin nhắn</string>
     <string name="ok">ĐỒNG Ý</string>
+    <string name="next">Tiếp theo</string>
     <string name="cancel">Hủy</string>
+    <string name="dismiss">Bỏ qua</string>
     <string name="yes">Có</string>
     <string name="no">Không</string>
     <string name="close">Đóng</string>
@@ -681,6 +742,10 @@
     <string name="export_failed">Thất bại</string>
     <string name="export_alert">CẢNH BÁO</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Chưa thiết lập mật khẩu chính!\n\nVui lòng đặt mật khẩu chính trong Tùy chọn cài đặt (%1$s)</string>
+    <string name="export_to">Xuất cài đặt đến</string>
+    <string name="password_preferences_encrypt_prompt">Hệ thống sẽ yêu cầu mật khẩu chính để mã hóa các thiết lập bạn xuất ra.</string>
+    <string name="preferences_export_canceled">Xuất dữ liệu đã bị hủy! Tùy chọn KHÔNG được xuất dữ liệu!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Đã xuất cài đặt</string>
     <string name="export_result_message_failed">Xuất cài đặt THẤT BẠI!</string>
@@ -688,8 +753,43 @@
     <string name="export_result_message_expired">Xuất cài đặt bị hủy: mật khẩu đã hết hạn. Vui lòng xuất thủ công và nhập lại!</string>
     <string name="export_result_message_disabled">Cảnh báo (automation): Xuất cài đặt chưa được bật!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Xuất dữ liệu lên đám mây thành công</string>
+    <string name="export_cloud_failed">Xuất dữ liệu lên đám mây THẤT BẠI!</string>
+    <string name="csv_exported">Dữ liệu người dùng đã được xuất</string>
+    <string name="csv_export_failed">Xuất các mục nhập của người dùng THẤT BẠI!</string>
+    <string name="logs_sent">Đã gửi nhật ký qua email</string>
+    <string name="logs_send_failed">Gửi nhật ký thất bại</string>
+    <string name="export_options">Xuất các tuỳ chọn</string>
+    <string name="cloud_directory">Thư mục đám mây</string>
+    <string name="export_settings_local">Xuất cài đặt (Cục bộ)</string>
+    <string name="export_settings_cloud">Xuất cài đặt (Đám mây)</string>
+    <string name="export_settings_both">Xuất cài đặt (Cục bộ + Đám mây)</string>
+    <string name="import_settings_local">Nhập cài đặt (Cục bộ)</string>
+    <string name="import_settings_cloud">Nhập cài đặt (Đám mây)</string>
+    <string name="import_settings_both">Nhập cài đặt (Cục bộ/Đám mây)</string>
+    <string name="send_logs_to_cloud">Xuất nhật ký lên đám mây</string>
+    <string name="export_csv_to_cloud">Xuất dữ liệu người dùng lên đám mây (csv)</string>
+    <string name="export_csv_to_local">Xuất mục dữ liệu vào cục bộ (csv)</string>
+    <string name="setup_cloud_directory_first">Vui lòng thiết lập Thư mục đám mây trước để sử dụng Xuất Cài đặt</string>
+    <string name="cloud_token_expired_or_invalid">Quyền xác thực lưu trữ đám mây đã hết hạn hoặc không hợp lệ. Vui lòng xác thực lại.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Cục Bộ</string>
+    <string name="chip_cloud">Đám mây</string>
+    <string name="chip_email">Email</string>
+    <string name="send_logs">Gửi nhật ký</string>
+    <string name="file_management">Quản lý tập tin</string>
+    <string name="database_management">Quản lý cơ sở dữ liệu</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Cấu hình mức độ chi tiết của nhật ký</string>
+    <string name="maintenance_send_logs_desc">Chia sẻ nhật ký để khắc phục sự cố</string>
+    <string name="maintenance_delete_logs_desc">Xóa các tệp nhật ký cũ</string>
+    <string name="maintenance_aaps_directory_desc">Chọn thư mục lưu trữ cục bộ</string>
+    <string name="maintenance_cloud_directory_desc">Cài đặt lưu trữ đám mây (Google Drive)</string>
+    <string name="maintenance_export_desc">Lưu bản sao lưu cài đặt được mã hóa</string>
+    <string name="maintenance_import_desc">Khôi phục cài đặt từ bản sao lưu</string>
+    <string name="maintenance_export_csv_desc">Xuất lịch sử điều trị dưới dạng bảng tính</string>
+    <string name="maintenance_cleanup_db_desc">Xóa các mục cũ khỏi cơ sở dữ liệu</string>
+    <string name="maintenance_reset_aps_results_desc">Xóa kết quả thuật toán đã lưu</string>
     <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">giảm %1$s bởi%2$s</string>
