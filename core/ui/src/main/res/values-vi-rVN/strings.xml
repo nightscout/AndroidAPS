@@ -812,6 +812,7 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Tùy chọn plugin</string>
     <!-- Navigation -->
+    <string name="manage">Quản lý</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
     <!-- Site Rotation -->
