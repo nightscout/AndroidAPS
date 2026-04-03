@@ -768,9 +768,40 @@
     <string name="import_settings_local">Importă setări (Local)</string>
     <string name="import_settings_cloud">Importă setări (Cloud)</string>
     <string name="import_settings_both">Importă setări (local/Cloud)</string>
+    <string name="send_logs_to_cloud">Exportați jurnalele în cloud</string>
+    <string name="export_csv_to_cloud">Exportați intrările utilizatorului în Cloud (csv)</string>
+    <string name="export_csv_to_local">Exportați intrările utilizatorului în stocarea locală (csv)</string>
+    <string name="setup_cloud_directory_first">Vă rugăm să setați Dosarul Cloud mai întâi pentru a utiliza Setările de Export</string>
+    <string name="cloud_token_expired_or_invalid">Autorizarea stocării în cloud a expirat sau este invalidă. Vă rugăm să reautorizați.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Local</string>
+    <string name="chip_cloud">Cloud</string>
+    <string name="chip_email">Email</string>
+    <string name="send_logs">Trimiteți jurnale</string>
+    <string name="file_management">Gestionarea fișierelor</string>
+    <string name="database_management">Gestionarea bazei de date</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Configurare niveluri de detaliere ale jurnalului</string>
+    <string name="maintenance_send_logs_desc">Distribuiți fișierele de jurnal pentru depanare</string>
+    <string name="maintenance_delete_logs_desc">Ștergeți fișierele jurnal vechi</string>
+    <string name="maintenance_aaps_directory_desc">Selectați dosarul local de stocare</string>
+    <string name="maintenance_cloud_directory_desc">Configurați stocarea cloud (Google Drive)</string>
+    <string name="maintenance_export_desc">Salvați copia de rezervă criptată</string>
+    <string name="maintenance_import_desc">Restaurați setările din copia de rezervă</string>
+    <string name="maintenance_export_csv_desc">Exportați istoricul tratamentului ca foaie de calcul</string>
+    <string name="maintenance_cleanup_db_desc">Eliminați intrările vechi din baza de date</string>
+    <string name="maintenance_reset_aps_results_desc">Ștergeți rezultatele stocate ale algoritmului</string>
+    <string name="maintenance_reset_db_desc">Ștergeți toate bazele de date și reporniți</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Alegeți tipul de stocare</string>
+    <string name="clear_cloud_action">Ștergeți setările</string>
+    <string name="clear_cloud_settings">Ștergeți setările Cloud</string>
+    <string name="clear_cloud_settings_message">Se va comuta la stocarea locală și se va șterge autorizarea. Continuați?</string>
+    <string name="cloud_connection_failed">Conexiune eșuată către stocarea din cloud</string>
+    <string name="cloud_reauthorize_message">Conexiunea către stocarea din cloud a eșuat. Doriți să vă reautentificați?</string>
+    <string name="reauthorize">Reautentificați-vă</string>
+    <string name="cloud_auth_success">Autentificare reușită în stocarea din cloud</string>
+    <string name="authorization_status">Stare autorizare</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">scădere %1$s cu %2$s</string>
     <string name="a11y_plus_button_description">creștere %1$s cu %2$s</string>
@@ -782,16 +813,32 @@
     <string name="need_connect_permission">Aplicația are nevoie de permisiune Bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Cerere utilizator</string>
+    <string name="pump_pair">Asociați</string>
+    <string name="pump_unpair">Dezasociați</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompă împerecheată</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE nu este suportat.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nu este acceptat sau dispozitivul nu este asociat.</string>
     <string name="ble_not_enabled">Bluetooth-ul este dezactivat.</string>
+    <string name="ble_permissions_missing">Permisiunile Bluetooth nu sunt acordate. Vă rugăm să le acordați în setările aplicației.</string>
     <string name="location_not_found_title">Localizarea este dezactivată</string>
     <string name="location_not_found_message">Pentru a putea căuta dispozitive Bluetooth noi, trebuie să activați localizarea. AAPS nu folosește datele dumneavoastră de localizare și acestea pot fi dezactivate după stabilirea conexiunii cu pompa.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferințe plugin</string>
     <!-- Navigation -->
+    <string name="nav_about">Despre</string>
+    <string name="nav_about_desc">Vizualizați versiunea aplicației și informațiile</string>
+    <string name="nav_exit">Ieșiți</string>
+    <string name="open_navigation">Deschideți navigare</string>
+    <string name="nav_history_browser">Vizualizare istoric</string>
+    <string name="nav_history_browser_desc">Răsfoiți datele istorice și graficele</string>
+    <string name="overview">Privire de ansamblu</string>
+    <string name="appearance">Aspect</string>
+    <string name="manage">Gestionați</string>
+    <string name="localprofile">Profil</string>
+    <string name="nav_setupwizard">Asistent de configurare</string>
+    <string name="nav_setupwizard_desc">Configurați AAPS pas cu pas</string>
+    <string name="statistics">Statistici</string>
     <string name="statistics_desc">Vizualizați statistici și rapoarte</string>
     <string name="tdd_cycle_pattern">Tipar ciclu DZT (Doză zilnică totală)</string>
     <string name="tdd_cycle_pattern_desc">Suprapunerea insulinei zilnice în cicluri de 28 de zile până la identificarea tiparelor recurente</string>
@@ -895,6 +942,9 @@
     <!--    Search-->
     <string name="search">Căutați</string>
     <string name="search_preferences">Preferințe căutare</string>
+    <string name="clear">Ștergeți</string>
+    <string name="search_category_categories">Categorii de preferințe</string>
+    <string name="search_category_preferences">Preferințe</string>
     <string name="search_category_dialogs">Dialoguri</string>
     <string name="search_category_plugins">Module</string>
     <string name="search_category_wiki">Documentație</string>
