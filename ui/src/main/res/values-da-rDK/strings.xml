@@ -101,8 +101,6 @@
     <string name="invalid_pct">Ugyldig angivelse af %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Basalrate</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP TRYKKET</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">kun på ur</string>
     <string name="a11y_only_on_phone">kun på telefon</string>
