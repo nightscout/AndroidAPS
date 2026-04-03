@@ -28,6 +28,8 @@
     <!-- manage moved to core:ui module -->
     <string name="description_actions">Một số nút để truy cập nhanh các tính năng thường dùng</string>
     <string name="actions_shortname">ACT</string>
+    <string name="status">Trạng thái</string>
+    <string name="pump_actions">Các hành động của bơm</string>
     <string name="tempbasal_button">Liều nền tạm thời</string>
     <string name="extended_bolus_button">Bolus kéo dài</string>
     <string name="extended_bolus_cancel_button">Hủy liều Bolus kéo dài</string>
