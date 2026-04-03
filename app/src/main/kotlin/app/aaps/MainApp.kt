@@ -671,7 +671,7 @@ class MainApp : Application(), HasAndroidInjector {
     }
 
     private suspend fun dataMigrations() {
-        // Migrate to database 32 (ICfg)
+        // Migrate to database 33 (ICfg)
         // Grab default value first
         val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
             localProfileManager.profile?.getSpecificProfile(profileName)?.iCfg?.dia
@@ -741,12 +741,12 @@ class MainApp : Application(), HasAndroidInjector {
 
         // Log a single user entry for the entire migration
         if (totalMigrated > 0) {
-            aapsLogger.debug(LTag.CORE, "Migration to DB 32 complete: $totalMigrated records updated")
+            aapsLogger.debug(LTag.CORE, "Migration to DB 33 complete: $totalMigrated records updated")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE(
                     timestamp = dateUtil.now(),
                     type = TE.Type.NOTE,
-                    note = "Database migration to v32: $totalMigrated records updated (insulin configuration)",
+                    note = "Database migration to v33: $totalMigrated records updated (insulin configuration)",
                     glucoseUnit = GlucoseUnit.MGDL
                 ),
                 action = Action.START_AAPS,
