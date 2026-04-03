@@ -117,8 +117,6 @@
     <string name="invalid_pct">Ongeldig % invoer</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Basaalstand</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP INGEDRUKT</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">alleen op smartwatch</string>
     <string name="a11y_only_on_phone">alleen op telefoon</string>
