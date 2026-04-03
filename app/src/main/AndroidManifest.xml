@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Permission required to use the phone's NFC hardware -->
+    <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
@@ -84,6 +86,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- NfcControlActivity processes NFC tags with AAPS commands.
+             The device must be unlocked before the activity can run.
+             The intent filter limits it to tags with the specific MIME type. -->
+        <activity
+            android:name="app.aaps.plugins.main.general.nfcCommands.NfcControlActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/vnd.app.aaps.command" />
+            </intent-filter>
+        </activity>
+
+        <!-- NfcBuildActivity: tag-command builder, launched from My Tags.
+             Not exported — only started by the app itself. -->
+        <activity
+            android:name="app.aaps.plugins.main.general.nfcCommands.NfcBuildActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
         <!-- Receive new BG readings from other local apps -->
         <receiver
             android:name="app.aaps.receivers.DataReceiver"

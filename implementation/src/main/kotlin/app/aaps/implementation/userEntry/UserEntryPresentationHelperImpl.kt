@@ -129,6 +129,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.MDI                 -> R.drawable.ic_ict
         Sources.VirtualPump         -> R.drawable.ic_virtual_pump
         Sources.SMS                 -> R.drawable.ic_sms
+        Sources.NfcCommands         -> R.drawable.ic_nfc
         //Sources.Treatments          -> R.drawable.ic_treatments
         Sources.Wear                -> R.drawable.ic_watch
         Sources.Food                -> R.drawable.ic_food

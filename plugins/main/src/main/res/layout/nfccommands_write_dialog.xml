@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="28dp">
+
+    <FrameLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="20dp">
+
+        <View
+            android:id="@+id/ring3"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:alpha="0.25" />
+
+        <View
+            android:id="@+id/ring2"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_gravity="center"
+            android:alpha="0.5" />
+
+        <View
+            android:id="@+id/ring1"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/nfc_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/nfccommands"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_nfc"
+            android:tint="@android:color/white" />
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/nfccommands_write_ready"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/write_summary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textStyle="italic" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@android:string/cancel" />
+
+</LinearLayout>

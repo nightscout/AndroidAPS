@@ -19,6 +19,7 @@ import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
 import app.aaps.plugins.main.general.actions.ActionsPlugin
 import app.aaps.plugins.main.general.food.FoodPlugin
+import app.aaps.plugins.main.general.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.persistentNotification.PersistentNotificationPlugin
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -180,6 +181,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(280)
     abstract fun bindSmsCommunicatorPlugin(plugin: SmsCommunicatorPlugin): PluginBase
+
+    @Binds
+    @NotNSClient
+    @IntoMap
+    @IntKey(285)
+    abstract fun bindNfcCommandsPlugin(plugin: NfcCommandsPlugin): PluginBase
 
     @Binds
     @APS

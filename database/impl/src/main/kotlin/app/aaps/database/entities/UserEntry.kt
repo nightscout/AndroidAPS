@@ -194,6 +194,7 @@ data class UserEntry(
         VirtualPump,
         Random,
         SMS,                //From SMS plugin
+        NfcCommands,        //From NFC Commands plugin
         Treatments,         //From Treatments plugin
         Wear,               //From Wear plugin
         Food,               //From Food plugin
