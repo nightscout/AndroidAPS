@@ -54,6 +54,7 @@
     <string name="retry">Reintentar</string>
     <string name="step_prepare_patch">Activar parche</string>
     <string name="step_prepare_patch_connect">Conectar y llenar</string>
+    <string name="step_select_insulin">Seleccionar insulina</string>
     <string name="step_prime">Purgar</string>
     <string name="step_priming">Purgando</string>
     <string name="step_priming_complete">Purgado completado</string>
@@ -101,8 +102,17 @@
     <string name="pump_unreachable_threshold_minutes_summary">Se recomienda configurarlo a 30 minutos, debido a que el parche de Medtrum puede presentar fallos y quedar inaccesible.</string>
     <string name="sn_input_title">Número de serie</string>
     <string name="sn_input_invalid">¡Número de serie inválido!</string>
+    <string name="change_sn">Cambiar</string>
     <string name="alarm_setting_title">Ajustes de las alarmas</string>
     <string name="alarm_setting_summary">Selecciona los ajustes de la alarma de la bomba que prefieras.</string>
+    <string name="alarm_setting_light_vibrate_beep">Luz, vibración y pitido</string>
+    <string name="alarm_setting_light_vibrate">Luz y vibración</string>
+    <string name="alarm_setting_light_beep">Luz y pitido</string>
+    <string name="alarm_setting_light">Luz</string>
+    <string name="alarm_setting_vibrate_beep">Vibración y pitido</string>
+    <string name="alarm_setting_vibrate">Vibración</string>
+    <string name="alarm_setting_beep">Pitido</string>
+    <string name="alarm_setting_silent">Silencio</string>
     <string name="pump_warning_notification_title">Notificación sobre advertencia de la bomba</string>
     <string name="pump_warning_notification_summary">Mostrar notificación en advertencias de la bomba no críticas: batería baja, reserva baja (20 unidades) y próxima a caducar. Se recomienda dejarlo habilitado cuando las alarmas de la bomba estén configuradas en silencio.</string>
     <string name="pump_warning_expiry_hour_title">Aviso de expiración de la bomba [horas]</string>
