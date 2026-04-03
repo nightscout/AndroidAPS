@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_button_activate_pod">Activează Pod</string>
-    <string name="omnipod_common_pod_management_button_deactivate_pod">Dezactivează Pod</string>
-    <string name="omnipod_common_pod_management_button_discard_pod">Renunţă la Pod</string>
-    <string name="omnipod_common_pod_management_discard_pod_confirmation">Dacă renunțați la Pod, nu veți mai putea să comunicați cu el. Ar trebui să faceți acest lucru doar atunci când toate comunicațiile cu Pod-ul eșuează în mod persistent. Daca mai puteți comunica cu Pod-ul, va rugam sa folosiți opțiunea <b>Dezactivare Pod</b>.\n\nDacă doriți să continuați, vă rugăm să vă asigurați că îndepărtați Pod-ul de pe corpul dvs!</string>
-    <string name="omnipod_common_pod_management_button_play_test_beep">Redă beep-uri de test</string>
-    <string name="omnipod_common_pod_management_button_pod_history">Istoric Pod</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Activează pompă</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Dezactivează pompă</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Renunțați la pompă</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Dacă renunțați la pompă, nu veți mai putea să comunicați cu ea. Ar trebui să faceți acest lucru doar atunci când toate comunicațiile cu pompa eșuează în mod persistent. Daca mai puteți comunica cu pompa, va rugăm să folosiți opțiunea <b>Dezactivare pompă</b>.\n\nDacă doriți să continuați, vă rugăm să vă asigurați că îndepărtați pompa de pe corpul dumneavoastră!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Redați semnale sonore de test</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Istoric pompă</string>
     <!-- Omnipod - Error -->
-    <string name="omnipod_common_error_pod_not_attached">Niciun Pod activ</string>
+    <string name="omnipod_common_error_pod_not_attached">Nicio pompă activă</string>
     <string name="omnipod_common_error_set_basal_failed">Setarea profilului bazalei a eșuat.</string>
     <string name="omnipod_common_error_bolus_did_not_succeed">Bolusul nu a avut succes.</string>
-    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Nu s-a reușit setarea unui profil de rate bazale: s-a primit un profil gol. Asigurați-va ca ați activat profilul ratelor bazale.</string>
-    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Nu e activ niciun profil de rate bazale. Asigurați-va ca activați profilul ratelor bazale.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Nu s-a reușit setarea unui profil de rate bazale: s-a primit un profil gol. Asigurați-vă că ați activat profilul ratelor bazale.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Nu e activ niciun profil de rate bazale. Asigurați-vă că activați profilul ratelor bazale.</string>
     <string name="omnipod_common_error_unsupported_custom_command">Comandă personalizată nesuportată: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Eroare la actualizarea stării</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Eșec la reîmprospătarea stării la pornire</string>
@@ -24,19 +24,19 @@
     <string name="omnipod_common_error_failed_to_insert_cannula">Nu s-a putut insera canula</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Timpul de activare al Pod-ul a fost depășit. Acest Pod nu mai poate fi activat.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">A eșuat verificarea progresului activării. Va rugam sa reîncercați.</string>
-    <string name="omnipod_common_error_pod_suspended">Pod suspendat</string>
-    <string name="omnipod_common_error_failed_to_play_test_beep">Nu s-a reușit redarea beep-ului de test</string>
-    <string name="omnipod_common_error_time_out_of_sync">Timpul de pe Pod nu este sincronizat. Va rugam sa actualizați timpul din secțiunea Omnipod.</string>
+    <string name="omnipod_common_error_pod_suspended">Pompă suspendată</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">Nu s-a reușit redarea semnalului sonor de test</string>
+    <string name="omnipod_common_error_time_out_of_sync">Timpul de pe pompă nu este sincronizat. Vă rugăm să actualizați timpul din secțiunea Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">A apărut o eroare neașteptată. Vă rugăm să o raportați! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation_expiration_alerts_updated">Setările pentru alarme au fost actualizate în Pod.</string>
-    <string name="omnipod_common_confirmation_time_on_pod_updated">Timpul in Pod a fost actualizat.</string>
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">Setările pentru alarme au fost actualizate în pompă.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">Timpul din pompă a fost actualizat.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Setați ora</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Suspendare</string>
     <string name="omnipod_common_overview_button_resume_delivery">Reia Livrarea</string>
     <string name="omnipod_common_overview_button_silence_alerts">Oprește Alarmele</string>
-    <string name="omnipod_common_overview_pod_status">Status Pod</string>
+    <string name="omnipod_common_overview_pod_status">Status pompă</string>
     <string name="omnipod_common_overview_total_delivered">Total livrat</string>
     <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">ID unic</string>
@@ -47,56 +47,56 @@
     <string name="omnipod_common_overview_last_bolus">Ultimul Bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Rată bazală temporară</string>
     <string name="omnipod_common_overview_base_basal_rate">Rată bazală implicită</string>
-    <string name="omnipod_common_overview_pod_active_alerts">Alarme active ale Pod-ului</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Alarme active ale pompei</string>
     <string name="omnipod_common_overview_firmware_version">Versiune Firmware</string>
-    <string name="omnipod_common_overview_time_on_pod">Timp Pod</string>
+    <string name="omnipod_common_overview_time_on_pod">Timp pompă</string>
     <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minute)</string>
     <string name="omnipod_common_overview_reservoir_concentration_value_over50">Peste %1$s rămas</string>
     <string name="omnipod_common_uncertain">nesigur</string>
     <!-- Omnipod - Wizard Base -->
-    <string name="omnipod_common_wizard_button_deactivate_pod">Dezactivare Pod</string>
-    <string name="omnipod_common_wizard_exit_confirmation_text">Nu aţi finalizat încă toţi paşii. Sunteţi sigur că doriţi să ieşiţi?</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Dezactivare pompă</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">Nu ați finalizat încă toți pașii. Sunteți sigur că doriți să ieșiți?</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">Ieșire</string>
     <!-- Omnipod - Pod Activation Wizard -->
-    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Umplere Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inițializează Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Atașează Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">\nPregătiți locul de infuzie. Scoateți capacul acului și suport adeziv și atașați Pod-ul la locul de infuzie.\n\nDacă canula pare în neregulă, apăsați <b>Anulare</b> și aruncați Pod-ul.\n\nApăsați <b>Următorul</b> pentru a introduce canula și a începe livrarea bazalei.</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Când apăsați <b>OK</b>, canula va fi introdusa. Asigurați-vă că ați atașat Pod-ul de locul de inserție.</string>
+    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Umplere pompă</string>
+    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inițializează pompă</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Atașează pompă</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">\nPregătiți locul de infuzie. Scoateți capacul acului și suport adeziv și atașați pompa la locul de infuzie.\n\nDacă canula pare în neregulă, apăsați <b>Anulare</b> și înlăturați pompa.\n\nApăsați <b>Următor</b> pentru a introduce canula și a începe livrarea bazalei.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Când apăsați <b>OK</b>, canula va fi introdusă. Asigurați-vă că ați atașat pompa la locul de infuzie.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Inserează canula</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Încercare de programare inițială a ratelor bazale si de inserție a canulei.\n\nCând canula a fost inserata cu succes, puteți apăsa <b>Următorul</b>.</string>
-    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod Activat</string>
-    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Noul Pod este acum activ.\n\nRata bazala a fost programata și a fost introdusa canula.\n\nVă rugăm să verificați dacă canula a fost inserată corect și să schimbați Pod-ul dacă considerați altfel.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Încercare de programare inițială a ratelor bazale si de inserție a canulei.\n\nCând canula a fost inserata cu succes, puteți apăsa <b>Următor</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pompă activată</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Noua pompă este acum activă.\n\nRata bazala a fost programata și a fost introdusa canula.\n\nVă rugăm să verificați dacă canula a fost inserată corect și să schimbați pompa dacă considerați altfel.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
-    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Dezactivare Pod</string>
-    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">\nApăsați <b>Următorul</b> pentru a dezactiva Pod-ul.\n\n<b>Notă:</b> Acest lucru va suspenda orice livrare de insulină și va dezactiva Pod-ul.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Se dezactivează Pod-ul</string>
-    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Se dezactivează Pod-ul.\n\nCand dezactivarea s-a încheiat cu succes, puteți sa apăsați <b>Următorul</b>.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod Dezactivat</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pod dezactivat.\n\nScoateți Pod-ul și reciclați-l.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod Eliminat</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Starea Pod-ului a fost eliminată. Livrarea insulinei nu a fost suspendată deoarece Pod-ul nu a fost dezactivat corespunzător!\n\nVa rugăm să eliminați Pod-ul de pe corp și să îl reciclați.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Dacă renunțați la Pod, nu veți mai putea comunica cu acesta. Ar trebui să faceți acest lucru doar atunci când orice comunicare cu Pod-ul eșuează în mod persistent. Sigur doriți să renunțați la acest Pod?</string>
-    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Renunţă la Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Dezactivare Pompă</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">\nApăsați <b>Următor</b> pentru a dezactiva pompa.\n\n<b>Notă:</b> Acest lucru va suspenda orice livrare de insulină și va dezactiva pompa.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Se dezactivează pompa</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Se dezactivează pompa.\n\nCand dezactivarea s-a încheiat cu succes, puteți sa apăsați <b>Următorul</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pompă dezactivată</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pompă dezactivată.\n\nScoateți pompa și reciclați-o.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pompă eliminată</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Starea pompei a fost eliminată. Administrarea insulinei nu a fost suspendată deoarece pompa nu a fost dezactivată corespunzător!\n\nVă rugăm să eliminați pompa de pe corp și să o reciclați.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Dacă renunțați la pompă, nu veți mai putea comunica cu aceasta. Ar trebui să faceți acest lucru doar atunci când orice comunicare cu pompa eșuează în mod persistent. Sigur doriți să renunțați la această pompă?</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Renunță la pompă</string>
     <!-- Omnipod - Preferences -->
-    <string name="omnipod_common_preferences_bolus_beeps_enabled">Bip pentru Bolus activat</string>
-    <string name="omnipod_common_preferences_basal_beeps_enabled">Bip pentru Bazală activat</string>
-    <string name="omnipod_common_preferences_smb_beeps_enabled">Bip pentru SMB activat</string>
-    <string name="omnipod_common_preferences_tbr_beeps_enabled">Bip pentru TBR activat</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Afișare buton de Suspendare Livrare în secțiunea Omnipod</string>
-    <string name="omnipod_common_preferences_time_change_enabled">Detectare DST/fus orar activată</string>
-    <string name="omnipod_common_preferences_expiration_reminder_enabled">Notificare de expirare activata</string>
-    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Când este activat, pod-ul va face bip când timpul specificat va fi atins</string>
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Semnal sonor pentru Bolus activat</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Semnal sonor pentru Bazală activat</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Semnal sonor pentru SMB activat</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Semnal sonor pentru TBR activat</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Afișare buton de Suspendare Administrare în secțiunea Omnipod</string>
+    <string name="omnipod_common_preferences_time_change_enabled">Detectare oră de vară/fus orar activată</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Notificare de expirare activată</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Când este activat, pompa va emite un semnal sonor când timpul specificat va fi atins</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Reamintire cu câteva ore înainte de expirare (72 ore)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Alertă de expirare activată</string>
-    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Când este activat, pod va apărea, când timpul specificat este atins și cu 1 oră înainte de închidere</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Când este activat, pompa va emite un semnal sonor, când timpul specificat este atins și cu 1 oră înainte de închidere</string>
     <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alertă la ore înainte de oprire (80 de ore)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alertă rezervor aproape gol activată</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Număr unități</string>
-    <string name="omnipod_common_preferences_automatically_silence_alerts">Confirmare automată alerte Pod</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Confirmare automată alerte pompă</string>
     <string name="omnipod_common_preferences_category_other">Altele</string>
     <string name="omnipod_common_preferences_category_alerts">Alerte</string>
-    <string name="omnipod_common_preferences_category_confirmation_beeps">Beep-uri de confirmare</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Semnale sonore de confirmare</string>
     <string name="omnipod_common_preferences_category_notifications">Notificări</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sunet pentru notificări RBT incerte activat</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sunet pentru notificările SMB incerte activat</string>
@@ -109,7 +109,7 @@
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Inițializarea este în curs (se așteaptă inserarea canulei)</string>
     <string name="omnipod_common_pod_status_running">Rulează</string>
     <string name="omnipod_common_pod_status_suspended">Suspendat</string>
-    <string name="omnipod_common_pod_status_pod_fault">Defecțiune Pod</string>
+    <string name="omnipod_common_pod_status_pod_fault">Defecțiune pompă</string>
     <string name="omnipod_common_pod_status_inactive">Inactiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Defecțiune Pompă: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
