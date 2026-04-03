@@ -9,11 +9,23 @@
     <string name="start_hypo_tt">Bắt đầu hạ đường huyết (TT)</string>
     <string name="time_offset">Lệch thời gian</string>
     <string name="remind_to_bolus_later">Nhắc tiêm bolus sau</string>
+    <string name="a11y_carb_reminder">Đặt nhắc nhở giờ ăn carbs</string>
     <!--    Widget-->
     <string name="configure">Cấu hình độ trong suốt</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Màn hình hoạt động</string>
+    <string name="time_range">Khoảng thời gian</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_reference">Người khỏe mạnh</string>
+    <string name="cgp_patient">Bệnh nhân</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Rủi ro rất thấp</string>
+    <string name="cgp_pgr_low">Rủi ro thấp</string>
+    <string name="cgp_pgr_moderate">Rủi ro vừa phải</string>
+    <string name="cgp_pgr_high">Rủi ro cao</string>
+    <string name="cgp_pgr_extremely_high">Rủi ro cực cao</string>
     <string name="do_you_want_reset_stats">Bạn có muốn đặt lại thống kê hoạt động không?</string>
     <string name="do_you_want_recalculate_tdd_stats">Bạn có muốn tính toán lại thống kê TDD không?</string>
     <string name="calculation_in_progress">Đang tiến hành tính toán</string>
@@ -41,22 +53,42 @@
     <string name="site_management">Hồ sơ quản lý vị trí tiêm</string>
     <string name="site_management_description">Tại đây bạn có thể chọn quản lý vị trí tiêm, vị trí cảm biến CGM hoặc cả hai. Thiết lập này sẽ được dùng để tự động hiển thị hộp thoại quản lý vị trí mỗi khi phát hiện mục nhập mới</string>
     <string name="record_site_change">Ghi lại vị trí tiêm/cảm biến</string>
+    <string name="update_site_change">Cập nhật vị trí</string>
     <string name="edit_site">Chỉnh sửa</string>
     <string name="record_site_location">Vị trí: %1$s</string>
     <string name="record_site_arrow">Hướng vị trí: %1$s</string>
     <string name="record_site_note">Ghi chú: %1$s</string>
     <string name="delete_site_note">Đã xóa ghi chú</string>
+    <string name="site_filter_info">Chọn loại sự kiện: Thay Cannula / Thay Sensor</string>
     <!-- FillDialog -->
     <string name="fill_warning">Hãy chắc chắn rằng liều lượng phù hợp với thông số của bộ dây truyền!</string>
     <string name="record_pump_site_change">Ghi lại việc thay vị trí tiêm</string>
     <string name="record_insulin_cartridge_change">Ghi lại việc thay ống insulin</string>
+    <string name="fill_prime_amount">Lượng insulin mồi</string>
+    <string name="fill_pump_units_note">Lượng insulin mồi tính theo đơn vị của bơm</string>
+    <string name="fill_insulin_change">Chuyển insulin sang: %1$s (sẽ áp dụng chuyển hồ sơ)</string>
+    <string name="fill_current_insulin">Insulin hiện tại</string>
+    <string name="fill_change_insulin">Thay đổi Insulin</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Không bolus, chỉ lưu lại</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Thiếu tên insulin</string>
+    <string name="insulin_name_exists">Tên insulin %1$s đã tồn tại, vui lòng chọn tên khác</string>
+    <string name="a11y_add_new_insulin">Thêm insulin mới</string>
+    <string name="a11y_delete_current_insulin">Xoa insulin hiện tại</string>
+    <string name="save_or_reset_changes_first">Lưu hoặc đặt lại thay đổi trước</string>
+    <string name="activate_insulin_no_profile">Không tìm thấy hồ sơ hoạt động</string>
+    <string name="activate_insulin_new_insulin">Insulin mới: %1$s</string>
+    <string name="activate_insulin_remaining">Còn lại: %1$d phút</string>
+    <string name="activate_insulin_profile_switch">Chuyển hồ sơ sẽ được tạo:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Lấy đỉnh từ</string>
+    <string name="cannot_delete_last_insulin">Không thể xóa insulin gần nhất</string>
+    <string name="cannot_delete_active_insulin">Không thể xóa insulin đang dùng</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Tái sử dụng %1$d%% %2$dh</string>
     <string name="timeshift_label">Dịch chuyển thời gian</string>
     <string name="percentage_label">Phần trăm</string>
+    <string name="permanent_profile_switch">Vĩnh viễn (0 = không giới hạn thời gian)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Tạm dừng vòng lặp 1 giờ</string>
     <string name="suspendloopfor2h">Tạm dừng vòng lặp 2 giờ</string>
@@ -82,9 +114,14 @@
     <string name="two_hours">2 giờ</string>
     <string name="result_insulin_carbs">Kết quả: %1$s %2$s</string>
     <string name="missing_carbs">Còn thiếu %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% carbs ngay, không kéo dài</string>
+    <string name="wizard_carbs_type_desc">Giảm %1$d%% carbs, thêm %2$d%% eCarbs, trễ %3$d phút, trong %4$dh</string>
+    <string name="wizard_include_info">Chạm để tính hoặc bỏ không tính toán:\n• BG — đường huyết (mặc định bật)\n• TT — mục tiêu tạm thời (mặc định bật)\n• Trend — xu hướng BG (ghi nhớ lần trước)\n• IOB — insulin đang hoạt động (mặc định bật)\n• COB — carbs đang hoạt động (ghi nhớ lần trước)</string>
+    <string name="wizard_bg_age">BG %1$d phút</string>
     <string name="a11y_current_bg">đường huyết hiện tại</string>
     <string name="carb_time_label">Carb time</string>
     <string name="a11y_set_carb_timer">đặt nhắc nhở carb</string>
+    <string name="show_calculation">Hiển thị tính toán</string>
     <!-- Treatments -->
     <string name="no_records_available">Không có bản ghi nào</string>
     <string name="calculation_short">Calc</string>
@@ -103,6 +140,13 @@
     <string name="show_loop">Hiển thị vòng lặp</string>
     <string name="user_entry">Nhập liệu người dùng</string>
     <string name="clone_label">Nhân bản</string>
+    <string name="add_new_profile">Thêm Hồ sơ mới</string>
+    <string name="show_profile">Hiển thị hồ sơ</string>
+    <string name="edit_label">Sửa</string>
+    <string name="edit_profile">Sửa hồ sơ</string>
+    <string name="activate_label">Kích hoạt</string>
+    <string name="activate_profile">Kích hoạt Hồ sơ</string>
+    <string name="remove_label">Loại bỏ</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Loại hồ sơ</string>
     <string name="basal_pct_from_tdd_label">% của liều nền</string>
@@ -117,8 +161,6 @@
     <string name="invalid_pct">Giá trị % không hợp lệ</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Tỷ lệ liều nền</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">ĐÃ NHẤN DỪNG</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">chỉ trên đồng hồ</string>
     <string name="a11y_only_on_phone">chỉ trên điện thoại</string>
@@ -142,10 +184,37 @@
     <string name="limitations">Các hạn chế</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_lines_legend">Các chu kỳ riêng lẻ</string>
+    <string name="cycles_found">%1$d chu kỳ (%2$d ngày)</string>
+    <string name="cycle_day1_date">Ngày 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Đang tính toán… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Không đủ dữ liệu (cần ít nhất 56 ngày cho 2 chu kỳ)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Cả hai</item>
         <item>Chỉ cho phép giá trị dương</item>
         <item>Chỉ cho phép giá trị âm</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Hành động đã chọn</string>
+    <string name="quick_launch_available_actions">Các hành động có sẵn</string>
+    <string name="quick_launch_no_dynamic_items">Không mục nào sẵn có</string>
+    <string name="quick_launch_category_treatment">Điều trị</string>
+    <string name="quick_launch_category_care">Care Portal</string>
+    <string name="quick_launch_category_profile">Hồ sơ</string>
+    <string name="quick_launch_category_temp_target">Các cài đặt sẵn cho mục tiêu tạm thời</string>
+    <string name="quick_launch_category_quick_wizard">Quick Wizard</string>
+    <string name="quick_launch_category_automation">Tự động hóa</string>
+    <string name="quick_launch_all_selected">Tất cả mục đã chọn</string>
+    <string name="quick_launch_no_quick_wizard">Thêm Quick Wizard để sử dụng tại đây</string>
+    <string name="quick_launch_no_automation">Tạo hành động tự động để dùng ở đây</string>
+    <string name="quick_launch_no_tt_presets">Thêm cài đặt sẵn Mục tiêu Tạm thời để sử dụng tại đây</string>
+    <string name="quick_launch_no_profiles">Tạo hồ sơ trong Hồ sơ Cục bộ để dùng ở đây</string>
+    <string name="quick_launch_edit_profile_preset">Sửa Hồ sơ Cài đặt sẵn</string>
+    <string name="quick_launch_profile_percentage">Phần trăm</string>
+    <string name="quick_launch_profile_duration">Thời lượng</string>
+    <string name="quick_launch_profile_permanent">Vĩnh viễn</string>
+    <string name="quick_launch_profile_confirm">Kích hoạt hồ sơ %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d phút</string>
+    <string name="select_arrow">Chọn Mũi tên</string>
 </resources>
