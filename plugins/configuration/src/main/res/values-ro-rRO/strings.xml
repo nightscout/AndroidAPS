@@ -59,6 +59,7 @@
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
     <string name="configbuilder_general_description">Există pluginuri generale pe care le-ați putea găsi utile.</string>
+    <string name="configbuilder_sync_description">Module de încărcare date, sincronizare și de comunicare.</string>
     <string name="configbuilder_constraints_description">Ce constrângeri sunt aplicate?</string>
     <string name="configbuilder_loop_description">Utilizaţi acest lucru pentru a activa integrarea buclei AAPS.</string>
     <string name="configbuilder_insulin_description">Ce tip de insulină folosiți?</string>
