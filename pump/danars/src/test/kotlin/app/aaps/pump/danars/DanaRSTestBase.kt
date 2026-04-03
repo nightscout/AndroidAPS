@@ -1,5 +1,6 @@
 package app.aaps.pump.danars
 
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.comm.DanaRSPacket
@@ -13,6 +14,7 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var uiInteraction: UiInteraction
 
+    val bolusProgressData = BolusProgressData()
     lateinit var danaPump: DanaPump
 
     @BeforeEach

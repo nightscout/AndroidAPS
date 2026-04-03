@@ -2,7 +2,7 @@ package app.aaps.pump.danar.comm
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -33,6 +33,8 @@ open class DanaRTestBase : TestBaseWithProfile() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Mock lateinit var uiInteraction: UiInteraction
+
+    val bolusProgressData = BolusProgressData()
 
     @BeforeEach
     fun setup() {
@@ -65,6 +67,7 @@ open class DanaRTestBase : TestBaseWithProfile() {
                 it.uiInteraction = uiInteraction
                 it.notificationManager = notificationManager
                 it.ch = ch
+                it.bolusProgressData = bolusProgressData
             }
         }
     }

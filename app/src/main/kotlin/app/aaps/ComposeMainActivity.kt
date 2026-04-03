@@ -91,6 +91,8 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.source.DexcomBoyda
@@ -124,6 +126,8 @@ import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.LocalVisibilityContext
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.pump.PumpActivityDialog
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.siteRotation.SiteLocationPickerScreen
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.search.SearchableItem
@@ -226,6 +230,8 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
     @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var bolusProgressData: BolusProgressData
+    @Inject lateinit var commandQueue: CommandQueue
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var callForPrefFile: ActivityResultLauncher<Void?>? = null
@@ -256,6 +262,9 @@ class ComposeMainActivity : AppCompatActivity() {
     private val configurationViewModel: ConfigurationViewModel by viewModels()
     private val siteRotationManagementViewModel: SiteRotationManagementViewModel by viewModels()
 
+    private val pumpCommunicationStatus by lazy {
+        PumpCommunicationStatus(rxBus, commandQueue, this, lifecycleScope)
+    }
     private var navController: NavHostController? = null
     private val _autoShowNotifications = mutableStateOf(false)
     private val disposable = CompositeDisposable()
@@ -546,6 +555,7 @@ class ComposeMainActivity : AppCompatActivity() {
         }
 
         val state by mainViewModel.uiState.collectAsStateWithLifecycle()
+        val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
 
         NavHost(
             navController = navController,
@@ -669,7 +679,15 @@ class ComposeMainActivity : AppCompatActivity() {
                     calcProgress = calcProgress,
                     graphViewModel = graphViewModel,
                     statusLightsDef = builtInSearchables.statusLights,
-                    treatmentButtonsDef = builtInSearchables.treatmentButtons
+                    treatmentButtonsDef = builtInSearchables.treatmentButtons,
+                    // Pump activity
+                    bolusState = bolusState,
+                    pumpStatusText = pumpCommunicationStatus.statusBanner()?.text ?: "",
+                    queueStatusText = pumpCommunicationStatus.queueStatus(),
+                    isPumpCommunicating = pumpCommunicationStatus.statusBanner() != null,
+                    onStopBolus = {
+                        commandQueue.cancelAllBoluses(null)
+                    }
                 )
             }
 
@@ -1184,6 +1202,24 @@ class ComposeMainActivity : AppCompatActivity() {
                 SiteRotationSettingsScreen(
                     viewModel = siteRotationManagementViewModel,
                     onNavigateBack = { navController.safePopBackStack() }
+                )
+            }
+        }
+
+        // Modal bolus progress overlay — shown above everything for standard bolus
+        bolusState?.let { state ->
+            if (!state.isSMB) {
+                val pumpStatus = pumpCommunicationStatus.statusBanner()?.text ?: ""
+                val queueStatus = pumpCommunicationStatus.queueStatus()
+                PumpActivityDialog(
+                    bolusState = state,
+                    pumpStatus = pumpStatus,
+                    queueStatus = queueStatus,
+                    isModal = true,
+                    onStop = {
+                        commandQueue.cancelAllBoluses(null)
+                    },
+                    onDismiss = { }
                 )
             }
         }

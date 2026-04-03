@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -146,6 +147,7 @@ class MedtronicPumpPlugin @Inject constructor(
     pumpSyncStorage: PumpSyncStorage,
     decimalFormatter: DecimalFormatter,
     pumpEnactResultProvider: Provider<PumpEnactResult>,
+    bolusProgressData: BolusProgressData,
     private val wakeAndTuneTaskProvider: Provider<WakeAndTuneTask>,
     private val resetRileyLinkConfigurationTaskProvider: Provider<ResetRileyLinkConfigurationTask>,
     private val blePreCheck: BlePreCheck
@@ -185,6 +187,7 @@ class MedtronicPumpPlugin @Inject constructor(
     decimalFormatter = decimalFormatter,
     //instantiator = instantiator,
     pumpEnactResultProvider = pumpEnactResultProvider,
+    bolusProgressData = bolusProgressData,
     pumpDriverConfigurationInternal = MedtronicPumpDriverConfiguration()
 ), Pump, RileyLinkPumpDevice, PumpSyncEntriesCreator {
 

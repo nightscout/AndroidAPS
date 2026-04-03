@@ -84,6 +84,7 @@ class DanaRPlugin @Inject constructor(
     notificationManager: NotificationManager,
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
+    private val bolusProgressData: BolusProgressData,
     pumpEnactResultProvider: Provider<PumpEnactResult>
 ) : AbstractDanaRPlugin(
     danaPump,
@@ -174,18 +175,19 @@ class DanaRPlugin @Inject constructor(
         var resultOK = false
         if (detailedBolusInfo.insulin > 0) resultOK = executionService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
-        result.success(resultOK && (abs(detailedBolusInfo.insulin - BolusProgressData.delivered) < pumpDescription.bolusStep || danaPump.bolusStopped))
-            .bolusDelivered(BolusProgressData.delivered)
+        val delivered = bolusProgressData.state.value?.delivered ?: 0.0
+        result.success(resultOK && (abs(detailedBolusInfo.insulin - delivered) < pumpDescription.bolusStep || danaPump.bolusStopped))
+            .bolusDelivered(delivered)
         if (!result.success) result.comment(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
                 detailedBolusInfo.insulin,
-                BolusProgressData.delivered,
+                delivered,
                 danaPump.bolusStartErrorCode
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-        detailedBolusInfo.insulin = BolusProgressData.delivered
+        detailedBolusInfo.insulin = delivered
         detailedBolusInfo.timestamp = System.currentTimeMillis()
         if (detailedBolusInfo.insulin > 0) runBlocking {
             pumpSync.syncBolusWithPumpId(

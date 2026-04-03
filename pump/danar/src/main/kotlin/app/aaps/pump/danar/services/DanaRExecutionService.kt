@@ -7,14 +7,11 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.pump.BolusProgressData.stopPressed
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.ui.toast.ToastUtils
@@ -200,7 +197,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
 
     override fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
         if (!isConnected) return false
-        if (stopPressed) return false
+        if (bolusProgressData.isStopPressed) return false
         danaPump.bolusingDetailedBolusInfo = detailedBolusInfo
         danaPump.bolusDone = false
         val preferencesSpeed = preferences.get(DanaIntKey.BolusSpeed)
@@ -233,7 +230,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                 2 -> speed = 60
             }
             // try to find real amount if bolusing was interrupted or comm failed
-            if (BolusProgressData.delivered != detailedBolusInfo.insulin) {
+            if ((bolusProgressData.state.value?.delivered ?: 0.0) != detailedBolusInfo.insulin) {
                 disconnect("bolusingInterrupted")
                 for (i in 0..59) {
                     rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.pump.danar.R.string.waiting_1_minute, i, 60)))
@@ -243,7 +240,8 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                 val expectedEnd = bolusStart + bolusDurationInMSec + 3000
                 while (System.currentTimeMillis() < expectedEnd) {
                     val waitTime = expectedEnd - System.currentTimeMillis()
-                    rxBus.send(EventOverviewBolusProgress(status = rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), id = detailedBolusInfo.id))
+                    val currentPercent = bolusProgressData.state.value?.percent ?: 0
+                    bolusProgressData.updateProgress(currentPercent, rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), bolusProgressData.state.value?.delivered ?: 0.0)
                     SystemClock.sleep(1000)
                 }
                 connect()
@@ -254,16 +252,17 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                 }
                 if (!isConnected) {
                     ToastUtils.errorToast(context, app.aaps.core.ui.R.string.treatmentdeliveryerror)
-                    BolusProgressData.delivered = 0.0
+                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: "", 0.0)
                     return false
                 }
                 mSerialIOThread?.sendMessage(MsgStatus(injector))
                 val lastBolusTime = danaPump.lastBolusTime
                 if (lastBolusTime != null && lastBolusTime > System.currentTimeMillis() - 2 * 60 * 1000L) { // last bolus max 2 min old
-                    BolusProgressData.delivered = danaPump.lastBolusAmount ?: 0.0
+                    val lastAmount = danaPump.lastBolusAmount ?: 0.0
+                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: "", lastAmount)
                     aapsLogger.debug(LTag.PUMP, "Used bolus amount from history: " + danaPump.lastBolusAmount)
                 } else {
-                    BolusProgressData.delivered = 0.0
+                    bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: "", 0.0)
                     aapsLogger.debug(LTag.PUMP, "Bolus amount in history too old: " + dateUtil.dateAndTimeStringNullable(lastBolusTime))
                     return false
                 }

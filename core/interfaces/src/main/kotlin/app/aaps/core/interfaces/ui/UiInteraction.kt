@@ -27,9 +27,6 @@ interface UiInteraction {
     /** The activity for displaying error information. */
     val errorHelperActivity: Class<*>
 
-    /** The activity for showing bolus progress. */
-    val bolusProgressHelperActivity: Class<*>
-
     /** A generic activity that can host a single fragment. */
     val singleFragmentActivity: Class<*>
 
@@ -175,12 +172,6 @@ interface UiInteraction {
      * @param fragmentManager The fragment manager to use.
      */
     fun runSiteRotationDialog(fragmentManager: FragmentManager)
-
-    /**
-     * Shows the bolus progress dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runBolusProgressDialog(fragmentManager: FragmentManager)
 
     /**
      * Defines modes for the profile viewer dialog.

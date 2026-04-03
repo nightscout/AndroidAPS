@@ -38,7 +38,6 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
@@ -65,6 +64,7 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
+import kotlin.math.min
 
 @Singleton
 open class VirtualPumpPlugin @Inject constructor(
@@ -81,6 +81,7 @@ open class VirtualPumpPlugin @Inject constructor(
     private val notificationManager: NotificationManager,
     private val ch: ConcentrationHelper,
     private val insulin: Insulin,
+    private val bolusProgressData: BolusProgressData,
     @ApplicationScope private val appScope: CoroutineScope
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
@@ -225,19 +226,23 @@ open class VirtualPumpPlugin @Inject constructor(
             .bolusDelivered(detailedBolusInfo.insulin)
             .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
             .comment(rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok))
+        val isPriming = bolusProgressData.state.value?.isPriming ?: false
+        val totalInsulin = bolusProgressData.state.value?.insulin ?: detailedBolusInfo.insulin
         var delivering = 0.0
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200)
-            rxBus.send(EventOverviewBolusProgress(ch, PumpInsulin(delivering), id = detailedBolusInfo.id))
+            val pumpInsulin = PumpInsulin(delivering)
+            val percent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
+            bolusProgressData.updateProgress(percent, ch.bolusProgressString(pumpInsulin, isPriming), delivering)
             delivering += 0.1
-            if (BolusProgressData.stopPressed)
+            if (bolusProgressData.isStopPressed)
                 return pumpEnactResultProvider.get()
                     .success(false)
                     .enacted(false)
                     .comment(rh.gs(app.aaps.core.ui.R.string.stop))
         }
         SystemClock.sleep(200)
-        rxBus.send(EventOverviewBolusProgress(rh, percent = 100, id = detailedBolusInfo.id))
+        bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin), detailedBolusInfo.insulin)
         SystemClock.sleep(1000)
         aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
         _lastDataTime.value = System.currentTimeMillis()

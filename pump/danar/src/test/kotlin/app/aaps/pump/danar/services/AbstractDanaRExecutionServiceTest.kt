@@ -3,6 +3,7 @@ package app.aaps.pump.danar.services
 import android.bluetooth.BluetoothManager
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
@@ -36,6 +37,9 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         addInjector { injector ->
             if (injector is MsgBolusStop) {
                 injector.aapsLogger = aapsLogger
+                injector.rh = rh
+                injector.danaPump = danaPump
+                injector.bolusProgressData = BolusProgressData()
             }
         }
     }
@@ -77,6 +81,7 @@ class AbstractDanaRExecutionServiceTest : TestBaseWithProfile() {
         testService.pumpSync = pumpSync
         testService.activePlugin = activePlugin
         testService.notificationManager = notificationManager
+        testService.bolusProgressData = BolusProgressData()
         testService.pumpEnactResultProvider = pumpEnactResultProvider
         testService.rfcommTransport = mock()
         testService.injector = injector

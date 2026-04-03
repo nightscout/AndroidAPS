@@ -20,10 +20,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
-import app.aaps.core.interfaces.rx.events.EventDismissBolusProgressIfRunning
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
@@ -76,6 +74,7 @@ class WearPlugin @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val versionCheckerUtils: VersionCheckerUtils,
+    private val bolusProgressData: BolusProgressData,
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -114,25 +113,21 @@ class WearPlugin @Inject constructor(
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
         dataLayerListenerServiceMobileHelper.startService(context)
-        disposable += rxBus
-            .toObservable(EventDismissBolusProgressIfRunning::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventDismissBolusProgressIfRunning ->
-                           event.resultSuccess?.let {
-                               val status =
-                                   if (it) rh.gs(app.aaps.core.ui.R.string.success)
-                                   else rh.gs(R.string.no_success)
-                               if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 100, status = status)))
-                           }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOverviewBolusProgress::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventOverviewBolusProgress ->
-                           if (!BolusProgressData.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
-                               if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = BolusProgressData.percent, status = BolusProgressData.wearStatus)))
-                           }
-                       }, fabricPrivacy::logException)
+        bolusProgressData.state
+            .drop(1) // Skip initial null emission on collection start
+            .onEach { state ->
+                if (isEnabled()) {
+                    if (state != null) {
+                        if (!state.isSMB || preferences.get(BooleanKey.WearNotifyOnSmb)) {
+                            rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = state.percent, status = state.status)))
+                        }
+                    } else {
+                        // Bolus ended — send 100% to clear wear display
+                        rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 100, status = "")))
+                    }
+                }
+            }
+            .launchIn(newScope)
         merge(
             // Preferences sent to watch via resendData()
             preferences.observe(BooleanKey.WearControl).drop(1).map {},

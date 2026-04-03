@@ -198,9 +198,6 @@
     <!-- Other dialogs -->
     <string name="basal_rate">Basal rate</string>
 
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP PRESSED</string>
-
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">only on watch</string>
     <string name="a11y_only_on_phone">only on phone</string>

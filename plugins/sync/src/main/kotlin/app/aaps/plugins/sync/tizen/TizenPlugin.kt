@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
@@ -28,7 +29,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.UnitDoubleKey
@@ -41,6 +41,12 @@ import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -65,7 +71,8 @@ class TizenPlugin @Inject constructor(
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val pumpStatusProvider: PumpStatusProvider
+    private val pumpStatusProvider: PumpStatusProvider,
+    private val bolusProgressData: BolusProgressData
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -78,8 +85,12 @@ class TizenPlugin @Inject constructor(
 ) {
 
     private val disposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
+
     override fun onStart() {
         super.onStart()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         disposable += rxBus
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
@@ -88,14 +99,19 @@ class TizenPlugin @Inject constructor(
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendData(it) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOverviewBolusProgress::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        bolusProgressData.state
+            .onEach { state ->
+                if (state != null && !state.isSMB) {
+                    sendBolusProgressData(state)
+                }
+            }
+            .launchIn(newScope)
     }
 
     override fun onStop() {
         disposable.clear()
+        scope?.cancel()
+        scope = null
         super.onStop()
     }
 
@@ -106,10 +122,23 @@ class TizenPlugin @Inject constructor(
         basalStatus(bundle)
         pumpStatus(bundle)
 
-        if (event is EventOverviewBolusProgress && !BolusProgressData.isSMB) {
-            bundle.putInt("progressPercent", BolusProgressData.percent)
-            bundle.putString("progressStatus", BolusProgressData.status)
+        bolusProgressData.state.value?.let { state ->
+            if (!state.isSMB) {
+                bundle.putInt("progressPercent", state.percent)
+                bundle.putString("progressStatus", state.status)
+            }
         }
+    }
+
+    private fun sendBolusProgressData(state: BolusProgressState) {
+        val bundle = Bundle()
+        prepareData(EventLoopUpdateGui(), bundle)
+        // prepareData already includes bolus progress from bolusProgressData.state
+        sendBroadcast(
+            Intent(Intents.AAPS_BROADCAST)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .putExtras(bundle)
+        )
     }
 
     private fun sendData(event: Event) {

@@ -3,6 +3,7 @@ package app.aaps.pump.diaconn
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -44,7 +45,7 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         diaconnG8Plugin = DiaconnG8Plugin(
             aapsLogger, rh, preferences, commandQueue, rxBus, context, constraintChecker, diaconnG8Pump,
             pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil, aapsSchedulers,
-            notificationManager, diaconnHistoryDatabase, pumpEnactResultProvider, blePreCheck
+            notificationManager, diaconnHistoryDatabase, pumpEnactResultProvider, BolusProgressData(), blePreCheck
         )
     }
 

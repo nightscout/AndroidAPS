@@ -2,6 +2,7 @@ package app.aaps.pump.virtual
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.StringKey
@@ -19,6 +20,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var bolusProgressData: BolusProgressData
 
     private lateinit var virtualPumpPlugin: VirtualPumpPlugin
     private val testScope = CoroutineScope(Dispatchers.Unconfined)
@@ -27,7 +29,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
     fun prepareMocks() {
         virtualPumpPlugin = VirtualPumpPlugin(
             aapsLogger, rxBus, rh, preferences,
-            commandQueue, pumpSync, config, dateUtil, persistenceLayer, pumpEnactResultProvider, notificationManager, ch, insulin, testScope
+            commandQueue, pumpSync, config, dateUtil, persistenceLayer, pumpEnactResultProvider, notificationManager, ch, insulin, bolusProgressData, testScope
         )
     }
 

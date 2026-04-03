@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.notifications.NotificationId;
 import app.aaps.core.interfaces.notifications.NotificationLevel;
 import app.aaps.core.interfaces.notifications.NotificationManager;
 import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.core.interfaces.pump.BolusProgressData;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpInsulin;
@@ -36,7 +37,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.AapsSchedulers;
 import app.aaps.core.interfaces.rx.bus.RxBus;
 import app.aaps.core.interfaces.rx.events.Event;
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
 import app.aaps.core.interfaces.ui.UiInteraction;
 import app.aaps.core.keys.interfaces.Preferences;
@@ -114,6 +114,7 @@ public class AapsOmnipodErosManager {
     private final NotificationManager notificationManager;
     private final Provider<PumpEnactResult> pumpEnactResultProvider;
     private final ConcentrationHelper ch;
+    private final BolusProgressData bolusProgressData;
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
     private boolean smbBeepsEnabled;
@@ -128,6 +129,7 @@ public class AapsOmnipodErosManager {
     private boolean rileylinkStatsButtonEnabled;
     private boolean showRileyLinkBatteryLevel;
     private boolean batteryChangeLoggingEnabled;
+
     @Inject
     public AapsOmnipodErosManager(@NonNull OmnipodRileyLinkCommunicationManager communicationService,
                                   @NonNull ErosPodStateManager podStateManager,
@@ -143,7 +145,8 @@ public class AapsOmnipodErosManager {
                                   UiInteraction uiInteraction,
                                   NotificationManager notificationManager,
                                   Provider<PumpEnactResult> pumpEnactResultProvider,
-                                  ConcentrationHelper ch
+                                  ConcentrationHelper ch,
+                                  BolusProgressData bolusProgressData
     ) {
 
         this.podStateManager = podStateManager;
@@ -159,6 +162,7 @@ public class AapsOmnipodErosManager {
         this.notificationManager = notificationManager;
         this.pumpEnactResultProvider = pumpEnactResultProvider;
         this.ch = ch;
+        this.bolusProgressData = bolusProgressData;
 
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
@@ -412,7 +416,11 @@ public class AapsOmnipodErosManager {
         try {
             bolusCommandResult = executeCommand(() -> delegate.bolus(PumpTypeExtensionKt.determineCorrectBolusSize(PumpType.OMNIPOD_EROS, detailedBolusInfo.insulin), beepsEnabled, beepsEnabled,
                     detailedBolusInfo.getBolusType() == BS.Type.SMB ? null :
-                            (estimatedUnitsDelivered, percentage) -> sendEvent(new EventOverviewBolusProgress(ch, new PumpInsulin(estimatedUnitsDelivered), detailedBolusInfo.getId()))));
+                            (estimatedUnitsDelivered, percentage) -> {
+                                String status = ch.bolusProgressString(new PumpInsulin(estimatedUnitsDelivered), false);
+                                int percent = Math.min(percentage, 100);
+                                bolusProgressData.updateProgress(percent, status, estimatedUnitsDelivered);
+                            }));
 
             bolusStarted = new Date();
         } catch (Exception ex) {

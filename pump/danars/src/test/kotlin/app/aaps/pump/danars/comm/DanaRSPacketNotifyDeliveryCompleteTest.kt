@@ -15,7 +15,8 @@ class DanaRSPacketNotifyDeliveryCompleteTest : DanaRSTestBase() {
         whenever(rh.gs(anyInt(), anyDouble())).thenReturn("SomeString")
 
         danaPump.bolusingDetailedBolusInfo = DetailedBolusInfo()
-        val packet = DanaRSPacketNotifyDeliveryComplete(aapsLogger, ch, rxBus, danaPump)
+        bolusProgressData.start(1.0, isSMB = false)
+        val packet = DanaRSPacketNotifyDeliveryComplete(aapsLogger, ch, bolusProgressData, danaPump)
         // test params
         Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding

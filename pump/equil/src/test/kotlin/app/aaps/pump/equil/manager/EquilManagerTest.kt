@@ -1,5 +1,6 @@
 package app.aaps.pump.equil.manager
 
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.ble.EquilBLE
@@ -14,17 +15,11 @@ import org.mockito.kotlin.whenever
 
 class EquilManagerTest : TestBaseWithProfile() {
 
-    @Mock
-    private lateinit var pumpSync: PumpSync
-
-    @Mock
-    private lateinit var equilBLE: EquilBLE
-
-    @Mock
-    private lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
-
-    @Mock
-    private lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
+    @Mock private lateinit var pumpSync: PumpSync
+    @Mock private lateinit var equilBLE: EquilBLE
+    @Mock private lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
+    @Mock private lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
+    @Mock lateinit var bolusProgressData: BolusProgressData
 
     private lateinit var equilManager: EquilManager
 
@@ -49,7 +44,8 @@ class EquilManagerTest : TestBaseWithProfile() {
             pumpEnactResultProvider,
             dateUtil,
             notificationManager,
-            ch
+            ch,
+            bolusProgressData
         )
     }
 
@@ -89,6 +85,5 @@ class EquilManagerTest : TestBaseWithProfile() {
     fun `equilState should be null initially`() {
         assertEquals(null, equilManager.equilState)
     }
-
 
 }

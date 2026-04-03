@@ -124,6 +124,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
     @Mock lateinit var concentrationHelper: ConcentrationHelper
     @Mock lateinit var profile: Profile
 
+    private val bolusProgressData = BolusProgressData()
     private lateinit var danaPump: DanaPump
     private lateinit var bleEncryption: BleEncryption
     private lateinit var emulatorTransport: EmulatorBleTransport
@@ -173,8 +174,8 @@ class DanaRSServiceIntegrationTest : TestBase() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
 
         // Wire up message hash table for bolus notification packets
-        val deliveryRatePacket = DanaRSPacketNotifyDeliveryRateDisplay(aapsLogger, concentrationHelper, rxBus, danaPump)
-        val deliveryCompletePacket = DanaRSPacketNotifyDeliveryComplete(aapsLogger, concentrationHelper, rxBus, danaPump)
+        val deliveryRatePacket = DanaRSPacketNotifyDeliveryRateDisplay(aapsLogger, concentrationHelper, bolusProgressData, danaPump)
+        val deliveryCompletePacket = DanaRSPacketNotifyDeliveryComplete(aapsLogger, concentrationHelper, bolusProgressData, danaPump)
         whenever(danaRSMessageHashTable.findMessage(deliveryRatePacket.command)).thenReturn(deliveryRatePacket)
         whenever(danaRSMessageHashTable.findMessage(deliveryCompletePacket.command)).thenReturn(deliveryCompletePacket)
 
@@ -204,6 +205,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
         danaRSService.fabricPrivacy = fabricPrivacy
         danaRSService.pumpSync = pumpSync
         danaRSService.dateUtil = dateUtil
+        danaRSService.bolusProgressData = bolusProgressData
         danaRSService.pumpEnactResultProvider = Provider { pumpEnactResult }
         danaRSService.notificationManager = notificationManager
 
@@ -239,7 +241,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
         danaRSService.danaRSPacketBolusSetExtendedBolus = Provider { DanaRSPacketBolusSetExtendedBolus(aapsLogger) }
         danaRSService.danaRSPacketBolusSetExtendedBolusCancel = Provider { DanaRSPacketBolusSetExtendedBolusCancel(aapsLogger) }
         danaRSService.danaRSPacketBolusSetStepBolusStart = Provider { DanaRSPacketBolusSetStepBolusStart(aapsLogger, danaPump, constraintsChecker) }
-        danaRSService.danaRSPacketBolusSetStepBolusStop = Provider { DanaRSPacketBolusSetStepBolusStop(aapsLogger, rxBus, rh, danaPump) }
+        danaRSService.danaRSPacketBolusSetStepBolusStop = Provider { DanaRSPacketBolusSetStepBolusStop(aapsLogger, bolusProgressData, rh, danaPump) }
         danaRSService.danaRSPacketBasalSetProfileBasalRate = Provider { DanaRSPacketBasalSetProfileBasalRate(aapsLogger) }
         danaRSService.danaRSPacketBasalSetProfileNumber = Provider { DanaRSPacketBasalSetProfileNumber(aapsLogger) }
         danaRSService.danaRSPacketGeneralSetHistoryUploadMode = Provider { DanaRSPacketGeneralSetHistoryUploadMode(aapsLogger) }
@@ -627,7 +629,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
         val initialReservoir = emulatorTransport.pumpState.reservoirRemainingUnits
         val detailedBolusInfo = DetailedBolusInfo().apply { insulin = 0.05 }
 
-        BolusProgressData.stopPressed = false
+        bolusProgressData.start(insulin = 0.05, isSMB = false)
         // Make dateUtil.now() return a past time so the connection-broken timeout triggers
         // immediately in the polling loop (SystemClock.sleep is no-op in unit tests,
         // and bolusDone is not volatile so background thread updates aren't visible)
@@ -647,7 +649,7 @@ class DanaRSServiceIntegrationTest : TestBase() {
         connectAndHandshake()
 
         val detailedBolusInfo = DetailedBolusInfo().apply { insulin = 0.05 }
-        BolusProgressData.stopPressed = false
+        bolusProgressData.start(insulin = 0.05, isSMB = false)
         whenever(dateUtil.now()).thenReturn(System.currentTimeMillis() - 20_000)
 
         danaRSService.bolus(detailedBolusInfo)
@@ -688,7 +690,8 @@ class DanaRSServiceIntegrationTest : TestBase() {
         connectAndHandshake()
 
         val detailedBolusInfo = DetailedBolusInfo().apply { insulin = 1.0 }
-        BolusProgressData.stopPressed = true
+        bolusProgressData.start(insulin = 1.0, isSMB = false)
+        bolusProgressData.stopPressed()
 
         val result = danaRSService.bolus(detailedBolusInfo)
 

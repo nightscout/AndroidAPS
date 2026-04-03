@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -104,6 +105,12 @@ fun MainScreen(
     graphViewModel: GraphViewModel,
     statusLightsDef: PreferenceSubScreenDef,
     treatmentButtonsDef: PreferenceSubScreenDef,
+    // Pump activity
+    bolusState: BolusProgressState? = null,
+    pumpStatusText: String = "",
+    queueStatusText: String? = null,
+    isPumpCommunicating: Boolean = false,
+    onStopBolus: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LocalDateUtil.current
@@ -211,7 +218,12 @@ fun MainScreen(
                         autoShowNotificationSheet = autoShowNotificationSheet,
                         onAutoShowConsumed = onAutoShowConsumed,
                         paddingValues = paddingValues,
-                        fabBottomOffset = if (hasToolbar) 56.dp else 0.dp
+                        fabBottomOffset = if (hasToolbar) 56.dp else 0.dp,
+                        bolusState = bolusState,
+                        pumpStatusText = pumpStatusText,
+                        queueStatusText = queueStatusText,
+                        isPumpCommunicating = isPumpCommunicating,
+                        onStopBolus = onStopBolus
                     )
 
                     // Search results overlay
