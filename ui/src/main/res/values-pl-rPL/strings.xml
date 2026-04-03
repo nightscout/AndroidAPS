@@ -117,8 +117,6 @@
     <string name="invalid_pct">Nieprawidłowa wartość procentowa</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Dawka bazowa</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">NACIŚNIĘTY STOP</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">tylko na zegarku</string>
     <string name="a11y_only_on_phone">tylko na telefonie</string>
