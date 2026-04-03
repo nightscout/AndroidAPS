@@ -21,7 +21,7 @@
     <string name="a11y_add_new_to_list">adăugare nouă la listă</string>
     <string name="do_you_want_switch_profile">Doriți să schimbați profilul și să renunțați la modificările făcute profilului curent?</string>
     <string name="save_or_reset_changes_first">Salvează sau resetează modificările curente mai întâi</string>
-    <string name="delete_current_profile">Ştergeţi profilul curent?</string>
+    <string name="delete_current_profile">Ștergeți profilul curent?</string>
     <string name="units_colon">Unități:</string>
     <!-- Actions -->
     <string name="actions">Acțiuni</string>
