@@ -128,4 +128,14 @@
     <string name="diaconn_g8_errorcode_36">Oprirea bazalei temporare este respinsă atunci când bazala temporară nu rulează</string>
     <string name="diaconn_g8_cloudsend_summary">Trimite jurnalele pompei către Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Sincronizare în Cloud Diaconn</string>
+    <string name="bolus_speed_1">1 U/min</string>
+    <string name="bolus_speed_2">2 U/min</string>
+    <string name="bolus_speed_3">3 U/min</string>
+    <string name="bolus_speed_4">4 U/min</string>
+    <string name="bolus_speed_5">5 U/min</string>
+    <string name="bolus_speed_6">6 U/min</string>
+    <string name="bolus_speed_7">7 U/min</string>
+    <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">Asociere reușită!</string>
+    <string name="diaconn_pairing_successful_message">Pompa dumneavoastră este acum conectată și gata de utilizare.</string>
 </resources>
