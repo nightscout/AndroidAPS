@@ -24,6 +24,13 @@
     <string name="password_not_changed">Parola nu a fost modificată</string>
     <string name="pin_not_changed">PIN nemodificat</string>
     <string name="pin_cleared">PIN șters!</string>
+    <string name="protection_password_hint">Introduceți parola aici</string>
+    <string name="protection_pin_hint">Introduceți codul PIN aici</string>
+    <string name="auth_hint_master_password">Introduceți parola principală</string>
+    <string name="auth_hint_master_or_pin">Introduceți parola principală sau codul PIN</string>
+    <string name="auth_hint_master_or_password">Introduceți parola principală sau parola personalizată</string>
+    <string name="use_pin_password">Utilizați codul PIN/parola</string>
+    <string name="current_master_password">Parola principală curentă</string>
     <string name="master_password_not_set">Parola principală nu este setată</string>
     <string name="aaps_directory_not_selected">Directorul AAPS nu a fost selectat</string>
 </resources>
