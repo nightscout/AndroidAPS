@@ -54,6 +54,7 @@
     <string name="retry">Încearcă din nou</string>
     <string name="step_prepare_patch">Activează patch-ul</string>
     <string name="step_prepare_patch_connect">Conectare și umplere</string>
+    <string name="step_select_insulin">Selectați insulina</string>
     <string name="step_prime">Amorsare</string>
     <string name="step_priming">Se amorsează</string>
     <string name="step_priming_complete">Amorsare finalizată</string>
@@ -101,8 +102,17 @@
     <string name="pump_unreachable_threshold_minutes_summary">Recomandat să se seteze la 30 de minute, deoarece plasturele Medtrum poate eșua și să nu fie accesibil.</string>
     <string name="sn_input_title">Număr de serie</string>
     <string name="sn_input_invalid">Număr de serie invalid!</string>
+    <string name="change_sn">Schimbați</string>
     <string name="alarm_setting_title">Setări alarmă</string>
     <string name="alarm_setting_summary">Selectează setările preferate pentru alarma pompei.</string>
+    <string name="alarm_setting_light_vibrate_beep">Lumină, vibrație și semnal sonor</string>
+    <string name="alarm_setting_light_vibrate">Lumină și vibrație</string>
+    <string name="alarm_setting_light_beep">Lumină și semnal sonor</string>
+    <string name="alarm_setting_light">Lumină</string>
+    <string name="alarm_setting_vibrate_beep">Vibrație și semnal sonor</string>
+    <string name="alarm_setting_vibrate">Vibrație</string>
+    <string name="alarm_setting_beep">Semnal sonor</string>
+    <string name="alarm_setting_silent">Silențios</string>
     <string name="pump_warning_notification_title">Notificare la avertizarea pompei</string>
     <string name="pump_warning_notification_summary">Arată notificare cu privire la avertismentele non-critice ale pompei: baterie scăzută, rezervor redus (20 de unități) și expiră în curând. Se recomandă să lăsați activat când alarmele pompei sunt setate la silențios.</string>
     <string name="pump_warning_expiry_hour_title">Atenționare expirare pompă [hours]</string>
