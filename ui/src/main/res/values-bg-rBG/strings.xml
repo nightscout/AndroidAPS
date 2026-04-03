@@ -102,8 +102,6 @@
     <string name="invalid_pct">Невалидна стойност в %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Базал</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">Натиснат е СТОП!</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">само на часовник</string>
     <string name="a11y_only_on_phone">само на смартфон</string>
