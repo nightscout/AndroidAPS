@@ -55,7 +55,7 @@
     <string name="rileylink_error_bt_disabled">Bluetooth dezactivat</string>
     <string name="rileylink_error_no_bt_adapter">Nu există un adaptor Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Conectare eșuată</string>
-    <string name="rileylink_error_pod_unreachable">Nu se poate comunica cu pod-ul</string>
+    <string name="rileylink_error_pod_unreachable">Nu se poate comunica cu pompa</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompă Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
@@ -73,7 +73,7 @@
         <item quantity="other">%1$d ore</item>
     </plurals>
     <string name="orange_use_scanning_level">Folosește Scanarea</string>
-    <string name="orange_use_scanning_level_summary">Scanează înainte de conectarea la OrangeLink, ar trebui să îmbunătăţească conexiunile (poate fi utilizat, de asemenea, cu alte clone RileyLink, dacă este necesar)</string>
+    <string name="orange_use_scanning_level_summary">Scanează înainte de conectarea la OrangeLink, ar trebui să îmbunătățească conexiunile (poate fi utilizat, de asemenea, cu alte clone RileyLink, dacă este necesar)</string>
     <string name="rileylink_pair">Asociați RileyLink</string>
     <string name="rileylink_pair_success">RileyLink asociat cu succes</string>
     <string name="rileylink_config_reset">Configurația RileyLink resetată</string>
