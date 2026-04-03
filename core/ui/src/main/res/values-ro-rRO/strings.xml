@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="treatments">Tratamente</string>
+    <string name="treatments_desc">Vezi și gestionează istoricul tratamentului</string>
+    <string name="nav_configuration">Configurație</string>
+    <string name="nav_configuration_desc">Creeați-vă configurația (senzor, pompă, șamd) și activați funcțiile</string>
+    <string name="count_selected">%1$d selected</string>
+    <string name="delete">Ștergeți</string>
+    <string name="show_invalidated">Afisați invalidat</string>
+    <string name="hide_invalidated">Ascundeți invalidat</string>
+    <string name="more_options">Mai multe opțiuni</string>
     <string name="refresh">Actualizează</string>
+    <string name="no_history_records">Nu s-au găsit înregistrări</string>
     <string name="error">Eroare</string>
     <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
     <string name="invalid_input">Date de intrare incorecte</string>
+    <string name="invalid_number">Număr incorect</string>
     <string name="constraint_applied">Limitare aplicată!</string>
     <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pompă indisponibilă</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pompa nu este inițializată, profilul nu este setat!</string>
     <string name="failed_update_basal_profile">Actualizarea profilului bazalei a eșuat</string>
     <string name="no_valid_basal_rate">Nu s-a citit o rată bazală validă din pompă</string>
@@ -21,7 +33,12 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Salvează</string>
+    <string name="skip">Omiteți</string>
+    <string name="switch_to_edit">Editați</string>
     <string name="snooze">Amână</string>
+    <string name="snooze_15m">Amânare 15 minute</string>
+    <string name="snooze_30m">Amânare 30 minute</string>
+    <string name="snooze_60m">Amânare 60 minute</string>
     <string name="virtual_pump">Pompă virtuală</string>
     <string name="constraints">Constrângeri</string>
     <string name="superbolus">Superbolus</string>
@@ -30,9 +47,20 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
     <string name="result">Rezultat</string>
     <string name="settings">Setări</string>
+    <string name="simple_mode">Mod simplu</string>
+    <string name="expand">Extindeți</string>
+    <string name="collapse">Restrângeți</string>
+    <string name="no_compose_preferences">Nu există preferințe de compunere disponibile pentru acest modul</string>
+    <string name="plugin_no_preferences">Modulul nu acceptă preferințe</string>
+    <string name="confirm_password_hint">Confirmați parola</string>
+    <string name="confirm_pin_hint">Confirmați codul PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Lumini de stare</string>
+    <string name="copy_existing_values">Copiați setările NS (dacă există)?</string>
     <string name="do_ns_upload_title">Încarcă date glicemie în NS</string>
     <string name="configbuilder_insulin">Insulină</string>
+    <string name="configbuilder_bgsource">Sursă glicemie</string>
+    <string name="configbuilder_smoothing">Uniformizare</string>
     <string name="value_unavailable_short">indisponibil</string>
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Exportă înregistrările utilizatorului în Excel (csv)</string>
