@@ -8,6 +8,7 @@
     <string name="pump_status_error_comm">Lỗi giao tiếp</string>
     <string name="pump_status_timeout_comm">Hết thời gian giao tiếp</string>
     <string name="pump_status_invalid_config">Cấu hình không hợp lệ</string>
+    <string name="medtronic_pump_encoding_title">Mã hóa Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">Mã hóa 4b6b phần mềm</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Mã hóa 4b6b phần cứng</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
@@ -69,4 +70,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Sử dụng Scan</string>
     <string name="orange_use_scanning_level_summary">Scan trước khi kết nối với OrangeLink, điều này sẽ giúp cải thiện kết nối (cũng có thể sử dụng với các bản sao RileyLink khác nếu cần)</string>
+    <string name="rileylink_pair">Ghép nối RileyLink</string>
+    <string name="rileylink_pair_success">Ghép nối RileyLink thành công</string>
+    <string name="rileylink_config_reset">Đã đặt lại cấu hình RileyLink</string>
 </resources>
