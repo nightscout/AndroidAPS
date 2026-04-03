@@ -1,9 +1,18 @@
+import kotlin.math.min
+
 plugins {
-    id("java-library")
-    id("org.jetbrains.kotlin.jvm")
+    alias(libs.plugins.android.library)
+    id("android-module-dependencies")
 }
 
-java {
-    sourceCompatibility = Versions.javaVersion
-    targetCompatibility = Versions.javaVersion
+android {
+    namespace = "app.aaps.core.keys"
+    defaultConfig {
+        minSdk = min(Versions.minSdk, Versions.wearMinSdk)  // Compatible with wear module
+    }
+}
+
+dependencies {
+    api(platform(libs.kotlinx.coroutines.bom))
+    api(libs.kotlinx.coroutines.core)
 }

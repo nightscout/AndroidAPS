@@ -25,7 +25,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
         value = Comparator.Compare.IS_EQUAL_OR_GREATER
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.info(LTag.AUTOMATION, "HR ready, no limit set ${friendlyDescription()}")
             return true

@@ -4,7 +4,7 @@ import app.aaps.database.entities.RunningMode
 
 class InvalidateRunningModeTransaction(val id: Long) : Transaction<InvalidateRunningModeTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val runningMode = database.runningModeDao.findById(id)
             ?: throw IllegalArgumentException("There is no such RunningMode with the specified ID.")

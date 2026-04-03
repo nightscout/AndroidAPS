@@ -1,6 +1,6 @@
 package app.aaps.implementation.userEntry
 
-import android.text.Spanned
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.UE
@@ -14,7 +14,21 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.objects.R
-import app.aaps.core.utils.HtmlHelper
+import app.aaps.core.ui.compose.icons.IcActivity
+import app.aaps.core.ui.compose.icons.IcAnnouncement
+import app.aaps.core.ui.compose.icons.IcBgCheck
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCalculator
+import app.aaps.core.ui.compose.icons.IcCalibration
+import app.aaps.core.ui.compose.icons.IcCannulaChange
+import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.icons.IcCgmInsert
+import app.aaps.core.ui.compose.icons.IcClinicalNotes
+import app.aaps.core.ui.compose.icons.IcNote
+import app.aaps.core.ui.compose.icons.IcPumpBattery
+import app.aaps.core.ui.compose.icons.IcQuestion
+import app.aaps.core.ui.compose.icons.IcQuickwizard
+import app.aaps.core.ui.compose.icons.IcSiteRotation
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -27,41 +41,48 @@ class UserEntryPresentationHelperImpl @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) : UserEntryPresentationHelper {
 
-    override fun colorId(colorGroup: Action.ColorGroup): Int = when (colorGroup) {
-        Action.ColorGroup.InsulinTreatment -> app.aaps.core.ui.R.color.iob
-        Action.ColorGroup.BasalTreatment   -> app.aaps.core.ui.R.color.basal
-        Action.ColorGroup.CarbTreatment    -> app.aaps.core.ui.R.color.carbs
-        Action.ColorGroup.TT               -> app.aaps.core.ui.R.color.tempTargetConfirmation
-        Action.ColorGroup.Profile          -> app.aaps.core.ui.R.color.white
-        Action.ColorGroup.Loop             -> app.aaps.core.ui.R.color.loopClosed
-        Action.ColorGroup.Careportal       -> app.aaps.core.ui.R.color.high
-        Action.ColorGroup.Pump             -> app.aaps.core.ui.R.color.loopDisconnected
-        Action.ColorGroup.Aaps             -> app.aaps.core.ui.R.color.defaultText
-        Action.ColorGroup.RunningMode      -> app.aaps.core.ui.R.color.white
-        // else                               -> app.aaps.core.ui.R.color.defaultText
+    override fun icon(source: Sources): ImageVector? = when (source) {
+        Sources.Announcement       -> IcAnnouncement
+        Sources.BatteryChange      -> IcPumpBattery
+        Sources.BgCheck            -> IcBgCheck
+        Sources.CalibrationDialog  -> IcCalibration
+        Sources.CarbDialog         -> IcCarbs
+        Sources.Exercise           -> IcActivity
+        Sources.FillDialog         -> IcCannulaChange
+        Sources.InsulinDialog      -> IcBolus
+        Sources.Note               -> IcNote
+        Sources.Question           -> IcQuestion
+        Sources.QuickWizard        -> IcQuickwizard
+        Sources.SensorInsert       -> IcCgmInsert
+        Sources.SiteRotationDialog -> IcSiteRotation
+        Sources.Treatments         -> IcClinicalNotes
+        Sources.WizardDialog       -> IcCalculator
+        else                       -> null
     }
 
+    @Deprecated("use fun icon(source: Sources): ImageVector?")
     override fun iconId(source: Sources): Int = when (source) {
         Sources.TreatmentDialog     -> R.drawable.icon_insulin_carbs
-        Sources.InsulinDialog       -> R.drawable.ic_bolus
-        Sources.CarbDialog          -> R.drawable.ic_cp_bolus_carbs
-        Sources.WizardDialog        -> R.drawable.ic_calculator
-        Sources.QuickWizard         -> R.drawable.ic_quick_wizard
+        //Sources.InsulinDialog       -> R.drawable.ic_bolus
+        //Sources.CarbDialog          -> R.drawable.ic_cp_bolus_carbs
+        //Sources.WizardDialog        -> R.drawable.ic_calculator
+        //Sources.QuickWizard         -> R.drawable.ic_quick_wizard
         Sources.ExtendedBolusDialog -> R.drawable.ic_actions_start_extended_bolus
         Sources.TTDialog            -> R.drawable.ic_temptarget_high
         Sources.ProfileSwitchDialog -> app.aaps.core.ui.R.drawable.ic_actions_profileswitch
         Sources.LoopDialog          -> R.drawable.ic_loop_closed
         Sources.TempBasalDialog     -> R.drawable.ic_actions_start_temp_basal
-        Sources.CalibrationDialog   -> R.drawable.ic_calibration
-        Sources.FillDialog          -> R.drawable.ic_cp_pump_cannula
-        Sources.SiteRotationDialog  -> app.aaps.core.ui.R.drawable.ic_site_rotation
-        Sources.BgCheck             -> R.drawable.ic_cp_bgcheck
-        Sources.SensorInsert        -> R.drawable.ic_cp_cgm_insert
-        Sources.BatteryChange       -> R.drawable.ic_cp_pump_battery
-        Sources.Note                -> R.drawable.ic_cp_note
-        Sources.Exercise            -> R.drawable.ic_cp_exercise
-        Sources.Question            -> R.drawable.ic_cp_question
-        Sources.Announcement        -> R.drawable.ic_cp_announcement
+        //Sources.CalibrationDialog   -> R.drawable.ic_calibration
+        //Sources.FillDialog          -> R.drawable.ic_cp_pump_cannula
+        //Sources.SiteRotationDialog  -> app.aaps.core.ui.R.drawable.ic_site_rotation
+        //Sources.BgCheck             -> R.drawable.ic_cp_bgcheck
+        //Sources.SensorInsert        -> R.drawable.ic_cp_cgm_insert
+        //Sources.BatteryChange       -> R.drawable.ic_cp_pump_battery
+        //Sources.Note                -> R.drawable.ic_cp_note
+        //Sources.Exercise            -> R.drawable.ic_cp_exercise
+        //Sources.Question            -> R.drawable.ic_cp_question
+        //Sources.Announcement        -> R.drawable.ic_cp_announcement
+        Sources.ConcentrationDialog -> R.drawable.ic_insulin
         Sources.SettingsExport      -> R.drawable.ic_automation
         Sources.Actions             -> R.drawable.ic_action
         Sources.Automation          -> R.drawable.ic_automation
@@ -78,10 +99,10 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Glunovo             -> R.drawable.ic_glunovo
         Sources.Intelligo           -> app.aaps.core.ui.R.drawable.ic_intelligo
         Sources.Xdrip               -> R.drawable.ic_blooddrop_48
-        Sources.Ottai    -> R.drawable.ic_syai_tag
-        Sources.SyaiTag  -> R.drawable.ic_syai_tag
-        Sources.SiBionic -> R.drawable.ic_generic_cgm
-        Sources.Sino     -> R.drawable.ic_generic_cgm
+        Sources.Ottai               -> R.drawable.ic_syai_tag
+        Sources.SyaiTag             -> R.drawable.ic_syai_tag
+        Sources.SiBionic            -> R.drawable.ic_generic_cgm
+        Sources.Sino                -> R.drawable.ic_generic_cgm
         Sources.LocalProfile        -> R.drawable.ic_local_profile
         Sources.Loop                -> R.drawable.ic_loop_closed_white
         Sources.Maintenance         -> app.aaps.core.ui.R.drawable.ic_maintenance
@@ -108,7 +129,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.MDI                 -> R.drawable.ic_ict
         Sources.VirtualPump         -> R.drawable.ic_virtual_pump
         Sources.SMS                 -> R.drawable.ic_sms
-        Sources.Treatments          -> R.drawable.ic_treatments
+        //Sources.Treatments          -> R.drawable.ic_treatments
         Sources.Wear                -> R.drawable.ic_watch
         Sources.Food                -> R.drawable.ic_food
         Sources.Stats               -> R.drawable.ic_cp_stats
@@ -120,47 +141,43 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Unknown             -> app.aaps.core.ui.R.drawable.ic_generic_icon
         Sources.Random              -> R.drawable.ic_aaps
         Sources.BgFragment          -> R.drawable.ic_aaps
+        Sources.Insulin             -> R.drawable.ic_insulin
+        else                        -> error("Missing resource")
     }
-
-    override fun actionToColoredString(action: Action): Spanned = when (action) {
-        Action.TREATMENT -> HtmlHelper.fromHtml(coloredAction(Action.BOLUS) + " + " + coloredAction(Action.CARBS))
-        else             -> HtmlHelper.fromHtml(coloredAction(action))
-    }
-
-    private fun coloredAction(action: Action): String = "<font color='${rh.gc(colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
     override fun listToPresentationString(list: List<ValueWithUnit>) =
         list.joinToString(separator = "  ", transform = this::toPresentationString)
 
     private fun toPresentationString(valueWithUnit: ValueWithUnit?): String = when (valueWithUnit) {
-        is ValueWithUnit.Gram         -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Hour         -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Minute       -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Percent      -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Insulin      -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-        is ValueWithUnit.UnitPerHour  -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-        is ValueWithUnit.SimpleInt    -> valueWithUnit.value.toString()
-        is ValueWithUnit.SimpleString -> valueWithUnit.value
-        is ValueWithUnit.TEMeterType  -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TETTReason   -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.RMMode       -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TEType       -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TELocation   -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TEArrow      -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.Timestamp    -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
+        is ValueWithUnit.Gram                 -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Hour                 -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Minute               -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Percent              -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Insulin              -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+        is ValueWithUnit.InsulinConcentration -> "${rh.gs(app.aaps.core.ui.R.string.ins_concentration_confirmed, valueWithUnit.value)}"
+        is ValueWithUnit.UnitPerHour          -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+        is ValueWithUnit.SimpleInt            -> valueWithUnit.value.toString()
+        is ValueWithUnit.SimpleString         -> valueWithUnit.value
+        is ValueWithUnit.TEMeterType          -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TETTReason           -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.RMMode               -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TEType               -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TELocation           -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TEArrow              -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.Timestamp            -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-        is ValueWithUnit.Mgdl         -> {
+        is ValueWithUnit.Mgdl                 -> {
             if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueWithUnit.value) + rh.gs(app.aaps.core.ui.R.string.mgdl)
             else decimalFormatter.to1Decimal(valueWithUnit.value * Constants.MGDL_TO_MMOLL) + rh.gs(app.aaps.core.ui.R.string.mmol)
         }
 
-        is ValueWithUnit.Mmoll        -> {
+        is ValueWithUnit.Mmoll                -> {
             if (profileUtil.units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(valueWithUnit.value) + rh.gs(app.aaps.core.ui.R.string.mmol)
             else decimalFormatter.to0Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + rh.gs(app.aaps.core.ui.R.string.mgdl)
         }
 
-        ValueWithUnit.UNKNOWN         -> ""
-        null                          -> ""
+        ValueWithUnit.UNKNOWN                 -> ""
+        null                                  -> ""
     }
 
     override fun userEntriesToCsv(userEntries: List<UE>): String {
@@ -210,29 +227,30 @@ class UserEntryPresentationHelperImpl @Inject constructor(
 
         for (valueWithUnit in fullValueWithUnitList.filterNotNull()) {
             when (valueWithUnit) {
-                is ValueWithUnit.Gram         -> gram = valueWithUnit.value.toString()
-                is ValueWithUnit.Hour         -> hour = valueWithUnit.value.toString()
-                is ValueWithUnit.Minute       -> minute = valueWithUnit.value.toString()
-                is ValueWithUnit.Percent      -> percent = valueWithUnit.value.toString()
-                is ValueWithUnit.Insulin      -> insulin = decimalFormatter.to2Decimal(valueWithUnit.value)
-                is ValueWithUnit.UnitPerHour  -> unitPerHour = decimalFormatter.to2Decimal(valueWithUnit.value)
-                is ValueWithUnit.SimpleInt    -> noUnit = noUnit.addWithSeparator(valueWithUnit.value)
-                is ValueWithUnit.SimpleString -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
-                is ValueWithUnit.TEMeterType  -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TETTReason   -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.RMMode       -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TEType       -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TELocation   -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TEArrow      -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.Timestamp    -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
+                is ValueWithUnit.Gram                 -> gram = valueWithUnit.value.toString()
+                is ValueWithUnit.Hour                 -> hour = valueWithUnit.value.toString()
+                is ValueWithUnit.Minute               -> minute = valueWithUnit.value.toString()
+                is ValueWithUnit.Percent              -> percent = valueWithUnit.value.toString()
+                is ValueWithUnit.Insulin              -> insulin = decimalFormatter.to2Decimal(valueWithUnit.value)
+                is ValueWithUnit.InsulinConcentration -> simpleString = simpleString.addWithSeparator(rh.gs(app.aaps.core.ui.R.string.ins_concentration_confirmed, valueWithUnit.value))
+                is ValueWithUnit.UnitPerHour          -> unitPerHour = decimalFormatter.to2Decimal(valueWithUnit.value)
+                is ValueWithUnit.SimpleInt            -> noUnit = noUnit.addWithSeparator(valueWithUnit.value)
+                is ValueWithUnit.SimpleString         -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
+                is ValueWithUnit.TEMeterType          -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TETTReason           -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.RMMode               -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TEType               -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TELocation           -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TEArrow              -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.Timestamp            -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-                is ValueWithUnit.Mgdl         ->
+                is ValueWithUnit.Mgdl                 ->
                     bg = profileUtil.fromMgdlToStringInUnits(valueWithUnit.value)
 
-                is ValueWithUnit.Mmoll        ->
+                is ValueWithUnit.Mmoll                ->
                     bg = profileUtil.fromMgdlToStringInUnits(valueWithUnit.value * Constants.MMOLL_TO_MGDL)
 
-                ValueWithUnit.UNKNOWN         -> Unit
+                ValueWithUnit.UNKNOWN                 -> Unit
             }
         }
 

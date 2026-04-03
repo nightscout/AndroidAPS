@@ -40,4 +40,12 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">Receive glucose data from Patched Sino App.</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Notification Reader</string>
+    <string name="description_source_notification_reader">Read glucose values from notifications posted by official CGM apps (Dexcom, Medtronic, Eversense, etc.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Application needs permission to receive CGM data from Dexcom app</string>
+    <string name="permission_notification_listener_title">Notification Access</string>
+    <string name="permission_notification_listener_description">Required to read glucose values from CGM app notifications</string>
 </resources>

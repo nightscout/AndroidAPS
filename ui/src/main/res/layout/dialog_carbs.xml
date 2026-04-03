@@ -135,7 +135,7 @@
                     android:gravity="start"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/unit_minute_short"
+                    android:text="@string/units_min"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </TableRow>

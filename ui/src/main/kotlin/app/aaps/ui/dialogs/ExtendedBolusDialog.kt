@@ -1,6 +1,5 @@
 package app.aaps.ui.dialogs
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,9 +19,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogExtendedbolusBinding
 import com.google.common.base.Joiner
@@ -33,7 +30,6 @@ import kotlin.math.abs
 
 class ExtendedBolusDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var ctx: Context
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var commandQueue: CommandQueue
@@ -101,8 +97,11 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         if (abs(insulinAfterConstraint - insulin) > 0.01)
             actions.add(rh.gs(app.aaps.core.ui.R.string.constraint_applied).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
 
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+        uiInteraction.showOkCancelDialog(
+            context = requireActivity(),
+            title = rh.gs(app.aaps.core.ui.R.string.extended_bolus),
+            message = Joiner.on("<br/>").join(actions),
+            ok = {
                 uel.log(
                     action = Action.EXTENDED_BOLUS, source = Sources.ExtendedBolusDialog,
                     listValues = listOf(
@@ -117,8 +116,9 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                         }
                     }
                 })
-            }, null)
-        }
+            },
+            cancel = null
+        )
         return true
     }
 
@@ -126,15 +126,13 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         super.onResume()
         if (!queryingProtection) {
             queryingProtection = true
-            activity?.let { activity ->
-                val cancelFail = {
-                    queryingProtection = false
-                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
-                    ToastUtils.warnToast(ctx, R.string.dialog_canceled)
-                    dismiss()
-                }
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+            val cancelFail = {
+                queryingProtection = false
+                aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
+                ToastUtils.warnToast(requireContext(), R.string.dialog_canceled)
+                dismiss()
             }
+            protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
         }
     }
 }

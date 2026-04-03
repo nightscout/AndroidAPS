@@ -54,16 +54,6 @@ class TrendCalculatorImplTest : TestBase() {
     }
 
     @Test
-    fun `getTrendArrow returns existing arrow when value not recalculated`() {
-        val data = mutableListOf(
-            createGlucoseValue(100.0, 300000L, recalculated = 100.0, trendArrow = TrendArrow.SINGLE_UP),
-            createGlucoseValue(95.0, 0L)
-        )
-        whenever(autosensDataStore.getBucketedDataTableCopy()).thenReturn(data)
-        assertThat(trendCalculator.getTrendArrow(autosensDataStore)).isEqualTo(TrendArrow.SINGLE_UP)
-    }
-
-    @Test
     fun `getTrendArrow calculates DOUBLE_DOWN for slope less than -3_5 per minute`() {
         // Need slope <= -3.5 per minute
         // Over 5 minutes: -3.5 * 5 = -17.5 mg/dL

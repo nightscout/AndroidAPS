@@ -3,7 +3,6 @@ package app.aaps.plugins.source.di
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.plugins.source.BGSourceFragment
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
@@ -15,20 +14,21 @@ import app.aaps.plugins.source.SyaiPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.plugins.source.notificationreader.NotificationCollectorService
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(
     includes = [
         SourceModule.Bindings::class
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class SourceModule {
-
-    @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
 
     @ContributesAndroidInjector abstract fun contributesXdripWorker(): XdripSourcePlugin.XdripSourceWorker
     @ContributesAndroidInjector abstract fun contributesDexcomWorker(): DexcomPlugin.DexcomWorker
@@ -41,8 +41,10 @@ abstract class SourceModule {
     @ContributesAndroidInjector abstract fun contributesSinoAppWorker(): PatchedSinoAppPlugin.PatchedSinoAppWorker
 
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
+    @ContributesAndroidInjector abstract fun contributesNotificationCollectorService(): NotificationCollectorService
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindNSClientSource(nsClientSourcePlugin: NSClientSourcePlugin): NSClientSource

@@ -7,9 +7,12 @@ import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.remotemodel.LastModified
@@ -20,6 +23,8 @@ import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,6 +52,9 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
     @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Mock lateinit var l: L
     @Mock lateinit var nsClientSource: NSClientSource
+    @Mock lateinit var nsClientRepository: NSClientRepository
+    @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var uel: UserEntryLogger
 
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var receiverDelegate: ReceiverDelegate
@@ -58,12 +66,11 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
             if (it is LoadFoodsWorker) {
                 it.aapsLogger = aapsLogger
                 it.fabricPrivacy = fabricPrivacy
-                it.rxBus = rxBus
-                it.context = context
                 it.dateUtil = dateUtil
                 it.nsClientV3Plugin = nsClientV3Plugin
                 it.storeDataForDb = storeDataForDb
                 it.nsIncomingDataProcessor = nsIncomingDataProcessor
+                it.nsClientRepository = nsClientRepository
             }
         }
     }
@@ -71,11 +78,15 @@ internal class LoadFoodsWorkerTest : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         dataWorkerStorage = DataWorkerStorage(context)
-        receiverDelegate = ReceiverDelegate(rxBus, rh, preferences, receiverStatusStore, aapsSchedulers, fabricPrivacy)
+        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
+        whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
+        whenever(receiverStatusStore.networkStatusFlow).thenReturn(MutableStateFlow(null))
+        whenever(receiverStatusStore.chargingStatusFlow).thenReturn(MutableStateFlow(null))
+        receiverDelegate = ReceiverDelegate(rh, preferences, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
-            aapsLogger, rh, preferences, aapsSchedulers, rxBus, context, fabricPrivacy,
+            aapsLogger, rh, preferences, rxBus, context,
             receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter, l
+            nsClientSource, storeDataForDb, decimalFormatter, l, nsClientRepository, uel, activePlugin
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

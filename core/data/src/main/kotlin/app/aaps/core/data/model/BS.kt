@@ -15,7 +15,7 @@ data class BS(
     var type: Type,
     var notes: String? = null,
     var isBasalInsulin: Boolean = false,
-    var icfg: ICfg? = null
+    var iCfg: ICfg
 ) : HasIDs {
 
     fun contentEqualsTo(other: BS): Boolean =
@@ -25,7 +25,8 @@ data class BS(
             amount == other.amount &&
             type == other.type &&
             notes == other.notes &&
-            isBasalInsulin == other.isBasalInsulin
+            isBasalInsulin == other.isBasalInsulin &&
+            iCfg == other.iCfg
 
     fun onlyNsIdAdded(previous: BS): Boolean =
         previous.id != id &&

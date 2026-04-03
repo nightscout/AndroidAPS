@@ -3,6 +3,7 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -10,7 +11,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerCOBTest : TriggerTestBase() {
 
-    @Test fun shouldRunTest() {
+    @Test fun shouldRunTest() = runTest {
         // COB value is 6
         whenever(iobCobCalculator.getCobInfo("AutomationTriggerCOB")).thenReturn(CobInfo(0, 6.0, 2.0))
         var t: TriggerCOB = TriggerCOB(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -31,27 +32,27 @@ class TriggerCOBTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
     }
 
-    @Test fun copyConstructorTest() {
+    @Test fun copyConstructorTest() = runTest {
         val t: TriggerCOB = TriggerCOB(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.cob.value).isWithin(0.01).of(213.0)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"carbs\":4},\"type\":\"TriggerCOB\"}"
-    @Test fun toJSONTest() {
+    @Test fun toJSONTest() = runTest {
         val t: TriggerCOB = TriggerCOB(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         JSONAssert.assertEquals(bgJson, t.toJSON(), true)
     }
 
     @Test
-    fun fromJSONTest() {
+    fun fromJSONTest() = runTest {
         val t: TriggerCOB = TriggerCOB(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerCOB
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.cob.value).isWithin(0.01).of(4.0)
     }
 
-    @Test fun iconTest() {
+    @Test fun iconTest() = runTest {
         assertThat(TriggerCOB(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_bolus_carbs)
     }
 }

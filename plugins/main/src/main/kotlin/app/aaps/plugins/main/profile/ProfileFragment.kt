@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
@@ -18,6 +19,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -29,10 +31,8 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.ProfileFragmentBinding
@@ -41,6 +41,7 @@ import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -53,6 +54,7 @@ class ProfileFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profilePlugin: ProfilePlugin
+    @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var hardLimits: HardLimits
@@ -72,12 +74,11 @@ class ProfileFragment : DaggerFragment() {
     private val save = Runnable {
         doEdit()
         basalView?.updateLabel(rh.gs(app.aaps.core.ui.R.string.basal_label) + ": " + sumLabel())
-        profilePlugin.getEditedProfile()?.let {
+        localProfileManager.getEditedProfile()?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it, null))
             binding.icGraph.show(ProfileSealed.Pure(it, null))
             binding.isfGraph.show(ProfileSealed.Pure(it, null))
             binding.targetGraph.show(ProfileSealed.Pure(it, null))
-            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
     }
 
@@ -85,14 +86,13 @@ class ProfileFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            profilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
-            profilePlugin.currentProfile()?.name = binding.name.text.toString()
+            localProfileManager.currentProfile()?.name = binding.name.text.toString()
             doEdit()
         }
     }
 
     private fun sumLabel(): String {
-        val profile = profilePlugin.getEditedProfile()
+        val profile = localProfileManager.getEditedProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile, null).baseBasalSum() } ?: 0.0
         return " ∑" + decimalFormatter.to2Decimal(sum) + " " + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
     }
@@ -121,22 +121,23 @@ class ProfileFragment : DaggerFragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-        binding.diaLabel.labelFor = binding.dia.editTextId
         binding.unlock.setOnClickListener { queryProtection() }
 
-        val profiles = profilePlugin.profile?.getProfileList() ?: ArrayList()
-        val activeProfile = profileFunction.getProfileName()
-        val profileIndex = profiles.indexOf(activeProfile)
-        profilePlugin.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
         val aps = activePlugin.activeAPS
         binding.isfDynamicLabel.visibility = aps.supportsDynamicIsf().toVisibility()
         binding.icDynamicLabel.visibility = aps.supportsDynamicIc().toVisibility()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val profiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
+            val activeProfile = profileFunction.getProfileName()
+            val profileIndex = profiles.indexOf(activeProfile)
+            localProfileManager.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
+        }
     }
 
     fun build() {
         val pumpDescription = activePlugin.activePump.pumpDescription
-        if (profilePlugin.numOfProfiles == 0) profilePlugin.addNewProfile()
-        val currentProfile = profilePlugin.currentProfile() ?: return
+        if (localProfileManager.numOfProfiles == 0) localProfileManager.addNewProfile()
+        val currentProfile = localProfileManager.currentProfile() ?: return
         val units = if (currentProfile.mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText
 
         binding.name.removeTextChangedListener(textWatch)
@@ -144,8 +145,6 @@ class ProfileFragment : DaggerFragment() {
         binding.name.addTextChangedListener(textWatch)
         binding.profileList.filters = arrayOf()
         binding.profileList.setText(currentProfile.name)
-        binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
-        binding.dia.tag = "LP_DIA"
         TimeListEdit(
             requireContext(),
             aapsLogger,
@@ -251,69 +250,64 @@ class ProfileFragment : DaggerFragment() {
         }
 
         context?.let { context ->
-            val profileList: ArrayList<CharSequence> = profilePlugin.profile?.getProfileList() ?: ArrayList()
+            val profileList: ArrayList<CharSequence> = localProfileManager.profile?.getProfileList() ?: ArrayList()
             binding.profileList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, profileList))
         } ?: return
 
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            if (profilePlugin.isEdited) {
-                activity?.let { activity ->
-                    OKDialog.showConfirmation(
-                        activity, rh.gs(R.string.do_you_want_switch_profile),
-                        {
-                            profilePlugin.currentProfileIndex = position
-                            profilePlugin.isEdited = false
-                            build()
-                        }, null
-                    )
-                }
+            if (localProfileManager.isEdited) {
+                uiInteraction.showOkCancelDialog(
+                    context = requireActivity(), message = rh.gs(R.string.do_you_want_switch_profile),
+                    ok = {
+                        localProfileManager.currentProfileIndex = position
+                        localProfileManager.isEdited = false
+                        build()
+                    }, cancel = null
+                )
             } else {
-                profilePlugin.currentProfileIndex = position
+                localProfileManager.currentProfileIndex = position
                 build()
             }
         }
-        profilePlugin.getEditedProfile()?.let {
+        localProfileManager.getEditedProfile()?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it, null))
             binding.icGraph.show(ProfileSealed.Pure(it, null))
             binding.isfGraph.show(ProfileSealed.Pure(it, null))
             binding.targetGraph.show(ProfileSealed.Pure(it, null))
-            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
 
         binding.profileAdd.setOnClickListener {
-            if (profilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
+            if (localProfileManager.isEdited) {
+                uiInteraction.showOkDialog(context = requireActivity(), title = "", message = rh.gs(R.string.save_or_reset_changes_first))
             } else {
                 uel.log(Action.NEW_PROFILE, Sources.LocalProfile)
-                profilePlugin.addNewProfile()
+                localProfileManager.addNewProfile()
                 build()
             }
         }
 
         binding.profileClone.setOnClickListener {
-            if (profilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
+            if (localProfileManager.isEdited) {
+                uiInteraction.showOkDialog(context = requireActivity(), title = "", message = rh.gs(R.string.save_or_reset_changes_first))
             } else {
                 uel.log(
                     action = Action.CLONE_PROFILE, source = Sources.LocalProfile,
-                    value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
+                    value = ValueWithUnit.SimpleString(localProfileManager.currentProfile()?.name ?: "")
                 )
-                profilePlugin.cloneProfile()
+                localProfileManager.cloneProfile()
                 build()
             }
         }
 
         binding.profileRemove.setOnClickListener {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.delete_current_profile, profilePlugin.currentProfile()?.name), {
-                    uel.log(
-                        action = Action.PROFILE_REMOVED, source = Sources.LocalProfile,
-                        value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
-                    )
-                    profilePlugin.removeCurrentProfile()
-                    build()
-                }, null)
-            }
+            uiInteraction.showOkCancelDialog(context = requireActivity(), message = rh.gs(R.string.delete_current_profile, localProfileManager.currentProfile()?.name), ok = {
+                uel.log(
+                    action = Action.PROFILE_REMOVED, source = Sources.LocalProfile,
+                    value = ValueWithUnit.SimpleString(localProfileManager.currentProfile()?.name ?: "")
+                )
+                localProfileManager.removeCurrentProfile()
+                build()
+            }, cancel = null)
         }
 
         // this is probably not possible because it leads to invalid profile
@@ -324,14 +318,14 @@ class ProfileFragment : DaggerFragment() {
 
         binding.profileswitch.setOnClickListener {
             if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP) {
-                activity?.let { activity -> OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pump_disconnected)) }
+                uiInteraction.showOkDialog(context = requireActivity(), title = R.string.not_available_full, message = R.string.smscommunicator_pump_disconnected)
             } else {
-                uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+                uiInteraction.runProfileSwitchDialog(childFragmentManager, localProfileManager.currentProfile()?.name)
             }
         }
 
         binding.reset.setOnClickListener {
-            profilePlugin.loadSettings()
+            localProfileManager.loadSettings()
             build()
         }
 
@@ -341,7 +335,7 @@ class ProfileFragment : DaggerFragment() {
             }
             uel.log(
                 action = Action.STORE_PROFILE, source = Sources.LocalProfile,
-                value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
+                value = ValueWithUnit.SimpleString(localProfileManager.currentProfile()?.name ?: "")
             )
             profilePlugin.storeSettings(activity, dateUtil.now())
             build()
@@ -373,7 +367,7 @@ class ProfileFragment : DaggerFragment() {
     }
 
     fun doEdit() {
-        profilePlugin.isEdited = true
+        localProfileManager.isEdited = true
         updateGUI()
     }
 
@@ -388,7 +382,7 @@ class ProfileFragment : DaggerFragment() {
     private fun updateGUI() {
         if (_binding == null) return
         val isValid = profilePlugin.isValidEditState(activity)
-        val isEdited = profilePlugin.isEdited
+        val isEdited = localProfileManager.isEdited
         if (isValid) {
             this.view?.setBackgroundColor(rh.gac(context, app.aaps.core.ui.R.attr.okBackgroundColor))
             binding.profileList.isEnabled = true
@@ -417,11 +411,10 @@ class ProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibility(position: Int) {
-        binding.diaPlaceholder.visibility = (position == 0).toVisibility()
-        binding.ic.visibility = (position == 1).toVisibility()
-        binding.isf.visibility = (position == 2).toVisibility()
-        binding.basal.visibility = (position == 3).toVisibility()
-        binding.target.visibility = (position == 4).toVisibility()
+        binding.ic.visibility = (position == 0).toVisibility()
+        binding.isf.visibility = (position == 1).toVisibility()
+        binding.basal.visibility = (position == 2).toVisibility()
+        binding.target.visibility = (position == 3).toVisibility()
     }
 
     private fun updateProtectedUi() {

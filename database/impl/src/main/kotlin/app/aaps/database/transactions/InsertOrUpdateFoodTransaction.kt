@@ -7,7 +7,7 @@ import app.aaps.database.entities.Food
  */
 class InsertOrUpdateFoodTransaction(private val food: Food) : Transaction<InsertOrUpdateFoodTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val current = database.foodDao.findById(food.id)
         if (current == null) {

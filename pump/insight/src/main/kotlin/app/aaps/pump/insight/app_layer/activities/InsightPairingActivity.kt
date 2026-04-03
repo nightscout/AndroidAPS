@@ -53,7 +53,6 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
                     it.registerStateCallback(this@InsightPairingActivity)
                     it.registerExceptionCallback(this@InsightPairingActivity)
                     onStateChanged(it.state)
-                    pumpSync.connectNewPump()
                 }
                 isBound = true
             }
@@ -180,6 +179,10 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
 
     override fun onClick(v: View) {
         if (v === binding.exit) finish() else if (v === binding.yes) service!!.confirmVerificationString() else if (v === binding.no) service!!.rejectVerificationString()
+    }
+
+    override fun onPumpPaired() {
+        pumpSync.connectNewPump()
     }
 
     override fun onExceptionOccur(e: Exception?) {

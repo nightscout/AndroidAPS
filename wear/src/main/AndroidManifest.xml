@@ -544,9 +544,9 @@
         </service>
 
         <service
-            android:name=".tile.LoopStateTileService"
+            android:name=".tile.RunningModeTileService"
             android:exported="true"
-            android:label="@string/label_loop_state_title"
+            android:label="@string/label_running_mode_title"
             android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
             <intent-filter>
                 <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
@@ -554,7 +554,7 @@
 
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
-                android:resource="@drawable/loop_states_tile" />
+                android:resource="@drawable/running_mode_tile" />
         </service>
 
         <!-- Transparent activity to handle complication taps reliably on Android 12+ -->
@@ -570,7 +570,8 @@
         <activity
             android:name=".interaction.menus.MainMenuActivity"
             android:exported="true"
-            android:label="@string/label_actions_activity">
+            android:label="@string/label_actions_activity"
+            android:theme="@style/WearAppCompatDark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -583,7 +584,8 @@
         <activity
             android:name=".interaction.actions.WizardActivity"
             android:exported="true"
-            android:label="@string/menu_wizard" />
+            android:label="@string/menu_wizard"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.WizardResultActivity"
             android:exported="false"
@@ -595,11 +597,13 @@
         <activity
             android:name=".interaction.menus.FillMenuActivity"
             android:exported="true"
-            android:label="@string/menu_prime_fill" />
+            android:label="@string/menu_prime_fill"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.menus.StatusMenuActivity"
             android:exported="true"
-            android:label="@string/menu_status" />
+            android:label="@string/menu_status"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.LoopStatusActivity"
             android:exported="false"
@@ -607,48 +611,60 @@
         <activity
             android:name=".interaction.menus.PreferenceMenuActivity"
             android:exported="true"
-            android:label="@string/menu_settings" />
+            android:label="@string/menu_settings"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
-            android:label="@string/menu_treatment" />
+            android:label="@string/menu_treatment"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.BolusActivity"
             android:exported="true"
-            android:label="@string/action_insulin" />
+            android:label="@string/action_insulin"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.ProfileSwitchActivity"
             android:exported="true"
-            android:label="@string/status_profile_switch" />
+            android:label="@string/status_profile_switch"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.AcceptActivity"
             android:exported="true"
             android:label="@string/action_confirm"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.FillActivity"
             android:exported="true"
-            android:label="@string/menu_prime_fill" />
+            android:label="@string/menu_prime_fill"
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.ECarbActivity"
             android:exported="true"
-            android:label="@string/action_ecarbs" />
+            android:label="@string/action_ecarbs"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.CarbActivity"
             android:exported="true"
-            android:label="@string/action_carbs" />
+            android:label="@string/action_carbs"
+            android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:exported="true"
-            android:label="@string/menu_tempt" />
+            android:label="@string/menu_tempt"
+            android:theme="@style/WearAppCompatDark" />
 
         <activity
             android:name=".interaction.actions.BackgroundActionActivity"
             android:exported="true" />
 
         <activity
-            android:name=".interaction.actions.LoopStateTimedActivity"
-            android:exported="true" />
+            android:name=".interaction.actions.RunningModeTimedActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/WearAppCompatDark" />
 
         <activity
             android:name=".interaction.ConfigurationActivity"

@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="treatments">Treatments</string>
+    <string name="treatments_desc">View and manage treatment history</string>
+    <string name="nav_configuration">Configuration</string>
+    <string name="nav_configuration_desc">Setup your configuration (CGM, Pump, ...) end enable features</string>
+    <string name="count_selected">%1$d selected</string>
+    <string name="delete">Delete</string>
+    <string name="show_invalidated">Show invalidated</string>
+    <string name="hide_invalidated">Hide invalidated</string>
+    <string name="more_options">More options</string>
     <string name="refresh">Refresh</string>
+    <string name="no_history_records">No records found</string>
     <string name="error">Error</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
     <string name="invalid_input">Invalid input data</string>
+    <string name="invalid_number">Invalid number</string>
     <string name="constraint_applied">Constraint applied!</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pump unreachable</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pump not initialized, profile not set!</string>
     <string name="failed_update_basal_profile">Failed to update basal profile</string>
     <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
@@ -21,7 +33,12 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Save</string>
+    <string name="skip">Skip</string>
+    <string name="switch_to_edit">Edit</string>
     <string name="snooze">Snooze</string>
+    <string name="snooze_15m">Snooze 15m</string>
+    <string name="snooze_30m">Snooze 30m</string>
+    <string name="snooze_60m">Snooze 60m</string>
     <string name="virtual_pump">Virtual Pump</string>
     <string name="constraints">Constraints</string>
     <string name="superbolus">Superbolus</string>
@@ -30,14 +47,37 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
     <string name="result">Result</string>
     <string name="settings">Settings</string>
+    <string name="simple_mode">Simple mode</string>
+    <string name="expand">Expand</string>
+    <string name="collapse">Collapse</string>
+    <string name="no_compose_preferences">No compose preferences available for this plugin</string>
+    <string name="plugin_no_preferences">Plugin does not support preferences</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="confirm_pin_hint">Confirm PIN</string>
+    <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Status lights</string>
+    <string name="copy_existing_values">Copy NS settings (if exists)?</string>
     <string name="do_ns_upload_title">Upload BG data to NS</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <string name="configbuilder_bgsource">BG Source</string>
+    <string name="configbuilder_smoothing">Smoothing</string>
+    <string name="configbuilder_pump">Pump</string>
+    <string name="configbuilder_sensitivity">Sensitivity detection</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_sync">Communication</string>
+    <string name="configbuilder_general">General</string>
+    <string name="protection">Protection</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">Master password</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
     <string name="confirm">Confirm</string>
     <string name="pump">Pump</string>
+    <string name="pump_management">Pump management</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader">Uploader</string>
+    <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Missed BG readings</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Mute for 5 minutes</string>
@@ -48,6 +88,9 @@
     <string name="aps_mode_title">APS Mode</string>
     <string name="extended_bolus">Extended bolus</string>
     <string name="paused">Paused</string>
+    <string name="running">Running</string>
+    <string name="open_menu">Open menu</string>
+    <string name="close_menu">Close menu</string>
     <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">Old data</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
@@ -60,12 +103,18 @@
     <string name="objectives">Objectives</string>
     <string name="please_wait">Please wait…</string>
     <string name="stop">Stop</string>
+    <string name="stop_pressed">STOP PRESSED</string>
     <string name="carbs">Carbs</string>
     <string name="invalid_profile">Invalid profile!</string>
     <string name="no_profile_set">NO PROFILE SET</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
     <string name="units_label">Units</string>
+    <string name="insulin_name_label">Insulin name</string>
+    <string name="insulin_nickname_label">Insulin nickname</string>
+    <string name="concentration_label">Concentration</string>
+    <string name="format_concentration">U%1$.0f</string>
+    <string name="peak_label">Peak</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -79,8 +128,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pump time updated</string>
     <string name="exit">Exit</string>
@@ -104,6 +151,8 @@
     <string name="time">Time</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Loading…</string>
+    <string name="waiting_for_pump">Waiting for pump…</string>
+    <string name="initialization_failed">Initialization failed</string>
     <string name="notes_label">Notes</string>
     <string name="remove_button">Remove</string>
     <string name="add_new">Add new</string>
@@ -111,9 +160,10 @@
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
+    <string name="cgm">CGM</string>
     <string name="alarminxmin">Run alarm in %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
-    <string name="bolus_reminder">Bolus reminder</string>
+    <string name="bolus_reminder">Remind for bolus when BG recovers</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pump suspended</string>
@@ -137,18 +187,20 @@
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>
     <string name="average">Average</string>
-    <string name="tir">TIR</string>
+    <string name="tir_short">TIR</string>
+    <string name="tir">Time in Range</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">REMOVE</string>
     <string name="activate_profile">Activate profile</string>
-    <string name="reset">reset</string>
+    <string name="activate_insulin">Activate insulin</string>
+    <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
     <string name="select_for_removal">Select for removal</string>
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="copytolocalprofile">Create new profile from this profile?</string>
-    <string name="wear_wizard_settings">Wizard Settings</string>
+    <string name="wear_wizard_settings">Wear Wizard Settings</string>
     <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -159,6 +211,14 @@
     <string name="logout">Logout</string>
     <string name="prime_fill">Prime/Fill</string>
     <string name="site_rotation">Site Rotation</string>
+    <string name="edit_site">Edit</string>
+    <string name="select_arrow">Select Arrow</string>
+    <string name="site_filter_info">Select Therapy event type you want to see: Cannula Change and/or Sensor Change</string>
+    <string name="selected_location">Selected: %1$s</string>
+    <string name="last_site_location">Last site: %1$s</string>
+    <string name="pick_site">Pick site</string>
+    <string name="select_site_location">Select site location</string>
+    <string name="site_location">Site location</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Stop temp target</string>
     <string name="closedloop">Closed Loop</string>
@@ -166,8 +226,17 @@
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
     <string name="pump_disconnected">Pump disconnected</string>
     <string name="pump_suspended">Pump suspended</string>
+    <string name="pump_suspend">Suspend pump</string>
+    <string name="pump_resume">Resume pump</string>
     <string name="mode_reverted">Mode reverted</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="select_insulin">Select Insulin</string>
+    <string name="select_pump_insulin">Select Pump Insulin</string>
+    <string name="select_pen_insulin">Select Insulin</string>
+    <string name="insulin_template">Template</string>
     <string name="dia">DIA</string>
+    <string name="peak">Peak</string>
+    <string name="concentration">Concentration</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Canceling of temporary basal failed</string>
@@ -184,6 +253,11 @@
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Export settings</string>
     <string name="location_permission_not_granted">Location permission not granted. Allow in android settings.</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
+    <string name="not_available_full">Not available</string>
+    <string name="engineering_mode_enabled">Engineering mode enabled</string>
+    <string name="back">Back</string>
+    <string name="show_hide_records">Hide loop records</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
@@ -209,6 +283,18 @@
     <string name="duration">Duration</string>
     <string name="reason">Reason</string>
     <string name="nochangerequested">No change requested</string>
+
+    <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Insulin %1$s confirmed</string>
+    <string name="current_insulin">Currently active</string>
+    <string name="change_insulin">Change</string>
+    <string name="select_insulin_description">Select the insulin you are filling the pump with. A profile switch will be applied after activation/prime.</string>
+    <string name="bolus_delivered">%1$.2fU / %2$.2fU</string>
+    <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
+    <string name="pump_insulin_cu">%1$.2f CU</string>
+    <string name="pump_insulin_cu1">%1$.1f CU</string>
+    <string name="selected_insulin">Selected Insulin: %1$s</string>
+    <string name="record_insulin_hint">If entering insulin applied by pen, select the correct insulin type below. The dose is always in International Units.</string>
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>
@@ -239,6 +325,7 @@
     <string name="careportal_dad_alert">D.A.D. Alert</string>
     <string name="careportal_insulin_cartridge_change">Insulin Cartridge Change</string>
     <string name="careportal_profileswitch">Profile switch</string>
+    <string name="profile_management">Profile management</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
     <string name="careportal_mealbolus">Meal Bolus</string>
     <string name="careportal_correctionbolus">Correction Bolus</string>
@@ -249,10 +336,39 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Pump Battery Change</string>
     <string name="temporary_target">Temporary target</string>
+    <string name="temporary_targets">Temporary targets</string>
     <string name="running_mode">Running mode</string>
     <string name="careportal_temporarytargetvalue">Temporary target value</string>
     <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
     <string name="boluswizard">Bolus wizard</string>
+    <string name="treatment_desc">Record insulin and carbs together</string>
+    <string name="treatment_insulin_desc">Deliver bolus manually</string>
+    <string name="treatment_carbs_desc">Record carbs without insulin</string>
+    <string name="treatment_calculator_desc">Calculate bolus</string>
+    <string name="insulin_management">Insulin management</string>
+    <string name="manage_insulin_desc">Manage and activate insulin configurations</string>
+    <string name="concentration_disable_blocked">Cannot disable concentration support while non-U100 insulins exist. Remove all non-U100 insulin configurations and switch to a U100 profile first.</string>
+    <string name="simple_mode_blocked_by_concentration">Cannot enable simple mode while using non-U100 insulin. Switch to U100 insulin first.</string>
+    <string name="manage_profile_desc">Manage and activate profiles</string>
+    <string name="manage_temp_target_desc">Manage and set temporary targets</string>
+    <string name="manage_temp_basal_desc">Start temporary basal</string>
+    <string name="manage_extended_bolus_desc">Start extended bolus delivery</string>
+    <string name="manage_site_rotation_desc">Track and rotate infusion sites</string>
+    <string name="manage_quickwizard_desc">Manage quick wizard presets</string>
+    <string name="treatment_note_desc">Add a note to your records</string>
+    <string name="treatment_question_desc">Log a question for your care team</string>
+    <string name="treatment_cgm_desc">Open CGM app</string>
+    <string name="treatment_calibration_desc">Calibrate CGM sensor</string>
+    <string name="treatment_bg_check_desc">Record blood glucose check</string>
+    <string name="treatment_exercise_desc">Log exercise activity</string>
+    <string name="treatment_announcement_desc">Post announcement</string>
+    <string name="treatment_sensor_insert_desc">Record CGM sensor insertion</string>
+    <string name="treatment_battery_change_desc">Record pump battery change</string>
+    <string name="treatment_cannula_change_desc">Record cannula/infusion set change</string>
+    <string name="treatment_fill_desc">Prime and fill cannula</string>
+    <string name="temp_basal">Temp basal</string>
+    <string name="user_entry">User entry</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
@@ -264,6 +380,13 @@
     <string name="automation">Automation</string>
     <string name="settingsexport">Settings Export</string>
     <string name="custom">Custom</string>
+    <string name="preset_settings">Preset Settings</string>
+    <string name="activation">Activation</string>
+    <string name="temp_target_management">Temporary Target management</string>
+    <string name="revert_to_defaults">Revert to defaults</string>
+    <string name="confirm_remove_preset">Remove preset %1$s?</string>
+    <string name="confirm_cancel_temp_target">Cancel active temporary target?</string>
+    <string name="add_new_preset">Add new preset</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -321,7 +444,8 @@
     <string name="expweight">Exponentially Weighted TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Total Daily Dose</string>
     <string name="ratio">Ratio</string>
     <string name="amount_days"># Days</string>
     <string name="weight">Weight</string>
@@ -431,6 +555,11 @@
     <string name="ue_csv_header" translatable="false">"%1$s;%2$s;%3$s;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;%12$s;%13$s;%14$s;%15$s;%16$s;%17$s"</string>
     <string name="uel_loop_change">LOOP CHANGED</string>
     <string name="uel_loop_removed">LOOP REMOVED</string>
+    <string name="uel_new_insulin">NEW INSULIN</string>
+    <string name="uel_change_pump_insulin">CHANGE PUMP INSULIN</string>
+    <string name="uel_store_insulin">STORE INSULIN</string>
+    <string name="uel_change_insulin_concentration">CHANGE INSULIN CONCENTRATION</string>
+    <string name="uel_insulin_removed">INSULIN REMOVED</string>
     <string name="uel_other">OTHER</string>
     <string name="uel_running_mode">RUNNING MODE</string>
     <string name="uel_running_mode_removed">RUNNING MODE REMOVED</string>
@@ -443,6 +572,8 @@
     <string name="temp_target_high_target">Temporary target top value</string>
     <string name="temp_target_value">Temporary target value</string>
     <string name="profile_dia">Profile DIA value</string>
+    <string name="insulin_dia">Insulin DIA value</string>
+    <string name="insulin_peak">Insulin Peak value</string>
     <string name="profile_sensitivity_value">Profile sensitivity value</string>
     <string name="profile_max_daily_basal_value">Maximal profile basal value</string>
     <string name="current_basal_value">Current basal value</string>
@@ -451,6 +582,18 @@
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
     <string name="basal_value">Basal value</string>
+
+    <!-- Profile validation -->
+    <string name="no_profile_selected">No profile selected</string>
+    <string name="missing_profile_name">Missing profile name</string>
+    <string name="error_in_ic_values">Error in IC values</string>
+    <string name="error_in_isf_values">Error in ISF values</string>
+    <string name="error_in_basal_values">Error in basal values</string>
+    <string name="error_in_target_values">Error in target values</string>
+    <string name="profile_name_contains_dot">Some of profile names contains dots.\nThis is not supported by NS.\nProfiles will not be uploaded to NS.</string>
+    <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
+    <string name="errors">Errors</string>
+    <string name="view">View</string>
 
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -480,7 +623,7 @@
     <string name="sensitivity">Sensitivity</string>
     <string name="isf_for_carbs">ISF for Calculator and Carbs Absorption: %1$.1f</string>
     <string name="autosens_long">Autosens Value: %.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens in algorithm: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">file</string>
@@ -493,7 +636,6 @@
 
 
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
     <string name="urgent_alarm">Urgent Alarm</string>
     <string name="info">INFO</string>
 
@@ -503,13 +645,33 @@
 
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
-    <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
-    <string name="partialboluswizard_reset_time">Old glycemia time threshold [min]</string>
+    <string name="slowabsorptiondetected_plain">!!!!! Slow carbs absorption detected: %1$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</string>
     <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
+    <string name="wizard_bg_label">BG</string>
+    <string name="wizard_correction">Correction</string>
+    <string name="wizard_subtotal">Subtotal</string>
+    <string name="carbs_type_bread">Bread, savory pastries, yogurt, fruit (apple, banana, pear), potatoes, rice, buckwheat, oatmeal, slow and low carb foods, vegetables</string>
+    <string name="carbs_type_cake">Dumplings, pasta, Asian cuisine rich in carbs and fats, sweet and yeast pastries, cereals, grain porridge, honey, jam</string>
+    <string name="carbs_type_pizza">Lasagna, pizza, hamburgers, fries, baked potatoes, chips and similar snacks</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="wizard_total">Total</string>
+    <string name="wizard_carb_time">Carb time</string>
+    <string name="carb_time_now">Now</string>
+    <string name="change">Change</string>
+    <string name="wizard_set_alarm">Set alarm</string>
+    <string name="wizard_use_percentage">Use percentage</string>
+    <string name="wizard_include_bg">Include BG</string>
+    <string name="wizard_include_tt">Include TempTarget</string>
+    <string name="wizard_include_trend">Include trend</string>
+    <string name="wizard_include_iob">Include IOB</string>
+    <string name="wizard_include_cob">Include COB</string>
+    <string name="wizard_advanced">Advanced</string>
+    <string name="wizard_calculation">Calculation</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>
+    <string name="bolus_equal_zero_no_action">Bolus = 0. No action taken!</string>
     <string name="wizard_no_insulin_required">No insulin required!</string>
     <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
     <string name="wizard_no_active_profile">No active profile set!</string>
@@ -522,12 +684,14 @@
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
+    <string name="wizard_trend_detail">15min trend (%1$s %2$s)</string>
     <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">No pump available!</string>
     <string name="quickwizard">QuickWizard</string>
+    <string name="quickwizard_managemnt">QuickWizard management</string>
 
 
     <!--    Preferences-->
@@ -553,6 +717,7 @@
     <string name="tempbasal_label">Temp basal</string>
     <string name="extended_bolus_label">Extended bolus</string>
     <string name="serial_number">Serial number</string>
+    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">Disconnected</string>
     <string name="connecting">Connecting</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicked connect to pump</string>
@@ -566,6 +731,7 @@
     <string name="device_changed" comment="26 characters max for translation">Device changed</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Tempbasal delivery error</string>
+    <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
     <string name="not_set_short">Not set</string>
     <string name="pump_busy">Pump is busy</string>
     <string name="connection_error">Pump connection error</string>
@@ -574,6 +740,12 @@
     <string name="pairing">Pairing</string>
     <string name="initializing">Initializing ...</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Warning</string>
+    <string name="retry" comment="Button label to retry a failed operation">Retry</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Finish</string>
+    <string name="firmware" comment="Pump firmware version label">Firmware</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Bolus speed</string>
+    <string name="history" comment="Tab/screen title for viewing past events">History</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -586,8 +758,9 @@
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>
     <string name="ok">OK</string>
+    <string name="next">Next</string>
     <string name="cancel">Cancel</string>
-    <string name="dismiss">DISMISS</string>
+    <string name="dismiss">Dismiss</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="close">Close</string>
@@ -603,12 +776,71 @@
     <string name="export_failed">Failed</string>
     <string name="export_alert">ALERT</string>
 
+    <!-- Export dialog strings -->
+    <string name="master_password_missing">Master password is not set!\n\nPlease set your Master password in Preferences (%1$s)</string>
+    <string name="export_to">Export settings to</string>
+    <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
+    <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
+
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Settings exported</string>
     <string name="export_result_message_failed">Settings export FAILED!</string>
     <string name="export_result_message_about_to_expire">Settings exported: password about to expire soon. Export manually and (re)enter password.</string>
     <string name="export_result_message_expired">Settings export canceled: password expired. Export manually and (re)enter!</string>
     <string name="export_result_message_disabled">Warning (automation): Settings export not enabled!</string>
+
+    <!-- Cloud export -->
+    <string name="export_cloud_success">Cloud export successful</string>
+    <string name="export_cloud_failed">Cloud export FAILED!</string>
+    <string name="csv_exported">User entries exported</string>
+    <string name="csv_export_failed">User entries export FAILED!</string>
+    <string name="logs_sent">Logs sent via email</string>
+    <string name="logs_send_failed">Failed to send logs</string>
+    <string name="export_options">Export Options</string>
+    <string name="cloud_directory">Cloud Directory</string>
+    <string name="export_settings_local">Export settings (Local)</string>
+    <string name="export_settings_cloud">Export settings (Cloud)</string>
+    <string name="export_settings_both">Export settings (Local+Cloud)</string>
+    <string name="import_settings_local">Import settings (Local)</string>
+    <string name="import_settings_cloud">Import settings (Cloud)</string>
+    <string name="import_settings_both">Import settings (Local/Cloud)</string>
+    <string name="send_logs_to_cloud">Export Logs to Cloud</string>
+    <string name="export_csv_to_cloud">Export User Entries to Cloud (csv)</string>
+    <string name="export_csv_to_local">Export User Entries to Local (csv)</string>
+    <string name="setup_cloud_directory_first">Please set up Cloud Directory first to use Export Settings</string>
+    <string name="cloud_token_expired_or_invalid">Cloud storage authorization has expired or is invalid. Please re-authorize.</string>
+
+    <!-- Export destination chip labels -->
+    <string name="chip_local">Local</string>
+    <string name="chip_cloud">Cloud</string>
+    <string name="chip_email">Email</string>
+    <string name="send_logs">Send logs</string>
+    <string name="file_management">File management</string>
+    <string name="database_management">Database management</string>
+
+    <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Configure log verbosity levels</string>
+    <string name="maintenance_send_logs_desc">Share log files for troubleshooting</string>
+    <string name="maintenance_delete_logs_desc">Remove old log files</string>
+    <string name="maintenance_aaps_directory_desc">Select local storage folder</string>
+    <string name="maintenance_cloud_directory_desc">Set up cloud storage (Google Drive)</string>
+    <string name="maintenance_export_desc">Save encrypted settings backup</string>
+    <string name="maintenance_import_desc">Restore settings from backup</string>
+    <string name="maintenance_export_csv_desc">Export treatment history as spreadsheet</string>
+    <string name="maintenance_cleanup_db_desc">Remove old entries from database</string>
+    <string name="maintenance_reset_aps_results_desc">Clear stored algorithm results</string>
+    <string name="maintenance_reset_db_desc">Erase all databases and restart</string>
+
+    <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Select Storage Type</string>
+    <string name="clear_cloud_action">Clear Settings</string>
+    <string name="clear_cloud_settings">Clear Cloud Settings</string>
+    <string name="clear_cloud_settings_message">This will switch to local storage and clear authorization. Continue?</string>
+    <string name="cloud_connection_failed">Cloud storage connection failed</string>
+    <string name="cloud_reauthorize_message">Cloud storage connection failed. Would you like to re-authenticate?</string>
+    <string name="reauthorize">Re-authenticate</string>
+    <string name="cloud_auth_success">Cloud storage authentication successful</string>
+    <string name="authorization_status">Authorization Status</string>
 
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
@@ -624,20 +856,67 @@
 
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">User request</string>
+    <string name="pump_pair">Pair</string>
+    <string name="pump_unpair">Unpair</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
 
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy not supported or device not paired.</string>
     <string name="ble_not_enabled">Bluetooth not enabled.</string>
+    <string name="ble_permissions_missing">Bluetooth permissions are not granted. Please grant them in the app settings.</string>
     <string name="location_not_found_title">Location Is Not Enabled</string>
     <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
 
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin preferences</string>
 
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+    <!-- Navigation -->
+    <string name="nav_about">About</string>
+    <string name="nav_about_desc">View app version and information</string>
+    <string name="nav_exit">Exit</string>
+    <string name="open_navigation">Open navigation</string>
+    <string name="nav_history_browser">History browser</string>
+    <string name="nav_history_browser_desc">Browse historical data and graphs</string>
+    <string name="overview">Overview</string>
+    <string name="appearance">Appearance</string>
+    <string name="manage">Manage</string>
+    <string name="localprofile">Profile</string>
+    <string name="nav_setupwizard">Setup Wizard</string>
+    <string name="nav_setupwizard_desc">Configure AAPS step by step</string>
+    <string name="statistics">Statistics</string>
+    <string name="statistics_desc">View statistics and reports</string>
+    <string name="tdd_cycle_pattern">TDD Cycle Pattern</string>
+    <string name="tdd_cycle_pattern_desc">Overlay daily insulin totals in 28-day cycles to spot recurring patterns</string>
+    <string name="nav_profile_helper">Profile helper</string>
+    <string name="nav_profile_helper_desc">Build your profile based on weight or TDD</string>
+    <string name="quick_launch_configure">Configure QuickLaunch</string>
+    <string name="quick_launch_configure_desc">Customize quick-action buttons on overview</string>
+
+    <!-- Alerts -->
+    <string name="localalertsettings_title">Local alerts</string>
+
+    <!-- Actions Screen -->
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="reorder">Reorder</string>
+    <string name="actions">Actions</string>
+    <string name="status">Status</string>
+    <string name="pump_actions">Pump actions</string>
+    <string name="tempbasal_button">TempBasal</string>
+    <string name="extended_bolus_button">Extended Bolus</string>
+    <string name="tools">Tools</string>
+    <string name="device_maintenance">Device Maintenance</string>
+    <string name="from_label">From</string>
+    <string name="to_label">To</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="pb_label">Pump battery</string>
+    <string name="cannula">Cannula</string>
+    <string name="patch_pump">Patch pump</string>
+
+    <!-- Site Rotation -->
+    <string name="select_location">Click below to select Site</string>
 
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
@@ -661,6 +940,8 @@
     <string name="cleanup_db_confirm">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.</string>
     <string name="cleanup_db_confirm_sync">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.\nDoing it will speedup full synchronization dramatically.</string>
     <string name="cleared_entries">Cleared entries</string>
+    <string name="reset_db_confirm">Do you really want to reset the databases?</string>
+    <string name="reset_aps_results_confirm">Do you really want to reset stored APS results?</string>
 
     <!--    Weekday-->
     <string name="weekday_sunday_short">Sun</string>
@@ -683,6 +964,7 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Rate: %1$.2f%% (%2$.2f U/h) Duration: %3$d min</string>
     <string name="rate_percent_duration">Rate: %1$.2f U/h (%2$.2f%%) Duration: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Rate</b>: %1$.2f%% (%2$.2f U/h)<br><b>Duration</b>: %3$d min<br>]]></string>
@@ -690,4 +972,86 @@
 
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS plays audio"</string>
+
+    <!-- ProfileEditor -->
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
+    <string name="target_short">TARG</string>
+    <string name="profile_name">Profile name:</string>
+    <string name="edit_profile_name">Edit profile name</string>
+    <string name="units_colon">Units:</string>
+    <string name="unsaved_changes">Unsaved changes</string>
+    <string name="unsaved_changes_message">You have unsaved changes. What would you like to do?</string>
+    <string name="discard">Discard</string>
+    <string name="ic_dynamic_label_warning">Your algorithm can provide dynamic calculation of IC. Values below cen be used only as a fallback in case of missing data or as a reference value only</string>
+    <string name="isf_dynamic_label_warning">Your algorithm can provide dynamic calculation of ISF. Values below can be used only as a fallback in case of missing data or as a reference value only</string>
+    <string name="add_time_block">Add time block</string>
+    <string name="remove_entry">Remove entry</string>
+    <string name="target_low_label">Low</string>
+    <string name="target_high_label">High</string>
+    <string name="select_profile">Select profile to edit</string>
+    <string name="a11y_add_new_profile">add new profile</string>
+    <string name="a11y_clone_profile">clone current profile</string>
+    <string name="a11y_delete_current_profile">delete current profile</string>
+
+    <!--    Search-->
+    <string name="search">Search</string>
+    <string name="search_preferences">Search preferences</string>
+    <string name="clear">Clear</string>
+    <string name="search_category_categories">Preference categories</string>
+    <string name="search_category_preferences">Preferences</string>
+    <string name="search_category_dialogs">Dialogs</string>
+    <string name="search_category_plugins">Plugins</string>
+    <string name="search_category_wiki">Documentation</string>
+    <string name="wiki_search_offline">Documentation search requires internet connection</string>
+    <string name="no_search_results">No results found</string>
+    <string name="search_plugin_disabled">Plugin %1$s disabled</string>
+
+    <!--    Log Settings-->
+    <string name="nav_logsettings">Log settings</string>
+    <string name="resettodefaults">Reset to defaults</string>
+
+    <!--    Maintenance-->
+    <string name="maintenance">Maintenance</string>
+    <string name="description_maintenance">Provides several functions for maintenance (eg. log sending, log deletion).</string>
+    <string name="log_files">Log files</string>
+    <string name="send_all_logs">Send Logs by Email</string>
+    <string name="delete_logs">Delete Logs</string>
+    <string name="logs_deleted">Logs deleted</string>
+    <string name="aaps_directory">AAPS directory</string>
+    <string name="import_setting">Import settings</string>
+    <string name="miscellaneous">Miscellaneous</string>
+
+    <!-- Import settings screen -->
+    <string name="import_decrypt_review">Decrypt &amp; Review</string>
+    <string name="import_decrypt">Decrypt</string>
+    <string name="import_master_password">Master password</string>
+    <string name="import_decryption_password">Decryption password</string>
+    <string name="import_different_password_hint">File was encrypted with a different password</string>
+    <string name="import_wrong_password">Wrong password</string>
+    <string name="import_btn">Import</string>
+    <string name="import_anyway_btn">Import anyway</string>
+    <string name="import_restart_title">Settings imported</string>
+    <string name="import_restart_message">Settings have been imported. The app needs to restart.</string>
+    <string name="import_file_details">File details</string>
+    <string name="import_source_local">Local</string>
+    <string name="import_source_cloud">Cloud</string>
+    <string name="import_load_more">Load more</string>
+    <string name="import_no_files">No settings files found</string>
+    <string name="import_review_summary">Import summary</string>
+    <string name="import_decrypt_ok">Decryption successful. Ready to import.</string>
+    <string name="import_decrypt_warn">Decryption successful, but there are warnings.</string>
+    <string name="import_decrypt_error">Decryption successful, but import is not possible.</string>
+    <string name="import_check_before">Please check preferences before importing:</string>
+    <string name="import_check_dangerous">Preferences should not be imported!</string>
+    <string name="import_check_cannot">Preferences cannot be imported!</string>
+    <string name="import_explain_issues">Explain import issues\u2026</string>
+    <string name="reset_aps_results">Reset APS results</string>
+    <string name="database_cleanup">Database cleanup</string>
+    <string name="nav_resetdb">Reset Databases</string>
+
+    <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="ble_scan_select_pump">Select your pump from the list below</string>
+    <string name="ble_scan_scanning">Scanning for devices…</string>
+
 </resources>

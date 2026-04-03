@@ -9,17 +9,17 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuProvider
+import androidx.lifecycle.lifecycleScope
+import app.aaps.core.data.model.PS
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.ui.locale.LocaleHelper.update
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
@@ -27,6 +27,8 @@ import app.aaps.plugins.configuration.databinding.ActivitySetupwizardBinding
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.math.max
@@ -37,8 +39,8 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var swDefinition: SWDefinition
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var swItemProvider: Provider<SWItem>
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private val disposable = CompositeDisposable()
     private lateinit var screens: List<SWScreen>
@@ -55,7 +57,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
         binding = ActivitySetupwizardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(R.string.nav_setupwizard)
+        title = rh.gs(app.aaps.core.ui.R.string.nav_setupwizard)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -67,7 +69,8 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (currentWizardPage == 0)
-                    OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() } else {
+                    uiInteraction.showOkCancelDialog(context = this@SetupWizardActivity, message = rh.gs(R.string.exitwizard), ok = { finish() })
+                else {
                     currentWizardPage = previousPage(); prepareLayout()
                 }
             }
@@ -78,8 +81,8 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                 when (menuItem.itemId) {
                     android.R.id.home -> {
-                        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
-                        OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() }
+                        preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
+                        uiInteraction.showOkCancelDialog(context = this@SetupWizardActivity, message = rh.gs(R.string.exitwizard), ok = { finish() })
                         true
                     }
 
@@ -121,10 +124,8 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
             .toObservable(EventSWSyncStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateButtons() }, fabricPrivacy::logException)
+        persistenceLayer.observeChanges(PS::class.java)
+            .onEach { updateButtons() }.launchIn(lifecycleScope)
         disposable += rxBus
             .toObservable(EventProfileStoreChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -154,7 +155,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
 
     // Go back to overview
     fun finishSetupWizard() {
-        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
+        preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
         val intent = Intent(this, uiInteraction.mainActivity).setAction("SetupWizardActivity")
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)

@@ -2,7 +2,6 @@ package app.aaps.core.interfaces.workflow
 
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
-import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.HISTORY_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 
@@ -52,7 +51,7 @@ interface CalculationWorkflow {
         reason: String,
         end: Long,
         bgDataReload: Boolean,
-        cause: Event?
+        triggeredByNewBG: Boolean
     )
 
     /**

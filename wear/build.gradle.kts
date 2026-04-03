@@ -3,8 +3,8 @@ import java.util.Date
 
 plugins {
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
     id("com.android.application")
-    id("kotlin-android")
     kotlin("plugin.serialization")
     id("android-app-dependencies")
     id("test-app-dependencies")
@@ -90,9 +90,18 @@ android {
             versionName = Versions.appVersion + "-aapsclient2"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_blueowl"
         }
+        create("aapsclient3") {
+            applicationId = "info.nightscout.aapsclient3"
+            dimension = "standard"
+            resValue("string", "app_name", "AAPSClient3")
+            versionName = Versions.appVersion + "-aapsclient3"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_greenowl"
+        }
     }
     buildFeatures {
         buildConfig = true
+        resValues = true
+        compose = true
     }
 }
 
@@ -129,6 +138,10 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.protobuf)
+
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.wear.compose.material3)
+    implementation(libs.androidx.wear.compose.foundation)
 
     implementation(libs.com.google.android.gms.playservices.wearable)
     implementation(files("${rootDir}/wear/libs/hellocharts-library-1.5.8.aar"))

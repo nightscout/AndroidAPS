@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    id("kotlin-android")
     id("kotlinx-serialization")
     id("android-module-dependencies")
     id("test-module-dependencies")
@@ -17,7 +16,6 @@ dependencies {
     api(libs.com.squareup.retrofit2.converter.gson)
     api(libs.com.squareup.okhttp3.okhttp)
     api(libs.com.squareup.okhttp3.logging.interceptor)
-    api(libs.com.google.code.gson)
     api(libs.net.danlew.android.joda)
     api(libs.io.reactivex.rxjava3.rxkotlin)
 
@@ -30,4 +28,5 @@ dependencies {
     api(libs.kotlinx.coroutines.rx3)
     api(platform(libs.kotlinx.serialization.bom))
     api(libs.kotlinx.serialization.protobuf)
+    api(libs.kotlinx.serialization.json)
 }

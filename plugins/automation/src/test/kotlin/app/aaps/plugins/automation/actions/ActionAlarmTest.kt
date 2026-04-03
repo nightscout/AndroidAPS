@@ -6,6 +6,7 @@ import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.ui.TimerUtil
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -40,20 +41,20 @@ class ActionAlarmTest : TestBaseWithProfile() {
         sut = ActionAlarm(injector)
     }
 
-    @Test fun friendlyNameTest() {
+    @Test fun friendlyNameTest() = runTest {
         assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.alarm)
     }
 
-    @Test fun shortDescriptionTest() {
+    @Test fun shortDescriptionTest() = runTest {
         sut.text = InputString("Asd")
         assertThat(sut.shortDescription()).isEqualTo("Alarm: %s")
     }
 
-    @Test fun iconTest() {
+    @Test fun iconTest() = runTest {
         assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_access_alarm_24dp)
     }
 
-    @Test fun doActionTest() {
+    @Test fun doActionTest() = runTest {
         sut.text = InputString("Asd")
         sut.doAction(object : Callback() {
             override fun run() {
@@ -62,16 +63,16 @@ class ActionAlarmTest : TestBaseWithProfile() {
         })
     }
 
-    @Test fun hasDialogTest() {
+    @Test fun hasDialogTest() = runTest {
         assertThat(sut.hasDialog()).isTrue()
     }
 
-    @Test fun toJSONTest() {
+    @Test fun toJSONTest() = runTest {
         sut.text = InputString("Asd")
         JSONAssert.assertEquals("""{"data":{"text":"Asd"},"type":"ActionAlarm"}""", sut.toJSON(), true)
     }
 
-    @Test fun fromJSONTest() {
+    @Test fun fromJSONTest() = runTest {
         sut.text = InputString("Asd")
         sut.fromJSON("""{"text":"Asd"}""")
         assertThat(sut.text.value).isEqualTo("Asd")

@@ -8,7 +8,7 @@ import app.aaps.core.graph.data.AreaGraphSeries
 import app.aaps.core.graph.data.BarGraphSeries
 import app.aaps.core.graph.data.BolusDataPoint
 import app.aaps.core.graph.data.DataPointWithLabelInterface
-import app.aaps.core.graph.data.DeviationDataPoint
+import app.aaps.core.graph.data.DeviationDataPointLegacy
 import app.aaps.core.graph.data.DoubleDataPoint
 import app.aaps.core.graph.data.EffectiveProfileSwitchDataPoint
 import app.aaps.core.graph.data.FixedLineGraphSeries
@@ -103,7 +103,7 @@ class GraphData @Inject constructor(
     }
 
     fun addRunningModes() {
-        addSeries(overviewData.runningModesSeries as PointsWithLabelGraphSeries<DataPoint>)
+        addSeries(overviewData.runningModesSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
     }
 
     fun addTreatments(context: Context?) {
@@ -184,7 +184,7 @@ class GraphData @Inject constructor(
             minY = -maxY
         }
         overviewData.devScale.multiplier = maxY * scale / overviewData.maxDevValueFound
-        addSeries(overviewData.deviationsSeries as BarGraphSeries<DeviationDataPoint>)
+        addSeries(overviewData.deviationsSeries as BarGraphSeries<DeviationDataPointLegacy>)
     }
 
     // scale in % of vertical size (like 0.3)

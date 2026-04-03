@@ -4,6 +4,7 @@ import android.content.Context
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
@@ -41,14 +42,15 @@ class DetailedBolusInfo {
     /**
      * Used for create record going directly to db (record only)
      */
-    fun createBolus(): BS =
+    fun createBolus(iCfg: ICfg): BS =
         if (insulin != 0.0)
             BS(
                 timestamp = bolusTimestamp ?: timestamp,
                 amount = insulin,
                 type = bolusType,
                 notes = notes,
-                ids = IDs(pumpId = timestamp)
+                ids = IDs(pumpId = timestamp),
+                iCfg = iCfg
             )
         else error("insulin == 0.0")
 

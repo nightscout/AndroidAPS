@@ -5,6 +5,7 @@ import androidx.annotation.DrawableRes
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -20,6 +21,7 @@ import app.aaps.plugins.automation.elements.InputWeekDay
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -29,10 +31,11 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var autotunePlugin: Autotune
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var preferences: Preferences
 
     private var defaultValue = 0
-    private var inputProfileName = InputProfileName(rh, activePlugin, "", true)
+    private var inputProfileName = InputProfileName(rh, localProfileManager, "", true)
     private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
     private val days = InputWeekDay().also { it.setAll(true) }
 
@@ -40,7 +43,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
     @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         val autoSwitch = preferences.get(BooleanKey.AutotuneAutoSwitchProfile)
         val profileName = if (inputProfileName.value == rh.gs(app.aaps.core.ui.R.string.active)) "" else inputProfileName.value
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
@@ -100,5 +103,5 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         return this
     }
 
-    override fun isValid(): Boolean = profileFunction.getProfile() != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).first().isEnabled()
+    override fun isValid(): Boolean = runBlocking { profileFunction.getProfile() } != null && activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).first().isEnabled()
 }

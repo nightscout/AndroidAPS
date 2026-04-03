@@ -6,8 +6,11 @@ import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
 import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class DanaRServicesModule {
 

@@ -19,15 +19,15 @@ import kotlin.math.abs
 @Singleton
 class SetGlobalTimeTask @Inject constructor() : TaskBase(TaskFunc.SET_GLOBAL_TIME) {
 
-    private val SET_GLOBAL_TIME: SetGlobalTime = SetGlobalTime()
-    private val GET_GLOBAL_TIME: GetGlobalTime = GetGlobalTime()
+    @Inject lateinit var setGlobalTime: SetGlobalTime
+    @Inject lateinit var getGlobalTime: GetGlobalTime
 
     fun set(): Single<PatchBooleanResponse> {
         return isReady()
-            .concatMapSingle<GlobalTimeResponse>(Function { GET_GLOBAL_TIME.get(false) })
+            .concatMapSingle<GlobalTimeResponse>(Function { getGlobalTime.get(false) })
             .doOnNext(Consumer { response: GlobalTimeResponse -> this.checkResponse(response) })
             .doOnNext(Consumer { response: GlobalTimeResponse -> this.checkPatchTime(response) })
-            .concatMapSingle<PatchBooleanResponse>(Function { SET_GLOBAL_TIME.set() })
+            .concatMapSingle<PatchBooleanResponse>(Function { setGlobalTime.set() })
             .doOnNext(Consumer { response: PatchBooleanResponse -> this.checkResponse(response) })
             .firstOrError()
             .doOnSuccess(Consumer { onSuccess() })

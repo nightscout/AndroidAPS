@@ -84,28 +84,9 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Synchronized
     private fun updateGUI() {
         binding.categories.removeAllViews()
-        configBuilder.createViewsForPlugins(
-            title = R.string.configbuilder_profile,
-            description = R.string.configbuilder_profile_description,
-            pluginType = PluginType.PROFILE,
-            plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.PROFILE),
-            pluginViewHolders = pluginViewHolders,
-            activity = requireActivity(),
-            parent = binding.categories
-        )
-        if (config.APS || config.PUMPCONTROL || config.isEngineeringMode())
-            configBuilder.createViewsForPlugins(
-                title = app.aaps.core.ui.R.string.configbuilder_insulin,
-                description = R.string.configbuilder_insulin_description,
-                pluginType = PluginType.INSULIN,
-                plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN),
-                pluginViewHolders = pluginViewHolders,
-                activity = requireActivity(),
-                parent = binding.categories
-            )
         if (!config.AAPSCLIENT) {
             configBuilder.createViewsForPlugins(
-                title = R.string.configbuilder_bgsource,
+                title = app.aaps.core.ui.R.string.configbuilder_bgsource,
                 description = R.string.configbuilder_bgsource_description,
                 pluginType = PluginType.BGSOURCE,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.BGSOURCE),
@@ -114,7 +95,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 parent = binding.categories
             )
             configBuilder.createViewsForPlugins(
-                title = R.string.configbuilder_smoothing,
+                title = app.aaps.core.ui.R.string.configbuilder_smoothing,
                 description = R.string.configbuilder_smoothing_description,
                 pluginType = PluginType.SMOOTHING,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.SMOOTHING),
@@ -123,7 +104,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 parent = binding.categories
             )
             configBuilder.createViewsForPlugins(
-                title = R.string.configbuilder_pump,
+                title = app.aaps.core.ui.R.string.configbuilder_pump,
                 description = R.string.configbuilder_pump_description,
                 pluginType = PluginType.PUMP,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.PUMP),
@@ -134,7 +115,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         }
         if (config.APS || config.PUMPCONTROL || config.isEngineeringMode())
             configBuilder.createViewsForPlugins(
-                title = R.string.configbuilder_sensitivity,
+                title = app.aaps.core.ui.R.string.configbuilder_sensitivity,
                 description = R.string.configbuilder_sensitivity_description,
                 pluginType = PluginType.SENSITIVITY,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.SENSITIVITY),
@@ -144,7 +125,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             )
         if (config.APS) {
             configBuilder.createViewsForPlugins(
-                title = R.string.configbuilder_aps,
+                title = app.aaps.core.ui.R.string.configbuilder_aps,
                 description = R.string.configbuilder_aps_description,
                 pluginType = PluginType.APS,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.APS),
@@ -153,7 +134,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 parent = binding.categories
             )
             configBuilder.createViewsForPlugins(
-                title = R.string.configbuilder_loop,
+                title = app.aaps.core.ui.R.string.configbuilder_loop,
                 description = R.string.configbuilder_loop_description,
                 pluginType = PluginType.LOOP,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.LOOP),
@@ -172,7 +153,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             )
         }
         configBuilder.createViewsForPlugins(
-            title = R.string.configbuilder_sync,
+            title = app.aaps.core.ui.R.string.configbuilder_sync,
             description = R.string.configbuilder_sync_description,
             pluginType = PluginType.SYNC,
             plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.SYNC),
@@ -181,7 +162,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             parent = binding.categories
         )
         configBuilder.createViewsForPlugins(
-            title = R.string.configbuilder_general,
+            title = app.aaps.core.ui.R.string.configbuilder_general,
             description = R.string.configbuilder_general_description,
             pluginType = PluginType.GENERAL,
             plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.GENERAL),

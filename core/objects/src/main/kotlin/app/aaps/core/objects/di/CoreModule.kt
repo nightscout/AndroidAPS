@@ -7,6 +7,8 @@ import app.aaps.core.objects.wizard.QuickWizardEntry
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Suppress("unused")
 @Module(
@@ -14,10 +16,12 @@ import dagger.android.ContributesAndroidInjector
         CoreModule.Bindings::class,
     ]
 )
+@InstallIn(SingletonComponent::class)
 open class CoreModule {
 
     @Suppress("unused")
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @ContributesAndroidInjector fun bolusWizardInjector(): BolusWizard

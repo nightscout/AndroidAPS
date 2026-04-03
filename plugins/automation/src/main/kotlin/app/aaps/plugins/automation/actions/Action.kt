@@ -22,7 +22,7 @@ abstract class Action(val injector: HasAndroidInjector) {
 
     abstract fun friendlyName(): Int
     abstract fun shortDescription(): String
-    abstract fun doAction(callback: Callback)
+    abstract suspend fun doAction(callback: Callback)
     abstract fun isValid(): Boolean
     @DrawableRes abstract fun icon(): Int
 

@@ -6,19 +6,21 @@ import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.stats.TddCalculator
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.interfaces.Preferences
@@ -51,8 +53,9 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     glucoseStatusProvider: GlucoseStatusProvider,
     bgQualityCheck: BgQualityCheck,
     tddCalculator: TddCalculator,
-    private val uiInteraction: UiInteraction,
-    glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
+    private val notificationManager: NotificationManager,
+    glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
+    ch: ConcentrationHelper
 ) : TestOpenAPSSMBPlugin(
     injector,
     aapsLogger,
@@ -72,7 +75,8 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     glucoseStatusProvider,
     bgQualityCheck,
     tddCalculator,
-    glucoseStatusCalculatorSMB
+    glucoseStatusCalculatorSMB,
+    ch
 ) {
 
     init {
@@ -90,13 +94,15 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     // If there is no TDD data fallback to SMB as ISF calculation may be really off
     override fun provideDetermineBasalAdapter(): DetermineBasalAdapter =
         if (tdd1D == null || tdd7D == null || tddLast4H == null || tddLast8to4H == null || tddLast24H == null || !dynIsfEnabled.value()) {
-            uiInteraction.addNotificationValidTo(
-                Notification.SMB_FALLBACK, dateUtil.now(),
-                rh.gs(R.string.fallback_smb_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
+            notificationManager.post(
+                NotificationId.SMB_FALLBACK,
+                R.string.fallback_smb_no_tdd,
+                level = NotificationLevel.INFO,
+                validTo = dateUtil.now() + T.mins(1).msecs()
             )
             DetermineBasalAdapterSMBJS(ScriptReader(), injector)
         } else {
-            uiInteraction.dismissNotification(Notification.SMB_FALLBACK)
+            notificationManager.dismiss(NotificationId.SMB_FALLBACK)
             DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(), injector)
         }
 

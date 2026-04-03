@@ -154,8 +154,8 @@ class EquilResponseTest : TestBase() {
         equilResponse.send.addLast(buffer2)
 
         assertEquals(2, equilResponse.send.size)
-        assertEquals(buffer1, equilResponse.send.first)
-        assertEquals(buffer2, equilResponse.send.last)
+        assertEquals(buffer1, equilResponse.send.first())
+        assertEquals(buffer2, equilResponse.send.last())
     }
 
     @Test

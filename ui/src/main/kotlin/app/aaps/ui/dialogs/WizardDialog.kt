@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -39,6 +40,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -56,6 +58,7 @@ import app.aaps.ui.databinding.DialogWizardBinding
 import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Provider
@@ -74,6 +77,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
@@ -179,7 +183,7 @@ class WizardDialog : DaggerDialogFragment() {
         // because loop doesn't add missing insulin
         var percentage = preferences.get(IntKey.OverviewBolusPercentage)
         val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
-        persistenceLayer.getLastGlucoseValue().let {
+        runBlocking { persistenceLayer.getLastGlucoseValue() }.let {
             // if last value is older or there is no bg
             if (it != null) {
                 if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
@@ -222,7 +226,7 @@ class WizardDialog : DaggerDialogFragment() {
                 okClicked = true
                 calculateInsulin()
                 context?.let { context ->
-                    wizard?.confirmAndExecute(context)
+                    runBlocking { wizard?.confirmAndExecute(context) }
                 }
                 aapsLogger.debug(LTag.APS, "Dialog ok pressed: ${this.javaClass.simpleName}")
             }
@@ -317,7 +321,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("unused") state: Boolean) {
         saveCheckedStates()
-        binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) != null
+        binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) } != null
         binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
         if (buttonView.id == binding.cobCheckbox.id)
             processCobCheckBox()
@@ -361,14 +365,14 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun saveCheckedStates() {
-        preferences.put(BooleanKey.WizardIncludeCob, binding.cobCheckbox.isChecked)
-        preferences.put(BooleanKey.WizardIncludeTrend, binding.bgTrendCheckbox.isChecked)
+        preferences.put(BooleanNonKey.WizardIncludeCob, binding.cobCheckbox.isChecked)
+        preferences.put(BooleanNonKey.WizardIncludeTrend, binding.bgTrendCheckbox.isChecked)
         preferences.put(BooleanKey.WizardCorrectionPercent, binding.correctionPercent.isChecked)
     }
 
     private fun loadCheckedStates() {
-        binding.bgTrendCheckbox.isChecked = preferences.get(BooleanKey.WizardIncludeTrend)
-        binding.cobCheckbox.isChecked = preferences.get(BooleanKey.WizardIncludeCob)
+        binding.bgTrendCheckbox.isChecked = preferences.get(BooleanNonKey.WizardIncludeTrend)
+        binding.cobCheckbox.isChecked = preferences.get(BooleanNonKey.WizardIncludeCob)
         usePercentage = preferences.get(BooleanKey.WizardCorrectionPercent)
         binding.correctionPercent.isChecked = usePercentage
     }
@@ -378,9 +382,9 @@ class WizardDialog : DaggerDialogFragment() {
         else decimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
     private fun initDialog() {
-        val profile = profileFunction.getProfile()
-        val profileStore = activePlugin.activeProfileSource.profile
-        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+        val profile = runBlocking { profileFunction.getProfile() }
+        val profileStore = localProfileManager.profile
+        val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
 
         if (profile == null || profileStore == null) {
             ToastUtils.errorToast(ctx, app.aaps.core.ui.R.string.noprofile)
@@ -389,8 +393,8 @@ class WizardDialog : DaggerDialogFragment() {
         }
 
         // IOB calculation
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val bolusIob = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()
+        val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
 
         runOnUiThread {
             _binding ?: return@runOnUiThread
@@ -425,12 +429,12 @@ class WizardDialog : DaggerDialogFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun calculateInsulin() {
-        val profileStore = activePlugin.activeProfileSource.profile ?: return // not initialized yet
+        val profileStore = localProfileManager.profile ?: return // not initialized yet
         var profileName = binding.profileList.text.toString()
         val specificProfile: Profile?
         if (profileName == rh.gs(app.aaps.core.ui.R.string.active)) {
-            specificProfile = profileFunction.getProfile()
-            profileName = profileFunction.getProfileName()
+            specificProfile = runBlocking { profileFunction.getProfile() }
+            profileName = runBlocking { profileFunction.getProfileName() }
         } else
             specificProfile = profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it, activePlugin) }
 
@@ -462,32 +466,34 @@ class WizardDialog : DaggerDialogFragment() {
         }
 
         bg = if (binding.bgCheckbox.isChecked) bg else 0.0
-        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+        val tempTarget = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
 
         // COB
         var cob = 0.0
         if (binding.cobCheckbox.isChecked) {
-            val cobInfo = iobCobCalculator.getCobInfo("Wizard COB")
+            val cobInfo = runBlocking { iobCobCalculator.getCobInfo("Wizard COB") }
             cobInfo.displayCob?.let { cob = it }
         }
 
         val carbTime = SafeParse.stringToInt(binding.carbTimeInput.text)
 
-        wizard = bolusWizardProvider.get().doCalc(
-            specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction, preferences.get(IntKey.OverviewBolusPercentage),
-            binding.bgCheckbox.isChecked,
-            binding.cobCheckbox.isChecked,
-            binding.iobCheckbox.isChecked,
-            binding.iobCheckbox.isChecked,
-            binding.sbCheckbox.isChecked,
-            binding.ttCheckbox.isChecked,
-            binding.bgTrendCheckbox.isChecked,
-            binding.alarm.isChecked,
-            binding.notesLayout.notes.text.toString(),
-            carbTime,
-            usePercentage = usePercentage,
-            totalPercentage = percentageCorrection.toDouble()
-        )
+        wizard = runBlocking {
+            bolusWizardProvider.get().doCalc(
+                specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction, preferences.get(IntKey.OverviewBolusPercentage),
+                binding.bgCheckbox.isChecked,
+                binding.cobCheckbox.isChecked,
+                binding.iobCheckbox.isChecked,
+                binding.iobCheckbox.isChecked,
+                binding.sbCheckbox.isChecked,
+                binding.ttCheckbox.isChecked,
+                binding.bgTrendCheckbox.isChecked,
+                binding.alarm.isChecked,
+                binding.notesLayout.notes.text.toString(),
+                carbTime,
+                usePercentage = usePercentage,
+                totalPercentage = percentageCorrection.toDouble()
+            )
+        }
 
         wizard?.let { wizard ->
             binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(profileUtil.convertToMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)

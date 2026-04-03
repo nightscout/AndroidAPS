@@ -26,7 +26,7 @@ class ActionSMBChange(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = rh.gs(R.string.changeSmbTo, smbState.toTextValue())
     @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_running_mode
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         preferences.put(BooleanKey.ApsUseSmb, smbState.value)
         callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }

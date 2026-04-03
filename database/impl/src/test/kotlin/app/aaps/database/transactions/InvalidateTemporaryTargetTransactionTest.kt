@@ -5,6 +5,7 @@ import app.aaps.database.daos.TemporaryTargetDao
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +27,7 @@ class InvalidateTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `invalidates valid temporary target`() {
+    fun `invalidates valid temporary target`() = runTest {
         val target = createTemporaryTarget(id = 1, isValid = true)
 
         whenever(temporaryTargetDao.findById(1)).thenReturn(target)
@@ -43,7 +44,7 @@ class InvalidateTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `does not update already invalid temporary target`() {
+    fun `does not update already invalid temporary target`() = runTest {
         val target = createTemporaryTarget(id = 1, isValid = false)
 
         whenever(temporaryTargetDao.findById(1)).thenReturn(target)
@@ -59,7 +60,7 @@ class InvalidateTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `throws exception when temporary target not found`() {
+    fun `throws exception when temporary target not found`() = runTest {
         whenever(temporaryTargetDao.findById(999)).thenReturn(null)
 
         val transaction = InvalidateTemporaryTargetTransaction(id = 999)
@@ -74,7 +75,7 @@ class InvalidateTemporaryTargetTransactionTest {
     }
 
     @Test
-    fun `preserves target values when invalidating`() {
+    fun `preserves target values when invalidating`() = runTest {
         val lowTarget = 80.0
         val highTarget = 120.0
         val target = createTemporaryTarget(id = 1, isValid = true, lowTarget = lowTarget, highTarget = highTarget)

@@ -1,8 +1,6 @@
 package app.aaps.plugins.aps.loop
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -12,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -32,6 +31,7 @@ import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class LoopFragment : DaggerFragment(), MenuProvider {
@@ -49,7 +49,6 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     @Suppress("PrivatePropertyName")
     private val ID_MENU_RUN = 501
 
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private var _binding: LoopFragmentBinding? = null
@@ -74,7 +73,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
         )
         binding.swipeRefresh.setOnRefreshListener {
             binding.lastrun.text = rh.gs(R.string.executing)
-            handler.post {
+            lifecycleScope.launch {
                 loop.invoke("Loop swipe refresh", true)
             }
         }
@@ -89,7 +88,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                handler.post { loop.invoke("Loop menu", true) }
+                lifecycleScope.launch { loop.invoke("Loop menu", true) }
                 true
             }
 
@@ -120,12 +119,6 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
-        handler.looper.quitSafely()
     }
 
     override fun onDestroyView() {

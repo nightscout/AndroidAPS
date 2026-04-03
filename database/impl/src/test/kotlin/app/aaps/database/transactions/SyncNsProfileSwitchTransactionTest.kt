@@ -7,6 +7,7 @@ import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -26,7 +27,7 @@ class SyncNsProfileSwitchTransactionTest {
     }
 
     @Test
-    fun `inserts new profile switch when nsId not found and no timestamp match`() {
+    fun `inserts new profile switch when nsId not found and no timestamp match`() = runTest {
         val profileSwitch = createProfileSwitch(id = 0, nsId = "ns-123", timestamp = 1000L)
 
         whenever(profileSwitchDao.findByNSId("ns-123")).thenReturn(null)
@@ -44,7 +45,7 @@ class SyncNsProfileSwitchTransactionTest {
     }
 
     @Test
-    fun `updates nsId when timestamp matches but nsId is null`() {
+    fun `updates nsId when timestamp matches but nsId is null`() = runTest {
         val profileSwitch = createProfileSwitch(id = 0, nsId = "ns-123", timestamp = 1000L)
         val existing = createProfileSwitch(id = 1, nsId = null, timestamp = 1000L)
 
@@ -63,7 +64,7 @@ class SyncNsProfileSwitchTransactionTest {
     }
 
     @Test
-    fun `invalidates profile switch when valid becomes invalid`() {
+    fun `invalidates profile switch when valid becomes invalid`() = runTest {
         val profileSwitches = listOf(createProfileSwitch(id = 0, nsId = "ns-123", isValid = false))
         val existing = createProfileSwitch(id = 1, nsId = "ns-123", isValid = true)
 
@@ -81,7 +82,7 @@ class SyncNsProfileSwitchTransactionTest {
     }
 
     @Test
-    fun `inserts new when timestamp matches but existing has different nsId`() {
+    fun `inserts new when timestamp matches but existing has different nsId`() = runTest {
         val profileSwitch = createProfileSwitch(id = 0, nsId = "ns-123", timestamp = 1000L)
         val existing = createProfileSwitch(id = 1, nsId = "other-ns", timestamp = 1000L)
 
@@ -115,7 +116,7 @@ class SyncNsProfileSwitchTransactionTest {
         percentage = 100,
         duration = 0,
         interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId),
-        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0),
         isValid = isValid
     ).also { it.id = id }
 }

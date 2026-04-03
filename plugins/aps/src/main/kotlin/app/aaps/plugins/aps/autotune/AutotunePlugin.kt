@@ -14,13 +14,15 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -35,6 +37,8 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.compose.icons.IcPluginAutotune
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -45,6 +49,7 @@ import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
 import app.aaps.plugins.aps.autotune.keys.AutotuneStringKey
+import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone
@@ -66,7 +71,8 @@ class AutotunePlugin @Inject constructor(
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin,
+    private val insulin: Insulin,
+    private val localProfileManager: LocalProfileManager,
     private val autotuneFS: AutotuneFS,
     private val autotuneIob: AutotuneIob,
     private val autotunePrep: AutotunePrep,
@@ -80,10 +86,11 @@ class AutotunePlugin @Inject constructor(
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutotuneFragment::class.qualifiedName)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_autotune)
+        .icon(IcPluginAutotune)
         .pluginName(app.aaps.core.ui.R.string.autotune)
         .shortName(R.string.autotune_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .showInList { config.isEngineeringMode() && config.isDev() || config.enableAutotune() }
+        .showInList { config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE) }
         .description(R.string.autotune_description),
     ownPreferences = listOf(AutotuneStringKey::class.java),
     aapsLogger, rh, preferences
@@ -103,7 +110,7 @@ class AutotunePlugin @Inject constructor(
     val days = WeekDay()
     val autotuneStartHour: Int = 4
 
-    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev() || config.enableAutotune()
+    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE)
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String, weekDays: BooleanArray?) {
         lastRunSuccess = false
@@ -128,7 +135,7 @@ class AutotunePlugin @Inject constructor(
         updateButtonVisibility = View.GONE
         var logResult = ""
         result = ""
-        if (profileFunction.getProfile() == null) {
+        if (runBlocking { profileFunction.getProfile() } == null) {
             result = rh.gs(app.aaps.core.ui.R.string.profileswitch_ismissing)
             rxBus.send(EventAutotuneUpdateGui())
             calculationRunning = false
@@ -138,18 +145,18 @@ class AutotunePlugin @Inject constructor(
         calculationRunning = true
         lastNbDays = "" + daysBack
         lastRun = dateUtil.now()
-        val profileStore = activePlugin.activeProfileSource.profile
+        val profileStore = localProfileManager.profile
         if (profileStore == null) {
             result = rh.gs(app.aaps.core.ui.R.string.profileswitch_ismissing)
             rxBus.send(EventAutotuneUpdateGui())
             calculationRunning = false
             return
         }
-        selectedProfile = profileToTune.ifEmpty { profileFunction.getProfileName() }
-        profileFunction.getProfile()?.let { currentProfile ->
+        selectedProfile = profileToTune.ifEmpty { runBlocking { profileFunction.getProfileName() } }
+        runBlocking { profileFunction.getProfile() }?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile
         }
-        val localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
+        val localInsulin = LocalInsulin("PumpInsulin", insulin.iCfg.peak, insulin.iCfg.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
 
         log("Start Autotune with $daysBack days back")
         autotuneFS.createAutotuneFolder()                           //create autotune subfolder for autotune files if not exists
@@ -186,7 +193,7 @@ class AutotunePlugin @Inject constructor(
 
                 log("Tune day " + (i + 1) + " of " + daysBack + " (" + currentCalcDay + " of " + calcDays + ")")
                 tunedProfile?.let {
-                    autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+                    runBlocking { autotuneIob.initializeData(from, to, it) }  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                     if (autotuneIob.boluses.isEmpty()) {
                         result = rh.gs(R.string.autotune_error)
                         log("No basal data on day ${i + 1}")
@@ -248,19 +255,23 @@ class AutotunePlugin @Inject constructor(
                     value = ValueWithUnit.SimpleString(tunedP.profileName)
                 )
                 updateButtonVisibility = View.GONE
+                val iCfg = insulin.iCfg      // use Current running iCfg, changing iCfg with Automation not allowed
                 tunedP.profileStore(circadian)?.let { profileStore ->
-                    if (profileFunction.createProfileSwitch(
-                            profileStore = profileStore,
-                            profileName = tunedP.profileName,
-                            durationInMinutes = 0,
-                            percentage = 100,
-                            timeShiftInHours = 0,
-                            timestamp = dateUtil.now(),
-                            action = Action.PROFILE_SWITCH,
-                            source = Sources.Automation,
-                            note = rh.gs(app.aaps.core.ui.R.string.autotune),
-                            listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName))
-                        )
+                    if (runBlocking {
+                            profileFunction.createProfileSwitch(
+                                profileStore = profileStore,
+                                profileName = tunedP.profileName,
+                                durationInMinutes = 0,
+                                percentage = 100,
+                                timeShiftInHours = 0,
+                                timestamp = dateUtil.now(),
+                                action = Action.PROFILE_SWITCH,
+                                source = Sources.Automation,
+                                note = rh.gs(app.aaps.core.ui.R.string.autotune),
+                                listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName)),
+                                iCfg = iCfg
+                            )
+                        } != null
                     ) log("Profile Switch succeed ${tunedP.profileName}")
                     rxBus.send(EventLocalProfileChanged())
                 }
@@ -314,7 +325,7 @@ class AutotunePlugin @Inject constructor(
     private fun settings(runDate: Long, nbDays: Int, firstLoopStart: Long, lastLoopEnd: Long): String {
         var jsonString = ""
         val jsonSettings = JSONObject()
-        val insulinInterface = activePlugin.activeInsulin
+        val insulinInterface = insulin
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         val startDateString = dateUtil.toISOString(firstLoopStart).substring(0, 10)
         val endDateString = dateUtil.toISOString(lastLoopEnd - 24 * 60 * 60 * 1000L).substring(0, 10)
@@ -340,18 +351,18 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("categorize_uam_as_basal", preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal))
             jsonSettings.put("tune_insulin_curve", false)
 
-            val peakTime: Int = insulinInterface.peak
+            val peakTime: Int = insulinInterface.iCfg.peak
             when {
-                insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING -> jsonSettings.put("curve", "ultra-rapid")
-                insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING       -> jsonSettings.put("curve", "rapid-acting")
+                insulinInterface.id === InsulinType.OREF_ULTRA_RAPID_ACTING -> jsonSettings.put("curve", "ultra-rapid")
+                insulinInterface.id === InsulinType.OREF_RAPID_ACTING       -> jsonSettings.put("curve", "rapid-acting")
 
-                insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV            -> {
+                insulinInterface.id === InsulinType.OREF_LYUMJEV            -> {
                     jsonSettings.put("curve", "ultra-rapid")
                     jsonSettings.put("useCustomPeakTime", true)
                     jsonSettings.put("insulinPeakTime", peakTime)
                 }
 
-                insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK          -> {
+                insulinInterface.id === InsulinType.OREF_FREE_PEAK          -> {
                     jsonSettings.put("curve", if (peakTime > 55) "rapid-acting" else "ultra-rapid")
                     jsonSettings.put("useCustomPeakTime", true)
                     jsonSettings.put("insulinPeakTime", peakTime)
@@ -366,24 +377,22 @@ class AutotunePlugin @Inject constructor(
 
     fun updateProfile(newProfile: ATProfile?) {
         if (newProfile == null) return
-        val profilePlugin = activePlugin.activeProfileSource
         val circadian = preferences.get(BooleanKey.AutotuneCircadianIcIsf)
-        val profileStore = activePlugin.activeProfileSource.profile ?: profileStoreProvider.get().with(JSONObject())
+        val profileStore = localProfileManager.profile ?: profileStoreProvider.get().with(JSONObject())
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
         for (p in profileList.indices)
             if (profileList[p] == newProfile.profileName)
                 indexLocalProfile = p
         if (indexLocalProfile == -1) {
-            profilePlugin.addProfile(profilePlugin.copyFrom(newProfile.getProfile(circadian), newProfile.profileName))
+            localProfileManager.addProfile(localProfileManager.copyFrom(newProfile.getProfile(circadian), newProfile.profileName))
             return
         }
-        profilePlugin.currentProfileIndex = indexLocalProfile
-        profilePlugin.currentProfile()?.dia = newProfile.dia
-        profilePlugin.currentProfile()?.basal = newProfile.basal()
-        profilePlugin.currentProfile()?.ic = newProfile.ic(circadian)
-        profilePlugin.currentProfile()?.isf = newProfile.isf(circadian)
-        profilePlugin.storeSettings(timestamp = dateUtil.now())
+        localProfileManager.currentProfileIndex = indexLocalProfile
+        localProfileManager.currentProfile()?.basal = newProfile.basal()
+        localProfileManager.currentProfile()?.ic = newProfile.ic(circadian)
+        localProfileManager.currentProfile()?.isf = newProfile.isf(circadian)
+        localProfileManager.storeSettings(timestamp = dateUtil.now())
     }
 
     fun saveLastRun() {
@@ -471,6 +480,20 @@ class AutotunePlugin @Inject constructor(
         autotuneFS.atLog(message)
     }
 
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "autotune_settings",
+        titleResId = app.aaps.core.ui.R.string.autotune,
+        items = listOf(
+            BooleanKey.AutotuneAutoSwitchProfile,
+            BooleanKey.AutotuneCategorizeUamAsBasal,
+            IntKey.AutotuneDefaultTuneDays,
+            BooleanKey.AutotuneCircadianIcIsf
+
+        ),
+        icon = pluginDescription.icon
+    )
+
+    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null) return
         val category = PreferenceCategory(context)

@@ -312,7 +312,7 @@ class ParsedDisplayFrameStreamTest : TestBase() {
             stream.getParsedDisplayFrame(processAlertScreens = true)
         }
         assertIs<AlertScreenContent.Warning>(alertScreenException.alertScreenContent)
-        assertEquals(6, (alertScreenException.alertScreenContent as AlertScreenContent.Warning).code)
+        assertEquals(6, alertScreenException.alertScreenContent.code)
 
         // Feed another dummy non-alert screen to see that the stream
         // parses correctly even after an AlertScreenException.

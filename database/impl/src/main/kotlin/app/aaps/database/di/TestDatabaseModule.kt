@@ -7,9 +7,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import app.aaps.database.AppDatabase
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.migration.DisableInstallInCheck
 import javax.inject.Singleton
 
+// Used in DaggerTestAppComponent (plain Dagger); duplicate AppDatabase binding conflicts with Hilt.
 @Module
+@DisableInstallInCheck
 open class TestDatabaseModule {
 
     @Provides

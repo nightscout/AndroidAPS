@@ -18,16 +18,18 @@ import app.aaps.wear.interaction.utils.MenuListActivity
 class MainMenuActivity : MenuListActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (BuildConfig.FLAVOR == "full") {
-            setTitle(R.string.app_name)
-        } else if (BuildConfig.FLAVOR == "aapsclient") {
-            setTitle("AAPSClient")
-        } else if (BuildConfig.FLAVOR == "pumpcontrol"){
-            setTitle("Pumpcontrol")
+        when (BuildConfig.FLAVOR) {
+            "full"        -> setTitle(R.string.app_name)
+            "aapsclient"  -> setTitle("AAPSClient")
+            "aapsclient2" -> setTitle("AAPSClient2")
+            "aapsclient3" -> setTitle("AAPSClient3")
+            "pumpcontrol" -> setTitle("Pumpcontrol")
         }
         super.onCreate(savedInstanceState)
         rxBus.send(EventWearToMobile(ActionResendData("MainMenuListActivity")))
     }
+
+    override fun provideTitleIcon(): Int = R.drawable.ic_aaps_light
 
     override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
@@ -38,10 +40,10 @@ class MainMenuActivity : MenuListActivity() {
                 add(MenuItem(R.drawable.ic_loop_closed, getString(R.string.loop_status)))
                 if (sp.getBoolean(R.string.key_show_wizard, true))
                     add(MenuItem(R.drawable.ic_calculator, getString(R.string.menu_wizard)))
-                add(MenuItem(R.drawable.ic_e_carbs, getString(R.string.menu_ecarb)))
-                add(MenuItem(R.drawable.ic_treatment, getString(R.string.menu_treatment)))
-                add(MenuItem(R.drawable.ic_temptarget, getString(R.string.menu_tempt)))
-                add(MenuItem(R.drawable.ic_profile, getString(R.string.status_profile_switch)))
+                add(MenuItem(R.drawable.ic_carbs_orange, getString(R.string.menu_ecarb)))
+                add(MenuItem(R.drawable.ic_bolus_carbs, getString(R.string.menu_treatment)))
+                add(MenuItem(R.drawable.ic_temptarget_flat, getString(R.string.loop_status_temp_target)))
+                add(MenuItem(R.drawable.ic_profile_switch, getString(R.string.status_profile_switch)))
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
                 add(MenuItem(R.drawable.ic_status, getString(R.string.menu_status)))
                 if (sp.getBoolean(R.string.key_prime_fill, false))
@@ -51,19 +53,16 @@ class MainMenuActivity : MenuListActivity() {
 
     override fun doAction(position: String) {
         when (position) {
-            getString(R.string.menu_settings)         -> startActivity(Intent(this, PreferenceMenuActivity::class.java))
-            getString(R.string.menu_resync)           -> rxBus.send(EventWearToMobile(ActionResendData("Re-Sync")))
-            getString(R.string.status_profile_switch) -> rxBus.send(EventWearToMobile(EventData.ActionProfileSwitchSendInitialData(System.currentTimeMillis())))
-            getString(R.string.menu_tempt)            -> startActivity(Intent(this, TempTargetActivity::class.java))
-            getString(R.string.menu_treatment)        -> startActivity(Intent(this, TreatmentActivity::class.java))
-            getString(R.string.loop_status) -> {
-                val intent = Intent(this, LoopStatusActivity::class.java)
-                startActivity(intent)
-            }
-            getString(R.string.menu_wizard)           -> startActivity(Intent(this, WizardActivity::class.java))
-            getString(R.string.menu_status)           -> startActivity(Intent(this, StatusMenuActivity::class.java))
-            getString(R.string.menu_prime_fill)       -> startActivity(Intent(this, FillMenuActivity::class.java))
-            getString(R.string.menu_ecarb)            -> startActivity(Intent(this, ECarbActivity::class.java))
+            getString(R.string.loop_status)             -> startActivity(Intent(this, LoopStatusActivity::class.java))
+            getString(R.string.menu_wizard)             -> startActivity(Intent(this, WizardActivity::class.java))
+            getString(R.string.menu_ecarb)              -> startActivity(Intent(this, ECarbActivity::class.java))
+            getString(R.string.menu_treatment)          -> startActivity(Intent(this, TreatmentActivity::class.java))
+            getString(R.string.loop_status_temp_target) -> startActivity(Intent(this, TempTargetActivity::class.java))
+            getString(R.string.status_profile_switch)   -> rxBus.send(EventWearToMobile(EventData.ActionProfileSwitchSendInitialData(System.currentTimeMillis())))
+            getString(R.string.menu_settings)           -> startActivity(Intent(this, PreferenceMenuActivity::class.java))
+            getString(R.string.menu_status)             -> startActivity(Intent(this, StatusMenuActivity::class.java))
+            getString(R.string.menu_prime_fill)         -> startActivity(Intent(this, FillMenuActivity::class.java))
+            getString(R.string.menu_resync)             -> rxBus.send(EventWearToMobile(ActionResendData("Re-Sync")))
         }
     }
 }

@@ -7,14 +7,15 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
-import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.notifications.NotificationUserMessage
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -27,14 +28,15 @@ import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
 class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var context: Context
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
@@ -42,8 +44,8 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var importExportPrefs: ImportExportPrefs
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
     @Inject lateinit var preferences: Preferences
+    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
-    private val disposable = CompositeDisposable()
     private val text = InputString()
 
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.exportsettings
@@ -52,12 +54,12 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
 
     override fun isValid(): Boolean = true
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
 
         // Feedback on result
         var exportResultMessage: String
         var exportResultComment: Int        // Comment string ID set in code
-        var notification: Notification      // Send user notification when done
+        var exportResultLevel: NotificationLevel // Level for user notification when done
         var announceAlert = false      // Also post an announcement (NS)
 
         if (exportPasswordDataStore.exportPasswordStoreEnabled()) {
@@ -74,12 +76,12 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                     // Note: we are allowed to export!
                     exportResultComment = app.aaps.core.ui.R.string.export_warning
                     exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_about_to_expire)
-                    notification = NotificationUserMessage(exportResultMessage, Notification.LOW)  // LOW -> e.g. color ORANGE
+                    exportResultLevel = NotificationLevel.LOW  // LOW -> e.g. color ORANGE
                 } else {
                     // We have a valid password: start exporting, then notify
                     exportResultComment = app.aaps.core.ui.R.string.export_ok
                     exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_exported)
-                    notification = NotificationUserMessage(exportResultMessage, Notification.INFO) // INFO -> e.g. color GREEN
+                    exportResultLevel = NotificationLevel.INFO // INFO -> e.g. color GREEN
                 }
                 // Execute settings export, then notify user
                 if (!importExportPrefs.exportSharedPreferencesNonInteractive(context, password)) {
@@ -87,14 +89,14 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
                     aapsLogger.error(LTag.AUTOMATION, "ERROR: exportSharedPreferencesNonInteractive() failed to export settings")
                     exportResultComment = app.aaps.core.ui.R.string.export_failed
                     exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_failed)
-                    notification = NotificationUserMessage(exportResultMessage, Notification.URGENT) // URGENT -> e.g. color RED
+                    exportResultLevel = NotificationLevel.URGENT // URGENT -> e.g. color RED
                     announceAlert = true
                 }
             } else {
                 // No password or was expired and needs re-entering by user
                 exportResultComment = app.aaps.core.ui.R.string.export_expired
                 exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_expired)
-                notification = NotificationUserMessage(exportResultMessage, Notification.URGENT)  // URGENT -> e.g. color RED
+                exportResultLevel = NotificationLevel.URGENT  // URGENT -> e.g. color RED
                 // Clear password in datastore, then notify user
                 aapsLogger.info(LTag.AUTOMATION, "No password or was expired and needs re-entering by user")
                 exportPasswordDataStore.clearPasswordDataStore(context)
@@ -104,36 +106,40 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
             // Not enabled, do nothing and notify user
             exportResultComment = app.aaps.core.ui.R.string.export_disabled
             exportResultMessage = rh.gs(app.aaps.core.ui.R.string.export_result_message_disabled)
-            notification = NotificationUserMessage(exportResultMessage, Notification.URGENT)
+            exportResultLevel = NotificationLevel.URGENT
             aapsLogger.info(LTag.AUTOMATION, "Settings export ignored: unattended settings export is disabled")
         }
         // send notification
-        rxBus.send(EventNewNotification(notification))
+        notificationManager.post(NotificationId.SETTINGS_EXPORT_RESULT, exportResultMessage, exportResultLevel)
 
         // Insert therapy event EXPORT_SETTINGS for automation trigger to uniquely detect.
         val error = "${text.value}: $exportResultMessage"
         aapsLogger.debug(LTag.AUTOMATION, "Insert therapy EXPORT_SETTINGS event, error=:${error}, doAlsoAnnouncement=$announceAlert")
-        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-            therapyEvent = TE.asSettingsExport(error = error),
-            timestamp = dateUtil.now(),
-            action = app.aaps.core.data.ue.Action.EXPORT_SETTINGS, // Signal export was done to automation!
-            source = Sources.Automation,
-            note = exportResultMessage,
-            listValues = listOf()
-        ).subscribe()
+        appScope.launch {
+            persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                therapyEvent = TE.asSettingsExport(error = error),
+                timestamp = dateUtil.now(),
+                action = app.aaps.core.data.ue.Action.EXPORT_SETTINGS, // Signal export was done to automation!
+                source = Sources.Automation,
+                note = exportResultMessage,
+                listValues = listOf()
+            )
+        }
 
         if (announceAlert && preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS) {
             // Do additional event type announcement for aapsClient alerting
             val alert = "${rh.gs(app.aaps.core.ui.R.string.export_alert)}(${text.value}): $exportResultMessage"
             aapsLogger.debug(LTag.AUTOMATION, "Insert therapy ALERT/ANNOUNCEMENT event, error=:${alert}")
-            disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                therapyEvent = TE.asAnnouncement(error = alert),
-                timestamp = dateUtil.now(),
-                action = app.aaps.core.data.ue.Action.EXPORT_SETTINGS,
-                source = Sources.Automation,
-                note = exportResultMessage,
-                listValues = listOf()
-            ).subscribe()
+            appScope.launch {
+                persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                    therapyEvent = TE.asAnnouncement(error = alert),
+                    timestamp = dateUtil.now(),
+                    action = app.aaps.core.data.ue.Action.EXPORT_SETTINGS,
+                    source = Sources.Automation,
+                    note = exportResultMessage,
+                    listValues = listOf()
+                )
+            }
         }
 
         rxBus.send(EventRefreshOverview("ActionSettingsExport"))

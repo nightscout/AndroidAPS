@@ -9,7 +9,7 @@ class InsertOrUpdateApsResultTransaction(
     private val apsResult: APSResult
 ) : Transaction<InsertOrUpdateApsResultTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val current = database.apsResultDao.findById(apsResult.id)
         if (current == null) {

@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -27,6 +29,7 @@ class TddCalculatorImplTest : TestBase() {
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
+    private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private lateinit var tddCalculator: TddCalculatorImpl
 
     private val now = 1000000000L
@@ -34,7 +37,7 @@ class TddCalculatorImplTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        tddCalculator = TddCalculatorImpl(aapsLogger, rh, activePlugin, profileFunction, dateUtil, iobCobCalculator, persistenceLayer)
+        tddCalculator = TddCalculatorImpl(aapsLogger, activePlugin, profileFunction, dateUtil, iobCobCalculator, persistenceLayer, testScope)
         whenever(dateUtil.now()).thenReturn(now)
     }
 

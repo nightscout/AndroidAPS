@@ -379,7 +379,7 @@
                     android:drawableTop="@drawable/ic_cp_stats"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
-                    android:text="@string/tdd"
+                    android:text="@string/tdd_short"
                     android:textSize="11sp"
                     app:layout_column="0"
                     app:layout_columnWeight="1"

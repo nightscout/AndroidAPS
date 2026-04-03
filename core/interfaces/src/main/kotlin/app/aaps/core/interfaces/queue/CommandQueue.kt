@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.queue
 
 import android.text.Spanned
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
@@ -39,5 +40,5 @@ interface CommandQueue {
     fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
     fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean
     fun spannedStatus(): Spanned
-    fun isThisProfileSet(requestedProfile: Profile): Boolean
+    fun isThisProfileSet(requestedProfile: EffectiveProfile): Boolean
 }

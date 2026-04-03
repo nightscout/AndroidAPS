@@ -1,5 +1,6 @@
 package app.aaps.pump.omnipod.common.keys
 
+import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
 
@@ -8,6 +9,9 @@ enum class OmnipodIntPreferenceKey(
     override val min: Int,
     override val max: Int,
     override val defaultValue: Int,
+    override val titleResId: Int = 0,
+    override val summaryResId: Int? = null,
+    override val entries: Map<Int, Int> = emptyMap(),
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -22,5 +26,7 @@ enum class OmnipodIntPreferenceKey(
 
     ExpirationReminderHours("AAPS.Omnipod.expiration_reminder_hours_before_expiry", min = 1, max = 24, defaultValue = 4, dependency = OmnipodBooleanPreferenceKey.ExpirationReminder),
     ExpirationAlarmHours("AAPS.Omnipod.expiration_alarm_hours_before_shutdown", min = 1, max = 8, defaultValue = 8, dependency = OmnipodBooleanPreferenceKey.ExpirationAlarm),
-    LowReservoirAlertUnits("AAPS.Omnipod.low_reservoir_alert_units", min = 5, max = 50, defaultValue = 20, dependency = OmnipodBooleanPreferenceKey.LowReservoirAlert),
+    LowReservoirAlertUnits("AAPS.Omnipod.low_reservoir_alert_units", min = 5, max = 50, defaultValue = 20, dependency = OmnipodBooleanPreferenceKey.LowReservoirAlert);
+
+    override val preferenceType: PreferenceType = PreferenceType.TEXT_FIELD
 }

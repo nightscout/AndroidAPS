@@ -15,7 +15,7 @@
     <string name="medtronic_pump_encoding">Medtronic Encoding</string>
     <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
     <string name="medtronic_custom_action_clear_bolus_block">Clear Bolus Block</string>
-    <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink Config</string>
+    <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink</string>
     <string name="medtronic_pump_battery_select">Battery Type (Power View)</string>
     <string name="medtronic_pump_battery_no">Not selected (Simple view)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (Extended view)</string>
@@ -23,16 +23,33 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
 
+    <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Other (unsupported)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A or lower)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A or lower)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
+
+    <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
+
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink Battery</string>
 
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Errors</string>
-    <string name="medtronic_error_serial_not_set">Serial # not set.</string>
     <string name="medtronic_error_serial_invalid">Serial # invalid.</string>
     <string name="medtronic_error_pump_type_not_set">Pump Type not set.</string>
     <string name="medtronic_error_pump_type_invalid">Pump Type unsupported.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Pump Frequency not set.</string>
     <string name="medtronic_error_pump_frequency_invalid">Pump Frequency unsupported.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink Address invalid.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Pump type detected is not the same as configured type.</string>
@@ -82,22 +99,17 @@
     <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Get Remaining Insulin</string>
 
-    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>
-    <string name="medtronic_warning">Warning</string>  <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Now</string> <!-- combo_pump_connected_now -->
-    <string name="ago">ago</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Now</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">ago</string>
     <string name="medtronic_notification_check_time_date">Pump clock update needed</string> <!-- combo_notification_check_time_date -->
     <string name="mdt_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
-    <string name="pump_time_updated">Pump time updated</string>
     <string name="set_neutral_temps_title">Set neutral temp basals</string>
     <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min remaining)</string>
     <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
     <string name="invalid_history_data">Invalid pump history data detected. Open new issue and provide logs.</string>
     <string name="riley_statistics">RL Stats</string>
-    <string name="medtronic_history_type">Type:</string>
 
     <string name="clicked_refresh" comment="26 characters max for translation">Clicked refresh</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Scheduled Status Refresh</string>
 
 </resources>

@@ -28,7 +28,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val tt = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         if (tt == null && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

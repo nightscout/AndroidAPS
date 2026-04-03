@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
     <string name="next_button">Next</string>
     <string name="previous_button">Prev</string>
-    <string name="nav_setupwizard">Setup Wizard</string>
     <string name="setupwizard_finish">FINISH</string>
     <string name="welcome">Welcome</string>
     <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process\n</string>
@@ -18,19 +17,13 @@
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
     <string name="permission">Permission</string>
     <string name="need_system_window_permission">Application needs system window permission for notifications</string>
-    <string name="need_location_permission">Application needs location permission for BT scan and WiFi identification</string>
-    <string name="need_background_location_permission">Application needs background location permission for automations</string>
-    <string name="need_storage_permission">Application needs storage permission to be able store log files and export settings</string>
     <string name="askforpermission">Ask for permission</string>
-    <string name="need_whitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
     <string name="storedsettingsfound">Stored settings found</string>
     <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>
-    <string name="current_master_password">Current master password</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Use values of your largest food you usually eat\n</string>
     <string name="syncinfotext">Synchronize data to the cloud. You can skip this part now but you will not be able to pass objectives until you set up Nightscout or Tidepool client.</string>
     <string name="status">Status:</string>
-    <string name="patient_name">Patient name</string>
-    <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
     <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
     <string name="profile">Profile</string>
     <string name="doprofileswitch">Do Profile Switch</string>
@@ -48,7 +41,7 @@
     <string name="unattended_settings_export">Unattended Settings Export</string>
     <string name="unattended_settings_export_summary">Enabling this will securely store your password on your phone</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
-    
+
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="exported_to_cloud">Settings successfully exported to cloud storage</string>
     <string name="export_to_cloud_failed">Failed to export to cloud storage</string>
@@ -64,25 +57,16 @@
 
     <!--    ConfigBuilder-->
     <string name="config_builder">Config Builder</string>
-    <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_pump_description">Which pump would you like to use with AAPS?</string>
     <string name="configbuilder_profile">Profile</string>
-    <string name="configbuilder_profile_description">Which profile should AAPS use?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Which APS algorithm should make therapy adjustments?</string>
-    <string name="configbuilder_general">General</string>
     <string name="configbuilder_general_description">These are some general plugins you might find useful.</string>
-    <string name="configbuilder_sync">Synchronization</string>
-    <string name="configbuilder_sync_description">Data upload and synchronization plugins.</string>
+    <string name="configbuilder_sync_description">Data upload, synchronization and communication plugins.</string>
     <string name="configbuilder_constraints_description">Which constraints are applied?</string>
-    <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Use this to activate AAPS\' loop integration.</string>
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
-    <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
-    <string name="configbuilder_smoothing">Smoothing</string>
     <string name="configbuilder_smoothing_description">Choose smoothing algorithm</string>
-    <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
@@ -94,21 +78,18 @@
 
     <!--ImportExport-->
     <string name="nav_preferences">Preferences</string>
-    <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
-    <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Import canceled! Preferences were NOT imported!</string>
     <string name="preferences_import_impossible">Cannot import preferences!</string>
     <string name="check_preferences_details_btn">Explain import issues…</string>
     <string name="check_preferences_details_title">Import issues details</string>
     <string name="check_preferences_import_btn">Import</string>
     <string name="check_preferences_import_anyway_btn">Import anyway (DANGEROUS!)</string>
-    <string name="import_setting">Import settings</string>
-    <string name="aaps_directory">AAPS directory</string>
-    <string name="select_aaps_directory">Select AAPS directory for storing exports, configurations etc.</string>
     <string name="check_preferences_before_import">Please check preferences before importing:</string>
     <string name="check_preferences_cannot_import">Preferences cannot be imported!</string>
     <string name="check_preferences_dangerous_import">Preferences should not be imported!</string>
-    <string name="export_to">Export settings to</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Import settings from</string>
     <string name="setting_imported">Settings imported</string>
     <string name="old_master_password">Old Master Password</string>
@@ -120,29 +101,14 @@
     <string name="goto_main_try_again">Please go back to main screen and try again.</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="ue_exported">User Entries exported</string>
-    <string name="protection">Protection</string>
-    <string name="master_password_missing">Master password is not set!\n\nPlease set your Master password in Preferences (%1$s)</string>
+    <!-- master_password_missing moved to core:ui -->
 
 
     <!--    Maintenance-->
-    <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">Provides several functions for maintenance (eg. log sending, log deletion).</string>
-    <string name="database_cleanup">Database cleanup</string>
-    <string name="reset_db_confirm">Do you really want to reset the databases?</string>
-    <string name="reset_aps_results_confirm">Do you really want to reset stored APS results?</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>
     <string name="maintenance_amount">No of Logs to send</string>
-    <string name="send_all_logs">Send Logs by Email</string>
-    <string name="delete_logs">Delete Logs</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="engineering_mode_enabled">Engineering mode enabled</string>
-    <string name="log_files">Log files</string>
-    <string name="nav_logsettings">Log settings</string>
-    <string name="miscellaneous">Miscellaneous</string>
-    <string name="nav_resetdb">Reset Databases</string>
-    <string name="resettodefaults">Reset to defaults</string>
 
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exported %1$s ago</string>
@@ -167,9 +133,6 @@
     <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
 
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Select Custom Watchface</string>
-
     <!-- Maintenance -->
     <string name="metadata_label_format">File format</string>
     <string name="metadata_label_created_at">Created at</string>
@@ -180,8 +143,8 @@
     <string name="metadata_label_encryption">File encryption</string>
     <string name="metadata_format_new">New encrypted format</string>
     <string name="metadata_format_other">Unknown export format</string>
-    <string name="reset_aps_results">Reset APS results</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Error accessing filesystem. Select AAPS directory properly.</string>
+    <!-- maintenance_email moved to core:keys module -->
 
     <!-- Google Drive Storage -->
     <string name="storage_local">Local Storage</string>
@@ -216,7 +179,7 @@
     <string name="import_settings_local">Import settings (Local)</string>
     <string name="import_settings_cloud">Import settings (Cloud)</string>
     <string name="import_settings_both">Import settings (Local/Cloud)</string>
-    
+
     <!-- Import source selection dialog -->
     <string name="select_import_source">Select Import Source</string>
     <string name="import_from_local">Import from Local Storage</string>
@@ -261,7 +224,7 @@
     <string name="google_drive_list_settings_error">Error listing settings files: %1$s</string>
     <string name="google_drive_download_failed">Failed to download file</string>
     <string name="google_drive_download_error">Error downloading file: %1$s</string>
-    
+
     <!-- Provider-agnostic cloud storage strings -->
     <string name="cloud_authorization_title">%1$s Authorization</string>
     <string name="cloud_authorization_message">%1$s authorization page has been opened in your browser.\n\nPlease complete the authorization, then return to this app.\n\nThis dialog will close automatically once authorization is completed.</string>
@@ -269,7 +232,7 @@
     <string name="cloud_auth_cancelled">Authorization cancelled</string>
     <string name="cloud_auth_timeout">Authorization timed out, please retry</string>
     <string name="cloud_token_expired_or_invalid">Cloud storage authorization has expired or is invalid. Please re-authorize.</string>
-    
+
     <!-- Authorization status strings -->
     <string name="authorization_status">Authorization Status</string>
     <string name="google_drive_authorized">Google Drive Authorized</string>

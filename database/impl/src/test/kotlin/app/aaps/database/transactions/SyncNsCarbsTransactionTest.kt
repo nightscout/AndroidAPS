@@ -5,6 +5,7 @@ import app.aaps.database.daos.CarbsDao
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -27,7 +28,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `inserts new carbs when nsId not found and no timestamp match`() {
+    fun `inserts new carbs when nsId not found and no timestamp match`() = runTest {
         val carbs = createCarbs(id = 0, nsId = "ns-123", amount = 50.0, timestamp = 1000L)
 
         whenever(carbsDao.getByNSId("ns-123")).thenReturn(null)
@@ -47,7 +48,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `updates nsId when timestamp matches but nsId is null`() {
+    fun `updates nsId when timestamp matches but nsId is null`() = runTest {
         val nsId = "ns-123"
         val timestamp = 1000L
         val existing = createCarbs(id = 1, nsId = null, amount = 50.0, timestamp = timestamp)
@@ -70,7 +71,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `invalidates carbs when nsId exists and incoming is invalid`() {
+    fun `invalidates carbs when nsId exists and incoming is invalid`() = runTest {
         val nsId = "ns-123"
         val existing = createCarbs(id = 1, nsId = nsId, amount = 50.0, isValid = true)
         val incoming = createCarbs(id = 0, nsId = nsId, amount = 50.0, isValid = false)
@@ -89,7 +90,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `does not invalidate already invalid carbs`() {
+    fun `does not invalidate already invalid carbs`() = runTest {
         val nsId = "ns-123"
         val existing = createCarbs(id = 1, nsId = nsId, amount = 50.0, isValid = false)
         val incoming = createCarbs(id = 0, nsId = nsId, amount = 50.0, isValid = false)
@@ -105,7 +106,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `updates duration to shorter in nsClientMode when duration differs`() {
+    fun `updates duration to shorter in nsClientMode when duration differs`() = runTest {
         val nsId = "ns-123"
         val existing = createCarbs(id = 1, nsId = nsId, amount = 50.0, duration = 60_000L)
         val incoming = createCarbs(id = 0, nsId = nsId, amount = 75.0, duration = 30_000L)
@@ -125,7 +126,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `does not update duration to longer in nsClientMode`() {
+    fun `does not update duration to longer in nsClientMode`() = runTest {
         val nsId = "ns-123"
         val existing = createCarbs(id = 1, nsId = nsId, amount = 50.0, duration = 60_000L)
         val incoming = createCarbs(id = 0, nsId = nsId, amount = 75.0, duration = 120_000L)
@@ -144,7 +145,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `does not update duration when not in nsClientMode`() {
+    fun `does not update duration when not in nsClientMode`() = runTest {
         val nsId = "ns-123"
         val existing = createCarbs(id = 1, nsId = nsId, amount = 50.0, duration = 60_000L)
         val incoming = createCarbs(id = 0, nsId = nsId, amount = 75.0, duration = 120_000L)
@@ -163,7 +164,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `does not update when duration is same in nsClientMode`() {
+    fun `does not update when duration is same in nsClientMode`() = runTest {
         val nsId = "ns-123"
         val duration = 60_000L
         val existing = createCarbs(id = 1, nsId = nsId, amount = 50.0, duration = duration)
@@ -180,7 +181,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `handles both invalidation and duration update to shorter`() {
+    fun `handles both invalidation and duration update to shorter`() = runTest {
         val nsId = "ns-123"
         val existing = createCarbs(id = 1, nsId = nsId, amount = 50.0, duration = 60_000L, isValid = true)
         val incoming = createCarbs(id = 0, nsId = nsId, amount = 75.0, duration = 30_000L, isValid = false)
@@ -201,7 +202,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `syncs multiple carbs`() {
+    fun `syncs multiple carbs`() = runTest {
         val carbs1 = createCarbs(id = 0, nsId = "ns-1", amount = 50.0, timestamp = 1000L)
         val carbs2 = createCarbs(id = 0, nsId = "ns-2", amount = 30.0, timestamp = 2000L)
 
@@ -221,7 +222,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `handles empty carbs list`() {
+    fun `handles empty carbs list`() = runTest {
         val transaction = SyncNsCarbsTransaction(emptyList(), nsClientMode = false)
         transaction.database = database
         val result = transaction.run()
@@ -236,7 +237,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `updates both validity and nsId when timestamp matches`() {
+    fun `updates both validity and nsId when timestamp matches`() = runTest {
         val nsId = "ns-123"
         val timestamp = 1000L
         val existing = createCarbs(id = 1, nsId = null, amount = 50.0, timestamp = timestamp, isValid = true)
@@ -257,7 +258,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `transaction result has correct structure`() {
+    fun `transaction result has correct structure`() = runTest {
         val result = SyncNsCarbsTransaction.TransactionResult()
 
         assertThat(result.updated).isEmpty()
@@ -267,7 +268,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `updates nsId when composite key matches but nsId not in DB`() {
+    fun `updates nsId when composite key matches but nsId not in DB`() = runTest {
         val pumpId = 12345L
         val pumpType = InterfaceIDs.PumpType.DANA_I
         val pumpSerial = "ABC123"
@@ -310,7 +311,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `inserts both records when same pumpId but different pumpType`() {
+    fun `inserts both records when same pumpId but different pumpType`() = runTest {
         val pumpId = 12345L
 
         val carbs1 = createCarbs(
@@ -351,7 +352,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `ignores duplicate NS record when composite key has different nsId`() {
+    fun `ignores duplicate NS record when composite key has different nsId`() = runTest {
         val pumpId = 12345L
         val pumpType = InterfaceIDs.PumpType.DANA_I
         val pumpSerial = "ABC123"
@@ -393,7 +394,7 @@ class SyncNsCarbsTransactionTest {
     }
 
     @Test
-    fun `falls back to timestamp when partial pump data is null`() {
+    fun `falls back to timestamp when partial pump data is null`() = runTest {
         val nsId = "ns-123"
         val timestamp = 1000L
 

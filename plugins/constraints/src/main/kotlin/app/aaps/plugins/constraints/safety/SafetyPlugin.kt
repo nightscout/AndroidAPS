@@ -1,6 +1,8 @@
 package app.aaps.plugins.constraints.safety
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Shield
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -13,7 +15,9 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.constraints.Safety
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -21,7 +25,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
 import app.aaps.core.interfaces.pump.defs.determineCorrectExtendedBolusSize
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -30,14 +33,17 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.plugins.constraints.R
-import org.json.JSONObject
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -52,7 +58,7 @@ class SafetyPlugin @Inject constructor(
     private val config: Config,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction,
+    private val notificationManager: NotificationManager,
     private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
@@ -61,6 +67,8 @@ class SafetyPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.safety)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_header_warning)
+        .icon(Icons.Default.Shield)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN),
     aapsLogger, rh
 ), PluginConstraints, Safety {
@@ -76,12 +84,12 @@ class SafetyPlugin @Inject constructor(
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
-                uiInteraction.addNotification(Notification.TOAST_ALARM, rh.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL)
+                notificationManager.post(NotificationId.TOAST_ALARM, R.string.closed_loop_disabled_on_dev_branch, level = NotificationLevel.NORMAL)
             }
             value.set(false, rh.gs(R.string.closed_loop_disabled_on_dev_branch), this)
         }
         val pump = activePlugin.activePump
-        if (!pump.isFakingTempsByExtendedBoluses && persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) != null) {
+        if (!pump.isFakingTempsByExtendedBoluses && runBlocking { persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) } != null) {
             value.set(false, rh.gs(R.string.closed_loop_disabled_with_eb), this)
         }
         return value
@@ -94,8 +102,7 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val bgSource = activePlugin.activeBgSource
-        if (!bgSource.advancedFilteringSupported()) value.set(false, rh.gs(R.string.smbalwaysdisabled), this)
+        if (!runBlocking { persistenceLayer.isAdvancedFilteringSupported() }) value.set(false, rh.gs(R.string.smbalwaysdisabled), this)
         return value
     }
 
@@ -168,19 +175,20 @@ class SafetyPlugin @Inject constructor(
         return carbs
     }
 
-    override fun configuration(): JSONObject =
-        JSONObject()
+    override fun configuration(): JsonObject =
+        JsonObject(emptyMap())
             .put(StringKey.SafetyAge, preferences)
             .put(DoubleKey.SafetyMaxBolus, preferences)
             .put(IntKey.SafetyMaxCarbs, preferences)
 
-    override fun applyConfiguration(configuration: JSONObject) {
+    override fun applyConfiguration(configuration: JsonObject) {
         configuration
             .store(StringKey.SafetyAge, preferences)
             .store(DoubleKey.SafetyMaxBolus, preferences)
             .store(IntKey.SafetyMaxCarbs, preferences)
     }
 
+    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null) return
         val category = PreferenceCategory(context)
@@ -203,4 +211,17 @@ class SafetyPlugin @Inject constructor(
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.SafetyMaxCarbs, title = app.aaps.core.ui.R.string.max_carbs_title))
         }
     }
+
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "safety_settings",
+        titleResId = R.string.safety,
+        items = listOf(
+            StringKey.SafetyAge.withEntries(
+                hardLimits.ageEntryValues().zip(hardLimits.ageEntries()).associate { it.first.toString() to it.second.toString() }
+            ),
+            DoubleKey.SafetyMaxBolus,
+            IntKey.SafetyMaxCarbs
+        ),
+        icon = pluginDescription.icon
+    )
 }

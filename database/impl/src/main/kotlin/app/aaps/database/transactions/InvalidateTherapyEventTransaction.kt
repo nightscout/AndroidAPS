@@ -4,7 +4,7 @@ import app.aaps.database.entities.TherapyEvent
 
 class InvalidateTherapyEventTransaction(val id: Long) : Transaction<InvalidateTherapyEventTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val therapyEvent = database.therapyEventDao.findById(id)
             ?: throw IllegalArgumentException("There is no such TherapyEvent with the specified ID.")

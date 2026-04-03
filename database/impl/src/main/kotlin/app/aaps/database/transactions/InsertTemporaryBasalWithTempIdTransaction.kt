@@ -9,7 +9,7 @@ class InsertTemporaryBasalWithTempIdTransaction(
     private val temporaryBasal: TemporaryBasal
 ) : Transaction<InsertTemporaryBasalWithTempIdTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         temporaryBasal.interfaceIDs.temporaryId ?: temporaryBasal.interfaceIDs.pumpType
         ?: temporaryBasal.interfaceIDs.pumpSerial
         ?: throw IllegalStateException("Some pump ID is null")

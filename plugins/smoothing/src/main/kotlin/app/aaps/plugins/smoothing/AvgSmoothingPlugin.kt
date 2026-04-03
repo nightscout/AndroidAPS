@@ -1,5 +1,7 @@
 package app.aaps.plugins.smoothing
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Timeline
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
@@ -22,6 +24,7 @@ class AvgSmoothingPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_timeline_24)
+        .icon(Icons.Default.Timeline)
         .pluginName(R.string.avg_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_avg_smoothing),

@@ -28,17 +28,20 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(
     includes = [
         CommandQueueModule.Bindings::class
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 open class CommandQueueModule {
 
     @Suppress("unused")
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindCommandQueueInjector(commandQueueImplementation: CommandQueueImplementation): CommandQueue

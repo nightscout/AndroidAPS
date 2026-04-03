@@ -24,7 +24,7 @@ class OpenHumansUploaderPluginTest : TestBaseWithProfile() {
         stateDelegate = OHStateDelegate(preferences)
         counterDelegate = OHCounterDelegate(preferences)
         appIdDelegate = OHAppIDDelegate(preferences)
-        openHumansUploaderPlugin = OpenHumansUploaderPlugin(rh, aapsLogger, preferences, context, persistenceLayer, openHumansAPI, stateDelegate, counterDelegate, appIdDelegate, rxBus)
+        openHumansUploaderPlugin = OpenHumansUploaderPlugin(rh, aapsLogger, preferences, context, persistenceLayer, openHumansAPI, stateDelegate, counterDelegate, appIdDelegate)
     }
 
     @Test

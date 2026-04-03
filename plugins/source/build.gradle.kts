@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
-    id("kotlin-android")
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -9,6 +10,10 @@ plugins {
 
 android {
     namespace = "app.aaps.plugins.source"
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 
@@ -22,11 +27,22 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:validators"))
     implementation(project(":shared:impl"))
+    implementation(project(":ui"))
+
+    // Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     testImplementation(libs.androidx.work.testing)
 
     testImplementation(project(":shared:tests"))
 
+    implementation(libs.com.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

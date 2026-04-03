@@ -13,6 +13,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.data.model.IDs
@@ -23,24 +26,19 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.objects.extensions.directionToIcon
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogSiteRotationBinding
 import app.aaps.ui.databinding.DialogSiteRotationChildBinding
@@ -51,8 +49,11 @@ import app.aaps.ui.dialogs.SiteRotationDialog.RecyclerViewAdapter.SiteManagement
 import app.aaps.ui.dialogs.utils.SiteRotationViewAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.common.base.Joiner
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.LinkedList
 import javax.inject.Inject
 
@@ -67,12 +68,7 @@ class SiteRotationDialog : DialogFragmentWithDate() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var translator: Translator
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-
-    private val disposable = CompositeDisposable()
     private var _binding: DialogSiteRotationBinding? = null
     private var _siteBinding: SiteRotationViewAdapter? = null
     private var siteMode = UiInteraction.SiteMode.VIEW
@@ -237,13 +233,17 @@ class SiteRotationDialog : DialogFragmentWithDate() {
         _binding = null
     }
 
+    @OptIn(FlowPreview::class)
     override fun onResume() {
         super.onResume()
         swapAdapter()
-        disposable += rxBus
-            .toObservable(EventTherapyEventChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                persistenceLayer.observeChanges<TE>()
+                    .debounce(300L)
+                    .collect { swapAdapter() }
+            }
+        }
     }
 
     override fun submit(): Boolean {
@@ -270,8 +270,11 @@ class SiteRotationDialog : DialogFragmentWithDate() {
                         te.note = null
                     }
                     if (actions.isNotEmpty())
-                        activity?.let { activity ->
-                            OKDialog.showConfirmation(activity, rh.gs(R.string.record_site_change), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                        uiInteraction.showOkCancelDialog(
+                            context = requireActivity(),
+                            title = rh.gs(R.string.record_site_change),
+                            message = Joiner.on("<br/>").join(actions),
+                            ok = {
                                 te.ids = IDs()  // Force Upload in NS
                                 uel.log(
                                     action = action,
@@ -279,11 +282,14 @@ class SiteRotationDialog : DialogFragmentWithDate() {
                                     note = te.note,
                                     listOfNotNull(ValueWithUnit.Timestamp(te.timestamp), ValueWithUnit.TELocation(te.location ?: selectedLocation), ValueWithUnit.TEArrow(te.arrow ?: selectedArrow))
                                 )
-                                disposable += persistenceLayer.insertOrUpdateTherapyEvent(
-                                    therapyEvent = te
-                                ).subscribe()
-                            }, null)
-                        }
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    runBlocking {
+                                        persistenceLayer.insertOrUpdateTherapyEvent(therapyEvent = te)
+                                    }
+                                }
+                            },
+                            cancel = null
+                        )
                 }
             }
         }
@@ -296,21 +302,19 @@ class SiteRotationDialog : DialogFragmentWithDate() {
 
         val now = System.currentTimeMillis()
         binding.recyclerview.isLoading = true
-        disposable += persistenceLayer
-            .getTherapyEventDataFromTime(now - millsToThePast, false)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { list ->
-                listTE = list.filter { te -> te.type == TE.Type.CANNULA_CHANGE || te.type == TE.Type.SENSOR_CHANGE }
-                editView()
-                siteBinding.updateSiteColors()
-                filterViews()
-            }
+        lifecycleScope.launch {
+            val list = persistenceLayer.getTherapyEventDataFromTime(now - millsToThePast, false)
+            listTE = list.filter { te -> te.type == TE.Type.CANNULA_CHANGE || te.type == TE.Type.SENSOR_CHANGE }
+            editView()
+            siteBinding.updateSiteColors()
+            filterViews()
+        }
     }
 
     fun editView() {
         binding.time.text = dateUtil.dateStringShort(time)
         therapyEdited = listTE.firstOrNull { it.timestamp == time }?.also {
-            binding.location.text = it.location?.let { loc -> translator.translate(loc) } ?: rh.gs(R.string.select_site)
+            binding.location.text = it.location?.let { loc -> translator.translate(loc) } ?: rh.gs(app.aaps.core.ui.R.string.select_location)
             binding.iconArrow.setImageResource(it.arrow?.directionToIcon() ?: TE.Arrow.NONE.directionToIcon())
             selectedArrow = it.arrow ?: TE.Arrow.NONE
             selectedLocation = it.location ?: TE.Location.NONE

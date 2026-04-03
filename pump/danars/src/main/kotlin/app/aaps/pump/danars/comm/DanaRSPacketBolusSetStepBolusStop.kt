@@ -4,15 +4,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
 
 open class DanaRSPacketBolusSetStepBolusStop @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
+    private val bolusProgressData: BolusProgressData,
     private val rh: ResourceHelper,
     private val danaPump: DanaPump
 ) : DanaRSPacket() {
@@ -34,10 +32,11 @@ open class DanaRSPacketBolusSetStepBolusStop @Inject constructor(
         danaPump.bolusStopped = true
         if (!danaPump.bolusStopForced) {
             // delivery ended without user intervention
-            BolusProgressData.delivered = BolusProgressData.insulin
-            rxBus.send(EventOverviewBolusProgress(rh, percent = 100, id = danaPump.bolusingDetailedBolusInfo?.id))
+            val insulin = bolusProgressData.state.value?.insulin ?: 0.0
+            bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin), insulin)
         } else {
-            rxBus.send(EventOverviewBolusProgress(status = rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped), id = danaPump.bolusingDetailedBolusInfo?.id))
+            val currentPercent = bolusProgressData.state.value?.percent ?: 0
+            bolusProgressData.updateProgress(currentPercent, rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped), bolusProgressData.state.value?.delivered ?: 0.0)
         }
     }
 

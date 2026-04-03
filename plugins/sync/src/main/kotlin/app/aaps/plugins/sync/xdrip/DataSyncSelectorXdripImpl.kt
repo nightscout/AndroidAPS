@@ -5,8 +5,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.JsonHelper
-import app.aaps.plugins.sync.xdrip.events.EventXdripNewLog
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import app.aaps.plugins.sync.xdrip.keys.XdripLongKey
 import dagger.Lazy
 import javax.inject.Inject
@@ -27,10 +27,11 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
+    private val localProfileManager: LocalProfileManager,
     private val xdripBroadcast: Lazy<XDripBroadcast>,
     private val persistenceLayer: PersistenceLayer,
-    private val rxBus: RxBus,
     private val preferences: Preferences,
+    private val xdripMvvmRepository: XdripMvvmRepository
 ) : DataSyncSelectorXdrip {
 
     class QueueCounter(
@@ -83,7 +84,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     override suspend fun doUpload() {
         synchronized(sync) {
             if (running) {
-                rxBus.send(EventXdripNewLog("RUN", "Already running"))
+                xdripMvvmRepository.addLog("RUN", "Already running")
                 return
             }
             running = true
@@ -114,7 +115,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         running = false
     }
 
-    override fun resetToNextFullSync() {
+    override suspend fun resetToNextFullSync() {
         preferences.remove(XdripLongKey.GlucoseValueLastSyncedId)
         preferences.remove(XdripLongKey.TemporaryBasalLastSyncedId)
         preferences.remove(XdripLongKey.TemporaryTargetLastSyncedId)
@@ -141,7 +142,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedGlucoseValues() {
+    private suspend fun processChangedGlucoseValues() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastGlucoseValueId() ?: 0L
@@ -153,7 +154,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.gvsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
+            persistenceLayer.getNextSyncElementGlucoseValue(startId)?.let { gv ->
                 aapsLogger.info(LTag.XDRIP, "Loading GlucoseValue data Start: $startId ${gv.first} forID: ${gv.second.id} ")
                 if (!isOld(gv.first.timestamp))
                     preparedEntries.add(DataSyncSelector.PairGlucoseValue(gv.first, gv.second.id))
@@ -192,7 +193,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedBoluses() {
+    private suspend fun processChangedBoluses() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastBolusId() ?: 0L
@@ -204,7 +205,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.bolusesRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementBolus(startId).blockingGet()?.let { bolus ->
+            persistenceLayer.getNextSyncElementBolus(startId)?.let { bolus ->
                 aapsLogger.info(LTag.XDRIP, "Loading Bolus data Start: $startId ${bolus.first} forID: ${bolus.second.id} ")
                 if (!isOld(bolus.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairBolus(bolus.first, bolus.second.id))
@@ -222,7 +223,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedCarbs() {
+    private suspend fun processChangedCarbs() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastCarbsId() ?: 0L
@@ -234,7 +235,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.carbsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementCarbs(startId).blockingGet()?.let { carb ->
+            persistenceLayer.getNextSyncElementCarbs(startId)?.let { carb ->
                 aapsLogger.info(LTag.XDRIP, "Loading Carbs data Start: $startId ${carb.first} forID: ${carb.second.id} ")
                 if (!isOld(carb.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairCarbs(carb.first, carb.second.id))
@@ -252,7 +253,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedBolusCalculatorResults() {
+    private suspend fun processChangedBolusCalculatorResults() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastBolusCalculatorResultId() ?: 0L
@@ -264,7 +265,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.bcrRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementBolusCalculatorResult(startId).blockingGet()?.let { bolusCalculatorResult ->
+            persistenceLayer.getNextSyncElementBolusCalculatorResult(startId)?.let { bolusCalculatorResult ->
                 aapsLogger.info(LTag.XDRIP, "Loading BolusCalculatorResult data Start: $startId ${bolusCalculatorResult.first} forID: ${bolusCalculatorResult.second.id} ")
                 if (!isOld(bolusCalculatorResult.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairBolusCalculatorResult(bolusCalculatorResult.first, bolusCalculatorResult.second.id))
@@ -282,7 +283,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedTempTargets() {
+    private suspend fun processChangedTempTargets() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastTemporaryTargetId() ?: 0L
@@ -294,7 +295,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.ttsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
+            persistenceLayer.getNextSyncElementTemporaryTarget(startId)?.let { tt ->
                 aapsLogger.info(LTag.XDRIP, "Loading TemporaryTarget data Start: $startId ${tt.first} forID: ${tt.second.id} ")
                 if (!isOld(tt.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairTemporaryTarget(tt.first, tt.second.id))
@@ -312,7 +313,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedFoods() {
+    private suspend fun processChangedFoods() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastFoodId() ?: 0L
@@ -324,7 +325,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.foodsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementFood(startId).blockingGet()?.let { food ->
+            persistenceLayer.getNextSyncElementFood(startId)?.let { food ->
                 aapsLogger.info(LTag.XDRIP, "Loading Food data Start: $startId ${food.first} forID: ${food.second.id} ")
                 preparedFoods.add(DataSyncSelector.PairFood(food.first, food.second.id))
                 sendFoods(force = false, progress)
@@ -341,7 +342,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedTherapyEvents() {
+    private suspend fun processChangedTherapyEvents() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastTherapyEventId() ?: 0L
@@ -353,7 +354,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.tesRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementTherapyEvent(startId).blockingGet()?.let { te ->
+            persistenceLayer.getNextSyncElementTherapyEvent(startId)?.let { te ->
                 aapsLogger.info(LTag.XDRIP, "Loading TherapyEvents data Start: $startId ${te.first} forID: ${te.second.id} ")
                 if (!isOld(te.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairTherapyEvent(te.first, te.second.id))
@@ -371,7 +372,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedDeviceStatuses() {
+    private suspend fun processChangedDeviceStatuses() {
         while (true) {
             val lastDbId = persistenceLayer.getLastDeviceStatusId() ?: 0L
             if (!isEnabled) return
@@ -381,7 +382,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
                 startId = 0
             }
             queueCounter.dssRemaining = lastDbId - startId
-            persistenceLayer.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
+            persistenceLayer.getNextSyncElementDeviceStatus(startId)?.let { deviceStatus ->
                 aapsLogger.info(LTag.XDRIP, "Loading DeviceStatus data Start: $startId $deviceStatus")
                 if (!isOld(deviceStatus.timestamp))
                     xdripPlugin.sendToXdrip("devicestatus", DataSyncSelector.PairDeviceStatus(deviceStatus, lastDbId), "$startId/$lastDbId")
@@ -397,7 +398,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedTemporaryBasals() {
+    private suspend fun processChangedTemporaryBasals() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastTemporaryBasalId() ?: 0L
@@ -409,7 +410,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.tbrsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
+            persistenceLayer.getNextSyncElementTemporaryBasal(startId)?.let { tb ->
                 aapsLogger.info(LTag.XDRIP, "Loading TemporaryBasal data Start: $startId ${tb.first} forID: ${tb.second.id} ")
                 if (!isOld(tb.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id))
@@ -427,7 +428,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedExtendedBoluses() {
+    private suspend fun processChangedExtendedBoluses() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastExtendedBolusId() ?: 0L
@@ -439,7 +440,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.ebsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
+            persistenceLayer.getNextSyncElementExtendedBolus(startId)?.let { eb ->
                 aapsLogger.info(LTag.XDRIP, "Loading ExtendedBolus data Start: $startId ${eb.first} forID: ${eb.second.id} ")
                 val profile = profileFunction.getProfile(eb.first.timestamp)
                 if (profile != null && !isOld(eb.first.timestamp)) {
@@ -460,7 +461,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedProfileSwitches() {
+    private suspend fun processChangedProfileSwitches() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastProfileSwitchId() ?: 0L
@@ -472,7 +473,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.pssRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementProfileSwitch(startId).blockingGet()?.let { ps ->
+            persistenceLayer.getNextSyncElementProfileSwitch(startId)?.let { ps ->
                 aapsLogger.info(LTag.XDRIP, "Loading ProfileSwitch data Start: $startId ${ps.first} forID: ${ps.second.id} ")
                 if (!isOld(ps.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairProfileSwitch(ps.first, ps.second.id))
@@ -490,7 +491,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedEffectiveProfileSwitches() {
+    private suspend fun processChangedEffectiveProfileSwitches() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L
@@ -502,7 +503,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.epssRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementEffectiveProfileSwitch(startId).blockingGet()?.let { ps ->
+            persistenceLayer.getNextSyncElementEffectiveProfileSwitch(startId)?.let { ps ->
                 aapsLogger.info(LTag.XDRIP, "Loading EffectiveProfileSwitch data Start: $startId ${ps.first} forID: ${ps.second.id} ")
                 if (!isOld(ps.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second.id))
@@ -520,7 +521,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         }
     }
 
-    private fun processChangedRunningModes() {
+    private suspend fun processChangedRunningModes() {
         var progress: String
         while (true) {
             val lastDbId = persistenceLayer.getLastRunningModeId() ?: 0L
@@ -532,7 +533,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.oesRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            persistenceLayer.getNextSyncElementRunningMode(startId).blockingGet()?.let { rm ->
+            persistenceLayer.getNextSyncElementRunningMode(startId)?.let { rm ->
                 aapsLogger.info(LTag.XDRIP, "Loading RunningMode data Start: $startId ${rm.first} forID: ${rm.second.id} ")
                 if (!isOld(rm.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairRunningMode(rm.first, rm.second.id))
@@ -557,8 +558,8 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
-            if (activePlugin.activeProfileSource.profile?.allProfilesValid != true) return
-            val profileStore = activePlugin.activeProfileSource.profile
+            if (localProfileManager.profile?.allProfilesValid != true) return
+            val profileStore = localProfileManager.profile
             val profileJson = profileStore?.getData() ?: return
             // add for v3
             if (JsonHelper.safeGetLongAllowNull(profileJson, "date") == null)

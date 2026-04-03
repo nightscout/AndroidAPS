@@ -5,7 +5,7 @@ import app.aaps.database.entities.StepsCount
 class InsertOrUpdateStepsCountTransaction(private val stepsCount: StepsCount) :
     Transaction<InsertOrUpdateStepsCountTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val existing = if (stepsCount.id == 0L) null else database.stepsCountDao.findById(stepsCount.id)
         return if (existing == null) {
             database.stepsCountDao.insertNewEntry(stepsCount).let {

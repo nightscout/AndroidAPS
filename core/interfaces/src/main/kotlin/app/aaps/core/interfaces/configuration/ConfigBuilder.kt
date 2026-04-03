@@ -26,6 +26,22 @@ interface ConfigBuilder {
     fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType)
 
     /**
+     * Attempt to switch a plugin, handling pump-specific validation.
+     * For pump plugins that are hardware pumps and haven't been allowed yet,
+     * returns a warning message string that should be shown in a confirmation dialog.
+     *
+     * @return null if the switch was performed immediately, or a confirmation message
+     *         if user must confirm before proceeding (call [confirmPumpPluginSwitch] on confirm).
+     */
+    fun requestPluginSwitch(plugin: PluginBase, enabled: Boolean, type: PluginType): String?
+
+    /**
+     * Confirm and perform a hardware pump plugin switch after the user acknowledged the warning.
+     * Call this after the user confirms in response to [requestPluginSwitch] returning non-null.
+     */
+    fun confirmPumpPluginSwitch(plugin: PluginBase, enabled: Boolean, type: PluginType)
+
+    /**
      * Make sure plugins configuration is valid after enabling/disabling plugin
      */
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType)

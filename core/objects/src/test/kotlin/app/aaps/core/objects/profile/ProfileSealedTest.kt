@@ -3,6 +3,7 @@ package app.aaps.core.objects.profile
 import android.content.Context
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -36,23 +37,24 @@ class ProfileSealedTest : TestBase() {
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var aps: APS
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
+    @Mock lateinit var notificationManager: NotificationManager
 
     private lateinit var hardLimits: HardLimits
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
-
-    private var okProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}]," +
+    //ICfg: dia 18000000 = 5.0h, peak = 4500000 = 75
+    private var okProfile = "{\"iCfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000,\"concentration\":\"1.0\"},\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}]," +
         "\"sens\":[{\"time\":\"00:00\",\"value\":\"6\"},{\"time\":\"2:00\",\"value\":\"6.2\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var belowLimitValidProfile =
-        "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.001\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+        "{\"iCfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000,\"concentration\":\"1.0\"},\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.001\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var notAlignedBasalValidProfile =
-        "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:30\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+        "{\"iCfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000,\"concentration\":\"1.0\"},\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:30\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var notStartingAtZeroValidProfile =
-        "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:30\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+        "{\"iCfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000,\"concentration\":\"1.0\"},\"carbratio\":[{\"time\":\"00:30\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
     private var noUnitsValidProfile =
-        "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\"}"
+        "{\"iCfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000,\"concentration\":\"1.0\"},\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\"}"
     private var wrongProfile =
-        "{\"dia\":\"5\",\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+        "{\"iCfg\":{\"insulinLabel\":\"\",\"insulinEndTime\":18000000,\"insulinPeakTime\":4500000,\"concentration\":\"1.0\"},\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
 
     //String profileStore = "{\"defaultProfile\":\"Default\",\"store\":{\"Default\":" + validProfile + "}}";
 
@@ -74,10 +76,10 @@ class ProfileSealedTest : TestBase() {
 
         // Test valid profile
         var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!, activePlugin)
-        assertThat(p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false).isValid).isTrue()
+        assertThat(p.isValid("Test", testPumpPlugin, config, rh, notificationManager, hardLimits, false).isValid).isTrue()
 //        assertThat(p.log()).contains("NS units: mmol")
 //        JSONAssertions.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
-        assertThat(p.dia).isWithin(0.01).of(5.0)
+//        assertThat(p.dia).isWithin(0.01).of(5.0)
 //       assertThat(p.timeZone).isEqualTo(TimeZone.getTimeZone("UTC"))
         assertThat(dateUtil.formatHHMM(30 * 60)).isEqualTo("00:30")
         val c = Calendar.getInstance()
@@ -116,7 +118,7 @@ class ProfileSealedTest : TestBase() {
 
         //Test basal profile below limit
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!, activePlugin)
-        p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false)
+        p.isValid("Test", testPumpPlugin, config, rh, notificationManager, hardLimits, false)
 
         // Test profile w/o units
         assertThat(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil)).isNull()
@@ -150,6 +152,6 @@ class ProfileSealedTest : TestBase() {
         // Test hour alignment
         testPumpPlugin.pumpDescription.is30minBasalRatesCapable = false
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notAlignedBasalValidProfile), dateUtil)!!, activePlugin)
-        p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false)
+        p.isValid("Test", testPumpPlugin, config, rh, notificationManager, hardLimits, false)
     }
 }

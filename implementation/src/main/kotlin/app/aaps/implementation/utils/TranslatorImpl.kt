@@ -111,6 +111,11 @@ class TranslatorImpl @Inject internal constructor(
         Action.RUNNING_MODE                    -> rh.gs(R.string.uel_running_mode)
         Action.RUNNING_MODE_REMOVED            -> rh.gs(R.string.uel_running_mode_removed)
         Action.RUNNING_MODE_UPDATED            -> rh.gs(R.string.uel_running_mode_updarted)
+        Action.NEW_INSULIN                     -> rh.gs(R.string.uel_new_insulin)
+        Action.STORE_INSULIN                   -> rh.gs(R.string.uel_store_insulin)
+        Action.INSULIN_REMOVED                 -> rh.gs(R.string.uel_insulin_removed)
+        Action.CHANGE_PUMP_INSULIN             -> rh.gs(R.string.uel_change_pump_insulin)
+        Action.CHANGE_INSULIN_CONCENTRATION    -> rh.gs(R.string.uel_change_insulin_concentration)
         Action.UNKNOWN                         -> rh.gs(R.string.unknown)
     }
 

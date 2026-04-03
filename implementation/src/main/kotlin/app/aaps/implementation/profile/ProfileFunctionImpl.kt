@@ -1,7 +1,9 @@
 package app.aaps.implementation.profile
 
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -9,24 +11,24 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.EffectiveProfile
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,44 +37,39 @@ import javax.inject.Singleton
 class ProfileFunctionImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
-    private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
+    private val localProfileManager: LocalProfileManager,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val config: Config,
     private val hardLimits: HardLimits,
-    aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData
+    private val notificationManager: NotificationManager,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ProfileFunction {
 
     @VisibleForTesting
-    val cache = ConcurrentHashMap<Long, Profile?>()
-
-    private val disposable = CompositeDisposable()
+    val cache = ConcurrentHashMap<Long, EffectiveProfile>()
 
     init {
-        disposable += rxBus
-            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                {
-                    synchronized(cache) { cache.keys.removeIf { key -> key > it.startDate } }
-                }, fabricPrivacy::logException
-            )
+        persistenceLayer.observeChanges(EPS::class.java)
+            .onEach { epsList ->
+                epsList.minOfOrNull { it.timestamp }?.let { timestamp ->
+                    synchronized(cache) { cache.keys.removeIf { key -> key > timestamp } }
+                }
+            }.launchIn(appScope)
     }
 
-    override fun getProfileName(): String =
+    override suspend fun getProfileName(): String =
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = false)
 
-    override fun getOriginalProfileName(): String =
+    override suspend fun getOriginalProfileName(): String =
         getProfileName(System.currentTimeMillis(), customized = false, showRemainingTime = false)
 
-    override fun getProfileNameWithRemainingTime(): String =
+    override suspend fun getProfileNameWithRemainingTime(): String =
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
 
-    private fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
+    private suspend fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
         var profileName = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
 
         val profileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(time)
@@ -85,12 +82,12 @@ class ProfileFunctionImpl @Inject constructor(
         return profileName
     }
 
-    override fun isProfileValid(from: String): Boolean = getProfile() != null
+    override suspend fun isProfileValid(from: String): Boolean = getProfile() != null
 
-    override fun getProfile(): Profile? =
+    override suspend fun getProfile(): EffectiveProfile? =
         getProfile(dateUtil.now())
 
-    override fun getProfile(time: Long): Profile? {
+    override suspend fun getProfile(time: Long): EffectiveProfile? {
         val rounded = time - time % 1000
         // Clear cache after longer use
         synchronized(cache) {
@@ -110,13 +107,17 @@ class ProfileFunctionImpl @Inject constructor(
             }
             return sealed
         }
+        /*
+        // Commented out because it's not possible to simply take Pure profile
+        // because we don't know Insulin configuration for it
+
         // In NSClient mode effective profile may not be received if older than 2 days
         // Try to get it from device status
         // Remove this code after switch to api v3
         // ps == null
         if (config.AAPSCLIENT) {
             processedDeviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
-                activePlugin.activeProfileSource.profile?.getSpecificProfile(activeProfile)?.let { ap ->
+                localProfileManager.profile?.getSpecificProfile(activeProfile)?.let { ap ->
                     val sealed = ProfileSealed.Pure(ap, activePlugin)
                     synchronized(cache) {
                         cache.put(rounded, sealed)
@@ -126,16 +127,16 @@ class ProfileFunctionImpl @Inject constructor(
 
             }
         }
-
+        */
         synchronized(cache) {
             cache.remove(rounded)
         }
         return null
     }
 
-    override fun getRequestedProfile(): PS? = persistenceLayer.getProfileSwitchActiveAt(dateUtil.now())
+    override suspend fun getRequestedProfile(): PS? = persistenceLayer.getProfileSwitchActiveAt(dateUtil.now())
 
-    override fun isProfileChangePending(): Boolean {
+    override suspend fun isProfileChangePending(): Boolean {
         val requested = getRequestedProfile() ?: return false
         val running = getProfile() ?: return true
         return !ProfileSealed.PS(requested, activePlugin).isEqual(running)
@@ -145,7 +146,7 @@ class ProfileFunctionImpl @Inject constructor(
         if (preferences.get(StringKey.GeneralUnits) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
 
-    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): PS? {
+    override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long, iCfg: ICfg): PS? {
         val pureProfile = profileStore.getSpecificProfile(profileName) ?: return null
         return PS(
             timestamp = timestamp,
@@ -158,41 +159,72 @@ class ProfileFunctionImpl @Inject constructor(
             timeshift = T.hours(timeShiftInHours.toLong()).msecs(),
             percentage = percentage,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
-            iCfg = activePlugin.activeInsulin.iCfg.also {
-                it.insulinEndTime = (pureProfile.dia * 3600 * 1000).toLong()
-            }
+            iCfg = iCfg
         )
     }
 
-    override fun createProfileSwitch(
+    override suspend fun createProfileSwitch(
         profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long,
-        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
-    ): Boolean {
-        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp) ?: return false
-        disposable += persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues).subscribe()
-        return true
+        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, iCfg: ICfg
+    ): PS? {
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp, iCfg) ?: return null
+        val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
+        return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
     }
 
-    override fun createProfileSwitch(
+    override suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
         action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
-    ): Boolean {
-        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return false
-        val profileStore = activePlugin.activeProfileSource.profile ?: return false
-        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now()) ?: return false
+    ): PS? {
+        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return null
+        val profileStore = localProfileManager.profile ?: return null
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return null
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(
             rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
             activePlugin.activePump,
             config,
             rh,
-            rxBus,
+            notificationManager,
             hardLimits,
             false
         )
         if (validity.isValid) {
-            disposable += persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues).subscribe()
-            return true
+            val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
+            return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
         }
-        return false
+        return null
+    }
+
+    override suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
+        val profile = getProfile()
+        val eps = (profile as? ProfileSealed.EPS)?.value ?: return false
+        val profileStore = localProfileManager.profile ?: return false
+        val profileName = eps.originalProfileName
+        val percentage = eps.originalPercentage
+        val timeshiftHours = T.msecs(eps.originalTimeshift).hours().toInt()
+        val now = dateUtil.now()
+
+        val durationMinutes = if (eps.originalDuration > 0) {
+            ((eps.originalDuration - (now - eps.timestamp)) / 60_000L).coerceAtLeast(0).toInt()
+        } else 0
+
+        return createProfileSwitch(
+            profileStore = profileStore,
+            profileName = profileName,
+            durationInMinutes = durationMinutes,
+            percentage = percentage,
+            timeShiftInHours = timeshiftHours,
+            timestamp = now,
+            action = Action.PROFILE_SWITCH,
+            source = source,
+            listValues = listOfNotNull(
+                ValueWithUnit.SimpleString(profileName),
+                ValueWithUnit.SimpleString(iCfg.insulinLabel),
+                ValueWithUnit.Percent(percentage),
+                ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
+                ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
+            ),
+            iCfg = iCfg
+        ) != null
     }
 }

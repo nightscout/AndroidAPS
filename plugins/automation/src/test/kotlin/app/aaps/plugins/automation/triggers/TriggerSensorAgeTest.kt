@@ -5,6 +5,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -13,7 +14,7 @@ import java.util.Optional
 
 class TriggerSensorAgeTest : TriggerTestBase() {
 
-    @Test fun shouldRunTest() {
+    @Test fun shouldRunTest() = runTest {
         val sensorAgeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.SENSOR_CHANGE)
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(sensorAgeEvent)
         var t: TriggerSensorAge = TriggerSensorAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -34,7 +35,7 @@ class TriggerSensorAgeTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
     }
 
-    @Test fun shouldRunNotAvailable() {
+    @Test fun shouldRunNotAvailable() = runTest {
         whenever(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)).thenReturn(null)
         var t = TriggerSensorAge(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()

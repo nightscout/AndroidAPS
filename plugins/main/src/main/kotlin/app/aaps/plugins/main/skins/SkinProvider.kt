@@ -1,27 +1,23 @@
 package app.aaps.plugins.main.skins
 
-import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.main.di.SkinsModule
-import java.util.Collections
-import javax.inject.Inject
-import javax.inject.Singleton
+import app.aaps.core.interfaces.skin.SkinDescriptionProvider
 
-@Singleton
-class SkinProvider @Inject constructor(
-    val preferences: Preferences,
-    @SkinsModule.Skin val allSkins: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards SkinInterface>
-) {
+/**
+ * Full skin provider interface with View-related functionality.
+ * Extends SkinDescriptionProvider to include methods that return SkinInterface.
+ *
+ * Use this interface for consumers that need activeSkin() or list.
+ * Use SkinDescriptionProvider for consumers that only need skinDescriptions.
+ */
+interface SkinProvider : SkinDescriptionProvider {
 
-    fun activeSkin(): SkinInterface =
-        list.firstOrNull { it.javaClass.name == preferences.get(StringKey.GeneralSkin) }
-            ?: list.first()
+    /**
+     * Returns the currently active skin based on user preference.
+     */
+    fun activeSkin(): SkinInterface
 
+    /**
+     * List of all available skins, sorted by priority.
+     */
     val list: List<SkinInterface>
-        get() = allSkins.toImmutableMap().toList().sortedBy { it.first }.map { it.second }
-
-    /** Returns an immutable copy of this. */
-    private fun Map<Int, SkinInterface>.toImmutableMap(): Map<Int, SkinInterface> =
-        if (isEmpty()) emptyMap()
-        else Collections.unmodifiableMap(LinkedHashMap(this))
 }

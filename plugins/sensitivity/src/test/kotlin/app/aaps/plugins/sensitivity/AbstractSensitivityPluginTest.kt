@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
@@ -33,9 +33,9 @@ class AbstractSensitivityPluginTest : TestBase() {
         override val isMinCarbsAbsorptionDynamic: Boolean = true
         override val isOref1: Boolean = true
 
-        override fun configuration(): JSONObject = JSONObject()
+        override fun configuration(): JsonObject = JsonObject(emptyMap())
 
-        override fun applyConfiguration(configuration: JSONObject) {}
+        override fun applyConfiguration(configuration: JsonObject) {}
     }
 
     @Test

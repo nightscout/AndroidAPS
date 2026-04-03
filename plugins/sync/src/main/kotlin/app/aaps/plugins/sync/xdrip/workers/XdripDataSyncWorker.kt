@@ -3,11 +3,9 @@ package app.aaps.plugins.sync.xdrip.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.plugins.sync.xdrip.events.EventXdripNewLog
-import app.aaps.plugins.sync.xdrip.events.EventXdripUpdateGUI
+import app.aaps.plugins.sync.xdrip.compose.XdripMvvmRepository
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -17,13 +15,13 @@ class XdripDataSyncWorker(
 
     @Inject lateinit var dataSyncSelector: DataSyncSelectorXdrip
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var xdripMvvmRepository: XdripMvvmRepository
 
     override suspend fun doWorkAndLog(): Result {
-        rxBus.send(EventXdripNewLog("UPL", "Start"))
+        xdripMvvmRepository.addLog("UPL", "Start")
         dataSyncSelector.doUpload()
-        rxBus.send(EventXdripNewLog("UPL", "End"))
-        rxBus.send(EventXdripUpdateGUI())
+        xdripMvvmRepository.addLog("UPL", "End")
+        xdripMvvmRepository.updateQueueSize(dataSyncSelector.queueSize())
         return Result.success()
     }
 }

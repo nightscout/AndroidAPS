@@ -4,6 +4,8 @@ import app.aaps.plugins.configuration.maintenance.cloud.CloudStorageProvider
 import app.aaps.plugins.configuration.maintenance.cloud.providers.googledrive.GoogleDriveProvider
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 
 /**
@@ -25,6 +27,7 @@ import dagger.multibindings.IntoSet
  * without needing to know about specific implementations at compile time.
  */
 @Module
+@InstallIn(SingletonComponent::class)
 abstract class CloudStorageModule {
 
     /**

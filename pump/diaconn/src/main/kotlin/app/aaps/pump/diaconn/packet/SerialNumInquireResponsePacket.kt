@@ -37,8 +37,8 @@ class SerialNumInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Pa
             return
         }
 
-        diaconnG8Pump.country = getByteToInt(bufferData).toChar().toString().toInt() // ASCII
-        diaconnG8Pump.productType = getByteToInt(bufferData).toChar().toString().toInt() // ASCII
+        diaconnG8Pump.country = Char(getByteToInt(bufferData)).toString().toInt() // ASCII
+        diaconnG8Pump.productType = Char(getByteToInt(bufferData)).toString().toInt() // ASCII
         diaconnG8Pump.makeYear = getByteToInt(bufferData)
         diaconnG8Pump.makeMonth = getByteToInt(bufferData)
         diaconnG8Pump.makeDay = getByteToInt(bufferData)

@@ -37,7 +37,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
         precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
     }
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         if (profileFunction.createProfileSwitch(
                 durationInMinutes = duration.value,
                 percentage = pct.value.toInt(),
@@ -49,7 +49,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
                     ValueWithUnit.Percent(pct.value.toInt()),
                     ValueWithUnit.Minute(duration.value)
                 )
-            )
+            ) != null
         ) {
             callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {

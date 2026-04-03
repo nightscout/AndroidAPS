@@ -43,7 +43,10 @@ import app.aaps.core.keys.interfaces.StringNonPreferenceKey
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import dagger.Lazy
-import java.util.Locale
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.runBlocking
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -57,7 +60,7 @@ class PreferencesImpl @Inject constructor(
     private val hardLimits: Lazy<HardLimits>,
     private val persistenceLayer: PersistenceLayer,
     private val config: Config,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
 ) : Preferences {
 
     override val simpleMode: Boolean get() = sp.getBoolean(BooleanKey.GeneralSimpleMode.key, BooleanKey.GeneralSimpleMode.defaultValue)
@@ -82,6 +85,13 @@ class PreferencesImpl @Inject constructor(
             UnitDoubleKey::class.java,
         )
 
+    private val booleanFlows = ConcurrentHashMap<String, MutableStateFlow<Boolean>>()
+    private val stringFlows = ConcurrentHashMap<String, MutableStateFlow<String>>()
+    private val doubleFlows = ConcurrentHashMap<String, MutableStateFlow<Double>>()
+    private val unitDoubleFlows = ConcurrentHashMap<String, MutableStateFlow<Double>>()
+    private val intFlows = ConcurrentHashMap<String, MutableStateFlow<Int>>()
+    private val longFlows = ConcurrentHashMap<String, MutableStateFlow<Long>>()
+
     private fun isHidden(key: PreferenceKey): Boolean =
         if (apsMode && key.showInApsMode == false) true
         else if (nsclientMode && key.showInNsClientMode == false) true
@@ -96,7 +106,12 @@ class PreferencesImpl @Inject constructor(
 
     override fun put(key: BooleanNonPreferenceKey, value: Boolean) {
         sp.putBoolean(key.key, value)
+        booleanFlows[key.key]?.value = value
+
     }
+
+    override fun observe(key: BooleanNonPreferenceKey): StateFlow<Boolean> =
+        booleanFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: BooleanPreferenceKey): Boolean =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
@@ -116,7 +131,12 @@ class PreferencesImpl @Inject constructor(
 
     override fun put(key: StringNonPreferenceKey, value: String) {
         sp.putString(key.key, value)
+        stringFlows[key.key]?.value = value
+
     }
+
+    override fun observe(key: StringNonPreferenceKey): StateFlow<String> =
+        stringFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: DoubleNonPreferenceKey): Double =
         sp.getDouble(key.key, key.defaultValue)
@@ -131,7 +151,12 @@ class PreferencesImpl @Inject constructor(
 
     override fun put(key: DoubleNonPreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
+        doubleFlows[key.key]?.value = value
+
     }
+
+    override fun observe(key: DoubleNonPreferenceKey): StateFlow<Double> =
+        doubleFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double =
         sp.getDouble(key.composeKey(*arguments), key.defaultValue)
@@ -140,7 +165,15 @@ class PreferencesImpl @Inject constructor(
         if (sp.contains(key.composeKey(*arguments))) sp.getDouble(key.composeKey(*arguments), key.defaultValue) else null
 
     override fun put(key: DoubleComposedNonPreferenceKey, vararg arguments: Any, value: Double) {
-        sp.putDouble(key.composeKey(*arguments), value)
+        val composedKey = key.composeKey(*arguments)
+        sp.putDouble(composedKey, value)
+        doubleFlows[composedKey]?.value = value
+
+    }
+
+    override fun observe(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Double> {
+        val composedKey = key.composeKey(*arguments)
+        return doubleFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun get(key: UnitDoublePreferenceKey): Double =
@@ -152,7 +185,12 @@ class PreferencesImpl @Inject constructor(
 
     override fun put(key: UnitDoublePreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
+        unitDoubleFlows[key.key]?.value = get(key)
+
     }
+
+    override fun observe(key: UnitDoublePreferenceKey): StateFlow<Double> =
+        unitDoubleFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: IntNonPreferenceKey): Int =
         sp.getInt(key.key, key.defaultValue)
@@ -162,10 +200,17 @@ class PreferencesImpl @Inject constructor(
 
     override fun put(key: IntNonPreferenceKey, value: Int) {
         sp.putInt(key.key, value)
+        intFlows[key.key]?.value = value
+
     }
+
+    override fun observe(key: IntNonPreferenceKey): StateFlow<Int> =
+        intFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
 
     override fun inc(key: IntNonPreferenceKey) {
         sp.incInt(key.key)
+        intFlows[key.key]?.let { it.value = get(key) }
+
     }
 
     override fun get(key: IntPreferenceKey): Int =
@@ -178,7 +223,15 @@ class PreferencesImpl @Inject constructor(
         sp.getInt(key.composeKey(*arguments), key.defaultValue)
 
     override fun put(key: IntComposedNonPreferenceKey, vararg arguments: Any, value: Int) {
-        sp.putInt(key.composeKey(*arguments), value)
+        val composedKey = key.composeKey(*arguments)
+        sp.putInt(composedKey, value)
+        intFlows[composedKey]?.value = value
+
+    }
+
+    override fun observe(key: IntComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Int> {
+        val composedKey = key.composeKey(*arguments)
+        return intFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun get(key: LongNonPreferenceKey): Long =
@@ -186,6 +239,8 @@ class PreferencesImpl @Inject constructor(
 
     override fun inc(key: LongNonPreferenceKey) {
         sp.incLong(key.key)
+        longFlows[key.key]?.let { it.value = get(key) }
+
     }
 
     override fun getIfExists(key: LongNonPreferenceKey): Long? =
@@ -193,7 +248,12 @@ class PreferencesImpl @Inject constructor(
 
     override fun put(key: LongNonPreferenceKey, value: Long) {
         sp.putLong(key.key, value)
+        longFlows[key.key]?.value = value
+
     }
+
+    override fun observe(key: LongNonPreferenceKey): StateFlow<Long> =
+        longFlows.computeIfAbsent(key.key) { MutableStateFlow(get(key)) }
 
     override fun get(key: LongPreferenceKey): Long =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
@@ -212,7 +272,15 @@ class PreferencesImpl @Inject constructor(
         if (sp.contains(key.composeKey(*arguments))) sp.getLong(key.composeKey(*arguments), key.defaultValue) else null
 
     override fun put(key: LongComposedNonPreferenceKey, vararg arguments: Any, value: Long) {
-        sp.putLong(key.composeKey(*arguments), value)
+        val composedKey = key.composeKey(*arguments)
+        sp.putLong(composedKey, value)
+        longFlows[composedKey]?.value = value
+
+    }
+
+    override fun observe(key: LongComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Long> {
+        val composedKey = key.composeKey(*arguments)
+        return longFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun remove(key: ComposedKey, vararg arguments: Any) {
@@ -254,7 +322,15 @@ class PreferencesImpl @Inject constructor(
         if (sp.contains(key.composeKey(*arguments))) sp.getBoolean(key.composeKey(*arguments), key.defaultValue) else null
 
     override fun put(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, value: Boolean) {
-        sp.putBoolean(key.composeKey(*arguments), value)
+        val composedKey = key.composeKey(*arguments)
+        sp.putBoolean(composedKey, value)
+        booleanFlows[composedKey]?.value = value
+
+    }
+
+    override fun observe(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Boolean> {
+        val composedKey = key.composeKey(*arguments)
+        return booleanFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun get(key: StringComposedNonPreferenceKey, vararg arguments: Any): String =
@@ -264,7 +340,15 @@ class PreferencesImpl @Inject constructor(
         if (sp.contains(key.composeKey(*arguments))) sp.getString(key.composeKey(*arguments), key.defaultValue) else null
 
     override fun put(key: StringComposedNonPreferenceKey, vararg arguments: Any, value: String) {
-        sp.putString(key.composeKey(*arguments), value)
+        val composedKey = key.composeKey(*arguments)
+        sp.putString(composedKey, value)
+        stringFlows[composedKey]?.value = value
+
+    }
+
+    override fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String> {
+        val composedKey = key.composeKey(*arguments)
+        return stringFlows.computeIfAbsent(composedKey) { MutableStateFlow(get(key, *arguments)) }
     }
 
     override fun registerPreferences(clazz: Class<out NonPreferenceKey>) {
@@ -332,18 +416,26 @@ class PreferencesImpl @Inject constructor(
         else key.defaultValue
 
     private fun calculatePreference(key: DoublePreferenceKey): Double =
-        limit(key, when (key) {
-            DoubleKey.ApsMaxBasal  -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
-            DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
-            DoubleKey.ApsAmaMaxIob -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
-            else                   -> error("Unsupported key calculation")
-        })
+        limit(
+            key, when (key) {
+                DoubleKey.ApsMaxBasal  -> runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+                DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
+                DoubleKey.ApsAmaMaxIob -> runBlocking { profileFunction.get().getProfile() }?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+                else                   -> error("Unsupported key calculation")
+            })
 
     private fun limit(key: DoublePreferenceKey, calculated: Double) = min(key.max, max(key.min, calculated))
     private fun recentMaxBolus(): Double =
-        persistenceLayer
-            .getBolusesFromTime(dateUtil.now() - T.days(7).msecs(), true)
-            .blockingGet()
-            .maxOfOrNull { it.amount }
-            ?: hardLimits.get().maxBolus()
+        runBlocking {
+            persistenceLayer
+                .getBolusesFromTime(dateUtil.now() - T.days(7).msecs(), true)
+                .maxOfOrNull { it.amount }
+                ?: hardLimits.get().maxBolus()
+        }
+
+    override fun getAllPreferenceKeys(): List<PreferenceKey> =
+        prefsList
+            .filter { PreferenceKey::class.java.isAssignableFrom(it) }
+            .flatMap { it.enumConstants!!.asIterable() }
+            .filterIsInstance<PreferenceKey>()
 }

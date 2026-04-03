@@ -1,5 +1,6 @@
 package app.aaps.implementation.queue.commands
 
+import android.os.SystemClock
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -9,8 +10,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDismissBolusProgressIfRunning
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Provider
@@ -25,9 +24,9 @@ class CommandBolus(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
+    @Inject lateinit var bolusProgressData: BolusProgressData
 
     override var commandType: Command.CommandType
 
@@ -39,10 +38,20 @@ class CommandBolus(
     override fun execute() {
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         if (r.success) carbsRunnable.run()
-        BolusProgressData.bolusEnded = true
-        rxBus.send(EventDismissBolusProgressIfRunning(r.success, detailedBolusInfo.id))
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
-        callback?.result(r)?.run()
+        if (r.success) {
+            bolusProgressData.complete()
+            callback?.result(r)?.run()
+            // Delay clear so UI can show completion state without blocking queue
+            val gen = bolusProgressData.currentGeneration
+            Thread {
+                SystemClock.sleep(5000)
+                bolusProgressData.clearIfSameGeneration(gen)
+            }.start()
+        } else {
+            callback?.result(r)?.run()
+            bolusProgressData.clear()
+        }
     }
 
     override fun status(): String {
@@ -58,5 +67,6 @@ class CommandBolus(
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
         callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
+        bolusProgressData.clear()
     }
 }

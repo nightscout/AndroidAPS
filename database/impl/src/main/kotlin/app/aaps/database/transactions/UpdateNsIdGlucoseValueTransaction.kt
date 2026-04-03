@@ -5,7 +5,7 @@ import app.aaps.database.entities.GlucoseValue
 class UpdateNsIdGlucoseValueTransaction(private val glucoseValues: List<GlucoseValue>) : Transaction<UpdateNsIdGlucoseValueTransaction.TransactionResult>() {
 
     val result = TransactionResult()
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         for (glucoseValue in glucoseValues) {
             val current = database.glucoseValueDao.findById(glucoseValue.id)
             if (current != null && current.interfaceIDs.nightscoutId != glucoseValue.interfaceIDs.nightscoutId) {

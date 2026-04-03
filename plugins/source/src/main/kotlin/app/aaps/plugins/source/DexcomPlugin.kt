@@ -17,6 +17,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -26,8 +27,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.ui.compose.icons.IcPluginByoda
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
+import app.aaps.plugins.source.compose.BgSourceComposeContent
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,18 +41,26 @@ class DexcomPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val context: Context,
-    config: Config
+    config: Config,
+    preferences: Preferences,
 ) : AbstractBgSourceWithSensorInsertLogPlugin(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .fragmentClass(BGSourceFragment::class.java.name)
+        .composeContent { plugin ->
+            BgSourceComposeContent(
+                title = rh.gs(R.string.dexcom_app_patched)
+            )
+        }
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_dexcom_g6)
+        .icon(IcPluginByoda)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_dexcom),
-    aapsLogger, rh
+    aapsLogger = aapsLogger,
+    rh = rh,
+    preferences = preferences
 ), BgSource, DexcomBoyda {
 
     init {
@@ -58,7 +69,26 @@ class DexcomPlugin @Inject constructor(
         }
     }
 
-    override fun advancedFilteringSupported(): Boolean = true
+    override fun requiredPermissions(): List<PermissionGroup> =
+        if (isDexcomAppInstalled()) listOf(
+            PermissionGroup(
+                permissions = listOf(PERMISSION),
+                rationaleTitle = R.string.permission_dexcom_title,
+                rationaleDescription = R.string.permission_dexcom_description,
+                special = true,
+            )
+        ) else emptyList()
+
+    private fun isDexcomAppInstalled(): Boolean =
+        PACKAGE_NAMES.any { pkg ->
+            try {
+                @Suppress("DEPRECATION")
+                context.packageManager.getPackageInfo(pkg, 0)
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
 
     override fun onStart() {
         super.onStart()
@@ -141,25 +171,28 @@ class DexcomPlugin @Inject constructor(
                 sensorStartTime?.let {
                     if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null
                 }
-                persistenceLayer.insertCgmSourceData(Sources.Dexcom, glucoseValues, calibrations, sensorStartTime)
-                    .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
-                    .blockingGet()
-                    .also { result ->
-                        // G6 calibration bug workaround (2 additional GVs are created within 1 minute)
-                        for (i in result.inserted.indices) {
-                            if (sourceSensor == SourceSensor.DEXCOM_G6_NATIVE) {
-                                if (i < result.inserted.size - 1) {
-                                    if (abs(result.inserted[i].timestamp - result.inserted[i + 1].timestamp) < T.mins(1).msecs()) {
-                                        persistenceLayer.invalidateGlucoseValue(result.inserted[i].id, Action.BG_REMOVED, Sources.Dexcom, note = null, listValues = listOf()).blockingGet()
-                                        persistenceLayer.invalidateGlucoseValue(result.inserted[i + 1].id, Action.BG_REMOVED, Sources.Dexcom, note = null, listValues = listOf()).blockingGet()
-                                        result.inserted.removeAt(i + 1)
-                                        result.inserted.removeAt(i)
-                                        continue
-                                    }
+                val result = try {
+                    persistenceLayer.insertCgmSourceData(Sources.Dexcom, glucoseValues, calibrations, sensorStartTime)
+                } catch (e: Exception) {
+                    ret = Result.failure(workDataOf("Error" to e.toString()))
+                    null
+                }
+                result?.let {
+                    // G6 calibration bug workaround (2 additional GVs are created within 1 minute)
+                    for (i in it.inserted.indices) {
+                        if (sourceSensor == SourceSensor.DEXCOM_G6_NATIVE) {
+                            if (i < it.inserted.size - 1) {
+                                if (abs(it.inserted[i].timestamp - it.inserted[i + 1].timestamp) < T.mins(1).msecs()) {
+                                    persistenceLayer.invalidateGlucoseValue(it.inserted[i].id, Action.BG_REMOVED, Sources.Dexcom, note = null, listValues = listOf())
+                                    persistenceLayer.invalidateGlucoseValue(it.inserted[i + 1].id, Action.BG_REMOVED, Sources.Dexcom, note = null, listValues = listOf())
+                                    it.inserted.removeAt(i + 1)
+                                    it.inserted.removeAt(i)
+                                    continue
                                 }
                             }
                         }
                     }
+                }
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)
                 ret = Result.failure(workDataOf("Error" to e.toString()))

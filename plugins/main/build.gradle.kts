@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
-    id("kotlin-android")
+    alias(libs.plugins.compose.compiler)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -9,6 +9,9 @@ plugins {
 
 android {
     namespace = "app.aaps.plugins.main"
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
@@ -26,18 +29,22 @@ dependencies {
 
     testImplementation(project(":implementation"))
     testImplementation(project(":plugins:aps"))
-    testImplementation(project(":plugins:insulin"))
     testImplementation(project(":shared:tests"))
 
     api(libs.androidx.appcompat)
     api(libs.com.google.android.material)
 
+    // Compose
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.compose.material3)
+    api(libs.androidx.compose.material.icons.extended)
+    api(libs.androidx.compose.foundation)
+    api(libs.androidx.lifecycle.runtime.compose)
+    api(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
     // Actions
     api(libs.androidx.gridlayout)
-
-    //SmsCommunicator
-    api(libs.com.eatthepath.java.otp)
-    api(libs.com.github.kenglxn.qrgen.android)
 
     api(libs.kotlinx.datetime)
 
@@ -48,5 +55,6 @@ dependencies {
     api(libs.androidx.work.runtime)
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }

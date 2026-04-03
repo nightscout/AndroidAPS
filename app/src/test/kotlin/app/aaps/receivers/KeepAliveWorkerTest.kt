@@ -13,13 +13,13 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.keys.LongNonKey
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.util.concurrent.ListenableFuture
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -74,15 +74,16 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
             it.localAlertUtils = localAlertUtils
             it.workManager = workManager
             it.rh = rh
+            it.ch = ch
         }
 
     @Test
-    fun `checkPump requests status when connection is outdated`() = runBlocking {
+    fun `checkPump requests status when connection is outdated`() = runTest {
         // Arrange
         worker = createWorker()
         whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
         whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch)
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         whenever(commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)).thenReturn(true)
         testPumpPlugin.lastData = now - T.mins(20).msecs()
 
@@ -91,11 +92,10 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
 
         // Assert
         verify(commandQueue).readStatus(anyOrNull(), anyOrNull())
-        Unit
     }
 
     @Test
-    fun `checkPump sends profile switch event if profile is mismatched`() = runBlocking {
+    fun `checkPump sends profile switch event if profile is mismatched`() = runTest {
         // Arrange
         worker = createWorker()
         whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
@@ -106,11 +106,11 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         worker.checkPump()
 
         // Assert
-        verify(mockedRxBus).send(any<EventProfileSwitchChanged>())
+        verify(mockedRxBus).send(any<EventProfileChangeRequested>())
     }
 
     @Test
-    fun `checkPump does nothing if mode is DISCONNECTED_PUMP`() = runBlocking {
+    fun `checkPump does nothing if mode is DISCONNECTED_PUMP`() = runTest {
         // Arrange
         worker = createWorker()
         whenever(loop.runningMode).thenReturn(RM.Mode.DISCONNECTED_PUMP)
@@ -121,11 +121,11 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
 
         // Assert
         verify(commandQueue, never()).readStatus(any(), anyOrNull())
-        verify(mockedRxBus, never()).send(any<EventProfileSwitchChanged>())
+        verify(mockedRxBus, never()).send(any<EventProfileChangeRequested>())
     }
 
     @Test
-    fun `checkAPS schedules device status upload if BG is missing`() = runBlocking {
+    fun `checkAPS schedules device status upload if BG is missing`() = runTest {
         // Arrange
         worker = createWorker()
         whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
@@ -139,7 +139,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `databaseCleanup does NOT run if it was run less than a day ago`() = runBlocking {
+    fun `databaseCleanup does NOT run if it was run less than a day ago`() = runTest {
         // Arrange
         worker = createWorker()
         whenever(preferences.get(LongNonKey.LastCleanupRun)).thenReturn(now - T.hours(12).msecs())
@@ -149,6 +149,5 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
 
         // Assert
         verify(persistenceLayer, never()).cleanupDatabase(any(), any())
-        Unit
     }
 }

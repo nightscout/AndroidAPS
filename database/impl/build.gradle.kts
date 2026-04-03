@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
-    id("kotlin-android")
     kotlin("plugin.allopen")
     id("android-module-dependencies")
     id("test-module-dependencies")
@@ -18,7 +17,7 @@ android {
         }
     }
     sourceSets {
-        getByName("androidTest").assets.srcDirs("$projectDir/schemas")
+        getByName("androidTest").assets.directories.add("$projectDir/schemas")
     }
 }
 
@@ -29,6 +28,7 @@ dependencies {
 
     api(libs.io.reactivex.rxjava3.rxandroid)
     api(libs.io.reactivex.rxjava3.rxkotlin)
+    api(libs.kotlinx.coroutines.rx3)
 
     api(libs.com.google.code.gson)
 
@@ -38,9 +38,11 @@ dependencies {
 
     api(libs.com.google.dagger.android)
     api(libs.com.google.dagger.android.support)
+    api(libs.com.google.dagger.hilt.android)
 
     androidTestImplementation(libs.androidx.room.testing)
 
     ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.androidx.room.compiler)
 }

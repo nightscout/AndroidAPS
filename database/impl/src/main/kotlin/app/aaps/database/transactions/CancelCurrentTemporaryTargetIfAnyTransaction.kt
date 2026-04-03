@@ -7,9 +7,9 @@ class CancelCurrentTemporaryTargetIfAnyTransaction(
     val timestamp: Long
 ) : Transaction<CancelCurrentTemporaryTargetIfAnyTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
-        val current = database.temporaryTargetDao.getTemporaryTargetActiveAt(timestamp).blockingGet()
+        val current = database.temporaryTargetDao.getTemporaryTargetActiveAt(timestamp)
         if (current != null) {
             current.end = timestamp
             database.temporaryTargetDao.updateExistingEntry(current)

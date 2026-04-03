@@ -4,6 +4,7 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.model.data.Block
@@ -189,10 +190,9 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 icBlocks = icBlocks,
                 targetBlocks = targetBlocks,
                 glucoseUnit = units,
-                timeZone = timezone,
-                dia = dia
+                timeZone = timezone
             )
-            return ATProfile(activePlugin, preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), localInsulin)
+            return ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), localInsulin)
         } catch (_: Exception) {
             return null
         }
@@ -229,7 +229,8 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 BS(
                     timestamp = preppedGlucose.crData[i].crEndTime,
                     amount = preppedGlucose.crData[i].crInsulin,
-                    type = BS.Type.NORMAL
+                    type = BS.Type.NORMAL,
+                    iCfg = ICfg(insulinLabel = "unused within Autotune", peak = 0, dia = 0.0, concentration = 0.0)
                 )
             )
         }
@@ -238,7 +239,8 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 BS(
                     timestamp = startDayTime,
                     amount = 1.0,
-                    type = BS.Type.NORMAL
+                    type = BS.Type.NORMAL,
+                    iCfg = ICfg(insulinLabel = "unused within Autotune", peak = 0, dia = 0.0, concentration = 0.0)
                 )
             )
         return boluses

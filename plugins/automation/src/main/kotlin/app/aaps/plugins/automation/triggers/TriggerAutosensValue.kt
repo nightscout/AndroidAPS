@@ -31,7 +31,7 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
         comparator = Comparator(rh, triggerAutosensValue.comparator.value)
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val autosensData = iobCobCalculator.ads.getLastAutosensData("Automation trigger", aapsLogger, dateUtil)
             ?: return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

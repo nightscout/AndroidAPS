@@ -7,7 +7,6 @@
 
     <string name="virtual_pump_shortname">VPUMP</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
-    <string name="virtual_pump_label">VIRTUAL PUMP</string>
     <string name="virtualpump_settings">Virtual pump settings</string>
 
     <!--    PumpType-->

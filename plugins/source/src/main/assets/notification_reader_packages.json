@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "packages": [
+    {
+      "package": "com.dexcom.g6",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region1.mmol",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region2.mgdl",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region3.mgdl",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region4.mmol",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region5.mmol",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region6.mgdl",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region7.mmol",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region8.mmol",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region9.mgdl",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region10.mgdl",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g6.region11.mmol",
+      "sensor": "AAPS-DexcomG6"
+    },
+    {
+      "package": "com.dexcom.g7",
+      "sensor": "AAPS-DexcomG7"
+    },
+    {
+      "package": "com.dexcom.dexcomone",
+      "sensor": "AAPS-Dexcom"
+    },
+    {
+      "package": "com.dexcom.d1plus",
+      "sensor": "AAPS-Dexcom"
+    },
+    {
+      "package": "com.dexcom.stelo",
+      "sensor": "AAPS-Dexcom"
+    },
+    {
+      "package": "com.camdiab.fx_alert.mmoll",
+      "sensor": "AAPS-Dexcom"
+    },
+    {
+      "package": "com.camdiab.fx_alert.mgdl",
+      "sensor": "AAPS-Dexcom"
+    },
+    {
+      "package": "com.camdiab.fx_alert.hx.mmoll",
+      "sensor": "AAPS-Dexcom"
+    },
+    {
+      "package": "com.camdiab.fx_alert.hx.mgdl",
+      "sensor": "AAPS-Dexcom"
+    },
+    {
+      "package": "com.camdiab.fx_alert.mmoll.ca",
+      "sensor": "AAPS-Dexcom"
+    },
+    {
+      "package": "com.medtronic.diabetes.guardian",
+      "sensor": "MM600Series"
+    },
+    {
+      "package": "com.medtronic.diabetes.guardianconnect",
+      "sensor": "MM600Series"
+    },
+    {
+      "package": "com.medtronic.diabetes.guardianconnect.us",
+      "sensor": "MM600Series"
+    },
+    {
+      "package": "com.medtronic.diabetes.minimedmobile.eu",
+      "sensor": "MM600Series"
+    },
+    {
+      "package": "com.medtronic.diabetes.minimedmobile.us",
+      "sensor": "MM600Series"
+    },
+    {
+      "package": "com.medtronic.diabetes.simplera.eu",
+      "sensor": "Simplera"
+    },
+    {
+      "package": "com.medtronic.diabetes.simplera.us",
+      "sensor": "Simplera"
+    },
+    {
+      "package": "com.senseonics.gen12androidapp",
+      "sensor": "Eversense"
+    },
+    {
+      "package": "com.senseonics.androidapp",
+      "sensor": "Eversense"
+    },
+    {
+      "package": "com.senseonics.eversense365.us",
+      "sensor": "Eversense"
+    },
+    {
+      "package": "com.microtechmd.cgms.uk",
+      "sensor": "GlucoRx Aidex"
+    },
+    {
+      "package": "com.microtechmd.cgms.mg",
+      "sensor": "GlucoRx Aidex"
+    },
+    {
+      "package": "com.microtech.aidexx",
+      "sensor": "GlucoRx Aidex"
+    },
+    {
+      "package": "com.microtech.aidexx.mgdl",
+      "sensor": "GlucoRx Aidex"
+    },
+    {
+      "package": "com.microtech.aidexx.linxneo.mmoll",
+      "sensor": "GlucoRx Aidex"
+    },
+    {
+      "package": "com.microtech.aidexx.equil.mmoll",
+      "sensor": "GlucoRx Aidex"
+    },
+    {
+      "package": "com.microtech.aidexx.diaexport.mmoll",
+      "sensor": "GlucoRx Aidex"
+    },
+    {
+      "package": "com.microtech.aidexx.smart.mmoll",
+      "sensor": "GlucoRx Aidex"
+    },
+    {
+      "package": "com.ottai.seas",
+      "sensor": "Ottai"
+    },
+    {
+      "package": "com.ottai.tag",
+      "sensor": "Ottai"
+    },
+    {
+      "package": "com.sinocare.cgm.ce",
+      "sensor": "Sino App"
+    },
+    {
+      "package": "com.sinocare.ican.health.ce",
+      "sensor": "Sino App"
+    },
+    {
+      "package": "com.sinocare.ican.health.ru",
+      "sensor": "Sino App"
+    },
+    {
+      "package": "com.kakaohealthcare.pasta",
+      "sensor": "Unknown"
+    },
+    {
+      "package": "com.glucotech.app.android",
+      "sensor": "Unknown"
+    },
+    {
+      "package": "com.suswel.ai",
+      "sensor": "Unknown"
+    }
+  ]
+}

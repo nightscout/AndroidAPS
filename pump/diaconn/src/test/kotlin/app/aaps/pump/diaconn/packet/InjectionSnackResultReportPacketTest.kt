@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
 
     private lateinit var diaconnG8Pump: DiaconnG8Pump
+    private val bolusProgressData = BolusProgressData()
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -21,6 +22,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
                 it.diaconnG8Pump = diaconnG8Pump
                 it.rxBus = rxBus
                 it.rh = rh
+                it.bolusProgressData = bolusProgressData
             }
         }
     }
@@ -28,8 +30,8 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         diaconnG8Pump = DiaconnG8Pump(aapsLogger, dateUtil, decimalFormatter)
-        // Reset bolus progress data
-        BolusProgressData.delivered = 0.0
+        // Initialize bolus progress state
+        bolusProgressData.start(insulin = 10.0, isSMB = false)
     }
 
     @Test
@@ -50,7 +52,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         assertThat(diaconnG8Pump.lastBolusAmount).isEqualTo(5.0)
         assertThat(diaconnG8Pump.bolusDone).isTrue()
         assertThat(diaconnG8Pump.bolusStopped).isFalse()
-        assertThat(BolusProgressData.delivered).isEqualTo(5.0)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isEqualTo(5.0)
     }
 
     @Test
@@ -71,7 +73,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         assertThat(diaconnG8Pump.lastBolusAmount).isEqualTo(4.5)
         assertThat(diaconnG8Pump.bolusDone).isTrue()
         assertThat(diaconnG8Pump.bolusStopped).isTrue()
-        assertThat(BolusProgressData.delivered).isEqualTo(4.5)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isEqualTo(4.5)
     }
 
     @Test
@@ -90,7 +92,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         // Then
         assertThat(packet.failed).isFalse()
         assertThat(diaconnG8Pump.lastBolusAmount).isEqualTo(0.5)
-        assertThat(BolusProgressData.delivered).isEqualTo(0.5)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isEqualTo(0.5)
     }
 
     @Test
@@ -109,7 +111,7 @@ class InjectionSnackResultReportPacketTest : TestBaseWithProfile() {
         // Then
         assertThat(packet.failed).isFalse()
         assertThat(diaconnG8Pump.lastBolusAmount).isEqualTo(15.0)
-        assertThat(BolusProgressData.delivered).isEqualTo(15.0)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isEqualTo(15.0)
     }
 
     @Test

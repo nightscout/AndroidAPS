@@ -34,13 +34,13 @@ class LoadBgDataWorker(
         val end: Long
     )
 
-    private fun AutosensDataStore.loadBgData(to: Long, persistenceLayer: PersistenceLayer, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
+    private suspend fun AutosensDataStore.loadBgData(to: Long, persistenceLayer: PersistenceLayer, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
+        val start = to - T.hours((24 + 10 /* max dia */).toLong()).msecs()
+        // there can be some readings with time in close future (caused by wrong time setting on sensor)
+        // so add 2 minutes
+        val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(start, to + T.mins(2).msecs(), false)
         synchronized(dataLock) {
-            val start = to - T.hours((24 + 10 /* max dia */).toLong()).msecs()
-            // there can be some readings with time in close future (caused by wrong time setting on sensor)
-            // so add 2 minutes
-            bgReadings = persistenceLayer
-                .getBgReadingsDataFromTimeToTime(start, to + T.mins(2).msecs(), false)
+            bgReadings = readings
             aapsLogger.debug(LTag.AUTOSENS) { "BG data loaded. Size: ${bgReadings.size} Start date: ${dateUtil.dateAndTimeString(start)} End date: ${dateUtil.dateAndTimeString(to)}" }
             createBucketedData(aapsLogger, dateUtil)
         }

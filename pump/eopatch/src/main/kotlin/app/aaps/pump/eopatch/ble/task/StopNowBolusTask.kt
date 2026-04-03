@@ -13,13 +13,12 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
 @Singleton
 class StopNowBolusTask @Inject constructor(
     private val aapsSchedulers: AapsSchedulers
 ) : BolusTask(TaskFunc.STOP_NOW_BOLUS) {
 
-    private val BOLUS_STOP: BolusStop = BolusStop()
+    @Inject lateinit var bolusStop: BolusStop
 
     fun stop(): Single<BolusStopResponse> {
         return isReady()
@@ -29,7 +28,7 @@ class StopNowBolusTask @Inject constructor(
     }
 
     fun stopJob(): Single<BolusStopResponse> {
-        return BOLUS_STOP.stop(IPatchConstant.NOW_BOLUS_ID.toInt())
+        return bolusStop.stop(IPatchConstant.NOW_BOLUS_ID.toInt())
             .doOnSuccess(Consumer { response: BolusStopResponse -> this.checkResponse(response) })
             .doOnSuccess(Consumer { response: BolusStopResponse -> this.onNowBolusStopped(response) })
     }

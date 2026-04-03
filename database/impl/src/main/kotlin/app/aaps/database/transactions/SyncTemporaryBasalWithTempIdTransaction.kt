@@ -10,7 +10,7 @@ class SyncTemporaryBasalWithTempIdTransaction(
     private val newType: TemporaryBasal.Type?
 ) : Transaction<SyncTemporaryBasalWithTempIdTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         bolus.interfaceIDs.temporaryId ?: bolus.interfaceIDs.pumpType
         ?: bolus.interfaceIDs.pumpSerial ?: throw IllegalStateException("Some pump ID is null")
         val result = TransactionResult()

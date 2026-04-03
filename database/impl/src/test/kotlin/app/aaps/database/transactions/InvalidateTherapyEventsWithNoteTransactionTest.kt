@@ -6,6 +6,7 @@ import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -27,7 +28,7 @@ class InvalidateTherapyEventsWithNoteTransactionTest {
     }
 
     @Test
-    fun `invalidates events with matching note`() {
+    fun `invalidates events with matching note`() = runTest {
         val searchNote = "test note"
         val event1 = createTherapyEvent(id = 1, note = "This is a test note", isValid = true)
         val event2 = createTherapyEvent(id = 2, note = "Another test note here", isValid = true)
@@ -49,7 +50,7 @@ class InvalidateTherapyEventsWithNoteTransactionTest {
     }
 
     @Test
-    fun `does not invalidate events without matching note`() {
+    fun `does not invalidate events without matching note`() = runTest {
         val searchNote = "missing"
         val event1 = createTherapyEvent(id = 1, note = "This is a test", isValid = true)
         val event2 = createTherapyEvent(id = 2, note = "Another note", isValid = true)
@@ -68,7 +69,7 @@ class InvalidateTherapyEventsWithNoteTransactionTest {
     }
 
     @Test
-    fun `does not invalidate already invalid events`() {
+    fun `does not invalidate already invalid events`() = runTest {
         val searchNote = "test"
         val event1 = createTherapyEvent(id = 1, note = "test note", isValid = false)
 
@@ -84,7 +85,7 @@ class InvalidateTherapyEventsWithNoteTransactionTest {
     }
 
     @Test
-    fun `handles empty event list`() {
+    fun `handles empty event list`() = runTest {
         val searchNote = "test"
 
         whenever(therapyEventDao.getValidByType(TherapyEvent.Type.NOTE)).thenReturn(emptyList())
@@ -99,7 +100,7 @@ class InvalidateTherapyEventsWithNoteTransactionTest {
     }
 
     @Test
-    fun `handles events with null notes`() {
+    fun `handles events with null notes`() = runTest {
         val searchNote = "test"
         val event1 = createTherapyEvent(id = 1, note = null, isValid = true)
         val event2 = createTherapyEvent(id = 2, note = "test note", isValid = true)

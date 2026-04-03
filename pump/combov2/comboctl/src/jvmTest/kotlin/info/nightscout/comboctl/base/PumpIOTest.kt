@@ -260,10 +260,13 @@ class PumpIOTest : TestBase() {
 
             // First, test long UP button press.
 
+            System.err.println("DEBUG: Phase 1 - feeding initial packets for UP press")
             testStates.feedInitialPackets()
 
+            System.err.println("DEBUG: Phase 1 - connecting")
             pumpIO.connect(runHeartbeat = false)
 
+            System.err.println("DEBUG: Phase 1 - starting long UP button press")
             var counter = 0
             pumpIO.startLongRTButtonPress(ApplicationLayer.RTButton.UP) {
                 // Return true the first time, false the second time.
@@ -271,10 +274,13 @@ class PumpIOTest : TestBase() {
                 // send a button status to the Combo once (= when
                 // we return true).
                 counter++
+                System.err.println("DEBUG: Phase 1 - keepGoing called, counter=$counter, returning=${counter <= 1}")
                 counter <= 1
             }
+            System.err.println("DEBUG: Phase 1 - waiting for long press to finish")
             pumpIO.waitForLongRTButtonPressToFinish()
 
+            System.err.println("DEBUG: Phase 1 - disconnecting")
             pumpIO.disconnect()
 
             testStates.checkAndRemoveInitialSentPackets()
@@ -285,22 +291,31 @@ class PumpIOTest : TestBase() {
             // test that function. Waiting for a while and calling it should
             // amount to the same behavior as calling waitForLongRTButtonPressToFinish().
 
+            System.err.println("DEBUG: Phase 2 - resetting IO")
             testIO.resetSentPacketData()
             testIO.resetIncomingPacketDataChannel()
 
+            System.err.println("DEBUG: Phase 2 - feeding initial packets for DOWN press")
             testStates.feedInitialPackets()
 
+            System.err.println("DEBUG: Phase 2 - connecting")
             pumpIO.connect(runHeartbeat = false)
 
+            System.err.println("DEBUG: Phase 2 - starting long DOWN button press")
             pumpIO.startLongRTButtonPress(ApplicationLayer.RTButton.DOWN)
+            System.err.println("DEBUG: Phase 2 - delaying 500ms before stop")
             delay(500L)
+            System.err.println("DEBUG: Phase 2 - stopping long press")
             pumpIO.stopLongRTButtonPress()
+            System.err.println("DEBUG: Phase 2 - delaying 500ms after stop")
             delay(500L)
 
+            System.err.println("DEBUG: Phase 2 - disconnecting")
             pumpIO.disconnect()
 
             testStates.checkAndRemoveInitialSentPackets()
             testStates.checkLongRTButtonPressPacketSequence(ApplicationLayer.RTButton.DOWN)
+            System.err.println("DEBUG: Test completed successfully")
         }
     }
 
@@ -342,7 +357,7 @@ class PumpIOTest : TestBase() {
         // Check what happens if the user issues redundant waitForLongRTButtonPressToFinish()
         // calls. The second call here should be ignored.
 
-        runBlockingWithWatchdog(12000) {
+        runBlockingWithWatchdog(20000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
 

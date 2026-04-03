@@ -13,7 +13,7 @@ class CgmSourceTransaction(
     private val sensorInsertionTime: Long?
 ) : Transaction<CgmSourceTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         glucoseValues.forEach { glucoseValue ->
             val current = database.glucoseValueDao.findByTimestampAndSensor(glucoseValue.timestamp, glucoseValue.sourceSensor)

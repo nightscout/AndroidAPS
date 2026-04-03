@@ -3,7 +3,6 @@ package app.aaps.implementation.queue.commands
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
@@ -18,7 +17,6 @@ class CommandTempBasalPercent(
     private val percent: Int,
     private val durationInMinutes: Int,
     private val enforceNew: Boolean,
-    private val profile: Profile,
     private val tbrType: PumpSync.TemporaryBasalType,
     override val callback: Callback?,
 ) : Command {
@@ -40,7 +38,7 @@ class CommandTempBasalPercent(
             if (percent == 100)
                 activePlugin.activePump.cancelTempBasal(enforceNew)
             else
-                activePlugin.activePump.setTempBasalPercent(percent, durationInMinutes, profile, enforceNew, tbrType)
+                activePlugin.activePump.setTempBasalPercent(percent, durationInMinutes, enforceNew, tbrType)
         aapsLogger.debug(LTag.PUMPQUEUE, "Result percent: $percent durationInMinutes: $durationInMinutes success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()
     }

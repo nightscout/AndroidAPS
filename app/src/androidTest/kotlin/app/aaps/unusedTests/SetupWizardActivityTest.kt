@@ -13,8 +13,7 @@ class SetupWizardActivityTest {
         var mGrantPermissionRule: GrantPermissionRule =
             GrantPermissionRule.grant(
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                android.Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
             )
 
         @Before

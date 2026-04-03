@@ -10,7 +10,7 @@ class SyncPumpBolusTransaction(
     private val bolusType: Bolus.Type? // extra parameter because field is not nullable in Bolus.class
 ) : Transaction<SyncPumpBolusTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         bolus.interfaceIDs.pumpId ?: bolus.interfaceIDs.pumpType ?: bolus.interfaceIDs.pumpSerial ?: throw IllegalStateException("Some pump ID is null")
         val result = TransactionResult()
         val current = database.bolusDao.findByPumpIds(bolus.interfaceIDs.pumpId!!, bolus.interfaceIDs.pumpType!!, bolus.interfaceIDs.pumpSerial!!)

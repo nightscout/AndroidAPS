@@ -21,6 +21,7 @@ enum class LTag(val tag: String, val defaultValue: Boolean = true, val requiresR
     PUMP("PUMP"),
     PUMPBTCOMM("PUMPBTCOMM", defaultValue = true),
     PUMPCOMM("PUMPCOMM"),
+    PUMPEMULATOR("PUMPEMULATOR", defaultValue = false),
     PUMPQUEUE("PUMPQUEUE"),
     PROFILE("PROFILE"),
     SMS("SMS"),

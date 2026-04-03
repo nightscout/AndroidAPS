@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -45,7 +46,8 @@ import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
-import org.json.JSONObject
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -70,7 +72,8 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val bgQualityCheck: BgQualityCheck,
     private val tddCalculator: TddCalculator,
-    private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB
+    private val glucoseStatusCalculatorSMB: GlucoseStatusCalculatorSMB,
+    private val ch: ConcentrationHelper
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -95,8 +98,8 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
     // last values
     override var lastAPSRun: Long = 0
     override val algorithm = APSResult.Algorithm.SMB
-    override fun configuration(): JSONObject = JSONObject()
-    override fun applyConfiguration(configuration: JSONObject) {
+    override fun configuration(): JsonObject = JsonObject(emptyMap())
+    override fun applyConfiguration(configuration: JsonObject) {
     }
 
     override var lastAPSResult: DetermineBasalResultSMBFromJS? = null
@@ -121,13 +124,13 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
         val smbAlwaysEnabled = preferences.get(BooleanKey.ApsUseSmbAlways)
-        val advancedFiltering = activePlugin.activeBgSource.advancedFilteringSupported()
+        val advancedFiltering = runBlocking { persistenceLayer.isAdvancedFilteringSupported() }
         preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithCob.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
         preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithLowTt.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
         preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbAfterCarbs.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
     }
 
-    override fun invoke(initiator: String, tempBasalFallback: Boolean) {
+    override suspend fun invoke(initiator: String, tempBasalFallback: Boolean) {
         aapsLogger.debug(LTag.APS, "invoke from $initiator tempBasalFallback: $tempBasalFallback")
         lastAPSResult = null
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
@@ -202,7 +205,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                     HardLimits.LIMIT_TEMP_TARGET_BG[1]
                 )
         }
-        if (!hardLimits.checkHardLimits(profile.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
+        if (!hardLimits.checkHardLimits(profile.iCfg.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
         if (!hardLimits.checkHardLimits(
                 profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()),
                 app.aaps.core.ui.R.string.profile_carbs_ratio_value,
@@ -212,7 +215,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
         ) return
         if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
-        if (!hardLimits.checkHardLimits(pump.baseBasalRate, app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
+        if (!hardLimits.checkHardLimits(ch.fromPump(pump.baseBasalRate), app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {
             val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
@@ -273,7 +276,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
         provideDetermineBasalAdapter().also { determineBasalAdapterSMBJS ->
             determineBasalAdapterSMBJS.setData(
                 profile, maxIob, maxBasal, minBg, maxBg, targetBg,
-                activePlugin.activePump.baseBasalRate,
+                ch.fromPump(activePlugin.activePump.baseBasalRate),
                 iobArray,
                 glucoseStatus,
                 iobCobCalculator.getMealDataWithWaitingForCalculationFinish(),
@@ -309,7 +312,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                 //lastDetermineBasalAdapter = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMBFromJS
                 lastAPSRun = now
-                // if (config.isUnfinishedMode())
+                // if (config.isEnabled(ExternalOptions.UNFINISHED_MODE))
                 // importExportPrefs.exportApsResult(
                 //     when (determineBasalAdapterSMBJS) {
                 //         is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName

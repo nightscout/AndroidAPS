@@ -13,8 +13,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -55,7 +54,7 @@ class DexcomWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When plugin disabled then return success`() {
-        runBlocking {
+        runTest {
             whenever(dexcomPlugin.isEnabled()).thenReturn(false)
 
             val result = worker.doWork()
@@ -68,10 +67,10 @@ class DexcomWorkerTest : TestBaseWithProfile() {
     @Test
     fun `When plugin enabled then insert G6 data`() {
         val timestamp = (now - 60000) / 1000L
-        runBlocking {
+        runTest {
             whenever(dexcomPlugin.isEnabled()).thenReturn(true)
             whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             val bundle = BundleMock.mocked().apply {
                 putString("sensorType", "G6")
                 putBundle("glucoseValues", BundleMock.mocked().apply {
@@ -114,10 +113,10 @@ class DexcomWorkerTest : TestBaseWithProfile() {
     @Test
     fun `When plugin enabled then insert G7 data with too old calibrations and insertions`() {
         val timestamp = (now - 60000) / 1000L
-        runBlocking {
+        runTest {
             whenever(dexcomPlugin.isEnabled()).thenReturn(true)
             whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             val bundle = BundleMock.mocked().apply {
                 putString("sensorType", "G7")
                 putBundle("glucoseValues", BundleMock.mocked().apply {
@@ -155,10 +154,10 @@ class DexcomWorkerTest : TestBaseWithProfile() {
     @Test
     fun `When plugin enabled then insert unknown Dexcom data`() {
         val timestamp = (now - 60000) / 1000L
-        runBlocking {
+        runTest {
             whenever(dexcomPlugin.isEnabled()).thenReturn(true)
             whenever(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(true)
-            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+            whenever(persistenceLayer.insertCgmSourceData(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
             val bundle = BundleMock.mocked().apply {
                 putString("sensorType", "G9")
                 putBundle("glucoseValues", BundleMock.mocked().apply {
@@ -188,7 +187,7 @@ class DexcomWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When bundle is missing then return failure`() {
-        runBlocking {
+        runTest {
             whenever(dexcomPlugin.isEnabled()).thenReturn(true)
             whenever(dataWorkerStorage.pickupBundle(1L)).thenReturn(null)
 
@@ -200,7 +199,7 @@ class DexcomWorkerTest : TestBaseWithProfile() {
 
     @Test
     fun `When glucoseValues are missing then return failure`() {
-        runBlocking {
+        runTest {
             whenever(dexcomPlugin.isEnabled()).thenReturn(true)
             val bundle = BundleMock.mocked().apply {
                 putString("sensorType", "G6")

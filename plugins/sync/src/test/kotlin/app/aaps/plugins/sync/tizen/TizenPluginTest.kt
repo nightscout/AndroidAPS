@@ -12,12 +12,14 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyBoolean
@@ -34,22 +36,23 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
 
+    private val bolusProgressData = BolusProgressData()
     private lateinit var sut: TizenPlugin
 
     @BeforeEach
     fun setUp() {
         sut = TizenPlugin(
             aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, preferences, processedDeviceStatusData,
-            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, pumpStatusProvider
+            loop, activePlugin, insulin, receiverStatusStore, config, glucoseStatusProvider, pumpStatusProvider, bolusProgressData
         )
         whenever(iobCobCalculator.ads).thenReturn(autosensDataStore)
         whenever(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        whenever(profileFunction.getProfileName()).thenReturn("TestProfile")
-        whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
-        whenever(iobCobCalculator.getCobInfo("broadcast")).thenReturn(CobInfo(1000, 100.0, 10.0))
-        whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
+        runBlocking { whenever(profileFunction.getProfileName()).thenReturn("TestProfile") }
+        runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis())) }
+        runBlocking { whenever(iobCobCalculator.getCobInfo("broadcast")).thenReturn(CobInfo(1000, 100.0, 10.0)) }
+        runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis())) }
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong()))
             .thenReturn(TB(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TB.Type.NORMAL))
         whenever(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
@@ -66,13 +69,16 @@ internal class TizenPluginTest : TestBaseWithProfile() {
             it.clockEnacted = 1000L
             it.enacted = RT(runningDynamicIsf = false)
         })
-        whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true))
+        runBlocking { whenever(pumpStatusProvider.shortStatus(anyBoolean())).thenReturn(testPumpPlugin.pumpSpecificShortStatus(true)) }
+        whenever(insulin.iCfg).thenReturn(someICfg)
     }
 
     @Test
     fun prepareDataTestAPS() {
         whenever(config.APS).thenReturn(true)
-        val event = EventOverviewBolusProgress(status = "Some status", percent = 100)
+        bolusProgressData.start(insulin = 1.0, isSMB = false)
+        bolusProgressData.updateProgress(100, "Some status", 1.0)
+        val event = EventLoopUpdateGui()
         val bundle = BundleMock.mocked()
         sut.prepareData(event, bundle)
         assertThat(bundle.containsKey("progressPercent")).isTrue()
@@ -111,7 +117,9 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     @Test
     fun prepareDataTestAAPSClient() {
         whenever(config.APS).thenReturn(false)
-        val event = EventOverviewBolusProgress(status = "Some status", percent = 100)
+        bolusProgressData.start(insulin = 1.0, isSMB = false)
+        bolusProgressData.updateProgress(100, "Some status", 1.0)
+        val event = EventLoopUpdateGui()
         val bundle = BundleMock.mocked()
         sut.prepareData(event, bundle)
         assertThat(bundle.containsKey("progressPercent")).isTrue()

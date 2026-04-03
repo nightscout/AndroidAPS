@@ -1,19 +1,19 @@
 package app.aaps.pump.danars.comm
 
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BolusProgressData
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
+import kotlin.math.min
 
 class DanaRSPacketNotifyDeliveryRateDisplay @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
-    private val rxBus: RxBus,
+    private val ch: ConcentrationHelper,
+    private val bolusProgressData: BolusProgressData,
     private val danaPump: DanaPump
 ) : DanaRSPacket() {
 
@@ -25,9 +25,13 @@ class DanaRSPacketNotifyDeliveryRateDisplay @Inject constructor(
     override fun handleMessage(data: ByteArray) {
         val deliveredInsulin = byteArrayToInt(getBytes(data, DATA_START, 2)) / 100.0
         danaPump.bolusProgressLastTimeStamp = System.currentTimeMillis()
-        BolusProgressData.delivered = deliveredInsulin
         failed = deliveredInsulin < danaPump.bolusingDetailedBolusInfo!!.insulin
-        rxBus.send(EventOverviewBolusProgress(rh, delivered = deliveredInsulin, id = danaPump.bolusingDetailedBolusInfo?.id))
+        val isPriming = bolusProgressData.state.value?.isPriming == true
+        val insulin = bolusProgressData.state.value?.insulin ?: 0.0
+        val delivered = ch.fromPump(PumpInsulin(deliveredInsulin), isPriming)
+        val percent = if (insulin > 0) min((delivered / insulin * 100).toInt(), 100) else 0
+        val status = ch.bolusProgressString(PumpInsulin(deliveredInsulin), isPriming)
+        bolusProgressData.updateProgress(percent, status, deliveredInsulin)
         aapsLogger.debug(LTag.PUMPCOMM, "Delivered insulin so far: $deliveredInsulin")
     }
 

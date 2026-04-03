@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -43,14 +44,16 @@ class CommandCancelTempBasal(
             cancel tbr anyway
          */
         if (autoForced && !r.success) {
-            if (pumpSync.expectedPumpState().temporaryBasal != null) {
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    dateUtil.now(),
-                    dateUtil.now(),
-                    activePlugin.activePump.pumpDescription.pumpType,
-                    activePlugin.activePump.serialNumber(),
-                    ignorePumpIds = true
-                )
+            if (runBlocking { pumpSync.expectedPumpState() }.temporaryBasal != null) {
+                runBlocking {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        dateUtil.now(),
+                        dateUtil.now(),
+                        activePlugin.activePump.pumpDescription.pumpType,
+                        activePlugin.activePump.serialNumber(),
+                        ignorePumpIds = true
+                    )
+                }
                 aapsLogger.debug(LTag.PUMPQUEUE, "Stopping TBR from suspended pump (auto-forced)")
             }
             r.success(true).enacted(false)

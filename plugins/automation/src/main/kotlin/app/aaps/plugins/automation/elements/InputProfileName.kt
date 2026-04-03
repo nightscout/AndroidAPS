@@ -6,15 +6,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
-import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 
-class InputProfileName(private val rh: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "", private val addActive: Boolean = false) : Element {
+class InputProfileName(private val rh: ResourceHelper, private val localProfileManager: LocalProfileManager, val name: String = "", private val addActive: Boolean = false) : Element {
 
     var value: String = name
 
     override fun addToLayout(root: LinearLayout) {
-        val profileStore = activePlugin.activeProfileSource.profile ?: return
+        val profileStore = localProfileManager.profile ?: return
         val profileList = profileStore.getProfileList()
         if (addActive)
             profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))

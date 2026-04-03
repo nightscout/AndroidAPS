@@ -1,8 +1,8 @@
 package app.aaps.pump.danarv2.services
 
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -12,6 +12,7 @@ import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.danarv2.comm.MessageHashTableRv2
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -26,7 +27,6 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var messageHashTableRv2: MessageHashTableRv2
     @Mock lateinit var profile: Profile
-    @Mock lateinit var pumpEnactResult: PumpEnactResult
     @Mock lateinit var danaPump: DanaPump
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var uiInteraction: UiInteraction
@@ -53,11 +53,11 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
         danaRv2ExecutionService.danaRv2Plugin = danaRv2Plugin
         danaRv2ExecutionService.commandQueue = commandQueue
         danaRv2ExecutionService.messageHashTableRv2 = messageHashTableRv2
-        danaRv2ExecutionService.profileFunction = profileFunction
+        //danaRv2ExecutionService.profileFunction = profileFunction
 
         `when`(rh.gs(anyInt())).thenReturn("test")
         `when`(rh.gs(anyInt(), any())).thenReturn("test")
-        `when`(activePlugin.activePump).thenReturn(danaRv2Plugin)
+        `when`(activePlugin.activePumpInternal).thenReturn(danaRv2Plugin)
         `when`(danaRv2Plugin.pumpDescription).thenReturn(mockPumpDescription())
     }
 
@@ -142,7 +142,7 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
 
     @Test
     fun testUpdateBasalsInPump_notConnected() {
-        `when`(profileFunction.getProfile()).thenReturn(profile)
+        runBlocking { `when`(profileFunction.getProfile()).thenReturn(effectiveProfile) }
         `when`(profile.getBasal()).thenReturn(1.0)
 
         val result = danaRv2ExecutionService.updateBasalsInPump(profile)
@@ -158,8 +158,8 @@ class DanaRv2ExecutionServiceTest : TestBaseWithProfile() {
         assertThat(result.success).isFalse()
     }
 
-    private fun mockPumpDescription(): app.aaps.core.data.pump.defs.PumpDescription {
-        return app.aaps.core.data.pump.defs.PumpDescription().apply {
+    private fun mockPumpDescription(): PumpDescription {
+        return PumpDescription().apply {
             basalStep = 0.01
         }
     }

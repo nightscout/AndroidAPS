@@ -1,20 +1,22 @@
 package app.aaps.plugins.sync.openhumans.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 internal class OHLoginViewModel @Inject constructor(
     private val plugin: OpenHumansUploaderPlugin
-) : ViewModel(), CoroutineScope by MainScope() {
+) : ViewModel() {
 
-    private val _state = MutableLiveData(State.WELCOME)
-    val state = _state as LiveData<State>
+    private val _state = MutableStateFlow(State.WELCOME)
+    val state: StateFlow<State> = _state.asStateFlow()
 
     private var bearerToken = ""
 
@@ -49,7 +51,7 @@ internal class OHLoginViewModel @Inject constructor(
 
     fun finish() {
         _state.value = State.FINISHING
-        launch {
+        viewModelScope.launch {
             try {
                 plugin.login(bearerToken)
                 _state.value = State.DONE
@@ -57,11 +59,6 @@ internal class OHLoginViewModel @Inject constructor(
                 _state.value = State.CONSENT
             }
         }
-    }
-
-    override fun onCleared() {
-        cancel()
-        super.onCleared()
     }
 
     enum class State {

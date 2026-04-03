@@ -74,21 +74,4 @@
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
 
-
-    <plurals name="duration_days">
-        <item quantity="one">%1$d day</item>
-        <item quantity="other">%1$d days</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d hour</item>
-        <item quantity="other">%1$d hours</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d hour ago</item>
-        <item quantity="other">%1$d hours ago</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d day ago</item>
-        <item quantity="other">%1$d days ago</item>
-    </plurals>
 </resources>

@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.HasAndroidInjector
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -30,6 +31,7 @@ class CommandSMBBolus(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var bolusProgressData: BolusProgressData
 
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
@@ -41,7 +43,7 @@ class CommandSMBBolus(
 
     override fun execute() {
         val r: PumpEnactResult
-        val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
+        val lastBolusTime = runBlocking { persistenceLayer.getNewestBolus() }?.timestamp ?: 0L
         aapsLogger.debug(LTag.PUMPQUEUE, "Last bolus: $lastBolusTime ${dateUtil.dateAndTimeAndSecondsString(lastBolusTime)}")
         if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
@@ -54,7 +56,7 @@ class CommandSMBBolus(
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()
-        BolusProgressData.bolusEnded = true
+        bolusProgressData.clear()
     }
 
     override fun status(): String = rh.gs(app.aaps.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)
@@ -63,5 +65,6 @@ class CommandSMBBolus(
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
         callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
+        bolusProgressData.clear()
     }
 }

@@ -8,6 +8,7 @@ fun app.aaps.database.entities.ValueWithUnit.fromDb(): app.aaps.core.data.ue.Val
         is app.aaps.database.entities.ValueWithUnit.Gram                  -> ValueWithUnit.Gram(value)
         is app.aaps.database.entities.ValueWithUnit.Hour                  -> ValueWithUnit.Hour(value)
         is app.aaps.database.entities.ValueWithUnit.Insulin               -> ValueWithUnit.Insulin(value)
+        is app.aaps.database.entities.ValueWithUnit.InsulinConcentration  -> ValueWithUnit.InsulinConcentration(value)
         is app.aaps.database.entities.ValueWithUnit.Mgdl                  -> ValueWithUnit.Mgdl(value)
         is app.aaps.database.entities.ValueWithUnit.Minute                -> ValueWithUnit.Minute(value)
         is app.aaps.database.entities.ValueWithUnit.Mmoll                 -> ValueWithUnit.Mmoll(value)
@@ -27,24 +28,25 @@ fun app.aaps.database.entities.ValueWithUnit.fromDb(): app.aaps.core.data.ue.Val
 
 fun app.aaps.core.data.ue.ValueWithUnit.toDb(): app.aaps.database.entities.ValueWithUnit =
     when (this) {
-        is ValueWithUnit.Gram         -> app.aaps.database.entities.ValueWithUnit.Gram(value)
-        is ValueWithUnit.Hour         -> app.aaps.database.entities.ValueWithUnit.Hour(value)
-        is ValueWithUnit.Insulin      -> app.aaps.database.entities.ValueWithUnit.Insulin(value)
-        is ValueWithUnit.Mgdl         -> app.aaps.database.entities.ValueWithUnit.Mgdl(value)
-        is ValueWithUnit.Minute       -> app.aaps.database.entities.ValueWithUnit.Minute(value)
-        is ValueWithUnit.Mmoll        -> app.aaps.database.entities.ValueWithUnit.Mmoll(value)
-        is ValueWithUnit.RMMode       -> app.aaps.database.entities.ValueWithUnit.RunningModeMode(value.toDb())
-        is ValueWithUnit.Percent      -> app.aaps.database.entities.ValueWithUnit.Percent(value)
-        is ValueWithUnit.SimpleInt    -> app.aaps.database.entities.ValueWithUnit.SimpleInt(value)
-        is ValueWithUnit.SimpleString -> app.aaps.database.entities.ValueWithUnit.SimpleString(value)
-        is ValueWithUnit.TEMeterType  -> app.aaps.database.entities.ValueWithUnit.TherapyEventMeterType(value.toDb())
-        is ValueWithUnit.TETTReason   -> app.aaps.database.entities.ValueWithUnit.TherapyEventTTReason(value.toDb())
-        is ValueWithUnit.TEType       -> app.aaps.database.entities.ValueWithUnit.TherapyEventType(value.toDb())
-        is ValueWithUnit.Timestamp    -> app.aaps.database.entities.ValueWithUnit.Timestamp(value)
-        is ValueWithUnit.UnitPerHour  -> app.aaps.database.entities.ValueWithUnit.UnitPerHour(value)
-        is ValueWithUnit.TEArrow      -> app.aaps.database.entities.ValueWithUnit.TherapyEventArrow(value.toDb())
-        is ValueWithUnit.TELocation   -> app.aaps.database.entities.ValueWithUnit.TherapyEventLocation(value.toDb())
-        is ValueWithUnit.UNKNOWN      -> app.aaps.database.entities.ValueWithUnit.UNKNOWN
+        is ValueWithUnit.Gram                 -> app.aaps.database.entities.ValueWithUnit.Gram(value)
+        is ValueWithUnit.Hour                 -> app.aaps.database.entities.ValueWithUnit.Hour(value)
+        is ValueWithUnit.Insulin              -> app.aaps.database.entities.ValueWithUnit.Insulin(value)
+        is ValueWithUnit.InsulinConcentration -> app.aaps.database.entities.ValueWithUnit.InsulinConcentration(value)
+        is ValueWithUnit.Mgdl                 -> app.aaps.database.entities.ValueWithUnit.Mgdl(value)
+        is ValueWithUnit.Minute               -> app.aaps.database.entities.ValueWithUnit.Minute(value)
+        is ValueWithUnit.Mmoll                -> app.aaps.database.entities.ValueWithUnit.Mmoll(value)
+        is ValueWithUnit.RMMode               -> app.aaps.database.entities.ValueWithUnit.RunningModeMode(value.toDb())
+        is ValueWithUnit.Percent              -> app.aaps.database.entities.ValueWithUnit.Percent(value)
+        is ValueWithUnit.SimpleInt            -> app.aaps.database.entities.ValueWithUnit.SimpleInt(value)
+        is ValueWithUnit.SimpleString         -> app.aaps.database.entities.ValueWithUnit.SimpleString(value)
+        is ValueWithUnit.TEMeterType          -> app.aaps.database.entities.ValueWithUnit.TherapyEventMeterType(value.toDb())
+        is ValueWithUnit.TETTReason           -> app.aaps.database.entities.ValueWithUnit.TherapyEventTTReason(value.toDb())
+        is ValueWithUnit.TEType               -> app.aaps.database.entities.ValueWithUnit.TherapyEventType(value.toDb())
+        is ValueWithUnit.Timestamp            -> app.aaps.database.entities.ValueWithUnit.Timestamp(value)
+        is ValueWithUnit.UnitPerHour          -> app.aaps.database.entities.ValueWithUnit.UnitPerHour(value)
+        is ValueWithUnit.TEArrow              -> app.aaps.database.entities.ValueWithUnit.TherapyEventArrow(value.toDb())
+        is ValueWithUnit.TELocation           -> app.aaps.database.entities.ValueWithUnit.TherapyEventLocation(value.toDb())
+        is ValueWithUnit.UNKNOWN              -> app.aaps.database.entities.ValueWithUnit.UNKNOWN
     }
 
 fun List<app.aaps.database.entities.ValueWithUnit>.fromDb(): List<app.aaps.core.data.ue.ValueWithUnit> =

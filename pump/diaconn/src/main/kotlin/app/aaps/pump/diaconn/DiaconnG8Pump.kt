@@ -8,6 +8,8 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -42,7 +44,13 @@ class DiaconnG8Pump @Inject constructor(
     var injectionBlockRemainAmount: Double = 0.0
     var injectionBlockProcess: Int = 0
     var injectionBlockGrade: Int = 0
-    var lastConnection: Long = 0
+    val lastConnectionFlow: StateFlow<Long>
+        field = MutableStateFlow(0L)
+    var lastConnection: Long
+        get() = lastConnectionFlow.value
+        set(value) {
+            lastConnectionFlow.value = value
+        }
     var lastSettingsRead: Long = 0
     var mealLimitTime: Int = 0
 
@@ -64,8 +72,22 @@ class DiaconnG8Pump @Inject constructor(
     var iob = 0.0
 
     var bolusBlocked = false
-    var lastBolusTime: Long = 0
-    var lastBolusAmount = 0.0
+
+    val lastBolusTimeFlow: StateFlow<Long?>
+        field = MutableStateFlow(null)
+    var lastBolusTime: Long?
+        get() = lastBolusTimeFlow.value
+        set(value) {
+            lastBolusTimeFlow.value = value
+        }
+
+    val lastBolusAmountFlow: StateFlow<Double?>
+        field = MutableStateFlow(null)
+    var lastBolusAmount: Double?
+        get() = lastBolusAmountFlow.value
+        set(value) {
+            lastBolusAmountFlow.value = value
+        }
 
     /*
      * TEMP BASALS
@@ -86,15 +108,6 @@ class DiaconnG8Pump @Inject constructor(
         }
     val tempBasalRemainingMin: Int
         get() = max(T.msecs(tempBasalStart + tempBasalDuration - dateUtil.now()).mins().toInt(), 0)
-
-    fun temporaryBasalToString(): String {
-        if (!isTempBasalInProgress) return ""
-
-        val passedMin = ((min(dateUtil.now(), tempBasalStart + tempBasalDuration) - tempBasalStart) / 60.0 / 1000).roundToInt()
-        return tempBasalAbsoluteRate.toString() + "U/h @" +
-            dateUtil.timeString(tempBasalStart) +
-            " " + passedMin + "/" + T.msecs(tempBasalDuration).mins() + "'"
-    }
 
     fun fromTemporaryBasal(tbr: PumpSync.PumpState.TemporaryBasal?) {
         if (tbr == null) {
@@ -160,7 +173,7 @@ class DiaconnG8Pump @Inject constructor(
         get() = T.msecs(max(0, dateUtil.now() - extendedBolusStart)).mins().toInt()
     val extendedBolusRemainingMinutes: Int
         get() = max(T.msecs(extendedBolusStart + extendedBolusDuration - dateUtil.now()).mins().toInt(), 0)
-    private val extendedBolusDurationInMinutes: Int
+    val extendedBolusDurationInMinutes: Int
         get() = T.msecs(extendedBolusDuration).mins().toInt()
 
     var extendedBolusAbsoluteRate: Double
@@ -168,15 +181,6 @@ class DiaconnG8Pump @Inject constructor(
         set(rate) {
             extendedBolusAmount = rate * extendedBolusDuration / T.hours(1).msecs()
         }
-
-    fun extendedBolusToString(): String {
-        if (!isExtendedInProgress) return ""
-        //return "E "+ decimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
-        //     " " + extendedBolusPassedMinutes + "/" + extendedBolusMinutes + "'"
-        return "E " + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
-            dateUtil.timeString(extendedBolusStart) +
-            " " + extendedBolusPassedMinutes + "/" + extendedBolusDurationInMinutes + "'"
-    }
 
     fun fromExtendedBolus(eb: PumpSync.PumpState.ExtendedBolus?) {
         if (eb == null) {
@@ -262,14 +266,29 @@ class DiaconnG8Pump @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 Pump reset")
         lastConnection = 0
         lastSettingsRead = 0
+        lastBolusTime = null
+        lastBolusAmount = null
     }
 
     // G8 pump
     var result: Int = 0 // 조회결과
 
     // 1. pump setting info
-    var systemRemainInsulin = 0.0 // 인슐린 잔량
-    var systemRemainBattery: Int? = null // 배터리 잔량(0~100%)
+    val systemRemainInsulinFlow: StateFlow<Double>
+        field = MutableStateFlow(0.0)
+    var systemRemainInsulin: Double // 인슐린 잔량
+        get() = systemRemainInsulinFlow.value
+        set(value) {
+            systemRemainInsulinFlow.value = value
+        }
+
+    val systemRemainBatteryFlow: StateFlow<Int?>
+        field = MutableStateFlow(null)
+    var systemRemainBattery: Int? // 배터리 잔량(0~100%)
+        get() = systemRemainBatteryFlow.value
+        set(value) {
+            systemRemainBatteryFlow.value = value
+        }
     var systemBasePattern = 0 // 기저주입 패턴(0=없음, 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2)
     var systemTbStatus = 0 // 임시기저 상태(1=임시기저 중, 2=임시기저 해제)
     var systemInjectionMealStatus = 0 // 식사주입 상태(1=주입중, 2=주입상태아님)

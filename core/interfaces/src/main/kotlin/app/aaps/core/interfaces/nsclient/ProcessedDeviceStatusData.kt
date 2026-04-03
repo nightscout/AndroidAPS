@@ -22,7 +22,7 @@ interface ProcessedDeviceStatusData {
         var status = "N/A"
         var reservoir = 0.0
         var reservoirDisplayOverride = ""
-        var extended: Spanned? = null
+        var extended: String? = null
         var activeProfileName: String? = null
     }
 
@@ -56,12 +56,15 @@ interface ProcessedDeviceStatusData {
 
     // test warning level // color
     fun pumpStatus(nsSettingsStatus: NSSettingsStatus): Spanned
-    val extendedPumpStatus: Spanned
-    val extendedOpenApsStatus: Spanned
+    fun pumpStatusHtml(nsSettingsStatus: NSSettingsStatus): String
+    val extendedPumpStatusHtml: String
+    val extendedOpenApsStatusHtml: String
     val openApsStatus: Spanned
+    val openApsStatusHtml: String
     val openApsTimestamp: Long
     fun getAPSResult(): APSResult?
     val uploaderStatus: String
     val uploaderStatusSpanned: Spanned
-    val extendedUploaderStatus: Spanned
+    val uploaderStatusHtml: String
+    val extendedUploaderStatusHtml: String
 }

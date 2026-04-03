@@ -1,7 +1,9 @@
 package app.aaps.core.nssdk.localmodel.treatment
 
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class NSTemporaryTarget(
     override var date: Long?,
     override val device: String? = null,

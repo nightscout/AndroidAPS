@@ -2,10 +2,12 @@ package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
@@ -20,17 +22,20 @@ import javax.inject.Inject
 
 class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var insulin: Insulin
+    @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
 
-    var inputProfileName: InputProfileName = InputProfileName(rh, activePlugin, "")
+    var inputProfileName: InputProfileName = InputProfileName(rh, localProfileManager, "")
+    val iCfg: ICfg
+        get() = insulin.iCfg         // use Current running iCfg, changing iCfg with Automation not allowed
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
     @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         val activeProfileName = profileFunction.getProfileName()
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
@@ -48,7 +53,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             callback.result(pumpEnactResultProvider.get().success(true).comment(R.string.alreadyset)).run()
             return
         }
-        val profileStore = activePlugin.activeProfileSource.profile ?: return
+        val profileStore = localProfileManager.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
             callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.notexists)).run()
@@ -66,9 +71,10 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             listValues = listOf(
                 ValueWithUnit.SimpleString(inputProfileName.value),
                 ValueWithUnit.Percent(100)
-            )
+            ),
+            iCfg = iCfg
         )
-        callback.result(pumpEnactResultProvider.get().success(result).comment(app.aaps.core.ui.R.string.ok)).run()
+        callback.result(pumpEnactResultProvider.get().success(result != null).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun generateDialog(root: LinearLayout) {
@@ -93,5 +99,5 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         return this
     }
 
-    override fun isValid(): Boolean = activePlugin.activeProfileSource.profile?.getSpecificProfile(inputProfileName.value) != null
+    override fun isValid(): Boolean = localProfileManager.profile?.getSpecificProfile(inputProfileName.value) != null
 }

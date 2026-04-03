@@ -12,7 +12,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import kotlin.test.assertIs
 
-@Suppress("SpellCheckingInspection")
 internal class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
 
     @Test

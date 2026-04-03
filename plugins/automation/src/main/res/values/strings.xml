@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_google_apis_android" translatable="false">AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM</string>
-
     <string name="automation_short">Auto</string>
     <string name="automation">Automation</string>
     <string name="automation_description">User defined automation tasks</string>
@@ -152,5 +150,14 @@
     <string name="newSmbMode">New SMB mode:</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
+
+    <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Pick from map</string>
+    <string name="tap_to_select_location">Tap on the map to select a location</string>
+    <string name="selected_coords">Selected: %1$.6f, %2$.6f</string>
+    <!-- Permission rationales -->
+    <string name="permission_location_title">Location</string>
+    <string name="permission_location_description">Needed for location-based automation triggers and WiFi network identification</string>
+    <string name="permission_background_location_description">Needed for automation triggers to work when the app is in the background</string>
 
 </resources>

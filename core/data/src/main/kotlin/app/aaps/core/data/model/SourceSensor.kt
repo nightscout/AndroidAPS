@@ -26,6 +26,7 @@ enum class SourceSensor(val text: String) {
     GLUNOVO_NATIVE("Glunovo"),
     INTELLIGO_NATIVE("Intelligo"),
     MM_600_SERIES("MM600Series"),
+    MM_SIMPLERA("Simplera"),
     OTTAI("Ottai"),
     SIBIONIC("SI App"),
     SINO("Sino App"),

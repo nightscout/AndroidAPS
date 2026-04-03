@@ -2,10 +2,12 @@ package app.aaps.pump.insight.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.pump.insight.R
 
 enum class InsightIntKey(
     override val key: String,
     override val defaultValue: Int,
+    override val titleResId: Int = 0,
     override val min: Int = Int.MIN_VALUE,
     override val max: Int = Int.MAX_VALUE,
     override val calculatedDefaultValue: Boolean = false,
@@ -20,7 +22,7 @@ enum class InsightIntKey(
     override val exportable: Boolean = true
 ) : IntPreferenceKey {
 
-    MinRecoveryDuration("insight_min_recovery_duration", 5),
-    MaxRecoveryDuration("insight_max_recovery_duration", 20),
-    DisconnectDelay("insight_disconnect_delay", 5),
+    MinRecoveryDuration("insight_min_recovery_duration", 5, titleResId = R.string.min_recovery_duration),
+    MaxRecoveryDuration("insight_max_recovery_duration", 20, titleResId = R.string.max_recovery_duration),
+    DisconnectDelay("insight_disconnect_delay", 5, titleResId = R.string.disconnect_delay),
 }

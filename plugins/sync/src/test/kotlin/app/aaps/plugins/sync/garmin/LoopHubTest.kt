@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.EffectiveProfile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -31,7 +31,10 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.shared.tests.TestBase
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -68,6 +71,7 @@ class LoopHubTest : TestBase() {
 
     private lateinit var loopHub: LoopHubImpl
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
+    private val testScope = CoroutineScope(Dispatchers.Unconfined)
 
     @BeforeEach
     fun setup() {
@@ -78,7 +82,7 @@ class LoopHubTest : TestBase() {
         }
         loopHub = LoopHubImpl(
             aapsLogger, commandQueue, constraints, iobCobCalculator, loop,
-            profileFunction, profileUtil, persistenceLayer, userEntryLogger, preferences, processedTbrEbData
+            profileFunction, profileUtil, persistenceLayer, userEntryLogger, preferences, processedTbrEbData, testScope
         )
         loopHub.clock = clock
     }
@@ -96,17 +100,17 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testCurrentProfile() {
-        val profile = mock<Profile>()
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        val profile = mock<EffectiveProfile>()
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
         assertEquals(profile, loopHub.currentProfile)
-        verify(profileFunction, times(1)).getProfile()
+        runBlocking { verify(profileFunction, times(1)).getProfile() }
     }
 
     @Test
     fun testCurrentProfileName() {
-        whenever(profileFunction.getProfileName()).thenReturn("pro")
+        runBlocking { whenever(profileFunction.getProfileName()).thenReturn("pro") }
         assertEquals("pro", loopHub.currentProfileName)
-        verify(profileFunction, times(1)).getProfileName()
+        runBlocking { verify(profileFunction, times(1)).getProfileName() }
     }
 
     @Test
@@ -144,25 +148,25 @@ class LoopHubTest : TestBase() {
     @Test
     fun testInsulinOnBoard() {
         val iobTotal = IobTotal(time = 0).apply { iob = 23.9 }
-        whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal)
+        runBlocking { whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal) }
         assertEquals(23.9, loopHub.insulinOnboard, 1e-10)
-        verify(iobCobCalculator, times(1)).calculateIobFromBolus()
+        runBlocking { verify(iobCobCalculator, times(1)).calculateIobFromBolus() }
     }
 
     @Test
     fun testBasalOnBoard() {
         val iobBasal = IobTotal(time = 0).apply { basaliob = 23.9 }
-        whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal)
+        runBlocking { whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal) }
         assertEquals(23.9, loopHub.insulinBasalOnboard, 1e-10)
-        verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended()
+        runBlocking { verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended() }
     }
 
     @Test
     fun testCarbsOnBoard() {
         val cobInfo = CobInfo(0, 12.0, 0.0)
-        whenever(iobCobCalculator.getCobInfo(anyString())).thenReturn(cobInfo)
+        runBlocking { whenever(iobCobCalculator.getCobInfo(anyString())).thenReturn(cobInfo) }
         assertEquals(12.0, loopHub.carbsOnboard)
-        verify(iobCobCalculator, times(1)).getCobInfo(anyString())
+        runBlocking { verify(iobCobCalculator, times(1)).getCobInfo(anyString()) }
     }
 
     @Test
@@ -189,7 +193,7 @@ class LoopHubTest : TestBase() {
     )
 
     @Test
-    fun testIsTemporaryProfileTrue() {
+    fun testIsTemporaryProfileTrue() = runTest {
         val eps = effectiveProfileSwitch(10)
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(eps)
         assertEquals(true, loopHub.isTemporaryProfile)
@@ -197,7 +201,7 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testIsTemporaryProfileFalse() {
+    fun testIsTemporaryProfileFalse() = runTest {
         val eps = effectiveProfileSwitch(0)
         whenever(persistenceLayer.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(eps)
         assertEquals(false, loopHub.isTemporaryProfile)
@@ -206,55 +210,56 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testTemporaryBasal() {
-        val profile = mock<Profile>()
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        val profile = mock<EffectiveProfile>()
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
         val tb = mock<TB> {
             on { isAbsolute }.thenReturn(false)
             on { rate }.thenReturn(45.0)
         }
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())).thenReturn(tb)
         assertEquals(0.45, loopHub.temporaryBasal, 1e-6)
-        verify(profileFunction, times(1)).getProfile()
+        runBlocking { verify(profileFunction, times(1)).getProfile() }
     }
 
     @Test
     fun testTemporaryBasalAbsolute() {
-        val profile = mock<Profile> {
+        val profile = mock<EffectiveProfile> {
             onGeneric { getBasal(clock.millis()) }.thenReturn(2.0)
         }
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
         val tb = mock<TB> {
             on { isAbsolute }.thenReturn(true)
             on { rate }.thenReturn(0.9)
         }
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())).thenReturn(tb)
         assertEquals(0.45, loopHub.temporaryBasal, 1e-6)
-        verify(profileFunction, times(1)).getProfile()
+        runBlocking { verify(profileFunction, times(1)).getProfile() }
     }
 
     @Test
     fun testTemporaryBasalNoRun() {
-        val profile = mock<Profile>()
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        val profile = mock<EffectiveProfile>()
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
         whenever(processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())).thenReturn(null)
         assertTrue(loopHub.temporaryBasal.isNaN())
-        verify(profileFunction, times(1)).getProfile()
+        runBlocking { verify(profileFunction, times(1)).getProfile() }
     }
 
     @Test
-    fun testConnectPump() {
-        whenever(persistenceLayer.cancelCurrentRunningMode(clock.millis(), Action.RECONNECT, Sources.Garmin)).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
+    fun testConnectPump() = runTest {
+        whenever(persistenceLayer.cancelCurrentRunningMode(clock.millis(), Action.RECONNECT, Sources.Garmin)).thenReturn(PersistenceLayer.TransactionResult())
         loopHub.connectPump()
+        kotlinx.coroutines.delay(100) // Give time for GlobalScope.launch to complete
         verify(persistenceLayer).cancelCurrentRunningMode(clock.millis(), Action.RECONNECT, Sources.Garmin)
         verify(commandQueue).cancelTempBasal(enforceNew = true, autoForced = false, callback = null)
     }
 
     @Test
     fun testDisconnectPump() {
-        val profile = mock<Profile>()
-        whenever(profileFunction.getProfile()).thenReturn(profile)
+        val profile = mock<EffectiveProfile>()
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(profile) }
         loopHub.disconnectPump(23)
-        verify(profileFunction).getProfile()
+        runBlocking { verify(profileFunction).getProfile() }
         verify(loop).handleRunningModeChange(
             durationInMinutes = 23, profile = profile, newRM = RM.Mode.DISCONNECTED_PUMP, action = Action.DISCONNECT,
             source = Sources.Garmin, listValues = listOf(ValueWithUnit.Minute(23))
@@ -262,7 +267,7 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testGetGlucoseValues() {
+    fun testGetGlucoseValues() = runTest {
         val glucoseValues = listOf(
             GV(
                 timestamp = 1_000_000L, raw = 90.0, value = 93.0,
@@ -271,7 +276,7 @@ class LoopHubTest : TestBase() {
             )
         )
         whenever(persistenceLayer.getBgReadingsDataFromTime(1001_000, false))
-            .thenReturn(Single.just(glucoseValues))
+            .thenReturn(glucoseValues)
         assertArrayEquals(
             glucoseValues.toTypedArray(),
             loopHub.getGlucoseValues(Instant.ofEpochMilli(1001_000), false).toTypedArray()
@@ -303,7 +308,7 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testStoreHeartRate() {
+    fun testStoreHeartRate() = runTest {
         val samplingStart = Instant.ofEpochMilli(1_001_000)
         val samplingEnd = Instant.ofEpochMilli(1_101_000)
         val hr = HR(
@@ -314,11 +319,12 @@ class LoopHubTest : TestBase() {
             device = "Test Device"
         )
         whenever(persistenceLayer.insertOrUpdateHeartRate(hr)).thenReturn(
-            Single.just(PersistenceLayer.TransactionResult())
+            PersistenceLayer.TransactionResult()
         )
         loopHub.storeHeartRate(
             samplingStart, samplingEnd, 101, "Test Device"
         )
+        kotlinx.coroutines.delay(100) // Give time for GlobalScope.launch to complete
         verify(persistenceLayer).insertOrUpdateHeartRate(hr)
     }
 }

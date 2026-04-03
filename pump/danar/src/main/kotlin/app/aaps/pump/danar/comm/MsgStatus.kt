@@ -27,7 +27,7 @@ class MsgStatus(
         aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: $isExtendedInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus min: $extendedBolusMinutes")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus amount: $extendedBolusAmount")
-        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + danaPump.lastBolusTime)
+        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + dateUtil.dateAndTimeStringNullable(danaPump.lastBolusTime))
         aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaPump.lastBolusAmount)
         aapsLogger.debug(LTag.PUMPCOMM, "IOB: " + danaPump.iob)
     }

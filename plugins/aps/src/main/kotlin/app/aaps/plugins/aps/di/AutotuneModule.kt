@@ -11,8 +11,11 @@ import app.aaps.plugins.aps.autotune.data.CRDatum
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class AutotuneModule {
 

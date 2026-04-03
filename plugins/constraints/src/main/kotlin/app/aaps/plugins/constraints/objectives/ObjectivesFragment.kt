@@ -27,9 +27,9 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNtpStatus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.databinding.ObjectivesFragmentBinding
@@ -56,6 +56,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sntpClient: SntpClient
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -225,7 +226,7 @@ class ObjectivesFragment : DaggerFragment() {
                     // state
                     val state = TextView(holder.binding.progress.context)
                     state.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
-                    val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
+                    val basicHTML = $$"<font color=\"%1$s\"><b>%2$s</b></font>"
                     val formattedHTML =
                         String.format(
                             basicHTML,
@@ -341,19 +342,17 @@ class ObjectivesFragment : DaggerFragment() {
                     }
             }
             holder.binding.unstart.setOnClickListener {
-                activity?.let { activity ->
-                    OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.objectives), rh.gs(R.string.doyouwantresetstart), Runnable {
-                        uel.log(
-                            action = Action.OBJECTIVE_UNSTARTED,
-                            source = Sources.Objectives,
-                            value = ValueWithUnit.SimpleInt(position + 1)
-                        )
-                        objective.startedOn = 0
-                        scrollToCurrentObjective()
-                        rxBus.send(EventObjectivesUpdateGui())
-                        rxBus.send(EventSWUpdate(false))
-                    })
-                }
+                uiInteraction.showOkCancelDialog(context = requireActivity(), title = app.aaps.core.ui.R.string.objectives, message = R.string.doyouwantresetstart, ok = {
+                    uel.log(
+                        action = Action.OBJECTIVE_UNSTARTED,
+                        source = Sources.Objectives,
+                        value = ValueWithUnit.SimpleInt(position + 1)
+                    )
+                    objective.startedOn = 0
+                    scrollToCurrentObjective()
+                    rxBus.send(EventObjectivesUpdateGui())
+                    rxBus.send(EventSWUpdate(false))
+                })
             }
             holder.binding.unfinish.setOnClickListener {
                 objective.accomplishedOn = 0

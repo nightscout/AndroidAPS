@@ -1,86 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        tools:ignore="UseCompoundDrawables">
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/splash"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="30dp"
-            android:text="@string/loading"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:ignore="UseCompoundDrawables">
 
-        <ImageView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:text="@string/loading"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/splash_logo" />
+
+        </LinearLayout>
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:importantForAccessibility="no"
-            app:srcCompat="@drawable/splash_logo" />
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="2dp"
+            app:contentInsetEndWithActions="48dp"
+            app:contentInsetStartWithNavigation="48dp">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs_normal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+
+                app:tabMode="scrollable" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs_compact"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                app:tabMinWidth="0dp"
+                app:tabMode="scrollable"
+
+                app:tabPadding="0dp" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/main_drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/main_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.google.android.material.navigation.NavigationView
+                android:id="@+id/main_navigation_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true"
+                app:itemBackground="?attr/selectableItemBackground"
+                app:itemIconTint="?android:textColorPrimary"
+                app:itemTextColor="?android:textColorPrimary" />
+        </androidx.drawerlayout.widget.DrawerLayout>
 
     </LinearLayout>
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="2dp"
-        app:contentInsetEndWithActions="48dp"
-        app:contentInsetStartWithNavigation="48dp">
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_switch_ui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/switch_to_compose_ui"
+        app:srcCompat="@drawable/ic_swap_horiz"
+        app:backgroundTint="?attr/colorSecondary"
+        app:tint="?attr/colorOnSecondary" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs_normal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-
-            app:tabMode="scrollable" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs_compact"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            app:tabMinWidth="0dp"
-            app:tabMode="scrollable"
-
-            app:tabPadding="0dp" />
-
-    </com.google.android.material.appbar.MaterialToolbar>
-
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/main_drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/main_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/main_navigation_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            app:itemBackground="?attr/selectableItemBackground"
-            app:itemIconTint="?android:textColorPrimary"
-            app:itemTextColor="?android:textColorPrimary" />
-    </androidx.drawerlayout.widget.DrawerLayout>
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmation</string>
+
     <!--    Events-->
     <string name="bolus_delivering">Delivering %1$.2fU</string>
     <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU delivered</string>
@@ -94,5 +97,31 @@
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Forever</string>
+
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Application needs bluetooth permission to communicate with pump</string>
+
+    <!-- Insulin -->
+    <string name="insulin_plugin">Insulin</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="unknown">Unknown</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Peak Time [min]</string>
+    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
+
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
 
 </resources>

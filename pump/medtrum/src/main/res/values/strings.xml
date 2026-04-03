@@ -15,22 +15,17 @@
     <string name="pump_sync_error">Error while syncing history from pump, a record has been skipped. Check treatment tab to check if bolus is synced correctly. Snooze and if error keep coming back change patch or pumpbase.</string>
 
     <!-- overview fragment -->
-    <string name="ble_status_label">BLE Status</string>
     <string name="last_connection_label">Last connected</string>
     <string name="active_bolus_label">Active bolus</string>
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Basal type</string>
     <string name="basal_rate_label">Basal rate</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Pump type</string>
     <string name="fw_version_label">FW version</string>
     <string name="patch_no_label">Patch no</string>
     <string name="patch_expiry_label">Patch expires</string>
     <string name="patch_activation_time_label">Activation</string>
-    <string name="refresh_label">Refresh</string>
     <string name="reset_alarms_label">Reset alarms</string>
     <string name="change_patch_label">Change Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
@@ -60,11 +55,10 @@
 
     <!-- wizard-->
     <string name="retry">Retry</string>
-    <string name="next">Next</string>
-    <string name="discard">Discard</string>
 
     <string name="step_prepare_patch">Activate Patch</string>
     <string name="step_prepare_patch_connect">Connect and Fill</string>
+    <string name="step_select_insulin">Select Insulin</string>
     <string name="step_prime">Prime</string>
     <string name="step_priming">Priming</string>
     <string name="step_priming_complete">Priming Complete</string>
@@ -77,9 +71,7 @@
     <string name="step_retry_activation">Activation in progress</string>
     <string name="unexpected_state">Unexpected state: %1$s</string>
     <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
-    <string name="no_sn_in_settings">No serial number known. Please enter pumpbase serial number in settings and try again.</string>
 
-    <string name="base_serial">Pump Base Serial: %1$X</string>
     <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>
     <string name="patch_not_active_note">Pump base should not be connected to the patch until the next step!</string>
     <string name="connect_pump_base">Connect pump base to a new patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
@@ -117,11 +109,18 @@
     <string name="enable_pump_unreachable_alert_summary">Unreachable alert forced enabled, because Medtrum patch can fail and be unreachable.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Advised to set to 30 minutes, because Medtrum patch can fail and be unreachable.</string>
     <string name="sn_input_title">Serial Number</string>
-    <string name="sn_input_summary">Enter the serial number of your pump base.</string>
     <string name="sn_input_invalid">Invalid serial number!</string>
-    <string name="pump_unsupported">Pump untested: %1$s! Please contact us at discord or github for support</string>
+    <string name="change_sn">Change</string>
     <string name="alarm_setting_title">Alarm Settings</string>
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
+    <string name="alarm_setting_light_vibrate_beep">Light, vibrate and beep</string>
+    <string name="alarm_setting_light_vibrate">Light and vibrate</string>
+    <string name="alarm_setting_light_beep">Light and beep</string>
+    <string name="alarm_setting_light">Light</string>
+    <string name="alarm_setting_vibrate_beep">Vibrate and beep</string>
+    <string name="alarm_setting_vibrate">Vibrate</string>
+    <string name="alarm_setting_beep">Beep</string>
+    <string name="alarm_setting_silent">Silent</string>
     <string name="pump_warning_notification_title">Notification on pump warning</string>
     <string name="pump_warning_notification_summary">Show notification on non critical pump warnings: low battery, low reservoir (20 units) and expires soon. Recommended to leave enabled when pump alarms are set to silent.</string>
     <string name="pump_warning_expiry_hour_title">Pump expiry warning [hours]</string>

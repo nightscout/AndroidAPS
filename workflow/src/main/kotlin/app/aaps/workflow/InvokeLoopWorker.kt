@@ -5,8 +5,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.rx.events.Event
-import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -22,22 +20,21 @@ class InvokeLoopWorker(
     @Inject lateinit var loop: Loop
 
     class InvokeLoopData(
-        val cause: Event?
+        val triggeredByNewBG: Boolean
     )
 
     /*
      This method is triggered once autosens calculation has completed, so the LoopPlugin
      has current data to work with. However, autosens calculation can be triggered by multiple
-     sources and currently only a new BG should trigger a loop run. Hence we return early if
-     the event causing the calculation is not EventNewBG.
-     <p>
+     sources and currently only a new BG should trigger a loop run. Hence, we return early if
+     the calculation was not triggered by a new BG value.
     */
     override suspend fun doWorkAndLog(): Result {
 
-        val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as InvokeLoopData?
+        val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as? InvokeLoopData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-        if (data.cause !is EventNewBG) return Result.success(workDataOf("Result" to "no calculation needed"))
+        if (!data.triggeredByNewBG) return Result.success(workDataOf("Result" to "no calculation needed"))
         val glucoseValue = iobCobCalculator.ads.actualBg() ?: return Result.success(workDataOf("Result" to "bg outdated"))
         if (glucoseValue.timestamp <= loop.lastBgTriggeredRun) return Result.success(workDataOf("Result" to "already looped with that value"))
         loop.lastBgTriggeredRun = glucoseValue.timestamp

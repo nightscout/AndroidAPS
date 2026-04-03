@@ -2,14 +2,11 @@ package app.aaps.core.nssdk.remotemodel
 
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
 
 /**
  * DeviceStatus coming from uploader or AAPS
  *
  **/
-@Serializable
 internal data class RemoteDeviceStatus(
     @SerializedName("app") var app: String? = null,
     @SerializedName("identifier")
@@ -31,47 +28,47 @@ internal data class RemoteDeviceStatus(
     @SerializedName("configuration") val configuration: Configuration?
 ) {
 
-    @Serializable data class Pump(
+    data class Pump(
         @SerializedName("clock") val clock: String?, // timestamp in ISO
         @SerializedName("reservoir") val reservoir: Double?,
         @SerializedName("reservoir_display_override") val reservoirDisplayOverride: String?,
         @SerializedName("battery") val battery: Battery?,
         @SerializedName("status") val status: Status?,
-        @Contextual @SerializedName("extended") val extended: JsonObject?   // Gson, content depending on pump driver
+        @SerializedName("extended") val extended: JsonObject?   // Gson, content depending on pump driver
     ) {
 
-        @Serializable data class Battery(
+        data class Battery(
             @SerializedName("percent") val percent: Int?,
             @SerializedName("voltage") val voltage: Double?
         )
 
-        @Serializable data class Status(
+        data class Status(
             @SerializedName("status") val status: String?,
             @SerializedName("timestamp") val timestamp: String?
         )
     }
 
-    @Serializable data class OpenAps(
-        @Contextual @SerializedName("suggested") val suggested: JsonObject?, // Gson
-        @Contextual @SerializedName("enacted") val enacted: JsonObject?,     // Gson
-        @Contextual @SerializedName("iob") val iob: JsonObject?              // Gson
+    data class OpenAps(
+        @SerializedName("suggested") val suggested: JsonObject?, // Gson
+        @SerializedName("enacted") val enacted: JsonObject?,     // Gson
+        @SerializedName("iob") val iob: JsonObject?              // Gson
     )
 
-    @Serializable data class Uploader(
+    data class Uploader(
         @SerializedName("battery") val battery: Int?
     )
 
-    @Serializable data class Configuration(
+    data class Configuration(
         @SerializedName("pump") val pump: String?,
         @SerializedName("version") val version: String?,
         @SerializedName("insulin") val insulin: Int?,
         @SerializedName("aps") val aps: String?,
         @SerializedName("sensitivity") val sensitivity: Int?,
         @SerializedName("smoothing") val smoothing: String?,
-        @Contextual @SerializedName("insulinConfiguration") val insulinConfiguration: JsonObject?,
-        @Contextual @SerializedName("apsConfiguration") val apsConfiguration: JsonObject?,
-        @Contextual @SerializedName("sensitivityConfiguration") val sensitivityConfiguration: JsonObject?,
-        @Contextual @SerializedName("overviewConfiguration") val overviewConfiguration: JsonObject?,
-        @Contextual @SerializedName("safetyConfiguration") val safetyConfiguration: JsonObject?
+        @SerializedName("insulinConfiguration") val insulinConfiguration: JsonObject?,
+        @SerializedName("apsConfiguration") val apsConfiguration: JsonObject?,
+        @SerializedName("sensitivityConfiguration") val sensitivityConfiguration: JsonObject?,
+        @SerializedName("overviewConfiguration") val overviewConfiguration: JsonObject?,
+        @SerializedName("safetyConfiguration") val safetyConfiguration: JsonObject?
     )
 }

@@ -4,9 +4,8 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.objects.workflow.LoggingWorker
@@ -20,12 +19,11 @@ class LoadFoodsWorker(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.IO) {
 
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var context: Context
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var storeDataForDb: StoreDataForDb
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
+    @Inject lateinit var nsClientRepository: NSClientRepository
 
     override suspend fun doWorkAndLog(): Result {
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
@@ -36,16 +34,16 @@ class LoadFoodsWorker(
             if (nsClientV3Plugin.lastLoadedSrvModified.collections.foods++ % 5 == 0L) {
                 val foods: List<NSFood> = nsAndroidClient.getFoods(1000).values
                 aapsLogger.debug(LTag.NSCLIENT, "FOODS: $foods")
-                rxBus.send(EventNSClientNewLog("◄ RCV", "${foods.size} FOODs"))
+                nsClientRepository.addLog("◄ RCV", "${foods.size} FOODs")
                 // Schedule processing of fetched data
                 nsIncomingDataProcessor.processFood(foods)
                 storeDataForDb.storeFoodsToDb()
             } else {
-                rxBus.send(EventNSClientNewLog("● RCV FOOD", "skipped"))
+                nsClientRepository.addLog("● RCV FOOD", "skipped")
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
+            nsClientRepository.addLog("◄ ERROR", error.localizedMessage)
             nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }

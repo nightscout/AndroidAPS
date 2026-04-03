@@ -8,7 +8,7 @@ import app.aaps.database.entities.TherapyEvent
 class SyncNsTherapyEventTransaction(private val therapyEvents: List<TherapyEvent>, private val nsClientMode: Boolean) :
     Transaction<SyncNsTherapyEventTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
 
         for (therapyEvent in therapyEvents) {

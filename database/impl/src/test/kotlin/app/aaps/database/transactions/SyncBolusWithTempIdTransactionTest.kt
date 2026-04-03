@@ -3,8 +3,10 @@ package app.aaps.database.transactions
 import app.aaps.database.DelegatedAppDatabase
 import app.aaps.database.daos.BolusDao
 import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -26,7 +28,7 @@ class SyncBolusWithTempIdTransactionTest {
     }
 
     @Test
-    fun `updates existing bolus when found by temp id`() {
+    fun `updates existing bolus when found by temp id`() = runTest {
         val bolus = createBolus(tempId = 500L, pumpId = 100L, amount = 7.0, timestamp = 2000L)
         val existing = createBolus(tempId = 500L, pumpId = null, amount = 5.0, timestamp = 1000L)
 
@@ -45,7 +47,7 @@ class SyncBolusWithTempIdTransactionTest {
     }
 
     @Test
-    fun `does not update when not found by temp id`() {
+    fun `does not update when not found by temp id`() = runTest {
         val bolus = createBolus(tempId = 500L, pumpId = 100L, amount = 7.0, timestamp = 2000L)
 
         whenever(bolusDao.findByPumpTempIds(500L, InterfaceIDs.PumpType.DANA_I, "ABC123")).thenReturn(null)
@@ -60,7 +62,7 @@ class SyncBolusWithTempIdTransactionTest {
     }
 
     @Test
-    fun `updates type when provided`() {
+    fun `updates type when provided`() = runTest {
         val bolus = createBolus(tempId = 500L, pumpId = 100L, amount = 5.0, timestamp = 1000L, type = Bolus.Type.NORMAL)
         val existing = createBolus(tempId = 500L, pumpId = null, amount = 5.0, timestamp = 1000L, type = Bolus.Type.NORMAL)
 
@@ -89,6 +91,7 @@ class SyncBolusWithTempIdTransactionTest {
             pumpId = pumpId,
             pumpType = InterfaceIDs.PumpType.DANA_I,
             pumpSerial = "ABC123"
-        )
+        ),
+        insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0)
     )
 }

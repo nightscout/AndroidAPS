@@ -1,11 +1,11 @@
-import org.gradle.kotlin.dsl.debugImplementation
 import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt)
     id("com.android.application")
-    id("kotlin-android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("android-app-dependencies")
@@ -134,14 +134,29 @@ android {
             manifestPlaceholders["appIcon"] = "@mipmap/ic_blueowl"
             manifestPlaceholders["appIconRound"] = "@mipmap/ic_blueowl"
         }
+        create("aapsclient3") {
+            applicationId = "info.nightscout.aapsclient3"
+            dimension = "standard"
+            resValue("string", "app_name", "AAPSClient3")
+            versionName = Versions.appVersion + "-aapsclient3"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_greenowl"
+            manifestPlaceholders["appIconRound"] = "@mipmap/ic_greenowl"
+        }
     }
 
     useLibrary("org.apache.http.legacy")
 
-    //Deleting it causes a binding error
     buildFeatures {
-        dataBinding = true
         buildConfig = true
+        compose = true
+        resValues = true
+    }
+
+    sourceSets {
+        getByName("full") { kotlin.directories.add("src/withPumps/kotlin") }
+        getByName("pumpcontrol") { kotlin.directories.add("src/withPumps/kotlin") }
+        getByName("aapsclient2") { kotlin.directories.add("src/aapsclient/kotlin") }
+        getByName("aapsclient3") { kotlin.directories.add("src/aapsclient/kotlin") }
     }
 }
 
@@ -152,7 +167,6 @@ allprojects {
 
 dependencies {
     // in order to use internet"s versions you"d need to enable Jetifier again
-    // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
     implementation(project(":shared:impl"))
     implementation(project(":core:data"))
@@ -171,7 +185,6 @@ dependencies {
     implementation(project(":plugins:automation"))
     implementation(project(":plugins:configuration"))
     implementation(project(":plugins:constraints"))
-    implementation(project(":plugins:insulin"))
     implementation(project(":plugins:main"))
     implementation(project(":plugins:sensitivity"))
     implementation(project(":plugins:smoothing"))
@@ -180,44 +193,60 @@ dependencies {
     implementation(project(":implementation"))
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))
-    implementation(project(":pump:combov2"))
-    implementation(project(":pump:dana"))
-    implementation(project(":pump:danars"))
-    implementation(project(":pump:danar"))
-    implementation(project(":pump:diaconn"))
-    implementation(project(":pump:eopatch"))
-    implementation(project(":pump:medtrum"))
-    implementation(project(":pump:equil"))
-    implementation(project(":pump:insight"))
-    implementation(project(":pump:medtronic"))
-    implementation(project(":pump:common"))
-    implementation(project(":pump:omnipod:common"))
-    implementation(project(":pump:omnipod:eros"))
-    implementation(project(":pump:omnipod:dash"))
-    implementation(project(":pump:rileylink"))
     implementation(project(":pump:virtual"))
     implementation(project(":workflow"))
+
+    // Pump drivers — only for full + pumpcontrol flavors
+    val pumpDependencies = listOf(
+        ":pump:combov2",
+        ":pump:dana",
+        ":pump:danars",
+        ":pump:danars-emulator",
+        ":pump:danar",
+        ":pump:danar-emulator",
+        ":pump:diaconn",
+        ":pump:eopatch",
+        ":pump:medtrum",
+        ":pump:equil",
+        ":pump:equil-emulator",
+        ":pump:insight",
+        ":pump:medtronic",
+        ":pump:common",
+        ":pump:omnipod:common",
+        ":pump:omnipod:eros",
+        ":pump:omnipod:dash",
+        ":pump:rileylink"
+    )
+    pumpDependencies.forEach {
+        "fullImplementation"(project(it))
+        "pumpcontrolImplementation"(project(it))
+    }
+
+    implementation(libs.androidx.lifecycle.process)
 
     testImplementation(project(":shared:tests"))
     androidTestImplementation(project(":shared:tests"))
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 
     debugImplementation(libs.com.squareup.leakcanary.android)
-
-
-    kspAndroidTest(libs.com.google.dagger.android.processor)
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
     ksp(libs.com.google.dagger.android.processor)
+    kspAndroidTest(libs.com.google.dagger.android.processor)
     ksp(libs.com.google.dagger.compiler)
+    implementation(libs.com.google.dagger.hilt.android)
+    ksp(libs.com.google.dagger.hilt.compiler)
 
     // MainApp
     api(libs.com.uber.rxdogtag2.rxdogtag)
     // Remote config
     api(libs.com.google.firebase.config)
+    // Navigation Compose
+    api(libs.androidx.compose.navigation)
 }
 
 println("-------------------")

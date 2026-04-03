@@ -5,7 +5,7 @@ import app.aaps.database.entities.TemporaryBasal
 class UpdateNsIdTemporaryBasalTransaction(private val temporaryBasals: List<TemporaryBasal>) : Transaction<UpdateNsIdTemporaryBasalTransaction.TransactionResult>() {
 
     val result = TransactionResult()
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         for (temporaryBasal in temporaryBasals) {
             val current = database.temporaryBasalDao.findById(temporaryBasal.id)
             if (current != null && current.interfaceIDs.nightscoutId != temporaryBasal.interfaceIDs.nightscoutId) {

@@ -41,20 +41,15 @@ class CloudStorageManager @Inject constructor(
     cloudStorageProviders: Set<@JvmSuppressWildcards CloudStorageProvider>
 ) {
 
-    companion object {
-        private const val LOG_PREFIX = "[CloudStorageManager]"
-    }
-
     /**
      * Map of storage type to provider instance
      */
-    private val providers: Map<String, CloudStorageProvider>
+    // Build provider map from the injected set
+    private val providers: Map<String, CloudStorageProvider> = cloudStorageProviders.associateBy { it.storageType }
 
     init {
-        // Build provider map from the injected set
-        providers = cloudStorageProviders.associateBy { it.storageType }
-        
-        aapsLogger.info(LTag.CORE, "$LOG_PREFIX Initialized with ${providers.size} provider(s): ${providers.keys.joinToString()}")
+
+        aapsLogger.info(LTag.CORE, "Initialized with ${providers.size} provider(s): ${providers.keys.joinToString()}")
     }
 
     /**
@@ -119,9 +114,9 @@ class CloudStorageManager @Inject constructor(
     fun setActiveStorageType(storageType: String) {
         if (StorageTypes.isValidStorageType(storageType)) {
             sp.putString(CloudConstants.PREF_CLOUD_STORAGE_TYPE, storageType)
-            aapsLogger.info(LTag.CORE, "$LOG_PREFIX Active storage type set to: $storageType")
+            aapsLogger.info(LTag.CORE, "Active storage type set to: $storageType")
         } else {
-            aapsLogger.warn(LTag.CORE, "$LOG_PREFIX Invalid storage type: $storageType")
+            aapsLogger.warn(LTag.CORE, "Invalid storage type: $storageType")
         }
     }
 
@@ -156,9 +151,9 @@ class CloudStorageManager @Inject constructor(
         providers.values.forEach { provider ->
             try {
                 provider.clearCredentials()
-                aapsLogger.info(LTag.CORE, "$LOG_PREFIX Cleared credentials for: ${provider.storageType}")
+                aapsLogger.info(LTag.CORE, "Cleared credentials for: ${provider.storageType}")
             } catch (e: Exception) {
-                aapsLogger.error(LTag.CORE, "$LOG_PREFIX Error clearing credentials for ${provider.storageType}", e)
+                aapsLogger.error(LTag.CORE, "Error clearing credentials for ${provider.storageType}", e)
             }
         }
     }

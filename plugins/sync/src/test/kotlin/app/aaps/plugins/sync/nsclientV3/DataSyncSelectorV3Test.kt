@@ -2,9 +2,9 @@ package app.aaps.plugins.sync.nsclientV3
 
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
-import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.BgSource
@@ -17,8 +17,7 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import app.aaps.plugins.sync.nsclientV3.keys.NsclientLongKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Maybe
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -34,29 +33,31 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var virtualPump: VirtualPump
-    @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var nsClient: NsClient
+    @Mock lateinit var nsClientRepository: NSClientRepository
+    @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
 
     private lateinit var storeDataForDb: StoreDataForDb
     private lateinit var sut: DataSyncSelectorV3
 
     @BeforeEach
     fun setUp() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, preferences, config, nsClientSource, virtualPump)
-        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, persistenceLayer, rxBus, storeDataForDb, config)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, virtualPump, nsClientRepository)
+        sut = DataSyncSelectorV3(preferences, aapsLogger, dateUtil, profileFunction, activePlugin, localProfileManager, persistenceLayer, storeDataForDb, config, nsClientRepository, dagger.Lazy { nsClientV3Plugin })
     }
 
     @Test
     fun bgUploadEnabledTest() {
 
-        class NSClientSourcePlugin() : NSClientSource, BgSource {
+        class NSClientSourcePlugin : NSClientSource, BgSource {
 
             override fun isEnabled(): Boolean = true
-            override fun detectSource(glucoseValue: GV) {}
         }
+
         val nsClientSourcePlugin = NSClientSourcePlugin()
 
-        class AnotherSourcePlugin() : BgSource
+        class AnotherSourcePlugin : BgSource
+
         val anotherSourcePlugin = AnotherSourcePlugin()
 
         whenever(preferences.get(BooleanKey.BgSourceUploadToNs)).thenReturn(false)
@@ -73,7 +74,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun resetToNextFullSyncTest() {
+    fun resetToNextFullSyncTest() = runTest {
         whenever(persistenceLayer.getLastDeviceStatusId()).thenReturn(1)
         sut.resetToNextFullSync()
         verify(preferences, Times(1)).remove(NsclientLongKey.GlucoseValueLastSyncedId)
@@ -127,15 +128,15 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         sut.confirmLastTempTargetsIdIfGreater(2)
         verify(preferences, Times(1)).put(NsclientLongKey.TemporaryTargetLastSyncedId, 2)
 // NSCv3 doesn't support food update
-/*
-        // Food
-        whenever(preferences.get(NsclientLongKey.FoodLastSyncedId)).thenReturn(2)
-        sut.confirmLastFoodIdIfGreater(2)
-        verify(preferences, Times(0)).put(NsclientLongKey.FoodLastSyncedId, 2)
-        whenever(preferences.get(NsclientLongKey.FoodLastSyncedId)).thenReturn(1)
-        sut.confirmLastFoodIdIfGreater(2)
-        verify(preferences, Times(1)).put(NsclientLongKey.FoodLastSyncedId, 2)
- */
+        /*
+                // Food
+                whenever(preferences.get(NsclientLongKey.FoodLastSyncedId)).thenReturn(2)
+                sut.confirmLastFoodIdIfGreater(2)
+                verify(preferences, Times(0)).put(NsclientLongKey.FoodLastSyncedId, 2)
+                whenever(preferences.get(NsclientLongKey.FoodLastSyncedId)).thenReturn(1)
+                sut.confirmLastFoodIdIfGreater(2)
+                verify(preferences, Times(1)).put(NsclientLongKey.FoodLastSyncedId, 2)
+         */
         // GlucoseValue
         whenever(preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)).thenReturn(2)
         sut.confirmLastGlucoseValueIdIfGreater(2)
@@ -198,10 +199,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusesAfterDbResetTest() = runBlocking {
+    fun processChangedBolusesAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastBolusId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementBolus(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolus(0)).thenReturn(null)
         sut.processChangedBoluses()
         verify(preferences, Times(1)).put(NsclientLongKey.BolusLastSyncedId, 0)
         verify(activePlugin, Times(0)).activeNsClient
@@ -209,7 +210,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusesWhenPausedTest() = runBlocking {
+    fun processChangedBolusesWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(5L)
@@ -222,11 +223,11 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusesWithEmptyQueueTest() = runBlocking {
+    fun processChangedBolusesWithEmptyQueueTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(5L)
         whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(5L)
-        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(null)
 
         sut.processChangedBoluses()
 
@@ -243,7 +244,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun doUploadWhenPausedTest() = runBlocking {
+    fun doUploadWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(true)
 
@@ -256,7 +257,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun doUploadWhenUploadDisabledTest() = runBlocking {
+    fun doUploadWhenUploadDisabledTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(false)
         whenever(config.AAPSCLIENT).thenReturn(false)
@@ -269,7 +270,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun doUploadCalculatesQueueCountersTest() = runBlocking {
+    fun doUploadCalculatesQueueCountersTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(true)
 
@@ -304,19 +305,19 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         whenever(preferences.get(NsclientLongKey.RunningModeLastSyncedId)).thenReturn(0L)
 
         // Mock all the getNextSyncElement methods to return empty
-        whenever(persistenceLayer.getNextSyncElementBolus(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementCarbs(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementBolusCalculatorResult(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementTemporaryTarget(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolus(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementCarbs(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementBolusCalculatorResult(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementTemporaryTarget(0)).thenReturn(null)
         //whenever(persistenceLayer.getNextSyncElementFood(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementGlucoseValue(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementTherapyEvent(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementDeviceStatus(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementTemporaryBasal(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementExtendedBolus(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementProfileSwitch(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementEffectiveProfileSwitch(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementRunningMode(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementGlucoseValue(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementTherapyEvent(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementDeviceStatus(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementTemporaryBasal(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementExtendedBolus(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementProfileSwitch(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementEffectiveProfileSwitch(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementRunningMode(0)).thenReturn(null)
 
         sut.doUpload()
 
@@ -325,7 +326,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun doUploadWithPartialSyncTest() = runBlocking {
+    fun doUploadWithPartialSyncTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(preferences.get(BooleanKey.NsClientUploadData)).thenReturn(true)
 
@@ -359,19 +360,19 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         whenever(preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)).thenReturn(0L)
         whenever(preferences.get(NsclientLongKey.RunningModeLastSyncedId)).thenReturn(0L)
 
-        whenever(persistenceLayer.getNextSyncElementBolus(50)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementCarbs(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementBolusCalculatorResult(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementTemporaryTarget(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementFood(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementGlucoseValue(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementTherapyEvent(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementDeviceStatus(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementTemporaryBasal(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementExtendedBolus(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementProfileSwitch(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementEffectiveProfileSwitch(0)).thenReturn(Maybe.empty())
-        whenever(persistenceLayer.getNextSyncElementRunningMode(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolus(50)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementCarbs(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementBolusCalculatorResult(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementTemporaryTarget(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementFood(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementGlucoseValue(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementTherapyEvent(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementDeviceStatus(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementTemporaryBasal(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementExtendedBolus(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementProfileSwitch(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementEffectiveProfileSwitch(0)).thenReturn(null)
+        whenever(persistenceLayer.getNextSyncElementRunningMode(0)).thenReturn(null)
 
         sut.doUpload()
 
@@ -424,7 +425,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedCarbs
     @Test
-    fun processChangedCarbsWhenPausedTest() = runBlocking {
+    fun processChangedCarbsWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L)
@@ -436,10 +437,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedCarbsAfterDbResetTest() = runBlocking {
+    fun processChangedCarbsAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementCarbs(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementCarbs(0)).thenReturn(null)
 
         sut.processChangedCarbs()
 
@@ -450,7 +451,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedBolusCalculatorResults
     @Test
-    fun processChangedBolusCalculatorResultsWhenPausedTest() = runBlocking {
+    fun processChangedBolusCalculatorResultsWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastBolusCalculatorResultId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)).thenReturn(5L)
@@ -462,10 +463,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusCalculatorResultsAfterDbResetTest() = runBlocking {
+    fun processChangedBolusCalculatorResultsAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastBolusCalculatorResultId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.BolusCalculatorLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementBolusCalculatorResult(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolusCalculatorResult(0)).thenReturn(null)
 
         sut.processChangedBolusCalculatorResults()
 
@@ -476,7 +477,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedTempTargets
     @Test
-    fun processChangedTempTargetsWhenPausedTest() = runBlocking {
+    fun processChangedTempTargetsWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastTemporaryTargetId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.TemporaryTargetLastSyncedId)).thenReturn(5L)
@@ -488,10 +489,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedTempTargetsAfterDbResetTest() = runBlocking {
+    fun processChangedTempTargetsAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastTemporaryTargetId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.TemporaryTargetLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementTemporaryTarget(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementTemporaryTarget(0)).thenReturn(null)
 
         sut.processChangedTempTargets()
 
@@ -501,51 +502,51 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     // Tests for processChangedFoods
-/*
-// NSCv3 doesn't support food update
+    /*
+    // NSCv3 doesn't support food update
+        @Test
+        fun processChangedFoodsWhenPausedTest() = runTest {
+            whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
+            whenever(persistenceLayer.getLastFoodId()).thenReturn(10L)
+            whenever(preferences.get(NsclientLongKey.FoodLastSyncedId)).thenReturn(5L)
+
+            sut.processChangedFoods()
+
+            verify(persistenceLayer, Times(0)).getNextSyncElementFood(any())
+            Unit
+        }
+
+        @Test
+        fun processChangedFoodsAfterDbResetTest() = runTest {
+            whenever(persistenceLayer.getLastFoodId()).thenReturn(0)
+            whenever(preferences.get(NsclientLongKey.FoodLastSyncedId)).thenReturn(1)
+            whenever(persistenceLayer.getNextSyncElementFood(0)).thenReturn(null)
+
+            sut.processChangedFoods()
+
+            verify(preferences, Times(1)).put(NsclientLongKey.FoodLastSyncedId, 0)
+            verify(activePlugin, Times(0)).activeNsClient
+            Unit
+        }
+
+        // Tests for processChangedGlucoseValues
+        @Test
+        fun processChangedGlucoseValuesWhenPausedTest() = runTest {
+            whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
+            whenever(persistenceLayer.getLastGlucoseValueId()).thenReturn(10L)
+            whenever(preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)).thenReturn(5L)
+
+            sut.processChangedGlucoseValues()
+
+            verify(persistenceLayer, Times(0)).getNextSyncElementGlucoseValue(any())
+            Unit
+        }
+    */
     @Test
-    fun processChangedFoodsWhenPausedTest() = runBlocking {
-        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
-        whenever(persistenceLayer.getLastFoodId()).thenReturn(10L)
-        whenever(preferences.get(NsclientLongKey.FoodLastSyncedId)).thenReturn(5L)
-
-        sut.processChangedFoods()
-
-        verify(persistenceLayer, Times(0)).getNextSyncElementFood(any())
-        Unit
-    }
-
-    @Test
-    fun processChangedFoodsAfterDbResetTest() = runBlocking {
-        whenever(persistenceLayer.getLastFoodId()).thenReturn(0)
-        whenever(preferences.get(NsclientLongKey.FoodLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementFood(0)).thenReturn(Maybe.empty())
-
-        sut.processChangedFoods()
-
-        verify(preferences, Times(1)).put(NsclientLongKey.FoodLastSyncedId, 0)
-        verify(activePlugin, Times(0)).activeNsClient
-        Unit
-    }
-
-    // Tests for processChangedGlucoseValues
-    @Test
-    fun processChangedGlucoseValuesWhenPausedTest() = runBlocking {
-        whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
-        whenever(persistenceLayer.getLastGlucoseValueId()).thenReturn(10L)
-        whenever(preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)).thenReturn(5L)
-
-        sut.processChangedGlucoseValues()
-
-        verify(persistenceLayer, Times(0)).getNextSyncElementGlucoseValue(any())
-        Unit
-    }
-*/
-    @Test
-    fun processChangedGlucoseValuesAfterDbResetTest() = runBlocking {
+    fun processChangedGlucoseValuesAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastGlucoseValueId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.GlucoseValueLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementGlucoseValue(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementGlucoseValue(0)).thenReturn(null)
 
         sut.processChangedGlucoseValues()
 
@@ -556,7 +557,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedTherapyEvents
     @Test
-    fun processChangedTherapyEventsWhenPausedTest() = runBlocking {
+    fun processChangedTherapyEventsWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastTherapyEventId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.TherapyEventLastSyncedId)).thenReturn(5L)
@@ -568,10 +569,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedTherapyEventsAfterDbResetTest() = runBlocking {
+    fun processChangedTherapyEventsAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastTherapyEventId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.TherapyEventLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementTherapyEvent(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementTherapyEvent(0)).thenReturn(null)
 
         sut.processChangedTherapyEvents()
 
@@ -582,7 +583,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedDeviceStatuses
     @Test
-    fun processChangedDeviceStatusesWhenPausedTest() = runBlocking {
+    fun processChangedDeviceStatusesWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastDeviceStatusId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.DeviceStatusLastSyncedId)).thenReturn(5L)
@@ -594,10 +595,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedDeviceStatusesAfterDbResetTest() = runBlocking {
+    fun processChangedDeviceStatusesAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastDeviceStatusId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.DeviceStatusLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementDeviceStatus(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementDeviceStatus(0)).thenReturn(null)
 
         sut.processChangedDeviceStatuses()
 
@@ -608,7 +609,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedTemporaryBasals
     @Test
-    fun processChangedTemporaryBasalsWhenPausedTest() = runBlocking {
+    fun processChangedTemporaryBasalsWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastTemporaryBasalId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.TemporaryBasalLastSyncedId)).thenReturn(5L)
@@ -620,10 +621,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedTemporaryBasalsAfterDbResetTest() = runBlocking {
+    fun processChangedTemporaryBasalsAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastTemporaryBasalId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.TemporaryBasalLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementTemporaryBasal(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementTemporaryBasal(0)).thenReturn(null)
 
         sut.processChangedTemporaryBasals()
 
@@ -634,7 +635,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedExtendedBoluses
     @Test
-    fun processChangedExtendedBolusesWhenPausedTest() = runBlocking {
+    fun processChangedExtendedBolusesWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastExtendedBolusId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.ExtendedBolusLastSyncedId)).thenReturn(5L)
@@ -646,10 +647,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedExtendedBolusesAfterDbResetTest() = runBlocking {
+    fun processChangedExtendedBolusesAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastExtendedBolusId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.ExtendedBolusLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementExtendedBolus(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementExtendedBolus(0)).thenReturn(null)
 
         sut.processChangedExtendedBoluses()
 
@@ -660,7 +661,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedProfileSwitches
     @Test
-    fun processChangedProfileSwitchesWhenPausedTest() = runBlocking {
+    fun processChangedProfileSwitchesWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastProfileSwitchId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.ProfileSwitchLastSyncedId)).thenReturn(5L)
@@ -672,10 +673,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedProfileSwitchesAfterDbResetTest() = runBlocking {
+    fun processChangedProfileSwitchesAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastProfileSwitchId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.ProfileSwitchLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementProfileSwitch(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementProfileSwitch(0)).thenReturn(null)
 
         sut.processChangedProfileSwitches()
 
@@ -686,7 +687,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedEffectiveProfileSwitches
     @Test
-    fun processChangedEffectiveProfileSwitchesWhenPausedTest() = runBlocking {
+    fun processChangedEffectiveProfileSwitchesWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastEffectiveProfileSwitchId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)).thenReturn(5L)
@@ -698,10 +699,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedEffectiveProfileSwitchesAfterDbResetTest() = runBlocking {
+    fun processChangedEffectiveProfileSwitchesAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastEffectiveProfileSwitchId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.EffectiveProfileSwitchLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementEffectiveProfileSwitch(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementEffectiveProfileSwitch(0)).thenReturn(null)
 
         sut.processChangedEffectiveProfileSwitches()
 
@@ -712,7 +713,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Tests for processChangedRunningModes
     @Test
-    fun processChangedRunningModesWhenPausedTest() = runBlocking {
+    fun processChangedRunningModesWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
         whenever(persistenceLayer.getLastRunningModeId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.RunningModeLastSyncedId)).thenReturn(5L)
@@ -724,10 +725,10 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedRunningModesAfterDbResetTest() = runBlocking {
+    fun processChangedRunningModesAfterDbResetTest() = runTest {
         whenever(persistenceLayer.getLastRunningModeId()).thenReturn(0)
         whenever(preferences.get(NsclientLongKey.RunningModeLastSyncedId)).thenReturn(1)
-        whenever(persistenceLayer.getNextSyncElementRunningMode(0)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementRunningMode(0)).thenReturn(null)
 
         sut.processChangedRunningModes()
 
@@ -738,7 +739,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
 
     // Test for processChangedProfileStore
     @Test
-    fun processChangedProfileStoreWhenPausedTest() = runBlocking {
+    fun processChangedProfileStoreWhenPausedTest() = runTest {
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(true)
 
         sut.processChangedProfileStore()
@@ -750,7 +751,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     // Tests for processChangedBoluses with getNextSyncElement returning data
 
     @Test
-    fun processChangedBolusesWithNewBolusTest() = runBlocking {
+    fun processChangedBolusesWithNewBolusTest() = runTest {
         // Setup: new bolus without NS id (should call nsAdd)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
@@ -764,12 +765,13 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs()
+            ids = IDs(),
+            iCfg = someICfg
         )
         val pair = Pair(bolus, bolus)
 
-        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(Maybe.just(pair))
-        whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(pair)
+        whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(null)
         whenever(nsClient.nsAdd(eq("treatments"), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())).thenReturn(true)
 
         sut.processChangedBoluses()
@@ -780,7 +782,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusesWithExistingBolusTest() = runBlocking {
+    fun processChangedBolusesWithExistingBolusTest() = runTest {
         // Setup: existing bolus with NS id and changes (should call nsUpdate)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
@@ -794,20 +796,22 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs(nightscoutId = "ns123")
+            ids = IDs(nightscoutId = "ns123"),
+            iCfg = someICfg
         )
         val newBolus = BS(
             id = 6,
             timestamp = 1000L,
             amount = 5.5, // Modified amount
             type = BS.Type.NORMAL,
-            ids = IDs(nightscoutId = "ns123")
+            ids = IDs(nightscoutId = "ns123"),
+            iCfg = someICfg
         )
         val pair = Pair(newBolus, oldBolus)
 
         whenever(persistenceLayer.getNextSyncElementBolus(5L))
-            .thenReturn(Maybe.just(pair))
-            .thenReturn(Maybe.empty())
+            .thenReturn(pair)
+            .thenReturn(null)
         whenever(nsClient.nsUpdate(eq("treatments"), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())).thenReturn(true)
 
         sut.processChangedBoluses()
@@ -818,7 +822,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusesWithBolusFromNSTest() = runBlocking {
+    fun processChangedBolusesWithBolusFromNSTest() = runTest {
         // Setup: bolus loaded from NS (should ignore)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
@@ -831,12 +835,13 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs(nightscoutId = "ns123")
+            ids = IDs(nightscoutId = "ns123"),
+            iCfg = someICfg
         )
         val pair = Pair(bolus, bolus)
 
-        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(Maybe.just(pair))
-        whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(pair)
+        whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(null)
 
         sut.processChangedBoluses()
 
@@ -847,7 +852,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusesWithOnlyNsIdChangedTest() = runBlocking {
+    fun processChangedBolusesWithOnlyNsIdChangedTest() = runTest {
         // Setup: bolus with only NS id changed (should ignore)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
@@ -860,19 +865,21 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs()
+            ids = IDs(),
+            iCfg = someICfg
         )
         val newBolus = BS(
             id = 6,
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs(nightscoutId = "ns123")
+            ids = IDs(nightscoutId = "ns123"),
+            iCfg = someICfg
         )
         val pair = Pair(newBolus, oldBolus)
 
-        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(Maybe.just(pair))
-        whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(pair)
+        whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(null)
 
         sut.processChangedBoluses()
 
@@ -883,7 +890,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusesWhenNsAddFailsTest() = runBlocking {
+    fun processChangedBolusesWhenNsAddFailsTest() = runTest {
         // Setup: nsAdd returns false (should stop loop)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
@@ -895,11 +902,12 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
             timestamp = 1000L,
             amount = 5.0,
             type = BS.Type.NORMAL,
-            ids = IDs()
+            ids = IDs(),
+            iCfg = someICfg
         )
         val pair = Pair(bolus, bolus)
 
-        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(Maybe.just(pair))
+        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(pair)
         whenever(nsClient.nsAdd(eq("treatments"), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())).thenReturn(false)
 
         sut.processChangedBoluses()
@@ -910,19 +918,19 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedBolusesWithMultipleBolusesTest() = runBlocking {
+    fun processChangedBolusesWithMultipleBolusesTest() = runTest {
         // Setup: multiple boluses to sync
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastBolusId()).thenReturn(10L)
         whenever(preferences.get(NsclientLongKey.BolusLastSyncedId)).thenReturn(5L, 5L, 6L, 6L, 7L, 7L)
         whenever(activePlugin.activeNsClient).thenReturn(nsClient)
 
-        val bolus1 = BS(id = 6, timestamp = 1000L, amount = 5.0, type = BS.Type.NORMAL, ids = IDs())
-        val bolus2 = BS(id = 7, timestamp = 2000L, amount = 3.0, type = BS.Type.NORMAL, ids = IDs())
+        val bolus1 = BS(id = 6, timestamp = 1000L, amount = 5.0, type = BS.Type.NORMAL, ids = IDs(), iCfg = someICfg)
+        val bolus2 = BS(id = 7, timestamp = 2000L, amount = 3.0, type = BS.Type.NORMAL, ids = IDs(), iCfg = someICfg)
 
-        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(Maybe.just(Pair(bolus1, bolus1)))
-        whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(Maybe.just(Pair(bolus2, bolus2)))
-        whenever(persistenceLayer.getNextSyncElementBolus(7L)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementBolus(5L)).thenReturn(Pair(bolus1, bolus1))
+        whenever(persistenceLayer.getNextSyncElementBolus(6L)).thenReturn(Pair(bolus2, bolus2))
+        whenever(persistenceLayer.getNextSyncElementBolus(7L)).thenReturn(null)
         whenever(nsClient.nsAdd(eq("treatments"), any<DataSyncSelector.PairBolus>(), any(), anyOrNull())).thenReturn(true)
 
         sut.processChangedBoluses()
@@ -935,7 +943,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     // Tests for processChangedCarbs with getNextSyncElement returning data
 
     @Test
-    fun processChangedCarbsWithNewCarbsTest() = runBlocking {
+    fun processChangedCarbsWithNewCarbsTest() = runTest {
         // Setup: new carbs without NS id (should call nsAdd)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
@@ -951,8 +959,8 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         )
         val pair = Pair(carbs, carbs)
 
-        whenever(persistenceLayer.getNextSyncElementCarbs(5L)).thenReturn(Maybe.just(pair))
-        whenever(persistenceLayer.getNextSyncElementCarbs(6L)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementCarbs(5L)).thenReturn(pair)
+        whenever(persistenceLayer.getNextSyncElementCarbs(6L)).thenReturn(null)
         whenever(nsClient.nsAdd(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())).thenReturn(true)
 
         sut.processChangedCarbs()
@@ -963,7 +971,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedCarbsWithExistingCarbsTest() = runBlocking {
+    fun processChangedCarbsWithExistingCarbsTest() = runTest {
         // Setup: existing carbs with NS id and changes (should call nsUpdate)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
@@ -987,8 +995,8 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         val pair = Pair(newCarbs, oldCarbs)
 
         whenever(persistenceLayer.getNextSyncElementCarbs(5L))
-            .thenReturn(Maybe.just(pair))
-            .thenReturn(Maybe.empty())
+            .thenReturn(pair)
+            .thenReturn(null)
         whenever(nsClient.nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())).thenReturn(true)
 
         sut.processChangedCarbs()
@@ -999,7 +1007,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedCarbsWhenNsUpdateFailsTest() = runBlocking {
+    fun processChangedCarbsWhenNsUpdateFailsTest() = runTest {
         // Setup: nsUpdate returns false (should stop loop)
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
@@ -1022,7 +1030,7 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
         )
         val pair = Pair(newCarbs, oldCarbs)
 
-        whenever(persistenceLayer.getNextSyncElementCarbs(5L)).thenReturn(Maybe.just(pair))
+        whenever(persistenceLayer.getNextSyncElementCarbs(5L)).thenReturn(pair)
         whenever(nsClient.nsUpdate(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())).thenReturn(false)
 
         sut.processChangedCarbs()
@@ -1033,21 +1041,21 @@ class DataSyncSelectorV3Test : TestBaseWithProfile() {
     }
 
     @Test
-    fun processChangedCarbsWithMultipleCarbsTest() = runBlocking {
+    fun processChangedCarbsWithMultipleCarbsTest() = runTest {
         // Setup: multiple carbs entries to sync
         whenever(preferences.get(NsclientBooleanKey.NsPaused)).thenReturn(false)
         whenever(persistenceLayer.getLastCarbsId()).thenReturn(10L)
-        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 5L,6L, 6L, 7L, 7L, 8L, 8L)
+        whenever(preferences.get(NsclientLongKey.CarbsLastSyncedId)).thenReturn(5L, 5L, 6L, 6L, 7L, 7L, 8L, 8L)
         whenever(activePlugin.activeNsClient).thenReturn(nsClient)
 
         val carbs1 = CA(id = 6, timestamp = 1000L, amount = 30.0, duration = 0L, ids = IDs())
         val carbs2 = CA(id = 7, timestamp = 2000L, amount = 20.0, duration = 0L, ids = IDs())
         val carbs3 = CA(id = 8, timestamp = 3000L, amount = 15.0, duration = 0L, ids = IDs())
 
-        whenever(persistenceLayer.getNextSyncElementCarbs(5L)).thenReturn(Maybe.just(Pair(carbs1, carbs1)))
-        whenever(persistenceLayer.getNextSyncElementCarbs(6L)).thenReturn(Maybe.just(Pair(carbs2, carbs2)))
-        whenever(persistenceLayer.getNextSyncElementCarbs(7L)).thenReturn(Maybe.just(Pair(carbs3, carbs3)))
-        whenever(persistenceLayer.getNextSyncElementCarbs(8L)).thenReturn(Maybe.empty())
+        whenever(persistenceLayer.getNextSyncElementCarbs(5L)).thenReturn(Pair(carbs1, carbs1))
+        whenever(persistenceLayer.getNextSyncElementCarbs(6L)).thenReturn(Pair(carbs2, carbs2))
+        whenever(persistenceLayer.getNextSyncElementCarbs(7L)).thenReturn(Pair(carbs3, carbs3))
+        whenever(persistenceLayer.getNextSyncElementCarbs(8L)).thenReturn(null)
         whenever(nsClient.nsAdd(eq("treatments"), any<DataSyncSelector.PairCarbs>(), any(), anyOrNull())).thenReturn(true)
 
         sut.processChangedCarbs()

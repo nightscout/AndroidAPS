@@ -18,6 +18,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
 import javax.inject.Qualifier
@@ -28,6 +30,7 @@ import javax.inject.Qualifier
         ObjectivesModule.ObjectivesListModule::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class ObjectivesModule {
 
@@ -36,6 +39,7 @@ abstract class ObjectivesModule {
     @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
 
     @Module
+    @InstallIn(SingletonComponent::class)
     open class Provide {
 
         @Provides
@@ -44,6 +48,7 @@ abstract class ObjectivesModule {
     }
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface ObjectivesListModule {
 
         @Binds

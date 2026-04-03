@@ -11,12 +11,7 @@ class GlimpPluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences)
-    }
-
-    @Test
-    fun advancedFilteringSupported() {
-        assertThat(glimpPlugin.advancedFilteringSupported()).isFalse()
+        glimpPlugin = GlimpPlugin(rh, aapsLogger, preferences, config)
     }
 
     @Test

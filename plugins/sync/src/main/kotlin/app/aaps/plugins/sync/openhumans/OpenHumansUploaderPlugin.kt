@@ -1,12 +1,15 @@
 package app.aaps.plugins.sync.openhumans
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.util.DisplayMetrics
 import android.view.WindowManager
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceCategory
@@ -29,24 +32,30 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginOpenHumans
+import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.openhumans.compose.OHComposeContent
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
 import app.aaps.plugins.sync.openhumans.keys.OhLongKey
 import app.aaps.plugins.sync.openhumans.keys.OhStringKey
-import app.aaps.plugins.sync.openhumans.ui.OHFragment
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -67,22 +76,27 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
-    private val context: Context,
+    internal val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val openHumansAPI: OpenHumansAPI,
-    stateDelegate: OHStateDelegate,
+    internal val stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
-    private val rxBus: RxBus
 ) : Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginIcon(R.drawable.open_humans_white)
+        .icon(IcPluginOpenHumans)
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)
         .description(R.string.open_humans_description)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .fragmentClass(OHFragment::class.qualifiedName),
+        .composeContent { plugin ->
+            OHComposeContent(
+                plugin = plugin as OpenHumansUploaderPlugin,
+                context = plugin.context,
+            )
+        },
     ownPreferences = listOf(OhStringKey.AppId::class.java, OhLongKey.Counter::class.java),
     aapsLogger, rh, preferences
 ) {
@@ -91,7 +105,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     private var uploadCounter by counterDelegate
     private val appId by appIdDelegate
 
-    private val preferenceChangeDisposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     // Not used Sync interface members
     override val hasWritePermission: Boolean = true
@@ -100,21 +114,23 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 
     override fun onStart() {
         super.onStart()
+        val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        scope = newScope
         setupNotificationChannels()
         if (openHumansState != null) scheduleWorker(false)
-        preferenceChangeDisposable += rxBus.toObservable(EventPreferenceChange::class.java).subscribe {
-            onSharedPreferenceChanged(it)
-        }
+        merge(
+            preferences.observe(BooleanKey.OpenHumansWifiOnly).drop(1).map {},
+            preferences.observe(BooleanKey.OpenHumansChargingOnly).drop(1).map {}
+        ).onEach {
+            if (openHumansState != null) scheduleWorker(true)
+        }.launchIn(newScope)
     }
 
     override fun onStop() {
         super.onStop()
         cancelWorker()
-        preferenceChangeDisposable.clear()
-    }
-
-    private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
-        if (event.changedKey in arrayOf(BooleanKey.OpenHumansWifiOnly.key, BooleanKey.OpenHumansChargingOnly.key) && openHumansState != null) scheduleWorker(true)
+        scope?.cancel()
+        scope = null
     }
 
     suspend fun login(bearerToken: String) = withContext(Dispatchers.IO) {
@@ -191,6 +207,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 val timestamp = System.currentTimeMillis()
                 val offset = openHumansState!!.uploadOffset
                 var page = 0
+                @Suppress("ControlFlowWithEmptyBody")
                 while (uploadDataPaged(offset, timestamp, page++));
                 withContext(Dispatchers.Main) {
                     openHumansState = openHumansState!!.copy(uploadOffset = timestamp)
@@ -350,8 +367,8 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("amount", it.amount)
                 put("type", it.type.toString())
                 put("isBasalInsulin", it.isBasalInsulin)
-                put("insulinEndTime", it.icfg?.insulinEndTime)
-                put("peak", it.icfg?.peak)
+                put("insulinEndTime", it.iCfg.insulinEndTime)
+                put("peak", it.iCfg.insulinPeakTime)
             }
             tags.add("Boluses")
         }
@@ -389,7 +406,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("originalDuration", it.originalDuration)
                 put("originalEnd", it.originalEnd)
                 put("insulinEndTime", it.iCfg.insulinEndTime)
-                put("insulinEndTime", it.iCfg.peak)
+                put("insulinEndTime", it.iCfg.insulinPeakTime)
             }
             tags.add("EffectiveProfileSwitches")
         }
@@ -474,7 +491,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("percentage", it.percentage)
                 put("duration", it.duration)
                 put("insulinEndTime", it.iCfg.insulinEndTime)
-                put("peak", it.iCfg.peak)
+                put("peak", it.iCfg.insulinPeakTime)
             }
             tags.add("ProfileSwitches")
         }
@@ -652,9 +669,18 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 )
             )
             .build()
-        NotificationManagerCompat.from(context).notify(SIGNED_OUT_NOTIFICATION_ID, notification)
-        withContext(Dispatchers.Main) {
-            logout()
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            NotificationManagerCompat.from(context).notify(SIGNED_OUT_NOTIFICATION_ID, notification)
+            withContext(Dispatchers.Main) {
+                logout()
+            }
         }
     }
 
@@ -679,7 +705,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 
         val HEX_DIGITS = "0123456789ABCDEF".toCharArray()
 
-        @Suppress("PrivatePropertyName")
         private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
         const val WORK_NAME_PERIODIC = "Open Humans Periodic"
         const val WORK_NAME_MANUAL = "Open Humans Manual"
@@ -689,6 +714,17 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         const val UPLOAD_NOTIFICATION_ID = 3126
     }
 
+    override fun getPreferenceScreenContent() = PreferenceSubScreenDef(
+        key = "open_humans_settings",
+        titleResId = R.string.open_humans,
+        items = listOf(
+            BooleanKey.OpenHumansWifiOnly,
+            BooleanKey.OpenHumansChargingOnly
+        ),
+        icon = pluginDescription.icon
+    )
+
+    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null) return
         val category = PreferenceCategory(context)

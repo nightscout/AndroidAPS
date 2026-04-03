@@ -4,6 +4,7 @@ import app.aaps.database.DelegatedAppDatabase
 import app.aaps.database.daos.GlucoseValueDao
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.embedments.InterfaceIDs
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -23,7 +24,7 @@ class UpdateGlucoseValueTransactionTest {
     }
 
     @Test
-    fun `updates glucose value`() {
+    fun `updates glucose value`() = runTest {
         val glucoseValue = createGlucoseValue(value = 120.0)
 
         val transaction = UpdateGlucoseValueTransaction(glucoseValue)

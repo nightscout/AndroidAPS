@@ -2,21 +2,16 @@ package app.aaps.pump.danars.comm
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventDismissNotification
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danars.encryption.BleEncryption
 import javax.inject.Inject
 
 class DanaRSPacketBolusGetBolusOption @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
-    private val rh: ResourceHelper,
-    private val danaPump: DanaPump,
-    private val uiInteraction: UiInteraction
+    private val notificationManager: NotificationManager,
+    private val danaPump: DanaPump
 ) : DanaRSPacket() {
 
     init {
@@ -83,10 +78,10 @@ class DanaRSPacketBolusGetBolusOption @Inject constructor(
         dataSize = 1
         val missedBolus04EndMin = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         if (!danaPump.isExtendedBolusEnabled) {
-            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(app.aaps.pump.dana.R.string.danar_enableextendedbolus), Notification.URGENT)
+            notificationManager.post(NotificationId.EXTENDED_BOLUS_DISABLED, app.aaps.pump.dana.R.string.danar_enableextendedbolus)
             failed = true
         } else {
-            rxBus.send(EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED))
+            notificationManager.dismiss(NotificationId.EXTENDED_BOLUS_DISABLED)
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus enabled: " + danaPump.isExtendedBolusEnabled)
         aapsLogger.debug(LTag.PUMPCOMM, "Missed bolus config: " + danaPump.missedBolusConfig)

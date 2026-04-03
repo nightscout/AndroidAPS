@@ -26,6 +26,47 @@ import app.aaps.core.ui.toast.ToastUtils
 
 object BiometricCheck {
 
+    /**
+     * Biometric prompt without internal master password fallback.
+     * All errors and the negative button trigger [onFallback], letting the caller
+     * (e.g. ProtectionHost) show the unified auth dialog instead.
+     */
+    fun biometricPromptSimple(activity: FragmentActivity, title: Int, onSuccess: Runnable?, onFallback: Runnable?, onCancel: Runnable?) {
+        val executor = ContextCompat.getMainExecutor(activity)
+
+        val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                when (errorCode) {
+                    ERROR_NEGATIVE_BUTTON -> onFallback?.run() // "Use PIN/Password" button
+                    ERROR_USER_CANCELED   -> onCancel?.run()
+
+                    else                  -> {
+                        ToastUtils.errorToast(activity.baseContext, errString.toString())
+                        onFallback?.run()
+                    }
+                }
+            }
+
+            override fun onAuthenticationSucceeded(result: AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                onSuccess?.run()
+            }
+
+        })
+
+        val promptInfo = PromptInfo.Builder()
+            .setTitle(activity.getString(title))
+            .setDescription(activity.getString(R.string.biometric_title))
+            .setNegativeButtonText(activity.getString(R.string.use_pin_password))
+            .setConfirmationRequired(false)
+            .build()
+
+        runOnUiThread {
+            biometricPrompt.authenticate(promptInfo)
+        }
+    }
+
     fun biometricPrompt(activity: FragmentActivity, title: Int, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
         val executor = ContextCompat.getMainExecutor(activity)
 
@@ -42,7 +83,7 @@ object BiometricCheck {
                     ERROR_USER_CANCELED        -> {
                         ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // fallback to master password
-                        passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     ERROR_NEGATIVE_BUTTON      ->
@@ -52,14 +93,14 @@ object BiometricCheck {
                         ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // no pin set
                         // fallback to master password
-                        passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     ERROR_NO_SPACE,
                     ERROR_HW_UNAVAILABLE,
                     ERROR_HW_NOT_PRESENT,
                     ERROR_NO_BIOMETRICS        ->
-                        passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        passwordCheck.queryPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                 }
             }
 

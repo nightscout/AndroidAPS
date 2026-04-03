@@ -3,39 +3,46 @@ package app.aaps.implementation.receivers
 import android.content.Context
 import android.content.Intent
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventChargingState
-import app.aaps.core.interfaces.rx.events.EventNetworkChange
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore.ChargingStatus
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore.NetworkStatus
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ReceiverStatusStoreImpl @Inject constructor(val context: Context, val rxBus: RxBus) : ReceiverStatusStore {
+class ReceiverStatusStoreImpl @Inject constructor(val context: Context) : ReceiverStatusStore {
 
-    override var lastNetworkEvent: EventNetworkChange? = null
+    private val _networkStatusFlow = MutableStateFlow<NetworkStatus?>(null)
+    override val networkStatusFlow: StateFlow<NetworkStatus?> = _networkStatusFlow
+
+    override fun setNetworkStatus(event: NetworkStatus) {
+        _networkStatusFlow.value = event
+    }
 
     override val isWifiConnected: Boolean
-        get() = lastNetworkEvent?.wifiConnected == true
+        get() = _networkStatusFlow.value?.wifiConnected == true
 
     override val isKnownNetworkStatus: Boolean
-        get() = lastNetworkEvent != null
+        get() = _networkStatusFlow.value != null
 
     override val isConnected: Boolean
-        get() = lastNetworkEvent?.wifiConnected == true || lastNetworkEvent?.mobileConnected == true
+        get() = _networkStatusFlow.value?.let { it.wifiConnected || it.mobileConnected } == true
 
     override fun updateNetworkStatus() {
         context.sendBroadcast(Intent(context, NetworkChangeReceiver::class.java))
     }
 
-    override var lastChargingEvent: EventChargingState? = null
+    private val _chargingStatusFlow = MutableStateFlow<ChargingStatus?>(null)
+    override val chargingStatusFlow: StateFlow<ChargingStatus?> = _chargingStatusFlow
+
+    override fun setChargingStatus(event: ChargingStatus) {
+        _chargingStatusFlow.value = event
+    }
 
     override val isCharging: Boolean
-        get() = lastChargingEvent?.isCharging == true
+        get() = _chargingStatusFlow.value?.isCharging == true
 
     override val batteryLevel: Int
-        get() = lastChargingEvent?.batteryLevel ?: 0
-
-    override fun broadcastChargingState() {
-        lastChargingEvent?.let { rxBus.send(it) }
-    }
+        get() = _chargingStatusFlow.value?.batteryLevel ?: 0
 }

@@ -28,4 +28,19 @@
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pump not initialized</string>
 
+    <!--    Permissions-->
+    <string name="permission_battery_title">Battery Optimization</string>
+    <string name="permission_battery_description">Application needs to be excluded from battery optimization to run reliably in the background</string>
+    <string name="permission_directory_title">AAPS Directory</string>
+    <string name="permission_directory_description">Select a directory for application settings and log files</string>
+    <string name="permission_notifications_title">Notifications</string>
+    <string name="permission_notifications_description">Required to show alerts, alarms, and pump status updates</string>
+
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
+
 </resources>

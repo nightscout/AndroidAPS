@@ -1,8 +1,10 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
 import org.json.JSONObject
@@ -26,7 +28,7 @@ fun BS.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
         }
 
-fun BS.Companion.fromJson(jsonObject: JSONObject): BS? {
+fun BS.Companion.fromJson(jsonObject: JSONObject, insulinFallback: Insulin): BS? {
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
@@ -42,6 +44,15 @@ fun BS.Companion.fromJson(jsonObject: JSONObject): BS? {
     val pumpType = PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
+    val insulinLabel = JsonHelper.safeGetStringAllowNull(jsonObject, "insulinLabel", null)
+    val insulinEndTime = JsonHelper.safeGetLongAllowNull(jsonObject, "insulinEndTime")
+    val insulinPeakTime = JsonHelper.safeGetLongAllowNull(jsonObject, "insulinPeakTime")
+    val concentration = JsonHelper.safeGetDoubleAllowNull(jsonObject, "concentration")
+
+    val iCfg =
+        if (insulinLabel != null && insulinEndTime != null && insulinPeakTime != null && concentration != null) ICfg(insulinLabel, insulinEndTime, insulinPeakTime, concentration)
+        else insulinFallback.iCfg
+
     if (timestamp == 0L) return null
     if (amount == 0.0) return null
 
@@ -51,6 +62,7 @@ fun BS.Companion.fromJson(jsonObject: JSONObject): BS? {
         type = type,
         notes = notes,
         isValid = isValid,
+        iCfg = iCfg
     ).also {
         it.ids.nightscoutId = id
         it.ids.pumpId = pumpId

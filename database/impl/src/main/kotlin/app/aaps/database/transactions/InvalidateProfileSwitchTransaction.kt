@@ -4,7 +4,7 @@ import app.aaps.database.entities.ProfileSwitch
 
 class InvalidateProfileSwitchTransaction(val id: Long) : Transaction<InvalidateProfileSwitchTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val profileSwitch = database.profileSwitchDao.findById(id)
             ?: throw IllegalArgumentException("There is no such ProfileSwitch with the specified ID.")

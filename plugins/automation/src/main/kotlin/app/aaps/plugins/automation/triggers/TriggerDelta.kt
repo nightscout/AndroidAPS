@@ -62,7 +62,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun(): Boolean {
+    override suspend fun shouldRun(): Boolean {
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             ?: return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

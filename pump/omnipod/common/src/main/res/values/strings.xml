@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_title">Pod Management</string>
-    <string name="omnipod_common_pod_management_heading_actions">Actions</string>
-    <string name="omnipod_common_pod_management_heading_tools">Tools</string>
     <string name="omnipod_common_pod_management_button_activate_pod">Activate Pod</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Deactivate Pod</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Discard Pod</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">If you discard the Pod, you will not be able to communicate with it anymore. You should only do this when all communication with the Pod persistently fails. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.\n\nIf you wish to proceed, please make sure to remove the Pod from your body!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Play Test Beep</string>
-    <string name="omnipod_common_pod_management_button_playing_test_beep">Playing Test Beep…</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod History</string>
 
     <!-- Omnipod - Error -->
@@ -35,18 +31,13 @@
     <string name="omnipod_common_error_unexpected_exception">An unexpected error occurred. Please report! (%1$s: %2$s).</string>
 
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation">Confirmation</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alert configuration has been updated in the Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">The time on the Pod has been updated.</string>
-    <string name="omnipod_common_confirmation_suspended_delivery">All insulin delivery has been suspended.</string>
-    <string name="omnipod_common_confirmation_silenced_alerts">Active alerts have been silenced.</string>
-    <string name="omnipod_common_confirmation_delivery_resumed">Insulin delivery has been resumed.</string>
 
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Set time</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Suspend</string>
     <string name="omnipod_common_overview_button_resume_delivery">Resume Delivery</string>
-    <string name="omnipod_common_overview_button_pod_management">Pod Mgmt</string>
     <string name="omnipod_common_overview_button_silence_alerts">Silence Alerts</string>
     <string name="omnipod_common_overview_pod_status">Pod Status</string>
     <string name="omnipod_common_overview_total_delivered">Total Delivered</string>
@@ -59,24 +50,15 @@
     <string name="omnipod_common_overview_last_bolus">Last Bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Temp Basal Rate</string>
     <string name="omnipod_common_overview_base_basal_rate">Base Basal Rate</string>
-    <string name="omnipod_common_overview_reservoir">Reservoir</string>
     <string name="omnipod_common_overview_pod_active_alerts">Active Pod Alerts</string>
     <string name="omnipod_common_overview_firmware_version">Firmware Version</string>
     <string name="omnipod_common_overview_time_on_pod">Time on Pod</string>
-    <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>
-    <string name="omnipod_common_overview_reservoir_value">%1$.2f U left</string>
-    <string name="omnipod_common_overview_reservoir_value_over50">Over 50 U left</string>
-    <string name="omnipod_common_overview_errors">Errors</string>
-    <string name="omnipod_common_overview_last_bolus_value" translatable="false">%1$.2f %2$s (%3$s)</string>
+    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minutes)</string>
+    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Over %1$s left</string>
     <string name="omnipod_common_uncertain">uncertain</string>
 
     <!-- Omnipod - Wizard Base -->
-    <string name="omnipod_common_wizard_button_cancel">Cancel</string>
-    <string name="omnipod_common_wizard_button_finish">Finish</string>
-    <string name="omnipod_common_wizard_button_next">Next</string>
-    <string name="omnipod_common_wizard_button_retry">Retry</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">Deactivate Pod</string>
-    <string name="omnipod_common_wizard_button_discard_pod">Discard Pod</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">You haven\'t completed all steps yet. Are you sure you want to exit?</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">Exit</string>
 
@@ -126,6 +108,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sound for uncertain TBR notifications enabled</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sound for uncertain SMB notifications enabled</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sound for uncertain bolus notifications enabled</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sound when delivery suspended notification enabled</string>
     <string name="omnipod_dash_use_bonding">Bond BT device on Android 15</string>
 
     <!-- Omnipod - Pod Status -->
@@ -133,54 +116,50 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Setup in progress (waiting for Pod activation)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Setup in progress (waiting for cannula insertion)</string>
     <string name="omnipod_common_pod_status_running">Running</string>
-    <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Suspended</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod Fault</string>
     <string name="omnipod_common_pod_status_inactive">Inactive</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Fault: %1$03d %2$s</string>
 
-    <!-- Omnipod - Commands -->
-    <string name="omnipod_common_cmd_deactivate_pod">Deactivate Pod</string>
-    <string name="omnipod_common_cmd_discard_pod">Discard Pod</string>
-    <string name="omnipod_common_cmd_set_bolus">Set Bolus</string>
-    <string name="omnipod_common_cmd_cancel_bolus">Cancel Bolus</string>
-    <string name="omnipod_common_cmd_set_tbr">Set Temporary Basal</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Cancel Temporary Basal (internally by driver)</string>
-    <string name="omnipod_common_cmd_cancel_tbr">Cancel Temporary Basal</string>
-    <string name="omnipod_common_cmd_set_basal_schedule">Set Basal Schedule</string>
-    <string name="omnipod_common_cmd_get_pod_status">Get Pod Status</string>
-    <string name="omnipod_common_cmd_get_pod_info">Get Pod Info</string>
-    <string name="omnipod_common_cmd_set_time">Set Time</string>
-    <string name="omnipod_common_cmd_configure_alerts">Configure Alerts</string>
-    <string name="omnipod_common_cmd_silence_alerts">Silence Alerts</string>
-    <string name="omnipod_common_cmd_suspend_delivery">Suspend Delivery</string>
-    <string name="omnipod_common_cmd_resume_delivery">Resume Delivery</string>
-    <string name="omnipod_common_cmd_unknown_entry">Unknown Entry</string>
-    <string name="omnipod_common_cmd_initialize_pod">Initialize Pod</string>
-    <string name="omnipod_common_cmd_insert_cannula">Insert Cannula</string>
-    <string name="omnipod_common_cmd_read_pulse_log">Read Pulse Log</string>
-    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
-    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
-    <string name="omnipod_common_cmd_split_tbr">Split temporary basal because of uncertain failure in cancellation</string>
-    <string name="omnipod_common_cmd_play_test_beep">Play Test Beep</string>
-
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">Finish pairing reminder</string>
-    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Finish setup reminder</string>
     <string name="omnipod_common_alert_expiration">Pod will expire soon</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod will expire soon</string>
     <string name="omnipod_common_alert_shutdown_imminent">Shutdown is imminent</string>
     <string name="omnipod_common_alert_low_reservoir">Low Reservoir</string>
     <string name="omnipod_common_alert_unknown_alert">Unknown Alert</string>
 
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_initialize_pod">Initialize Pod</string>
+    <string name="omnipod_common_cmd_insert_cannula">Insert Cannula</string>
+    <string name="omnipod_common_cmd_deactivate_pod">Deactivate Pod</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Set Basal Schedule</string>
+    <string name="omnipod_common_cmd_set_bolus">Set Bolus</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Cancel Bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Set TBR</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Cancel TBR</string>
+    <string name="omnipod_common_cmd_discard_pod">Discard Pod</string>
+    <string name="omnipod_common_cmd_get_pod_status">Get Pod Status</string>
+    <string name="omnipod_common_cmd_set_time">Set Time</string>
+    <string name="omnipod_common_cmd_configure_alerts">Configure Alerts</string>
+    <string name="omnipod_common_cmd_silence_alerts">Silence Alerts</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Read Pulse Log</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Suspend Delivery</string>
+    <string name="omnipod_common_cmd_resume_delivery">Resume Delivery</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Cancel TBR (by user)</string>
+    <string name="omnipod_common_cmd_get_pod_info">Get Pod Info</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Set Fake Suspended TBR</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancel Fake Suspended TBR</string>
+    <string name="omnipod_common_cmd_split_tbr">Split TBR</string>
+    <string name="omnipod_common_cmd_play_test_beep">Play Test Beep</string>
+    <string name="omnipod_common_cmd_unknown_entry">Unknown Entry</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Disable Suspend Alerts</string>
+
+    <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Finish Pairing Reminder</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Finish Setup Reminder</string>
+
     <!-- Omnipod - Other -->
-    <string name="omnipod_common_yes">Yes</string>
-    <string name="omnipod_common_no">No</string>
-    <string name="omnipod_common_ok">OK</string>
-    <string name="omnipod_common_cancel">Cancel</string>
-    <string name="omnipod_common_warning">Warning</string>
     <string name="omnipod_common_two_strings_concatenated_by_colon" translatable="false">%1$s: %2$s</string>
-    <string name="omnipod_common_disable_suspend_alerts">DISABLE SUSPEND ALERTS</string>
 
     <!-- Omnipod - Times -->
     <string name="omnipod_common_time_with_timezone" translatable="false">%1$s (%2$s)</string>

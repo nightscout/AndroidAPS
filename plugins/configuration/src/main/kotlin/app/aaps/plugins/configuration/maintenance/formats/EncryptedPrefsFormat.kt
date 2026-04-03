@@ -17,8 +17,8 @@ import app.aaps.plugins.configuration.maintenance.PrefsMetadataKeyImpl
 import app.aaps.plugins.configuration.maintenance.data.PrefFileNotFoundError
 import app.aaps.plugins.configuration.maintenance.data.PrefFormatError
 import app.aaps.plugins.configuration.maintenance.data.PrefIOError
-import app.aaps.plugins.configuration.maintenance.data.PrefMetadataMap
-import app.aaps.plugins.configuration.maintenance.data.Prefs
+import app.aaps.core.interfaces.maintenance.PrefMetadataMap
+import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import org.json.JSONException

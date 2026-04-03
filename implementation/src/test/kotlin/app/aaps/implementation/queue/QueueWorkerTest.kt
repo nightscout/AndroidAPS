@@ -6,15 +6,19 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.data.pump.defs.PumpDescription
-import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,11 +33,13 @@ class QueueWorkerTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
-    @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var jobName: CommandQueueName
     @Mock lateinit var workManager: WorkManager
+
+    private val testScope = CoroutineScope(Dispatchers.Unconfined)
+    private val bolusProgressData = BolusProgressData()
 
     init {
         addInjector {
@@ -50,8 +56,8 @@ class QueueWorkerTest : TestBaseWithProfile() {
                 it.activePlugin = activePlugin
                 it.rh = rh
                 it.preferences = preferences
-                it.androidPermission = androidPermission
                 it.config = config
+                it.bolusProgressData = bolusProgressData
             }
         }
     }
@@ -61,17 +67,18 @@ class QueueWorkerTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
+        whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
         commandQueue = CommandQueueImplementation(
-            injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
+            injector, aapsLogger, rxBus, rh, constraintChecker,
             profileFunction, activePlugin, context, config, dateUtil, fabricPrivacy,
-            uiInteraction, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager
+            uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope, bolusProgressData
         )
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1
 
         whenever(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
-        whenever(profileFunction.getProfile()).thenReturn(validProfile)
+        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
 
         val bolusConstraint = ConstraintObject(0.0, aapsLogger)
         whenever(constraintChecker.applyBolusConstraints(anyOrNull())).thenReturn(bolusConstraint)

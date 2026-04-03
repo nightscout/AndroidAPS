@@ -14,7 +14,7 @@ class ActionDummy(injector: HasAndroidInjector) : Action(injector) {
         throw NotImplementedError("An operation is not implemented")
     }
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         throw NotImplementedError("An operation is not implemented")
     }
 

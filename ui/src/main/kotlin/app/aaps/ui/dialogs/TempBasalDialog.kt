@@ -23,12 +23,11 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogTempbasalBinding
 import com.google.common.base.Joiner
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -70,7 +69,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val pumpDescription = activePlugin.activePump.pumpDescription
-        val profile = profileFunction.getProfile() ?: return
+        val profile = runBlocking { profileFunction.getProfile() } ?: return
 
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()
         val tempPercentStep = pumpDescription.tempPercentStep.toDouble()
@@ -115,7 +114,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
         var percent = 0
         var absolute = 0.0
         val durationInMinutes = binding.duration.value.toInt()
-        val profile = profileFunction.getProfile() ?: return false
+        val profile = runBlocking { profileFunction.getProfile() } ?: return false
         val actions: LinkedList<String> = LinkedList()
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(binding.basalPercentInput.text)
@@ -131,8 +130,11 @@ class TempBasalDialog : DialogFragmentWithDate() {
             if (abs(absolute - basalAbsoluteInput) > 0.01)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.constraint_applied).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
         }
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+        uiInteraction.showOkCancelDialog(
+            context = requireActivity(),
+            title = rh.gs(app.aaps.core.ui.R.string.tempbasal_label),
+            message = Joiner.on("<br/>").join(actions),
+            ok = {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -159,8 +161,8 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     )
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 }
-            })
-        }
+            }
+        )
         return true
     }
 

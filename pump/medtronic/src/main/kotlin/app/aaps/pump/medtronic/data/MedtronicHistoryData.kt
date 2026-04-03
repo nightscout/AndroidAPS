@@ -4,11 +4,13 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationLevel
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.LongNonPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.DateTimeUtil
@@ -37,6 +39,7 @@ import app.aaps.pump.medtronic.keys.MedtronicLongNonKey
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
@@ -57,13 +60,12 @@ import javax.inject.Singleton
 class MedtronicHistoryData @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
-    private val rh: ResourceHelper,
     private val medtronicUtil: MedtronicUtil,
     private val medtronicPumpHistoryDecoder: MedtronicPumpHistoryDecoder,
     private val medtronicPumpStatus: MedtronicPumpStatus,
     private val pumpSync: PumpSync,
     private val pumpSyncStorage: PumpSyncStorage,
-    private val uiInteraction: UiInteraction,
+    private val notificationManager: NotificationManager,
     private val profileUtil: ProfileUtil
 ) {
 
@@ -247,11 +249,11 @@ class MedtronicHistoryData @Inject constructor(
     }
 
     private fun isCollectionEmpty(col: List<*>?): Boolean {
-        return col == null || col.isEmpty()
+        return col.isNullOrEmpty()
     }
 
     private fun isCollectionNotEmpty(col: List<*>?): Boolean {
-        return col != null && col.isNotEmpty()
+        return !col.isNullOrEmpty()
     }
 
     fun isPumpSuspended(): Boolean {
@@ -436,13 +438,15 @@ class MedtronicHistoryData @Inject constructor(
             val glucose = profileUtil.fromMgdlToUnits(glucoseMgdl.toDouble())
             val glucoseUnit = profileUtil.units
 
-            val result = pumpSync.insertFingerBgIfNewWithTimestamp(
-                DateTimeUtil.toMillisFromATD(bgRecord.atechDateTime),
-                glucose, glucoseUnit, null,
-                bgRecord.pumpId,
-                medtronicPumpStatus.pumpType,
-                medtronicPumpStatus.serialNumber
-            )
+            val result = runBlocking {
+                pumpSync.insertFingerBgIfNewWithTimestamp(
+                    DateTimeUtil.toMillisFromATD(bgRecord.atechDateTime),
+                    glucose, glucoseUnit, null,
+                    bgRecord.pumpId,
+                    medtronicPumpStatus.pumpType,
+                    medtronicPumpStatus.serialNumber
+                )
+            }
 
             aapsLogger.debug(
                 LTag.PUMP, String.format(
@@ -534,13 +538,15 @@ class MedtronicHistoryData @Inject constructor(
     private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: LongNonPreferenceKey, eventType: TE.Type) {
         val lastPrimeFromAAPS = preferences.get(eventSP)
         if (historyRecord.atechDateTime != lastPrimeFromAAPS) {
-            val result = pumpSync.insertTherapyEventIfNewWithTimestamp(
-                DateTimeUtil.toMillisFromATD(historyRecord.atechDateTime),
-                eventType, null,
-                historyRecord.pumpId,
-                medtronicPumpStatus.pumpType,
-                medtronicPumpStatus.serialNumber
-            )
+            val result = runBlocking {
+                pumpSync.insertTherapyEventIfNewWithTimestamp(
+                    DateTimeUtil.toMillisFromATD(historyRecord.atechDateTime),
+                    eventType, null,
+                    historyRecord.pumpId,
+                    medtronicPumpStatus.pumpType,
+                    medtronicPumpStatus.serialNumber
+                )
+            }
 
             aapsLogger.debug(
                 LTag.PUMP, String.format(
@@ -567,15 +573,17 @@ class MedtronicHistoryData @Inject constructor(
         for (tdd in tdds) {
             val totalsDTO = tdd.decodedData["Object"] as DailyTotalsDTO
 
-            pumpSync.createOrUpdateTotalDailyDose(
-                DateTimeUtil.toMillisFromATD(tdd.atechDateTime),
-                totalsDTO.insulinBolus,
-                totalsDTO.insulinBasal,
-                totalsDTO.insulinTotal,
-                tdd.pumpId,
-                medtronicPumpStatus.pumpType,
-                medtronicPumpStatus.serialNumber
-            )
+            runBlocking {
+                pumpSync.createOrUpdateTotalDailyDose(
+                    DateTimeUtil.toMillisFromATD(tdd.atechDateTime),
+                    totalsDTO.insulinBolus,
+                    totalsDTO.insulinBasal,
+                    totalsDTO.insulinTotal,
+                    tdd.pumpId,
+                    medtronicPumpStatus.pumpType,
+                    medtronicPumpStatus.serialNumber
+                )
+            }
         }
     }
 
@@ -627,15 +635,17 @@ class MedtronicHistoryData @Inject constructor(
             }
 
             if (temporaryId != null) {
-                val result = pumpSync.syncBolusWithTempId(
-                    timestamp = tryToGetByLocalTime(bolus.atechDateTime),
-                    amount = deliveredAmount,
-                    temporaryId = temporaryId,
-                    type = null,
-                    pumpId = bolus.pumpId,
-                    pumpType = medtronicPumpStatus.pumpType,
-                    pumpSerial = medtronicPumpStatus.serialNumber
-                )
+                val result = runBlocking {
+                    pumpSync.syncBolusWithTempId(
+                        timestamp = tryToGetByLocalTime(bolus.atechDateTime),
+                        amount = PumpInsulin(deliveredAmount),
+                        temporaryId = temporaryId,
+                        type = null,
+                        pumpId = bolus.pumpId,
+                        pumpType = medtronicPumpStatus.pumpType,
+                        pumpSerial = medtronicPumpStatus.serialNumber
+                    )
+                }
 
                 aapsLogger.debug(
                     LTag.PUMP, String.format(
@@ -645,14 +655,16 @@ class MedtronicHistoryData @Inject constructor(
                     )
                 )
             } else {
-                val result = pumpSync.syncBolusWithPumpId(
-                    timestamp = tryToGetByLocalTime(bolus.atechDateTime),
-                    amount = deliveredAmount,
-                    type = null,
-                    pumpId = bolus.pumpId,
-                    pumpType = medtronicPumpStatus.pumpType,
-                    pumpSerial = medtronicPumpStatus.serialNumber
-                )
+                val result = runBlocking {
+                    pumpSync.syncBolusWithPumpId(
+                        timestamp = tryToGetByLocalTime(bolus.atechDateTime),
+                        amount = PumpInsulin(deliveredAmount),
+                        type = null,
+                        pumpId = bolus.pumpId,
+                        pumpType = medtronicPumpStatus.pumpType,
+                        pumpSerial = medtronicPumpStatus.serialNumber
+                    )
+                }
 
                 aapsLogger.debug(
                     LTag.PUMP, String.format(
@@ -670,15 +682,17 @@ class MedtronicHistoryData @Inject constructor(
     private fun addExtendedBolus(bolus: PumpHistoryEntry, bolusDTO: BolusDTO, isMultiwave: Boolean) {
         val durationMs: Long = bolusDTO.duration * 60L * 1000L
 
-        val result = pumpSync.syncExtendedBolusWithPumpId(
-            tryToGetByLocalTime(bolus.atechDateTime),
-            bolusDTO.deliveredAmount,
-            durationMs,
-            false,
-            bolus.pumpId,
-            medtronicPumpStatus.pumpType,
-            medtronicPumpStatus.serialNumber
-        )
+        val result = runBlocking {
+            pumpSync.syncExtendedBolusWithPumpId(
+                tryToGetByLocalTime(bolus.atechDateTime),
+                PumpRate(bolusDTO.deliveredAmount),
+                durationMs,
+                false,
+                bolus.pumpId,
+                medtronicPumpStatus.pumpType,
+                medtronicPumpStatus.serialNumber
+            )
+        }
 
         aapsLogger.debug(
             LTag.PUMP, String.format(
@@ -767,20 +781,22 @@ class MedtronicHistoryData @Inject constructor(
                         )
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            uiInteraction.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
+                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.URGENT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
-                            val result = pumpSync.syncTemporaryBasalWithTempId(
-                                tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
-                                tbrEntry.insulinRate,
-                                tempBasalProcessDTO.durationAsSeconds * 1000L,
-                                isAbsolute = !tbrEntry.isPercent,
-                                entryWithTempId.temporaryId,
-                                PumpSync.TemporaryBasalType.NORMAL,
-                                tempBasalProcessDTO.pumpId,
-                                medtronicPumpStatus.pumpType,
-                                medtronicPumpStatus.serialNumber
-                            )
+                            val result = runBlocking {
+                                pumpSync.syncTemporaryBasalWithTempId(
+                                    tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                    PumpRate(tbrEntry.insulinRate),
+                                    tempBasalProcessDTO.durationAsSeconds * 1000L,
+                                    isAbsolute = !tbrEntry.isPercent,
+                                    entryWithTempId.temporaryId,
+                                    PumpSync.TemporaryBasalType.NORMAL,
+                                    tempBasalProcessDTO.pumpId,
+                                    medtronicPumpStatus.pumpType,
+                                    medtronicPumpStatus.serialNumber
+                                )
+                            }
 
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithTempId - Result: $result")
                         }
@@ -809,19 +825,21 @@ class MedtronicHistoryData @Inject constructor(
                         )
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            uiInteraction.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
+                            notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.URGENT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
-                            val result = pumpSync.syncTemporaryBasalWithPumpId(
-                                tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
-                                tbrEntry.insulinRate,
-                                tempBasalProcessDTO.durationAsSeconds * 1000L,
-                                !tbrEntry.isPercent,
-                                PumpSync.TemporaryBasalType.NORMAL,
-                                tempBasalProcessDTO.pumpId,
-                                medtronicPumpStatus.pumpType,
-                                medtronicPumpStatus.serialNumber
-                            )
+                            val result = runBlocking {
+                                pumpSync.syncTemporaryBasalWithPumpId(
+                                    tryToGetByLocalTime(tempBasalProcessDTO.atechDateTime),
+                                    PumpRate(tbrEntry.insulinRate),
+                                    tempBasalProcessDTO.durationAsSeconds * 1000L,
+                                    !tbrEntry.isPercent,
+                                    PumpSync.TemporaryBasalType.NORMAL,
+                                    tempBasalProcessDTO.pumpId,
+                                    medtronicPumpStatus.pumpType,
+                                    medtronicPumpStatus.serialNumber
+                                )
+                            }
 
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Result: $result")
                         }
@@ -1079,19 +1097,21 @@ class MedtronicHistoryData @Inject constructor(
             )
 
             if (tempBasalProcess.durationAsSeconds <= 0) {
-                uiInteraction.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
+                notificationManager.post(NotificationId.MDT_INVALID_HISTORY_DATA, R.string.invalid_history_data, level = NotificationLevel.URGENT)
                 aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
             } else {
-                val result = pumpSync.syncTemporaryBasalWithPumpId(
-                    tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime),
-                    0.0,
-                    tempBasalProcess.durationAsSeconds * 1000L,
-                    true,
-                    PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                    tempBasalProcess.itemOne.pumpId,
-                    medtronicPumpStatus.pumpType,
-                    medtronicPumpStatus.serialNumber
-                )
+                val result = runBlocking {
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                        tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime),
+                        PumpRate(0.0),
+                        tempBasalProcess.durationAsSeconds * 1000L,
+                        true,
+                        PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                        tempBasalProcess.itemOne.pumpId,
+                        medtronicPumpStatus.pumpType,
+                        medtronicPumpStatus.serialNumber
+                    )
+                }
 
                 aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
             }
@@ -1428,6 +1448,7 @@ class MedtronicHistoryData @Inject constructor(
          * Note: June 2020. Since this seems to be fixed, I am disabling this per default. I will leave code inside
          * in case we need it again. Code that turns this on is commented out RileyLinkMedtronicService#verifyConfiguration()
          */
+        @Suppress("ConstPropertyName")
         const val doubleBolusDebug = false
     }
 

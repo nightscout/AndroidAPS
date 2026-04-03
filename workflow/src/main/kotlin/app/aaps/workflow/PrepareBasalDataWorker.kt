@@ -40,7 +40,7 @@ class PrepareBasalDataWorker(
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareBasalData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 0, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 0, false))
         val baseBasalArray: MutableList<ScaledDataPoint> = ArrayList()
         val tempBasalArray: MutableList<ScaledDataPoint> = ArrayList()
         val basalLineArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -55,7 +55,7 @@ class PrepareBasalDataWorker(
         while (time < endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
-            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, progress.toInt(), null))
+            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, progress.toInt(), false))
             val profile = profileFunction.getProfile(time)
             if (profile == null) {
                 time += 60 * 1000L
@@ -97,6 +97,7 @@ class PrepareBasalDataWorker(
                 absoluteBasalLineArray.add(ScaledDataPoint(time, lastAbsoluteLineBasal, data.overviewData.basalScale))
                 absoluteBasalLineArray.add(ScaledDataPoint(time, basal, data.overviewData.basalScale))
             }
+
             lastAbsoluteLineBasal = absoluteLineValue
             lastLineBasal = baseBasalValue
             lastTempBasal = tempBasalValue
@@ -137,7 +138,7 @@ class PrepareBasalDataWorker(
                 absolutePaint.color = rh.gac(ctx, app.aaps.core.ui.R.attr.basal)
             })
         }
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 100, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 100, false))
         return Result.success()
     }
 }

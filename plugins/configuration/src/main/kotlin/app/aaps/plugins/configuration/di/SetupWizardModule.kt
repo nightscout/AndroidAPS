@@ -29,18 +29,22 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWRadioButton
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(
     includes = [
         SetupWizardModule.Provide::class
     ]
 )
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class SetupWizardModule {
 
     @ContributesAndroidInjector abstract fun contributesSetupWizardActivity(): SetupWizardActivity
 
     @Module
+    @InstallIn(SingletonComponent::class)
     class Provide {
 
         @Provides

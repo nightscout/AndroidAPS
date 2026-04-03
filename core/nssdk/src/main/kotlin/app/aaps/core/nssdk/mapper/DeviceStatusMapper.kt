@@ -4,7 +4,7 @@ import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.nssdk.remotemodel.RemoteDeviceStatus
 import com.google.gson.Gson
 import com.google.gson.JsonParser
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
 
 fun NSDeviceStatus.convertToRemoteAndBack(): NSDeviceStatus =
     toRemoteDeviceStatus().toNSDeviceStatus()
@@ -53,7 +53,7 @@ internal fun RemoteDeviceStatus.Pump.toNSDeviceStatusPump(): NSDeviceStatus.Pump
         reservoirDisplayOverride = reservoirDisplayOverride,
         battery = NSDeviceStatus.Pump.Battery(battery?.percent, battery?.voltage),
         status = NSDeviceStatus.Pump.Status(status?.status, status?.timestamp),
-        extended = extended?.let { JSONObject(it.toString()) }
+        extended = extended?.let { Json.decodeFromString(it.toString()) }
     )
 
 internal fun NSDeviceStatus.Pump.toRemoteDeviceStatusPump(): RemoteDeviceStatus.Pump =
@@ -68,9 +68,9 @@ internal fun NSDeviceStatus.Pump.toRemoteDeviceStatusPump(): RemoteDeviceStatus.
 
 internal fun RemoteDeviceStatus.OpenAps.toNSDeviceStatusOpenAps(): NSDeviceStatus.OpenAps =
     NSDeviceStatus.OpenAps(
-        suggested = suggested?.let { JSONObject(it.toString()) },
-        enacted = enacted?.let { JSONObject(it.toString()) },
-        iob = iob?.let { JSONObject(it.toString()) }
+        suggested = suggested?.let { Json.decodeFromString(it.toString()) },
+        enacted = enacted?.let { Json.decodeFromString(it.toString()) },
+        iob = iob?.let { Json.decodeFromString(it.toString()) }
     )
 
 internal fun NSDeviceStatus.OpenAps.toRemoteDeviceStatusOpenAps(): RemoteDeviceStatus.OpenAps =
@@ -88,11 +88,11 @@ internal fun RemoteDeviceStatus.Configuration.toNSDeviceStatusConfiguration(): N
         aps = aps,
         sensitivity = sensitivity,
         smoothing = smoothing,
-        insulinConfiguration = insulinConfiguration?.let { JSONObject(it.toString()) },
-        apsConfiguration = apsConfiguration?.let { JSONObject(it.toString()) },
-        sensitivityConfiguration = sensitivityConfiguration?.let { JSONObject(it.toString()) },
-        overviewConfiguration = overviewConfiguration?.let { JSONObject(it.toString()) },
-        safetyConfiguration = safetyConfiguration?.let { JSONObject(it.toString()) }
+        insulinConfiguration = insulinConfiguration?.let { Json.decodeFromString(it.toString()) },
+        apsConfiguration = apsConfiguration?.let { Json.decodeFromString(it.toString()) },
+        sensitivityConfiguration = sensitivityConfiguration?.let { Json.decodeFromString(it.toString()) },
+        overviewConfiguration = overviewConfiguration?.let { Json.decodeFromString(it.toString()) },
+        safetyConfiguration = safetyConfiguration?.let { Json.decodeFromString(it.toString()) }
     )
 
 internal fun NSDeviceStatus.Configuration.toRemoteDeviceStatusConfiguration(): RemoteDeviceStatus.Configuration =

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.data.model.FD
@@ -19,37 +20,31 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventFoodDatabaseChanged
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.UIRunnable
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.FoodFragmentBinding
 import app.aaps.plugins.main.databinding.FoodItemBinding
 import dagger.android.support.DaggerFragment
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class FoodFragment : DaggerFragment() {
 
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
 
-    private val disposable = CompositeDisposable()
     private var unfiltered: List<FD> = arrayListOf()
     private var filtered: MutableList<FD> = arrayListOf()
 
@@ -89,31 +84,29 @@ class FoodFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable += rxBus
-            .toObservable(EventFoodDatabaseChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
+        persistenceLayer.observeChanges(FD::class.java)
+            .debounce(1000L)
+            .onEach { swapAdapter() }
+            .launchIn(lifecycleScope)
         swapAdapter()
     }
 
     private fun swapAdapter() {
-        disposable += persistenceLayer
-            .getFoods()
-            .observeOn(aapsSchedulers.main)
-            .subscribe { list ->
-                unfiltered = list
-                fillCategories()
-                fillSubcategories()
-                filterData()
-                binding.recyclerview.swapAdapter(RecyclerViewAdapter(filtered), true)
+        lifecycleScope.launch {
+            val list = withContext(Dispatchers.IO) {
+                persistenceLayer.getFoods()
             }
+            unfiltered = list
+            fillCategories()
+            fillSubcategories()
+            filterData()
+            binding.recyclerview.swapAdapter(RecyclerViewAdapter(filtered), true)
+        }
     }
 
     @Synchronized
     override fun onPause() {
         super.onPause()
-        disposable.clear()
     }
 
     @Synchronized
@@ -207,19 +200,15 @@ class FoodFragment : DaggerFragment() {
             init {
                 binding.icRemove.setOnClickListener { v: View ->
                     val food = v.tag as FD
-                    activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord) + "\n" + food.name, {
-                            disposable += persistenceLayer.invalidateFood(food.id, Action.FOOD_REMOVED, Sources.Food).subscribe()
-                        }, null)
-                    }
+                    uiInteraction.showOkCancelDialog(context = requireActivity(), message = rh.gs(app.aaps.core.ui.R.string.removerecord) + "\n" + food.name, ok = {
+                        lifecycleScope.launch { persistenceLayer.invalidateFood(food.id, Action.FOOD_REMOVED, Sources.Food) }
+                    }, cancel = null)
                 }
                 binding.icCalculator.setOnClickListener { v: View ->
                     val food = v.tag as FD
-                    activity?.let { activity ->
-                        protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                            if (isAdded) uiInteraction.runWizardDialog(childFragmentManager, food.carbs, food.name)
-                        })
-                    }
+                    protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable {
+                        if (isAdded) uiInteraction.runWizardDialog(childFragmentManager, food.carbs, food.name)
+                    })
                 }
             }
         }

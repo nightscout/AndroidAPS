@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
@@ -37,14 +38,12 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogCarbsBinding
 import com.google.common.base.Joiner
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.util.LinkedList
 import java.util.concurrent.TimeUnit
@@ -69,7 +68,6 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var queryingProtection = false
-    private val disposable = CompositeDisposable()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -187,7 +185,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
             if (bgReading.recalculated < 72) {
 
-                val activeTT = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+                val activeTT = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
                 val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
 
                 var shouldAutoCheckHypo = true
@@ -231,7 +229,6 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        disposable.clear()
         _binding = null
     }
 
@@ -325,8 +322,11 @@ class CarbsDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         if (carbsAfterConstraints != 0 || activitySelected || eatingSoonSelected || hypoSelected) {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            uiInteraction.showOkCancelDialog(
+                context = requireActivity(),
+                title = rh.gs(app.aaps.core.ui.R.string.carbs),
+                message = Joiner.on("<br/>").join(actions),
+                ok = {
                     val selectedTTDuration = when {
                         activitySelected   -> activityTTDuration
                         eatingSoonSelected -> eatingSoonTTDuration
@@ -346,23 +346,25 @@ class CarbsDialog : DialogFragmentWithDate() {
                         else               -> TT.Reason.CUSTOM
                     }
                     if (reason != TT.Reason.CUSTOM)
-                        disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                            temporaryTarget = TT(
-                                timestamp = System.currentTimeMillis(),
-                                duration = TimeUnit.MINUTES.toMillis(selectedTTDuration.toLong()),
-                                reason = reason,
-                                lowTarget = profileUtil.convertToMgdl(selectedTT, profileUtil.units),
-                                highTarget = profileUtil.convertToMgdl(selectedTT, profileUtil.units)
-                            ),
-                            action = Action.TT,
-                            source = Sources.CarbDialog,
-                            note = null,
-                            listValues = listOf(
-                                ValueWithUnit.TETTReason(reason),
-                                ValueWithUnit.fromGlucoseUnit(selectedTT, units),
-                                ValueWithUnit.Minute(selectedTTDuration)
+                        lifecycleScope.launch {
+                            persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                                temporaryTarget = TT(
+                                    timestamp = System.currentTimeMillis(),
+                                    duration = TimeUnit.MINUTES.toMillis(selectedTTDuration.toLong()),
+                                    reason = reason,
+                                    lowTarget = profileUtil.convertToMgdl(selectedTT, profileUtil.units),
+                                    highTarget = profileUtil.convertToMgdl(selectedTT, profileUtil.units)
+                                ),
+                                action = Action.TT,
+                                source = Sources.CarbDialog,
+                                note = null,
+                                listValues = listOf(
+                                    ValueWithUnit.TETTReason(reason),
+                                    ValueWithUnit.fromGlucoseUnit(selectedTT, units),
+                                    ValueWithUnit.Minute(selectedTTDuration)
+                                )
                             )
-                        ).subscribe()
+                        }
                     if (carbsAfterConstraints != 0) {
                         val detailedBolusInfo = DetailedBolusInfo().also {
                             it.eventType = TE.Type.CORRECTION_BOLUS
@@ -395,12 +397,15 @@ class CarbsDialog : DialogFragmentWithDate() {
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
                         automation.scheduleTimeToEatReminder(T.mins(timeOffset.toLong()).secs().toInt())
                     }
-                }, null)
-            }
+                },
+                cancel = null
+            )
         } else
-            activity?.let { activity ->
-                OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.carbs), rh.gs(app.aaps.core.ui.R.string.no_action_selected))
-            }
+            uiInteraction.showOkDialog(
+                context = requireActivity(),
+                title = rh.gs(app.aaps.core.ui.R.string.carbs),
+                message = rh.gs(app.aaps.core.ui.R.string.no_action_selected)
+            )
         return true
     }
 

@@ -1,5 +1,7 @@
 package app.aaps.core.keys.interfaces
 
+import kotlinx.coroutines.flow.StateFlow
+
 interface Preferences {
 
     /**
@@ -49,6 +51,14 @@ interface Preferences {
     fun put(key: BooleanNonPreferenceKey, value: Boolean)
 
     /**
+     * Observe [Boolean] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: BooleanNonPreferenceKey): StateFlow<Boolean>
+
+    /**
      * Get [Boolean] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
@@ -96,6 +106,15 @@ interface Preferences {
     fun put(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, value: Boolean)
 
     /**
+     * Observe [Boolean] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.BooleanComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Boolean>
+
+    /**
      * Remove value from [android.content.SharedPreferences]
      *
      * @param key [app.aaps.core.keys.interfaces.PreferenceKey] enum
@@ -128,6 +147,14 @@ interface Preferences {
      * @param value value
      */
     fun put(key: StringNonPreferenceKey, value: String)
+
+    /**
+     * Observe [String] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [StringNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: StringNonPreferenceKey): StateFlow<String>
 
     /**
      * Get [String] value from [android.content.SharedPreferences]
@@ -165,6 +192,15 @@ interface Preferences {
      * @param value value
      */
     fun put(key: StringComposedNonPreferenceKey, vararg arguments: Any, value: String)
+
+    /**
+     * Observe [String] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.StringComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: StringComposedNonPreferenceKey, vararg arguments: Any): StateFlow<String>
 
     /* DOUBLE */
 
@@ -205,6 +241,14 @@ interface Preferences {
     fun put(key: DoubleNonPreferenceKey, value: Double)
 
     /**
+     * Observe [Double] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoubleNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: DoubleNonPreferenceKey): StateFlow<Double>
+
+    /**
      * Get [String] value from [android.content.SharedPreferences]
      * *
      * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
@@ -230,6 +274,15 @@ interface Preferences {
      * @param value value
      */
     fun put(key: DoubleComposedNonPreferenceKey, vararg arguments: Any, value: Double)
+
+    /**
+     * Observe [Double] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.DoubleComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Double>
 
     /* UNIT DOUBLE */
 
@@ -258,6 +311,15 @@ interface Preferences {
      * @param value value
      */
     fun put(key: UnitDoublePreferenceKey, value: Double)
+
+    /**
+     * Observe [Double] value changes for unit-aware preference.
+     * Emits when the preference value OR the display units change.
+     *
+     * @param key [UnitDoublePreferenceKey] enum
+     * @return [StateFlow] emitting current value in user's units
+     */
+    fun observe(key: UnitDoublePreferenceKey): StateFlow<Double>
 
     /* INT */
 
@@ -297,6 +359,14 @@ interface Preferences {
     fun put(key: IntNonPreferenceKey, value: Int)
 
     /**
+     * Observe [Int] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: IntNonPreferenceKey): StateFlow<Int>
+
+    /**
      * Increment [Int] value in [android.content.SharedPreferences]
      *
      * @param key [app.aaps.core.keys.interfaces.IntNonPreferenceKey] enum
@@ -312,6 +382,15 @@ interface Preferences {
      * @return value
      */
     fun get(key: IntComposedNonPreferenceKey, vararg arguments: Any): Int
+
+    /**
+     * Observe [Int] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.IntComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: IntComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Int>
 
     /**
      * Get [Int] value from [android.content.SharedPreferences]
@@ -350,6 +429,14 @@ interface Preferences {
      * @param value value
      */
     fun put(key: LongNonPreferenceKey, value: Long)
+
+    /**
+     * Observe [Long] value changes from [android.content.SharedPreferences]
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongNonPreferenceKey] enum
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: LongNonPreferenceKey): StateFlow<Long>
 
     /**
      * Get [Long] value from [android.content.SharedPreferences]
@@ -395,6 +482,15 @@ interface Preferences {
      * @param value value
      */
     fun put(key: LongComposedNonPreferenceKey, vararg arguments: Any, value: Long)
+
+    /**
+     * Observe [Long] value changes for composed key
+     *
+     * @param key [app.aaps.core.keys.interfaces.LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return [StateFlow] that emits current value and all subsequent changes
+     */
+    fun observe(key: LongComposedNonPreferenceKey, vararg arguments: Any): StateFlow<Long>
 
     /* GENERAL */
 
@@ -457,4 +553,12 @@ interface Preferences {
      * @return true if exportable key
      */
     fun isExportableKey(key: String): Boolean
+
+    /**
+     * Get all registered PreferenceKey instances.
+     * Used by the global search feature to build the search index.
+     * @return list of all PreferenceKey instances from registered enums
+     */
+    fun getAllPreferenceKeys(): List<PreferenceKey>
+
 }

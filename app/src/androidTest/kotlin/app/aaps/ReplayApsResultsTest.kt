@@ -2,7 +2,6 @@ package app.aaps
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.GrantPermissionRule
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
@@ -37,7 +36,6 @@ import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.skyscreamer.jsonassert.Customization
 import org.skyscreamer.jsonassert.JSONAssert
@@ -61,9 +59,6 @@ class ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var preferences: Preferences
 
     private val context = ApplicationProvider.getApplicationContext<TestApplication>()
-
-    @get:Rule
-    var runtimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.READ_EXTERNAL_STORAGE)!!
 
     private var ktTime = 0L
     private var jsTime = 0L

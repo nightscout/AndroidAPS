@@ -2,7 +2,6 @@ package app.aaps.core.interfaces.sync
 
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 
 /**
  * Plugin providing communication with Nightscout server
@@ -25,11 +24,6 @@ interface NsClient : Sync {
      * @param reason identification of caller
      */
     fun resend(reason: String)
-
-    /**
-     * List of log messages for fragment
-     */
-    val listLog: MutableList<EventNSClientNewLog>
 
     /**
      * Used data sync selector
@@ -84,7 +78,7 @@ interface NsClient : Sync {
      *
      * Next synchronization will start from scratch
      */
-    fun resetToFullSync()
+    suspend fun resetToFullSync()
 
     /**
      * Upload new record to NS

@@ -3,7 +3,7 @@ package app.aaps.receivers
 import android.Manifest
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
-import app.aaps.core.interfaces.androidPermissions.AndroidPermission
+import android.content.pm.PackageManager
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.utils.extensions.safeGetParcelableExtra
@@ -24,7 +24,6 @@ class BTReceiverTest : TestBaseWithProfile() {
     private lateinit var btReceiver: BTReceiver
 
     // Mocks for dependencies
-    @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var intent: Intent
     @Mock lateinit var bluetoothDevice: BluetoothDevice
     @Mock lateinit var mockedRxBus: RxBus
@@ -38,7 +37,6 @@ class BTReceiverTest : TestBaseWithProfile() {
     fun setUpMocks() {
         btReceiver = BTReceiver().also {
             it.rxBus = mockedRxBus
-            it.androidPermission = androidPermission
         }
 
         // Common setup for the mock BluetoothDevice
@@ -49,10 +47,8 @@ class BTReceiverTest : TestBaseWithProfile() {
     @Test
     fun `processIntent sends CONNECT event on ACTION_ACL_CONNECTED when permission is granted`() {
         // Arrange
-        // 1. Permission IS granted (permissionNotGranted returns false)
-        whenever(androidPermission.permissionNotGranted(context, Manifest.permission.BLUETOOTH_CONNECT))
-            .thenReturn(false)
-        // 2. Intent contains the device and the correct action
+        whenever(context.checkPermission(Manifest.permission.BLUETOOTH_CONNECT, android.os.Process.myPid(), android.os.Process.myUid()))
+            .thenReturn(PackageManager.PERMISSION_GRANTED)
         whenever(intent.safeGetParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java))
             .thenReturn(bluetoothDevice)
         whenever(intent.action).thenReturn(BluetoothDevice.ACTION_ACL_CONNECTED)
@@ -71,10 +67,8 @@ class BTReceiverTest : TestBaseWithProfile() {
     @Test
     fun `processIntent sends DISCONNECT event on ACTION_ACL_DISCONNECTED when permission is granted`() {
         // Arrange
-        // 1. Permission IS granted
-        whenever(androidPermission.permissionNotGranted(context, Manifest.permission.BLUETOOTH_CONNECT))
-            .thenReturn(false)
-        // 2. Intent contains the device and the correct action
+        whenever(context.checkPermission(Manifest.permission.BLUETOOTH_CONNECT, android.os.Process.myPid(), android.os.Process.myUid()))
+            .thenReturn(PackageManager.PERMISSION_GRANTED)
         whenever(intent.safeGetParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java))
             .thenReturn(bluetoothDevice)
         whenever(intent.action).thenReturn(BluetoothDevice.ACTION_ACL_DISCONNECTED)
@@ -93,10 +87,8 @@ class BTReceiverTest : TestBaseWithProfile() {
     @Test
     fun `processIntent does nothing if permission is NOT granted`() {
         // Arrange
-        // 1. Permission is NOT granted (permissionNotGranted returns true)
-        whenever(androidPermission.permissionNotGranted(context, Manifest.permission.BLUETOOTH_CONNECT))
-            .thenReturn(true)
-        // 2. Intent has a valid device and action, but the permission check should fail first
+        whenever(context.checkPermission(Manifest.permission.BLUETOOTH_CONNECT, android.os.Process.myPid(), android.os.Process.myUid()))
+            .thenReturn(PackageManager.PERMISSION_DENIED)
         whenever(intent.safeGetParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java))
             .thenReturn(bluetoothDevice)
         whenever(intent.action).thenReturn(BluetoothDevice.ACTION_ACL_CONNECTED)
@@ -111,10 +103,8 @@ class BTReceiverTest : TestBaseWithProfile() {
     @Test
     fun `processIntent does nothing if device is missing from intent`() {
         // Arrange
-        // 1. Intent returns null for the device extra
         whenever(intent.safeGetParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java))
             .thenReturn(null)
-        // No need to set permission or action, as the first check for the device should fail and return early
 
         // Act
         btReceiver.processIntent(context, intent)
@@ -126,10 +116,8 @@ class BTReceiverTest : TestBaseWithProfile() {
     @Test
     fun `processIntent does nothing for an irrelevant action`() {
         // Arrange
-        // 1. Permission IS granted
-        whenever(androidPermission.permissionNotGranted(context, Manifest.permission.BLUETOOTH_CONNECT))
-            .thenReturn(false)
-        // 2. Intent has a valid device but an irrelevant action
+        whenever(context.checkPermission(Manifest.permission.BLUETOOTH_CONNECT, android.os.Process.myPid(), android.os.Process.myUid()))
+            .thenReturn(PackageManager.PERMISSION_GRANTED)
         whenever(intent.safeGetParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java))
             .thenReturn(bluetoothDevice)
         whenever(intent.action).thenReturn("some.other.irrelevant.ACTION")

@@ -9,7 +9,7 @@ class InsertOrUpdateBolusCalculatorResultTransaction(
     private val bolusCalculatorResult: BolusCalculatorResult
 ) : Transaction<InsertOrUpdateBolusCalculatorResultTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val current = database.bolusCalculatorResultDao.findById(bolusCalculatorResult.id)
         if (current == null) {

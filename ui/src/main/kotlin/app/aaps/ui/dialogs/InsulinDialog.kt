@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -38,16 +39,14 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogInsulinBinding
 import app.aaps.ui.extensions.toSignedString
 import com.google.common.base.Joiner
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.util.LinkedList
 import java.util.concurrent.TimeUnit
@@ -74,7 +73,6 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var loop: Loop
 
     private var queryingProtection = false
-    private val disposable = CompositeDisposable()
     private var _binding: DialogInsulinBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -183,7 +181,6 @@ class InsulinDialog : DialogFragmentWithDate() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        disposable.clear()
         _binding = null
     }
 
@@ -194,6 +191,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
+        val profile = runBlocking { profileFunction.getProfile() } ?: error("Profile not defined")
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
@@ -231,25 +229,30 @@ class InsulinDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + notes)
 
         if (insulinAfterConstraints > 0 || eatingSoonChecked) {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            uiInteraction.showOkCancelDialog(
+                context = requireActivity(),
+                title = rh.gs(app.aaps.core.ui.R.string.bolus),
+                message = Joiner.on("<br/>").join(actions),
+                ok = {
                     if (eatingSoonChecked) {
-                        disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                            TT(
-                                timestamp = System.currentTimeMillis(),
-                                duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                                reason = TT.Reason.EATING_SOON,
-                                lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits()),
-                                highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits())
-                            ),
-                            action = Action.TT, source = Sources.InsulinDialog,
-                            note = notes,
-                            listValues = listOf(
-                                ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
-                                ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
-                                ValueWithUnit.Minute(eatingSoonTTDuration)
+                        lifecycleScope.launch {
+                            persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                                TT(
+                                    timestamp = System.currentTimeMillis(),
+                                    duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
+                                    reason = TT.Reason.EATING_SOON,
+                                    lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits()),
+                                    highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits())
+                                ),
+                                action = Action.TT, source = Sources.InsulinDialog,
+                                note = notes,
+                                listValues = listOf(
+                                    ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
+                                    ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
+                                    ValueWithUnit.Minute(eatingSoonTTDuration)
+                                )
                             )
-                        ).subscribe()
+                        }
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
@@ -259,12 +262,14 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
-                            disposable += persistenceLayer.insertOrUpdateBolus(
-                                bolus = detailedBolusInfo.createBolus(),
-                                action = Action.BOLUS,
-                                source = Sources.InsulinDialog,
-                                note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
-                            ).subscribe()
+                            lifecycleScope.launch {
+                                persistenceLayer.insertOrUpdateBolus(
+                                    bolus = detailedBolusInfo.createBolus(profile.iCfg),
+                                    action = Action.BOLUS,
+                                    source = Sources.InsulinDialog,
+                                    note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
+                                )
+                            }
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()
                         } else {
@@ -284,12 +289,14 @@ class InsulinDialog : DialogFragmentWithDate() {
                             })
                         }
                     }
-                })
-            }
+                }
+            )
         } else
-            activity?.let { activity ->
-                OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.bolus), rh.gs(app.aaps.core.ui.R.string.no_action_selected))
-            }
+            uiInteraction.showOkDialog(
+                context = requireActivity(),
+                title = rh.gs(app.aaps.core.ui.R.string.bolus),
+                message = rh.gs(app.aaps.core.ui.R.string.no_action_selected)
+            )
         return true
     }
 

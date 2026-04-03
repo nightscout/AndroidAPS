@@ -1,10 +1,13 @@
 package app.aaps.pump.omnipod.common.keys
 
+import app.aaps.core.keys.PreferenceType
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 
 enum class OmnipodBooleanPreferenceKey(
     override val key: String,
     override val defaultValue: Boolean,
+    override val titleResId: Int = 0,
+    override val summaryResId: Int? = null,
     override val calculatedDefaultValue: Boolean = false,
     override val engineeringModeOnly: Boolean = false,
     override val defaultedBySM: Boolean = false,
@@ -27,5 +30,7 @@ enum class OmnipodBooleanPreferenceKey(
     SoundUncertainTbrNotification("AAPS.Omnipod.notification_uncertain_tbr_sound_enabled", true),
     SoundUncertainSmbNotification("AAPS.Omnipod.notification_uncertain_smb_sound_enabled", true),
     SoundUncertainBolusNotification("AAPS.Omnipod.notification_uncertain_bolus_sound_enabled", true),
-    AutomaticallyAcknowledgeAlerts("AAPS.Omnipod.automatically_acknowledge_alerts_enabled", false),
+    AutomaticallyAcknowledgeAlerts("AAPS.Omnipod.automatically_acknowledge_alerts_enabled", false);
+
+    override val preferenceType: PreferenceType = PreferenceType.SWITCH
 }

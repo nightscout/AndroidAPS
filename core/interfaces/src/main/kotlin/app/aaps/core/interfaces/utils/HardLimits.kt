@@ -17,6 +17,8 @@ interface HardLimits {
         val LIMIT_TEMP_TARGET_BG = doubleArrayOf(72.0, 200.0)
         val MIN_DIA = doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0)
         val MAX_DIA = doubleArrayOf(9.0, 9.0, 9.0, 9.0, 10.0)
+        const val MIN_PEAK = 35 // mgdl
+        const val MAX_PEAK = 120 // mgdl
         val MIN_IC = doubleArrayOf(2.0, 2.0, 2.0, 2.0, 0.3)
         val MAX_IC = doubleArrayOf(100.0, 100.0, 100.0, 100.0, 100.0)
         const val MIN_ISF = 2.0 // mgdl
@@ -39,6 +41,8 @@ interface HardLimits {
     fun maxBasal(): Double
     fun minDia(): Double
     fun maxDia(): Double
+    fun minPeak(): Int
+    fun maxPeak(): Int
     fun minIC(): Double
     fun maxIC(): Double
 

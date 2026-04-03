@@ -9,7 +9,7 @@ class InsertIfNewByTimestampCarbsTransaction(
     private val carbs: Carbs
 ) : Transaction<InsertIfNewByTimestampCarbsTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val current = database.carbsDao.findByTimestamp(carbs.timestamp)
         if (current == null) {

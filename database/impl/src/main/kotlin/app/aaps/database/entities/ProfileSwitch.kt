@@ -24,8 +24,6 @@ import java.util.TimeZone
     indices = [
         Index("referenceId"),
         Index("timestamp"),
-        Index("isValid"),
-        Index("id"),
         Index("nightscoutId")
     ]
 )

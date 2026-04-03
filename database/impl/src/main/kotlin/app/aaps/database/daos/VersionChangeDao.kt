@@ -16,9 +16,9 @@ interface VersionChangeDao {
     fun deleteOlderThan(than: Long): Int
 
     @Query("SELECT * FROM $TABLE_VERSION_CHANGES ORDER BY id DESC LIMIT 1")
-    fun getMostRecentVersionChange(): VersionChange?
+    suspend fun getMostRecentVersionChange(): VersionChange?
 
     @Query("SELECT * FROM $TABLE_VERSION_CHANGES WHERE timestamp > :since AND timestamp <= :until LIMIT :limit OFFSET :offset")
-    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<VersionChange>
+    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<VersionChange>
 
 }

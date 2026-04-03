@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
-    id("kotlin-android")
+    alias(libs.plugins.ksp)
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -14,4 +14,7 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":database:impl"))
     implementation(project(":core:objects"))
+
+    ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.hilt.compiler)
 }

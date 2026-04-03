@@ -8,6 +8,8 @@ import app.aaps.plugins.aps.loop.LoopPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 @Module(
     includes = [
@@ -16,13 +18,14 @@ import dagger.android.ContributesAndroidInjector
         ApsModule.Bindings::class
     ]
 )
-
+@InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class ApsModule {
 
     @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment
 
     @Module
+    @InstallIn(SingletonComponent::class)
     interface Bindings {
 
         @Binds fun bindLoop(loopPlugin: LoopPlugin): Loop

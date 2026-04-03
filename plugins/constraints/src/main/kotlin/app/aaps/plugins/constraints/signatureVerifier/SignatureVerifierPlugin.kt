@@ -8,11 +8,11 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.signatureVerifier.keys.SignatureVerifierLongKey
@@ -44,7 +44,7 @@ class SignatureVerifierPlugin @Inject constructor(
     rh: ResourceHelper,
     preferences: Preferences,
     private val context: Context,
-    private val uiInteraction: UiInteraction
+    private val notificationManager: NotificationManager
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -106,7 +106,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     private fun showNotification() {
-        uiInteraction.addNotification(Notification.INVALID_VERSION, rh.gs(R.string.running_invalid_version), Notification.URGENT)
+        notificationManager.post(NotificationId.INVALID_VERSION, R.string.running_invalid_version)
     }
 
     private fun hasIllegalSignature(): Boolean {

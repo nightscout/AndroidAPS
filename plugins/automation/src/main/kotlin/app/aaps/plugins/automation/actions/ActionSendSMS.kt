@@ -22,7 +22,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = rh.gs(R.string.sendsmsactionlabel, text.value)
     override fun icon(): Int = R.drawable.ic_notifications
 
-    override fun doAction(callback: Callback) {
+    override suspend fun doAction(callback: Callback) {
         val result = smsCommunicator.sendNotificationToAllNumbers(text.value)
         callback.result(pumpEnactResultProvider.get().success(result).comment(if (result) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.error)).run()
     }

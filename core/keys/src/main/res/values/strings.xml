@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General preferences -->
+    <string name="pref_title_simple_mode">Simple mode</string>
+    <string name="pref_title_insulin_concentration">Insulin concentration support</string>
+    <string name="pref_summary_insulin_concentration">Enable support for different insulin concentrations (U200, U300, etc.)</string>
+
+    <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Keep screen on</string>
+    <string name="pref_summary_keep_screen_on">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
+    <string name="pref_title_show_treatment_button">Show treatment button</string>
+    <string name="pref_title_show_wizard_button">Show wizard button</string>
+    <string name="pref_title_show_insulin_button">Show insulin button</string>
+    <string name="pref_title_show_carbs_button">Show carbs button</string>
+    <string name="pref_title_show_cgm_button">Show CGM button</string>
+    <string name="pref_summary_show_cgm_button">Opens xDrip+ or Dexcom App (you can use back button to return to AAPS).</string>
+    <string name="pref_title_show_calibration_button">Show calibration button</string>
+    <string name="pref_summary_show_calibration_button">Sends a calibration to xDrip+ (ensure \'Accept Calibrations\' is enabled in xDrip+ under Inter-App settings).</string>
+    <string name="pref_title_show_notes_in_dialogs">Show notes in dialogs</string>
+    <string name="pref_title_use_bolus_advisor">Use bolus advisor</string>
+    <string name="pref_summary_use_bolus_advisor">Enable bolus advisor which assists with bolus calculations during higher glycemias.</string>
+    <string name="pref_title_use_bolus_reminder">Use bolus reminder</string>
+    <string name="pref_summary_use_bolus_reminder">Enable bolus reminder notifications to help track insulin administration.</string>
+    <string name="pref_title_use_super_bolus">Use super bolus</string>
+    <string name="pref_summary_use_super_bolus">Enable super bolus feature which borrows insulin from basal for immediate delivery.</string>
+
+    <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
+
+    <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Alert if no BG data is received</string>
+    <string name="pref_title_alert_pump_unreachable">Alert if pump is unreachable</string>
+    <string name="pref_title_alert_carbs_required">Alert on carbs required</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Raise urgent alarms as Android notifications</string>
+    <string name="pref_title_alert_increase_volume">Gradually increase notification volume</string>
+
+    <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Upload BG data to NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Log sensor change</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Create sensor change therapy event when sensor is inserted.</string>
+
+    <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Use dynamic sensitivity</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Use DynamicISF for sensitivity adjustment instead of Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Use Autosens</string>
+    <string name="pref_title_aps_use_smb">Enable SMB</string>
+    <string name="pref_summary_aps_use_smb">Enable Super Micro Bolus. SMB delivers insulin immediately to respond to rising blood glucose.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Enable SMB with high temp target</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Allow SMB when high temporary target is active.</string>
+    <string name="pref_title_aps_use_smb_always">Enable SMB always</string>
+    <string name="pref_summary_aps_use_smb_always">Enable SMB in all conditions regardless of bolus or COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Enable SMB with COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Allow SMB when carbs on board are present.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Enable SMB with low temp target</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Allow SMB when low temporary target is active.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Enable SMB after carbs</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Allow SMB for a period after carbs are entered.</string>
+    <string name="pref_title_aps_use_uam">Enable UAM</string>
+    <string name="pref_summary_aps_use_uam">Enable Unannounced Meals detection and treatment.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Sensitivity raises target</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">When sensitivity is detected, raise the target glucose.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Resistance lowers target</string>
+    <string name="pref_summary_aps_resistance_lowers_target">When resistance is detected, lower the target glucose.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Always use short average delta</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Always use short average delta instead of simple delta for BG change calculations.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF adjust sensitivity</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Adjust sensitivity calculations when using DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens adjust targets</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Allow Autosens to adjust target glucose in addition to basal and ISF.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">High temp target raises sensitivity</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">High temporary targets will increase insulin sensitivity.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Low temp target lowers sensitivity</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Low temporary targets will decrease insulin sensitivity.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Enable AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Enable AutoISF weight-based ISF adjustments.</string>
+    <string name="pref_title_aps_smb_on_even_target">Enable SMB on even target</string>
+    <string name="pref_summary_aps_smb_on_even_target">Alternative activation of SMB always based on target glucose value.</string>
+
+    <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Enable Fabric crash reporting</string>
+    <string name="pref_title_maintenance_enable_export_automation">Enable automated settings export</string>
+
+    <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Auto switch profile</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Automatically switch to the Autotune-generated profile after calculation.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Categorize UAM as basal</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Treat unannounced meals as basal insulin needs for Autotune calculations.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Tune insulin curve</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Use circadian IC/ISF</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Apply circadian variation to IC and ISF in Autotune calculations.</string>
+    <string name="pref_title_autotune_additional_log">Additional logging</string>
+
+    <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Allow remote commands via SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Report pump unreachable via SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Send SMS notification when pump becomes unreachable.</string>
+
+    <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Upload pump status to NS</string>
+
+    <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Upload data to NS</string>
+    <string name="pref_summary_ns_upload_data">Upload treatments, temp basals, and other data to Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Receive CGM data from NS</string>
+    <string name="pref_summary_ns_receive_cgm">Accept CGM readings from Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Receive profile store from NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Accept profile store updates from Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Receive temp targets from NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Accept temporary target changes from Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Receive profile switches from NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Accept profile switch events from Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">Receive insulin from NS</string>
+    <string name="pref_summary_ns_receive_insulin">Accept insulin treatments from Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">Receive carbs from NS</string>
+    <string name="pref_summary_ns_receive_carbs">Accept carb entries from Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Receive therapy events from NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Accept therapy events from Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Receive running mode from NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Accept running mode changes from Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Receive TBR/EB from NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Accept temp basal rates and extended boluses from Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS alarms</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS announcements</string>
+    <string name="pref_title_ns_use_cellular">Use cellular data</string>
+    <string name="pref_title_ns_use_roaming">Use roaming</string>
+    <string name="pref_title_ns_use_wifi">Use WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Sync on battery</string>
+    <string name="pref_title_ns_use_on_charging">Sync while charging</string>
+    <string name="pref_title_ns_log_app_start">Log app start event</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Create announcements from errors</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Create announcements from carbs required</string>
+    <string name="pref_title_ns_slow_sync">Use slow sync</string>
+    <string name="pref_title_ns_use_ws">Use websockets</string>
+    <string name="pref_summary_ns_use_ws">Use websockets for real-time communication with Nightscout.</string>
+
+    <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">WiFi only</string>
+    <string name="pref_title_openhumans_charging_only">Charging only</string>
+
+    <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Send status to xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Send detailed IOB</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Send detailed IOB information to xDrip+ for display on watch faces.</string>
+    <string name="pref_title_xdrip_send_bgi">Show BGI</string>
+    <string name="pref_summary_xdrip_send_bgi">Show Blood Glucose Impact in xDrip+ status line.</string>
+
+    <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Wear control</string>
+    <string name="pref_summary_wear_control">Control AAPS from Android Wear watch.</string>
+    <string name="pref_title_wear_wizard_bg">Include BG in wizard</string>
+    <string name="pref_title_wear_wizard_tt">Include temp target in wizard</string>
+    <string name="pref_title_wear_wizard_trend">Include trend in wizard</string>
+    <string name="pref_title_wear_wizard_cob">Include COB in wizard</string>
+    <string name="pref_title_wear_wizard_iob">Include IOB in wizard</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Authorize custom watchfaces</string>
+    <string name="pref_title_wear_notify_on_smb">Notify on SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">Send notifications to watch when SMB is delivered.</string>
+    <string name="pref_title_wear_broadcast_data">Broadcast data to watch</string>
+    <string name="pref_summary_wear_broadcast_data">Broadcast AAPS data to 3rd party watch apps via intent.</string>
+
+    <!-- Wizard preferences -->
+    <string name="pref_title_wizard_calculation_visible">Show wizard calculation</string>
+    <string name="pref_title_wizard_correction_percent">Use correction percent</string>
+
+    <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Manage pump site rotation</string>
+    <string name="pref_title_site_rotation_manage_cgm">Manage CGM site rotation</string>
+
+    <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Carbs button increment 1</string>
+    <string name="pref_title_carbs_button_increment_2">Carbs button increment 2</string>
+    <string name="pref_title_carbs_button_increment_3">Carbs button increment 3</string>
+    <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
+    <string name="pref_title_eating_soon_duration">Eating soon duration</string>
+    <string name="pref_title_activity_duration">Activity duration</string>
+    <string name="pref_title_hypo_duration">Hypo duration</string>
+    <string name="pref_title_cage_warning">Threshold warning cannula age</string>
+    <string name="pref_title_cage_critical">Threshold critical cannula age</string>
+    <string name="pref_title_iage_warning">Threshold warning insulin age</string>
+    <string name="pref_title_iage_critical">Threshold critical insulin age</string>
+    <string name="pref_title_sage_warning">Threshold warning sensor age</string>
+    <string name="pref_title_sage_critical">Threshold critical sensor age</string>
+    <string name="pref_title_sbat_warning">Threshold warning sensor battery level</string>
+    <string name="pref_title_sbat_critical">Threshold critical sensor battery level</string>
+    <string name="pref_title_bage_warning">Threshold warning pump battery age</string>
+    <string name="pref_title_bage_critical">Threshold critical pump battery age</string>
+    <string name="pref_title_res_warning">Threshold warning reservoir level</string>
+    <string name="pref_title_res_critical">Threshold critical reservoir level</string>
+    <string name="pref_title_batt_warning">Threshold warning pump battery level</string>
+    <string name="pref_title_batt_critical">Threshold critical pump battery level</string>
+    <string name="pref_title_bolus_percentage">Bolus percentage</string>
+    <string name="deliverpartofboluswizard">Apply this value to BG and carbs correction in bolus wizard\'s result</string>
+    <string name="pref_title_reset_bolus_percentage_time">Reset bolus percentage time</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Deliver full bolus (100%) if glycemia is older than</string>
+
+    <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Protection timeout</string>
+    <string name="pref_title_protection_type_application">Level 0: Application protection</string>
+    <string name="pref_summary_protection_type_application">App launch. Independent from other levels</string>
+    <string name="pref_title_protection_type_bolus">Level 1: Bolus protection</string>
+    <string name="pref_summary_protection_type_bolus">Treatments, profile activation. Requires Level 2</string>
+    <string name="pref_title_protection_type_settings">Level 2: Settings protection</string>
+    <string name="pref_summary_protection_type_settings">Editing profiles, preferences</string>
+    <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">No protection</string>
+    <string name="biometric">Biometric</string>
+    <string name="master_password">Master password</string>
+    <string name="custom_password">Custom password</string>
+    <string name="custom_pin">Custom PIN</string>
+
+    <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Maximum carbs allowed</string>
+
+    <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Open mode minimum change</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
+
+    <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">SMB interval</string>
+    <string name="pref_title_smb_max_minutes">Max minutes of basal to limit SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">UAM max minutes of basal to limit SMB</string>
+    <string name="uam_smb_max_minutes">UAM SMB max minutes</string>
+    <string name="pref_title_carbs_request_threshold">Carbs required threshold</string>
+    <string name="carbs_req_threshold_summary">Minimum grams of carbs to display a carbs suggestion alert. Carbs suggestions below this number will not trigger a notification.</string>
+    <string name="pref_title_half_basal_exercise_target">Half basal exercise target</string>
+    <string name="half_basal_exercise_target_summary">Set to a number, e.g. 160, which means when temp target is 160 mg/dL and High temptarget raises sensitivity=true, run 50%% basal at this level (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">IOB threshold percent</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage of maxIOB above which SMBs are disabled.\\nDefault value: 100%%\\nWith 100%% this feature is effectively disabled.</string>
+    <string name="pref_title_dynisf_adjustment_factor">DynamicISF adjustment factor</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Adjustment factor for DynamicISF. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
+    <string name="pref_title_autosens_period">Autosens period</string>
+    <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
+
+    <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Number of logs to send</string>
+
+    <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Stale data threshold</string>
+    <string name="pref_title_pump_unreachable_threshold">Pump unreachable threshold</string>
+
+    <!-- IntKey: Insulin preferences -->
+    <string name="pref_title_insulin_oref_peak">Peak time</string>
+
+    <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Default tune days</string>
+    <string name="autotune_default_tune_days_summary">Default number of days of data to be processed by Autotune (up to 30)</string>
+
+    <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Remote bolus min distance</string>
+
+    <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Random BG interval</string>
+
+    <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Stale data alarm threshold</string>
+    <string name="pref_title_urgent_alarm_stale_data">Urgent stale data alarm threshold</string>
+
+    <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">User profile for site rotation</string>
+
+    <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Units</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_min">min</string>
+    <string name="units_sec">sec</string>
+    <string name="units_hours">h</string>
+    <string name="units_days">days</string>
+    <string name="units_grams">g</string>
+    <string name="units_kg">kg</string>
+    <string name="units_years">y</string>
+    <string name="units_percent">%</string>
+
+    <!-- Formatted unit strings with value only -->
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_min">%1$d min</string>
+    <string name="units_format_sec">%1$d sec</string>
+    <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.0f h</string>
+    <string name="units_format_days">%1$d days</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mmol">%1$s mmol/L</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+
+    <!-- Formatted unit strings with value and range -->
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
+    <string name="units_format_sec_range">%1$d sec (%2$d - %3$d)</string>
+    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
+    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
+    <string name="units_format_days_range">%1$d days (%2$d - %3$d)</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="pref_title_language">Language</string>
+    <string name="lang_default">System default</string>
+    <string name="lang_en">English</string>
+    <string name="lang_af">Afrikaans</string>
+    <string name="lang_bg">Bulgarian</string>
+    <string name="lang_cs">Czech</string>
+    <string name="lang_de">German</string>
+    <string name="lang_dk">Danish</string>
+    <string name="lang_fr">French</string>
+    <string name="lang_nl">Dutch</string>
+    <string name="lang_es">Spanish</string>
+    <string name="lang_el">Greek</string>
+    <string name="lang_ga">Irish</string>
+    <string name="lang_it">Italian</string>
+    <string name="lang_ko">Korean</string>
+    <string name="lang_lt">Lithuanian</string>
+    <string name="lang_nb">Norwegian</string>
+    <string name="lang_pl">Polish</string>
+    <string name="lang_pt">Portuguese</string>
+    <string name="lang_pt_br">Portuguese, Brazilian</string>
+    <string name="lang_ro">Romanian</string>
+    <string name="lang_ru">Russian</string>
+    <string name="lang_sk">Slovak</string>
+    <string name="lang_sv">Swedish</string>
+    <string name="lang_tr">Turkish</string>
+    <string name="lang_zh_tw">Chinese, Traditional</string>
+    <string name="lang_zh_cn">Chinese, Simplified</string>
+    <string name="pref_title_skin">Skin</string>
+    <string name="pref_title_patient_name">Patient name</string>
+    <string name="pref_summary_patient_name">Please provide patient name or nickname to differentiate among multiple setups</string>
+
+    <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS directory</string>
+
+    <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Master password</string>
+    <string name="pref_title_settings_password">Settings password</string>
+    <string name="pref_title_settings_pin">Settings PIN</string>
+    <string name="pref_title_application_password">Application password</string>
+    <string name="pref_title_application_pin">Application PIN</string>
+    <string name="pref_title_bolus_password">Bolus password</string>
+    <string name="pref_title_bolus_pin">Bolus PIN</string>
+
+    <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Choose dark, light, or to follow the system theme</string>
+    <string name="pref_title_app_color_scheme">App Color Scheme</string>
+    <string name="pref_dark_theme">Dark theme</string>
+    <string name="pref_light_theme">Light theme</string>
+    <string name="pref_follow_system_theme">Use device theme</string>
+
+    <!-- StringKey: Overview preferences -->
+    <string name="pref_title_copy_settings_from_ns">Copy settings from NS</string>
+
+    <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Patient age</string>
+
+    <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Email recipient</string>
+    <string name="pref_title_identification">Identification for crash reports</string>
+
+    <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Location service</string>
+    <string name="automation_location_passive">Use passive location</string>
+    <string name="automation_location_network">Use network location</string>
+    <string name="automation_location_gps">Use GPS location</string>
+
+    <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Additional mandatory PIN at token end</string>
+    <string name="smscommunicator_otp_pin_summary">Additional digits that should be memorised and glued at end of each generated One Time Password</string>
+
+    <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Pump type</string>
+
+    <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_summary">Enter your Nightscout URL (i.e. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_summary">Enter your Nightscout API secret (min. 12 characters)</string>
+    <string name="nsclient_token_title">Nightscout access token</string>
+    <string name="nsclient_token_summary">Enter your Nightscout access token (min. 17 characters)</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">Allowed SSIDs (semicolon separated)</string>
+
+    <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Insulin button increment 1</string>
+    <string name="pref_title_insulin_button_increment_2">Insulin button increment 2</string>
+    <string name="pref_title_insulin_button_increment_3">Insulin button increment 3</string>
+    <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
+
+    <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Fill button 1</string>
+    <string name="pref_title_fill_button_2">Fill button 2</string>
+    <string name="pref_title_fill_button_3">Fill button 3</string>
+
+    <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Maximum bolus</string>
+
+    <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Maximum basal rate</string>
+    <string name="openapsma_max_basal_summary">This value is called max basal in OpenAPS context</string>
+    <string name="pref_title_smb_max_iob">Max IOB for SMB</string>
+    <string name="openapssmb_max_iob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
+    <string name="pref_title_ama_max_iob">Max IOB for AMA</string>
+    <string name="openapsma_max_iob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
+    <string name="pref_title_max_daily_multiplier">Max daily safety multiplier</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that\'s what is discussed about "3x max daily; 4x current" for safety caps.</string>
+    <string name="pref_title_current_basal_multiplier">Current basal safety multiplier</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of "3x max daily; 4x current" of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are "running into" this safety cap.</string>
+    <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA divisor</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Default value: 2\\nBolus snooze is enacted after you do a meal bolus, so the loop won\'t counteract with low temps when you\'ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5m carbs impact</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB min 5m carbs impact</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Default value: 3.0 (AMA) or 8.0 (SMB). This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
+    <string name="pref_title_absorption_cutoff">Absorption cutoff</string>
+    <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
+    <string name="pref_title_absorption_maxtime">Absorption max time</string>
+    <string name="absorption_max_time_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
+    <string name="pref_title_autosens_min">Autosens min</string>
+    <string name="openapsama_autosens_min_summary">Default value: 0.7\\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
+    <string name="pref_title_autosens_max">Autosens max</string>
+    <string name="openapsama_autosens_max_summary">Default value: 1.2\\nThis is a multiplier cap for autosens (and soon autotune) to set a 20%% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
+    <string name="pref_title_autoisf_min">AutoISF min</string>
+    <string name="openapsama_autoISF_min_summary">Similar to autosens_min this defines how weak ISF can become.\\n\\nThe default value 1.0 effectively shuts off this effect.</string>
+    <string name="pref_title_autoisf_max">AutoISF max</string>
+    <string name="openapsama_autoISF_max_summary">Similar to autosens_max this defines how strong ISF can become.\\n\\nThe default value 1.0 effectively shuts off this effect.\\n\\nWARNING: Be extremely careful when using values above 2.5</string>
+    <string name="pref_title_bg_accel_weight">BG acceleration ISF weight</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">This is the weight applied while glucose accelerates and which strengthens ISF thereby potentially increasing insulin delivery.\\n\\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="pref_title_bg_brake_weight">BG brake ISF weight</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">This is the weight applied while glucose decelerates and which weakens ISF thereby potentially reducing insulin delivery.\\n\\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="pref_title_low_bg_weight">Low BG range weight</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">This is the weight applied while glucose is below target and which weakens ISF thereby potentially reducing insulin delivery.\\n\\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="pref_title_high_bg_weight">High BG range weight</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">This is the weight applied while glucose is above target and which strengthens ISF thereby potentially increasing insulin delivery.\\n\\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">SMB delivery ratio BG range</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Default value: 0. The linearly increasing SMB delivery ratio is mapped to the glucose range [target_bg, target_bg+bg_range].\\nAt target_bg the SMB ratio is smb_delivery_ratio_min, at target_bg+bg_range it is smb_delivery_ratio_max\\nWith 0 the linearly increasing SMB ratio is disabled and the fixed smb_delivery_ratio is used.</string>
+    <string name="pref_title_pp_weight">Post-prandial ISF weight</string>
+    <string name="openapsama_pp_ISF_weight_summary">This is the weight applied while glucose is rising and which strengthens ISF thereby potentially increasing insulin delivery.\\n\\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="pref_title_dura_weight">Duration ISF weight</string>
+    <string name="openapsama_dura_ISF_weight_summary">This is the weight applied during longer lasting, elevated glucose plateaus and which strengthens ISF thereby potentially increasing insulin delivery.\\n\\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="pref_title_smb_delivery_ratio">SMB delivery ratio</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Default value: 0.5 This is another key OpenAPS safety cap, and specifies what share of the total insulin required can be delivered as SMB. This is to prevent people from getting into dangerous territory by setting SMB requests from the caregivers phone at the same time. Increase this experimental value slowly and with caution.</string>
+    <string name="pref_title_smb_delivery_ratio_min">SMB delivery ratio min</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Default value: 0.5 This is the lower end of a linearly increasing ratio rather than the fix value above.</string>
+    <string name="pref_title_smb_delivery_ratio_max">SMB delivery ratio max</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Default value: 0.5 This is the upper end of a linearly increasing ratio rather than the fix value above.</string>
+    <string name="pref_title_smb_max_range_extension">SMB max range extension</string>
+    <string name="openapsama_smb_max_range_extension_summary">Default value: 1 This is another key OpenAPS safety cap, and specifies by what factor you can exceed the regular 120 maxSMB/maxUAM minutes. Increase this experimental value slowly and with caution.</string>
+
+    <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_eating_soon_target">Eating soon target</string>
+    <string name="pref_title_activity_target">Activity target</string>
+    <string name="pref_title_hypo_target">Hypo target</string>
+    <string name="pref_title_low_mark">Low BG mark</string>
+    <string name="pref_title_high_mark">High BG mark</string>
+
+    <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">LGS threshold</string>
+    <string name="lgs_threshold_summary">BG value below which insulin is suspended. Default value uses standard target model. User can set value between 60mg/dl (3.3mmol/l) and 100mg/dl(5.5mmol/l). Values below 65/3.6 result in use of default model</string>
+
+    <!-- IntentKey preferences -->
+    <string name="pref_title_link_to_docs">Algorithm documentation</string>
+    <string name="pref_title_otp_setup">Authenticator setup</string>
+    <string name="pref_title_quick_wizard_settings">QuickWizard settings</string>
+    <string name="pref_title_xdrip_info">xDrip+ info</string>
+
+    <!--    Appearance preferences-->
+    <string name="prefs_range_title">Range for visualization</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
+
+</resources>

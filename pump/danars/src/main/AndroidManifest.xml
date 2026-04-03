@@ -4,26 +4,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
     <application>
-        <activity
-            android:name="app.aaps.pump.danars.activities.BLEScanActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="info.nightscout.pump.danars.activities.BLEScanActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="app.aaps.pump.danars.activities.PairingHelperActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask" />
-        <activity
-            android:name="app.aaps.pump.danars.activities.EnterPinActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask" />
-
         <service
             android:name="app.aaps.pump.danars.services.DanaRSService"
             android:enabled="true"

@@ -4,6 +4,7 @@ import app.aaps.core.data.model.SC
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
@@ -42,14 +43,14 @@ class TriggerStepsCountTest : TriggerTestBase() {
     }
 
     @Test
-    fun shouldRunNotAvailable() {
+    fun shouldRunNotAvailable() = runTest {
         val t = TriggerStepsCount(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
         verifyNoMoreInteractions(persistenceLayer)
     }
 
     @Test
-    fun shouldRunNoStepsAvailable() {
+    fun shouldRunNoStepsAvailable() = runTest {
         val t = TriggerStepsCount(injector).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
@@ -62,7 +63,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
     }
 
     @Test
-    fun shouldRunBelowThreshold() {
+    fun shouldRunBelowThreshold() = runTest {
         val t = TriggerStepsCount(injector).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"
@@ -77,7 +78,7 @@ class TriggerStepsCountTest : TriggerTestBase() {
     }
 
     @Test
-    fun shouldRunTrigger() {
+    fun shouldRunTrigger() = runTest {
         val t = TriggerStepsCount(injector).apply {
             stepsCount.value = 100.0
             measurementDuration.value = "5"

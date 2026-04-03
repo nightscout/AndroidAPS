@@ -2,9 +2,11 @@ package app.aaps.pump.insight.keys
 
 import app.aaps.core.keys.interfaces.BooleanPreferenceKey
 import app.aaps.core.keys.interfaces.IntentPreferenceKey
+import app.aaps.pump.insight.R
 
 enum class InsightIntentKey(
     override val key: String,
+    override val titleResId: Int = 0,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -15,5 +17,5 @@ enum class InsightIntentKey(
     override val exportable: Boolean = false
 ) : IntentPreferenceKey {
 
-    InsightPairing(key = "insight_pairing")
+    InsightPairing(key = "insight_pairing", titleResId = R.string.insight_pairing)
 }

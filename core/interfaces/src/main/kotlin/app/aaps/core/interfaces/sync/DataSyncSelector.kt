@@ -41,7 +41,7 @@ interface DataSyncSelector {
 
     fun queueSize(): Long
 
-    fun resetToNextFullSync()
+    suspend fun resetToNextFullSync()
 
     suspend fun doUpload()
 

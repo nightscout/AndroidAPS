@@ -5,6 +5,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,7 +20,7 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
     }
 
     @Test
-    fun shouldRunTest() {
+    fun shouldRunTest() = runTest {
         whenever(persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(
             TT(
                 duration = 60000,

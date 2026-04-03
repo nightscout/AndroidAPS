@@ -79,7 +79,7 @@ interface Loop {
      * @param allowNotification Allow notification to be sent (false in open loop mode)
      * @param tempBasalFallback true if called from failed SMB
      */
-    fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean = false)
+    suspend fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean = false)
 
     /**
      * Open loop mode trigger

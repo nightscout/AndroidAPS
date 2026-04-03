@@ -1,10 +1,13 @@
 package app.aaps.core.interfaces.pump
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.HandlerThread
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -30,7 +33,10 @@ abstract class PumpPluginBase(
         super.onStart()
         assert(getType() == PluginType.PUMP)
         handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
-        handler?.postDelayed({ commandQueue.readStatus(rh.gs(R.string.pump_driver_changed), null) }, 6000)
+        handler?.postDelayed({
+                                 if ((this as? Pump)?.isConfigured() != false)
+                                     commandQueue.readStatus(rh.gs(R.string.pump_driver_changed), null)
+                             }, 6000)
     }
 
     override fun onStop() {
@@ -39,4 +45,13 @@ abstract class PumpPluginBase(
         handler?.looper?.quit()
         handler = null
     }
+
+    @SuppressLint("InlinedApi")
+    override fun requiredPermissions(): List<PermissionGroup> = listOf(
+        PermissionGroup(
+            permissions = listOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN),
+            rationaleTitle = R.string.permission_bluetooth_title,
+            rationaleDescription = R.string.permission_bluetooth_description,
+        )
+    )
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Garmin triangle centered and fitted to 24x24 -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M20.32,20.86L3.67,20.86C3.06,20.86 2.54,20.56 2.23,20.03C1.93,19.50 1.93,18.90 2.24,18.37L10.56,3.96C10.86,3.43 11.39,3.13 12.00,3.13C12.61,3.13 13.13,3.43 13.44,3.96L21.76,18.37C22.07,18.90 22.07,19.50 21.76,20.03C21.45,20.56 20.93,20.86 20.32,20.86Z" />
+</vector>

@@ -4,7 +4,7 @@ import app.aaps.database.entities.ExtendedBolus
 
 class InvalidateExtendedBolusTransaction(val id: Long) : Transaction<InvalidateExtendedBolusTransaction.TransactionResult>() {
 
-    override fun run(): TransactionResult {
+    override suspend fun run(): TransactionResult {
         val result = TransactionResult()
         val extendedBolus = database.extendedBolusDao.findById(id)
             ?: throw IllegalArgumentException("There is no such Extended Bolus with the specified ID.")

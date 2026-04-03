@@ -6,7 +6,7 @@ import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.end
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Maybe
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.never
@@ -28,11 +28,11 @@ class CancelCurrentTemporaryTargetIfAnyTransactionTest {
     }
 
     @Test
-    fun `cancels running temporary target`() {
+    fun `cancels running temporary target`() = runTest {
         val timestamp = 31_000L
         val running = createTemporaryTarget(timestamp = 1000L, duration = 60_000L)
 
-        whenever(temporaryTargetDao.getTemporaryTargetActiveAt(31_000L)).thenReturn(Maybe.just(running))
+        whenever(temporaryTargetDao.getTemporaryTargetActiveAt(31_000L)).thenReturn(running)
 
         val transaction = CancelCurrentTemporaryTargetIfAnyTransaction(timestamp)
         transaction.database = database
@@ -45,10 +45,10 @@ class CancelCurrentTemporaryTargetIfAnyTransactionTest {
     }
 
     @Test
-    fun `does not cancel when no running temporary target`() {
+    fun `does not cancel when no running temporary target`() = runTest {
         val timestamp = 31_000L
 
-        whenever(temporaryTargetDao.getTemporaryTargetActiveAt(31_000L)).thenReturn(Maybe.empty())
+        whenever(temporaryTargetDao.getTemporaryTargetActiveAt(31_000L)).thenReturn(null)
 
         val transaction = CancelCurrentTemporaryTargetIfAnyTransaction(timestamp)
         transaction.database = database

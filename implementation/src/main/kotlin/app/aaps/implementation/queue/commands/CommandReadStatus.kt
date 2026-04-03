@@ -38,7 +38,7 @@ class CommandReadStatus(
         aapsLogger.debug(LTag.PUMPQUEUE, "CommandReadStatus executed. Reason: $reason")
         val pump = activePlugin.activePump
         val result = pumpEnactResultProvider.get().success(false)
-        val lastConnection = pump.lastDataTime
+        val lastConnection = pump.lastDataTime.value
         if (lastConnection > System.currentTimeMillis() - T.mins(1).msecs()) result.success(true)
         callback?.result(result)?.run()
     }

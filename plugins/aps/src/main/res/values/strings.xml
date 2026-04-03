@@ -179,7 +179,6 @@
     <string name="autotune_log_ic_isf" translatable="false">| %1$4.4s | %2$3.3f |\t%3$3.3f |\n</string>
     <string name="autotune_log_basal" translatable="false">|\t%1$02.0f\t| %2$3.3f |%3$3.3f\t| %5$.0f%% / %4$d\n</string>
     <string name="autotune_log_sum_basal" translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
-    <string name="not_available_full">Not available</string>
     <string name="pump_disconnected">Pump disconnected</string>
 
     <!--    autoISF -->

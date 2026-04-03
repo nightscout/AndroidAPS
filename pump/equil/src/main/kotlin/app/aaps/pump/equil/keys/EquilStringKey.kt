@@ -12,4 +12,5 @@ enum class EquilStringKey(
     Password("key_equil_password", ""),
     PairPassword("key_equil_pair_password", ""),
     State("key_equil_state1", ""),
+    EmulatorDeviceName("key_equil_emulator_device_name", "", exportable = false),
 }
