@@ -51,6 +51,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.withActivity
 import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -142,7 +143,7 @@ class ComboV2Plugin @Inject constructor(
         pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
             .fragmentClass(ComboV2Fragment::class.java.name)
-            .pluginIcon(R.drawable.ic_combov2)
+            .icon(IcPluginCombo)
             .pluginName(R.string.combov2_plugin_name)
             .shortName(R.string.combov2_plugin_shortname)
             .description(R.string.combov2_plugin_description)
