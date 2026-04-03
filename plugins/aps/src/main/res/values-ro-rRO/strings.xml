@@ -44,7 +44,7 @@
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_script_debug_data_label">Depanare script</string>
     <string name="openapsama_use_autosens">Folosește opțiunea de autosensibilitate</string>
-    <string name="openapsma_max_basal_title">Valoarea maximă în U/ora (unități insulina/ora) a unei rate bazale temporare poate fi setată la</string>
+    <string name="openapsma_max_basal_title">Valoarea maximă în U/ora (unități insulină/ora) a unei rate bazale temporare poate fi setată la</string>
     <string name="openapsma_max_basal_summary">Această valoare este denumită bazală maximă în contextul OpenAPS</string>
     <string name="openapsma_max_iob_title">Maximul de bazală IOB pe care o poate livra OpenAPS[U]</string>
     <string name="openapsma_max_iob_summary">Această valoare este denumită Max IOB în contextul OpenAPS\nAceastă valoare este implicit nulă (0). După câteva zile sau săptămâni, în funcție de opțiunea dumneavoastră, puteți ajusta acest număr.</string>
@@ -64,7 +64,7 @@
     <string name="enable_uam">Activează UAM</string>
     <string name="enable_smb">Activează SMB</string>
     <string name="enable_smb_summary">Folosește SMB în locul bazalei temporare pentru reacție mai rapidă</string>
-    <string name="enable_uam_summary">S-a detectat masă neanunțată</string>
+    <string name="enable_uam_summary">Detectarea unor mese neanunțate</string>
     <string name="enable_smb_always">Activează SMB întotdeauna</string>
     <string name="enable_smb_always_summary">Activează SMB întotdeauna independent de CIO, ținte temporare sau bolusuri. Este posibil numai cu surse de glicemie cu filtrare avansată a datelor</string>
     <string name="enable_smb_after_carbs">Activează SMB după carbohidrați</string>
@@ -77,11 +77,11 @@
     <string name="enable_smb_with_high_temp_target_summary">Activați SMB atunci când există o țintă temporară activă (exerciții fizice, peste 100mg/dl sau 5.5mmol/l)</string>
     <string name="smb_max_minutes_summary">Max minute de bazală la care să se limiteze SMB</string>
     <string name="uam_smb_max_minutes">UAM SMB maxim minute</string>
-    <string name="uam_smb_max_minutes_summary">Durata maxima (în minute) a bazalei pentru a limita SMB în cazul UAM</string>
+    <string name="uam_smb_max_minutes_summary">Durata maximă (în minute) a bazalei pentru a limita SMB în cazul UAM</string>
     <string name="carbs_req_threshold">Numărul minim de carbohidrați solicitați în Sugestii</string>
     <string name="carbs_req_threshold_summary">Numărul minim de carbohidrați pentru a afișa o alertă-sugestie. Sugestiile de carbohidrați mai jos acest număr nu vor declanșa o notificare.</string>
-    <string name="lgs_threshold_summary">Valoarea glicemiei sub care insulina este suspendată. Valoarea implicită foloseşte modelul standard țintal. Utilizatorul poate seta valoarea între 60mg/dl (3. mmol/l) şi 100 mg/dl (5,5mmol/l). Valorile sub 65/3,6 determină utilizarea modelului standard</string>
-    <string name="lgs_threshold_title">Nivel glicemic sub care survine suspendarea de hipo</string>
+    <string name="lgs_threshold_summary">Valoarea glicemiei sub care insulina este suspendată. Valoarea implicită folosește modelul standard de țintă. Utilizatorul poate seta valoarea între 60mg/dl (3. mmol/l) și 100 mg/dl (5,5mmol/l). Valorile sub 65/3,6 determină utilizarea modelului standard</string>
+    <string name="lgs_threshold_title">Nivel glicemic sub care survine suspendarea la hipoglicemie</string>
     <string name="increasing_max_basal">Se mărește valoarea bazalei maxime deoarece setarea este mai joasă decât bazala maximă din profil</string>
     <string name="max_basal_multiplier">maximul multiplicatorului bazalei</string>
     <string name="max_daily_basal_multiplier">maximul zilnic al multiplicatorului bazalei</string>
@@ -101,7 +101,7 @@
     <string name="smb_frequency_exceeded">S-a livrat un bolus în ultimele 3 minute, nu se livrează SMB</string>
     <string name="pump_not_initialized">Pompa nu este inițializată!</string>
     <string name="loop_shortname">BUCL</string>
-    <string name="description_loop">Activare sau dezactivare a implementării declanşatoare pentru buclă.</string>
+    <string name="description_loop">Activare sau dezactivare a implementării declanșatoare pentru buclă.</string>
     <string name="no_aps_selected">NU AȚI SELECTAT APS SAU NU EXISTĂ REZULTAT GENERAT</string>
     <string name="ignore5m">Ignorați 5min</string>
     <string name="ignore15m">Ignorați 15min</string>
@@ -117,7 +117,7 @@
     <string name="loop_tbr_execution_time_label">Timpul de execuție al bazalei temporare</string>
     <string name="loop_tbr_set_by_pump_label">Bazală temporară setată de pompă</string>
     <string name="loop_smb_request_time_label">Timp solicitare SMB</string>
-    <string name="loop_smb_execution_time_label">Timp de execuţie SMB</string>
+    <string name="loop_smb_execution_time_label">Timp de execuție SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB setat de pompă</string>
     <string name="loop_open_mode_min_change">Cerere de schimbare minimală [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Bucla deschisă va afișa o nouă cerere de schimbare doar dacă noua valoare este mai mare cu %. Valoarea implicită este 20%</string>
@@ -159,7 +159,7 @@
     <string name="autotune_compare_profile">Compară profilurile</string>
     <string name="autotune_copy_localprofile_button">Copiați în profilul local</string>
     <string name="autotune_update_input_profile_button">Actualizați profilul de intrare</string>
-    <string name="autotune_revert_input_profile_button">Reveniţi la profilul de intrare</string>
+    <string name="autotune_revert_input_profile_button">Reveniți la profilul de intrare</string>
     <string name="autotune_copy_local_profile_message">Creați un profil local nou din acest profil Autotune?</string>
     <string name="autotune_update_local_profile_message">Actualizați profilul %1$s cu Profil Autotune?</string>
     <string name="autotune_revert_local_profile_message">Reveniți la profilul %1$s cu profilul de intrare?</string>
