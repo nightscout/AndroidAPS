@@ -87,8 +87,6 @@
     <string name="invalid_pct">Dada % no vàlida</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Ràtio de basal</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP polsat</string>
     <!--QuickWizard-->
     <!--    Widget-->
     <!--    Permissions-->
