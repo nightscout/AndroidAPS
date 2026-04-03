@@ -84,9 +84,9 @@
     <string name="activating_complete">Plasture nou activat. %.2f unități rămase.</string>
     <string name="can_export_settings">Puteți exporta setările pentru a putea recupera această sesiune de plasture mai târziu.</string>
     <string name="press_OK_to_return"><b>OK</b> pentru a reveni la ecranul principal.</string>
-    <string name="deactivate_sure">Sigur dorești să dezactivezi plasturele curent?</string>
-    <string name="cancel_sure">Sigur dorești să anulezi activarea?</string>
-    <string name="medtrum_deactivate_pump_confirm">Ești sigur? Această acțiune nu poate fi inversată!!</string>
+    <string name="deactivate_sure">Sigur doriți să dezactivați plasturele curent?</string>
+    <string name="cancel_sure">Sigur doriți să anulați activarea?</string>
+    <string name="medtrum_deactivate_pump_confirm">Sunteți sigur? Această acțiune nu este reversibilă!!</string>
     <string name="press_next_or_cancel">Apasă <b>Înainte</b> pentru a dezactiva sau <b>Anulează</b> pentru a reveni la ecranul principal.</string>
     <string name="deactivating_pump">Se dezactivează plasturele. Te rog, așteaptă.</string>
     <string name="deactivating_error">Dezactivarea nu a reușit, apasă <b>Renunțare</b> pentru a uita plasturele.</string>
