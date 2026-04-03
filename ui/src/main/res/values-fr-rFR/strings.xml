@@ -117,8 +117,6 @@
     <string name="invalid_pct">% saisi invalide</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Débit de Basal</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">ARRÊT APPUYÉ</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">uniquement sur la montre</string>
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
