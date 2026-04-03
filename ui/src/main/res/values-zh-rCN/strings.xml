@@ -100,8 +100,6 @@
     <string name="invalid_pct">输入的百分比无效</string>
     <!-- Other dialogs -->
     <string name="basal_rate">基础率</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">停止键按下了</string>
     <!--QuickWizard-->
     <!--    Widget-->
     <!--    Permissions-->
