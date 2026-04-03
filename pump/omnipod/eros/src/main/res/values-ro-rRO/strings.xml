@@ -44,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">O rata bazală temporară rulează pe Pod, dar AAPS nu este la curent cu această bazală temporară. Vă rugăm să anulați manual bazala temporară.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Stare RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetați dispozitivull RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Citește Jurnal Puls</string>
     <string name="omnipod_eros_pod_management_pulse_log">Jurnal Puls</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Jurnal Puls (copiat în clipboard)</string>
