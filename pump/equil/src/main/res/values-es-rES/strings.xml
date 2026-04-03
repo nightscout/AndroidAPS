@@ -15,8 +15,13 @@
     <string name="equil_stop">Detener</string>
     <string name="equil_success">Éxito</string>
     <string name="equil_title_dressing">Cambiar cartucho</string>
+    <string name="equil_title_assemble">Montar la bomba</string>
     <string name="equil_title_serial">Emparejar dispositivo</string>
     <string name="equil_title_fill">Cebado / Llenado</string>
+    <string name="equil_title_attach">Acoplar la bomba</string>
+    <string name="equil_title_air">Cebado de la cánula</string>
+    <string name="equil_title_unpair_detach">Desacoplar la bomba</string>
+    <string name="equil_title_unpair_confirm">Confirmar desvinculación</string>
     <string name="equil_title_history_events">Historial de eventos</string>
     <string name="equil_tone">Tono de alerta</string>
     <string name="equil_tone_mode_mute">Silenciar</string>
@@ -137,6 +142,7 @@
     <string name="equil_device_unpaired">Dispositivo desemparejado</string>
     <string name="equil_assemble">Por favor, monta la bomba, el reservorio lleno y la batería cargada</string>
     <string name="equil_devices_number">Introducir nuevo ID de la bomba</string>
+    <string name="equil_pair_password_title">Introducir contraseña para %1$s</string>
     <string name="equil_insert">Ceba el depósito hasta que haya una gota de insulina en la punta de la aguja</string>
     <string name="equil_insert2">La bomba no debe estar sobre su base.</string>
     <string name="equil_attach">Por favor, añade la bomba a su base</string>
