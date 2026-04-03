@@ -50,6 +50,8 @@
     <string name="omnipod_common_overview_pod_active_alerts">Alarme active ale Pod-ului</string>
     <string name="omnipod_common_overview_firmware_version">Versiune Firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Timp Pod</string>
+    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minute)</string>
+    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Peste %1$s rămas</string>
     <string name="omnipod_common_uncertain">nesigur</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Dezactivare Pod</string>
@@ -99,6 +101,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sunet pentru notificări RBT incerte activat</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sunet pentru notificările SMB incerte activat</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sunet activat pentru notificări bolus incert</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sunet când notificarea de livrare suspendată este activă</string>
     <string name="omnipod_dash_use_bonding">Asociază un dispozitiv Bluetooth pe Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nicio pompă activă</string>
@@ -122,6 +125,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Setează Ratele Bazale</string>
     <string name="omnipod_common_cmd_set_bolus">Setează Bolus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Anulează Bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Setați RBT</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Anulați RBT</string>
     <string name="omnipod_common_cmd_discard_pod">Renunță la Pompă</string>
     <string name="omnipod_common_cmd_get_pod_status">Citește Stare Pompă</string>
     <string name="omnipod_common_cmd_set_time">Setare timp</string>
@@ -130,10 +135,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Citește Jurnal Puls</string>
     <string name="omnipod_common_cmd_suspend_delivery">Suspendă Livrarea</string>
     <string name="omnipod_common_cmd_resume_delivery">Reia Livrarea</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Anulare RBT (de către utilizator)</string>
     <string name="omnipod_common_cmd_get_pod_info">Citește Informații Pompă</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Setați suspendare falsă RBT</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Anulați suspendare falsă RBT</string>
+    <string name="omnipod_common_cmd_split_tbr">Divizați RBT</string>
     <string name="omnipod_common_cmd_play_test_beep">Redă semnale sonore de test</string>
     <string name="omnipod_common_cmd_unknown_entry">Înregistrare necunoscută</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Dezactivați alertele de suspendare</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Memento de finalizare asociere</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Memento de finalizare configurare</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Acum câteva momente</string>
