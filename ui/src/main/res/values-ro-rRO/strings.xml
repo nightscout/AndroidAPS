@@ -86,10 +86,14 @@
     <string name="activate_insulin_new_insulin">Noua insulină: %1$s</string>
     <string name="activate_insulin_remaining">Rămase: %1$d min</string>
     <string name="activate_insulin_profile_switch">Schimbarea profilului va fi creată:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Încarcă maxim de la</string>
+    <string name="cannot_delete_last_insulin">Nu se poate șterge ultima insulină</string>
+    <string name="cannot_delete_active_insulin">Nu se poate șterge insulina activă</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalare</string>
     <string name="percentage_label">Procentaj</string>
+    <string name="permanent_profile_switch">Permanent (0 = nicio limită de durată)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
     <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
@@ -115,9 +119,14 @@
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="missing_carbs">Lipsă %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% carbohidrați imediați, fără carbohidrați extinși</string>
+    <string name="wizard_carbs_type_desc">Carbohidrați reduși cu %1$d%%, adăugați carbohidrați extinși %2$d%% întârziere %3$dmin pentru %4$dh</string>
+    <string name="wizard_include_info">Atingeți pentru a include/exclude din calcul:\n• BG - glicemie (inclusă la început)\n• TT - țintă temporară (inclusă la început)\n• Tendința Glicemiei (ultima stare amintită)\n• IOB - insulină la bord (inclusă la început)\n• COB - carbohidrați de la bord (ultima stare amintită)</string>
+    <string name="wizard_bg_age">Vârsta glicemiei: %1$d min</string>
     <string name="a11y_current_bg">valoarea actuală a glicemiei</string>
     <string name="carb_time_label">Ora carbohidrați</string>
     <string name="a11y_set_carb_timer">stabilește alarma pentru timpul carbohidraților</string>
+    <string name="show_calculation">Afișați calculul</string>
     <!-- Treatments -->
     <string name="no_records_available">Nicio înregistrare disponibilă</string>
     <string name="calculation_short">Calcul</string>
@@ -136,10 +145,32 @@
     <string name="show_loop">Arată bucla</string>
     <string name="user_entry">Înregistrare utilizator</string>
     <string name="clone_label">Clonează</string>
+    <string name="add_new_profile">Adăugați un profil nou</string>
+    <string name="show_profile">Afișați profilul</string>
+    <string name="edit_label">Editați</string>
+    <string name="edit_profile">Editați profilul</string>
+    <string name="activate_label">Activați</string>
+    <string name="activate_profile">Activați profilul</string>
+    <string name="remove_label">Eliminați</string>
+    <string name="active_profile_indicator">ACTIV</string>
+    <string name="remaining_time_label">Rămas</string>
+    <string name="confirm_remove_profile">Eliminați profilul \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Clonați profilul \"%1$s\"?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tip profil</string>
+    <string name="profile_parameters">Parametrii profilului</string>
+    <string name="active_profile">Profil activ</string>
+    <string name="available_profiles">Profiluri disponibile</string>
+    <string name="profile_switches">Schimbări de profil</string>
     <string name="basal_pct_from_tdd_label">% din bazală</string>
     <string name="selected_profile">Selectat:</string>
+    <string name="comparation">Comparație</string>
+    <string name="profile_tab_1">Profilul 1</string>
+    <string name="profile_tab_2">Profilul 2</string>
     <string name="motol_default_profile">Profil implicit</string>
     <string name="current_profile">Profil curent</string>
     <string name="available_profile">Profil disponibil</string>
@@ -157,6 +188,9 @@
     <string name="a11y_only_on_phone">numai pe telefon</string>
     <string name="quickwizard_settings">Setări AsistentRapid</string>
     <string name="overview_edit_quickwizard_button_text">Text buton</string>
+    <string name="quick_wizard_mode_wizard">Asistent</string>
+    <string name="quick_wizard_mode_insulin">Insulină</string>
+    <string name="quick_wizard_mode_carbs">Carbohidrați</string>
     <string name="overview_edit_quickwizard_valid">Valabil:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Doar IOB pozitiv</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
@@ -164,6 +198,24 @@
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
     <string name="additional_ecarbs">Adaugă carbohidrați extinși</string>
     <string name="overview_edit_quickwizard_useforcalculation">Utilizați pentru calcul:</string>
+    <string name="calculator_options">Opţiuni calculator</string>
+    <string name="use_bg">Utilizați glicemia</string>
+    <string name="use_cob">Utilizați COB</string>
+    <string name="use_iob">Utilizați IOB</string>
+    <string name="use_trend">Utilizați tendința</string>
+    <string name="trend_all">Toate</string>
+    <string name="trend_positive_only">Doar pozitiv</string>
+    <string name="trend_negative_only">Doar negativ</string>
+    <string name="use_temp_target">Utilizați Ținta Temporară</string>
+    <string name="use_alarm">Utilizați alarma</string>
+    <string name="device_selection">Selectare dispozitiv</string>
+    <string name="show_on_phone">Afișați pe telefon</string>
+    <string name="show_on_watch">Afișați pe ceas</string>
+    <string name="ecarbs_additional">Carbohidrați suplimentari</string>
+    <string name="valid_from_to">Interval de timp valid</string>
+    <string name="carb_time">Timp carbohidrați</string>
+    <string name="no_quickwizard_entries">Fără intrări de Asistent Rapid. Atingeți + pentru a adăuga unul.</string>
+    <string name="save_changes_question">Salvați modificările acestei intrări?</string>
     <string name="constraints_violation">Încălcarea constrângerilor</string>
     <string name="change_your_input">Schimbați-vă intrarea!</string>
     <string name="wizard_no_insulin_required">Nu este necesară insulină</string>
