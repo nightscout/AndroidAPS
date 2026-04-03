@@ -103,6 +103,7 @@
     <string name="objectives">目標</string>
     <string name="please_wait">請稍候…</string>
     <string name="stop">停止</string>
+    <string name="stop_pressed">已按下停止鍵</string>
     <string name="carbs">碳水化合物</string>
     <string name="invalid_profile">無效的設定檔！</string>
     <string name="no_profile_set">未設置設定檔</string>
