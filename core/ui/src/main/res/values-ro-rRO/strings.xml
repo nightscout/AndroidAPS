@@ -255,6 +255,7 @@
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
     <string name="not_available_full">Indisponibil</string>
     <string name="engineering_mode_enabled">Mod inginer activat</string>
+    <string name="back">Înapoi</string>
     <string name="show_hide_records">Ascundeți înregistrările buclei</string>
     <!--    Protection-->
     <string name="wrongpassword">Parola greșită</string>
@@ -334,8 +335,31 @@
     <string name="treatment_desc">Înregistrați insulina și carbohidrații împreună</string>
     <string name="treatment_insulin_desc">Administrați bolusul manual</string>
     <string name="treatment_carbs_desc">Înregistrați carbohidrați fără insulină</string>
+    <string name="treatment_calculator_desc">Calculați bolusul</string>
+    <string name="insulin_management">Gestionarea insulinei</string>
+    <string name="manage_insulin_desc">Gestionați și activați configurațiile insulinei</string>
+    <string name="concentration_disable_blocked">Nu se poate dezactiva suportul concentrației cât timp există insuline non-U100. Îndepărtați mai întâi toate configurațiile de insulină non-U100 și treceți la un profil U100.</string>
+    <string name="simple_mode_blocked_by_concentration">Nu se poate activa modul simplu în timp ce se folosește insulina non-U100. Mai întâi se trece la insulina U100.</string>
+    <string name="manage_profile_desc">Gestionați și activați profilurile</string>
+    <string name="manage_temp_target_desc">Gestionați și stabiliți ținte temporare</string>
+    <string name="manage_temp_basal_desc">Porniți bazala temporară</string>
+    <string name="manage_extended_bolus_desc">Începeți administrarea bolusului extins</string>
+    <string name="manage_site_rotation_desc">Urmăriți și schimbați locurile de infuzare</string>
+    <string name="manage_quickwizard_desc">Gestionați presetările asistentului rapid</string>
+    <string name="treatment_note_desc">Adăugați o notă la înregistrările dumneavoastră</string>
+    <string name="treatment_question_desc">Înregistrați o întrebare pentru echipa dumneavoastră de îngrijire</string>
     <string name="treatment_cgm_desc">Deschide aplicația senzorului de glicemie</string>
     <string name="treatment_calibration_desc">Calibrează senzorul de glicemie</string>
+    <string name="treatment_bg_check_desc">Înregistrați verificarea glicemiei</string>
+    <string name="treatment_exercise_desc">Înregistrați activitatea fizică</string>
+    <string name="treatment_announcement_desc">Publicați anunț</string>
+    <string name="treatment_sensor_insert_desc">Înregistrați inserarea senzorului CGM</string>
+    <string name="treatment_battery_change_desc">Înregistrați schimbarea bateriei pompei</string>
+    <string name="treatment_cannula_change_desc">Înregistrați schimbarea canulei/setului de perfuzie</string>
+    <string name="treatment_fill_desc">Amorsați și umpleți canula</string>
+    <string name="temp_basal">Bazală temporară</string>
+    <string name="user_entry">Înregistrare utilizator</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Deget</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Manual</string>
@@ -347,6 +371,13 @@
     <string name="automation">Automatizare</string>
     <string name="settingsexport">Setări Export</string>
     <string name="custom">Personalizat</string>
+    <string name="preset_settings">Setări presetare</string>
+    <string name="activation">Activare</string>
+    <string name="temp_target_management">Gestionare Țintă Temporară</string>
+    <string name="revert_to_defaults">Reveniți la valorile implicite</string>
+    <string name="confirm_remove_preset">Eliminați presetare %1$s?</string>
+    <string name="confirm_cancel_temp_target">Anulați ținta activă temporară?</string>
+    <string name="add_new_preset">Adăugați o presetare nouă</string>
     <string name="loop">Buclă</string>
     <string name="ns">NS</string>
     <string name="record">Înregistrare</string>
@@ -399,6 +430,8 @@
     <string name="expweight">TDD estimat exponențial</string>
     <string name="basalrate">Bazală</string>
     <string name="bolus">Bolus</string>
+    <string name="tdd_short">DZT (Doza zilnică totală)</string>
+    <string name="tdd">Doza zilnică totală</string>
     <string name="ratio">Rata</string>
     <string name="amount_days"># Zile</string>
     <string name="weight">Greutate</string>
@@ -505,6 +538,11 @@
     <string name="ue_none">Nicio unitate</string>
     <string name="uel_loop_change">BUCLA SCHIMBATA</string>
     <string name="uel_loop_removed">BUCLA ELIMINATA</string>
+    <string name="uel_new_insulin">INSULINĂ NOUĂ</string>
+    <string name="uel_change_pump_insulin">SCHIMBAȚI INSULINA POMPEI</string>
+    <string name="uel_store_insulin">PĂSTRAȚI INSULINA</string>
+    <string name="uel_change_insulin_concentration">SCHIMBAȚI CONCENTRAȚIA INSULINEI</string>
+    <string name="uel_insulin_removed">INSULINĂ ELIMINATĂ</string>
     <string name="uel_other">ALTELE</string>
     <string name="uel_running_mode">MODUL DE RULARE</string>
     <string name="uel_running_mode_removed">MODUL DE RULARE ȘTERS</string>
@@ -516,6 +554,8 @@
     <string name="temp_target_high_target">Limita superioara a țintei temporare</string>
     <string name="temp_target_value">Valoare ținta temporară</string>
     <string name="profile_dia">Valoare profil DIA</string>
+    <string name="insulin_dia">Valoarea DIA a insulinei</string>
+    <string name="insulin_peak">Vârful de acțiune al insulinei</string>
     <string name="profile_sensitivity_value">Valoare sensibilitate profil</string>
     <string name="profile_max_daily_basal_value">Valoare bazală maximă a profilului</string>
     <string name="current_basal_value">Valoare bazală curentă</string>
@@ -525,6 +565,16 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f este in afara limitelor stabilite</string>
     <string name="basal_value">Valoare rata bazală</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Niciun profil selectat</string>
+    <string name="missing_profile_name">Lipsește numele profilului</string>
+    <string name="error_in_ic_values">Eroare în valorile IC</string>
+    <string name="error_in_isf_values">Eroare în valorile ISF</string>
+    <string name="error_in_basal_values">Eroare în valorile ratei bazale</string>
+    <string name="error_in_target_values">Eroare in valorile țintă</string>
+    <string name="profile_name_contains_dot">Unele nume de profiluri conțin puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
+    <string name="invalid_profile_not_accepted">Profilul invalid din NS %1$s nu este acceptat</string>
+    <string name="errors">Erori</string>
+    <string name="view">Vizualizați</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">CARB %1$d g</string>
@@ -579,8 +629,24 @@
     <string name="wizard_subtotal">Subtotal</string>
     <string name="carbs_type_bread">Pâine, patiserie sărată, iaurt, fructe (măr, banană, pară), cartofi, orez, hrișcă, ovăz, alimente cu carbohidrați lenți și puțini, legume</string>
     <string name="carbs_type_cake">Găluște, paste, bucătărie asiatică bogată în carbohidrați și grăsimi, patiserie dulce și cu drojdie, cereale, terci de cereale, miere, gem</string>
+    <string name="carbs_type_pizza">Lasagna, pizza, hamburgeri, cartofi prăjiți, cartofi copți, chipsuri și gustări similare</string>
+    <string name="wizard_ecarbs">carbohidrați extinși %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="wizard_total">Total</string>
+    <string name="wizard_carb_time">Timp carbohidrați</string>
+    <string name="carb_time_now">Acum</string>
+    <string name="change">Schimbați</string>
+    <string name="wizard_set_alarm">Setați alarma</string>
+    <string name="wizard_use_percentage">Utilizați procentul</string>
+    <string name="wizard_include_bg">Includeți glicemia</string>
+    <string name="wizard_include_tt">Includeți Ținta Temporară</string>
+    <string name="wizard_include_trend">Includeți tendința</string>
+    <string name="wizard_include_iob">Includeți IOB</string>
+    <string name="wizard_include_cob">Includeți COB</string>
+    <string name="wizard_advanced">Avansat</string>
+    <string name="wizard_calculation">Calcul</string>
     <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
     <string name="carb_equal_zero_no_action">Carbohidrați = 0. Nicio acțiune efectuată!</string>
+    <string name="bolus_equal_zero_no_action">Bolus = 0. Nicio acțiune întreprinsă!</string>
     <string name="wizard_no_insulin_required">Nu este necesară insulină!</string>
     <string name="wizard_no_actual_bg">Nicio glicemie recentă pe care să se bazeze calculul!</string>
     <string name="wizard_no_active_profile">Niciun profil activ stabilit!</string>
@@ -593,12 +659,14 @@
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">Tendința la 15\': %1$.2fU</string>
+    <string name="wizard_trend_detail">Tendință 15 minute (%1$s %2$s)</string>
     <string name="wizard_explain_percent">Procentaj: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Încălcare constrângere insulină!\nNu se pot livra %1$.2fU</string>
     <string name="wizard_explain_tt">BazalaT.: %1$s</string>
     <string name="wizard_explain_tt_to">Între %1$s și %2$s</string>
     <string name="wizard_pump_not_available">Nicio pompă disponibilă!</string>
     <string name="quickwizard">Asistent Rapid</string>
+    <string name="quickwizard_managemnt">Gestionare Asistent Rapid</string>
     <!--    Preferences-->
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
@@ -620,6 +688,7 @@
     <string name="tempbasal_label">Bazală temporară</string>
     <string name="extended_bolus_label">Bolus extins</string>
     <string name="serial_number">Număr serial</string>
+    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">Deconectat</string>
     <string name="connecting">Se conectează</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Conectare la pompă apăsat</string>
@@ -633,6 +702,7 @@
     <string name="device_changed" comment="26 characters max for translation">Dispozitiv modificat</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Eroare la livrare bazală temporară</string>
+    <string name="ebstopsloop">Utilizarea unui bolus extins va opri modul buclă închisă pe timpul livrării bolusului extins. Sigur doriți acest lucru?</string>
     <string name="not_set_short">Nesetată</string>
     <string name="pump_busy">Pompa face altă acțiune</string>
     <string name="connection_error">Eroare de conexiune cu pompa</string>
@@ -641,6 +711,12 @@
     <string name="pairing">Împerechere</string>
     <string name="initializing">Inițializare...</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Avertisment</string>
+    <string name="retry" comment="Button label to retry a failed operation">Reîncercați</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Finalizare</string>
+    <string name="firmware" comment="Pump firmware version label">Firmware</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Viteză bolusare</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Istoric</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -651,7 +727,9 @@
     <string name="confirmation">Confirmare</string>
     <string name="message">Mesaj</string>
     <string name="ok">OK</string>
+    <string name="next">Înainte</string>
     <string name="cancel">Renunță</string>
+    <string name="dismiss">Renunțați</string>
     <string name="yes">Da</string>
     <string name="no">Nu</string>
     <string name="close">Închide</string>
@@ -665,6 +743,10 @@
     <string name="export_failed">Eșuat</string>
     <string name="export_alert">ALERTĂ</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Parola principală nu este setată!\n\nVă rugăm să setați parola principală în Preferințe (%1$s)</string>
+    <string name="export_to">Exportați setările către</string>
+    <string name="password_preferences_encrypt_prompt">Vi se va solicita parola principală, care va fi utilizată pentru criptare la exportarea setărilor.</string>
+    <string name="preferences_export_canceled">Exportare anulată! Preferințele nu au fost exportate!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Setări exportate</string>
     <string name="export_result_message_failed">Exportare setări EȘUATĂ!</string>
@@ -672,6 +754,20 @@
     <string name="export_result_message_expired">Exportare setări anulată: parola expirată. Exportați manual și (re)introduceți parola!</string>
     <string name="export_result_message_disabled">Avertisment (automatizare): Exportarea setărilor nu este activată!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Exportare în cloud cu succes</string>
+    <string name="export_cloud_failed">Exportare în cloud EȘUATĂ!</string>
+    <string name="csv_exported">Intrările utilizatorului exportate</string>
+    <string name="csv_export_failed">Exportarea intrărilor utilizatorului EȘUATĂ!</string>
+    <string name="logs_sent">Jurnale trimise prin e-mail</string>
+    <string name="logs_send_failed">Trimiterea jurnalelor a eșuat</string>
+    <string name="export_options">Opțiuni exportare</string>
+    <string name="cloud_directory">Dosar Cloud</string>
+    <string name="export_settings_local">Exportați setările (local)</string>
+    <string name="export_settings_cloud">Exportați setările (cloud)</string>
+    <string name="export_settings_both">Exportați setările (local+cloud)</string>
+    <string name="import_settings_local">Importă setări (Local)</string>
+    <string name="import_settings_cloud">Importă setări (Cloud)</string>
+    <string name="import_settings_both">Importă setări (local/Cloud)</string>
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
@@ -696,9 +792,35 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferințe plugin</string>
     <!-- Navigation -->
+    <string name="statistics_desc">Vizualizați statistici și rapoarte</string>
+    <string name="tdd_cycle_pattern">Tipar ciclu DZT (Doză zilnică totală)</string>
+    <string name="tdd_cycle_pattern_desc">Suprapunerea insulinei zilnice în cicluri de 28 de zile până la identificarea tiparelor recurente</string>
+    <string name="nav_profile_helper">Ajutor de profil</string>
+    <string name="nav_profile_helper_desc">Construiți-vă profilul pe baza greutății sau a DZT (Dozei zilnice totale)</string>
+    <string name="quick_launch_configure">Configurați Lansarea Rapidă</string>
+    <string name="quick_launch_configure_desc">Personalizați butoanele cu acțiune rapidă în vederea de ansamblu</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Alerte locale</string>
     <!-- Actions Screen -->
+    <string name="add">Adăugați</string>
+    <string name="remove">Eliminați</string>
+    <string name="reorder">Reordonați</string>
+    <string name="actions">Acțiuni</string>
+    <string name="status">Stare</string>
+    <string name="pump_actions">Acțiuni pompă</string>
+    <string name="tempbasal_button">Bazală temporară</string>
+    <string name="extended_bolus_button">Bolus extins</string>
+    <string name="tools">Instrumente</string>
+    <string name="device_maintenance">Întreținerea dispozitivului</string>
+    <string name="from_label">De la</string>
+    <string name="to_label">Către</string>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Insulină</string>
+    <string name="pb_label">Baterie pompă</string>
+    <string name="cannula">Canulă</string>
+    <string name="patch_pump">Pompă fără fir</string>
     <!-- Site Rotation -->
+    <string name="select_location">Apăsați mai jos pentru a selecta locul de inserție</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
     <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivata!</string>
@@ -722,6 +844,8 @@
     <string name="cleanup_db_confirm">Doriți să curățați baza de date?\nAceasta va elimina schimbările înregistrate și datele istorice mai vechi de 3 luni.</string>
     <string name="cleanup_db_confirm_sync">Doriți să curățați baza de date?\nAceasta va elimina schimbările înregistrate și datele istorice mai vechi de 3 luni.\nFăcând acest lucru, veți accelera foarte mult sincronizarea completă.</string>
     <string name="cleared_entries">Înregistrări șterse</string>
+    <string name="reset_db_confirm">Sigur doriți să resetați bazele de date?</string>
+    <string name="reset_aps_results_confirm">Sigur doriți să resetați rezultatele APS stocate?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">Dum</string>
     <string name="weekday_saturday_short">Sâm</string>
@@ -741,6 +865,7 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Rată: %1$.2f%% (%2$.2f U/h) Durată: %3$d min</string>
     <string name="rate_percent_duration">Rată: %1$.2f U/h (%2$.2f%%) Durată: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Rată</b>: %1$.2f%% (%2$.2f U/h)<br><b>Durata</b>: %3$d min<br>]]></string>
@@ -748,9 +873,75 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS redă audio"</string>
     <!-- ProfileEditor -->
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAZALĂ</string>
+    <string name="target_short">ȚINTĂ</string>
+    <string name="profile_name">Nume profil:</string>
+    <string name="edit_profile_name">Editați numele profilului</string>
+    <string name="units_colon">Unități:</string>
+    <string name="unsaved_changes">Modificări nesalvate</string>
+    <string name="unsaved_changes_message">Aveți modificări nesalvate. Ce doriți să faceți?</string>
+    <string name="discard">Renunțați</string>
+    <string name="ic_dynamic_label_warning">Algoritmul poate oferi un calcul dinamic al IC. Valorile de mai jos pot fi utilizate doar ca soluție de rezervă în cazul lipsei datelor sau doar ca valoare de referință</string>
+    <string name="isf_dynamic_label_warning">Algoritmul poate oferi un calcul dinamic al ISF. Valorile de mai jos pot fi utilizate doar ca soluție de rezervă în cazul lipsei datelor sau doar ca valoare de referință</string>
+    <string name="add_time_block">Adăugați bloc de timp</string>
+    <string name="remove_entry">Ștergeți înregistrarea</string>
+    <string name="target_low_label">Scăzut</string>
+    <string name="target_high_label">Ridicat</string>
+    <string name="select_profile">Selectați profilul de editat</string>
+    <string name="a11y_add_new_profile">adăugați un profil nou</string>
+    <string name="a11y_clone_profile">clonați profilul curent</string>
+    <string name="a11y_delete_current_profile">ștergeți profilul curent</string>
     <!--    Search-->
+    <string name="search">Căutați</string>
+    <string name="search_preferences">Preferințe căutare</string>
+    <string name="search_category_dialogs">Dialoguri</string>
+    <string name="search_category_plugins">Module</string>
+    <string name="search_category_wiki">Documentație</string>
+    <string name="wiki_search_offline">Căutarea în documentație necesită o conexiune la internet</string>
+    <string name="no_search_results">Nu s-au găsit rezultate</string>
+    <string name="search_plugin_disabled">Modul %1$s dezactivat</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Setări jurnal</string>
+    <string name="resettodefaults">Reveniți la valorile implicite</string>
     <!--    Maintenance-->
+    <string name="maintenance">Mentenanță</string>
+    <string name="description_maintenance">Oferă mai multe funcții pentru mentenanță (spre exemplu trimiterea jurnalelor, ștergerea jurnalelor).</string>
+    <string name="log_files">Fișiere jurnal</string>
+    <string name="send_all_logs">Trimiteți jurnale prin email</string>
+    <string name="delete_logs">Ștergeți jurnalele</string>
+    <string name="logs_deleted">Jurnale șterse</string>
+    <string name="aaps_directory">Dosar AAPS</string>
+    <string name="import_setting">Importă setări</string>
+    <string name="miscellaneous">Diverse</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Decriptare &amp; Revizuire</string>
+    <string name="import_decrypt">Decriptați</string>
+    <string name="import_master_password">Parola principală</string>
+    <string name="import_decryption_password">Parolă de decriptare</string>
+    <string name="import_different_password_hint">Fișierul a fost criptat cu o parolă diferită</string>
+    <string name="import_wrong_password">Parolă greșită</string>
+    <string name="import_btn">Importați</string>
+    <string name="import_anyway_btn">Importați oricum</string>
+    <string name="import_restart_title">Setări importate</string>
+    <string name="import_restart_message">Setările au fost importate. Aplicația trebuie să repornească.</string>
+    <string name="import_file_details">Detalii fișier</string>
+    <string name="import_source_local">Local</string>
+    <string name="import_source_cloud">Cloud</string>
+    <string name="import_load_more">Încărcați mai multe</string>
+    <string name="import_no_files">Nu s-au găsit fișiere de setări</string>
+    <string name="import_review_summary">Sumar importare</string>
+    <string name="import_decrypt_ok">Decriptare reușită. Gata de importare.</string>
+    <string name="import_decrypt_warn">Decriptarea a reușit, dar există avertismente.</string>
+    <string name="import_decrypt_error">Decriptarea a reușit, dar importarea nu este posibilă.</string>
+    <string name="import_check_before">Verificați preferințele înainte de a le importa:</string>
+    <string name="import_check_dangerous">Preferințele nu ar trebui importate!</string>
+    <string name="import_check_cannot">Preferințele nu pot fi importate!</string>
+    <string name="import_explain_issues">Explicați problemele de import\u2026</string>
+    <string name="reset_aps_results">Resetați rezultatele APS</string>
+    <string name="database_cleanup">Curățarea bazei de date</string>
+    <string name="nav_resetdb">Resetați bazele de date</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="ble_scan_select_pump">Selectați pompa din lista de mai jos</string>
+    <string name="ble_scan_scanning">Se scanează pentru dispozitive…</string>
 </resources>
