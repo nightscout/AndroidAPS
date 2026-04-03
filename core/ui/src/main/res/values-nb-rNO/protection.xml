@@ -28,6 +28,9 @@
     <string name="protection_pin_hint">Skriv inn PIN-koden her</string>
     <string name="auth_hint_master_password">Skriv inn hovedpassordet</string>
     <string name="auth_hint_master_or_pin">Skriv inn hovedpassordet eller PIN-kode</string>
+    <string name="auth_hint_master_or_password">Skriv inn hovedpassordet eller det tilpassede passordet</string>
+    <string name="use_pin_password">Bruk PIN/passord</string>
+    <string name="current_master_password">Nåværende hovedpassord</string>
     <string name="master_password_not_set">Hovedpassord ikke satt</string>
     <string name="aaps_directory_not_selected">AAPS-mappe ikke valgt</string>
 </resources>
