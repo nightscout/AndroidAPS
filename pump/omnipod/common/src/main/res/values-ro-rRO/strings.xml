@@ -98,40 +98,40 @@
     <string name="omnipod_common_preferences_category_notifications">Notificări</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sunet pentru notificări RBT incerte activat</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sunet pentru notificările SMB incerte activat</string>
-    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sunet pentru notificări bolus incert activat</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Sunet activat pentru notificări bolus incert</string>
     <string name="omnipod_dash_use_bonding">Asociază un dispozitiv Bluetooth pe Android 15</string>
     <!-- Omnipod - Pod Status -->
-    <string name="omnipod_common_pod_status_no_active_pod">Niciun Pod activ</string>
-    <string name="omnipod_common_pod_status_waiting_for_activation">Setare în desfășurare (se așteaptă activarea Pod-ului)</string>
+    <string name="omnipod_common_pod_status_no_active_pod">Nicio pompă activă</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Setare în desfășurare (se așteaptă activarea pompei)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Inițializarea este în curs (se așteaptă inserarea canulei)</string>
     <string name="omnipod_common_pod_status_running">Rulează</string>
     <string name="omnipod_common_pod_status_suspended">Suspendat</string>
     <string name="omnipod_common_pod_status_pod_fault">Defecțiune Pod</string>
     <string name="omnipod_common_pod_status_inactive">Inactiv</string>
-    <string name="omnipod_common_pod_status_pod_fault_description">Defecțiune Pod: %1$03d %2$s</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Defecțiune Pompă: %1$03d %2$s</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_expiration">Pod-ul va expira în curând</string>
-    <string name="omnipod_common_alert_expiration_advisory">Pod-ul va expira în curând</string>
+    <string name="omnipod_common_alert_expiration">Pompa va expira în curând</string>
+    <string name="omnipod_common_alert_expiration_advisory">Pompa va expira în curând</string>
     <string name="omnipod_common_alert_shutdown_imminent">Oprirea este iminentă</string>
     <string name="omnipod_common_alert_low_reservoir">Nivel rezervor scăzut</string>
     <string name="omnipod_common_alert_unknown_alert">Alertă necunoscută</string>
     <!-- Omnipod - Commands -->
-    <string name="omnipod_common_cmd_initialize_pod">Inițializează Pod</string>
+    <string name="omnipod_common_cmd_initialize_pod">Inițializează Pompă</string>
     <string name="omnipod_common_cmd_insert_cannula">Inserează canula</string>
-    <string name="omnipod_common_cmd_deactivate_pod">Dezactivare Pod</string>
+    <string name="omnipod_common_cmd_deactivate_pod">Dezactivare Pompă</string>
     <string name="omnipod_common_cmd_set_basal_schedule">Setează Ratele Bazale</string>
     <string name="omnipod_common_cmd_set_bolus">Setează Bolus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Anulează Bolus</string>
-    <string name="omnipod_common_cmd_discard_pod">Renunţă la Pod</string>
-    <string name="omnipod_common_cmd_get_pod_status">Citește Stare Pod</string>
+    <string name="omnipod_common_cmd_discard_pod">Renunță la Pompă</string>
+    <string name="omnipod_common_cmd_get_pod_status">Citește Stare Pompă</string>
     <string name="omnipod_common_cmd_set_time">Setare timp</string>
     <string name="omnipod_common_cmd_configure_alerts">Configurare Alerte</string>
     <string name="omnipod_common_cmd_silence_alerts">Confirmare Alerte</string>
     <string name="omnipod_common_cmd_read_pulse_log">Citește Jurnal Puls</string>
     <string name="omnipod_common_cmd_suspend_delivery">Suspendă Livrarea</string>
     <string name="omnipod_common_cmd_resume_delivery">Reia Livrarea</string>
-    <string name="omnipod_common_cmd_get_pod_info">Citește Informații Pod</string>
-    <string name="omnipod_common_cmd_play_test_beep">Redă beep-uri de test</string>
+    <string name="omnipod_common_cmd_get_pod_info">Citește Informații Pompă</string>
+    <string name="omnipod_common_cmd_play_test_beep">Redă semnale sonore de test</string>
     <string name="omnipod_common_cmd_unknown_entry">Înregistrare necunoscută</string>
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Other -->
@@ -156,8 +156,8 @@
         <item quantity="other">%1$d zile</item>
     </plurals>
     <plurals name="omnipod_common_pod_alerts">
-        <item quantity="one">Alertă Pod: %1$s</item>
-        <item quantity="few">Alerte Pod: %1$s</item>
-        <item quantity="other">Alerte Pod: %1$s</item>
+        <item quantity="one">Alertă Pompă: %1$s</item>
+        <item quantity="few">Alerte Pompă: %1$s</item>
+        <item quantity="other">Alerte Pompă: %1$s</item>
     </plurals>
 </resources>
