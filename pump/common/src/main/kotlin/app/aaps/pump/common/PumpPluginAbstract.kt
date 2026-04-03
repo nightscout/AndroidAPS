@@ -49,7 +49,6 @@ import app.aaps.pump.common.sync.PumpSyncStorage
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Provider
-import app.aaps.core.ui.R as Rc
 
 /**
  * Created by andy on 23.04.18.
@@ -292,7 +291,7 @@ abstract class PumpPluginAbstract protected constructor(
                 aapsLogger.error("deliverTreatment: Invalid input")
                 pumpEnactResultProvider.get().success(false).enacted(false)
                     .bolusDelivered(0.0)
-                    .comment(R.string.invalid_input)
+                    .comment(app.aaps.core.ui.R.string.invalid_input)
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)
@@ -307,7 +306,7 @@ abstract class PumpPluginAbstract protected constructor(
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")
                 pumpEnactResultProvider.get().success(true).enacted(true)
                     .bolusDelivered(0.0)
-                    .comment(Rc.string.ok)
+                    .comment(app.aaps.core.ui.R.string.ok)
             }
         } finally {
             triggerUIChange()
