@@ -106,4 +106,16 @@
     <string name="basal_bolus_step">Etapa bazală/bolus</string>
     <string name="connecting_to_pump">Conectarea la pompa…</string>
     <string name="pairing_successful">Asociere reușită!</string>
+    <string name="pairing_successful_message">Pompa dumneavoastră este acum conectată și gata de utilizare.</string>
+    <string name="cancel_pairing_title">Anulați asocierea?</string>
+    <string name="cancel_pairing_message">Procesul de asociere va fi abandonat.</string>
+    <string name="done">Finalizat</string>
+    <string name="open_bluetooth_settings">Deschideți setările Bluetooth</string>
+    <string name="enter_pump_password">Introduceți parola pompei</string>
+    <string name="select_paired_device">Selectați dispozitivul asociat</string>
+    <string name="no_paired_devices">Nu s-au găsit dispozitive Dana asociate. Mai întâi asociați pompa în setările Bluetooth Android.</string>
+    <string name="password_hint">Parolă de 4 cifre (0–9999)</string>
+    <string name="connecting_verifying">Se conectează și se verifică parola…</string>
+    <string name="password_ok">Parolă verificată cu succes!</string>
+    <string name="password_wrong">Parolă greșită. Reveniți și corectați-o.</string>
 </resources>
