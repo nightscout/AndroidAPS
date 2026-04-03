@@ -103,6 +103,7 @@
     <string name="objectives">Mục tiêu</string>
     <string name="please_wait">Vui lòng chờ…</string>
     <string name="stop">Dừng lại</string>
+    <string name="stop_pressed">Đã nhấn DỪNG</string>
     <string name="carbs">Carbs</string>
     <string name="invalid_profile">Hồ sơ không hợp lệ!</string>
     <string name="no_profile_set">KHÔNG CÓ HỒ SƠ</string>
@@ -790,7 +791,17 @@
     <string name="maintenance_export_csv_desc">Xuất lịch sử điều trị dưới dạng bảng tính</string>
     <string name="maintenance_cleanup_db_desc">Xóa các mục cũ khỏi cơ sở dữ liệu</string>
     <string name="maintenance_reset_aps_results_desc">Xóa kết quả thuật toán đã lưu</string>
+    <string name="maintenance_reset_db_desc">Xóa tất cả cơ sở dữ liệu và khởi động lại</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Chọn loại lưu trữ</string>
+    <string name="clear_cloud_action">Xóa cài đặt</string>
+    <string name="clear_cloud_settings">Xóa cài đặt đám mây</string>
+    <string name="clear_cloud_settings_message">Hành động này sẽ chuyển sang lưu trữ cục bộ và xóa quyền truy cập. Tiếp tục?</string>
+    <string name="cloud_connection_failed">Kết nối lưu trữ đám mây thất bại</string>
+    <string name="cloud_reauthorize_message">Kết nối lưu trữ đám mây thất bại. Bạn có muốn xác thực lại không?</string>
+    <string name="reauthorize">Xác thực lại</string>
+    <string name="cloud_auth_success">Xác thực lưu trữ đám mây thành công</string>
+    <string name="authorization_status">Trạng thái xác thực</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">giảm %1$s bởi%2$s</string>
     <string name="a11y_plus_button_description">tăng %1$s bởi %2$s</string>
@@ -802,20 +813,61 @@
     <string name="need_connect_permission">Ứng dụng yêu cầu quyền Bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Yêu cầu người dùng</string>
+    <string name="pump_pair">Ghép nối</string>
+    <string name="pump_unpair">Hủy ghép nối</string>
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Thiết bị không hỗ trợ Bluetooth.</string>
     <string name="ble_not_supported_or_not_paired">Không hỗ trợ Bluetooth hoặc thiết bị chưa được ghép nối.</string>
     <string name="ble_not_enabled">Bluetooth chưa được bật.</string>
+    <string name="ble_permissions_missing">Quyền truy cập Bluetooth chưa được cấp. Vui lòng cấp quyền trong cài đặt ứng dụng.</string>
     <string name="location_not_found_title">Vị trí chưa được bật</string>
     <string name="location_not_found_message">Để phát hiện Bluetooth trên các thiết bị mới, cần bật dịch vụ vị trí. AAPS không theo dõi vị trí của bạn và có thể tắt dịch vụ vị trí sau khi ghép nối thành công.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Tùy chọn plugin</string>
     <!-- Navigation -->
+    <string name="nav_about">Thông tin</string>
+    <string name="nav_about_desc">Xem phiên bản và thông tin ứng dụng</string>
+    <string name="nav_exit">Thoát</string>
+    <string name="open_navigation">Mở điều hướng</string>
+    <string name="nav_history_browser">Xem lịch sử</string>
+    <string name="nav_history_browser_desc">Duyệt dữ liệu và biểu đồ lịch sử</string>
+    <string name="overview">Tổng quan</string>
+    <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
+    <string name="localprofile">Hồ sơ</string>
+    <string name="nav_setupwizard">Cài đặt nhanh</string>
+    <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
+    <string name="statistics">Thống kê</string>
+    <string name="statistics_desc">Xem thống kê và báo cáo</string>
+    <string name="tdd_cycle_pattern">Mẫu chu kỳ TDD</string>
+    <string name="tdd_cycle_pattern_desc">Gộp tổng liều insulin hàng ngày theo chu kỳ 28 ngày để nhận diện các mẫu lặp lại</string>
+    <string name="nav_profile_helper">Hỗ trợ hồ sơ</string>
+    <string name="nav_profile_helper_desc">Xây dựng hồ sơ dựa trên cân nặng hoặc TDD</string>
+    <string name="quick_launch_configure">Thiết lập Khởi chạy nhanh</string>
+    <string name="quick_launch_configure_desc">Tùy chỉnh các nút hành động nhanh trên tổng quan</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Cảnh báo cục bộ</string>
     <!-- Actions Screen -->
+    <string name="add">Thêm</string>
+    <string name="remove">Loại bỏ</string>
+    <string name="reorder">Sắp xếp lại</string>
+    <string name="actions">Hành động</string>
+    <string name="status">Trạng thái</string>
+    <string name="pump_actions">Các hành động bơm</string>
+    <string name="tempbasal_button">Liều nền tạm thời</string>
+    <string name="extended_bolus_button">Liều bolus kéo dài</string>
+    <string name="tools">Công cụ</string>
+    <string name="device_maintenance">Bảo trì thiết bị</string>
+    <string name="from_label">Từ</string>
+    <string name="to_label">Đến</string>
+    <string name="sensor_label">Cảm biến</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="pb_label">Pin của Bơm</string>
+    <string name="cannula">Kim luồn</string>
+    <string name="patch_pump">Patch pump</string>
     <!-- Site Rotation -->
+    <string name="select_location">Nhấn bên dưới để chọn vị trí</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Đừng tắt ứng dụng!</string>
     <string name="fabric_upload_disabled">Đã vô hiệu hóa tải lên nhật ký sự cố!</string>
@@ -833,6 +885,8 @@
     <string name="cleanup_db_confirm">Bạn có muốn dọn dẹp cơ sở dữ liệu không?\nHành động này sẽ xóa các thay đổi đã theo dõi và dữ liệu lịch sử cũ hơn 3 tháng.</string>
     <string name="cleanup_db_confirm_sync">Bạn có muốn dọn dẹp cơ sở dữ liệu không?\nViệc này sẽ xóa các thay đổi đã theo dõi và dữ liệu lịch sử cũ hơn 3 tháng.\nThao tác này sẽ giúp đồng bộ toàn bộ nhanh hơn đáng kể.</string>
     <string name="cleared_entries">Các mục đã được xóa</string>
+    <string name="reset_db_confirm">Bạn có thật sự muốn đặt lại cơ sở dữ liệu không?</string>
+    <string name="reset_aps_results_confirm">Bạn có thật sự muốn đặt lại các kết quả APS đã lưu không?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">Sun</string>
     <string name="weekday_saturday_short">Sat</string>
@@ -852,6 +906,7 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Tốc độ: %1$.2f%% (%2$.2f U/h) Thời gian: %3$d phút</string>
     <string name="rate_percent_duration">Tốc độ: %1$.2f U/h (%2$.2f%%) Thời gian: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Tốc độ</b>: %1$.2f%% (%2$.2f U/h)<br><b>Thời gian</b>: %3$d phút<br>]]></string>
@@ -859,9 +914,78 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS phát âm thanh"</string>
     <!-- ProfileEditor -->
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
+    <string name="target_short">TARG</string>
+    <string name="profile_name">Tên Hồ sơ:</string>
+    <string name="edit_profile_name">Sửa tên hồ sơ</string>
+    <string name="units_colon">Đơn vị:</string>
+    <string name="unsaved_changes">Chưa lưu thay đổi</string>
+    <string name="unsaved_changes_message">Có thay đổi chưa lưu. Bạn muốn làm gì?</string>
+    <string name="discard">Bỏ qua</string>
+    <string name="ic_dynamic_label_warning">Thuật toán của bạn có thể tính toán IC động. Các giá trị bên dưới chỉ được dùng làm dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
+    <string name="isf_dynamic_label_warning">Thuật toán của bạn có thể tính toán ISF động. Các giá trị bên dưới chỉ được dùng làm dự phòng khi thiếu dữ liệu hoặc chỉ để tham khảo</string>
+    <string name="add_time_block">Thêm thời gian</string>
+    <string name="remove_entry">Xóa mục</string>
+    <string name="target_low_label">Thấp</string>
+    <string name="target_high_label">Cao</string>
+    <string name="select_profile">Chọn Hồ sơ để chỉnh sửa</string>
+    <string name="a11y_add_new_profile">thêm Hồ sơ mới</string>
+    <string name="a11y_clone_profile">nhân bản Hồ sơ hiện tại</string>
+    <string name="a11y_delete_current_profile">xóa Hồ sơ hiện tại</string>
     <!--    Search-->
+    <string name="search">Tìm kiếm</string>
+    <string name="search_preferences">Tùy chọn tìm kiếm</string>
+    <string name="clear">Xóa</string>
+    <string name="search_category_categories">Danh mục tùy chọn</string>
+    <string name="search_category_preferences">Tùy chọn</string>
+    <string name="search_category_dialogs">Hộp thoại</string>
+    <string name="search_category_plugins">Plugins</string>
+    <string name="search_category_wiki">Tài liệu</string>
+    <string name="wiki_search_offline">Cần có Internet để tìm kiếm tài liệu</string>
+    <string name="no_search_results">Không tìm thấy kết quả</string>
+    <string name="search_plugin_disabled">Plugin %1$s đã bị tắt</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Cài đặt nhật ký</string>
+    <string name="resettodefaults">Đặt lại về mặc định</string>
     <!--    Maintenance-->
+    <string name="maintenance">Bảo trì hệ thống</string>
+    <string name="description_maintenance">Cung cấp một số chức năng bảo trì (ví dụ: gửi nhật ký, xóa nhật ký).</string>
+    <string name="log_files">Tập tin nhật ký</string>
+    <string name="send_all_logs">Gửi nhật ký qua Email</string>
+    <string name="delete_logs">Xóa các nhật ký</string>
+    <string name="logs_deleted">Đã xóa nhật ký</string>
+    <string name="aaps_directory">Thư mục AAPS</string>
+    <string name="import_setting">Nhập cài đặt</string>
+    <string name="miscellaneous">Các tùy chọn khác</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Giải mã &amp; xem lại</string>
+    <string name="import_decrypt">Giải mã</string>
+    <string name="import_master_password">Mật khẩu chính</string>
+    <string name="import_decryption_password">Mật khẩu giải mã</string>
+    <string name="import_different_password_hint">Tệp đã được mã hóa bằng mật khẩu khác</string>
+    <string name="import_wrong_password">Sai mật khẩu</string>
+    <string name="import_btn">Nhập</string>
+    <string name="import_anyway_btn">Vẫn nhập</string>
+    <string name="import_restart_title">Đã nhập cài đặt</string>
+    <string name="import_restart_message">Cài đặt đã được nhập. Ứng dụng cần khởi động lại.</string>
+    <string name="import_file_details">Chi tiết tệp</string>
+    <string name="import_source_local">Cục bộ</string>
+    <string name="import_source_cloud">Đám mây</string>
+    <string name="import_load_more">Tải thêm</string>
+    <string name="import_no_files">Không tìm thấy tệp cài đặt</string>
+    <string name="import_review_summary">Tóm tắt quá trình nhập</string>
+    <string name="import_decrypt_ok">Giải mã thành công. Sẵn sàng để nhập.</string>
+    <string name="import_decrypt_warn">Giải mã thành công, nhưng có cảnh báo.</string>
+    <string name="import_decrypt_error">Giải mã thành công, nhưng không thể nhập.</string>
+    <string name="import_check_before">Vui lòng kiểm tra tùy chọn trước khi nhập:</string>
+    <string name="import_check_dangerous">Không nên nhập các tùy chọn!</string>
+    <string name="import_check_cannot">Không thể nhập các tùy chọn!</string>
+    <string name="import_explain_issues">Giải thích các vấn đề khi nhập\u2026</string>
+    <string name="reset_aps_results">Đặt lại kết quả APS</string>
+    <string name="database_cleanup">Dọn dẹp cơ sở dữ liệu</string>
+    <string name="nav_resetdb">Đặt lại cơ sở dữ liệu</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="ble_scan_select_pump">Chọn bơm của bạn từ danh sách bên dưới</string>
+    <string name="ble_scan_scanning">Đang quét các thiết bị…</string>
 </resources>
