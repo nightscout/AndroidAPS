@@ -29,15 +29,6 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="app.aaps.ui.activities.BolusProgressHelperActivity"
-            android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Translucent" />
-        <activity
-            android:name=".activities.ConcentrationActivity"
-            android:exported="false"
-            android:launchMode="singleInstance"
-            android:theme="@style/Theme.MaterialComponents.Translucent" />
-        <activity
             android:name=".activities.ErrorActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Translucent" />

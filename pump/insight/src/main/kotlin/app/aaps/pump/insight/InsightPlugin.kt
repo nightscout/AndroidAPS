@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Insight
 import app.aaps.core.interfaces.pump.Pump
@@ -44,7 +45,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
@@ -136,6 +136,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import android.app.NotificationManager as AndroidNotificationManager
@@ -154,7 +155,8 @@ class InsightPlugin @Inject constructor(
     private val insightDatabase: InsightDatabase,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val notificationManager: NotificationManager,
-    private val ch: ConcentrationHelper
+    private val ch: ConcentrationHelper,
+    private val bolusProgressData: BolusProgressData
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .icon(IcPluginInsight)
@@ -531,8 +533,10 @@ class InsightPlugin @Inject constructor(
                         bolusID = service.requestMessage(bolusMessage).await().bolusId
                         bolusCancelled = false
                     }
+                    val isPriming = bolusProgressData.state.value?.isPriming ?: false
+                    val totalInsulin = bolusProgressData.state.value?.insulin ?: detailedBolusInfo.insulin
                     result.success(true).enacted(true)
-                    rxBus.send(EventOverviewBolusProgress(ch, PumpInsulin(0.0), id = detailedBolusInfo.id))
+                    bolusProgressData.updateProgress(0, ch.bolusProgressString(PumpInsulin(0.0), isPriming), 0.0)
                     var trials = 0
                     val now = dateUtil.now()
                     val serial = serialNumber()
@@ -574,12 +578,17 @@ class InsightPlugin @Inject constructor(
                         }
                         if (activeBolus != null) {
                             trials = -1
-                            rxBus.send(EventOverviewBolusProgress(ch, delivered = PumpInsulin(activeBolus.initialAmount - activeBolus.remainingAmount), id = detailedBolusInfo.id))
+                            val delivered = activeBolus.initialAmount - activeBolus.remainingAmount
+                            val pumpInsulin = PumpInsulin(delivered)
+                            val percent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
+                            bolusProgressData.updateProgress(percent, ch.bolusProgressString(pumpInsulin, isPriming), delivered)
                         } else {
                             synchronized(_bolusLock) {
                                 if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                     if (!bolusCancelled) {
-                                        rxBus.send(EventOverviewBolusProgress(ch, delivered = PumpInsulin(insulin), id = detailedBolusInfo.id))
+                                        val pumpInsulin = PumpInsulin(insulin)
+                                        val percent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
+                                        bolusProgressData.updateProgress(percent, ch.bolusProgressString(pumpInsulin, isPriming), insulin)
                                     }
                                 }
                             }

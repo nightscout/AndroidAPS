@@ -126,7 +126,16 @@ class AcceptActivity : DaggerAppCompatActivity() {
                     HorizontalPager(state = pagerState) { page ->
                         when (page) {
                             0    -> {
-                                if (hasStructuredData) {
+                                val curvedTitle = when {
+                                    hasStructuredData  -> stringResource(R.string.menu_treatment)
+                                    hasTempTargetData  -> stringResource(R.string.loop_status_temp_target)
+                                    hasProfileData     -> stringResource(R.string.status_profile_switch)
+                                    hasRunningModeData -> stringResource(R.string.status_running_mode)
+                                    else               -> null
+                                }
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    if (curvedTitle != null) CurvedTitle(curvedTitle)
+                                    if (hasStructuredData) {
                                     // Bolus / Carbs / eCarbs structured summary
                                     Column(
                                         modifier = Modifier
@@ -362,6 +371,7 @@ class AcceptActivity : DaggerAppCompatActivity() {
                                             textAlign = if (isError) TextAlign.Center else TextAlign.Start,
                                         )
                                     }
+                                }
                                 }
                             }
 

@@ -14,7 +14,7 @@ import app.aaps.pump.eopatch.compose.EopatchPatchViewModel
 fun TurningOffAlarmStep(viewModel: EopatchPatchViewModel) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.next),
+            text = stringResource(app.aaps.core.ui.R.string.next),
             onClick = { viewModel.onConfirm() }
         )
     ) {
@@ -46,7 +46,7 @@ fun TurningOffAlarmStep(viewModel: EopatchPatchViewModel) {
 private fun TurningOffAlarmStepPreview() {
     MaterialTheme {
         WizardStepLayout(
-            primaryButton = WizardButton(text = stringResource(R.string.next), onClick = {})
+            primaryButton = WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = {})
         ) {
             Text(text = stringResource(R.string.patch_manually_turning_off_alarm_title), style = MaterialTheme.typography.titleLarge)
             Text(text = stringResource(R.string.patch_manually_turning_off_alarm_desc_1), style = MaterialTheme.typography.bodyMedium)

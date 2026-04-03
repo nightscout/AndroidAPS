@@ -11,6 +11,24 @@
     <string name="pump_status_suspended">Pozastaveno</string>
     <string name="pump_status_executing_command">Provádění příkazu</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Načítání nastavení</string>
+    <string name="pump_cmd_desc_get_firmware">Načítání firmware pumpy</string>
+    <string name="pump_cmd_desc_get_basal_profile">Načítání profilu</string>
+    <string name="pump_cmd_desc_set_basal_profile">Nastavování profilu</string>
+    <string name="pump_cmd_desc_get_tbr">Načítání dočasného bazálu</string>
+    <string name="pump_cmd_desc_cancel_tbr">Zrušit dočasný bazál</string>
+    <string name="pump_cmd_desc_set_tbr">Nastavit dočasný bazál</string>
+    <string name="pump_cmd_desc_set_bolus">Poslat bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Načítání bolusu</string>
+    <string name="pump_cmd_desc_cancel_bolus">Zrušit bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Načítání zbývajícího inzulínu</string>
+    <string name="pump_cmd_desc_get_battery_status">Načítání stavu baterie</string>
+    <string name="pump_cmd_desc_get_time">Načítání času</string>
+    <string name="pump_cmd_desc_set_time">Nastavení času</string>
+    <string name="pump_cmd_desc_get_pump_status">Načíst stav pumpy</string>
+    <string name="pump_cmd_desc_get_history">Načítání historie</string>
+    <string name="pump_cmd_desc_get_history_params">Načítání historie %s</string>
+    <string name="pump_cmd_desc_custom">Vlastní příkaz</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazály</string>
     <string name="history_group_configuration">Konfigurace</string>
@@ -32,6 +50,7 @@
     <string name="time_last_3_hours">Poslední 3 hodiny</string>
     <string name="time_last_6_hours">Posledních 6 hodin</string>
     <string name="time_last_12_hours">Posledních 12 hodin</string>
+    <string name="time_last_24_hours">Posledních 24 hodin</string>
     <string name="time_last_2_days">Poslední 2 dny</string>
     <string name="time_last_4_days">Poslední 4 dny</string>
     <string name="time_last_week">Minulý týden</string>

@@ -44,12 +44,10 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalDateUtil
-import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -90,20 +88,14 @@ fun BolusCarbsScreen(
     // Update toolbar configuration whenever state changes
     LaunchedEffect(uiState.isRemovingMode, uiState.selectedItems.size, uiState.showInvalidated) {
         setToolbarConfig(
-            SelectableListToolbar(
-                isRemovingMode = uiState.isRemovingMode,
-                selectedCount = uiState.selectedItems.size,
-                onExitRemovingMode = { viewModel.exitSelectionMode() },
+            viewModel.getToolbarConfig(
                 onNavigateBack = onNavigateBack,
-                onDelete = {
+                onDeleteClick = {
                     if (uiState.selectedItems.isNotEmpty()) {
                         deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
                         showDeleteDialog = true
                     }
-                },
-                rh = viewModel.rh,
-                showInvalidated = uiState.showInvalidated,
-                onToggleInvalidated = { viewModel.toggleInvalidated() }
+                }
             )
         )
     }
@@ -168,7 +160,6 @@ fun BolusCarbsScreen(
                             profile = profile,
                             insulin = insulin,
                             rh = viewModel.rh,
-                            decimalFormatter = viewModel.decimalFormatter,
                             showInvalidated = uiState.showInvalidated
                         )
                     }
@@ -208,7 +199,6 @@ private fun MealLinkItem(
     profile: Profile?,
     insulin: Insulin,
     rh: ResourceHelper,
-    decimalFormatter: DecimalFormatter,
     showInvalidated: Boolean
 ) {
     val dateUtil = LocalDateUtil.current
@@ -291,7 +281,7 @@ private fun MealLinkItem(
                         )
 
                         // Bolus amount with IOB
-                        profile?.let { prof ->
+                        profile?.let { _ ->
                             val iob = bolus.iobCalc(System.currentTimeMillis())
                             val bolusText = if (iob.iobContrib > 0.01) {
                                 buildAnnotatedString {

@@ -36,7 +36,7 @@ import javax.inject.Inject
 @Stable
 class DanaRSOverviewViewModel @Inject constructor(
     aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
+    rh: ResourceHelper,
     rxBus: RxBus,
     aapsSchedulers: AapsSchedulers,
     commandQueue: CommandQueue,
@@ -97,7 +97,7 @@ class DanaRSOverviewViewModel @Inject constructor(
         if (isConfigured) {
             add(
                 PumpAction(
-                    label = rh.gs(R.string.unpair),
+                    label = rh.gs(app.aaps.core.ui.R.string.pump_unpair),
                     icon = Icons.Filled.Bluetooth,
                     category = ActionCategory.MANAGEMENT,
                     onClick = { onUnpairClick() }
@@ -106,7 +106,7 @@ class DanaRSOverviewViewModel @Inject constructor(
         } else {
             add(
                 PumpAction(
-                    label = rh.gs(R.string.danars_pairing),
+                    label = rh.gs(app.aaps.core.ui.R.string.pairing),
                     icon = Icons.Filled.Bluetooth,
                     category = ActionCategory.MANAGEMENT,
                     onClick = { onPairClick() }

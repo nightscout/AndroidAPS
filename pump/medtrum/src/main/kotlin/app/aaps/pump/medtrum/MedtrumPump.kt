@@ -45,7 +45,8 @@ class MedtrumPump @Inject constructor(
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
-    private val temporaryBasalStorage: TemporaryBasalStorage
+    private val temporaryBasalStorage: TemporaryBasalStorage,
+    private val bolusProgressData: BolusProgressData
 ) {
 
     companion object {
@@ -410,7 +411,11 @@ class MedtrumPump @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
         bolusProgressLastTimeStamp = dateUtil.now()
         _bolusAmountDelivered.value = amountDelivered
-        BolusProgressData.delivered = amountDelivered
+        val state = bolusProgressData.state.value
+        val insulin = state?.insulin ?: 0.0
+        val percent = if (insulin > 0) ((amountDelivered / insulin) * 100).toInt().coerceAtMost(100) else 0
+        val status = state?.status ?: ""
+        bolusProgressData.updateProgress(percent, status, amountDelivered)
         bolusDone = bolusCompleted
     }
 

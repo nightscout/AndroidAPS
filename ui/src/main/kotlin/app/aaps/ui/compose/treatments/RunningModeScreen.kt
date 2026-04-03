@@ -10,15 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -81,62 +76,15 @@ fun RunningModeScreen(
     // Update toolbar configuration whenever state changes
     LaunchedEffect(uiState.isRemovingMode, uiState.selectedItems.size, uiState.showInvalidated) {
         setToolbarConfig(
-            if (uiState.isRemovingMode) {
-                // Selection mode: show count, close icon, and delete action
-                ToolbarConfig(
-                    title = viewModel.rh.gs(app.aaps.core.ui.R.string.count_selected, uiState.selectedItems.size),
-                    navigationIcon = {
-                        IconButton(onClick = { viewModel.exitSelectionMode() }) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.close)
-                            )
-                        }
-                    },
-                    actions = {
-                        // Delete button
-                        IconButton(
-                            onClick = {
-                                if (uiState.selectedItems.isNotEmpty()) {
-                                    deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
-                                    showDeleteDialog = true
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.delete),
-                                tint = MaterialTheme.colorScheme.error
-                            )
-                        }
+            viewModel.getToolbarConfig(
+                onNavigateBack = onNavigateBack,
+                onDeleteClick = {
+                    if (uiState.selectedItems.isNotEmpty()) {
+                        deleteDialogMessage = viewModel.getDeleteConfirmationMessage()
+                        showDeleteDialog = true
                     }
-                )
-            } else {
-                // Normal mode: show title, back icon, and show/hide action
-                ToolbarConfig(
-                    title = viewModel.rh.gs(app.aaps.core.ui.R.string.treatments),
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(app.aaps.core.ui.R.string.back)
-                            )
-                        }
-                    },
-                    actions = {
-                        // Show/Hide invalidated button
-                        IconButton(onClick = { viewModel.toggleInvalidated() }) {
-                            Icon(
-                                imageVector = if (uiState.showInvalidated) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                contentDescription = if (uiState.showInvalidated)
-                                    stringResource(app.aaps.core.ui.R.string.hide_invalidated)
-                                else
-                                    stringResource(app.aaps.core.ui.R.string.show_invalidated)
-                            )
-                        }
-                    }
-                )
-            }
+                }
+            )
         )
     }
 

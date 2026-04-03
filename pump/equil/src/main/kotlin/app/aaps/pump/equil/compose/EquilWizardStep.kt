@@ -16,7 +16,7 @@ enum class EquilWizardStep(val titleResId: Int) {
     AIR(R.string.equil_title_air),
     SELECT_INSULIN(app.aaps.core.ui.R.string.select_insulin),
     SITE_LOCATION(app.aaps.core.ui.R.string.site_rotation),
-    CONFIRM(R.string.equil_title_confirm),
+    CONFIRM(app.aaps.core.ui.R.string.confirm),
 
     // CHANGE_INSULIN flow: ChangeInsulin → Assemble → [SelectInsulin] → Fill → Attach → Air → [SiteLocation] → Confirm
     CHANGE_INSULIN(R.string.equil_change),

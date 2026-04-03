@@ -12,6 +12,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -83,7 +84,8 @@ class EquilWizardViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val rxBus: RxBus,
     private val insulinManager: InsulinManager,
-    private val bleTransport: EquilBleTransport
+    private val bleTransport: EquilBleTransport,
+    private val hardLimits: HardLimits
 ) : ViewModel(), SiteLocationStepHost {
 
     // region State
@@ -466,9 +468,10 @@ class EquilWizardViewModel @Inject constructor(
     }
 
     private fun pumpSettings(address: String, serial: String) {
-        val profile = runBlocking { pumpSync.expectedPumpState() }.profile ?: return
+        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
+        val maxBasal = if (profile != null) constraintsChecker.getMaxBasalAllowed(profile).value() else hardLimits.maxBasal()
         commandQueue.customCommand(
-            CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
+            CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), maxBasal, aapsLogger, preferences, equilManager),
             object : Callback() {
                 override fun run() {
                     if (result.success) {
@@ -757,9 +760,10 @@ class EquilWizardViewModel @Inject constructor(
     }
 
     private fun setLimits() {
-        val profile = runBlocking { pumpSync.expectedPumpState() }.profile ?: return
+        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
+        val maxBasal = if (profile != null) constraintsChecker.getMaxBasalAllowed(profile).value() else hardLimits.maxBasal()
         commandQueue.customCommand(
-            CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
+            CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), maxBasal, aapsLogger, preferences, equilManager),
             object : Callback() {
                 override fun run() {
                     _isLoading.value = false

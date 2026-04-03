@@ -166,7 +166,7 @@ private fun CommErrorDialog(
             title = { Text(stringResource(R.string.patch_communication_failed)) },
             text = { Text("${stringResource(R.string.patch_comm_error_during_discard_desc_2)}\n${stringResource(R.string.patch_communication_check_helper_2)}") },
             confirmButton = {
-                TextButton(onClick = { onDismiss(); viewModel.discardPatch() }) { Text(stringResource(R.string.discard)) }
+                TextButton(onClick = { onDismiss(); viewModel.discardPatch() }) { Text(stringResource(app.aaps.core.ui.R.string.discard)) }
             },
             dismissButton = {
                 TextButton(onClick = { onDismiss(); viewModel.cancelPatchCommCheck() }) { Text(commCheckCancelLabel) }
@@ -178,7 +178,7 @@ private fun CommErrorDialog(
             title = { Text(stringResource(R.string.patch_communication_failed)) },
             text = { Text("${stringResource(R.string.patch_communication_check_helper_1)}\n${stringResource(R.string.patch_communication_check_helper_2)}") },
             confirmButton = {
-                TextButton(onClick = { onDismiss(); viewModel.retryCheckCommunication() }) { Text(stringResource(R.string.retry)) }
+                TextButton(onClick = { onDismiss(); viewModel.retryCheckCommunication() }) { Text(stringResource(app.aaps.core.ui.R.string.retry)) }
             },
             dismissButton = {
                 TextButton(onClick = { onDismiss(); viewModel.cancelPatchCommCheck() }) { Text(commCheckCancelLabel) }
@@ -196,7 +196,7 @@ private fun BondedDialog(visible: Boolean, viewModel: EopatchPatchViewModel, onD
         text = { Text(stringResource(R.string.patch_communication_succeed_message)) },
         confirmButton = {
             TextButton(onClick = { onDismiss(); viewModel.dismissPatchCommCheckDialogInternal(true) }) {
-                Text(stringResource(R.string.confirm))
+                Text(stringResource(app.aaps.core.ui.R.string.confirm))
             }
         }
     )
@@ -221,7 +221,7 @@ private fun ChangePatchDialog(visible: Boolean, viewModel: EopatchPatchViewModel
             TextButton(onClick = { onDismiss(); viewModel.deactivatePatch() }) { Text(stringResource(R.string.string_discard_patch)) }
         },
         dismissButton = {
-            TextButton(onClick = { onDismiss() }) { Text(stringResource(R.string.cancel)) }
+            TextButton(onClick = { onDismiss() }) { Text(stringResource(app.aaps.core.ui.R.string.cancel)) }
         }
     )
 }
@@ -251,14 +251,14 @@ private fun DiscardDialog(visible: Boolean, viewModel: EopatchPatchViewModel, on
                         viewModel.handleComplete()
                     }
                 }
-            }) { Text(stringResource(R.string.discard)) }
+            }) { Text(stringResource(app.aaps.core.ui.R.string.discard)) }
         },
         dismissButton = {
             if (!viewModel.isInAlarmHandling) {
                 TextButton(onClick = {
                     onDismiss()
                     viewModel.updateIncompletePatchActivationReminder()
-                }) { Text(stringResource(R.string.cancel)) }
+                }) { Text(stringResource(app.aaps.core.ui.R.string.cancel)) }
             }
         }
     )
@@ -277,7 +277,7 @@ private fun ForceResetDialog(visible: Boolean, viewModel: EopatchPatchViewModel,
             }
         },
         dismissButton = {
-            TextButton(onClick = { onDismiss() }) { Text(stringResource(R.string.cancel)) }
+            TextButton(onClick = { onDismiss() }) { Text(stringResource(app.aaps.core.ui.R.string.cancel)) }
         }
     )
 }

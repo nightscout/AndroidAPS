@@ -38,6 +38,7 @@ fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil, insuli
         originalPercentage = originalPercentage,
         originalDuration = originalDuration,
         originalEnd = originalEnd,
+        originalPsId = originalPsId,
         iCfg = iCfg,
         ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
@@ -56,6 +57,7 @@ fun EPS.toNSEffectiveProfileSwitch(dateUtil: DateUtil): NSEffectiveProfileSwitch
         originalPercentage = originalPercentage,
         originalDuration = originalDuration,
         originalEnd = originalEnd,
+        originalPsId = originalPsId,
         notes = originalCustomizedName,
         identifier = ids.nightscoutId,
         pumpId = ids.pumpId,

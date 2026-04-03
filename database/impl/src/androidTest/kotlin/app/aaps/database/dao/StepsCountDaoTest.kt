@@ -73,7 +73,6 @@ class StepsCountDaoTest {
         Assert.assertFalse(getTableNames(supportDb).contains(TABLE_STEPS_COUNT))
         DatabaseModule().migrations.filter { m -> m.startVersion >= startVersion }.forEach { m -> m.migrate(supportDb) }
         Assert.assertTrue(getTableNames(supportDb).contains(TABLE_STEPS_COUNT))
-        Assert.assertTrue(getIndexNames(supportDb).contains("index_stepsCount_id"))
         Assert.assertTrue(getIndexNames(supportDb).contains("index_stepsCount_timestamp"))
     }
 

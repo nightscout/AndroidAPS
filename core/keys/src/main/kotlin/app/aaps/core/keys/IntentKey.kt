@@ -9,7 +9,6 @@ import app.aaps.core.keys.interfaces.IntentPreferenceKey
  * - XdripIntentKey in :plugins:sync
  * - SmsIntentKey in :plugins:main
  * - OverviewIntentKey in :plugins:main
- * - RileyLinkIntentPreferenceKey in :pump:rileylink
  *
  * This enum is kept for backwards compatibility but should remain empty.
  * New intent keys should be added to their respective module key enums.

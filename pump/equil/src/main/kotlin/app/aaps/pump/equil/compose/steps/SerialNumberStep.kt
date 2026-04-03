@@ -132,7 +132,7 @@ private fun SerialNumberStepContent(
                 )
             } else {
                 Text(
-                    text = if (scanError != null) stringResource(R.string.equil_retry)
+                    text = if (scanError != null) stringResource(app.aaps.core.ui.R.string.retry)
                     else stringResource(R.string.equil_pair)
                 )
             }

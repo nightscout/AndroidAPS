@@ -81,6 +81,7 @@ class DanaRv2Plugin @Inject constructor(
     notificationManager: NotificationManager,
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
+    private val bolusProgressData: BolusProgressData,
     pumpEnactResultProvider: Provider<PumpEnactResult>
 ) : AbstractDanaRPlugin(
     danaPump,
@@ -172,11 +173,12 @@ class DanaRv2Plugin @Inject constructor(
         var connectionOK = false
         if (detailedBolusInfo.insulin > 0) connectionOK = executionService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
-        result.success(connectionOK && (abs(detailedBolusInfo.insulin - BolusProgressData.delivered) < pumpDescription.bolusStep || danaPump.bolusStopped))
-            .bolusDelivered(BolusProgressData.delivered)
+        val delivered = bolusProgressData.state.value?.delivered ?: 0.0
+        result.success(connectionOK && (abs(detailedBolusInfo.insulin - delivered) < pumpDescription.bolusStep || danaPump.bolusStopped))
+            .bolusDelivered(delivered)
         if (!result.success) result.comment(
             rh.gs(
-                R.string.boluserrorcode, detailedBolusInfo.insulin, BolusProgressData.delivered,
+                R.string.boluserrorcode, detailedBolusInfo.insulin, delivered,
                 danaPump.bolusStartErrorCode
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
@@ -413,7 +415,7 @@ class DanaRv2Plugin @Inject constructor(
             key = "danar_v2_settings"
             title = rh.gs(R.string.danar_pump_settings)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.BolusSpeed, title = R.string.bolusspeed, dialogTitle = R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.BolusSpeed, title = app.aaps.core.ui.R.string.bolusspeed, dialogTitle = app.aaps.core.ui.R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
         }
     }
 }

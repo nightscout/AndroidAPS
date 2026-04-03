@@ -257,19 +257,21 @@ class AutotunePlugin @Inject constructor(
                 updateButtonVisibility = View.GONE
                 val iCfg = insulin.iCfg      // use Current running iCfg, changing iCfg with Automation not allowed
                 tunedP.profileStore(circadian)?.let { profileStore ->
-                    if (profileFunction.createProfileSwitch(
-                            profileStore = profileStore,
-                            profileName = tunedP.profileName,
-                            durationInMinutes = 0,
-                            percentage = 100,
-                            timeShiftInHours = 0,
-                            timestamp = dateUtil.now(),
-                            action = Action.PROFILE_SWITCH,
-                            source = Sources.Automation,
-                            note = rh.gs(app.aaps.core.ui.R.string.autotune),
-                            listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName)),
-                            iCfg = iCfg
-                        )
+                    if (runBlocking {
+                            profileFunction.createProfileSwitch(
+                                profileStore = profileStore,
+                                profileName = tunedP.profileName,
+                                durationInMinutes = 0,
+                                percentage = 100,
+                                timeShiftInHours = 0,
+                                timestamp = dateUtil.now(),
+                                action = Action.PROFILE_SWITCH,
+                                source = Sources.Automation,
+                                note = rh.gs(app.aaps.core.ui.R.string.autotune),
+                                listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName)),
+                                iCfg = iCfg
+                            )
+                        } != null
                     ) log("Profile Switch succeed ${tunedP.profileName}")
                     rxBus.send(EventLocalProfileChanged())
                 }

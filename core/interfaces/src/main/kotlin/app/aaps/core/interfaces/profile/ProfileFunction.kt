@@ -86,10 +86,10 @@ interface ProfileFunction {
      * @param listValues Values for UserEntry logging
      * @return true if profile was created from store
      */
-    fun createProfileSwitch(
+    suspend fun createProfileSwitch(
         profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long,
         action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>, iCfg: ICfg
-    ): Boolean
+    ): PS?
 
     /**
      * Create a new circadian profile switch request based on currently selected profile interface and default profile
@@ -106,7 +106,7 @@ interface ProfileFunction {
     suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
         action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
-    ): Boolean
+    ): PS?
 
     /**
      * Re-apply the currently active profile switch with a different insulin configuration.

@@ -28,7 +28,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -120,6 +119,7 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
     @Inject lateinit var ch: ConcentrationHelper
+    @Inject lateinit var bolusProgressData: BolusProgressData
 
     private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
@@ -475,7 +475,7 @@ class DiaconnG8Service : DaggerService() {
 
     fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
         if (!isConnected) return false
-        if (BolusProgressData.stopPressed) return false
+        if (bolusProgressData.isStopPressed) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.startingbolus)))
 
         // aps speed check
@@ -529,7 +529,11 @@ class DiaconnG8Service : DaggerService() {
         if (diaconnG8Pump.isReadyToBolus) {
             while (!diaconnG8Pump.bolusDone) {
                 if (diaconnG8Pump.isPumpVersionGe3_53) {
-                    rxBus.send(EventOverviewBolusProgress(ch, delivered = PumpInsulin(diaconnG8Pump.bolusingInjAmount), id = detailedBolusInfo.id))
+                    val delivered = diaconnG8Pump.bolusingInjAmount
+                    val totalInsulin = bolusProgressData.state.value?.insulin ?: 0.0
+                    val percent = if (totalInsulin > 0) min(((delivered / totalInsulin) * 100).toInt(), 100) else 0
+                    val status = ch.bolusProgressString(PumpInsulin(delivered))
+                    bolusProgressData.updateProgress(percent, status, delivered)
                 } else {
                     var progressPercent = 0
                     val waitTime = (expectedEnd - System.currentTimeMillis()) / 1000
@@ -537,13 +541,7 @@ class DiaconnG8Service : DaggerService() {
                         progressPercent = ((totalwaitTime - waitTime) * 100 / totalwaitTime).toInt()
                     }
                     val percent = min(progressPercent, 100)
-                    rxBus.send(
-                        EventOverviewBolusProgress(
-                            status = rh.gs(R.string.waitingforestimatedbolusend),
-                            percent = percent,
-                            id = detailedBolusInfo.id
-                        )
-                    )
+                    bolusProgressData.updateProgress(percent, rh.gs(R.string.waitingforestimatedbolusend))
                 }
                 SystemClock.sleep(200)
             }

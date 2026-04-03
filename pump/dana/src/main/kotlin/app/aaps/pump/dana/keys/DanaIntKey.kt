@@ -28,7 +28,7 @@ enum class DanaIntKey(
     BolusSpeed(
         key = "danars_bolusspeed",
         defaultValue = 0,
-        titleResId = R.string.bolusspeed,
+        titleResId = app.aaps.core.ui.R.string.bolusspeed,
         preferenceType = PreferenceType.LIST,
         entries = mapOf(
             0 to R.string.bolus_speed_12,

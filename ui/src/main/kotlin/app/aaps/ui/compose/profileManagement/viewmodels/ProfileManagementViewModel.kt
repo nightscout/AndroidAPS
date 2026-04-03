@@ -379,7 +379,7 @@ class ProfileManagementViewModel @Inject constructor(
      * @param timeChanged Whether the user modified the time from the default
      * @return true if activation was successful
      */
-    fun activateProfile(
+    suspend fun activateProfile(
         profileIndex: Int,
         durationMinutes: Int,
         percentage: Int,
@@ -443,7 +443,7 @@ class ProfileManagementViewModel @Inject constructor(
             iCfg = insulin.iCfg
         )
 
-        if (success) {
+        if (success != null) {
             // Track objectives progress
             if (percentage == 90 && durationMinutes == 10) {
                 preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
@@ -478,7 +478,7 @@ class ProfileManagementViewModel @Inject constructor(
             loadData() // Refresh UI after activation
         }
 
-        return success
+        return success != null
     }
 }
 

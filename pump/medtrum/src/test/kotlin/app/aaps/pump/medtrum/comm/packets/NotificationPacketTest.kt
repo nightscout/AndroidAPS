@@ -1,6 +1,5 @@
 package app.aaps.pump.medtrum.comm.packets
 
-import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.pump.medtrum.MedtrumTestBase
 import app.aaps.pump.medtrum.comm.enums.BasalType
 import app.aaps.pump.medtrum.comm.enums.MedtrumPumpState
@@ -67,28 +66,28 @@ class NotificationPacketTest : MedtrumTestBase() {
     @Test fun handleNotificationGivenBolusInProgressThenDataSaved() {
         // Inputs
         val data = byteArrayOf(32, 34, 16, 0, 3, 0, -58, 12, 0, 0, 0, 0, 0)
-        BolusProgressData.set(0.0, false, 1)
+        bolusProgressData.start(insulin = 1.0, isSMB = false)
 
         // Call
         NotificationPacket(packetInjector).handleNotification(data)
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isFalse()
-        assertThat(BolusProgressData.delivered).isWithin(0.01).of(0.15)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(0.15)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(163.5)
     }
 
     @Test fun handleNotificationGivenBolusFinishedThenDataSaved() {
         // Inputs
         val data = byteArrayOf(32, 34, 17, -128, 33, 0, -89, 12, -80, 0, 14, 0, 0, 0, 0, 0, 0)
-        BolusProgressData.set(0.0, false, 1)
+        bolusProgressData.start(insulin = 1.0, isSMB = false)
 
         // Call
         NotificationPacket(packetInjector).handleNotification(data)
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isTrue()
-        assertThat(BolusProgressData.delivered).isWithin(0.01).of(1.65)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(1.65)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(161.95)
     }
 
@@ -122,7 +121,7 @@ class NotificationPacketTest : MedtrumTestBase() {
     @Test fun handleNotificationGivenBolusOutOfRangeThenNothingSaved() {
         // Inputs
         val data = byteArrayOf(32, 34, 17, -128, -128, -128, -89, 12, -80, 0, 14, 0, 0, 0, 0, 0, 0)
-        BolusProgressData.set(0.0, false, 1)
+        bolusProgressData.start(insulin = 1.0, isSMB = false)
         // Set valid patchID (as in a started pump session)
         medtrumPump.patchId = 14
 
@@ -131,7 +130,7 @@ class NotificationPacketTest : MedtrumTestBase() {
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isTrue()
-        assertThat(BolusProgressData.delivered).isWithin(0.01).of(0.0)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(0.0)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
     }
 
@@ -174,21 +173,21 @@ class NotificationPacketTest : MedtrumTestBase() {
     @Test fun handleNotificationGivenReservoirOutOfRangeThenNothingSaved() {
         // Inputs
         val data = byteArrayOf(32, 34, 16, 0, 3, 0, -128, -128, 0, 0, 0, 0, 0)
-        BolusProgressData.set(0.0, false, 1)
+        bolusProgressData.start(insulin = 1.0, isSMB = false)
 
         // Call
         NotificationPacket(packetInjector).handleNotification(data)
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isTrue()
-        assertThat(BolusProgressData.delivered).isWithin(0.01).of(0.0)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(0.0)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
     }
 
     @Test fun handleNotificationGivenWrongPatchIDThenNothingSaved() {
         // Inputs
         val data = byteArrayOf(32, 34, 17, -128, 33, 0, -89, 12, -80, 0, 15, 0, 0, 0, 0, 0, 0)
-        BolusProgressData.set(0.0, false, 1)
+        bolusProgressData.start(insulin = 1.0, isSMB = false)
         // Set valid patchID (as in a started pump session)
         medtrumPump.patchId = 14
 
@@ -197,7 +196,7 @@ class NotificationPacketTest : MedtrumTestBase() {
 
         // Expected values
         assertThat(medtrumPump.bolusDone).isTrue()
-        assertThat(BolusProgressData.delivered).isWithin(0.01).of(0.0)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(0.0)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
     }
 }

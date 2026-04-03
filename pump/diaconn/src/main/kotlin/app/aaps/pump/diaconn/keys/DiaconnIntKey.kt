@@ -28,7 +28,7 @@ enum class DiaconnIntKey(
     BolusSpeed(
         key = "g8_bolusspeed",
         defaultValue = 5,
-        titleResId = R.string.bolusspeed,
+        titleResId = app.aaps.core.ui.R.string.bolusspeed,
         preferenceType = PreferenceType.LIST,
         entries = mapOf(
             1 to R.string.bolus_speed_1,

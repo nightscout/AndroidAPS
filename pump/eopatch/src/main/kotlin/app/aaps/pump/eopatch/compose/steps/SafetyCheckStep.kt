@@ -53,13 +53,13 @@ fun SafetyCheckStep(viewModel: EopatchPatchViewModel) {
                 TextButton(onClick = {
                     showRetryDialog = false
                     viewModel.retrySafetyCheck()
-                }) { Text(stringResource(R.string.retry)) }
+                }) { Text(stringResource(app.aaps.core.ui.R.string.retry)) }
             },
             dismissButton = {
                 TextButton(onClick = {
                     showRetryDialog = false
                     viewModel.handleCancel()
-                }) { Text(stringResource(R.string.cancel)) }
+                }) { Text(stringResource(app.aaps.core.ui.R.string.cancel)) }
             }
         )
     }

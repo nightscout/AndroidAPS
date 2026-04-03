@@ -159,7 +159,7 @@ class EquilOverviewViewModel @Inject constructor(
                 }
             )
         )
-        add(PumpInfoRow(label = rh.gs(R.string.equil_date_device), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
+        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
         add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.battery_label), value = "${state.battery}%"))
         add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = state.currentInsulin.toString()))
         add(
@@ -191,7 +191,7 @@ class EquilOverviewViewModel @Inject constructor(
                 dateUtil.sinceString(it.startTime, rh)
             )
         } ?: "-"
-        add(PumpInfoRow(label = rh.gs(R.string.equil_last_bolus), value = lastBolusText))
+        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_bolus_label), value = lastBolusText))
     }
 
     private fun buildPrimaryActions(isPaired: Boolean): List<PumpAction> = buildList {
@@ -236,7 +236,7 @@ class EquilOverviewViewModel @Inject constructor(
             ))
             add(
                 PumpAction(
-                label = rh.gs(R.string.equil_history),
+                label = rh.gs(app.aaps.core.ui.R.string.history),
                 iconRes = app.aaps.core.ui.R.drawable.ic_pump_history,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartHistory) }

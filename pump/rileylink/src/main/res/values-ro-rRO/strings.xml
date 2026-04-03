@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Niciodată contactată</string>
+    <string name="pump_status_sleeping">În repaus</string>
+    <string name="pump_status_waking_up">Se pornește</string>
+    <string name="pump_status_active">Activă</string>
+    <string name="pump_status_error_comm">Eroare de comunicare</string>
+    <string name="pump_status_timeout_comm">Comunicarea nu a reușit la timp</string>
+    <string name="pump_status_pump_unreachable">Pompă indisponibilă</string>
+    <string name="pump_status_invalid_config">Configurație invalidă</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Codare software 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificare hardware 4b6b</string>
+    <string name="medtronic_pump_frequency_us_ca">SUA &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Nivel mondial (868 MHz)</string>
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Scanare</string>
     <string name="riley_link_ble_config_scan_stop">Stop</string>
@@ -64,7 +76,7 @@
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Afișare nivel baterie raportat de OrangeLink/EmaLink/DiaLink</string>
-    <string name="riley_link_show_battery_level_summary">NU funcționează cu RileyLink original. Este posibil sa nu funcționeze nici cu versiuni alternative de RileyLink.</string>
+    <string name="riley_link_show_battery_level_summary">NU funcționează cu RileyLink original. Este posibil să nu funcționeze nici cu versiuni alternative de RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

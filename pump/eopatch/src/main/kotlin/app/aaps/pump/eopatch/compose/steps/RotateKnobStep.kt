@@ -57,20 +57,20 @@ fun RotateKnobStep(viewModel: EopatchPatchViewModel) {
                 TextButton(onClick = {
                     showActivationFailedDialog = false
                     viewModel.startNeedleSensing()
-                }) { Text(stringResource(R.string.retry)) }
+                }) { Text(stringResource(app.aaps.core.ui.R.string.retry)) }
             },
             dismissButton = {
                 TextButton(onClick = {
                     showActivationFailedDialog = false
                     viewModel.handleCancel()
-                }) { Text(stringResource(R.string.cancel)) }
+                }) { Text(stringResource(app.aaps.core.ui.R.string.cancel)) }
             }
         )
     }
 
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = if (isNeedleInsertionError) stringResource(R.string.retry) else stringResource(R.string.next),
+            text = if (isNeedleInsertionError) stringResource(app.aaps.core.ui.R.string.retry) else stringResource(app.aaps.core.ui.R.string.next),
             onClick = { viewModel.startNeedleSensing() }
         )
     ) {

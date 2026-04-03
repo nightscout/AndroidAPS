@@ -24,6 +24,7 @@ fun EPS.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("originalPercentage", originalPercentage)
         .put("originalDuration", originalDuration)
         .put("originalEnd", originalEnd)
+        .also { if (originalPsId != null) it.put("originalPsId", originalPsId) }
         .put("notes", originalCustomizedName)
         .also {
             if (ids.pumpId != null) it.put("pumpId", ids.pumpId)
@@ -78,6 +79,7 @@ fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, insulinFa
         originalPercentage = originalPercentage,
         originalDuration = originalDuration,
         originalEnd = originalEnd,
+        originalPsId = JsonHelper.safeGetLongAllowNull(jsonObject, "originalPsId", null),
         iCfg = iCfg,
         isValid = isValid
     ).also {

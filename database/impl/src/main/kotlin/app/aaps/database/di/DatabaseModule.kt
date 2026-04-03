@@ -16,6 +16,7 @@ import app.aaps.database.entities.TABLE_PREFERENCE_CHANGES
 import app.aaps.database.entities.TABLE_PROFILE_SWITCHES
 import app.aaps.database.entities.TABLE_RUNNING_MODE
 import app.aaps.database.entities.TABLE_STEPS_COUNT
+import app.aaps.database.entities.TABLE_TEMPORARY_BASALS
 import app.aaps.database.entities.TABLE_THERAPY_EVENTS
 import app.aaps.database.entities.TABLE_USER_ENTRY
 import dagger.Module
@@ -277,7 +278,48 @@ open class DatabaseModule {
         }
     }
 
+    internal val migration33to34 = object : Migration(33, 34) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE `$TABLE_EFFECTIVE_PROFILE_SWITCHES` ADD COLUMN `originalPsId` INTEGER DEFAULT NULL")
+            // Remove redundant indexes on primary key columns
+            db.execSQL("DROP INDEX IF EXISTS `index_effectiveProfileSwitches_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_boluses_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_bolusCalculatorResults_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_bolusCalculatorResults_isValid`")
+            db.execSQL("DROP INDEX IF EXISTS `index_carbs_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_carbs_isValid`")
+            db.execSQL("DROP INDEX IF EXISTS `index_extendedBoluses_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_extendedBoluses_isValid`")
+            db.execSQL("DROP INDEX IF EXISTS `index_extendedBoluses_pumpSerial`")
+            db.execSQL("DROP INDEX IF EXISTS `index_extendedBoluses_pumpType`")
+            db.execSQL("DROP INDEX IF EXISTS `index_glucoseValues_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_glucoseValues_sourceSensor`")
+            db.execSQL("DROP INDEX IF EXISTS `index_profileSwitches_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_temporaryBasals_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_temporaryBasals_isValid`")
+            db.execSQL("DROP INDEX IF EXISTS `index_temporaryBasals_pumpType`")
+            db.execSQL("DROP INDEX IF EXISTS `index_temporaryBasals_pumpSerial`")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_temporaryBasals_pumpId` ON `$TABLE_TEMPORARY_BASALS` (`pumpId`)")
+            db.execSQL("DROP INDEX IF EXISTS `index_temporaryTargets_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_temporaryTargets_isValid`")
+            db.execSQL("DROP INDEX IF EXISTS `index_therapyEvents_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_therapyEvents_isValid`")
+            db.execSQL("DROP INDEX IF EXISTS `index_totalDailyDoses_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_totalDailyDoses_isValid`")
+            db.execSQL("DROP INDEX IF EXISTS `index_totalDailyDoses_pumpType`")
+            db.execSQL("DROP INDEX IF EXISTS `index_totalDailyDoses_pumpSerial`")
+            db.execSQL("DROP INDEX IF EXISTS `index_foods_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_foods_isValid`")
+            db.execSQL("DROP INDEX IF EXISTS `index_deviceStatus_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_runningModes_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_heartRate_id`")
+            db.execSQL("DROP INDEX IF EXISTS `index_stepsCount_id`")
+            // Custom indexes must be dropped on migration to pass room schema checking after upgrade
+            dropCustomIndexes(db)
+        }
+    }
+
     /** List of all migrations for easy reply in tests. */
     @VisibleForTesting
-    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24, migration24to25, migration25to26, migration26to27, migration27to28, migration28to29, migration29to30, migration30to31, migration31to32, migration32to33)
+    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24, migration24to25, migration25to26, migration26to27, migration27to28, migration28to29, migration29to30, migration30to31, migration31to32, migration32to33, migration33to34)
 }

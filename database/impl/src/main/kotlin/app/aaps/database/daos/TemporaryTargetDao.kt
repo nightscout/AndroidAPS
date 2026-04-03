@@ -23,19 +23,19 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
     @Query("SELECT id FROM $TABLE_TEMPORARY_TARGETS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
     suspend fun findByNSId(nsId: String): TemporaryTarget?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryTargetActiveAtLegacy(timestamp: Long): TemporaryTarget?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE (timestamp <= :timestamp) AND ((timestamp + duration) > :timestamp) AND (referenceId IS NULL) AND (isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getTemporaryTargetActiveAt(timestamp: Long): TemporaryTarget?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTemporaryTargetDataFromTime(timestamp: Long): List<TemporaryTarget>
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long): List<TemporaryTarget>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE id > :id ORDER BY id ASC limit 1")

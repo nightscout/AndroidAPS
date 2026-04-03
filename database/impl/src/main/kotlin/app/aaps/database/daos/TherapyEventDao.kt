@@ -23,28 +23,28 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
     @Query("SELECT id FROM $TABLE_THERAPY_EVENTS ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE likely(type = :type) AND unlikely(timestamp = :timestamp) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (type = :type) AND (timestamp = :timestamp) AND (referenceId IS NULL)")
     suspend fun findByTimestamp(type: TherapyEvent.Type, timestamp: Long): TherapyEvent?
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE unlikely(type = :type) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (type = :type) AND (referenceId IS NULL)")
     suspend fun getValidByType(type: TherapyEvent.Type): List<TherapyEvent>
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (nightscoutId = :nsId) AND (referenceId IS NULL)")
     suspend fun findByNSId(nsId: String): TherapyEvent?
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTherapyEventDataFromTime(timestamp: Long): List<TherapyEvent>
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND (timestamp >= :timestamp) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTherapyEventDataFromTime(timestamp: Long, type: TherapyEvent.Type): List<TherapyEvent>
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (timestamp >= :timestamp) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long): List<TherapyEvent>
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND likely(isValid = 1) AND unlikely(timestamp <= :now) AND likely(referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND (isValid = 1) AND (timestamp <= :now) AND (referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
     suspend fun getLastTherapyRecord(type: TherapyEvent.Type, now: Long): TherapyEvent?
 
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE unlikely(timestamp BETWEEN :from AND :to) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE (timestamp BETWEEN :from AND :to) AND (isValid = 1) AND (referenceId IS NULL) ORDER BY timestamp ASC")
     suspend fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): List<TherapyEvent>
 
     // for WS we need 1 record only

@@ -163,22 +163,22 @@ class ProfileFunctionImpl @Inject constructor(
         )
     }
 
-    override fun createProfileSwitch(
+    override suspend fun createProfileSwitch(
         profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long,
         action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>, iCfg: ICfg
-    ): Boolean {
-        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp, iCfg) ?: return false
-        appScope.launch { persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues) }
-        return true
+    ): PS? {
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp, iCfg) ?: return null
+        val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
+        return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
     }
 
     override suspend fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
         action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
-    ): Boolean {
-        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return false
-        val profileStore = localProfileManager.profile ?: return false
-        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return false
+    ): PS? {
+        val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return null
+        val profileStore = localProfileManager.profile ?: return null
+        val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now(), profile.iCfg) ?: return null
         val validity = ProfileSealed.PS(ps, activePlugin).isValid(
             rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
             activePlugin.activePump,
@@ -189,10 +189,10 @@ class ProfileFunctionImpl @Inject constructor(
             false
         )
         if (validity.isValid) {
-            appScope.launch { persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues) }
-            return true
+            val result = persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues)
+            return result.inserted.firstOrNull() ?: result.updated.firstOrNull()
         }
-        return false
+        return null
     }
 
     override suspend fun createProfileSwitchWithNewInsulin(iCfg: ICfg, source: Sources): Boolean {
@@ -225,6 +225,6 @@ class ProfileFunctionImpl @Inject constructor(
                 ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
             ),
             iCfg = iCfg
-        )
+        ) != null
     }
 }

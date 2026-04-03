@@ -283,7 +283,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             "DynIsfResult: tdd1D=$tdd1D tdd7D=$tdd7D tddLast24H=$tddLast24H tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tdd=$tdd variableSensitivity=$variableSensitivity insulinDivisor=$insulinDivisor tdd7DDataCarbs=$tdd7DDataCarbs tdd7DAllDaysHaveCarbs=$tdd7DAllDaysHaveCarbs"
     }
 
-    private fun calculateRawDynIsf(multiplier: Double): DynIsfResult {
+    private suspend fun calculateRawDynIsf(multiplier: Double): DynIsfResult {
         val dynIsfResult = DynIsfResult()
         // DynamicISF specific
         // without these values DynISF doesn't work properly

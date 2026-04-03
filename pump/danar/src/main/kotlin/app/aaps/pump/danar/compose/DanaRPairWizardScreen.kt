@@ -106,7 +106,7 @@ private fun ConfigureStep(
     WizardStepLayout(
         scrollable = false,
         primaryButton = WizardButton(
-            text = stringResource(R.string.danars_pairing),
+            text = stringResource(app.aaps.core.ui.R.string.pairing),
             onClick = onPair,
             enabled = state.password.isNotEmpty() && state.selectedDevice != null
         ),

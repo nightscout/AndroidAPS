@@ -253,7 +253,7 @@ private fun PairingErrorStep(
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.danars_pairing),
+            text = stringResource(app.aaps.core.ui.R.string.pairing),
             onClick = onRetry
         ),
         secondaryButton = WizardButton(

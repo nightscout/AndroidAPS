@@ -31,6 +31,7 @@ class CommandSMBBolus(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var bolusProgressData: BolusProgressData
 
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
@@ -55,7 +56,7 @@ class CommandSMBBolus(
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()
-        BolusProgressData.bolusEnded = true
+        bolusProgressData.clear()
     }
 
     override fun status(): String = rh.gs(app.aaps.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)
@@ -64,5 +65,6 @@ class CommandSMBBolus(
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
         callback?.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
+        bolusProgressData.clear()
     }
 }

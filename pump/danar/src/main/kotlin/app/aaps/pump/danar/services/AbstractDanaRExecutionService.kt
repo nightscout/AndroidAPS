@@ -76,6 +76,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
     @Inject lateinit var rfcommTransport: RfcommTransport
+    @Inject lateinit var bolusProgressData: BolusProgressData
 
     private val disposable = CompositeDisposable()
     protected var mRfcommSocket: RfcommSocket? = null
@@ -192,7 +193,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     }
 
     fun bolusStop() {
-        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ ${BolusProgressData.delivered}")
+        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ ${bolusProgressData.state.value?.delivered ?: 0.0}")
         val stop = MsgBolusStop(injector)
         danaPump.bolusStopForced = true
         if (isConnected) {

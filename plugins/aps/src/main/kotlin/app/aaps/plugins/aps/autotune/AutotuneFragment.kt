@@ -284,7 +284,7 @@ class AutotuneFragment : DaggerFragment() {
                                 )
                                 val now = dateUtil.now()
                                 val iCfg = insulin.iCfg
-                                profileFunction.createProfileSwitch(
+                                lifecycleScope.launch { profileFunction.createProfileSwitch(
                                     profileStore = it,
                                     profileName = tunedP.profileName,
                                     durationInMinutes = 0,
@@ -296,7 +296,7 @@ class AutotuneFragment : DaggerFragment() {
                                     note = "Autotune AutoSwitch",
                                     listValues = listOf(ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName)),
                                     iCfg = iCfg
-                                )
+                                ) }
                                 rxBus.send(EventLocalProfileChanged())
                                 updateGui()
                             }

@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.PS
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
@@ -13,6 +14,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -87,7 +89,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
         // do profile switch
         whenever(profileFunction.getProfileName()).thenReturn("Test")
-        whenever(profileFunction.createProfileSwitch(anyOrNull(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any(), any())).thenReturn(true)
+        whenever(profileFunction.createProfileSwitch(anyOrNull(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
         sut.inputProfileName = InputProfileName(rh, localProfileManager, TESTPROFILENAME)
         sut.doAction(object : Callback() {
             override fun run() {

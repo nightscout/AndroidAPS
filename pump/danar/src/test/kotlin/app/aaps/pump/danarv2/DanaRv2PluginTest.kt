@@ -2,6 +2,7 @@ package app.aaps.pump.danarv2
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -42,7 +43,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         danaRv2Plugin = DanaRv2Plugin(
             aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, commandQueue, danaPump, detailedBolusInfoStorage,
-            temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, pumpEnactResultProvider
+            temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync, preferences, config, notificationManager, danaHistoryDatabase, decimalFormatter, BolusProgressData(), pumpEnactResultProvider
         )
     }
 

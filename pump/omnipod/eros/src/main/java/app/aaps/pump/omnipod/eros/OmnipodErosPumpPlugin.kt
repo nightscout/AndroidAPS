@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.OmnipodEros
 import app.aaps.core.interfaces.pump.Pump
@@ -57,15 +58,12 @@ import app.aaps.core.ui.compose.icons.IcPluginOmnipod
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.DateTimeUtil.getTimeInFutureFromMinutes
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.common.defs.TempBasalPair
-import app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
-import app.aaps.pump.common.hw.rileylink.keys.RileyLinkIntentPreferenceKey
 import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey
 import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
@@ -101,7 +99,7 @@ import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import app.aaps.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import app.aaps.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import app.aaps.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
-import app.aaps.pump.omnipod.eros.ui.OmnipodErosOverviewFragment
+import app.aaps.pump.omnipod.eros.ui.compose.OmnipodErosComposeContent
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -152,11 +150,19 @@ class OmnipodErosPumpPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val erosHistoryDatabase: ErosHistoryDatabase,
-    private val pumpEnactResultProvider: Provider<PumpEnactResult>
+    private val pumpEnactResultProvider: Provider<PumpEnactResult>,
+    private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck,
+    private val blePreCheck: BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(OmnipodErosOverviewFragment::class.java.name)
+        .composeContent { _ ->
+            OmnipodErosComposeContent(
+                pluginName = rh.gs(R.string.omnipod_eros_name),
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck
+            )
+        }
         .icon(IcPluginOmnipod)
         .pluginName(R.string.omnipod_eros_name)
         .shortName(R.string.omnipod_eros_name_short)
@@ -918,7 +924,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
                 key = "omnipod_eros_riley_link",
                 titleResId = R.string.omnipod_eros_preferences_category_riley_link,
                 items = listOf(
-                    RileyLinkIntentPreferenceKey.MacAddressSelector,
                     RileylinkBooleanPreferenceKey.OrangeUseScanning,
                     RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel,
                     ErosBooleanPreferenceKey.BatteryChangeLogging
@@ -982,12 +987,6 @@ class OmnipodErosPumpPlugin @Inject constructor(
             key = "omnipod_eros_riley_link"
             title = rh.gs(R.string.omnipod_eros_preferences_category_riley_link)
             initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveIntentPreference(
-                    ctx = context, intentKey = RileyLinkIntentPreferenceKey.MacAddressSelector, title = app.aaps.pump.common.hw.rileylink.R.string.rileylink_configuration,
-                    intent = Intent(context, RileyLinkBLEConfigActivity::class.java)
-                )
-            )
             addPreference(
                 AdaptiveSwitchPreference(
                     ctx = context,

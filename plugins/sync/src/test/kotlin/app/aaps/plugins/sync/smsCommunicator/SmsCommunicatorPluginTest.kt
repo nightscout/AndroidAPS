@@ -54,6 +54,7 @@ import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import javax.inject.Provider
 
@@ -777,7 +778,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
                     anyOrNull(),
                     anyOrNull()
                 )
-            ).thenReturn(true)
+            ).thenReturn(mock())
         }
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 1 90")

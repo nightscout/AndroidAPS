@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,8 +15,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -93,6 +92,7 @@ fun NumberInputRow(
     valueFormat: DecimalFormat? = null,
     decimalPlaces: Int = 0,
     enabled: Boolean = true,
+    onTextChange: ((String) -> Unit)? = null,
 ) {
     val effectiveValueFormat = valueFormat ?: remember(decimalPlaces) {
         if (decimalPlaces == 0) DecimalFormat("0")
@@ -128,6 +128,7 @@ fun NumberInputRow(
             formatAsInt = formatAsInt,
             valueFormat = effectiveValueFormat,
             enabled = enabled,
+            onTextChange = onTextChange,
             modifier = modifier
         )
     }
@@ -156,7 +157,7 @@ private fun SliderNumberInputRow(
     val label = stringResource(labelResId)
 
     val resolvedUnitLabel = when {
-        unitLabelResId != 0  -> stringResource(unitLabelResId)
+        unitLabelResId != 0    -> stringResource(unitLabelResId)
         unitLabel.isNotEmpty() -> unitLabel
         else                   -> ""
     }
@@ -239,13 +240,14 @@ private fun DirectNumberInputRow(
     formatAsInt: Boolean,
     valueFormat: DecimalFormat,
     enabled: Boolean,
+    onTextChange: ((String) -> Unit)?,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
     val label = stringResource(labelResId)
     // Track whether the field is focused for editing
     var isFocused by remember { mutableStateOf(false) }
-    var textFieldValue by remember(value) {
+    var textFieldValue by remember {
         mutableStateOf(TextFieldValue(if (value == 0.0) "" else valueFormat.format(value)))
     }
     var isError by remember { mutableStateOf(false) }
@@ -316,6 +318,7 @@ private fun DirectNumberInputRow(
                 onValueChange = { newValue ->
                     textFieldValue = newValue
                     if (isError) isError = false
+                    onTextChange?.invoke(newValue.text)
                 },
                 label = { Text(label) },
                 singleLine = true,
@@ -400,13 +403,7 @@ private fun DirectNumberInputRow(
 @Composable
 private fun NumberInputRowBasicPreview() {
     MaterialTheme {
-        NumberInputRow(
-            labelResId = app.aaps.core.ui.R.string.carbs,
-            value = 20.0,
-            onValueChange = {},
-            valueRange = 0.0..100.0,
-            step = 1.0
-        )
+        NumberInputRow(labelResId = R.string.carbs, value = 20.0, onValueChange = {}, valueRange = 0.0..100.0, step = 1.0)
     }
 }
 
@@ -415,7 +412,7 @@ private fun NumberInputRowBasicPreview() {
 private fun NumberInputRowWithUnitPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = app.aaps.core.ui.R.string.insulin_label,
+            labelResId = R.string.insulin_label,
             value = 3.5,
             onValueChange = {},
             valueRange = 0.0..10.0,
@@ -431,7 +428,7 @@ private fun NumberInputRowWithUnitPreview() {
 private fun NumberInputRowMinutesPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = app.aaps.core.ui.R.string.duration,
+            labelResId = R.string.duration,
             value = 130.0,
             onValueChange = {},
             valueRange = 0.0..300.0,
@@ -446,7 +443,7 @@ private fun NumberInputRowMinutesPreview() {
 private fun NumberInputRowPercentPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = app.aaps.core.ui.R.string.duration,
+            labelResId = R.string.duration,
             value = 100.0,
             onValueChange = {},
             valueRange = 10.0..200.0,
@@ -461,7 +458,7 @@ private fun NumberInputRowPercentPreview() {
 private fun NumberInputRowSliderPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = app.aaps.core.ui.R.string.carbs,
+            labelResId = R.string.carbs,
             value = 20.0,
             onValueChange = {},
             valueRange = 0.0..100.0,
@@ -476,7 +473,7 @@ private fun NumberInputRowSliderPreview() {
 private fun NumberInputRowMinutesDirectPreview() {
     MaterialTheme {
         NumberInputRow(
-            labelResId = app.aaps.core.ui.R.string.duration,
+            labelResId = R.string.duration,
             value = 130.0,
             onValueChange = {},
             valueRange = 0.0..300.0,

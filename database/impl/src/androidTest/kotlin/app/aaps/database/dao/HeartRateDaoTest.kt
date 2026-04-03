@@ -68,7 +68,6 @@ class HeartRateDaoTest {
         Assert.assertFalse(getTableNames(supportDb).contains(TABLE_HEART_RATE))
         DatabaseModule().migrations.filter { m -> m.startVersion >= startVersion }.forEach { m -> m.migrate(supportDb) }
         Assert.assertTrue(getTableNames(supportDb).contains(TABLE_HEART_RATE))
-        Assert.assertTrue(getIndexNames(supportDb).contains("index_heartRate_id"))
         Assert.assertTrue(getIndexNames(supportDb).contains("index_heartRate_timestamp"))
     }
 

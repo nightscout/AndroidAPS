@@ -23,28 +23,28 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
     @Query("SELECT id FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
     suspend fun getLastId(): Long?
 
-    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE unlikely(timestamp = :timestamp) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE timestamp = :timestamp AND referenceId IS NULL")
     suspend fun findByTimestamp(timestamp: Long): EffectiveProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE nightscoutId = :nsId AND referenceId IS NULL")
     suspend fun findByNSId(nsId: String): EffectiveProfileSwitch?
 
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC LIMIT 1")
     suspend fun getOldestEffectiveProfileSwitchRecord(): EffectiveProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE unlikely(:timestamp >= timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE :timestamp >= timestamp AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
     suspend fun getEffectiveProfileSwitchActiveAt(timestamp: Long): EffectiveProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
     suspend fun getEffectiveProfileSwitchDataFromTime(timestamp: Long): List<EffectiveProfileSwitch>
 
-    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE unlikely(timestamp BETWEEN :start AND :end) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE timestamp BETWEEN :start AND :end AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
     suspend fun getEffectiveProfileSwitchDataFromTimeToTime(start: Long, end: Long): List<EffectiveProfileSwitch>
 
-    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
     suspend fun getEffectiveProfileSwitchDataIncludingInvalidFromTime(timestamp: Long): List<EffectiveProfileSwitch>
 
-    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE referenceId IS NULL AND isValid = 1 ORDER BY timestamp ASC")
     suspend fun getAllEffectiveProfileSwitches(): List<EffectiveProfileSwitch>
 
     // for WS we need 1 record only

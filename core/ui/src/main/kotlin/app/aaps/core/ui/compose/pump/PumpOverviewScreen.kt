@@ -3,6 +3,7 @@ package app.aaps.core.ui.compose.pump
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,22 +54,28 @@ fun PumpOverviewScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        // 1. Status banner + queue status (combined card)
-        CommunicationStatusCard(state.statusBanner, state.queueStatus)
+        // Scrollable content
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // 1. Status banner + queue status (combined card)
+            CommunicationStatusCard(state.statusBanner, state.queueStatus)
 
-        // 3. Info rows
-        if (state.infoRows.isNotEmpty()) {
-            InfoSection(state.infoRows)
+            // 3. Info rows
+            if (state.infoRows.isNotEmpty()) {
+                InfoSection(state.infoRows)
+            }
+
+            // 4. Custom content (pump image, etc.)
+            customContent?.invoke()
         }
 
-        // 4. Custom content (pump image, etc.)
-        customContent?.invoke()
-
-        // 5+6. Action buttons (primary + management, 2 per row)
+        // 5+6. Action buttons pinned to bottom
         ActionButtons(state.primaryActions + state.managementActions)
     }
 }
@@ -80,11 +87,11 @@ private fun CommunicationStatusCard(banner: StatusBanner?, queueStatus: String?)
     if (banner == null && queueStatus == null) return
 
     val (bgColor, fgColor) = when (banner?.level) {
-        StatusLevel.CRITICAL    -> MaterialTheme.colorScheme.errorContainer to MaterialTheme.colorScheme.onErrorContainer
-        StatusLevel.WARNING     -> MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
-        StatusLevel.NORMAL      -> MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
+        StatusLevel.CRITICAL -> MaterialTheme.colorScheme.errorContainer to MaterialTheme.colorScheme.onErrorContainer
+        StatusLevel.WARNING  -> MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
+        StatusLevel.NORMAL   -> MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
         StatusLevel.UNSPECIFIED,
-        null                    -> MaterialTheme.colorScheme.surfaceContainerHigh to MaterialTheme.colorScheme.onSurface
+        null                 -> MaterialTheme.colorScheme.surfaceContainerHigh to MaterialTheme.colorScheme.onSurface
     }
 
     Surface(
@@ -175,7 +182,8 @@ private fun ActionButtons(actions: List<PumpAction>) {
                 FilledTonalButton(
                     onClick = action.onClick,
                     enabled = action.enabled,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     if (action.icon != null) {
                         Icon(
@@ -191,8 +199,8 @@ private fun ActionButtons(actions: List<PumpAction>) {
                             modifier = Modifier.size(18.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text(text = action.label)
+                    Spacer(modifier = Modifier.size(4.dp))
+                    Text(text = action.label, maxLines = 1)
                 }
             }
             if (row.size == 1) {

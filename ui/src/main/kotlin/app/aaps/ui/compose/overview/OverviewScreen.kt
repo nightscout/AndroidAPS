@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -66,6 +67,8 @@ import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.preference.ProvidePreferenceTheme
+import app.aaps.core.ui.compose.pump.PumpActivityDialog
+import app.aaps.core.ui.compose.pump.PumpActivityFab
 import app.aaps.core.ui.compose.statusLevelToColor
 import app.aaps.ui.compose.main.TempTargetChipState
 import app.aaps.ui.compose.manageSheet.ManageViewModel
@@ -109,6 +112,11 @@ fun OverviewScreen(
     onAutoShowConsumed: () -> Unit,
     paddingValues: PaddingValues,
     fabBottomOffset: Dp = 0.dp,
+    bolusState: BolusProgressState? = null,
+    pumpStatusText: String = "",
+    queueStatusText: String? = null,
+    isPumpCommunicating: Boolean = false,
+    onStopBolus: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val config = LocalConfig.current
@@ -119,6 +127,14 @@ fun OverviewScreen(
 
     // Notification bottom sheet state
     var showNotificationSheet by remember { mutableStateOf(false) }
+    // Pump activity dialog state
+    var showPumpActivityDialog by remember { mutableStateOf(false) }
+    val showPumpFab = isPumpCommunicating || (bolusState != null && bolusState.isSMB)
+
+    // Auto-close pump dialog when bolus ends
+    LaunchedEffect(bolusState) {
+        if (bolusState == null) showPumpActivityDialog = false
+    }
 
     // Auto-show bottom sheet on resume when urgent notifications exist
     LaunchedEffect(autoShowNotificationSheet) {
@@ -267,6 +283,17 @@ fun OverviewScreen(
             GraphsSection(graphViewModel = graphViewModel)
         }
 
+        // Pump activity FAB — visible during pump communication or SMB
+        PumpActivityFab(
+            visible = showPumpFab,
+            bolusState = bolusState,
+            onClick = { showPumpActivityDialog = true },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(paddingValues)
+                .padding(end = 16.dp, bottom = 128.dp + fabBottomOffset)
+        )
+
         // Notification FAB overlay
         NotificationFab(
             notificationCount = notifications.size,
@@ -276,6 +303,18 @@ fun OverviewScreen(
                 .align(Alignment.BottomEnd)
                 .padding(paddingValues)
                 .padding(end = 16.dp, bottom = 72.dp + fabBottomOffset)
+        )
+    }
+
+    // Pump activity dialog (non-modal, opened from FAB)
+    if (showPumpActivityDialog) {
+        PumpActivityDialog(
+            bolusState = bolusState,
+            pumpStatus = pumpStatusText,
+            queueStatus = queueStatusText,
+            isModal = false,
+            onStop = onStopBolus,
+            onDismiss = { showPumpActivityDialog = false }
         )
     }
 

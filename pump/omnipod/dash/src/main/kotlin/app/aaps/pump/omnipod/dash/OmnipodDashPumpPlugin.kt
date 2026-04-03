@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.OmnipodDash
 import app.aaps.core.interfaces.pump.Pump
@@ -35,7 +36,6 @@ import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -76,7 +76,7 @@ import app.aaps.pump.omnipod.dash.history.data.BolusRecord
 import app.aaps.pump.omnipod.dash.history.data.BolusType
 import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
 import app.aaps.pump.omnipod.dash.history.database.DashHistoryDatabase
-import app.aaps.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
+import app.aaps.pump.omnipod.dash.ui.compose.OmnipodDashComposeContent
 import app.aaps.pump.omnipod.dash.util.Constants
 import app.aaps.pump.omnipod.dash.util.mapProfileToBasalProgram
 import io.reactivex.rxjava3.core.Completable
@@ -102,6 +102,7 @@ import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 import kotlin.math.ceil
+import app.aaps.core.interfaces.R as CoreInterfacesR
 
 @Singleton
 class OmnipodDashPumpPlugin @Inject constructor(
@@ -118,11 +119,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val notificationManager: NotificationManager,
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
-    private val dashHistoryDatabase: DashHistoryDatabase
+    private val bolusProgressData: BolusProgressData,
+    private val dashHistoryDatabase: DashHistoryDatabase,
+    private val protectionCheck: app.aaps.core.interfaces.protection.ProtectionCheck,
+    private val blePreCheck: app.aaps.core.interfaces.pump.BlePreCheck
 ) : PumpPluginBase(
     pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(OmnipodDashOverviewFragment::class.java.name)
+        .composeContent { _ ->
+            OmnipodDashComposeContent(
+                pluginName = rh.gs(R.string.omnipod_dash_name),
+                protectionCheck = protectionCheck,
+                blePreCheck = blePreCheck
+            )
+        }
         .icon(IcPluginOmnipod)
         .pluginName(R.string.omnipod_dash_name)
         .shortName(R.string.omnipod_dash_name_short)
@@ -688,7 +698,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun updateBolusProgressDialog(msg: String, percent: Int) {
-        rxBus.send(EventOverviewBolusProgress(status = msg, percent = percent))
+        bolusProgressData.updateProgress(percent, msg)
     }
 
     private fun waitForBolusDeliveryToComplete(
@@ -725,7 +735,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 continue
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
-            rxBus.send(EventOverviewBolusProgress(rh, percent = percent.toInt()))
+            val insulin = bolusProgressData.state.value?.insulin ?: 0.0
+            val delivered = insulin * percent / 100.0
+            val status = rh.gs(CoreInterfacesR.string.bolus_delivering, delivered)
+            bolusProgressData.updateProgress(percent.toInt(), status, delivered)
         }
 
         (1..BOLUS_RETRIES).forEach { tryNumber ->
@@ -753,7 +766,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 // delivery not complete yet
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
                 val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
-                rxBus.send(EventOverviewBolusProgress(rh, percent = percent.toInt()))
+                val delivered = requestedBolusAmount - remainingUnits
+                val status = rh.gs(CoreInterfacesR.string.bolus_delivering, delivered)
+                bolusProgressData.updateProgress(percent.toInt(), status, delivered)
 
                 val sleepSeconds = if (bolusCanceled)
                     BOLUS_RETRY_INTERVAL_MS

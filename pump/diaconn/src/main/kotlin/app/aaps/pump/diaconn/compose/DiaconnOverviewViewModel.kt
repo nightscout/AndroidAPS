@@ -305,7 +305,7 @@ class DiaconnOverviewViewModel @Inject constructor(
                 "\nCountry: ${pump.country}" +
                 "\nProductType: ${pump.productType}" +
                 "\nManufacture: ${pump.makeYear}.${pump.makeMonth}.${pump.makeDay}"
-            add(PumpInfoRow(label = rh.gs(R.string.pump_firmware_label), value = firmware))
+            add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.firmware), value = firmware))
         }
 
         // Actions

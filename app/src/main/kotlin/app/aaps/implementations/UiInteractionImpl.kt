@@ -18,13 +18,11 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
-import app.aaps.ui.activities.BolusProgressHelperActivity
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.activities.ProfileViewerActivity
 import app.aaps.ui.activities.QuickWizardListActivity
 import app.aaps.ui.activities.TDDStatsActivity
 import app.aaps.ui.dialogs.AlertDialogs
-import app.aaps.ui.dialogs.BolusProgressDialog
 import app.aaps.ui.dialogs.CalibrationDialog
 import app.aaps.ui.dialogs.CarbsDialog
 import app.aaps.ui.dialogs.CareDialog
@@ -61,7 +59,6 @@ class UiInteractionImpl @Inject constructor(
     override val tddStatsActivity: Class<*> = TDDStatsActivity::class.java
     override val historyBrowseActivity: Class<*> = HistoryBrowseActivity::class.java
     override val errorHelperActivity: Class<*> = ErrorActivity::class.java
-    override val bolusProgressHelperActivity: Class<*> = BolusProgressHelperActivity::class.java
     override val singleFragmentActivity: Class<*> = SingleFragmentActivity::class.java
     override val preferencesActivity: Class<*> = PreferencesActivity::class.java
     override val myPreferenceFragment: Class<*> = MyPreferenceFragment::class.java
@@ -186,15 +183,6 @@ class UiInteractionImpl @Inject constructor(
                     .putExtra(UiInteraction.PLUGIN_NAME, pluginSimpleName)
             )
         })
-    }
-
-    override fun runBolusProgressDialog(fragmentManager: FragmentManager) {
-        // Activity may be destroyed before Dialog pop up so try/catch
-        try {
-            BolusProgressDialog().show(fragmentManager, "BolusProgress")
-        } catch (_: Exception) {
-            // do nothing
-        }
     }
 
     override fun startAlarm(@RawRes sound: Int, reason: String) {

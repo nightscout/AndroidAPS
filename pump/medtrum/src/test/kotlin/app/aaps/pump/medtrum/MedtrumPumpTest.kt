@@ -3,7 +3,6 @@ package app.aaps.pump.medtrum
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.objects.extensions.pureProfileFromJson
@@ -122,6 +121,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val bolusType = 0
         val bolusCompleted = false
         val amount = 1.4
+        bolusProgressData.start(insulin = 2.0, isSMB = false)
 
         // Call
         medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, amount)
@@ -129,7 +129,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         assertThat(medtrumPump.bolusDone).isEqualTo(bolusCompleted)
         assertThat(medtrumPump.bolusAmountDeliveredFlow.value).isWithin(0.01).of(amount)
-        assertThat(BolusProgressData.delivered).isWithin(0.01).of(amount)
+        assertThat(bolusProgressData.state.value?.delivered ?: 0.0).isWithin(0.01).of(amount)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndTemporaryBasalInfoThenExpectNewData() {

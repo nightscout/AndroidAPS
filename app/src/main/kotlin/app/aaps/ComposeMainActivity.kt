@@ -49,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -90,6 +91,8 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionResult
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.source.DexcomBoyda
@@ -110,6 +113,7 @@ import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -122,6 +126,8 @@ import app.aaps.core.ui.compose.preference.LocalHashPassword
 import app.aaps.core.ui.compose.preference.LocalVisibilityContext
 import app.aaps.core.ui.compose.preference.PluginPreferencesScreen
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.ui.compose.pump.PumpActivityDialog
+import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
 import app.aaps.core.ui.compose.siteRotation.SiteLocationPickerScreen
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.core.ui.search.SearchableItem
@@ -224,6 +230,8 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var builtInSearchables: BuiltInSearchables
     @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var bolusProgressData: BolusProgressData
+    @Inject lateinit var commandQueue: CommandQueue
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var callForPrefFile: ActivityResultLauncher<Void?>? = null
@@ -254,6 +262,9 @@ class ComposeMainActivity : AppCompatActivity() {
     private val configurationViewModel: ConfigurationViewModel by viewModels()
     private val siteRotationManagementViewModel: SiteRotationManagementViewModel by viewModels()
 
+    private val pumpCommunicationStatus by lazy {
+        PumpCommunicationStatus(rxBus, commandQueue, this, lifecycleScope)
+    }
     private var navController: NavHostController? = null
     private val _autoShowNotifications = mutableStateOf(false)
     private val disposable = CompositeDisposable()
@@ -544,6 +555,7 @@ class ComposeMainActivity : AppCompatActivity() {
         }
 
         val state by mainViewModel.uiState.collectAsStateWithLifecycle()
+        val bolusState by bolusProgressData.state.collectAsStateWithLifecycle()
 
         NavHost(
             navController = navController,
@@ -667,7 +679,15 @@ class ComposeMainActivity : AppCompatActivity() {
                     calcProgress = calcProgress,
                     graphViewModel = graphViewModel,
                     statusLightsDef = builtInSearchables.statusLights,
-                    treatmentButtonsDef = builtInSearchables.treatmentButtons
+                    treatmentButtonsDef = builtInSearchables.treatmentButtons,
+                    // Pump activity
+                    bolusState = bolusState,
+                    pumpStatusText = pumpCommunicationStatus.statusBanner()?.text ?: "",
+                    queueStatusText = pumpCommunicationStatus.queueStatus(),
+                    isPumpCommunicating = pumpCommunicationStatus.statusBanner() != null,
+                    onStopBolus = {
+                        commandQueue.cancelAllBoluses(null)
+                    }
                 )
             }
 
@@ -925,6 +945,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 val profileIndex = backStackEntry.arguments?.getInt("profileIndex") ?: 0
                 val profileName = profileManagementViewModel.uiState.value.profileNames.getOrNull(profileIndex) ?: ""
                 val reuseValues = profileManagementViewModel.getReuseValues()
+                val coroutineScope = rememberCoroutineScope()
 
                 ProfileActivationScreen(
                     profileName = profileName,
@@ -936,18 +957,20 @@ class ComposeMainActivity : AppCompatActivity() {
                     rh = rh,
                     onNavigateBack = { navController.safePopBackStack() },
                     onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
-                        val success = profileManagementViewModel.activateProfile(
-                            profileIndex = profileIndex,
-                            durationMinutes = duration,
-                            percentage = percentage,
-                            timeshiftHours = timeshift,
-                            withTT = withTT,
-                            notes = notes,
-                            timestamp = timestamp,
-                            timeChanged = timeChanged
-                        )
-                        if (success) {
-                            navController.popBackStack(AppRoute.Profile.route, inclusive = false)
+                        coroutineScope.launch {
+                            val success = profileManagementViewModel.activateProfile(
+                                profileIndex = profileIndex,
+                                durationMinutes = duration,
+                                percentage = percentage,
+                                timeshiftHours = timeshift,
+                                withTT = withTT,
+                                notes = notes,
+                                timestamp = timestamp,
+                                timeChanged = timeChanged
+                            )
+                            if (success) {
+                                navController.popBackStack(AppRoute.Profile.route, inclusive = false)
+                            }
                         }
                     }
                 )
@@ -1048,30 +1071,34 @@ class ComposeMainActivity : AppCompatActivity() {
                             )
                         )
                     }
-                    Scaffold(
-                        topBar = {
-                            AapsTopAppBar(
-                                title = { Text(toolbarConfig.title) },
-                                navigationIcon = { toolbarConfig.navigationIcon() },
-                                actions = { toolbarConfig.actions(this) }
-                            )
-                        }
-                    ) { paddingValues ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues)
-                        ) {
-                            composeContent.Render(
-                                setToolbarConfig = { config -> toolbarConfig = config },
-                                onNavigateBack = { navController.safePopBackStack() },
-                                onSettings = {
-                                    handleNavigationRequest(
-                                        NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
-                                        navController
-                                    )
-                                }
-                            )
+                    val pluginSnackbarHostState = remember { SnackbarHostState() }
+                    CompositionLocalProvider(LocalSnackbarHostState provides pluginSnackbarHostState) {
+                        Scaffold(
+                            snackbarHost = { SnackbarHost(pluginSnackbarHostState) },
+                            topBar = {
+                                AapsTopAppBar(
+                                    title = { Text(toolbarConfig.title) },
+                                    navigationIcon = { toolbarConfig.navigationIcon() },
+                                    actions = { toolbarConfig.actions(this) }
+                                )
+                            }
+                        ) { paddingValues ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues)
+                            ) {
+                                composeContent.Render(
+                                    setToolbarConfig = { config -> toolbarConfig = config },
+                                    onNavigateBack = { navController.safePopBackStack() },
+                                    onSettings = {
+                                        handleNavigationRequest(
+                                            NavigationRequest.PluginPreferences(plugin.javaClass.simpleName),
+                                            navController
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -1175,6 +1202,24 @@ class ComposeMainActivity : AppCompatActivity() {
                 SiteRotationSettingsScreen(
                     viewModel = siteRotationManagementViewModel,
                     onNavigateBack = { navController.safePopBackStack() }
+                )
+            }
+        }
+
+        // Modal bolus progress overlay — shown above everything for standard bolus
+        bolusState?.let { state ->
+            if (!state.isSMB) {
+                val pumpStatus = pumpCommunicationStatus.statusBanner()?.text ?: ""
+                val queueStatus = pumpCommunicationStatus.queueStatus()
+                PumpActivityDialog(
+                    bolusState = state,
+                    pumpStatus = pumpStatus,
+                    queueStatus = queueStatus,
+                    isModal = true,
+                    onStop = {
+                        commandQueue.cancelAllBoluses(null)
+                    },
+                    onDismiss = { }
                 )
             }
         }

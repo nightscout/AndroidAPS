@@ -19,9 +19,7 @@ import java.util.TimeZone
     )],
     indices = [
         Index("referenceId"),
-        Index("timestamp"),
-        Index("id"),
-        Index("isValid")
+        Index("timestamp")
     ]
 )
 data class BolusCalculatorResult(

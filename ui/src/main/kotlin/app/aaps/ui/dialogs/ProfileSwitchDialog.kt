@@ -213,30 +213,30 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 title = rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
                 message = Joiner.on("<br/>").join(actions),
                 ok = {
-                    if (profileFunction.createProfileSwitch(
-                            profileStore = profileStore,
-                            profileName = profileName,
-                            durationInMinutes = duration,
-                            percentage = percent,
-                            timeShiftInHours = timeShift,
-                            timestamp = eventTime,
-                            action = Action.PROFILE_SWITCH,
-                            source = Sources.ProfileSwitchDialog,
-                            note = notes,
-                            listValues = listOfNotNull(
-                                ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                                ValueWithUnit.SimpleString(profileName),
-                                ValueWithUnit.SimpleString(newICfg.insulinLabel),
-                                ValueWithUnit.Percent(percent),
-                                ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
-                                ValueWithUnit.Minute(duration).takeIf { duration != 0 }
-                            ),
-                            iCfg = newICfg
-                        )
-                    ) {
-                        if (percent == 90 && duration == 10) preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
-                        if (isTT) {
-                            lifecycleScope.launch {
+                    lifecycleScope.launch {
+                        if (profileFunction.createProfileSwitch(
+                                profileStore = profileStore,
+                                profileName = profileName,
+                                durationInMinutes = duration,
+                                percentage = percent,
+                                timeShiftInHours = timeShift,
+                                timestamp = eventTime,
+                                action = Action.PROFILE_SWITCH,
+                                source = Sources.ProfileSwitchDialog,
+                                note = notes,
+                                listValues = listOfNotNull(
+                                    ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                                    ValueWithUnit.SimpleString(profileName),
+                                    ValueWithUnit.SimpleString(newICfg.insulinLabel),
+                                    ValueWithUnit.Percent(percent),
+                                    ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
+                                    ValueWithUnit.Minute(duration).takeIf { duration != 0 }
+                                ),
+                                iCfg = newICfg
+                            ) != null
+                        ) {
+                            if (percent == 90 && duration == 10) preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
+                            if (isTT) {
                                 persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                                     TT(
                                         timestamp = eventTime + 10000, // Add ten secs for proper NSCv1 sync

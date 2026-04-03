@@ -116,10 +116,10 @@ internal fun PrepareStepContent(
 ) {
     WizardStepLayout(
         primaryButton = when (state) {
-            PrepareState.INITIAL    -> WizardButton(text = stringResource(R.string.next), onClick = onNext, enabled = isSnValid)
-            PrepareState.CONNECTING -> WizardButton(text = stringResource(R.string.next), onClick = {}, loading = true)
-            PrepareState.FILLED     -> WizardButton(text = stringResource(R.string.next), onClick = onFilled)
-            PrepareState.ERROR      -> WizardButton(text = stringResource(R.string.retry), onClick = onRetry)
+            PrepareState.INITIAL    -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onNext, enabled = isSnValid)
+            PrepareState.CONNECTING -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = {}, loading = true)
+            PrepareState.FILLED     -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onFilled)
+            PrepareState.ERROR      -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.retry), onClick = onRetry)
         },
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),
@@ -221,7 +221,7 @@ private fun SerialNumberSection(
                         Icon(Icons.Default.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.cancel))
                     }
                     IconButton(onClick = { confirmEdit() }, enabled = isSnValid) {
-                        Icon(Icons.Default.Check, contentDescription = stringResource(R.string.next))
+                        Icon(Icons.Default.Check, contentDescription = stringResource(app.aaps.core.ui.R.string.next))
                     }
                 }
             }

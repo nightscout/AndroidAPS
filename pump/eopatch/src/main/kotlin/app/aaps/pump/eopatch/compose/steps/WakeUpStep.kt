@@ -25,7 +25,7 @@ fun WakeUpStep(viewModel: EopatchPatchViewModel) {
 internal fun WakeUpStepContent(onStartPairing: () -> Unit = {}, onCancel: () -> Unit = {}) {
     WizardStepLayout(
         primaryButton = WizardButton(text = stringResource(R.string.patch_start_pairing), onClick = onStartPairing),
-        secondaryButton = WizardButton(text = stringResource(R.string.cancel), onClick = onCancel)
+        secondaryButton = WizardButton(text = stringResource(app.aaps.core.ui.R.string.cancel), onClick = onCancel)
     ) {
         Text(text = stringResource(R.string.patch_wake_up), style = MaterialTheme.typography.titleLarge)
         Text(text = stringResource(R.string.patch_wake_up_desc_1), style = MaterialTheme.typography.bodyMedium)

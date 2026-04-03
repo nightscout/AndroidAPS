@@ -86,7 +86,7 @@ class DanaRSComposeContent(
         // Toolbar configuration
         val historyTitle = stringResource(app.aaps.core.ui.R.string.pump_history)
         val userOptionsTitle = stringResource(R.string.danar_pump_settings)
-        val pairingTitle = stringResource(R.string.danars_pairing)
+        val pairingTitle = stringResource(app.aaps.core.ui.R.string.pairing)
 
         val overviewNavIcon: @Composable () -> Unit = {
             IconButton(onClick = onNavigateBack) {

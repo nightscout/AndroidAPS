@@ -149,7 +149,7 @@ class CobExtendedCarbsTest @Inject constructor() {
             ),
             iCfg = iCfg
         )
-        assertThat(result).isTrue()
+        assertThat(result).isNotNull()
 
         // Wait for EPS flow emission (replaces old EventEffectiveProfileSwitchChanged)
         val epsList = epsDeferred.await()

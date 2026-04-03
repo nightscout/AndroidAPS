@@ -262,7 +262,7 @@ class EopatchOverviewViewModel @Inject constructor(
             if (connState != BleConnectionState.CONNECTED) {
                 val connText = when (connState) {
                     BleConnectionState.DISCONNECTED -> rh.gs(app.aaps.core.ui.R.string.disconnected)
-                    else                            -> rh.gs(R.string.string_connecting)
+                    else                            -> rh.gs(app.aaps.core.ui.R.string.connecting)
                 }
                 add(PumpInfoRow(label = rh.gs(R.string.eopatch_ble_status), value = connText))
             }
@@ -278,7 +278,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 } else {
                     rh.gs(R.string.string_running)
                 }
-                add(PumpInfoRow(label = rh.gs(R.string.eopatch_status), value = statusText))
+                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.status), value = statusText))
 
                 // Basal rate
                 if (preferenceManager.patchState.isNormalBasalRunning) {
@@ -366,7 +366,7 @@ class EopatchOverviewViewModel @Inject constructor(
         !isActivated -> StatusBanner(text = rh.gs(R.string.eopatch_not_activated), level = StatusLevel.WARNING)
         isPaused -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.pumpsuspended), level = StatusLevel.WARNING)
         connState == BleConnectionState.DISCONNECTED -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.disconnected), level = StatusLevel.CRITICAL)
-        connState != BleConnectionState.CONNECTED -> StatusBanner(text = rh.gs(R.string.string_connecting), level = StatusLevel.UNSPECIFIED)
+        connState != BleConnectionState.CONNECTED -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.connecting), level = StatusLevel.UNSPECIFIED)
         else -> null // Connected, activated, running — no banner needed
     }
 }

@@ -1,5 +1,6 @@
 package app.aaps.pump.medtrum
 
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.stats.TddCalculator
@@ -18,6 +19,7 @@ open class MedtrumTestBase : TestBaseWithProfile() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
 
+    val bolusProgressData = BolusProgressData()
     lateinit var medtrumPump: MedtrumPump
 
     @BeforeEach
@@ -34,6 +36,6 @@ open class MedtrumTestBase : TestBaseWithProfile() {
             whenever(pumpSync.syncExtendedBolusWithPumpId(any(), any(), any(), any(), any(), any(), any())).thenReturn(true)
             whenever(pumpSync.createOrUpdateTotalDailyDose(any(), any(), any(), any(), anyOrNull(), any(), any())).thenReturn(true)
         }
-        medtrumPump = MedtrumPump(aapsLogger, rh, preferences, dateUtil, pumpSync, temporaryBasalStorage)
+        medtrumPump = MedtrumPump(aapsLogger, rh, preferences, dateUtil, pumpSync, temporaryBasalStorage, bolusProgressData)
     }
 }

@@ -4,12 +4,14 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Schimbare oră vară/iarnă în mai puțin de 24h</string>
     <string name="dst_loop_disabled_warning">Schimbare oră vară/iarnă în mai puțin de 3 ore - buclă închisă dezactivată</string>
+    <string name="dst_loop_disabled_error">Schimbarea orei de vară (DST) a avut loc cu mai puțin de 3 ore în urmă. Bucla închisă dezactivată temporar. Se va reactiva automat la 3 ore după schimbarea DST</string>
     <!-- Storage constraint -->
     <string name="disk_full">Eliberați cel puțin %1$d MB de pe stocarea internă! Buclă dezactivată!</string>
     <!-- Version Checker -->
     <string name="application_expired">Aplicația a expirat</string>
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
+    <string name="version_expire">Versiunea %1$s expiră la %2$s și se va trece în modul LGS</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Date recalculate utilizate</string>

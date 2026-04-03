@@ -81,6 +81,7 @@ class DanaRKoreanPlugin @Inject constructor(
     notificationManager: NotificationManager,
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
+    private val bolusProgressData: BolusProgressData,
     pumpEnactResultProvider: Provider<PumpEnactResult>
 ) : AbstractDanaRPlugin(
     danaPump,
@@ -173,13 +174,14 @@ class DanaRKoreanPlugin @Inject constructor(
         if (detailedBolusInfo.insulin > 0)
             connectionOK = executionService?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
-        result.success(connectionOK && abs(detailedBolusInfo.insulin - BolusProgressData.delivered) < pumpDescription.bolusStep)
-            .bolusDelivered(BolusProgressData.delivered)
+        val delivered = bolusProgressData.state.value?.delivered ?: 0.0
+        result.success(connectionOK && abs(detailedBolusInfo.insulin - delivered) < pumpDescription.bolusStep)
+            .bolusDelivered(delivered)
         if (!result.success) result.comment(
             rh.gs(
                 app.aaps.pump.dana.R.string.boluserrorcode,
                 detailedBolusInfo.insulin,
-                BolusProgressData.delivered,
+                delivered,
                 danaPump.bolusStartErrorCode
             )
         ) else result.comment(app.aaps.core.ui.R.string.ok)
@@ -187,7 +189,7 @@ class DanaRKoreanPlugin @Inject constructor(
         if (detailedBolusInfo.insulin > 0) runBlocking {
             pumpSync.syncBolusWithPumpId(
                 dateUtil.now(),
-                PumpInsulin(BolusProgressData.delivered),
+                PumpInsulin(delivered),
                 detailedBolusInfo.bolusType,
                 dateUtil.now(),
                 PumpType.DANA_R_KOREAN,

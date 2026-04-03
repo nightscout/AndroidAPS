@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -103,6 +102,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var ch: ConcentrationHelper
+    @Inject lateinit var bolusProgressData: BolusProgressData
 
     companion object {
 
@@ -392,14 +392,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
         medtrumPump.bolusDone = false
         medtrumPump.bolusStopped = false
         medtrumPump.bolusErrorReason = null
-        BolusProgressData.delivered = 0.0
 
         if (!sendBolusCommand(insulin)) {
             medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_unable_to_send_command)
             aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
             commandQueue.readStatus(rh.gs(R.string.bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
             medtrumPump.bolusDone = true
-            BolusProgressData.delivered = 0.0
+            bolusProgressData.updateProgress(0, "", 0.0)
             return false
         }
 
@@ -432,7 +431,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         waitForBolusProgress()
 
-        if (medtrumPump.bolusStopped && BolusProgressData.delivered == 0.0) {
+        if (medtrumPump.bolusStopped && (bolusProgressData.state.value?.delivered ?: 0.0) == 0.0) {
             // In this case we don't get a bolus end event, so need to remove all the stuff added previously
             val syncOk = runBlocking {
                 pumpSync.syncBolusWithTempId(
@@ -462,7 +461,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_not_connected)
             return false
         }
-        if (BolusProgressData.stopPressed) {
+        if (bolusProgressData.isStopPressed) {
             aapsLogger.warn(LTag.PUMPCOMM, "Bolus stop pressed, not setting bolus")
             medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_user)
             return false
@@ -506,9 +505,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     disconnect("Communication stopped")
                 }
             } else {
-                val currentBolusAmount = BolusProgressData.delivered
+                val currentBolusAmount = bolusProgressData.state.value?.delivered ?: 0.0
                 if (currentBolusAmount != lastSentBolusAmount) {
-                    rxBus.send(EventOverviewBolusProgress(ch, PumpInsulin(BolusProgressData.delivered)))
+                    val insulin = bolusProgressData.state.value?.insulin ?: 0.0
+                    val percent = if (insulin > 0) ((currentBolusAmount / insulin) * 100).toInt().coerceAtMost(100) else 0
+                    val status = ch.bolusProgressString(PumpInsulin(currentBolusAmount))
+                    bolusProgressData.updateProgress(percent, status, currentBolusAmount)
                     lastSentBolusAmount = currentBolusAmount
                 }
             }
@@ -532,7 +534,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun stopBolus() {
-        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ ${BolusProgressData.delivered}")
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ ${bolusProgressData.state.value?.delivered ?: 0.0}")
         medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_user)
         if (isConnected) {
             var success = sendPacketAndGetResponse(CancelBolusPacket(injector))

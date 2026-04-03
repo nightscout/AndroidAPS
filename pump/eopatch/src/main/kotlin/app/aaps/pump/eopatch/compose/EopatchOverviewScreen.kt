@@ -1,6 +1,5 @@
 package app.aaps.pump.eopatch.compose
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -28,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
@@ -43,6 +43,7 @@ fun EopatchOverviewScreen(
 ) {
     val baseState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val snackbarHostState = LocalSnackbarHostState.current
 
     // Dialog state
     var showSuspendConfirmDialog by remember { mutableStateOf(false) }
@@ -57,11 +58,7 @@ fun EopatchOverviewScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is EopatchOverviewEvent.ShowToast -> {
-                    Toast.makeText(
-                        context,
-                        context.getString(event.messageResId),
-                        if (event.isError) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
-                    ).show()
+                    snackbarHostState.showSnackbar(context.getString(event.messageResId))
                 }
 
                 is EopatchOverviewEvent.StartPatchWorkflow -> {
@@ -96,12 +93,12 @@ fun EopatchOverviewScreen(
                     showSuspendConfirmDialog = false
                     showSuspendTimePicker = true
                 }) {
-                    Text(stringResource(R.string.confirm))
+                    Text(stringResource(app.aaps.core.ui.R.string.confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showSuspendConfirmDialog = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(app.aaps.core.ui.R.string.cancel))
                 }
             }
         )
@@ -142,7 +139,7 @@ fun EopatchOverviewScreen(
                     viewModel.pauseBasal(suspendDurations[selectedDurationIndex])
                     selectedDurationIndex = 0
                 }) {
-                    Text(stringResource(R.string.confirm))
+                    Text(stringResource(app.aaps.core.ui.R.string.confirm))
                 }
             },
             dismissButton = {
@@ -150,7 +147,7 @@ fun EopatchOverviewScreen(
                     showSuspendTimePicker = false
                     selectedDurationIndex = 0
                 }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(app.aaps.core.ui.R.string.cancel))
                 }
             }
         )
@@ -167,12 +164,12 @@ fun EopatchOverviewScreen(
                     showResumeDialog = false
                     viewModel.resumeBasal()
                 }) {
-                    Text(stringResource(R.string.confirm))
+                    Text(stringResource(app.aaps.core.ui.R.string.confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showResumeDialog = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(app.aaps.core.ui.R.string.cancel))
                 }
             }
         )

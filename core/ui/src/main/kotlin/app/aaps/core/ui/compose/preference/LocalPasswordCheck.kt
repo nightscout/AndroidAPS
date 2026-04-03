@@ -1,9 +1,8 @@
 package app.aaps.core.ui.compose.preference
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.compositionLocalOf
-import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
+import app.aaps.core.ui.compose.ComposeScreenContent
 
 /**
  * CompositionLocal for providing PreferenceVisibilityContext to preference composables.
@@ -24,12 +23,6 @@ val LocalCheckPassword = compositionLocalOf<((String, String) -> Boolean)?> { nu
  * Signature: (password: String) -> String
  */
 val LocalHashPassword = compositionLocalOf<((String) -> String)?> { null }
-
-/**
- * CompositionLocal for SnackbarHostState.
- * Used by preference dialogs to show feedback messages.
- */
-val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState?> { null }
 
 /**
  * CompositionLocal for highlighting a specific preference key.

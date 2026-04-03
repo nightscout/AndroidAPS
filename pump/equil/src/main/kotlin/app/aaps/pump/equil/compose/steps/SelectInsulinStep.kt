@@ -21,7 +21,7 @@ internal fun SelectInsulinStep(
 
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.equil_common_wizard_button_next),
+            text = stringResource(app.aaps.core.ui.R.string.next),
             onClick = { viewModel.moveToNextStep(app.aaps.pump.equil.compose.EquilWizardStep.SELECT_INSULIN) },
             enabled = selectedInsulin != null
         ),

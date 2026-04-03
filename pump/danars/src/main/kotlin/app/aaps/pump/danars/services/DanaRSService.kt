@@ -26,7 +26,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -111,6 +110,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
     @Inject lateinit var danaRSPacketAPSBasalSetTemporaryBasal: Provider<DanaRSPacketAPSBasalSetTemporaryBasal>
     @Inject lateinit var danaRSPacketAPSHistoryEvents: Provider<DanaRSPacketAPSHistoryEvents>
@@ -336,7 +336,7 @@ class DanaRSService : DaggerService() {
 
     fun bolus(detailedBolusInfo: DetailedBolusInfo): Boolean {
         if (!isConnected) return false
-        if (BolusProgressData.stopPressed) return false
+        if (bolusProgressData.isStopPressed) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.startingbolus)))
         val preferencesSpeed = preferences.get(DanaIntKey.BolusSpeed)
         danaPump.bolusDone = false
@@ -351,7 +351,6 @@ class DanaRSService : DaggerService() {
             if (!danaPump.bolusStopped) {
                 sendMessage(start)
             } else {
-                BolusProgressData.bolusEnded = true
                 return false
             }
             while (!danaPump.bolusStopped && !start.failed && !danaPump.bolusDone && !connectionBroken) {
@@ -374,7 +373,7 @@ class DanaRSService : DaggerService() {
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
         while (System.currentTimeMillis() < expectedEnd) {
             val waitTime = expectedEnd - System.currentTimeMillis()
-            rxBus.send(EventOverviewBolusProgress(status = rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), id = detailedBolusInfo.id))
+            bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000), bolusProgressData.state.value?.delivered ?: 0.0)
             SystemClock.sleep(1000)
         }
         // do not call loadEvents() directly, reconnection may be needed
@@ -383,7 +382,7 @@ class DanaRSService : DaggerService() {
                 // reread bolus status
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
                 sendMessage(danaRSPacketBolusGetStepBolusInformation.get()) // last bolus
-                rxBus.send(EventOverviewBolusProgress(status = rh.gs(app.aaps.core.interfaces.R.string.disconnecting), id = detailedBolusInfo.id, percent = 100))
+                bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.disconnecting), bolusProgressData.state.value?.delivered ?: 0.0)
                 rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
             }
         })
@@ -391,7 +390,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun bolusStop() {
-        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @${BolusProgressData.delivered}")
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @${bolusProgressData.state.value?.delivered ?: 0.0}")
         val stop = danaRSPacketBolusSetStepBolusStop.get()
         danaPump.bolusStopForced = true
         if (isConnected) {

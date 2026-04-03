@@ -101,14 +101,14 @@ internal fun RetryActivationContent(
 ) {
     WizardStepLayout(
         primaryButton = if (isConnecting) {
-            WizardButton(text = stringResource(R.string.next), onClick = {}, loading = true)
+            WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = {}, loading = true)
         } else {
-            WizardButton(text = stringResource(R.string.next), onClick = onRetry)
+            WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onRetry)
         },
         secondaryButton = if (isConnecting) {
             WizardButton(text = stringResource(app.aaps.core.ui.R.string.cancel), onClick = onCancel)
         } else {
-            WizardButton(text = stringResource(R.string.discard), onClick = onDiscard)
+            WizardButton(text = stringResource(app.aaps.core.ui.R.string.discard), onClick = onDiscard)
         }
     ) {
         if (isConnecting) {

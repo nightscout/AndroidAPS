@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 
 interface ConcentrationHelper {
+
     /**
      *  return true if default concentration (U100) is set, false if another concentration has been approved by user
      */
@@ -69,7 +70,7 @@ interface ConcentrationHelper {
      *
      * @param amount insulin amount in CU
      */
-    fun bolusWithVolume(amount:Double): String
+    fun bolusWithVolume(amount: Double): String
 
     /**
      * Show bolus with volume in µl after conversion due to concentration
@@ -78,19 +79,19 @@ interface ConcentrationHelper {
      *
      * @param amount insulin amount in IU
      */
-    fun bolusWithConvertedVolume(amount:Double): String
+    fun bolusWithConvertedVolume(amount: Double): String
 
-   /**
-     * show bolus Progress information (to be used within EventOverviewBolusProgress)
+    /**
+     * show bolus Progress information (to be used within BolusProgressData.updateProgress)
      *
-     * @param amount PumpInsulin
+     * @param delivered PumpInsulin
      */
     fun bolusProgressString(delivered: PumpInsulin, isPriming: Boolean = false): String
 
     /**
-     * show bolus Progress information for wear (to be used within EventOverviewBolusProgress)
+     * show bolus Progress information for wear (to be used within BolusProgressData.updateProgress)
      *
-     * @param amount PumpInsulin
+     * @param delivered PumpInsulin
      * @param total Double
      */
     fun bolusProgressString(delivered: PumpInsulin, total: Double, isPriming: Boolean = false): String

@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpInsulin
@@ -15,7 +16,6 @@ import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.waitMillis
@@ -84,7 +84,8 @@ class EquilManager @Inject constructor(
     private val pumpEnactResultProvider: Provider<PumpEnactResult>,
     private val dateUtil: DateUtil,
     private val notificationManager: NotificationManager,
-    private val ch: ConcentrationHelper
+    private val ch: ConcentrationHelper,
+    private val bolusProgressData: BolusProgressData
 ) {
 
     private val gsonInstance: Gson = createGson()
@@ -249,18 +250,23 @@ class EquilManager @Inject constructor(
             val percent1 = (5f / detailedBolusInfo.insulin).toFloat()
             aapsLogger.debug(LTag.PUMPCOMM, "sleep===" + detailedBolusInfo.insulin + "===" + percent1)
             var percent = 0f
+            val isPriming = bolusProgressData.state.value?.isPriming ?: false
+            val totalInsulin = bolusProgressData.state.value?.insulin ?: detailedBolusInfo.insulin
             if (command.cmdSuccess) {
                 result.success = true
                 result.enacted(true)
                 while (!bolusProfile.stop && percent < 100) {
-                    rxBus.send(EventOverviewBolusProgress(ch, PumpInsulin(percent / 100.0 * detailedBolusInfo.insulin), id = detailedBolusInfo.id))
+                    val delivering = percent / 100.0 * detailedBolusInfo.insulin
+                    val pumpInsulin = PumpInsulin(delivering)
+                    val progressPercent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
+                    bolusProgressData.updateProgress(progressPercent, ch.bolusProgressString(pumpInsulin, isPriming), delivering)
                     SystemClock.sleep(sleep.toLong())
                     percent += percent1
                     aapsLogger.debug(LTag.PUMPCOMM, "isCmdStatus===" + percent + "====" + bolusProfile.stop)
                 }
                 // constraint percent.
                 percent = min(percent, 100.0f)
-                rxBus.send(EventOverviewBolusProgress(rh, percent = 100, id = detailedBolusInfo.id))
+                bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin), detailedBolusInfo.insulin)
                 result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
             } else {
                 result.success = false
@@ -672,7 +678,6 @@ class EquilManager @Inject constructor(
         var startHistoryIndex = 0
         var basalSchedule: BasalSchedule? = null
     }
-
 
     fun setRunMode(mode: Int) {
         when (mode) {

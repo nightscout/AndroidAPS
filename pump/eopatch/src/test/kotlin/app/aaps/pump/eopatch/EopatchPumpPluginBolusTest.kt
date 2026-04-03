@@ -2,6 +2,7 @@ package app.aaps.pump.eopatch
 
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpProfile
 import app.aaps.core.interfaces.pump.PumpSync
@@ -28,6 +29,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
     @Mock lateinit var profile: PumpProfile
     @Mock lateinit var protectionCheck: ProtectionCheck
     @Mock lateinit var blePreCheck: BlePreCheck
+    @Mock lateinit var bolusProgressData: BolusProgressData
 
     private lateinit var plugin: EopatchPumpPlugin
 
@@ -55,7 +57,7 @@ class EopatchPumpPluginBolusTest : EopatchTestBase() {
         plugin = EopatchPumpPlugin(
             aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, fabricPrivacy, dateUtil, pumpSync, patchManager, patchManagerExecutor,
             alarmManager, eopatchPreferenceManager, notificationManager, pumpEnactResultProvider, patchConfig, normalBasalManager,
-            protectionCheck, blePreCheck, ch
+            protectionCheck, blePreCheck, ch, bolusProgressData
         )
     }
 

@@ -181,7 +181,6 @@ val IcPluginCombo: ImageVector by lazy {
             close()
         }
 
-        // Polygones avec opacité 0.5
         path(
             fill = SolidColor(Color.Black),
             fillAlpha = 0.3f,

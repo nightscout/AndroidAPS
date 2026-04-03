@@ -19,7 +19,7 @@ fun BasalScheduleStep(viewModel: EopatchPatchViewModel) {
 
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.finish),
+            text = stringResource(app.aaps.core.ui.R.string.finish),
             onClick = { viewModel.onConfirm() }
         )
     ) {

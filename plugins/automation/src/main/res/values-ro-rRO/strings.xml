@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Introduceți o denumire pentru această acțiune.</string>
     <string name="automation_missing_trigger">Vă rugăm să specificați cel puțin un factor declanșator.</string>
     <string name="automation_missing_action">Trebuie să specificați cel puțin o acțiune.</string>
+    <string name="exportsettings_message">Export setări: %1$s</string>
+    <string name="export_settings_short">Text în tratamente:</string>
     <string name="alarm_message">Alarmă: %1$s</string>
     <string name="alarm_short">Alarmă:</string>
     <string name="message_short">Msj:</string>
@@ -76,6 +78,7 @@
     <string name="deltalabel">Diferență glicemie</string>
     <string name="deltalabel_u">Diferență glicemie [%1$s]</string>
     <string name="currentlocation">Localizarea curentă</string>
+    <string name="choose_from_map">Alegeți de pe hartă</string>
     <string name="location">Localizare</string>
     <string name="glucose_u">Glicemie [%1$s]:</string>
     <string name="target_u">Tinta [%1$s]:</string>
@@ -85,6 +88,20 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Ritm cardiac</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Vârsta senzorului</string>
+    <string name="triggerSensorAgeDesc">Vârsta senzorului %1$s %2$.1f oră</string>
+    <string name="triggerCannulaAgeLabel">Vârsta canulei</string>
+    <string name="triggerCannulaAgeDesc">Vârsta canulei %1$s %2$.1f oră</string>
+    <string name="triggerPodChangeLabel">Activarea pompei</string>
+    <string name="triggerPodChangeDesc">Pompă activată</string>
+    <string name="triggerInsulinAgeLabel">Vechime insulină</string>
+    <string name="triggerInsulinAgeDesc">Vechime insulină %1$s %2$.1f oră</string>
+    <string name="triggerPumpBatteryAgeLabel">Vechime baterie pompă</string>
+    <string name="triggerPumpBatteryAgeDesc">Vechime baterie pompă %1$s %2$.1f oră</string>
+    <string name="triggerReservoirLevelLabel">Nivel rezervor</string>
+    <string name="triggerReservoirLevelDesc">Nivel rezervor %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Nivel baterie pompă</string>
+    <string name="triggerPumpBatteryLevelDesc">Nivel baterie pompă %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Timp recurent</string>
@@ -113,11 +130,20 @@
     <string name="time_to_bolus">Timpul sa faci bolus!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="error_setting_reminder">Eroare la setarea alarmei viitoare</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">Profil reglare automată (Autotune) %1$s</string>
     <string name="autotune_run">Rulează Autotune</string>
     <string name="autotune_run_without_autoswitch">Autotune a rulat fără schimbarea profilului</string>
     <string name="autotune_run_with_autoswitch">Autotune a rulat și profilul a fost automat schimbat</string>
     <string name="autotune_run_with_error">Eroare în timpul ultimei rulări Autotune</string>
     <string name="autotune_run_cancelled">O altă rulare Autotune este detectată, rularea este anulată</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Număr de pași</string>
+    <string name="triggerStepsCountDesc">Număr de pași per %1$s minute %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Durata de măsurare</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">Activează/dezactivează SMB</string>
+    <string name="changeSmbTo">Schimbă SMB la %1$s</string>
+    <string name="newSmbMode">Noul mod SMB:</string>
+    <string name="on">PORNIT</string>
+    <string name="off">OPRIT</string>
 </resources>

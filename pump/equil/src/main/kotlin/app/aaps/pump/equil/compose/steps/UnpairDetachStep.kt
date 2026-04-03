@@ -50,7 +50,7 @@ private fun UnpairDetachStepContent(
 ) {
     WizardStepLayout(
         primaryButton = WizardButton(
-            text = stringResource(R.string.equil_common_wizard_button_next),
+            text = stringResource(app.aaps.core.ui.R.string.next),
             onClick = onNext,
             loading = isLoading
         ),

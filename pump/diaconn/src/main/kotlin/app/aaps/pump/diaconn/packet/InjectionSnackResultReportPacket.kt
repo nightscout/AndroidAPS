@@ -17,6 +17,7 @@ class InjectionSnackResultReportPacket(injector: HasAndroidInjector) : DiaconnG8
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var bolusProgressData: BolusProgressData
 
     init {
         msgType = 0xe4.toByte()
@@ -38,7 +39,11 @@ class InjectionSnackResultReportPacket(injector: HasAndroidInjector) : DiaconnG8
 
         diaconnG8Pump.lastBolusAmount = deliveredBolusAmount
         diaconnG8Pump.lastBolusTime = dateUtil.now()
-        BolusProgressData.delivered = deliveredBolusAmount
+        val state = bolusProgressData.state.value
+        val insulin = state?.insulin ?: 0.0
+        val percent = if (insulin > 0) ((deliveredBolusAmount / insulin) * 100).toInt().coerceAtMost(100) else 0
+        val status = state?.status ?: ""
+        bolusProgressData.updateProgress(percent, status, deliveredBolusAmount)
 
         if (result == 1) {
             diaconnG8Pump.bolusStopped = true // 주입 중 취소 처리!
@@ -49,7 +54,7 @@ class InjectionSnackResultReportPacket(injector: HasAndroidInjector) : DiaconnG8
         aapsLogger.debug(LTag.PUMPCOMM, "bolusAmountToBeDelivered --> $bolusAmountToBeDelivered")
         aapsLogger.debug(LTag.PUMPCOMM, "lastBolusAmount --> ${diaconnG8Pump.lastBolusAmount}")
         aapsLogger.debug(LTag.PUMPCOMM, "lastBolusTime --> ${diaconnG8Pump.lastBolusTime}")
-        aapsLogger.debug(LTag.PUMPCOMM, "delivered --> ${BolusProgressData.delivered}")
+        aapsLogger.debug(LTag.PUMPCOMM, "delivered --> ${bolusProgressData.state.value?.delivered ?: 0.0}")
         aapsLogger.debug(LTag.PUMPCOMM, "bolusDone --> ${diaconnG8Pump.bolusDone}")
     }
 
