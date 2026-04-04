@@ -187,7 +187,6 @@ class BLEComm @Inject internal constructor(
         } else {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Not connected, closing gatt")
             close()
-            isConnected = false
             mCallback?.onBLEDisconnected()
         }
     }
@@ -198,6 +197,8 @@ class BLEComm @Inject internal constructor(
         mBluetoothGatt?.close()
         SystemClock.sleep(100)
         mBluetoothGatt = null
+        isConnected = false
+        isConnecting = false
     }
 
     /** Scan callback  */
@@ -390,8 +391,6 @@ class BLEComm @Inject internal constructor(
             // CLosing asynchronously to avoid deadlocks or silent failures in the Android BLE callback thread during disconnect.
             handler.post {
                 close()
-                isConnected = false
-                isConnecting = false
                 mCallback?.onBLEDisconnected()
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
             }
