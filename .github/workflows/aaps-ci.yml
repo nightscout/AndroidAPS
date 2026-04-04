@@ -117,7 +117,7 @@ jobs:
 
       - name: Decode GDrive OAuth2 secrets
         run: |
-          echo "🔐 Decoding GDRIVE_OAUTH2..."
+          echo "🔐 Decoding dummy..."
           DECODED=$(echo "${{ secrets.GDRIVE_OAUTH2 }}" | base64 -d)
           
           GDRIVE_CLIENT_ID=$(echo "$DECODED" | cut -d'|' -f1)
