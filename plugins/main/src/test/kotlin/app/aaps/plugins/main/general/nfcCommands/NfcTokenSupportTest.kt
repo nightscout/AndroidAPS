@@ -162,6 +162,12 @@ class NfcTokenSupportTest {
     }
 
     @Test
+    fun `tagUidHex returns lowercase hex and null for null input`() {
+        assertThat(NfcTokenSupport.tagUidHex(byteArrayOf(0x0A, 0x1B, 0x2C))).isEqualTo("0a1b2c")
+        assertThat(NfcTokenSupport.tagUidHex(null)).isNull()
+    }
+
+    @Test
     fun `loadCreatedTags ignores entries without commands array`() {
         val legacyJson = JSONArray()
         legacyJson.put(
@@ -174,6 +180,15 @@ class NfcTokenSupportTest {
                 .put("expiresAtMillis", now + NfcTokenSupport.ONE_YEAR_MILLIS),
         )
         prefs.edit().putString("nfccommunicator_created_tags_v1", legacyJson.toString()).apply()
+
+        val tags = NfcTokenSupport.loadCreatedTags(prefs)
+
+        assertThat(tags).isEmpty()
+    }
+
+    @Test
+    fun `loadCreatedTags returns empty list for malformed json`() {
+        prefs.edit().putString("nfccommunicator_created_tags_v1", "{not-valid-json").apply()
 
         val tags = NfcTokenSupport.loadCreatedTags(prefs)
 
@@ -267,6 +282,31 @@ class NfcTokenSupportTest {
         val blacklisted = NfcTokenSupport.loadBlacklistedTokens(prefs, now)
         assertThat(blacklisted).hasSize(1)
         assertThat(blacklisted.first().tokenId).isEqualTo("bl-id")
+    }
+
+    @Test
+    fun `saveCreatedTag replaces existing tag with same id`() {
+        val original = makeTag(id = "same-id")
+        val updated = original.copy(name = "Updated Name", token = "new.token")
+        NfcTokenSupport.saveCreatedTag(prefs, original)
+
+        NfcTokenSupport.saveCreatedTag(prefs, updated)
+
+        val tags = NfcTokenSupport.loadCreatedTags(prefs)
+        assertThat(tags).hasSize(1)
+        assertThat(tags.first().id).isEqualTo("same-id")
+        assertThat(tags.first().name).isEqualTo("Updated Name")
+        assertThat(tags.first().token).isEqualTo("new.token")
+    }
+
+    @Test
+    fun `clearBlacklist removes all entries`() {
+        NfcTokenSupport.blacklistTag(prefs, makeTag(id = "a"))
+        NfcTokenSupport.blacklistTag(prefs, makeTag(id = "b"))
+
+        NfcTokenSupport.clearBlacklist(prefs)
+
+        assertThat(NfcTokenSupport.loadBlacklistedTokens(prefs, now)).isEmpty()
     }
 
     // ── log tests ─────────────────────────────────────────────────────────────
@@ -385,5 +425,103 @@ class NfcTokenSupportTest {
         val result = NfcTokenSupport.verifyToken(secret, issued.token, now + 1_000L, tagUid = "aabbccdd")
 
         assertThat(result).isInstanceOf(NfcTokenVerificationResult.Success::class.java)
+    }
+
+    @Test
+    fun `verifyToken rejects malformed payload base64`() {
+        val issued = NfcTokenSupport.issueToken(secret, listOf("LOOP STOP"), now, tagUid = tagUid)
+        val header = issued.token.split(".")[0]
+        val malformedPayload = "%%%25"
+        val signingInput = "$header.$malformedPayload"
+        val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+        mac.init(javax.crypto.spec.SecretKeySpec(secret, "HmacSHA256"))
+        val sig =
+            Base64
+                .getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(mac.doFinal(signingInput.toByteArray()))
+        val malformed = "$signingInput.$sig"
+
+        val result = NfcTokenSupport.verifyToken(secret, malformed, now + 1_000L, tagUid = tagUid)
+
+        assertThat(result).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
+        result as NfcTokenVerificationResult.Failure
+        assertThat(result.reason).isEqualTo("Malformed payload")
+    }
+
+    @Test
+    fun `verifyToken rejects malformed payload json`() {
+        val issued = NfcTokenSupport.issueToken(secret, listOf("LOOP STOP"), now, tagUid = tagUid)
+        val header = issued.token.split(".")[0]
+        val malformedPayload =
+            Base64
+                .getUrlEncoder()
+                .withoutPadding()
+                .encodeToString("not-json".toByteArray())
+        val signingInput = "$header.$malformedPayload"
+        val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+        mac.init(javax.crypto.spec.SecretKeySpec(secret, "HmacSHA256"))
+        val sig =
+            Base64
+                .getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(mac.doFinal(signingInput.toByteArray()))
+        val malformed = "$signingInput.$sig"
+
+        val result = NfcTokenSupport.verifyToken(secret, malformed, now + 1_000L, tagUid = tagUid)
+
+        assertThat(result).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
+        result as NfcTokenVerificationResult.Failure
+        assertThat(result.reason).isEqualTo("Malformed payload")
+    }
+
+    @Test
+    fun `verifyToken rejects token with blank jti`() {
+        val headerJson = JSONObject().put("alg", "HS256").put("typ", "JWT")
+        val payloadJson =
+            JSONObject()
+                .put("jti", "")
+                .put("cmds", JSONArray().put("LOOP STOP"))
+                .put("iat", now / 1000L)
+                .put("exp", (now + 10_000L) / 1000L)
+                .put("tid", tagUid)
+        val header = Base64.getUrlEncoder().withoutPadding().encodeToString(headerJson.toString().toByteArray())
+        val payload = Base64.getUrlEncoder().withoutPadding().encodeToString(payloadJson.toString().toByteArray())
+        val signingInput = "$header.$payload"
+        val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+        mac.init(javax.crypto.spec.SecretKeySpec(secret, "HmacSHA256"))
+        val sig = Base64.getUrlEncoder().withoutPadding().encodeToString(mac.doFinal(signingInput.toByteArray()))
+        val token = "$signingInput.$sig"
+
+        val result = NfcTokenSupport.verifyToken(secret, token, now + 1_000L, tagUid = tagUid)
+
+        assertThat(result).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
+        result as NfcTokenVerificationResult.Failure
+        assertThat(result.reason).isEqualTo("Missing token claims")
+    }
+
+    @Test
+    fun `verifyToken rejects token with empty commands array`() {
+        val headerJson = JSONObject().put("alg", "HS256").put("typ", "JWT")
+        val payloadJson =
+            JSONObject()
+                .put("jti", "token-id")
+                .put("cmds", JSONArray())
+                .put("iat", now / 1000L)
+                .put("exp", (now + 10_000L) / 1000L)
+                .put("tid", tagUid)
+        val header = Base64.getUrlEncoder().withoutPadding().encodeToString(headerJson.toString().toByteArray())
+        val payload = Base64.getUrlEncoder().withoutPadding().encodeToString(payloadJson.toString().toByteArray())
+        val signingInput = "$header.$payload"
+        val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+        mac.init(javax.crypto.spec.SecretKeySpec(secret, "HmacSHA256"))
+        val sig = Base64.getUrlEncoder().withoutPadding().encodeToString(mac.doFinal(signingInput.toByteArray()))
+        val token = "$signingInput.$sig"
+
+        val result = NfcTokenSupport.verifyToken(secret, token, now + 1_000L, tagUid = tagUid)
+
+        assertThat(result).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
+        result as NfcTokenVerificationResult.Failure
+        assertThat(result.reason).isEqualTo("Missing token claims")
     }
 }
