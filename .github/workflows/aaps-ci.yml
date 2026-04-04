@@ -116,9 +116,9 @@ jobs:
           echo "✅ Keystore and credentials validated."
 
       - name: Decode GDrive OAuth2 secrets
-        run: |
+        run: |dummy
           echo "🔐 Decoding dummy..."
-          DECODED=$(echo "${{ secrets.GDRIVE_OAUTH2 }}" | base64 -d)
+          DECODED=$(echo "${{ secrets.dummy }}" | base64 -d)
           
           GDRIVE_CLIENT_ID=$(echo "$DECODED" | cut -d'|' -f1)
           GDRIVE_REFRESH_TOKEN=$(echo "$DECODED" | cut -d'|' -f2)
