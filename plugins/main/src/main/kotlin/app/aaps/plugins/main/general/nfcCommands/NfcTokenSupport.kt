@@ -259,20 +259,14 @@ object NfcTokenSupport {
         val tokenId = payload.optString("jti")
         val issuedAtMillis = payload.optLong("iat") * 1000L
         val expiresAtMillis = payload.optLong("exp") * 1000L
-
-        // Decode commands: try "cmds" (JSONArray) first, fall back to "cmd" (String) for legacy tokens
+        val claimedUid = payload.optString("tid").takeIf { it.isNotEmpty() }
         val cmdsArray = payload.optJSONArray("cmds")
-        val commands: List<String>
-        if (cmdsArray != null && cmdsArray.length() > 0) {
-            commands = (0 until cmdsArray.length()).map { cmdsArray.optString(it) }.filter { it.isNotBlank() }
-            if (commands.isEmpty()) return NfcTokenVerificationResult.Failure("Missing token claims")
-        } else {
-            val cmd = payload.optString("cmd")
-            if (cmd.isBlank()) return NfcTokenVerificationResult.Failure("Missing token claims")
-            commands = listOf(cmd)
-        }
+        val commands =
+            cmdsArray
+                ?.let { array -> (0 until array.length()).map { array.optString(it) }.filter { it.isNotBlank() } }
+                .orEmpty()
 
-        if (tokenId.isBlank() || expiresAtMillis == 0L) {
+        if (tokenId.isBlank() || expiresAtMillis == 0L || claimedUid == null || commands.isEmpty()) {
             return NfcTokenVerificationResult.Failure("Missing token claims")
         }
         if (issuedAtMillis == 0L || issuedAtMillis > expiresAtMillis) {
@@ -281,14 +275,8 @@ object NfcTokenSupport {
         if (nowMillis >= expiresAtMillis) {
             return NfcTokenVerificationResult.Failure("Token expired")
         }
-
-        // UID binding: if the token carries a tid claim the physical tag UID must match.
-        // Tokens written without a tid claim (legacy) pass through unconditionally.
-        val claimedUid = payload.optString("tid").takeIf { it.isNotEmpty() }
-        if (claimedUid != null) {
-            if (tagUid == null || !claimedUid.equals(tagUid, ignoreCase = true)) {
-                return NfcTokenVerificationResult.Failure("Tag UID mismatch")
-            }
+        if (tagUid == null || !claimedUid.equals(tagUid, ignoreCase = true)) {
+            return NfcTokenVerificationResult.Failure("Tag UID mismatch")
         }
 
         return NfcTokenVerificationResult.Success(
@@ -307,15 +295,9 @@ object NfcTokenSupport {
         val array = runCatching { JSONArray(raw) }.getOrElse { JSONArray() }
         for (index in 0 until array.length()) {
             val item = array.optJSONObject(index) ?: continue
-            // Check "commands" (JSONArray) first; fall back to legacy "command" (String)
             val commandsJson = item.optJSONArray("commands")
-            val commands =
-                if (commandsJson != null && commandsJson.length() > 0) {
-                    (0 until commandsJson.length()).map { commandsJson.optString(it) }
-                } else {
-                    val cmd = item.optString("command")
-                    if (cmd.isNotBlank()) listOf(cmd) else emptyList()
-                }
+            val commands = (0 until (commandsJson?.length() ?: 0)).map { commandsJson!!.optString(it) }.filter { it.isNotBlank() }
+            if (commands.isEmpty()) continue
             tags.add(
                 NfcCreatedTag(
                     id = item.optString("id"),

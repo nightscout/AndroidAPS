@@ -42,6 +42,9 @@ class NfcBuildActivityTest : TestBaseWithProfile() {
         doReturn("error").whenever(activity).buildWriteMessage(eq(false))
         doNothing().whenever(activity).persistWriteAttempt(any(), any(), any())
         doNothing().whenever(activity).persistWrittenTag(any(), any(), any())
+        doNothing().whenever(activity).showWriteResult(any())
+        doNothing().whenever(activity).postUi(any())
+        doNothing().whenever(activity).showBlankTagNameDialog(any())
     }
 
     // ── onTagDiscovered ────────────────────────────────────────────────────
@@ -69,6 +72,7 @@ class NfcBuildActivityTest : TestBaseWithProfile() {
         verify(activity).buildAndWriteNdef(any(), eq(mockIssuedToken.token))
         verify(activity).persistWriteAttempt(eq("My Tag"), eq(false), eq("error"))
         verify(activity, never()).persistWrittenTag(any(), any(), any())
+        verify(activity).postUi(any())
     }
 
     @Test
@@ -82,6 +86,7 @@ class NfcBuildActivityTest : TestBaseWithProfile() {
         verify(activity).buildAndWriteNdef(any(), eq(mockIssuedToken.token))
         verify(activity).persistWriteAttempt(eq("My Tag"), eq(true), eq("written"))
         verify(activity).persistWrittenTag(eq(mockIssuedToken), eq("My Tag"), eq(listOf("LOOP STOP")))
+        verify(activity).postUi(any())
     }
 
     @Test
@@ -93,6 +98,22 @@ class NfcBuildActivityTest : TestBaseWithProfile() {
         activity.onTagDiscovered(mock<Tag>())
 
         verify(activity).persistWriteAttempt(eq("LOOP STOP"), any(), any())
+    }
+
+    @Test
+    fun `requestWrite starts write mode immediately when tag name is present`() {
+        activity.requestWrite(listOf("LOOP STOP"), "My Tag")
+
+        verify(activity).startWriteMode(eq(listOf("LOOP STOP")), eq("My Tag"))
+        verify(activity, never()).showBlankTagNameDialog(any())
+    }
+
+    @Test
+    fun `requestWrite shows confirmation dialog when tag name is blank`() {
+        activity.requestWrite(listOf("LOOP STOP"), "   ")
+
+        verify(activity).showBlankTagNameDialog(eq(listOf("LOOP STOP")))
+        verify(activity, never()).startWriteMode(any(), any())
     }
 
     // ── disableWritingMode ─────────────────────────────────────────────────

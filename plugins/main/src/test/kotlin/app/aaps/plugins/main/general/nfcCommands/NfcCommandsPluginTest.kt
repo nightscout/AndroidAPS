@@ -40,6 +40,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var mockProfileStore: ProfileStore
 
     private val secret = "0123456789abcdef0123456789abcdef".toByteArray()
+    private val tagUid = "aabbccdd"
     private lateinit var plugin: NfcCommandsPlugin
 
     @BeforeEach
@@ -136,9 +137,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `issued token should verify until expiry`() {
         val now = 1_700_000_000_000L
-        val issued = NfcTokenSupport.issueToken(secret, "BOLUS 1.0", now)
+        val issued = NfcTokenSupport.issueToken(secret, "BOLUS 1.0", now, tagUid = tagUid)
 
-        val verified = NfcTokenSupport.verifyToken(secret, issued.token, now + 1_000L)
+        val verified = NfcTokenSupport.verifyToken(secret, issued.token, now + 1_000L, tagUid = tagUid)
 
         assertThat(verified).isInstanceOf(NfcTokenVerificationResult.Success::class.java)
         verified as NfcTokenVerificationResult.Success
@@ -149,9 +150,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `expired token should be rejected`() {
         val now = 1_700_000_000_000L
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now, tagUid = tagUid)
 
-        val verified = NfcTokenSupport.verifyToken(secret, issued.token, now + NfcTokenSupport.ONE_YEAR_MILLIS + 1L)
+        val verified = NfcTokenSupport.verifyToken(secret, issued.token, now + NfcTokenSupport.ONE_YEAR_MILLIS + 1L, tagUid = tagUid)
 
         assertThat(verified).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
         verified as NfcTokenVerificationResult.Failure
@@ -161,11 +162,11 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `tampered signature should be rejected`() {
         val now = 1_700_000_000_000L
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now, tagUid = tagUid)
         val parts = issued.token.split(".")
         val tamperedToken = "${parts[0]}.${parts[1]}.invalidsignature"
 
-        val verified = NfcTokenSupport.verifyToken(secret, tamperedToken, now + 1_000L)
+        val verified = NfcTokenSupport.verifyToken(secret, tamperedToken, now + 1_000L, tagUid = tagUid)
 
         assertThat(verified).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
     }
@@ -174,9 +175,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `token with wrong secret should be rejected`() {
         val now = 1_700_000_000_000L
         val otherSecret = "ffffffffffffffffffffffffffffffff".toByteArray()
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now, tagUid = tagUid)
 
-        val verified = NfcTokenSupport.verifyToken(otherSecret, issued.token, now + 1_000L)
+        val verified = NfcTokenSupport.verifyToken(otherSecret, issued.token, now + 1_000L, tagUid = tagUid)
 
         assertThat(verified).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
         verified as NfcTokenVerificationResult.Failure
@@ -193,13 +194,14 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `token with iat after exp should be rejected`() {
         val now = 1_700_000_000_000L
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now, tagUid = tagUid)
         val headerB64 = issued.token.split(".")[0]
         val badPayload =
             org.json
                 .JSONObject()
                 .put("jti", "test-id")
-                .put("cmd", "LOOP STOP")
+                .put("cmds", org.json.JSONArray().put("LOOP STOP"))
+                .put("tid", tagUid)
                 .put("iat", (now / 1000L) + 100_000L) // iat after exp
                 .put("exp", now / 1000L)
                 .toString()
@@ -219,41 +221,11 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 .encodeToString(mac.doFinal(signingInput.toByteArray()))
         val badToken = "$signingInput.$sig"
 
-        val verified = NfcTokenSupport.verifyToken(secret, badToken, now)
+        val verified = NfcTokenSupport.verifyToken(secret, badToken, now, tagUid = tagUid)
 
         assertThat(verified).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
         verified as NfcTokenVerificationResult.Failure
         assertThat(verified.reason).isEqualTo("Invalid token timestamps")
-    }
-
-    // ── executeToken tests ─────────────────────────────────────────────────────
-
-    @Test
-    fun `executeToken should fail when plugin is disabled`() {
-        plugin.setPluginEnabledBlocking(PluginType.GENERAL, false)
-        whenever(rh.gs(R.string.nfccommands_plugin_disabled)).thenReturn("NFC communicator is disabled")
-        val now = 1_700_000_000_000L
-        whenever(dateUtil.now()).thenReturn(now)
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
-
-        withFakePrefs { fakePrefs ->
-            NfcTokenSupport.saveCreatedTag(
-                fakePrefs,
-                NfcCreatedTag(
-                    id = issued.tokenId,
-                    name = "test",
-                    commands = listOf("LOOP STOP"),
-                    token = issued.token,
-                    createdAtMillis = now,
-                    expiresAtMillis = issued.expiresAtMillis,
-                ),
-            )
-
-            val result = plugin.executeToken(issued.token)
-
-            assertThat(result.success).isFalse()
-            assertThat(result.message).isEqualTo("NFC communicator is disabled")
-        }
     }
 
     // ── processLoop tests ──────────────────────────────────────────────────────
@@ -950,50 +922,6 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         }
     }
 
-    @Test
-    fun `executeToken returns eraseTag=true for blacklisted token`() {
-        // Use a future now so token expiry is well ahead of System.currentTimeMillis()
-        val now = System.currentTimeMillis() - 1_000L
-        whenever(dateUtil.now()).thenReturn(now)
-        whenever(rh.gs(R.string.nfccommands_tag_erased_blacklisted)).thenReturn("Tag erased")
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
-
-        withFakePrefs { fakePrefs ->
-            NfcTokenSupport.blacklistTag(
-                fakePrefs,
-                NfcCreatedTag(
-                    id = issued.tokenId,
-                    name = "test",
-                    commands = listOf("LOOP STOP"),
-                    token = issued.token,
-                    createdAtMillis = now,
-                    expiresAtMillis = issued.expiresAtMillis,
-                ),
-            )
-
-            val result = plugin.executeToken(issued.token)
-
-            assertThat(result.eraseTag).isTrue()
-            assertThat(result.success).isFalse()
-        }
-    }
-
-    @Test
-    fun `executeToken has eraseTag=false for non-blacklisted valid token`() {
-        val now = System.currentTimeMillis() - 1_000L
-        whenever(dateUtil.now()).thenReturn(now)
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
-        whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
-
-        withFakePrefs {
-            val result = plugin.executeToken(issued.token)
-
-            assertThat(result.eraseTag).isFalse()
-        }
-    }
-
     // ── executeCascade tests ───────────────────────────────────────────────────
 
     @Test
@@ -1023,25 +951,6 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         verify(commandQueue, Mockito.never()).cancelTempBasal(any(), any(), any())
     }
 
-    @Test
-    fun `executeToken delegates to executeCascade for multi-command token`() {
-        val now = System.currentTimeMillis() - 1_000L
-        whenever(dateUtil.now()).thenReturn(now)
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
-        whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
-        whenever(rh.gs(R.string.nfccommands_tempbasal_canceled)).thenReturn("Temp basal canceled")
-        val issued = NfcTokenSupport.issueToken(secret, listOf("LOOP STOP", "BASAL STOP"), now)
-
-        withFakePrefs {
-            val result = plugin.executeToken(issued.token)
-
-            assertThat(result.success).isTrue()
-            assertThat(result.message).contains("Loop disabled")
-            assertThat(result.message).contains("Temp basal canceled")
-        }
-    }
-
     // ── prepareExecution tests ─────────────────────────────────────────────────
 
     @Test
@@ -1068,19 +977,14 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `prepareExecution returns Error for expired token`() {
         val issuedAt = 1_700_000_000_000L
-        // Issue token so it expired 1 ms ago
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", issuedAt)
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", issuedAt, tagUid = tagUid)
         val now = issued.expiresAtMillis + 1L
         whenever(dateUtil.now()).thenReturn(now)
 
-        // withFakePrefs required: verifyToken(context,…) reads the JWT secret from
-        // SharedPreferences. Without it, a random secret is generated and the token
-        // fails with "Invalid token signature" rather than "Token expired".
         withFakePrefs {
-            val result = plugin.prepareExecution(issued.token)
+            val result = plugin.prepareExecution(issued.token, tagUid)
 
             assertThat(result).isInstanceOf(NfcPrepareResult.Error::class.java)
-            // Specifically "Token expired", not a signature error
             result as NfcPrepareResult.Error
             assertThat(result.message).isEqualTo("Token expired")
         }
@@ -1091,7 +995,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val now = System.currentTimeMillis() - 1_000L
         whenever(dateUtil.now()).thenReturn(now)
         whenever(rh.gs(R.string.nfccommands_tag_erased_blacklisted)).thenReturn("Tag erased")
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now, tagUid = tagUid)
 
         withFakePrefs { fakePrefs ->
             NfcTokenSupport.blacklistTag(
@@ -1106,7 +1010,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 ),
             )
 
-            val result = plugin.prepareExecution(issued.token)
+            val result = plugin.prepareExecution(issued.token, tagUid)
 
             assertThat(result).isInstanceOf(NfcPrepareResult.Error::class.java)
             result as NfcPrepareResult.Error
@@ -1117,8 +1021,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `prepareExecution returns Ready with null rewriteWith for non-expiring token in list`() {
         val issuedAt = 1_700_000_000_000L
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", issuedAt)
-        // Now is 6 months after issue — 6 months to expiry, > 30 days
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", issuedAt, tagUid = tagUid)
         val now = issuedAt + (NfcTokenSupport.ONE_YEAR_MILLIS / 2)
         whenever(dateUtil.now()).thenReturn(now)
 
@@ -1135,7 +1038,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 ),
             )
 
-            val result = plugin.prepareExecution(issued.token)
+            val result = plugin.prepareExecution(issued.token, tagUid)
 
             assertThat(result).isInstanceOf(NfcPrepareResult.Ready::class.java)
             result as NfcPrepareResult.Ready
@@ -1148,14 +1051,12 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `prepareExecution returns Ready with null rewriteWith for valid token not in list`() {
         val issuedAt = 1_700_000_000_000L
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", issuedAt)
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", issuedAt, tagUid = tagUid)
         val now = issuedAt + 1_000L
         whenever(dateUtil.now()).thenReturn(now)
 
         withFakePrefs {
-            // Empty tags list — token not found
-
-            val result = plugin.prepareExecution(issued.token)
+            val result = plugin.prepareExecution(issued.token, tagUid)
 
             assertThat(result).isInstanceOf(NfcPrepareResult.Ready::class.java)
             result as NfcPrepareResult.Ready
@@ -1167,8 +1068,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     @Test
     fun `prepareExecution returns Ready with rewriteWith for soon-expiring token in list`() {
         val issuedAt = 1_700_000_000_000L
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", issuedAt)
-        // Now is 15 days before expiry — within 30 days
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", issuedAt, tagUid = tagUid)
         val now = issued.expiresAtMillis - 15L * 24L * 60L * 60L * 1000L
         whenever(dateUtil.now()).thenReturn(now)
 
@@ -1185,7 +1085,7 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
                 ),
             )
 
-            val result = plugin.prepareExecution(issued.token)
+            val result = plugin.prepareExecution(issued.token, tagUid)
 
             assertThat(result).isInstanceOf(NfcPrepareResult.Ready::class.java)
             result as NfcPrepareResult.Ready
@@ -1193,23 +1093,18 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             assertThat(result.oldTag).isNotNull()
             assertThat(result.oldTag!!.id).isEqualTo(issued.tokenId)
             assertThat(result.commands).isEqualTo(listOf("LOOP STOP"))
-            // New token should expire ~1 year from now, not from original issue date
             assertThat(result.rewriteWith!!.expiresAtMillis)
                 .isGreaterThan(issued.expiresAtMillis)
         }
     }
 
     @Test
-    fun `executeToken does not erase expired blacklist entry`() {
+    fun `prepareExecution ignores expired blacklist entry`() {
         val now = System.currentTimeMillis() - 1_000L
         whenever(dateUtil.now()).thenReturn(now)
-        whenever(loop.allowedNextModes()).thenReturn(listOf(RM.Mode.DISABLED_LOOP))
-        whenever(loop.handleRunningModeChange(any(), any(), any(), any(), any(), any())).thenReturn(true)
-        whenever(rh.gs(R.string.nfccommands_loop_has_been_disabled)).thenReturn("Loop disabled")
-        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now)
+        val issued = NfcTokenSupport.issueToken(secret, "LOOP STOP", now, tagUid = tagUid)
 
         withFakePrefs { fakePrefs ->
-            // Expired blacklist entry: expiresAtMillis is in the past
             val expiredEntry = NfcBlacklistEntry(issued.tokenId, now - 1_000L)
             val array = org.json.JSONArray()
             array.put(
@@ -1220,9 +1115,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
             )
             fakePrefs.edit().putString("nfccommunicator_blacklisted_tokens_v1", array.toString()).apply()
 
-            val result = plugin.executeToken(issued.token)
+            val result = plugin.prepareExecution(issued.token, tagUid)
 
-            assertThat(result.eraseTag).isFalse()
+            assertThat(result).isInstanceOf(NfcPrepareResult.Ready::class.java)
         }
     }
 }
