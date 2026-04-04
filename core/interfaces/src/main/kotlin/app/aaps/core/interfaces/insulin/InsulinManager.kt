@@ -9,6 +9,11 @@ import app.aaps.core.data.model.ICfg
  */
 interface InsulinManager {
 
+    /**
+     * Provide default Insulin
+     */
+    val iCfg: ICfg
+
     /** All configured insulins */
     val insulins: ArrayList<ICfg>
 
@@ -22,7 +27,7 @@ interface InsulinManager {
     fun storeSettings()
 
     /** Add a new insulin to the list. Returns the stored copy. */
-    fun addNewInsulin(newICfg: ICfg, ue: Boolean = true): ICfg
+    fun addNewInsulin(newICfg: ICfg, ue: Boolean = true, keepName: Boolean = false): ICfg
 
     /** Remove the insulin at [currentInsulinIndex] */
     fun removeCurrentInsulin()
@@ -38,6 +43,18 @@ interface InsulinManager {
      * @param excludeIndex index to exclude for duplicated name identification (-1 for none)
      */
     fun buildFullName(nickname: String, peak: Int, dia: Double, concentration: Double, excludeIndex: Int = -1): String
+
+    /**
+     * Calculate the suffix for insulin migration.
+     */
+    fun buildSuffix(peak: Int, dia: Double, concentration: Double): String
+
+    /**
+     * Check if an iCfg already exists in the list.
+     * @param iCfg
+     * @param excludeIndex index to exclude for duplicated name identification (-1 for none)
+     */
+    fun insulinAlreadyExists(iCfg: ICfg, excludeIndex: Int = -1): Boolean
 
     /**
      * Calculate the suffix to be shown in UI (include potential index to prevent duplication names).
