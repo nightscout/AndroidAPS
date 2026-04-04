@@ -9,6 +9,7 @@
     <string name="eopatch_ble_status">Trạng thái BLE</string>
     <string name="eopatch_serial_number">Số sê-ri</string>
     <string name="eopatch_expiration_time">Thời gian hết hạn</string>
+    <string name="eopatch_not_activated">Chưa kích hoạt</string>
     <string name="eopatch_base_basal_rate">Tỷ lệ liều nền cơ bản</string>
     <string name="eopatch_temp_basal_rate">Tỷ lệ liều nền tạm thời</string>
     <string name="invalid_basal_rate">Liều nền trong Hồ sơ nhỏ hơn 0,05 U/giờ. EOPatch có đơn vị tiêm tối thiểu là 0.05 U. Vui lòng thử lại sau khi đặt cấu hình lớn hơn đơn vị tiêm tối thiểu.</string>
@@ -37,17 +38,21 @@
     <string name="patch_wake_up">Đang nạp Insulin</string>
     <string name="patch_wake_up_desc_1">Nạp insulin ở nhiệt độ phòng vào Patch mới. Kiểm tra góc của ống tiêm.</string>
     <string name="patch_wake_up_desc_2">Kiểm tra xem Patch có phát ra 1 tiếng bíp.</string>
+    <string name="patch_wake_up_pairing_info">Trong quá trình ghép nối, hai cửa sổ hệ thống Android sẽ xuất hiện. Bạn phải xác nhận cả hai để hoàn tất ghép nối Bluetooth.</string>
     <string name="patch_start_pairing">Bắt đầu ghép nối</string>
     <string name="patch_connect_new">Đang ghép đôi Patch</string>
     <string name="patch_connect_new_desc">Patch mới đang được ghép đôi.\nGiữ Patch và thiết bị thông minh ở khoảng cách gần nhất có thể</string>
     <string name="patch_remove_needle_cap">Chuẩn bị gắn Patch</string>
     <string name="patch_remove_needle_cap_desc_1">Tháo băng dính y tế, sau đó nhấn ‘Tiếp theo’.</string>
+    <string name="patch_remove_needle_cap_desc_2">Nếu kim lộ ra ngoài, nhấn ‘Hủy bỏ’.</string>
+    <string name="patch_remove_needle_cap_desc_3">Nếu Patch bị ướt hoặc bẩn, hoặc băng dính bị gập, nhấn ‘Hủy bỏ\'.</string>
     <string name="patch_remove_protection_tape">Gắn Patch</string>
     <string name="patch_remove_protection_tape_desc_1">Làm sạch và lau khô vị trí dán, sau đó gắn Patch lên da.</string>
     <string name="patch_remove_protection_tape_desc_2">Kiểm tra vị trí truyền và sau đó nhấn \'Bắt đầu kiểm tra an toàn\'.</string>
     <string name="patch_start_safety_check">Bắt đầu kiểm tra an toàn</string>
     <string name="patch_safety_check">Kiểm tra an toàn…</string>
     <string name="patch_safety_check_desc_1">Mất khoảng 30 giây.</string>
+    <string name="patch_safety_check_desc_2">Để sử dụng an toàn, không tháo cần thao tác kim cho đến khi quá trình kiểm tra an toàn hoàn tất!</string>
     <string name="patch_rotate_knob">Đang đưa kim vào</string>
     <string name="patch_rotate_knob_desc_1">Xoay cần thao tác kim hơn 100° để đưa kim vào, sau đó xoay hết cỡ để rút kim ra</string>
     <string name="patch_rotate_knob_desc_2">Kiểm tra có 1 tiếng bíp và sau đó nhấn \'Tiếp theo\'.</string>
@@ -59,6 +64,7 @@
     <string name="patch_activate_reminder_desc">Kích hoạt Patch chưa hoàn tất.\nTiếp tục.</string>
     <string name="patch_communication_check_helper_1">Đưa thiết bị thông minh lại gần Patch hơn.</string>
     <string name="patch_communication_check_helper_2">Vui lòng di chuyển đến vị trí khác và thử lại.</string>
+    <string name="patch_safety_check_failed_desc">Kiểm tra an toàn thất bại. Vui lòng thử lại.</string>
     <string name="patch_communication_failed">Lỗi giao tiếp</string>
     <string name="patch_communication_succeed">Giao tiếp thành công</string>
     <string name="patch_communication_succeed_message">Đã kết nối với Patch.</string>
@@ -77,9 +83,17 @@
     <string name="needle_insertion_error_3">Nhấn ‘Hủy bỏ’ để hủy kích hoạt Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Thời gian tạm dừng liều nền</string>
     <string name="string_resume_insulin_delivery_title">Phục hồi liều insulin</string>
+    <string name="string_resume_insulin_delivery_message">Kết thúc tạm ngừng tiêm insulin.\nNhấn \'Xác nhận\' để tiếp tục tiêm insulin.\n\n[Cảnh báo]\nViệc tiêm insulin sẽ không tiếp tục cho đến khi bạn nhấn \'Xác nhận\'.\nNếu bạn không nhấn \'Xác nhận\', bạn có thể bị tăng đường huyết.</string>
     <string name="string_suspended_insulin_delivery_message">Việc tiêm insulin đã bị tạm dừng.</string>
     <string name="string_resumed_insulin_delivery_message">Việc truyền insulin đã được tiếp tục.</string>
     <string name="string_temp_basal_remained_hhmm">thời gian còn lại: %1$s:%2$s</string>
+    <string name="string_pause_failed">Tạm dừng thất bại.</string>
     <string name="string_resume_failed">Tiếp tục thất bại.</string>
+    <string name="wizard_exit_activation_warning">Thoát trình hướng dẫn kích hoạt? Miếng dán có thể ở trạng thái chưa hoàn tất và cần miếng dán mới.</string>
+    <string name="wizard_exit_deactivation_warning">Thoát trình hướng dẫn hủy kích hoạt? Miếng dán có thể vẫn hoạt động và tiếp tục bơm insulin.</string>
+    <string name="patch_force_reset">Đặt lại ngay</string>
+    <string name="patch_force_reset_confirm">Điều này sẽ xóa trạng thái miếng dán trên thiết bị mà không gửi lệnh tới miếng dán. Chỉ sử dụng nếu hủy kích hoạt bình thường thất bại. Miếng dán sẽ tiếp tục bơm insulin cho đến khi hết pin hoặc bị tắt thủ công.</string>
     <!-- Permission rationales -->
+    <string name="permission_exact_alarm_title">Báo động chính xác</string>
+    <string name="permission_exact_alarm_description">Ứng dụng cần quyền để lập lịch báo động chính xác cho quản lý miếng dán</string>
 </resources>
