@@ -44,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Một liều nền tạm thời đang chạy trên Pod, nhưng AAPS không nhận biết được liều nền tạm thời này. Vui lòng hủy liều nền tạm thời thủ công.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Thống kê RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Đặt lại RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Đọc nhật ký Pulse</string>
     <string name="omnipod_eros_pod_management_pulse_log">Nhật ký Pulse</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Nhật ký Pulse (đã sao chép vào bộ nhớ tạm)</string>
