@@ -54,6 +54,7 @@
     <string name="retry">Thử lại</string>
     <string name="step_prepare_patch">Kích hoạt Patch</string>
     <string name="step_prepare_patch_connect">Kết nối và nạp insulin</string>
+    <string name="step_select_insulin">Chọn loại Insulin</string>
     <string name="step_prime">Mồi Bơm</string>
     <string name="step_priming">Đang mồi</string>
     <string name="step_priming_complete">Hoàn thành mồi Bơm</string>
@@ -94,14 +95,24 @@
     <string name="press_next_or_OK">Nhấn <b>ĐỒNG Ý</b> để quay về màn hình chính. Nhấn <b>Tiếp theo</b> để bắt đầu kích hoạt Patch mới.</string>
     <string name="activation_in_progress">Rất tiếc! Đã xảy ra lỗi, có vẻ như một quá trình kích hoạt khác đang diễn ra.</string>
     <string name="press_retry_or_discard">Nhấn <b>Tiếp theo</b> để tiếp tục kích hoạt hoặc <b>Bỏ qua</b> để đặt lại trạng thái kích hoạt.</string>
+    <string name="retry_activation_filled_error">Không thể tiếp tục kích hoạt. Trạng thái bơm đã bị mất. KHÔNG làm đầy lại, vì miếng dán có thể đã được gắn. Hãy bỏ miếng dán và bắt đầu kích hoạt mới.</string>
     <string name="reading_activation_status">Vui lòng chờ, đang đọc trạng thái kích hoạt từ Bơm.</string>
     <!-- settings-->
     <string name="enable_pump_unreachable_alert_summary">Cảnh báo không thể kết nối đã được buộc bật, vì Patch Medtrum có thể gặp lỗi và trở nên không thể kết nối.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Khuyến nghị đặt là 30 phút, vì Patch Medtrum có thể gặp lỗi và trở nên không thể kết nối.</string>
     <string name="sn_input_title">Số sê-ri</string>
     <string name="sn_input_invalid">Số sê-ri không hợp lệ!</string>
+    <string name="change_sn">Thay đổi</string>
     <string name="alarm_setting_title">Cài đặt cảnh báo</string>
     <string name="alarm_setting_summary">Chọn cài đặt báo động Bơm mà bạn muốn.</string>
+    <string name="alarm_setting_light_vibrate_beep">Đèn, rung và tiếng bíp</string>
+    <string name="alarm_setting_light_vibrate">Đèn và rung</string>
+    <string name="alarm_setting_light_beep">Đèn và tiếng bíp</string>
+    <string name="alarm_setting_light">Đèn</string>
+    <string name="alarm_setting_vibrate_beep">Rung và tiếng bíp</string>
+    <string name="alarm_setting_vibrate">Rung</string>
+    <string name="alarm_setting_beep">Tiếng bíp</string>
+    <string name="alarm_setting_silent">Im lặng</string>
     <string name="pump_warning_notification_title">Thông báo khi có cảnh báo từ Bơm</string>
     <string name="pump_warning_notification_summary">Hiển thị thông báo cho các cảnh báo không nghiêm trọng từ Bơm: pin yếu, lượng insulin còn ít (20 đơn vị) và sắp hết hạn. Khuyến nghị nên để bật khi báo động của Bơm được đặt ở chế độ im lặng.</string>
     <string name="pump_warning_expiry_hour_title">Cảnh báo Bơm hết hạn [giờ]</string>
