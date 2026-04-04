@@ -16,8 +16,13 @@
     <!--     Activities-->
     <string name="activity_monitor">Màn hình hoạt động</string>
     <string name="time_range">Khoảng thời gian</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Glucose Pentagon (CGP) — 14 days</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hyper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Mean</string>
     <string name="cgp_reference">Người khỏe mạnh</string>
     <string name="cgp_patient">Bệnh nhân</string>
     <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
@@ -147,6 +152,7 @@
     <string name="activate_label">Kích hoạt</string>
     <string name="activate_profile">Kích hoạt Hồ sơ</string>
     <string name="remove_label">Loại bỏ</string>
+    <string name="active_profile_indicator">ACTIVE</string>
     <string name="remaining_time_label">Còn lại</string>
     <string name="confirm_remove_profile">Xóa hồ sơ \"%1$s\"?</string>
     <string name="confirm_clone_profile">Nhân bản hồ sơ \"%1$s\"?</string>
