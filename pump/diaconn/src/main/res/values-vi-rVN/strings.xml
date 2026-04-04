@@ -128,4 +128,14 @@
     <string name="diaconn_g8_errorcode_36">Dừng liều nền tạm thời bị từ chối khi liều nền tạm thời không hoạt động</string>
     <string name="diaconn_g8_cloudsend_summary">Gửi nhật ký bơm lên Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Đông bộ Diaconn Cloud</string>
+    <string name="bolus_speed_1">1 U/phút</string>
+    <string name="bolus_speed_2">2 U/phút</string>
+    <string name="bolus_speed_3">3 U/phút</string>
+    <string name="bolus_speed_4">4 U/phút</string>
+    <string name="bolus_speed_5">5 U/phút</string>
+    <string name="bolus_speed_6">6 U/phút</string>
+    <string name="bolus_speed_7">7 U/phút</string>
+    <string name="bolus_speed_8">8 U/phút</string>
+    <string name="diaconn_pairing_successful">Ghép nối thành công!</string>
+    <string name="diaconn_pairing_successful_message">Bơm của bạn đã được kết nối và sẵn sàng sử dụng.</string>
 </resources>
