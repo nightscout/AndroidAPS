@@ -194,6 +194,14 @@ class EversensePlugin @Inject constructor(
         val calibrationAction = Preference(context)
         calibrationAction.key = "eversense_calibration_action"
         calibrationAction.title = rh.gs(R.string.eversense_calibration_action)
+        calibrationAction.summary = when {
+            state == null -> rh.gs(R.string.eversense_not_connected)
+            state.calibrationReadiness == CalibrationReadiness.TOO_SOON ->
+                "⏳ " + rh.gs(R.string.eversense_calibration_too_soon)
+            state.calibrationReadiness != CalibrationReadiness.READY -> state.calibrationReadiness.name
+            else -> ""
+        }
+        calibrationAction.isEnabled = state?.calibrationReadiness == CalibrationReadiness.READY
         calibrationAction.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             val latestState = eversense.getCurrentState()
             if (latestState?.calibrationReadiness == CalibrationReadiness.READY) {
@@ -451,3 +459,5 @@ class EversensePlugin @Inject constructor(
         }
     }
 }
+
+
