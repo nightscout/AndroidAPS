@@ -16,6 +16,13 @@
     <string name="equil_stop">Dừng lại</string>
     <string name="equil_success">Thành công</string>
     <string name="equil_title_dressing">Thay bình chứa insulin</string>
+    <string name="equil_title_assemble">Lắp ráp Bơm</string>
+    <string name="equil_title_serial">Ghép nối thiết bị</string>
+    <string name="equil_title_fill">Prime/Fill</string>
+    <string name="equil_title_attach">Gắn bơm</string>
+    <string name="equil_title_air">Mồi kim luồn(cannula)</string>
+    <string name="equil_title_unpair_detach">Tháo bơm</string>
+    <string name="equil_title_unpair_confirm">Xác nhận hủy ghép nối</string>
     <string name="equil_title_history_events">Lịch sử sự kiện</string>
     <string name="equil_tone">Âm cảnh báo</string>
     <string name="equil_tone_mode_mute">Im lặng</string>
@@ -23,6 +30,7 @@
     <string name="equil_tone_mode_tone">Chỉ âm báo</string>
     <string name="equil_tone_mode_tone_and_shake">Rung và âm báo</string>
     <string name="equil_unit_u">%1$s U</string>
+    <string name="equil_unbind_content">Thao tác này sẽ dừng việc truyền insulin và rút piston bơm về đáy! Đồng thời, nó sẽ xóa trạng thái liên kết!</string>
     <string name="equil_ble_config_confirmation_title">Ghép nối bơm Patch Equil</string>
     <string name="equil_error">Lỗi kết nối</string>
     <string name="equil_change">Thay Bơm</string>
@@ -75,6 +83,7 @@
     <string name="equil_command_connect_error">Lỗi kết nối Bơm</string>
     <string name="equil_command_connect_no_response">Không có phản hồi từ Bơm</string>
     <string name="equil_command__unknown">Không xác định được trạng thái của lệnh</string>
+    <string name="equil_install">Gắn bơm vào cơ thể</string>
     <string name="equil_settings_alarm_battery">Cảnh báo mức pin yếu</string>
     <string name="equil_settings_alarm_insulin">Cảnh báo insulin thấp</string>
     <string name="equil_init_insulin_error">Khởi tạo ống chứa insulin chưa hoàn tất</string>
@@ -124,12 +133,14 @@
         <item quantity="other">%1$d ngày</item>
     </plurals>
     <string name="equil_support_error">Phiên bản firmware quá thấp. Không được hỗ trợ</string>
+    <string name="equil_password_tips">Vui lòng đặt mật khẩu mới để ghép nối với bơm Equil v5.3. Mật khẩu này cũng sẽ được sử dụng để hủy ghép nối với bơm hiện tại trong dự kiến, vì vậy hãy chắc chắn ghi nhớ. Quy tắc mật khẩu: gồm 4 ký tự, chọn từ ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Đặt mật khẩu ghép nối</string>
     <string name="equil_hint1">Sau khi lắp bơm vào đế, hãy chọn xem có muốn đuổi khí khỏi kim tiêm lưu hay không.</string>
     <string name="equil_unbind">Hủy ghép nối thiết bị</string>
     <string name="equil_device_unpaired">Thiết bị đã hủy ghép nối</string>
     <string name="equil_assemble">Vui lòng lắp ráp bơm, ống chứa đã nạp đầy và pin đã sạc</string>
     <string name="equil_devices_number">Nhập ID bơm mới</string>
+    <string name="equil_pair_password_title">Nhập mật khẩu cho %1$s</string>
     <string name="equil_insert">Vui lòng mồi ống chứa cho đến khi có một giọt insulin xuất hiện ở đầu kim</string>
     <string name="equil_insert2">Bơm không được đặt trên đế bơm.</string>
     <string name="equil_attach">Vui lòng gắn bơm vào đế</string>
