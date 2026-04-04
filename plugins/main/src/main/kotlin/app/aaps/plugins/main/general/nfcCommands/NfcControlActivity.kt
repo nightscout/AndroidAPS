@@ -61,6 +61,7 @@ open class NfcControlActivity : Activity() {
         // Require a physical Tag object. Only the Android NFC subsystem can supply this;
         // an explicit intent crafted by another app cannot forge a real Tag instance,
         // so this check enforces that an actual NFC scan took place.
+        // getParcelableExtra(String) deprecated in API 33; type-safe overload requires API 33+, minSdk=26
         @Suppress("DEPRECATION")
         val nfcTag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
         if (nfcTag == null) {
@@ -68,6 +69,7 @@ open class NfcControlActivity : Activity() {
             return
         }
 
+        // getParcelableArrayExtra(String) deprecated in API 33; type-safe overload requires API 33+, minSdk=26
         @Suppress("DEPRECATION")
         val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES) ?: return
         if (rawMsgs.isEmpty()) return
@@ -165,6 +167,7 @@ open class NfcControlActivity : Activity() {
 
     /** Overridable in tests to avoid real NFC I/O. */
     open fun erasePhysicalTag(intent: Intent) {
+        // getParcelableExtra(String) deprecated in API 33; type-safe overload requires API 33+, minSdk=26
         @Suppress("DEPRECATION")
         val nfcTag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG) ?: return
         try {

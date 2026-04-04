@@ -44,8 +44,6 @@
     <string name="nfccommands_tab_my_tags">My Tags</string>
     <string name="nfccommands_cat_loop">Loop</string>
     <string name="nfccommands_cat_pump">Pump</string>
-    <string name="nfccommands_cat_dosing">Dosing</string>
-    <string name="nfccommands_cat_nutrition">Nutrition</string>
     <string name="nfccommands_cat_basal">Basal</string>
     <string name="nfccommands_cat_bolus">Bolus</string>
     <string name="nfccommands_cat_targets">Temp Targets</string>
