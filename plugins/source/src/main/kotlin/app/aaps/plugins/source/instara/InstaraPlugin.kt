@@ -1,7 +1,6 @@
 package app.aaps.plugins.source.instara
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
@@ -41,7 +40,7 @@ import app.aaps.core.ui.R as CoreUiR
 
 @Singleton
 class InstaraPlugin @Inject constructor(
-    private val application: Application,
+    private val context: Context,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     preferences: Preferences,
@@ -58,7 +57,7 @@ class InstaraPlugin @Inject constructor(
     aapsLogger, rh, preferences, config
 ), BgSource {
 
-    private fun appContext(): Context = application.applicationContext
+    private fun appContext(): Context = context
 
     // Preference Settings
     override fun addPreferenceScreen(
@@ -337,8 +336,6 @@ class InstaraPlugin @Inject constructor(
 
                 // Upstream changed this to suspend; call directly and catch exceptions.
                 persistenceLayer.insertCgmSourceData(Sources.Instara, glucoseValues, emptyList(), null)
-                // UPDATED: txResult no longer exists (upstream suspend call). If we reached here, insert succeeded.
-                val insertOk = true
 
                 // Persist latest-device-only meta JSON if we saw a valid mark seed.
                 if (latestDevicePrefix != null && latestDeviceStartWithMark != null && latestDeviceMark != null) {
@@ -353,7 +350,7 @@ class InstaraPlugin @Inject constructor(
                 }
 
                 // Refresh overview only when we received at least one recent record
-                if (insertOk && hasRecentInBatch) {
+                if (hasRecentInBatch) {
                     rxBus.send(EventRefreshOverview(from = "Instara", now = true))
                 }
 

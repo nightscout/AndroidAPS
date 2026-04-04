@@ -31,17 +31,30 @@ class InstaraStaleCheckWorker(
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var preferences: Preferences
 
+    // ADDED: guard so worker never crashes if injection fails
+    private var injectedOk: Boolean = false
+
     init {
         try {
             (applicationContext as? HasAndroidInjector)
                 ?.androidInjector()
                 ?.inject(this)
+            // ADDED: mark injection success only if no exception
+            injectedOk = true
         } catch (t: Throwable) {
+            injectedOk = false
             Log.e("InstaraStaleCheckWorker", "Injection failed", t)
         }
     }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+        // ADDED: if injection failed, do NOT touch lateinit fields; reschedule and exit safely
+        if (!injectedOk) {
+            Log.e("InstaraStaleCheckWorker", "Skipping run because injection failed; will reschedule.")
+            scheduleNext(applicationContext)
+            return@withContext Result.success()
+        }
+
         val enabledNow = preferences.get(BooleanKey.InstaraHistoryRequestEnabled)
         val now = System.currentTimeMillis()
 
@@ -212,6 +225,7 @@ class InstaraStaleCheckWorker(
         )
 
         val nextAt = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(REPEAT_INTERVAL_MINUTES)
+        // NOTE: if injection failed, aapsLogger may not exist; but scheduleNext() is only called after injectedOk check
         aapsLogger.debug(LTag.CORE, "Instara check RESCHEDULE -> unique=$UNIQUE_NAME delayMin=$REPEAT_INTERVAL_MINUTES nextAt=$nextAt")
     }
 
