@@ -8,8 +8,8 @@ import com.nightscout.eversense.packets.EversensePacket
 import com.nightscout.eversense.packets.e3.util.EversenseE3Parser
 
 @EversensePacket(
-    requestId = EversenseE3Packets.ReadTwoByteSerialFlashRegisterCommandId,
-    responseId = EversenseE3Packets.ReadTwoByteSerialFlashRegisterResponseId,
+    requestId = EversenseE3Packets.ReadSingleByteSerialFlashRegisterCommandId,
+    responseId = EversenseE3Packets.ReadSingleByteSerialFlashRegisterResponseId,
     typeId = 0,
     securityType = EversenseSecurityType.None
 )

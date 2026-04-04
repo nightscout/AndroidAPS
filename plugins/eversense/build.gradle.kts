@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.ksp)
     id("kotlinx-serialization")
     id("android-module-dependencies")
+    id("test-module-dependencies")
 }
 android {
     namespace = "com.nightscout.eversense"

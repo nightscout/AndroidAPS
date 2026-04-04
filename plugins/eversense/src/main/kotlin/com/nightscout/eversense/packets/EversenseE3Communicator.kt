@@ -1,4 +1,4 @@
-﻿package com.nightscout.eversense.packets
+package com.nightscout.eversense.packets
 
 import android.content.SharedPreferences
 import android.os.Handler
@@ -133,13 +133,13 @@ class EversenseE3Communicator {
             }
         }
 
-        fun fullSync(gatt: EversenseGattCallback, preferences: SharedPreferences, watchers: List<EversenseWatcher>) {
+        fun fullSync(gatt: EversenseGattCallback, preferences: SharedPreferences, watchers: List<EversenseWatcher>, force: Boolean = false) {
             try {
                 val stateJson = preferences.getString(StorageKeys.STATE, null) ?: "{}"
                 val state = JSON.decodeFromString<EversenseState>(stateJson)
                 val fourHalfMinAgo = System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(270)
 
-                if (fourHalfMinAgo < state.lastSync) {
+                if (!force && fourHalfMinAgo < state.lastSync) {
                     EversenseLogger.warning(TAG, "State is still fresh - lastSync: ${state.lastSync}")
                     return
                 }

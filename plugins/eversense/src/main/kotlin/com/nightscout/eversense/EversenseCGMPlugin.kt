@@ -1,4 +1,4 @@
-﻿package com.nightscout.eversense
+package com.nightscout.eversense
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
@@ -234,7 +234,7 @@ class EversenseCGMPlugin {
 
     // Triggers both a full sync and a glucose read on the connected transmitter.
     // Should be called from a background thread (ioScope).
-    fun triggerFullSync() {
+    fun triggerFullSync(force: Boolean = false) {
         val gattCallback = this.gattCallback ?: run {
             EversenseLogger.error(TAG, "Cannot sync — no gattCallback available")
             return
@@ -248,7 +248,7 @@ class EversenseCGMPlugin {
             return
         }
         EversenseLogger.info(TAG, "Triggering full sync on user request")
-        EversenseE3Communicator.fullSync(gattCallback, preferences, watchers.toList())
+        EversenseE3Communicator.fullSync(gattCallback, preferences, watchers.toList(), force)
         EversenseE3Communicator.readGlucose(gattCallback, preferences, watchers.toList())
         // Update placement signal after sync
         gattCallback.readRssi()

@@ -61,6 +61,7 @@
     <string name="eversense_calibration_last">Last calibration</string>
     <string name="eversense_calibration_next">Next calibration</string>
     <string name="eversense_calibration_action">Calibrate transmitter</string>
+    <string name="eversense_calibration_too_soon">Too soon — calibration already done in the past 2 hours</string>
     <string name="eversense_use_smoothing">Use ESEL Smoothing</string>
     <!-- Credentials section for Eversense 365 DMS login -->
     <string name="eversense_not_connected">Not connected</string>

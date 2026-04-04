@@ -262,7 +262,7 @@ class EversensePlugin @Inject constructor(
             if (!eversense.isConnected()) {
                 aapsLogger.warn(LTag.BGSOURCE, "Cannot trigger sync — not connected")
             } else {
-                eversense.triggerFullSync()
+                eversense.triggerFullSync(force = true)
             }
             true
         }
