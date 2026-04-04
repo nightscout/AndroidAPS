@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -134,10 +135,13 @@ class GraphViewModel @Inject constructor(
 
     init {
         // Update chart config when high/low mark preferences change
+        // drop(1) skips the initial emission (already set in field initializer)
         preferences.observe(UnitDoubleKey.OverviewHighMark)
+            .drop(1)
             .onEach { highMark -> chartConfigFlow.update { it.copy(highMark = highMark) } }
             .launchIn(viewModelScope)
         preferences.observe(UnitDoubleKey.OverviewLowMark)
+            .drop(1)
             .onEach { lowMark -> chartConfigFlow.update { it.copy(lowMark = lowMark) } }
             .launchIn(viewModelScope)
     }
@@ -150,6 +154,7 @@ class GraphViewModel @Inject constructor(
     // Secondary graph flows
     val iobGraphFlow = cache.iobGraphFlow
     val cobGraphFlow = cache.cobGraphFlow
+    val activityGraphFlow = cache.activityGraphFlow
     val treatmentGraphFlow = cache.treatmentGraphFlow
     val epsGraphFlow = cache.epsGraphFlow
     val basalGraphFlow = cache.basalGraphFlow

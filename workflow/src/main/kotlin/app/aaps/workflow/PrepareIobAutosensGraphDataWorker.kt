@@ -459,7 +459,8 @@ class PrepareIobAutosensGraphDataWorker(
         overviewDataCache.updateActivityGraph(
             ActivityGraphData(
                 activity = activityListCompose,
-                activityPrediction = activityPredictionListCompose
+                activityPrediction = activityPredictionListCompose,
+                maxActivity = data.overviewData.maxIAValue
             )
         )
         overviewDataCache.updateBgiGraph(

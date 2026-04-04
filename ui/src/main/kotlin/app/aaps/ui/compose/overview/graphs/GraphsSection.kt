@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -82,6 +83,9 @@ fun GraphsSection(
         initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES)
     )
 
+    // Collect nowTimestamp ONCE so all 4 graphs use the same value (avoids 4 separate recompositions every 30s)
+    val nowTimestamp by graphViewModel.nowTimestamp.collectAsStateWithLifecycle()
+
     // Collect time range ONCE so all graphs use the exact same values in the same frame.
     // Without this, each graph independently collects derivedTimeRange via
     // collectAsStateWithLifecycle(), which can recompose in different frames —
@@ -99,11 +103,15 @@ fun GraphsSection(
         initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES)
     )
 
+    // Flag to prevent drift-correction from firing during an active sync
+    var isSyncing by remember { mutableStateOf(false) }
+
     // Observe BG graph scroll/zoom and sync to belt/IOB/COB graphs
     LaunchedEffect(bgScrollState, bgZoomState, beltScrollState, beltZoomState, iobScrollState, iobZoomState, cobScrollState, cobZoomState) {
         snapshotFlow { bgScrollState.value to bgZoomState.value }
             .debounce(30) // Wait for gesture to settle
             .collect { (scroll, zoom) ->
+                isSyncing = true
                 // Sync zoom first, then scroll (order matters for proper positioning)
                 beltZoomState.zoom(Zoom.fixed(zoom))
                 iobZoomState.zoom(Zoom.fixed(zoom))
@@ -112,6 +120,7 @@ fun GraphsSection(
                 beltScrollState.scroll(Scroll.Absolute.pixels(scroll))
                 iobScrollState.scroll(Scroll.Absolute.pixels(scroll))
                 cobScrollState.scroll(Scroll.Absolute.pixels(scroll))
+                isSyncing = false
             }
     }
 
@@ -130,6 +139,7 @@ fun GraphsSection(
 
     // Correct secondary graph scroll drift — Vico may internally adjust scroll
     // when model producers fire. Watch for any divergence and re-sync to BG.
+    // Skips when isSyncing is true to avoid feedback loop with primary sync above.
     LaunchedEffect(Unit) {
         snapshotFlow {
             Triple(
@@ -140,6 +150,7 @@ fun GraphsSection(
         }
             .debounce(100) // Let Vico settle after model update
             .collect { (belt, iob, cob) ->
+                if (isSyncing) return@collect
                 val bgScroll = bgScrollState.value
                 val bgZoom = bgZoomState.value
                 val threshold = 1f
@@ -151,6 +162,7 @@ fun GraphsSection(
                         abs(iob.second - bgZoom) > 0.001f ||
                         abs(cob.second - bgZoom) > 0.001f
                 if (needsSync) {
+                    isSyncing = true
                     beltZoomState.zoom(Zoom.fixed(bgZoom))
                     iobZoomState.zoom(Zoom.fixed(bgZoom))
                     cobZoomState.zoom(Zoom.fixed(bgZoom))
@@ -158,6 +170,7 @@ fun GraphsSection(
                     beltScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
                     iobScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
                     cobScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
+                    isSyncing = false
                 }
             }
     }
@@ -173,6 +186,7 @@ fun GraphsSection(
             scrollState = beltScrollState,
             zoomState = beltZoomState,
             derivedTimeRange = derivedTimeRange,
+            nowTimestamp = nowTimestamp,
             modifier = Modifier.fillMaxWidth()
         )
         // BG Graph - primary interactive graph
@@ -181,6 +195,7 @@ fun GraphsSection(
             scrollState = bgScrollState,
             zoomState = bgZoomState,
             derivedTimeRange = derivedTimeRange,
+            nowTimestamp = nowTimestamp,
             modifier = Modifier
                 .fillMaxWidth()
                 .offset(y = (-16).dp)
@@ -192,6 +207,7 @@ fun GraphsSection(
                 scrollState = iobScrollState,
                 zoomState = iobZoomState,
                 derivedTimeRange = derivedTimeRange,
+                nowTimestamp = nowTimestamp,
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
@@ -210,6 +226,7 @@ fun GraphsSection(
                 scrollState = cobScrollState,
                 zoomState = cobZoomState,
                 derivedTimeRange = derivedTimeRange,
+                nowTimestamp = nowTimestamp,
                 modifier = Modifier.fillMaxWidth()
             )
             Text(

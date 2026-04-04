@@ -42,6 +42,8 @@ data class ElementColors(
     val treatments: Color,
     val statistics: Color,
     val navigation: Color,          // history browser, setup wizard, maintenance, configuration
+    // Graph overlay colors (no ElementType)
+    val activity: Color,
     // Running mode belt graph background colors (no ElementType)
     val loopClosed: Color,
     val loopOpened: Color,
@@ -89,6 +91,8 @@ internal val LightElementColors = ElementColors(
     treatments = Color(0xFF00897B),       // teal 600
     statistics = Color(0xFF5C6BC0),       // indigo 400
     navigation = Color(0xFF607D8B),       // blue-grey 500
+    // Graph overlay colors
+    activity = Color(0xFFD3F166),         // activity — yellow-green
     // Running mode belt graph background colors
     loopClosed = Color(0xFF4CAF50),       // green — normal operating state
     loopOpened = Color(0xFF4983D7),       // blue
@@ -136,6 +140,8 @@ internal val DarkElementColors = ElementColors(
     treatments = Color(0xFF26A69A),       // teal 400 (night)
     statistics = Color(0xFF7986CB),       // indigo 300 (night)
     navigation = Color(0xFF90A4AE),       // blue-grey 300 (night)
+    // Graph overlay colors
+    activity = Color(0xFFD3F166),         // activity — yellow-green
     // Running mode belt graph background colors
     loopClosed = Color(0xFF4CAF50),       // green — normal operating state
     loopOpened = Color(0xFF4983D7),       // blue
