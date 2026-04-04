@@ -130,9 +130,6 @@ fun GraphsSection(
         graphConfig.secondaryGraphs.size.coerceAtMost(GraphConfig.MAX_SECONDARY_GRAPHS)
     )
 
-    // Flag to prevent drift-correction from firing during an active sync
-    var isSyncing by remember { mutableStateOf(false) }
-
     // All secondary scroll/zoom states in arrays for indexed access (keyed to rebuild if state identity changes)
     val secScrollStates = remember(sec0scroll, sec1scroll, sec2scroll, sec3scroll, sec4scroll) {
         arrayOf(sec0scroll, sec1scroll, sec2scroll, sec3scroll, sec4scroll)
@@ -152,7 +149,6 @@ fun GraphsSection(
         snapshotFlow { bgScrollState.value to bgZoomState.value }
             .debounce(30) // Wait for gesture to settle
             .collect { (scroll, zoom) ->
-                isSyncing = true
                 val count = activeCount
                 // Sync zoom first, then scroll (order matters for proper positioning)
                 beltZoomState.zoom(Zoom.fixed(zoom))
@@ -160,27 +156,35 @@ fun GraphsSection(
                 delay(10)
                 beltScrollState.scroll(Scroll.Absolute.pixels(scroll))
                 for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(scroll))
-                isSyncing = false
             }
     }
 
-    // Auto-scroll to end when new BG value arrives
+    // Auto-scroll when new BG value arrives
     val bgInfoState by graphViewModel.bgInfoState.collectAsStateWithLifecycle()
+    val predictions by graphViewModel.predictionsFlow.collectAsStateWithLifecycle()
     var lastBgTimestamp by remember { mutableLongStateOf(0L) }
 
     LaunchedEffect(bgInfoState.bgInfo?.timestamp) {
         val newTimestamp = bgInfoState.bgInfo?.timestamp ?: return@LaunchedEffect
         if (lastBgTimestamp != 0L && newTimestamp > lastBgTimestamp) {
-            // New BG arrived - scroll all graphs to show latest data
-            bgScrollState.scroll(Scroll.Absolute.End)
+            val timeRange = derivedTimeRange
+            if (predictions.isNotEmpty() && timeRange != null) {
+                // Scroll so "now + 2h" is at the right edge of viewport
+                val (minTimestamp, _) = timeRange
+                val nowX = timestampToX(System.currentTimeMillis(), minTimestamp)
+                bgScrollState.animateScroll(Scroll.Absolute.x(nowX + 120.0, bias = 1f))
+            } else {
+                // No predictions - scroll to end
+                bgScrollState.animateScroll(Scroll.Absolute.End)
+            }
         }
         lastBgTimestamp = newTimestamp
     }
 
     // Correct secondary graph scroll drift — Vico may internally adjust scroll
     // when model producers fire. Watch for any divergence and re-sync to BG.
-    // Skips when isSyncing is true to avoid feedback loop with primary sync above.
-    // Key is Unit — runs once for composable lifetime (identical to original pattern)
+    // No isSyncing guard needed: primary sync only reads BG state, so writing to
+    // secondary states here cannot trigger primary sync (no feedback loop).
     LaunchedEffect(Unit) {
         snapshotFlow {
             // Only read states that are attached to a chart (belt + active secondary)
@@ -194,7 +198,6 @@ fun GraphsSection(
         }
             .debounce(100) // Let Vico settle after model update
             .collect { states ->
-                if (isSyncing) return@collect
                 val bgScroll = bgScrollState.value
                 val bgZoom = bgZoomState.value
                 val threshold = 1f
@@ -202,14 +205,12 @@ fun GraphsSection(
                     abs(scroll - bgScroll) > threshold || abs(zoom - bgZoom) > 0.001f
                 }
                 if (needsSync) {
-                    isSyncing = true
                     val count = activeCount
                     beltZoomState.zoom(Zoom.fixed(bgZoom))
                     for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(bgZoom))
                     delay(10)
                     beltScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
                     for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(bgScroll))
-                    isSyncing = false
                 }
             }
     }
