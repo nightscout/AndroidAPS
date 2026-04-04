@@ -1,30 +1,51 @@
 package app.aaps.ui.compose.overview.graphs
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.SeriesType
 import com.patrykandpatrick.vico.compose.cartesian.Scroll
-import com.patrykandpatrick.vico.compose.cartesian.VicoScrollState
-import com.patrykandpatrick.vico.compose.cartesian.VicoZoomState
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
@@ -220,12 +241,13 @@ fun GraphsSection(
                 .offset(y = (-16).dp)
         )
         // Secondary graphs — config-driven
+        var editingGraphIndex by remember { mutableIntStateOf(-1) }
         for (i in 0 until activeCount) {
-            val seriesSet = graphConfig.secondaryGraphs[i]
+            val seriesList = graphConfig.secondaryGraphs[i]
             Box(modifier = Modifier.offset(y = (-8).dp)) {
                 SecondaryGraphCompose(
                     viewModel = graphViewModel,
-                    seriesTypes = seriesSet,
+                    seriesTypes = seriesList,
                     scrollState = secScrollStates[i],
                     zoomState = secZoomStates[i],
                     derivedTimeRange = derivedTimeRange,
@@ -233,15 +255,94 @@ fun GraphsSection(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(
-                    text = seriesSetLabel(seriesSet),
+                    text = seriesListLabel(seriesList),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .padding(start = 36.dp, top = 2.dp)
                 )
+                GraphEditButton(
+                    onClick = { editingGraphIndex = i },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 4.dp, top = 2.dp)
+                )
             }
         }
+        if (editingGraphIndex >= 0 && editingGraphIndex < activeCount) {
+            GraphSeriesBottomSheet(
+                title = stringResource(app.aaps.core.ui.R.string.graph_number, editingGraphIndex + 1),
+                selectedSeries = graphConfig.secondaryGraphs[editingGraphIndex],
+                availableSeries = SeriesType.entries,
+                onToggle = { type ->
+                    val graphs = graphConfig.secondaryGraphs.toMutableList()
+                    val current = graphs[editingGraphIndex].toMutableList()
+                    if (type in current) {
+                        current.remove(type)
+                    } else {
+                        current.add(type)
+                        if (current.size > 2) current.removeAt(0) // FIFO: drop oldest
+                    }
+                    if (current.isEmpty()) {
+                        // Auto-remove graph when all series deselected
+                        graphs.removeAt(editingGraphIndex)
+                        editingGraphIndex = -1
+                    } else {
+                        graphs[editingGraphIndex] = current
+                    }
+                    graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
+                },
+                onRemoveGraph = {
+                    val graphs = graphConfig.secondaryGraphs.toMutableList()
+                    graphs.removeAt(editingGraphIndex)
+                    editingGraphIndex = -1
+                    graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
+                },
+                onDismiss = { editingGraphIndex = -1 }
+            )
+        }
+        // Add graph button
+        if (activeCount < GraphConfig.MAX_SECONDARY_GRAPHS) {
+            var showAddSheet by remember { mutableStateOf(false) }
+            TextButton(
+                onClick = { showAddSheet = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text(stringResource(app.aaps.core.ui.R.string.graph_add), style = MaterialTheme.typography.labelMedium)
+            }
+            if (showAddSheet) {
+                var newGraphSeries by remember { mutableStateOf(emptyList<SeriesType>()) }
+                GraphSeriesBottomSheet(
+                    title = stringResource(app.aaps.core.ui.R.string.graph_new),
+                    selectedSeries = newGraphSeries,
+                    availableSeries = SeriesType.entries,
+                    onToggle = { type ->
+                        val current = newGraphSeries.toMutableList()
+                        if (type in current) {
+                            current.remove(type)
+                        } else {
+                            current.add(type)
+                            if (current.size > 2) current.removeAt(0)
+                        }
+                        newGraphSeries = current
+                    },
+                    onDismiss = {
+                        if (newGraphSeries.isNotEmpty()) {
+                            val graphs = graphConfig.secondaryGraphs.toMutableList()
+                            graphs.add(newGraphSeries)
+                            graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
+                        }
+                        newGraphSeries = emptyList()
+                        showAddSheet = false
+                    }
+                )
+            }
+        }
+        // Spacer so the last graph / Add button isn't covered by QuickLaunch toolbar
+        Spacer(Modifier.height(48.dp))
     }
 }
 
@@ -250,19 +351,108 @@ fun GraphsSection(
 // =========================================================================
 
 /** Generate a short label from the series types in a graph (e.g., "IOB", "COB", "BGI / DEV") */
-private fun seriesSetLabel(seriesSet: Set<SeriesType>): String {
-    return seriesSet.joinToString(" / ") { seriesShortName(it) }
+@Composable
+private fun seriesListLabel(seriesList: List<SeriesType>): String {
+    val names = seriesList.map { stringResource(seriesShortNameId(it)) }
+    return names.joinToString(" / ")
 }
 
-private fun seriesShortName(type: SeriesType): String = when (type) {
-    SeriesType.IOB             -> "IOB"
-    SeriesType.ABS_IOB         -> "ABS"
-    SeriesType.COB             -> "COB"
-    SeriesType.BGI             -> "BGI"
-    SeriesType.DEVIATIONS      -> "DEV"
-    SeriesType.SENSITIVITY     -> "SEN"
-    SeriesType.VAR_SENSITIVITY -> "VSENS"
-    SeriesType.DEV_SLOPE       -> "SLOPE"
-    SeriesType.HEART_RATE      -> "HR"
-    SeriesType.STEPS           -> "STEPS"
+/** String resource ID for the short name of a series type */
+private fun seriesShortNameId(type: SeriesType): Int = when (type) {
+    SeriesType.IOB             -> app.aaps.core.ui.R.string.iob
+    SeriesType.ABS_IOB         -> app.aaps.core.ui.R.string.abs_insulin_shortname
+    SeriesType.COB             -> app.aaps.core.ui.R.string.cob
+    SeriesType.BGI             -> app.aaps.core.ui.R.string.bgi_shortname
+    SeriesType.DEVIATIONS      -> app.aaps.core.ui.R.string.deviation_shortname
+    SeriesType.SENSITIVITY     -> app.aaps.core.ui.R.string.sensitivity_shortname
+    SeriesType.VAR_SENSITIVITY -> app.aaps.core.ui.R.string.variable_sensitivity_shortname
+    SeriesType.DEV_SLOPE       -> app.aaps.core.ui.R.string.devslope_shortname
+    SeriesType.HEART_RATE      -> app.aaps.core.ui.R.string.heartRate_shortname
+    SeriesType.STEPS           -> app.aaps.core.ui.R.string.steps_shortname
+    SeriesType.ACTIVITY        -> app.aaps.core.ui.R.string.activity_shortname
+}
+
+// =========================================================================
+// Graph edit button + series picker bottom sheet
+// =========================================================================
+
+/** Small pencil icon button overlaid on a graph */
+@Composable
+private fun GraphEditButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier.size(28.dp),
+        colors = IconButtonDefaults.iconButtonColors(
+            contentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Edit,
+            contentDescription = null,
+            modifier = Modifier.size(16.dp)
+        )
+    }
+}
+
+/** Bottom sheet with toggleable FilterChips for series selection + optional remove button */
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+private fun GraphSeriesBottomSheet(
+    title: String,
+    selectedSeries: List<SeriesType>,
+    availableSeries: List<SeriesType>,
+    onToggle: (SeriesType) -> Unit,
+    onDismiss: () -> Unit,
+    onRemoveGraph: (() -> Unit)? = null
+) {
+    val sheetState = rememberModalBottomSheetState()
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                if (onRemoveGraph != null) {
+                    TextButton(onClick = onRemoveGraph) {
+                        Icon(Icons.Filled.Delete, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text(stringResource(app.aaps.core.ui.R.string.remove))
+                    }
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                for (type in availableSeries) {
+                    FilterChip(
+                        selected = type in selectedSeries,
+                        onClick = { onToggle(type) },
+                        label = { Text(stringResource(seriesShortNameId(type))) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    )
+                }
+            }
+        }
+    }
 }

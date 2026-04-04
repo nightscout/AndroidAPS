@@ -45,6 +45,10 @@ import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 
 /** Series identifiers */
+/** Basal on BG graph — deprecated, now shown as flipped overlay on IOB graph. Set to true to restore. */
+@Deprecated("Basal moved to IOB graph as flipped overlay")
+private const val showBasalOnBgGraph = false
+
 private const val SERIES_REGULAR = "regular"
 private const val SERIES_BUCKETED = "bucketed"
 private const val SERIES_PRED_IOB = "pred_iob"
@@ -81,8 +85,13 @@ fun BgGraphCompose(
     val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
     val bucketedData by viewModel.bucketedDataFlow.collectAsStateWithLifecycle()
     val predictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
-    val basalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
+    val rawBasalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
     val targetData by viewModel.targetLineFlow.collectAsStateWithLifecycle()
+
+    // Basal on BG graph is deprecated — now shown as flipped overlay on IOB graph instead.
+    // Keep the layer structure intact (dummy data) to avoid chart restructuring.
+    @Suppress("DEPRECATION")
+    val basalData = if (showBasalOnBgGraph) rawBasalData else BasalGraphData(emptyList(), emptyList(), 0.0)
     val epsPoints by viewModel.epsGraphFlow.collectAsStateWithLifecycle()
     val activityData by viewModel.activityGraphFlow.collectAsStateWithLifecycle()
     val chartConfig by viewModel.chartConfigFlow.collectAsStateWithLifecycle()

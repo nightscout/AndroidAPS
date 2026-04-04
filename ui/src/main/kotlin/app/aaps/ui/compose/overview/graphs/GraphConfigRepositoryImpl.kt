@@ -2,7 +2,6 @@ package app.aaps.ui.compose.overview.graphs
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.overview.graph.BgOverlay
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.SeriesType
@@ -34,7 +33,7 @@ class GraphConfigRepositoryImpl @Inject constructor(
     init {
         // Sync from preferences when changed externally (e.g. import/restore)
         scope.launch {
-            preferences.observe(StringNonKey.GraphConfig)
+            preferences.observe(StringNonKey.ComposeGraphConfig)
                 .drop(1) // Skip initial (already loaded)
                 .collect { json -> _graphConfigFlow.value = parseJson(json) }
         }
@@ -42,10 +41,10 @@ class GraphConfigRepositoryImpl @Inject constructor(
 
     override fun update(config: GraphConfig) {
         _graphConfigFlow.value = config
-        preferences.put(StringNonKey.GraphConfig, toJson(config))
+        preferences.put(StringNonKey.ComposeGraphConfig, toJson(config))
     }
 
-    private fun load(): GraphConfig = parseJson(preferences.get(StringNonKey.GraphConfig))
+    private fun load(): GraphConfig = parseJson(preferences.get(StringNonKey.ComposeGraphConfig))
 
     private fun parseJson(json: String): GraphConfig {
         if (json.isBlank()) return GraphConfig()
@@ -59,14 +58,10 @@ class GraphConfigRepositoryImpl @Inject constructor(
 
     companion object {
 
-        private const val KEY_BG_OVERLAYS = "bgOverlays"
         private const val KEY_SECONDARY_GRAPHS = "secondaryGraphs"
 
         fun toJson(config: GraphConfig): String {
             val obj = JSONObject()
-            val overlaysArray = JSONArray()
-            for (overlay in config.bgOverlays) overlaysArray.put(overlay.name)
-            obj.put(KEY_BG_OVERLAYS, overlaysArray)
             val graphsArray = JSONArray()
             for (graph in config.secondaryGraphs) {
                 val seriesArray = JSONArray()
@@ -79,34 +74,24 @@ class GraphConfigRepositoryImpl @Inject constructor(
 
         fun fromJson(json: String): GraphConfig {
             val obj = JSONObject(json)
-            val overlays = mutableSetOf<BgOverlay>()
-            val overlaysArray = obj.optJSONArray(KEY_BG_OVERLAYS)
-            if (overlaysArray != null) {
-                for (i in 0 until overlaysArray.length()) {
-                    try {
-                        overlays.add(BgOverlay.valueOf(overlaysArray.getString(i)))
-                    } catch (_: IllegalArgumentException) {
-                        // Skip unknown overlay (forward compat)
-                    }
-                }
-            }
-            val graphs = mutableListOf<Set<SeriesType>>()
+            val graphs = mutableListOf<List<SeriesType>>()
             val graphsArray = obj.optJSONArray(KEY_SECONDARY_GRAPHS)
             if (graphsArray != null) {
                 for (i in 0 until graphsArray.length()) {
                     val seriesArray = graphsArray.getJSONArray(i)
-                    val series = mutableSetOf<SeriesType>()
+                    val series = mutableListOf<SeriesType>()
                     for (j in 0 until seriesArray.length()) {
                         try {
-                            series.add(SeriesType.valueOf(seriesArray.getString(j)))
+                            val type = SeriesType.valueOf(seriesArray.getString(j))
+                            if (type !in series) series.add(type) // preserve order, no duplicates
                         } catch (_: IllegalArgumentException) {
                             // Skip unknown series (forward compat)
                         }
                     }
-                    if (series.isNotEmpty()) graphs.add(series)
+                    if (series.isNotEmpty()) graphs.add(series.take(2)) // max 2 per graph
                 }
             }
-            return GraphConfig(bgOverlays = overlays, secondaryGraphs = graphs)
+            return GraphConfig(secondaryGraphs = graphs)
         }
     }
 }
