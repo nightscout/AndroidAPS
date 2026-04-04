@@ -1,6 +1,8 @@
 package app.aaps.plugins.main.general.nfcCommands
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,13 +26,26 @@ class NfcTagsFragment : Fragment() {
     ): View {
         _binding = NfccommandsTagsFragmentBinding.inflate(inflater, container, false)
 
-        adapter = NfcTagsAdapter(tagsList) { tag -> confirmDelete(tag) }
+        adapter =
+            NfcTagsAdapter(
+                tagsList,
+                onRename = { tag -> showRenameDialog(tag) },
+                onDelete = { tag -> confirmDelete(tag) },
+            )
         binding.tagsRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.tagsRecycler.adapter = adapter
+        binding.buildButton.setOnClickListener {
+            startActivity(Intent(requireContext(), NfcBuildActivity::class.java))
+        }
 
         refresh()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refresh()
     }
 
     fun refresh() {
@@ -47,6 +62,30 @@ class NfcTagsFragment : Fragment() {
             .setMessage(R.string.nfccommands_delete_confirm_msg)
             .setPositiveButton(R.string.nfccommands_delete_confirm_ok) { _, _ ->
                 NfcTokenSupport.blacklistTag(requireContext(), tag)
+                refresh()
+            }.setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showRenameDialog(tag: NfcCreatedTag) {
+        val input =
+            EditText(requireContext()).apply {
+                setText(tag.name)
+                setSelection(tag.name.length)
+                hint = getString(R.string.nfccommands_rename_tag)
+                maxLines = 1
+            }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.nfccommands_rename_tag_title)
+            .setView(input)
+            .setPositiveButton(R.string.nfccommands_rename_ok) { _, _ ->
+                val updatedName = input.text?.toString()?.trim().orEmpty()
+                if (updatedName.isBlank() || updatedName == tag.name) return@setPositiveButton
+                NfcTokenSupport.saveCreatedTag(
+                    requireContext(),
+                    tag.copy(name = updatedName),
+                )
                 refresh()
             }.setNegativeButton(android.R.string.cancel, null)
             .show()

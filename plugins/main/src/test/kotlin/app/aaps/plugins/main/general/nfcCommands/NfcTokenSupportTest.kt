@@ -12,6 +12,7 @@ class NfcTokenSupportTest {
     private lateinit var prefs: SharedPreferencesMock
     private val now = 1_700_000_000_000L
     private val secret = "0123456789abcdef0123456789abcdef".toByteArray()
+    private val tagUid = "aabbccdd"
 
     @BeforeEach
     fun setup() {
@@ -106,25 +107,13 @@ class NfcTokenSupportTest {
     @Test
     fun `verifyToken with cmds array returns multi-command Success`() {
         val commands = listOf("TARGET MEAL", "BOLUS 2.0 MEAL")
-        val issued = NfcTokenSupport.issueToken(secret, commands, now)
+        val issued = NfcTokenSupport.issueToken(secret, commands, now, tagUid = tagUid)
 
-        val result = NfcTokenSupport.verifyToken(secret, issued.token, now + 1_000L)
+        val result = NfcTokenSupport.verifyToken(secret, issued.token, now + 1_000L, tagUid = tagUid)
 
         assertThat(result).isInstanceOf(NfcTokenVerificationResult.Success::class.java)
         result as NfcTokenVerificationResult.Success
         assertThat(result.commands).isEqualTo(commands)
-    }
-
-    @Test
-    fun `verifyToken with legacy cmd string returns single-command Success`() {
-        // Build a legacy token with "cmd" field (not "cmds")
-        val legacyToken = buildLegacyToken(secret, "LOOP STOP", now)
-
-        val result = NfcTokenSupport.verifyToken(secret, legacyToken, now + 1_000L)
-
-        assertThat(result).isInstanceOf(NfcTokenVerificationResult.Success::class.java)
-        result as NfcTokenVerificationResult.Success
-        assertThat(result.commands).isEqualTo(listOf("LOOP STOP"))
     }
 
     @Test
@@ -173,8 +162,7 @@ class NfcTokenSupportTest {
     }
 
     @Test
-    fun `loadCreatedTags migrates legacy single command field`() {
-        // Write old-format JSON with "command" field
+    fun `loadCreatedTags ignores entries without commands array`() {
         val legacyJson = JSONArray()
         legacyJson.put(
             JSONObject()
@@ -189,8 +177,7 @@ class NfcTokenSupportTest {
 
         val tags = NfcTokenSupport.loadCreatedTags(prefs)
 
-        assertThat(tags).hasSize(1)
-        assertThat(tags.first().commands).isEqualTo(listOf("LOOP STOP"))
+        assertThat(tags).isEmpty()
     }
 
     // ── isExpiringSoon tests ───────────────────────────────────────────────────
@@ -381,13 +368,14 @@ class NfcTokenSupportTest {
     }
 
     @Test
-    fun `verifyToken accepts legacy token with no tid claim even when tagUid is provided`() {
-        // Legacy tokens (no tid claim) pass through unconditionally to preserve backward compatibility.
+    fun `verifyToken rejects token with no tid claim`() {
         val issued = NfcTokenSupport.issueToken(secret, listOf("LOOP STOP"), now, tagUid = null)
 
         val result = NfcTokenSupport.verifyToken(secret, issued.token, now + 1_000L, tagUid = "anyuid")
 
-        assertThat(result).isInstanceOf(NfcTokenVerificationResult.Success::class.java)
+        assertThat(result).isInstanceOf(NfcTokenVerificationResult.Failure::class.java)
+        result as NfcTokenVerificationResult.Failure
+        assertThat(result.reason).isEqualTo("Missing token claims")
     }
 
     @Test
@@ -397,44 +385,5 @@ class NfcTokenSupportTest {
         val result = NfcTokenSupport.verifyToken(secret, issued.token, now + 1_000L, tagUid = "aabbccdd")
 
         assertThat(result).isInstanceOf(NfcTokenVerificationResult.Success::class.java)
-    }
-
-    // ── helpers ────────────────────────────────────────────────────────────────
-
-    private fun buildLegacyToken(
-        secret: ByteArray,
-        command: String,
-        nowMillis: Long,
-    ): String {
-        val expiresAtMillis = nowMillis + NfcTokenSupport.ONE_YEAR_MILLIS
-        val header =
-            Base64
-                .getUrlEncoder()
-                .withoutPadding()
-                .encodeToString(
-                    JSONObject()
-                        .put("alg", "HS256")
-                        .put("typ", "JWT")
-                        .toString()
-                        .toByteArray(),
-                )
-        val payload =
-            Base64
-                .getUrlEncoder()
-                .withoutPadding()
-                .encodeToString(
-                    JSONObject()
-                        .put("jti", "legacy-token-id")
-                        .put("cmd", command)
-                        .put("iat", nowMillis / 1000L)
-                        .put("exp", expiresAtMillis / 1000L)
-                        .toString()
-                        .toByteArray(),
-                )
-        val signingInput = "$header.$payload"
-        val mac = javax.crypto.Mac.getInstance("HmacSHA256")
-        mac.init(javax.crypto.spec.SecretKeySpec(secret, "HmacSHA256"))
-        val sig = Base64.getUrlEncoder().withoutPadding().encodeToString(mac.doFinal(signingInput.toByteArray()))
-        return "$signingInput.$sig"
     }
 }

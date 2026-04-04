@@ -11,6 +11,7 @@ import java.text.DateFormat
 
 class NfcTagsAdapter(
     private val tags: MutableList<NfcCreatedTag>,
+    private val onRename: (NfcCreatedTag) -> Unit,
     private val onDelete: (NfcCreatedTag) -> Unit,
 ) : RecyclerView.Adapter<NfcTagsAdapter.ViewHolder>() {
     inner class ViewHolder(
@@ -60,6 +61,9 @@ class NfcTagsAdapter(
             }
         }
 
+        holder.binding.tagRenameButton.setOnClickListener {
+            onRename(tag)
+        }
         holder.binding.tagDeleteButton.setOnClickListener {
             onDelete(tag)
         }

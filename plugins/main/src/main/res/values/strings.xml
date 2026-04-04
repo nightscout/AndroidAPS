@@ -41,7 +41,6 @@
     <string name="nfccommands_cascade_step_label">%1$d. %2$s</string>
     <string name="nfccommands_cascade_empty">Add at least one command before writing.</string>
     <string name="nfccommands_remove_step">Remove step</string>
-    <string name="nfccommands_tab_build">Build</string>
     <string name="nfccommands_tab_my_tags">My Tags</string>
     <string name="nfccommands_cat_loop">Loop</string>
     <string name="nfccommands_cat_pump">Pump</string>
@@ -59,6 +58,9 @@
     <string name="nfccommands_add_to_chain">Add to Chain</string>
     <string name="nfccommands_chain_title">Command Chain</string>
     <string name="nfccommands_write_ready">Hold phone near NFC tag</string>
+    <string name="nfccommands_blank_name_confirm_title">Write tag without name?</string>
+    <string name="nfccommands_blank_name_confirm_message">This tag has no name. It will still be written and shown later with the first command as its name.</string>
+    <string name="nfccommands_blank_name_confirm_write_anyway">Write anyway</string>
     <string name="nfccommands_no_args_needed">No additional input needed</string>
     <string name="nfccommands_suspend_label">Suspend duration</string>
     <string name="nfccommands_suspend_minutes">%1$d min</string>

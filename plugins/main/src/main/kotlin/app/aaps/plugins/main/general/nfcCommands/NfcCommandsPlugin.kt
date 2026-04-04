@@ -186,14 +186,6 @@ class NfcCommandsPlugin
             }
         }
 
-        fun executeToken(token: String): NfcExecutionResult =
-            when (val prep = prepareExecution(token)) {
-                is NfcPrepareResult.Error ->
-                    NfcExecutionResult(success = false, message = prep.message, eraseTag = prep.eraseTag)
-                is NfcPrepareResult.Ready ->
-                    executeCascade(prep.commands)
-            }
-
         fun replaceTag(
             oldId: String,
             newTag: NfcCreatedTag,

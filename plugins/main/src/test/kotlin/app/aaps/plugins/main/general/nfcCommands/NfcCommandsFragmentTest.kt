@@ -1,27 +1,13 @@
 package app.aaps.plugins.main.general.nfcCommands
 
 import app.aaps.shared.tests.TestBaseWithProfile
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.mockito.kotlin.spy
 
 class NfcCommandsFragmentTest : TestBaseWithProfile() {
-    private lateinit var fragment: NfcCommandsFragment
-
-    @BeforeEach
-    fun setup() {
-        fragment = spy(NfcCommandsFragment())
-    }
-
     @Test
     fun `fragment is instantiable`() {
         assertDoesNotThrow { NfcCommandsFragment() }
-    }
-
-    @Test
-    fun `NfcBuildFragment is instantiable`() {
-        assertDoesNotThrow { NfcBuildFragment() }
     }
 
     @Test
