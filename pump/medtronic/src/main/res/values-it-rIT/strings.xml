@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Codifica Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Risveglio e Sintonizzazione</string>
     <string name="medtronic_custom_action_clear_bolus_block">Cancella blocco bolo</string>
-    <string name="medtronic_custom_action_reset_rileylink">Reset config.ne RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipo batteria (Power view)</string>
     <string name="medtronic_pump_battery_no">Non selezionato (Simple view)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Extended view)</string>
     <string name="medtronic_pump_battery_lithium">Litio (Extended view)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batteria RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Errori</string>
-    <string name="medtronic_error_serial_not_set"># seriale non impostato.</string>
     <string name="medtronic_error_serial_invalid"># seriale non valido.</string>
     <string name="medtronic_error_pump_type_not_set">Tipo micro non impostato.</string>
     <string name="medtronic_error_pump_type_invalid">Tipo micro non supportato.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Frequenza micro non impostata.</string>
     <string name="medtronic_error_pump_frequency_invalid">Frequenza micro non supportata.</string>
     <string name="medtronic_error_rileylink_address_invalid">Indirizzo RileyLink non valido.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Il tipo di micro rilevato non è uguale al tipo configurato.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Cancella basale temporanea</string>
     <string name="medtronic_cmd_desc_set_bolus">Imposta bolo</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Ottieni insulina rimanente</string>
-    <string name="medtronic_pump_status_pump_unreachable">Micro irraggiungibile</string>
-    <string name="medtronic_warning">Avviso</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Adesso</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">fa</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Adesso</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">fa</string>
     <string name="medtronic_notification_check_time_date">Necessario aggiornare orologio micro</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Ora del micro aggiornata</string>
     <string name="set_neutral_temps_title">Imposta basali temporanee neutre</string>
     <string name="set_neutral_temps_summary">Se abilitato, cancellerà una basale temporanea prima della fine di ogni ora. Questo metodo può aiutare a fermare alcuni micro dall\'emettere un suono/vibrare allo scoccare dell\'ora.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min rimanenti/e)</string>
     <string name="invalid_history_data">Rilevati dati non validi dallo storico del micro. Apri una segnalazione e fornisci i log.</string>
     <string name="riley_statistics">Statistiche RL</string>
-    <string name="medtronic_history_type">Tipo:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Aggiorna: cliccato</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Aggiornamento stato pianificato</string>
 </resources>

@@ -11,20 +11,15 @@
     <string name="patch_not_active">Пач помпата не е активирана</string>
     <string name="pump_setting_failed">Неуспешно зареждане на потребителските настройки в помпата!</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Състояние на BLE</string>
     <string name="last_connection_label">Последно свързване</string>
     <string name="pump_state_label">Състояние на помпата</string>
     <string name="active_alarms_label">Активни аларми</string>
-    <string name="reservoir_level"> %.2f Ед.</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Тип базал</string>
     <string name="basal_rate_label">Базал</string>
-    <string name="current_basal_rate"> %.2f Ед/ч</string>
     <string name="pump_type_label">Тип помпа</string>
     <string name="fw_version_label">Версия на FW</string>
     <string name="patch_no_label">Номер на пач помпа</string>
     <string name="patch_expiry_label">Срок на пач помпа</string>
-    <string name="refresh_label">Обнови</string>
     <string name="reset_alarms_label">Нулирай аларми</string>
     <string name="change_patch_label">Сменете пач помпата</string>
     <string name="requested_by_user" comment="26 characters max for translation">Заявено от потребителя</string>
@@ -51,8 +46,6 @@
     <string name="pump_time_update_failed">Неуспешно актуализиране на часова зона на помпата, отложете съобщението и актуализирайте ръчно.</string>
     <!-- wizard-->
     <string name="retry">Повтори</string>
-    <string name="next">Следващ</string>
-    <string name="discard">Откажи</string>
     <string name="step_prepare_patch">Активирай пач помпа</string>
     <string name="step_prepare_patch_connect">Свържи и Напълни</string>
     <string name="step_prime">Пълнене</string>
@@ -67,7 +60,6 @@
     <string name="step_retry_activation">Активация в ход</string>
     <string name="unexpected_state">Неочаквано състояние: %1$s</string>
     <string name="no_profile_selected">Няма избран профил. Моля, изберете профил и опитайте отново.</string>
-    <string name="base_serial">Сериен номер на основа на помпа: %1$X</string>
     <string name="patch_begin_activation">Няма активна пач помпа. Натиснете <b>Следващ</b>, за да започнете процеса по активация.</string>
     <string name="patch_not_active_note">Основата на помпата не трябва да се свързва с пач помпата преди следващата стъпка!</string>
     <string name="connect_pump_base">Сържете основата към нова пач помпа, отстранете остатъчния въздух и напълнете с инсулин, след което натиснете <b>Следващ</b>.</string>
@@ -97,7 +89,6 @@
     <string name="reading_activation_status">Моля изчакайте, прочитане на статуса на активация от помпата.</string>
     <!-- settings-->
     <string name="sn_input_title">Сериен номер</string>
-    <string name="sn_input_summary">Въведете серийния номер на вашата основа на помпа.</string>
     <string name="sn_input_invalid">Невалиден сериен номер!</string>
     <string name="alarm_setting_title">Настройки на аларма</string>
     <string name="alarm_setting_summary">Изберете предпочитани настройки за аларми на помпата.</string>

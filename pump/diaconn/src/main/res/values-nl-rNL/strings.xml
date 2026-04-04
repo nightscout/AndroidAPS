@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Koppeling verwijderen</string>
-    <string name="diaconn_no_device_available">Geen apparaat beschikbaar</string>
     <string name="diaconn_pairing">Diaconn Pomp Koppeling</string>
-    <string name="pumperror">Pomp storing</string>
     <string name="diaconn_g8_history_alarm">Alarmen</string>
     <string name="diaconn_g8_history_basalhours">Basaal uren</string>
     <string name="diaconn_g8_history_bolus">Bolussen</string>
     <string name="diaconn_g8_history_dailyinsulin">Dagtotaal insuline</string>
     <string name="diaconn_g8_history_refill">Hervullen</string>
     <string name="diaconn_g8_history_suspend">Onderbreken</string>
-    <string name="invalidpairing">Ongeldige koppelingsinformatie. Nieuwe koppelingspoging wordt uitgevoerd</string>
     <string name="gettingpumpsettings">Pomp instellingen aan het ophalen</string>
     <string name="gettingpumptime">Pomp tijd aan het ophalen</string>
     <string name="largetimediff">Groot tijdsverschil:\nTijd in de pomp staat meer dan 1,5 uur uit.\nPas de tijd handmatig aan op de pomp en zorg ervoor dat het lezen van geschiedenis uit de pomp geen onverwacht gedrag veroorzaakt.\nindien mogelijk verwijder de geschiedenis van de pomp voordat je de tijd wijzigt of schakel de closed loop uit voor een DIA na het laatste verkeerde geschiedenis-invoer, maar vanaf nu minimaal één DIA.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Snelheid fout</string>
     <string name="insulinlimitviolation">Insuline limiet overschrijding</string>
     <string name="boluserrorcode">Gevraagd: %1$.2fE Toegediend: %2$.2fE Error code: %3$s</string>
-    <string name="bolusspeed">Bolus snelheid</string>
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="diaconn_g8_bluetooth_status">Bluetooth Status</string>
     <string name="bolus_step">Bolus Stap</string>
     <string name="basal_step">Basaal Stap</string>
-    <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">GEBRUIKER OPTIES</string>
     <string name="pairfirst">A.u.b. de pomp koppelen met je telefoon!</string>
     <string name="processinghistory">"Gebeurtenis wordt uitgevoerd "</string>

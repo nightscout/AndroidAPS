@@ -65,28 +65,4 @@
     <string name="ble_config_remove">Odebrat</string>
     <!-- Pump History -->
     <string name="pump_history_type">Typ:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d den</item>
-        <item quantity="few">%1$d dnů</item>
-        <item quantity="many">%1$d dnů</item>
-        <item quantity="other">%1$d dnů</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d hodina</item>
-        <item quantity="few">%1$d hodin</item>
-        <item quantity="many">%1$d hodin</item>
-        <item quantity="other">%1$d hodin</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">před %1$d hodinou</item>
-        <item quantity="few">před %1$d hodinami</item>
-        <item quantity="many">před %1$d hodinami</item>
-        <item quantity="other">před %1$d hodinami</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">před %1$d dnem</item>
-        <item quantity="few">před %1$d dny</item>
-        <item quantity="many">před %1$d dny</item>
-        <item quantity="other">před %1$d dny</item>
-    </plurals>
 </resources>

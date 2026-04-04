@@ -164,7 +164,6 @@
     <string name="autotune_update_local_profile_message">¿Actualizar el perfil %1$s con perfil de Autotune?</string>
     <string name="autotune_revert_local_profile_message">¿Revertir el perfil %1$s con perfil de entrada?</string>
     <string name="autotune_profile_invalid">Perfil inválido</string>
-    <string name="not_available_full">No disponible</string>
     <string name="pump_disconnected">Bomba desconectada</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Basal media con objetivo actividad</string>

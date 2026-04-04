@@ -25,4 +25,17 @@
     <string name="short_status_reservoir">儲存槽：%1$dU</string>
     <string name="short_status_battery">電池：%1$d%%</string>
     <string name="short_status_not_initialized">幫浦未初始化</string>
+    <!--    Permissions-->
+    <string name="permission_battery_title">電池優化</string>
+    <string name="permission_battery_description">為了在背景中可靠執行，必須將此應用程式從電池優化中排除</string>
+    <string name="permission_directory_title">AAPS 目錄</string>
+    <string name="permission_directory_description">選取應用程式設定與記錄檔的目錄</string>
+    <string name="permission_notifications_title">通知</string>
+    <string name="permission_notifications_description">需要以顯示警示、警報與幫浦狀態更新</string>
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
 </resources>

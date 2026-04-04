@@ -14,8 +14,8 @@
     <string name="operating_mode">Modul de funcționare</string>
     <string name="description_pump_insight_local">Integrare pentru pompele Accu-Chek Insight</string>
     <string name="not_inserted">Nu este introdus</string>
-    <string name="tdd_bolus">Bolus TDD</string>
-    <string name="tdd_basal">Bazală TDD</string>
+    <string name="tdd_bolus">Bolus DZT</string>
+    <string name="tdd_basal">Bazală DZT</string>
     <string name="tbr_formatter">%1$d%% pentru %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus multiwave</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U pentru %3$d min</string>
@@ -37,7 +37,7 @@
     <string name="pump_stopped">Pompă oprită</string>
     <string name="pump_started">Pompă pornită</string>
     <string name="release_software_version">Versiunea de software</string>
-    <string name="ui_processor_software_version">Versiunea softwareului procesor UI</string>
+    <string name="ui_processor_software_version">Versiunea software procesor UI</string>
     <string name="pc_processor_software_version">Versiunea software procesor PC</string>
     <string name="md_tel_processor_software_version">Versiunea software procesor MD tel</string>
     <string name="safety_processor_software_version">Versiunea software procesor siguranță</string>

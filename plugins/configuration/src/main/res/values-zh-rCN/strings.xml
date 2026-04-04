@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">选择你想要的血糖显示单位。</string>
     <string name="next_button">下一个</string>
     <string name="previous_button">上一个</string>
-    <string name="nav_setupwizard">设置向导</string>
     <string name="setupwizard_finish">完成</string>
     <string name="welcometosetupwizard">欢迎使用设置向导。它将指导您完成设置过程 \n</string>
     <string name="end_user_license_agreement">最终用户许可协议</string>
@@ -17,16 +16,12 @@
     <string name="high_mark_comment">血糖范围区域的上限值(仅显示，不影响算法)</string>
     <string name="permission">权限</string>
     <string name="need_system_window_permission">应用程序需要悬浮窗权限用于发送通知。</string>
-    <string name="need_location_permission">应用程序需要定位权限，才能进行蓝牙扫描及WIFI识别。</string>
-    <string name="need_storage_permission">应用程序需要文件存储权限，才能存储日志文件及导出设置。</string>
     <string name="askforpermission">请求权限</string>
     <string name="storedsettingsfound">发现曾经保存过的设置</string>
     <string name="master_password_summary">主密码用于备份和安全性加密，它优先于其他功能模块的密码，请牢记它或储存在安全的地方。</string>
-    <string name="current_master_password">当前主密码</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">\n选择您三餐的最大碳水值和最大胰岛素剂量\n</string>
     <string name="status">状态:</string>
-    <string name="patient_name">患者名称</string>
-    <string name="patient_name_summary">请提供患者姓名或昵称来区分多个设置</string>
     <string name="diawarning">请记住：新的胰岛素分布需要DIA至少5小时。 对于新的配置文件，DIA 5-6小时相当于旧胰岛素配置文件中的DIA 3小时</string>
     <string name="profile">配置文件</string>
     <string name="doprofileswitch">配置文件切换</string>
@@ -47,37 +42,29 @@
     <string name="alert_dialog_permission_battery_optimization_failed">此设备似乎不支持电池优化白名单 - 您可能会遇到性能问题。</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">配置生成器</string>
-    <string name="configbuilder_pump">胰岛素泵</string>
     <string name="configbuilder_profile">配置文件</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">哪个 APS 算法应该用于治疗调整？</string>
-    <string name="configbuilder_general">一般</string>
     <string name="configbuilder_general_description">这些是一些一般的插件, 你可能会觉得有用。</string>
-    <string name="configbuilder_sync">同步</string>
     <string name="configbuilder_constraints_description">应用了哪些约束条件？</string>
-    <string name="configbuilder_loop">闭环</string>
     <string name="configbuilder_insulin_description">你使用哪种类型的胰岛素？</string>
-    <string name="configbuilder_bgsource">血糖来源</string>
-    <string name="configbuilder_sensitivity">灵敏度检测</string>
     <string name="configbuilder_sensitivity_description">应使用哪一种灵敏度算法？</string>
     <string name="config_builder_shortname">配置</string>
     <string name="description_config_builder">用于配置活动插件</string>
     <string name="a11y_open_settings">打开设置</string>
     <!--ImportExport-->
     <string name="nav_preferences">参数选项</string>
-    <string name="password_preferences_encrypt_prompt">请您输入主密码，该密码将用于加密导出的首选项配置。</string>
-    <string name="preferences_export_canceled">导出已取消！首选项未导出！</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">导入已取消! 未导入首选项 !</string>
     <string name="preferences_import_impossible">无法导入首选项 !</string>
     <string name="check_preferences_details_btn">说明导入问题…</string>
     <string name="check_preferences_details_title">导入问题详细信息</string>
     <string name="check_preferences_import_btn">导入</string>
     <string name="check_preferences_import_anyway_btn">继续导入（危险！）</string>
-    <string name="import_setting">导入配置</string>
     <string name="check_preferences_before_import">请在导入之前检查首选项：</string>
     <string name="check_preferences_cannot_import">无法导入首选项！</string>
     <string name="check_preferences_dangerous_import">不应导入首选项 !</string>
-    <string name="export_to">导出配置</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">导入配置</string>
     <string name="setting_imported">配置导入了</string>
     <string name="old_master_password">旧的主密码</string>
@@ -88,22 +75,12 @@
     <string name="goto_main_try_again">请返回主屏幕，然后重试。</string>
     <string name="restartingapp">正在退出应用程序以应用设置。</string>
     <string name="ue_exported">用户条目已导出</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">维护</string>
     <string name="maintenance_shortname">维护</string>
-    <string name="description_maintenance">提供了几个维护功能 (例如日志发送、日志删除)。</string>
-    <string name="reset_db_confirm">你真的想重置数据库吗?</string>
     <string name="maintenance_settings">维护设置</string>
     <string name="maintenance_email">电子邮箱收件人</string>
     <string name="maintenance_amount">没有要发送的日志</string>
-    <string name="send_all_logs">用电子邮件发送</string>
-    <string name="delete_logs">删除日志</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout 版本:</string>
-    <string name="engineering_mode_enabled">已启用工程模式</string>
-    <string name="log_files">日志文件</string>
-    <string name="nav_logsettings">日志设置</string>
-    <string name="nav_resetdb">重置数据库</string>
-    <string name="resettodefaults">重置为默认值</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">已导出 %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">导出 %1$s</string>
@@ -126,7 +103,6 @@
     <string name="prefdecrypt_issue_wrong_pass">解密错误，提供的密码无效或设置文件已修改! 导入的文件可能是使用其他主密码导出的。</string>
     <string name="prefdecrypt_issue_wrong_format">缺少加密配置，设置格式无效!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法!</string>
-    <!-- Custom Watchface -->
     <!-- Maintenance -->
     <string name="metadata_label_format">文件格式</string>
     <string name="metadata_label_created_at">创建于</string>
@@ -136,6 +112,7 @@
     <string name="metadata_label_encryption">文件加密密钥。</string>
     <string name="metadata_format_new">新的加密格式</string>
     <string name="metadata_format_other">未知的导出格式</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->

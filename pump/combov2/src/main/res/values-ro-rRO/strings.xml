@@ -11,11 +11,11 @@
     <string name="combov2_error_1">Rezervor pompă gol</string>
     <string name="combov2_error_2">Baterie epuizată</string>
     <string name="combov2_error_4">Ocluzie</string>
-    <string name="combov2_error_5">Sfârşitul operării pompei de rezervă</string>
+    <string name="combov2_error_5">Sfârșitul operării pompei de rezervă</string>
     <string name="combov2_error_6">Eroare mecanică</string>
     <string name="combov2_error_7">Eroare electronică</string>
     <string name="combov2_error_8">Întrerupere de energie</string>
-    <string name="combov2_error_9">Sfârşitul operaţiunii pompei de împrumut</string>
+    <string name="combov2_error_9">Sfârșitul operațiunii pompei de împrumut</string>
     <string name="combov2_error_10">Eroare la rezervor</string>
     <string name="combov2_error_11">Setul de infuzie neamorsat</string>
     <string name="combov2_extended_bolus_not_supported">Bolusul extins nu este acceptat</string>
@@ -25,7 +25,7 @@
     <string name="combov2_driver_state_label">Stare soft conexiune</string>
     <string name="combov2_current_activity_label">Activitate curentă</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
-    <string name="combov2_start_pairing">Începe asocierea</string>
+    <string name="combov2_start_pairing">Începeți asocierea</string>
     <string name="combov2_pairing_in_progress">Asocierea Combo în curs</string>
     <string name="combov2_pairing_start_steps">Pași pentru a efectua asocierea cu Combo:\n\n
 1. Pe pompă, navigați la Setările Bluetooth\n
@@ -57,7 +57,7 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_less_than_one_minute_ago">Mai puțin de un minut în urmă</string>
     <string name="combov2_setting_current_pump_time">Setarea orei curente a pompei</string>
     <string name="combov2_setting_current_pump_date">Setarea datei curente a pompei</string>
-    <string name="combov2_not_initialized">Neiniţializat</string>
+    <string name="combov2_not_initialized">Neinițializat</string>
     <string name="combov2_checking_pump">Se verifică pompa</string>
     <string name="combov2_ready">Pregătit</string>
     <string name="combov2_suspended">Suspendat</string>
@@ -89,8 +89,8 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_combo_alert">Alertă Combo</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min rămase)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (mai puțin de 1 min rămas)</string>
-    <string name="combov2_load_tdds_cancelled">Încărcarea TDD a fost anulată</string>
-    <string name="combov2_retrieving_tdds_failed">Preluarea TDD a eșuat</string>
+    <string name="combov2_load_tdds_cancelled">Încărcarea DZT a fost anulată</string>
+    <string name="combov2_retrieving_tdds_failed">Preluarea DZT a eșuat</string>
     <string name="combov2_battery_low_warning">Nivelul bateriei pompei este scăzut</string>
     <string name="combov2_reservoir_low_warning">Nivelul rezervorului pompei este scăzut</string>
     <string name="combov2_setting_tbr_succeeded">Setarea RBT a reușit</string>
@@ -105,7 +105,7 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_unknown_tbr_detected">RBT necunoscută a fost detectată și oprită; procentaj: %1$d%%; durată rămasă: %2$s</string>
     <string name="combov2_connection_error">Eroare conexiune: %1$s</string>
     <string name="combov2_short_status_alert">Alertă: %s</string>
-    <string name="combov2_automatic_reservoir_entry">Autodetectează şi introdu automat schimbarea rezervorului de insulină</string>
+    <string name="combov2_automatic_reservoir_entry">Autodetectează și introdu automat schimbarea rezervorului de insulină</string>
     <string name="combov2_automatic_battery_entry">Autodetectează și introdu automat schimbarea bateriei</string>
     <string name="combov2_timezone_changed">Fus orar schimbat</string>
     <string name="combov2_datetime_changed">Data și/sau ora schimbate</string>
@@ -116,5 +116,5 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_go_back">Înapoi</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Nu se poate efectua asocierea deoarece driverul nu este inițializat. Acest lucru se întâmplă de obicei deoarece permisiunile Bluetooth necesare nu au fost acordate. Mergeți înapoi, acordați permisiunile Bluetooth, apoi încercați din nou împerecherea.</string>
     <string name="combov2_bluetooth_disabled">Nu se poate porni driver-ul - Bluetooth este dezactivat</string>
-    <string name="combov2_bluetooth_not_supported">Driverul nu poate rula - acest dispozitiv nu suportă Bluetooth</string>
+    <string name="combov2_bluetooth_not_supported">Driverul nu poate rula - acest dispozitiv nu acceptă Bluetooth</string>
 </resources>

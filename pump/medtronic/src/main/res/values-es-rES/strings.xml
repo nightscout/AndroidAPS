@@ -12,22 +12,36 @@
     <string name="medtronic_pump_encoding">Codificación de Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Encender y ajustar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Borrar el bloque de bolo</string>
-    <string name="medtronic_custom_action_reset_rileylink">Restablecer configuración de RileyLink</string>
+    <string name="medtronic_custom_action_reset_rileylink">Restablecer RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipo de batería (Vista de energía)</string>
     <string name="medtronic_pump_battery_no">No seleccionado (Vista simple)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (vista extendida)</string>
     <string name="medtronic_pump_battery_lithium">Litio (vista extendida)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (vista ampliada)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (vista extendida)</string>
+    <!-- Pump type entries -->
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A or lower)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A or lower)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
+    <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batería RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Errores</string>
-    <string name="medtronic_error_serial_not_set">Nº serie no establecido.</string>
     <string name="medtronic_error_serial_invalid">Número de serie no válido.</string>
     <string name="medtronic_error_pump_type_not_set">Tipo de infusora no establecido.</string>
     <string name="medtronic_error_pump_type_invalid">Tipo de infusora no soportado.</string>
-    <string name="medtronic_error_pump_frequency_not_set">No se ha establecido la frecuencia de la infusora.</string>
     <string name="medtronic_error_pump_frequency_invalid">Frecuencia de la infusora no soportada.</string>
     <string name="medtronic_error_rileylink_address_invalid">Dirección de RileyLink no válida.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">El tipo de infusora detectado no es el mismo que el tipo configurado.</string>
@@ -71,21 +85,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Cancelar base temporal</string>
     <string name="medtronic_cmd_desc_set_bolus">Fijar Bolo</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Comprobar Insulina Restante</string>
-    <string name="medtronic_pump_status_pump_unreachable">Infusora no alcanzable</string>
-    <string name="medtronic_warning">Alerta</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Ahora</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">hace</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Ahora</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">hace</string>
     <string name="medtronic_notification_check_time_date">Se necesita actualizar reloj de la bomba</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Hora del infusor actualizada</string>
     <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
     <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
     <string name="invalid_history_data">Se han detectado datos inválidos en el historial de la bomba. Abre una nueva incidencia y proporciona los archivos de registros.</string>
     <string name="riley_statistics">Estadísticas del RL</string>
-    <string name="medtronic_history_type">Tipo:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Refresco pulsado</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Refrescar estado programado</string>
 </resources>

@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Ladda upp BG-data till Nightscout</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="value_unavailable_short">-</string>
-    <string name="master_password">Huvudlösenord</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Exportera användarposter till Excel (csv)</string>
     <string name="confirm">Bekräfta</string>
     <string name="pump">Pump</string>
@@ -78,8 +78,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">Bluetooth-övervakare</string>
-    <string name="btwatchdog_summary">Startar om bluetooth på telefonen om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Tiden uppdaterad i pumpen</string>
     <string name="exit">Avsluta</string>
@@ -108,7 +106,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Larma om %1$d min</string>
-    <string name="bolus_reminder">Boluspåminnelse</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pump pausad</string>
@@ -130,18 +127,15 @@
     <string name="a11y_inrange">inom målområdet</string>
     <string name="a11y_low">låg</string>
     <string name="average">Medel</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<ingen>]]></string>
     <string name="remove_label">TA BORT</string>
     <string name="activate_profile">Aktivera profil</string>
-    <string name="reset">Återställ</string>
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
     <string name="profile">Profil</string>
     <string name="select_for_removal">Markera för borttagning</string>
     <string name="confirm_remove_multiple_items">Är du säker på att du vill ta bort %1$d objekt</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Skapa kopia av denna profil?</string>
-    <string name="wear_wizard_settings">Kalkylatorinställningar</string>
     <string name="bg_trend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -182,6 +176,7 @@
     <string name="duration">Duration</string>
     <string name="reason">Orsak</string>
     <string name="nochangerequested">Ingen ändring behövs</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ogiltig profil: %1$s</string>
     <!--    Temptarget-->
@@ -247,7 +242,6 @@
     <string name="expweight">Exponentiellt viktad TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD</string>
     <string name="ratio">Kvot</string>
     <string name="amount_days">Antal dagar</string>
     <string name="weight">Vikt</string>
@@ -364,6 +358,7 @@
     <string name="valueoutofrange">»%1$s« är utanför de hårda gränserna</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f är utanför hårda gränser</string>
     <string name="basal_value">Basaldos</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">KH %1$d g</string>
@@ -396,7 +391,6 @@
     <string name="autotune_tune_days">Justering dagar :</string>
     <string name="autotune_select_profile">Välj profil att justera</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
     <string name="urgent_alarm">Akut larm</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -404,8 +398,6 @@
     <string name="bolus_advisor_message">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrigeringsbolus nu och få en påminnelse när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
     <string name="cobvsiob">COB kontra IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
-    <string name="partialboluswizard">Direkt bolus [%]</string>
-    <string name="partialboluswizard_reset_time">Tröskelvärde för gammalt BG-värde [min]</string>
     <string name="bolus_constraint_applied_warn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus kommer bara att loggas (inte levereras av pumpen)</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
@@ -479,14 +471,18 @@
     <string name="message">Meddelande</string>
     <string name="ok">OK</string>
     <string name="cancel">Avbryt</string>
-    <string name="dismiss">TA BORT</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
     <string name="close">Stäng</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att avkryptera importerade inställningar.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">minska %1$s med %2$s</string>
     <string name="a11y_plus_button_description">öka %1$s med %2$s</string>
@@ -507,8 +503,10 @@
     <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Inställningar för insticksprogram</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Saknar behörighet att skicka SMS</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
     <string name="fabric_upload_disabled">Uppladdning av kraschloggar inaktiverad!</string>
@@ -534,4 +532,10 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2fU</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

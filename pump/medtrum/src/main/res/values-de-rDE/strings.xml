@@ -11,20 +11,15 @@
     <string name="patch_not_active">Patch nicht aktiviert</string>
     <string name="pump_setting_failed">Einstellung der Benutzereinstellungen auf Pumpe fehlgeschlagen!</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">BLE Status</string>
     <string name="last_connection_label">Zuletzt verbunden</string>
     <string name="pump_state_label">Pumpenstatus</string>
     <string name="active_alarms_label">Aktive Alarme</string>
-    <string name="reservoir_level"> %.2f IE</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Basaltyp</string>
     <string name="basal_rate_label">Basalrate</string>
-    <string name="current_basal_rate"> %.2f IE/h</string>
     <string name="pump_type_label">Pumpentyp</string>
     <string name="fw_version_label">FW-Version</string>
     <string name="patch_no_label">Patch Nr.</string>
     <string name="patch_expiry_label">Patch läuft ab</string>
-    <string name="refresh_label">Aktualisieren</string>
     <string name="reset_alarms_label">Alarme zurücksetzen</string>
     <string name="change_patch_label">Wechsele Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Vom Nutzer angefragt</string>
@@ -51,8 +46,6 @@
     <string name="pump_time_update_failed">Fehler beim Aktualisieren der Pumpen-Zeitzone, stelle Benachrichtigung ab und aktualisiere manuell.</string>
     <!-- wizard-->
     <string name="retry">Erneut versuchen</string>
-    <string name="next">Weiter</string>
-    <string name="discard">Verwerfen</string>
     <string name="step_prepare_patch">Pod aktivieren</string>
     <string name="step_prepare_patch_connect">Verbinden und füllen</string>
     <string name="step_prime">Füllen</string>
@@ -67,7 +60,6 @@
     <string name="step_retry_activation">Aktivierung wird ausgeführt</string>
     <string name="unexpected_state">Unerwarteter Zustand: %1$s</string>
     <string name="no_profile_selected">Kein Profil ausgewählt. Bitte wählen Sie ein Profil und versuchen Sie es erneut.</string>
-    <string name="base_serial">Pumpen-Basis-Serie: %1$X</string>
     <string name="patch_begin_activation">Kein aktiver Patch. Drücken Sie <b>Weiter</b> um den Aktivierungsprozess zu starten.</string>
     <string name="patch_not_active_note">Die Pumpenbasis darf erst im nächsten Schritt mit dem Pflaster verbunden werden!</string>
     <string name="connect_pump_base">Verbinde die Pumpenbasis mit einem neuen Patch, entferne die Restluft, fülle das Insulin und drücke dann <b>Next</b>.</string>
@@ -97,7 +89,6 @@
     <string name="reading_activation_status">Bitte warten, auslesen des Aktivierungsstatus der Pumpe.</string>
     <!-- settings-->
     <string name="sn_input_title">Seriennummer</string>
-    <string name="sn_input_summary">Geben Sie die Seriennummer Ihrer Pumpenbasis ein.</string>
     <string name="sn_input_invalid">Ungültige Seriennummer!</string>
     <string name="alarm_setting_title">Alarm Einstellungen</string>
     <string name="alarm_setting_summary">Wählen Sie Ihre bevorzugten Pumpen-Alarmeinstellungen.</string>

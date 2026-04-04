@@ -13,10 +13,7 @@
     <string name="bolus_pin">Mã PIN liều Bolus</string>
     <string name="protection_timeout_title">Thời gian lưu mật khẩu và mã PIN [giây]</string>
     <string name="protection_timeout_summary">Thời gian trước khi phải nhập mật khẩu hoặc mã PIN</string>
-    <string name="biometric">Sinh trắc học</string>
-    <string name="custom_password">Mật khẩu tùy chọn</string>
-    <string name="custom_pin">Mã PIN tùy chọn</string>
-    <string name="noprotection">Không bảo mật</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Phương án dự phòng không an toàn</string>
     <string name="unsecure_fallback_descriotion_biometric">Để dùng sinh trắc học, bạn cần thiết lập mật khẩu chính làm phương án dự phòng.\n\n Cài đặt mật khẩu chính ngay!</string>
     <string name="password_set">Mật khẩu đã được đặt!</string>
@@ -27,8 +24,13 @@
     <string name="password_not_changed">Mật khẩu chưa được thay đổi</string>
     <string name="pin_not_changed">Mã PIN chưa được thay đổi</string>
     <string name="pin_cleared">Đã xóa mã PIN!</string>
-    <string name="password_hint">Nhập mật khẩu tại đây</string>
-    <string name="pin_hint">Nhập mã PIN tại đây</string>
+    <string name="protection_password_hint">Nhập mật khẩu tại đây</string>
+    <string name="protection_pin_hint">Nhập mã PIN tại đây</string>
+    <string name="auth_hint_master_password">Nhập mật khẩu chính</string>
+    <string name="auth_hint_master_or_pin">Nhập mật khẩu chính hoặc mã PIN</string>
+    <string name="auth_hint_master_or_password">Nhập mật khẩu chính hoặc mật khẩu tùy chọn</string>
+    <string name="use_pin_password">Sử dụng mã PIN/Mật khẩu</string>
+    <string name="current_master_password">Mật khẩu chính hiện tại</string>
     <string name="master_password_not_set">Chưa thiết lập mật khẩu chính</string>
     <string name="aaps_directory_not_selected">Chưa chọn thư mục AAPS</string>
 </resources>

@@ -17,4 +17,6 @@
     <string name="night_tir">Tempo no alvo (TIR) noturno</string>
     <string name="carbs_short" comment="max 6 characters">Carboidratos</string>
     <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>

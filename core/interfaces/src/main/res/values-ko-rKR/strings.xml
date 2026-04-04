@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">펌프 드라이버가 변경되었습니다.</string>
@@ -60,4 +61,7 @@
     <string name="pref_show_date">날짜 표시</string>
     <string name="default_custom_watchface_comment">기본 시계, 워치페이스 내보내기 버튼을 클릭하여 템플릿을 생성할 수 있습니다.</string>
     <string name="wear_default_watchface">기본 워치페이스</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>

@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Đặt lại ghép đôi</string>
-    <string name="diaconn_no_device_available">Không có thiết bị nào</string>
     <string name="diaconn_pairing">Ghép đôi máy bơm Diaconn</string>
-    <string name="pumperror">Bơm lỗi</string>
     <string name="diaconn_g8_history_alarm">Cảnh báo</string>
     <string name="diaconn_g8_history_basalhours">Khung giờ basal</string>
     <string name="diaconn_g8_history_bolus">Liều bolus</string>
     <string name="diaconn_g8_history_dailyinsulin">Insulin hàng ngày</string>
     <string name="diaconn_g8_history_refill">Nạp lại Insulin</string>
     <string name="diaconn_g8_history_suspend">Tạm dừng</string>
-    <string name="invalidpairing">Thông tin ghép cặp không hợp lệ. Yêu cầu ghép đôi mới</string>
     <string name="gettingpumpsettings">Đang cập nhật cài đặt Bơm</string>
     <string name="gettingpumptime">Đang cập nhật thời gian Bơm</string>
     <string name="largetimediff">Chênh lệch thời gian lớn:\nThời gian trên bơm lệch hơn 1,5 giờ.\nVui lòng chỉnh thời gian trên bơm thủ công và đảm bảo việc đọc lịch sử từ bơm không gây ra hành vi bất ngờ.\nNếu có thể, hãy xóa lịch sử trên bơm trước khi thay đổi thời gian hoặc tắt chế độ vòng lặp kín trong một khoảng DIA kể từ mục lịch sử sai cuối cùng, nhưng tối thiểu một DIA kể từ bây giờ.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Lỗi tốc độ</string>
     <string name="insulinlimitviolation">Vi phạm giới hạn insulin</string>
     <string name="boluserrorcode">Yêu cầu: %1$.2fU Đã tiêm: %2$.2fU Mã lỗi: %3$s</string>
-    <string name="bolusspeed">Tốc độ liều Bolus</string>
     <string name="selectedpump">Bơm đã chọn</string>
     <string name="diaconn_g8_bluetooth_status">Trạng thái Bluetooth</string>
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
-    <string name="pump_firmware_label">Phần mềm</string>
     <string name="diaconn_g8_user_options">TÙY CHỌN NGƯỜI DÙNG</string>
     <string name="pairfirst">Hãy kết nối Bơm với điện thoại của bạn!</string>
     <string name="processinghistory">"Đang xử lý sự kiện "</string>
@@ -133,4 +128,14 @@
     <string name="diaconn_g8_errorcode_36">Dừng liều nền tạm thời bị từ chối khi liều nền tạm thời không hoạt động</string>
     <string name="diaconn_g8_cloudsend_summary">Gửi nhật ký bơm lên Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Đông bộ Diaconn Cloud</string>
+    <string name="bolus_speed_1">1 U/phút</string>
+    <string name="bolus_speed_2">2 U/phút</string>
+    <string name="bolus_speed_3">3 U/phút</string>
+    <string name="bolus_speed_4">4 U/phút</string>
+    <string name="bolus_speed_5">5 U/phút</string>
+    <string name="bolus_speed_6">6 U/phút</string>
+    <string name="bolus_speed_7">7 U/phút</string>
+    <string name="bolus_speed_8">8 U/phút</string>
+    <string name="diaconn_pairing_successful">Ghép nối thành công!</string>
+    <string name="diaconn_pairing_successful_message">Bơm của bạn đã được kết nối và sẵn sàng sử dụng.</string>
 </resources>

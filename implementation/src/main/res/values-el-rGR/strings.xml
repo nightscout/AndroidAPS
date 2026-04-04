@@ -17,4 +17,6 @@
     <string name="night_tir">Στόχος νύχτας</string>
     <string name="carbs_short" comment="max 6 characters">Υδατάνθρακες</string>
     <!--    PumpStatusGenerator-->
+    <!--    Permissions-->
+    <!--       ConcentrationHelper / DecimalFormatter-->
 </resources>

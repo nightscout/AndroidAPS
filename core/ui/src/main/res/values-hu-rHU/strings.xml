@@ -13,6 +13,7 @@
     <string name="settings">Beállítások</string>
     <string name="configbuilder_insulin">Inzulin</string>
     <string name="value_unavailable_short">n/a</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="pump">Pumpa</string>
     <string name="mute">Némít</string>
     <string name="waitingforpump">Várakozás pumpára</string>
@@ -26,7 +27,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pumpa idő frissítve</string>
     <string name="exit">Kilép</string>
@@ -43,7 +43,6 @@
     <string name="remove_button">Eltávolít</string>
     <string name="bg_label">VC</string>
     <string name="calibration">Kalibrálás</string>
-    <string name="bolus_reminder">Bólus emlékeztető</string>
     <string name="duration_label">Időtartam</string>
     <string name="shortgramm">g</string>
     <string name="notconfigured">Nincs beállítva</string>
@@ -53,7 +52,6 @@
     <string name="a11y_high">magas</string>
     <string name="a11y_low">alacsony</string>
     <string name="average">Átlag</string>
-    <string name="tir">TIR</string>
     <string name="remove_label">ELTÁVOLÍT</string>
     <string name="profile">Profil</string>
     <string name="treatments_wizard_cob_label">COB</string>
@@ -71,6 +69,7 @@
     <!--    ProfileFunction-->
     <!--    APSResult-->
     <string name="duration">Időtartam</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
@@ -90,12 +89,12 @@
     <!--    TDDStatsActivity-->
     <string name="basalrate">Bázis</string>
     <string name="bolus">Bólus</string>
-    <string name="tdd">TND</string>
     <string name="weight">Súly</string>
     <!--    Ntp-->
     <!-- User Entry -->
     <string name="uel_cancel_bolus">BÓLUS MEGSZAKÍT</string>
     <!-- HardLimits -->
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bázis</string>
@@ -125,14 +124,22 @@
     <string name="close">Bezár</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    BlePreCheck-->
     <!--    Preferences -->
-    <!-- SmsCommunicator -->
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d nap</item>
@@ -154,4 +161,10 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2f E</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

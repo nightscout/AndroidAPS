@@ -39,4 +39,6 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Aplikace Sino</string>
     <string name="description_source_patched_sino_app">Přijímat glykémie z upravené aplikace Sino.</string>
+    <!-- Notification Reader -->
+    <!-- Permission rationales -->
 </resources>

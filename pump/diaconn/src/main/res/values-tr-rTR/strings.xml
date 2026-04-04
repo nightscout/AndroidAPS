@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Eşleştirmeyi Sıfırla</string>
-    <string name="diaconn_no_device_available">Kullanılabilir Cihaz yok</string>
     <string name="diaconn_pairing">Diaconn Pompa Eşleştirme</string>
-    <string name="pumperror">Pompa Hatası</string>
     <string name="diaconn_g8_history_alarm">Alarmlar</string>
     <string name="diaconn_g8_history_basalhours">Bazal Saatler</string>
     <string name="diaconn_g8_history_bolus">Boluslar</string>
     <string name="diaconn_g8_history_dailyinsulin">Günlük İnsülin</string>
     <string name="diaconn_g8_history_refill">Yeniden doldurun</string>
     <string name="diaconn_g8_history_suspend">Askıya almak</string>
-    <string name="invalidpairing">Geçersiz eşleştirme bilgisi. Yeniden eşleştirme isteniyor</string>
     <string name="gettingpumpsettings">Pompa ayarları alınıyor</string>
     <string name="gettingpumptime">Pompa zamanı alınıyor</string>
     <string name="largetimediff">Büyük zaman farkı:\nPompadaki süre 1,5 saatten fazla kapalı.\nLütfen zamanı pompada manuel olarak ayarlayın ve pompadan geçmişi okumanın beklenmeyen davranışlara neden olmadığından emin olun.\nMümkünse zamanı değiştirmeden önce geçmişi kaldırın veya son yanlış geçmiş girişinden sonra bir DIA için kapalı döngüyü devre dışı bırakın.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Hız hatası</string>
     <string name="insulinlimitviolation">İnsülin limit ihlali</string>
     <string name="boluserrorcode">İstenen: %1$.2fU Teslim edilen: %2$.2fU Hata kodu: %3$s</string>
-    <string name="bolusspeed">Bolus hızı</string>
     <string name="selectedpump">Seçilen pompa</string>
     <string name="diaconn_g8_bluetooth_status">Bluetooth Durumu</string>
     <string name="bolus_step">Bolus Adımı</string>
     <string name="basal_step">Bazal Adımı</string>
-    <string name="pump_firmware_label">Yazılım</string>
     <string name="diaconn_g8_user_options">KULLANICI SEÇENEKLERİ</string>
     <string name="pairfirst">Lütfen pompanızı telefonunuzla eşleştirin!</string>
     <string name="processinghistory">"Etkinlik İşleniyor "</string>

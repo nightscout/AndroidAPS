@@ -7,32 +7,17 @@
     <string name="pump_status_active">Attivo</string>
     <string name="pump_status_error_comm">Errore nella comunicazione</string>
     <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
-    <string name="pump_status_pump_unreachable">Micro irraggiungibile</string>
     <string name="pump_status_invalid_config">Configurazione non valida</string>
     <string name="medtronic_pump_encoding_4b6b_local">Codifica hardware 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Codifica hardware 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">USA &amp; Canada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Mondo (868 Mhz)</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Scansione</string>
-    <string name="riley_link_ble_config_scan_stop">Stop</string>
-    <string name="riley_link_ble_config_scan_selected">Selezionato</string>
-    <string name="riley_link_ble_config_scan_title">Scansione RileyLink</string>
     <string name="riley_link_ble_config_scan_scanning">Scansione</string>
-    <string name="riley_link_ble_config_scan_finished">Scansione terminata</string>
-    <string name="riley_link_ble_config_scan_error">Errore scansione: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Mai</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink attualmente selezionato</string>
-    <string name="riley_link_ble_config_remove_riley_link">Rimuovi</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Sei sicuro di voler rimuovere il tuo RileyLink?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Rimuovi RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Nessun RileyLink selezionato</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Impostazioni</string>
-    <string name="rileylink_settings_tab2">Storico</string>
     <string name="rileylink_status">Stato RileyLink</string>
     <string name="medtronic_pump_status">Stato micro</string>
-    <string name="title_activity_rileylink_settings">Impostazioni RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Indirizzo:</string>
     <string name="rileylink_name">Nome:</string>
@@ -69,7 +54,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth disabilitato</string>
     <string name="rileylink_error_no_bt_adapter">Nessun adattatore bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Sintonizzazione fallita</string>
-    <string name="rileylink_error_pump_unreachable">Micro irraggiungibile</string>
     <string name="rileylink_error_pod_unreachable">Pod irraggiungibile</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Micro Medtronic</string>
@@ -87,5 +71,4 @@
     </plurals>
     <string name="orange_use_scanning_level">Usa scansione</string>
     <string name="orange_use_scanning_level_summary">Scansiona prima della connessione a OrangeLink, dovrebbe migliorare le connessioni (può essere usato anche con altri cloni di RileyLink, se necessario)</string>
-    <string name="rileylink_configuration">Configurazione RileyLink</string>
 </resources>

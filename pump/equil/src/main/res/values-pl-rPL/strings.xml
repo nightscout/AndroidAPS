@@ -3,16 +3,9 @@
     <string name="equil_pump_description">Pompa Equil 5.3 lub nowsza </string>
     <!--  start  -->
     <string name="equil_basal_speed">Baza podstawowa</string>
-    <string name="equil_btn_cancel">Anuluj</string>
-    <string name="equil_btn_need">Potrzeba</string>
-    <string name="equil_btn_skip">Pomiń</string>
-    <string name="equil_date_device">Ostatnie połączenie</string>
     <string name="equil_dressing">Zmień zbiornik</string>
     <string name="equil_dressing_onkey_msg">Automatycznie przesuwam tłok na dno zbiornika. Zatrzyma się sam po dotarciu na dół. Kliknij \'Zatrzymaj\', aby w razie potrzeby przerwać.</string>
-    <string name="equil_finish">Zakończ</string>
-    <string name="equil_next">Dalej</string>
     <string name="equil_hint_dressing">Ta operacja zatrzyma podawanie insuliny i spowoduje cofnięcie tłoka pompy do dołu!</string>
-    <string name="equil_history">Historia</string>
     <string name="equil_insulin_reservoir">Zbiornik insuliny</string>
     <string name="equil_mode">Tryb pracy</string>
     <string name="equil_mode_running">Pracuje</string>
@@ -23,16 +16,12 @@
     <string name="equil_success">Sukces</string>
     <string name="equil_title_dressing">Zmień zbiornik</string>
     <string name="equil_title_history_events">Zdarzenia historii</string>
-    <string name="equil_title_tips">Wskazówki</string>
     <string name="equil_tone">Sygnał dźwiękowy</string>
     <string name="equil_tone_mode_mute">Wyciszenie</string>
     <string name="equil_tone_mode_shake">Tylko wibracje</string>
     <string name="equil_tone_mode_tone">Tylko dźwięk</string>
     <string name="equil_tone_mode_tone_and_shake">Wibracje i dźwięk</string>
     <string name="equil_unit_u">%1$s U</string>
-    <string name="equil_unit_u_hours">%1$s U/H</string>
-    <string name="equil_unbind_content">Ta operacja zatrzyma podawanie insuliny i cofnie tłok pompy do dołu! Usunie również status powiązania!</string>
-    <string name="equil_error_no_devices">Brak urządzenia</string>
     <string name="equil_ble_config_confirmation_title">Paruj pompę Equil</string>
     <string name="equil_error">Błąd połączenia</string>
     <string name="equil_change">Zmień pompę</string>
@@ -49,18 +38,15 @@
     <string name="equil_pump_not_run">Pompa nie jest uruchomiona</string>
     <string name="equil_pair">Paruj</string>
     <string name="equil_pair_error">Błąd parowania</string>
-    <string name="equil_retry">Spróbuj ponownie</string>
     <string name="equil_fill">Rozpocznij/Wypełnij</string>
     <string name="equil_air">Usuń powietrze</string>
     <string name="equil_temp_basal_rate">Tymczasowa dawka bazowa</string>
     <string name="equil_total_delivered">Łącznie dostarczono</string>
-    <string name="equil_last_bolus">Ostatni bolus</string>
     <string name="equil_firmware_version">Wersja firmware\'u </string>
     <string name="equil_shutdown_be">Equil wyłączy się automatycznie</string>
     <string name="equil_shutdown">Auto wyłączenie Equila</string>
     <string name="equil_common_history_tbr_value">Dawka：%1$.2f U, Czas trwania：%2$d min</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
-    <string name="equil_history_type">Typ：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Ustaw bolus</string>
     <string name="equil_common_cmd_cancel_bolus">Anuluj bolus</string>
@@ -73,7 +59,6 @@
     <string name="equil_common_cmd_pair">Paruj Equil</string>
     <string name="equil_common_cmd_insert_cannula">Wprowadź wkłucie</string>
     <string name="equil_common_cmd_unpair">Rozłącz Equil</string>
-    <string name="equil_common_cmd_alarm">Alarm</string>
     <string name="equil_common_cmd_set_extended_bolus">Ustaw bolus przedłużony</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Anuluj bolus przedłużony</string>
     <!--    推杆回退-->
@@ -89,7 +74,6 @@
     <string name="equil_command_connect_error">Błąd połączenia z pompą</string>
     <string name="equil_command_connect_no_response">Brak odpowiedzi z pompy</string>
     <string name="equil_command__unknown">Nieznany stan polecenia</string>
-    <string name="equil_install">Wprowadź pompę do organizmu</string>
     <string name="equil_settings_alarm_battery">Alarm słabej baterii</string>
     <string name="equil_settings_alarm_insulin">Alarm o niskim poziomie zbiornika insuliny</string>
     <string name="equil_init_insulin_error">Inicjalizacja zbiornika nie została zakończona</string>
@@ -127,8 +111,6 @@
     <string name="equil_common_less_than_a_minute_ago">Mniej niż minutę temu</string>
     <string name="equil_common_time_ago">%1$s temu</string>
     <string name="equil_common_composite_time">%1$s i %2$s</string>
-    <string name="equil_common_wizard_button_finish">Zakończ</string>
-    <string name="equil_common_wizard_button_next">Dalej</string>
     <string name="equil_common_wizard_exit_confirmation_text">Nie ukończono jeszcze wszystkich kroków. Czy na pewno chcesz zakończyć?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Wyjście</string>
     <plurals name="equil_common_minutes">
@@ -150,8 +132,6 @@
         <item quantity="other">%1$d dni</item>
     </plurals>
     <string name="equil_support_error">Zbyt niska wersja firmware\'u urządzenia - nie jest obsługiwana</string>
-    <string name="equil_password_tips">Ustaw nowe hasło do parowania z pompą Equil v5.3. To hasło będzie również używane do rozłączenia bieżącej pompy w przyszłości, więc upewnij się, że je pamiętasz lub zapisz je w managerze haseł. Hasło musi mieć 4 znaki, wybrane spośród: ABCDEF0123456789.</string>
-    <string name="delete">Usuń</string>
     <string name="equil_set_pair_password">Ustaw hasło parowania</string>
     <string name="equil_hint1">Po zainstalowaniu pompy na płytce bazowej wybierz, czy usunąć powietrze z igły, która ma być wkłuta.</string>
     <string name="equil_unbind">Rozłącz urządzenie</string>
@@ -162,8 +142,6 @@
     <string name="equil_insert2">Pompa nie może znajdować się na płytce bazowej.</string>
     <string name="equil_attach">Podłącz pompę do płytki bazowej</string>
     <string name="equil_hint2">Wypełnij wkłucie</string>
-    <string name="equil_hint_dressing2">Proszę usuń pompę z płytki bazowej</string>
-    <string name="equil_unpair">Dezaktywować starą pompę %1$s?</string>
     <string name="equil_pump_updated">Pompa zaktualizowana</string>
     <string name="equil_replace_reservoir">Zbiornik jest pusty. Proszę wymienić zbiornik</string>
     <string name="error_mustbe6hexadidits">Musi składać się z 6 znaków spośród: ABCDEF0123456789</string>

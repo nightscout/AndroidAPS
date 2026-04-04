@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">泵驱动程序已变更</string>
@@ -54,4 +55,7 @@
     <string name="pref_show_bg">显示血糖</string>
     <string name="pref_show_direction_arrow">显示方向箭头</string>
     <string name="pref_show_ago">显示Ago信息</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>

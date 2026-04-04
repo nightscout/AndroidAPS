@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Usar conexión móvil</string>
     <string name="ns_wifi">Usar conexión WiFi</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Durante la carga</string>
     <string name="ns_battery">Con batería</string>
     <string name="connection_settings_title">Ajustes de conexión</string>
-    <string name="ns_wifi_allowed_ssids">SSID\'s permitidos (separados por punto y coma)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Permitir conexión en roaming</string>
     <string name="ns_create_announcements_from_errors_title">Crear notificaciones de los errores</string>
     <string name="ns_create_announcements_from_carbs_req_title">Crear notificaciones de alertas de carbohidratos necesarios</string>
@@ -19,8 +19,6 @@
     <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
     <string name="no_connectivity">Sin conectividad</string>
     <string name="unsupported_ns_version">Versión de Nightscout no soportada</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <string name="ns_malfunction">NSClient fallando. Considera reiniciar Nightscout y NSClient.</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
@@ -28,15 +26,14 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Reiniciar</string>
     <string name="ns_client_title">NSClientV1</string>
     <string name="ns_client_v3_title">NSClientV3</string>
-    <string name="ns_client_url_title">URL de Nightscout</string>
-    <string name="ns_client_url_dialog_message">Introduce tu URL de Nightscout (por ejemplo, https://yoursitename.yourplatform.dom)</string>
-    <string name="ns_client_secret_title">Nightscout API secret</string>
-    <string name="ns_client_secret_dialog_message">Introduce API Secret de Nightscout (mínimo 12 caracteres de contraseña registrada en las variables de Nightscout)</string>
-    <string name="nsclient_token_title">Token de acceso de Nightscout</string>
-    <string name="nsclient_token_dialog_message">Introduce el token de acceso a nivel de administrador generado en las herramientas de administrativas de Nightscout (mínimo 17 caracteres, ¡no tu API Secret!)</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Lanzar ahora</string>
     <string name="queue">Cola:</string>
     <string name="status">Estado:</string>
@@ -71,7 +68,6 @@
     <string name="ns_alarm_stale_data_value_label">Datos antiguos limite [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Datos antiguos urgentes limite [min]</string>
     <string name="ns_log_app_started_event">Registrar el inicio de la aplicación en Nightscout</string>
-    <string name="copy_existing_values">¿Deseas copiar los ajustes desde Nightscout, si existen?</string>
     <string name="ns_use_ws_title">Conectar a websockets</string>
     <string name="ns_use_ws_summary">Activarlo significa: actualizaciones más rápidas, recepción de alarmas y avisos con un mayor consumo de batería, similar a v1. El resto de cargadores a NS deben utilizar el protocolo v3.</string>
     <!-- Tidepool -->
@@ -148,9 +144,12 @@
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/es/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
+    <string name="wear_import_custom_watchface_title">Seleccionar esfera de reloj personalizada</string>
     <string name="cwf_infos_pref_locked">Lista de preferencias bloqueadas por la esfera</string>
     <string name="cwf_infos_pref_required">Lista de preferencias necesarias para la esfera</string>
     <string name="cwf_infos_view_title">Lista de campos incluidos en la esfera</string>
+    <string name="enabled">Activado</string>
+    <string name="disabled">Desactivado</string>
     <string name="pump_fetching_data">tratando de obtener datos de la bomba.</string>
     <string name="pump_old_data">TDD: ¡Siguen siendo datos antiguos! No se puede cargar desde la bomba</string>
     <string name="units_short">U</string>
@@ -185,18 +184,76 @@
     <string name="wear_action_loop_state_profile_invalid">¡Perfil inválido!</string>
     <string name="wear_action_loop_state_unauthorized">Por favor, inténtalo de nuevo.</string>
     <string name="wear_action_loop_state_invalid">Etado del lazo solicitado inválido</string>
-    <string name="wear_action_loop_state_title">ESTADO DEL LAZO</string>
+    <string name="wear_action_running_mode_title">MODO DE EJECUCIÓN</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuración: %2$d min</string>
-    <string name="wear_action_loop_state_now_closed">Cerrado</string>
-    <string name="wear_action_loop_state_now_lgs">LGS</string>
-    <string name="wear_action_loop_state_now_open">Abierto</string>
-    <string name="wear_action_loop_state_now_suspended">Suspendido</string>
-    <string name="wear_action_loop_state_now_resumed">Reanudado</string>
-    <string name="wear_action_loop_state_now_disabled">Desactivado</string>
+    <string name="wear_action_loop_state_now_closed">Lazo cerrado</string>
+    <string name="wear_action_loop_state_now_lgs">Suspensión por glucosa baja (LGS)</string>
+    <string name="wear_action_loop_state_now_open">Lazo abierto</string>
+    <string name="wear_action_loop_state_now_suspended">Suspender lazo</string>
+    <string name="wear_action_loop_state_now_resumed">Reanudar lazo</string>
+    <string name="wear_action_loop_state_now_disabled">Desactivar lazo</string>
     <string name="wear_action_loop_state_now_pump_suspended">Bomba suspendida</string>
     <string name="wear_action_loop_state_now_superbolus">Superbolo</string>
     <string name="wear_action_loop_state_now_invalid">Inválido</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">Bomba desconectada</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Desconectar bomba</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">Reconectar bomba</string>
     <string name="garmin_request_key">Solicitar clave</string>
     <string name="garmin_request_key_summary">Clave opcional para securizar la comunicación HTTP entre el dispositivo Garmin y AAPS.</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicador por SMS</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Control remoto de AAPS mediante comandos SMS.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de la aplicación Authenticator para: %1$s seguido del PIN</string>
+    <string name="smscommunicator_tab_otp_label">Configurar el Authenticator</string>
+    <string name="smscommunicator_code_verify_label">Código para comprobar:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">El código de verificación consta de los 6 dígitos que muestra la aplicación Authenticator (conocido como OTP), seguidos de los 3 o más dígitos del PIN obligatorio.</string>
+    <string name="smscommunicator_otp_reset_btn">Restablecer autenticadores</string>
+    <string name="smscommunicator_otp_reset_title">Restablecer clave del autenticador</string>
+    <string name="smscommunicator_otp_reset_prompt">¿Está seguro de que desea restablecer la clave del Authenticator? Esto invalidará todos los autenticadores configurados actualmente y deberá configurarlos de nuevo.</string>
+    <string name="smscommunicator_otp_reset_successful">¡Se ha generado una nueva clave del Authenticator! Por favor, utilice el código QR actualizado para configurar los authenticators.</string>
+    <string name="smscommunicator_otp_export_title">Exportando la clave secreta OTP</string>
+    <string name="smscommunicator_otp_export_prompt">¿Está seguro de que desea copiar la clave secreta OTP al portapapeles?\n\nEs posible que solo necesite esto si su aplicación de autenticación tiene problemas para escanear el código QR, si desea introducirla manualmente o si desea configurar un token OTP físico (hardware) mediante una aplicación dedicada.</string>
+    <string name="smscommunicator_otp_export_successful">Secreto OTP (en formato Base32) exportado y copiado al portapapeles. ¡Pégalo en el autenticador o en el grabador de OTP de hardware!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Instalar Authenticator</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Escanea el código para configurar los códigos OTP de AAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Probar la contraseña de un solo uso (OTP)</string>
+    <string name="smscommunicator_otp_reset_header">Restablecer autenticadores</string>
+    <string name="smscommunicator_otp_install_info">En cada teléfono de seguidor (follower), instala una aplicación de autenticación que admita tokens TOTP RFC 6238. Las aplicaciones gratuitas más populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Al restablecer el autenticador, invalidas todos los autenticadores ya configurados. ¡Tendrás que configurarlos de nuevo!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">¡TAMAÑO INVÁLIDO!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN INCORRECTO</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP INCORRECTO</string>
+    <string name="sms_wrong_code">Código incorrecto. Comando cancelado.</string>
+    <string name="sms_timeout_while_waiting">Tiempo de espera agotado mientras se esperaba a que finalizara la comunicación anterior con la bomba</string>
+    <string name="smscommunicator_bolus_reply_with_code">Para suministrar un bolo de %1$.2f unidades, responde con el código %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Para suministrar un bolo de comida de %1$.2fU, responde con el código %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Para establecer el Objetivo Temporal de %1$s, responde con el código %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Para cancelar el Objetivo Temporal, responda con el código %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Para desactivar el Servicio Remoto por SMS, responda con el código %1$s.\n\nTenga en cuenta que solo podrá reactivarlo directamente desde el teléfono principal de AAPS.</string>
+    <string name="smscommunicator_stopped_sms">Servicio remoto por SMS detenido. Para reactivarlo, utilice AAPS en el teléfono principal.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Para enviar la calibración %1$.2f responda con el código %2$s</string>
+    <string name="smscommunicator_bolus_failed">Fallo en el bolo. ¡Verifique el estado real antes de enviar otro comando!</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Número mínimo de minutos que deben transcurrir entre un bolo remoto y el siguiente</string>
+    <string name="smscommunicator_remote_bolus_min_distance">Minutos mínimos que deben transcurrir entre un bolo y el siguiente. Por su seguridad, para editar esta preferencia debe añadir al menos 2 números de teléfono. De lo contrario, se utilizarán 15 min.</string>
+    <string name="smscommunicator_bolus_delivered">Bolo de %1$.2f U administrado con éxito</string>
+    <string name="smscommunicator_meal_bolus_delivered">Bolo de comida de %1$.2f U administrado con éxito</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Objetivo de %1$s por %2$d minutos</string>
+    <string name="smscommunicator_tt_set">Objetivo de %1$s por %2$d minutos establecido con éxito</string>
+    <string name="smscommunicator_tt_canceled">Objetivo temporal cancelado con éxito</string>
+    <string name="sms_actual_bg">Glucosa:</string>
+    <string name="sms_last_bg">Última glucemia:</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolo:</string>
+    <string name="sms_basal">Basal:</string>
+    <string name="sms_min_ago">hace %1$d min</string>
+    <string name="sms_loop_suspended_for">Suspendido (%1$d min)</string>
+    <string name="sms_read_status_failed">Error al leer estado</string>
+    <string name="sms_profile_switch_created">Cambio de perfil creado</string>
+    <string name="sms_wrong_tbr_duration">La duración de la TBR debe ser un múltiplo de %1$d minutos y mayor que 0</string>
+    <string name="a11y_otp_qr_code">Código QR para configurar la contraseña de un solo uso</string>
+    <string name="permission_sms_title">SMS</string>
+    <string name="permission_sms_description">La aplicación necesita permiso de SMS para el control remoto mediante mensajes de texto</string>
 </resources>

@@ -146,4 +146,12 @@
     <string name="newSmbMode">新 SMB 模式：</string>
     <string name="on">開</string>
     <string name="off">關</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">從地圖選取</string>
+    <string name="tap_to_select_location">在地圖上點選以選擇位置</string>
+    <string name="selected_coords">已選擇：%1$.6f, %2$.6f</string>
+    <!-- Permission rationales -->
+    <string name="permission_location_title">位置</string>
+    <string name="permission_location_description">用於位置型自動化觸發與 WiFi 網路識別</string>
+    <string name="permission_background_location_description">在應用程式於背景時，讓自動化觸發能運作所需</string>
 </resources>

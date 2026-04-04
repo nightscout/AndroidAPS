@@ -34,6 +34,7 @@
     <string name="do_ns_upload_title">将 数据血糖数据上传到 NS服务器</string>
     <string name="configbuilder_insulin">胰岛素</string>
     <string name="value_unavailable_short">无可用</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">导出用户条目到 Excel (csv)</string>
     <string name="confirm">确认</string>
     <string name="pump">胰岛素泵</string>
@@ -72,8 +73,6 @@
     <string name="shortgram">克</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">蓝牙</string>
-    <string name="btwatchdog_title">蓝牙看门狗</string>
-    <string name="btwatchdog_summary">如果无法与泵连接，将关闭手机的蓝牙一秒钟后再自动打开。在一些蓝牙堆栈僵死的手机上是有帮助的。</string>
     <string name="virtualpump_resultok">确定</string>
     <string name="pump_time_updated">泵时间已经更新</string>
     <string name="exit">退出</string>
@@ -101,7 +100,6 @@
     <string name="bg_label">血糖</string>
     <string name="calibration">校准</string>
     <string name="alarminxmin">在 %1$d 分钟内运行提醒</string>
-    <string name="bolus_reminder">大剂量提醒</string>
     <string name="duration_label">持续时间</string>
     <string name="shortgramm">克</string>
     <string name="pumpsuspended">泵暂停了</string>
@@ -123,18 +121,15 @@
     <string name="a11y_inrange">在范围内</string>
     <string name="a11y_low">低</string>
     <string name="average">平均</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">移除</string>
     <string name="activate_profile">激活配置文件</string>
-    <string name="reset">重置</string>
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
     <string name="select_for_removal">选择要删除的</string>
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
-    <string name="wear_wizard_settings">向导设置</string>
     <string name="bg_trend_label">15分钟 趋势</string>
     <string name="treatments_wizard_cob_label">碳水</string>
     <string name="bolus_iob_label">大剂量活性胰岛素IOB</string>
@@ -169,6 +164,7 @@
     <string name="duration">持续时间</string>
     <string name="reason">原因</string>
     <string name="nochangerequested">不需要改变</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">无效的配置文件：%1$s</string>
     <!--    Temptarget-->
@@ -227,7 +223,6 @@
     <string name="expweight">日输注总量指数加权</string>
     <string name="basalrate">基础率</string>
     <string name="bolus">大剂量</string>
-    <string name="tdd">日胰岛素总量</string>
     <string name="ratio">比值</string>
     <string name="amount_days"># 天</string>
     <string name="weight">权重</string>
@@ -342,6 +337,7 @@
     <string name="valueoutofrange">»%1$s« 超出了硬限制</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f 超出了硬限制</string>
     <string name="basal_value">基础率值</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">大剂量 %1$.2f U</string>
     <string name="carbs_g">碳水 %1$d 克</string>
@@ -371,13 +367,11 @@
     <string name="autotune_tune_days">调整天数</string>
     <string name="autotune_select_profile">选择配置文件去协调</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">对警报和通知使用系统通知音</string>
     <string name="urgent_alarm">紧急报警</string>
     <string name="info">信息</string>
     <!-- BolusWizard -->
     <string name="cobvsiob">活性碳水vs活性胰岛素</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 检测到碳水化合物吸收缓慢：%2$d%%的时间。再次检查你的计算。COB可能被高估，因此可以给予更多胰岛素!!!!!</font>]]></string>
-    <string name="partialboluswizard">输注大剂量向导结果的一部分[%]</string>
     <string name="advisoralarm">在应当吃饭时提醒</string>
     <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
     <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
@@ -441,14 +435,18 @@
     <string name="message">消息</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
-    <string name="dismiss">忽略</string>
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="close">关闭</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">请您输入主密码，该密码将用于解密导入的首选项配置。</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">将%1$s 减少 %2$s</string>
     <string name="a11y_plus_button_description">将%1$s 增加 %2$s</string>
@@ -468,8 +466,10 @@
     <string name="location_not_found_message">为了蓝牙能发现新的设备，手机定位功能必须启用， AAPS 不会追踪你的位置，你可以在配对成功后禁用定位。</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">插件选项</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">缺少 SMS 短信权限</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
@@ -498,4 +498,10 @@
     <string name="sunday_short">周日</string>
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

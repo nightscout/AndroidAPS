@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">NS에 혈당데이터 업로드하기</string>
     <string name="configbuilder_insulin">인슐린</string>
     <string name="value_unavailable_short">사용불가</string>
-    <string name="master_password">마스터 비밀번호</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">사용자 항목 엑셀 파일로 내보내기 (csv)</string>
     <string name="confirm">확인</string>
     <string name="pump">펌프</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">블루투스</string>
-    <string name="btwatchdog_title">블루투스 감시기능</string>
-    <string name="btwatchdog_summary">펌프에 연결이 되지 않을때 폰의 블루투스를 1초간 껐다 켭니다. 블루투스 스택이 정지되는 일부폰에 이 기능이 도움이 됩니다.</string>
     <string name="virtualpump_resultok">네</string>
     <string name="pump_time_updated">펌프 시간 업데이트</string>
     <string name="exit">종료</string>
@@ -109,7 +107,6 @@
     <string name="bg_label">혈당</string>
     <string name="calibration">보정</string>
     <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
-    <string name="bolus_reminder">BOLUS 알림</string>
     <string name="duration_label">기간</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">펌프 일시중지됨</string>
@@ -131,18 +128,15 @@
     <string name="a11y_inrange">범위 내</string>
     <string name="a11y_low">소</string>
     <string name="average">평균</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">삭제</string>
     <string name="activate_profile">프로파일 활성화하기</string>
-    <string name="reset">재설정</string>
     <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
     <string name="profile">프로파일</string>
     <string name="select_for_removal">제거할 항목 선택하기</string>
     <string name="confirm_remove_multiple_items">정말로 %1$d 항목을 제거하시겠습니까?</string>
     <string name="overview_treatment_label">관리</string>
     <string name="copytolocalprofile">이 프로파일에서 새로운 프로파일을 생성하시겠습니까?</string>
-    <string name="wear_wizard_settings">마법사 설정</string>
     <string name="bg_trend_label">15분 추이</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -185,6 +179,7 @@
     <string name="duration">기간</string>
     <string name="reason">근거</string>
     <string name="nochangerequested">변경사항 없음</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">유효하지 않은 프로파일: %1$s</string>
     <!--    Temptarget-->
@@ -250,7 +245,6 @@
     <string name="expweight">지수가중 일총량</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">일총량</string>
     <string name="ratio">비율</string>
     <string name="amount_days">#일</string>
     <string name="weight">가중</string>
@@ -367,6 +361,7 @@
     <string name="valueoutofrange">»%1$s«이 \'고정된 한계값\'을 벗어났습니다.</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f이 \'고정된 한계값\'을 벗어났습니다.</string>
     <string name="basal_value">Basal 값</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">탄수화물 %1$d g</string>
@@ -399,7 +394,6 @@
     <string name="autotune_tune_days">조정 일수 :</string>
     <string name="autotune_select_profile">조정할 프로파일 선택하기</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
     <string name="urgent_alarm">긴급 알람</string>
     <string name="info">정보</string>
     <!-- BolusWizard -->
@@ -407,8 +401,6 @@
     <string name="bolus_advisor_message">현재 높은 혈당을 가지고 있습니다. 지금 먹는 대신 더 나은 혈당을 기다리는 게 좋습니다. 지금 교정bolus 을 진행하고, 식사 시간을 알려드릴까요? 이 경우 탄수화물은 기록되지 않으며, 다시 알림을 줄 때 마법사를 다시 사용해야 합니다.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 느린 탄수화물 흡수 감지: %2$d%% of time. 계산을 다시 확인하십시오. COB를 과대하게 측정하여 더 많은 인슐린이 주입될 수 있습니다 !!!!!</font>]]></string>
-    <string name="partialboluswizard">Bolus 마법사 결과의 이 부분 주입[%]</string>
-    <string name="partialboluswizard_reset_time">이전 혈당 시간 임계값 [min]</string>
     <string name="bolus_constraint_applied_warn">적용된 Bolus 제약 조건: %1$.2f U 에서 %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus는 이 경우(펌프를 통해 공급되지 않음) 에만 기록됩니다</string>
     <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
@@ -484,14 +476,18 @@
     <string name="message">메시지</string>
     <string name="ok">네</string>
     <string name="cancel">취소</string>
-    <string name="dismiss">무시</string>
     <string name="yes">네</string>
     <string name="no">아니오</string>
     <string name="close">닫기</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">내보낸 preferences를 가져오기 위해서는 마스터 비밀번호가 필요합니다.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">%1$s을 %2$s만큼 감소하였습니다</string>
     <string name="a11y_plus_button_description">%1$s을 %2$s만큼 증가하였습니다</string>
@@ -512,8 +508,10 @@
     <string name="location_not_found_message">최신 스마트폰에서 블루투스 검색이 작동하려면 위치가 활성화되어 있어야합니다. AAPS는 당신의 위치를 추적하지 않으며 페어링에 성공한 후 비활성화 할 수 있습니다.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">플러그인 설정</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">앱이 종료되지 않도록 해야합니다?</string>
     <string name="fabric_upload_disabled">충돌 로그 업로드가 작동되지 않습니다!</string>
@@ -551,4 +549,10 @@
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

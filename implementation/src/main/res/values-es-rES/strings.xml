@@ -25,4 +25,17 @@
     <string name="short_status_reservoir">Reservorio: %1$dU</string>
     <string name="short_status_battery">Batería: %1$d%%</string>
     <string name="short_status_not_initialized">Bomba no inicializada</string>
+    <!--    Permissions-->
+    <string name="permission_battery_title">Optimización de batería</string>
+    <string name="permission_battery_description">La aplicación debe ser excluida de la optimización de batería para funcionar de forma fiable en segundo plano</string>
+    <string name="permission_directory_title">Directorio de AAPS</string>
+    <string name="permission_directory_description">Seleccione un directorio para los ajustes de la aplicación y los archivos de registro</string>
+    <string name="permission_notifications_title">Notificaciones</string>
+    <string name="permission_notifications_description">Necesario para mostrar alertas, alarmas y actualizaciones del estado de la bomba</string>
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
 </resources>

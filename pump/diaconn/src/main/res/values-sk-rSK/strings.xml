@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Zrušiť párovanie</string>
-    <string name="diaconn_no_device_available">Nie sú k dispozícii žiadne zariadenia</string>
     <string name="diaconn_pairing">Párovanie pumpy Diaconn</string>
-    <string name="pumperror">Chyba pumpy</string>
     <string name="diaconn_g8_history_alarm">Alarmy</string>
     <string name="diaconn_g8_history_basalhours">Hodinové bazály</string>
     <string name="diaconn_g8_history_bolus">Bolusy</string>
     <string name="diaconn_g8_history_dailyinsulin">Denný inzulín</string>
     <string name="diaconn_g8_history_refill">Plnenie</string>
     <string name="diaconn_g8_history_suspend">Pozastaviť</string>
-    <string name="invalidpairing">Neplatné informácie o párovaní. Požiadavka na nové párovanie</string>
     <string name="gettingpumpsettings">Získavam nastavenia pumpy</string>
     <string name="gettingpumptime">Získavam čas z pumpy</string>
     <string name="largetimediff">Veľký rozdiel v čase:\nČas v pumpe sa líši minimálne o 1,5 h.\nProsím upravte čas v pumpe manuálne a vymažte históriu pumpy.\nPokiaľ je to potrebné, pozastavte uzavretý okruh aspoň na \"DIA\" hodín.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Chyba rýchlosti</string>
     <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
     <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$s</string>
-    <string name="bolusspeed">Rýchlosť bolusu</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="diaconn_g8_bluetooth_status">Stav Bluetooth</string>
     <string name="bolus_step">Krok bolusu</string>
     <string name="basal_step">Krok bazálu</string>
-    <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">UŽIVATEĽSKÉ NASTAVENIA</string>
     <string name="pairfirst">Prosím spárujte pumpu s telefónom!</string>
     <string name="processinghistory">"Spracúvam udalosť "</string>

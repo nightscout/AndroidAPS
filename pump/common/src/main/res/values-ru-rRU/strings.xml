@@ -65,28 +65,4 @@
     <string name="ble_config_remove">Удалить</string>
     <!-- Pump History -->
     <string name="pump_history_type">Тип:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d день</item>
-        <item quantity="few">%1$d дня</item>
-        <item quantity="many">%1$d дней</item>
-        <item quantity="other">%1$d дн</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d час</item>
-        <item quantity="few">%1$d часа</item>
-        <item quantity="many">%1$d часов</item>
-        <item quantity="other">%1$d ч</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d час назад</item>
-        <item quantity="few">%1$d часа назад</item>
-        <item quantity="many">%1$d часов назад</item>
-        <item quantity="other">%1$d ч назад</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d день назад</item>
-        <item quantity="few">%1$d дня назад</item>
-        <item quantity="many">%1$d дней назад</item>
-        <item quantity="other">%1$d дн назад</item>
-    </plurals>
 </resources>

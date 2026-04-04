@@ -25,4 +25,17 @@
     <string name="short_status_reservoir">Rezervor: %1$dU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="short_status_not_initialized">Pompa nu este inițializată</string>
+    <!--    Permissions-->
+    <string name="permission_battery_title">Optimizarea bateriei</string>
+    <string name="permission_battery_description">Aplicația trebuie exclusă din optimizarea bateriei pentru a rula în mod fiabil în fundal</string>
+    <string name="permission_directory_title">Dosar AAPS</string>
+    <string name="permission_directory_description">Selectați un dosar pentru setările aplicației și fișierele de jurnal</string>
+    <string name="permission_notifications_title">Notificări</string>
+    <string name="permission_notifications_description">Necesar pentru a afișa alerte, alarme și actualizări ale stării pompei</string>
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
 </resources>

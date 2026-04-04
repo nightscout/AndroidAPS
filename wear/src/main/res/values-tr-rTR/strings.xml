@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 dk</string>
     <string name="pref_10_min">10 dk</string>
     <string name="pref_15_min">15 dk</string>
-    <string name="pref_input_design">Giriş Tasarımı</string>
-    <string name="pref_default">Varsayılan</string>
-    <string name="pref_quick_righty">Hızlı Sağ</string>
-    <string name="pref_quick_lefty">Hızlı Sol</string>
-    <string name="pref_modern_sparse">Modern Seyrek</string>
     <string name="pref_big_numbers">Büyük Sayılar</string>
     <string name="pref_ring_history">Zil Geçmişi</string>
     <string name="pref_light_ring_history">Düşük zil Geçmişi</string>
@@ -90,7 +85,6 @@
     <string name="menu_default">Varsayılan</string>
     <string name="menu_menu">Menü</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Süre\n[minutes]</string>
     <string name="action_tempt_confirmation">Geçici hedef talebi</string>
     <string name="action_quick_wizard_confirmation">Hızlı asistan talebi</string>
     <string name="action_user_action_confirmation">Kullanıcı Eylemi Gerekli</string>
@@ -100,9 +94,6 @@
     <string name="action_fill_confirmation">Doldurma talebi</string>
     <string name="action_ecarb_confirmation">Karonhidrat talebi</string>
     <string name="action_profile_switch_confirmation">Profil Değişimi İstendi</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Hedef\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Düşük\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Yüksek\n[%s]</string>
     <string name="action_carbs">Karbonhidrat</string>
     <string name="action_carbs_gram">Karb.lar [g]</string>
     <string name="action_ecarbs">yKarb</string>
@@ -195,7 +186,6 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">eski</string>
     <string name="old_warning">!eski!</string>
-    <string name="error">!hata!</string>
     <string name="pref_heartRateSampling">Nabız</string>
     <string name="pref_heartRateSmoothing">Nabız yumuşatma</string>
     <string name="pref_stepsSampling">Adım Saymayı Etkinleştir</string>
@@ -225,7 +215,4 @@
     <string name="complication_iob_icon">AİNS simgesi</string>
     <string name="complication_iob_detailed">Detaylı AiNS</string>
     <string name="complication_uploader_phone_battery">Yükleyici/Telefon Pili</string>
-    <string name="status_loop_state">Döngü durumu</string>
-    <string name="label_loop_state_title">AAPS(Döngü Durumu)</string>
-    <string name="action_loop_state_selected">Döngü durumu talep edildi</string>
 </resources>

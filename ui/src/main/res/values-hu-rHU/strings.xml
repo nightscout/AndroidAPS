@@ -3,7 +3,6 @@
     <string name="temp_target_short">ÁC</string>
     <!--    Widget-->
     <!--     Activities-->
-    <string name="statistics">Statisztikák</string>
     <string name="calculation_in_progress">Számítás folyamatban</string>
     <string name="age">Kor</string>
     <string name="weight_label">Súly</string>
@@ -15,6 +14,7 @@
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <!-- InsulinDialog -->
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
     <string name="resume">Folytatás</string>
@@ -30,12 +30,12 @@
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil típusa</string>
     <string name="selected_profile">Kiválasztott:</string>
-    <string name="compare_profile">Profilok összehasonlítása</string>
-    <string name="nav_profile_helper">Profilsegéd</string>
     <string name="motol_default_profile">Alapértelmezett profil</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Bázisütem</string>
-    <!--    BolusProgressDialog-->
     <!--QuickWizard-->
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
 </resources>

@@ -2,7 +2,7 @@
 <resources>
     <string name="biometric_title">Autentificarea este obligatorie</string>
     <string name="biometric_description">Puneți degetul pe cititorul de amprente pentru a verifica identitatea</string>
-    <string name="settings_protection">Protecţie setări</string>
+    <string name="settings_protection">Protecție setări</string>
     <string name="application_protection">Protecție aplicație</string>
     <string name="bolus_protection">Protecție bolus</string>
     <string name="settings_password">Parolă setări</string>
@@ -13,12 +13,9 @@
     <string name="bolus_pin">PIN Bolus</string>
     <string name="protection_timeout_title">Reținerea parolei și a PIN-ului [s]</string>
     <string name="protection_timeout_summary">Timpul până la introducerea parolei sau a PIN-ului</string>
-    <string name="biometric">Biometric</string>
-    <string name="custom_password">Parolă personalizată</string>
-    <string name="custom_pin">PIN particularizat</string>
-    <string name="noprotection">Fără protecţie</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Trecere la modul nesecurizat biometric</string>
-    <string name="unsecure_fallback_descriotion_biometric">Pentru a fi eficientă, protecţia biometrică are nevoie de o parolă principală pentru regresie.\n\nVă rugăm să setaţi o parolă principală!</string>
+    <string name="unsecure_fallback_descriotion_biometric">Pentru a fi eficientă, protecția biometrică are nevoie de o parolă principală pentru regresie.\n\nVă rugăm să setați o parolă principală!</string>
     <string name="password_set">Parola a fost setată!</string>
     <string name="datastore_password_cleared">Parola de export stocată a fost ștearsă!</string>
     <string name="pin_set">PIN setat!</string>
@@ -27,8 +24,13 @@
     <string name="password_not_changed">Parola nu a fost modificată</string>
     <string name="pin_not_changed">PIN nemodificat</string>
     <string name="pin_cleared">PIN șters!</string>
-    <string name="password_hint">Introduceți parola aici</string>
-    <string name="pin_hint">Introduceți codul PIN aici</string>
+    <string name="protection_password_hint">Introduceți parola aici</string>
+    <string name="protection_pin_hint">Introduceți codul PIN aici</string>
+    <string name="auth_hint_master_password">Introduceți parola principală</string>
+    <string name="auth_hint_master_or_pin">Introduceți parola principală sau codul PIN</string>
+    <string name="auth_hint_master_or_password">Introduceți parola principală sau parola personalizată</string>
+    <string name="use_pin_password">Utilizați codul PIN/parola</string>
+    <string name="current_master_password">Parola principală curentă</string>
     <string name="master_password_not_set">Parola principală nu este setată</string>
     <string name="aaps_directory_not_selected">Directorul AAPS nu a fost selectat</string>
 </resources>

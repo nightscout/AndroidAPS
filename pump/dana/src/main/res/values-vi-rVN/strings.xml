@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Đang ghép đôi</string>
-    <string name="danars_no_device_available">Chưa tìm thấy thiết bị nào</string>
-    <string name="danars_pairingok">Ghép đôi thành công</string>
     <string name="danars_pairingtimedout">Hết thời gian ghép đôi</string>
-    <string name="danars_waitingforpairing">Đang chờ ghép đôi trên bơm</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Tích hợp bơm cho DANA Diabecare RS và Dana-i</string>
@@ -59,7 +55,6 @@
     <string name="danar_history_bolus">Liều bolus</string>
     <string name="danar_history_carbohydrates">Carbohydrates</string>
     <string name="danar_history_dailyinsulin">Insulin hàng ngày</string>
-    <string name="danar_history_errors">Lỗi</string>
     <string name="danar_history_glucose">Đường huyết</string>
     <string name="danar_history_refill">Nạp lại</string>
     <string name="danar_history_syspend">Tạm dừng</string>
@@ -68,7 +63,6 @@
     <string name="danar_time_display">Hiển thị định dạng thời gian</string>
     <string name="danar_button_scroll">Phím cuộn</string>
     <string name="danar_beep">Kêu bíp khi nhấn nút</string>
-    <string name="danar_pump_alarm">Cảnh báo</string>
     <string name="danar_pump_alarm_sound">Âm thanh</string>
     <string name="danar_pump_alarm_vibrate">Rung</string>
     <string name="danar_pump_alarm_both">Cả hai</string>
@@ -82,7 +76,6 @@
     <string name="description_pump_dana_r_korean">Tích hợp bơm DANA Diabecare R (bản nội địa)</string>
     <string name="description_pump_dana_r_v2">Tích hợp bơm DANA Diabecare R với firmware đã nâng cấp</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Không phát hiện Bluetooth</string>
     <string name="devicenotfound">Không tìm thấy thiết bị đã chọn</string>
     <string name="danar_switchtouhmode">Thay đổi chế độ từ U/d sang U/h trên bơm</string>
     <string name="danarkoreanpump">DanaR Korean</string>
@@ -91,28 +84,38 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Tắt chế độ EasyUI trên bơm</string>
     <string name="profile_set_failed">Cài đặt Hồ sơ liều nền thất bại</string>
-    <string name="danar_bluetooth_status">Trạng thái Bluetooth</string>
-    <string name="firmware_label">Phần mềm</string>
     <string name="danar_pump_settings">Cài đặt bơm Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">Bật</string>
     <string name="option_off">Tắt</string>
-    <string name="danar_bt_name_title">Thiết bị Bluetooth DanaR</string>
     <string name="danars_password_title">Mật khẩu bơm (chỉ v1)</string>
     <string name="danar_password_title">Mật khẩu bơm</string>
     <string name="danar_useextended_title">Sử dụng bolus kéo dài khi &gt;200%</string>
-    <string name="bolusspeed">Tốc độ Bolus</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Bơm đã chọn</string>
     <string name="rs_loginsulinchange_title">Ghi lại thay đổi bình chứa</string>
     <string name="rs_loginsulinchange_summary">Thêm sự kiện \"Thay đổi insulin\" vào careportal khi phát hiện trong lịch sử</string>
     <string name="rs_logcanulachange_title">Ghi lại thay đổi kim truyền</string>
     <string name="rs_logcanulachange_summary">Thêm sự kiện \"Thay đổi kim truyền\" vào careportal khi phát hiện trong lịch sử</string>
-    <string name="pin1">Mã PIN1</string>
-    <string name="pin2">Mã PIN2</string>
     <string name="press_ok_on_the_pump">Nhấn OK trên Bơm\nvà nhập 2 số hiển thị\nGiữ màn hình bơm luôn BẬT bằng cách nhấn nút trừ cho đến khi bạn nhập xong mã.</string>
     <string name="num1pin">1: (12 chữ số)</string>
     <string name="num2pin">2: (8 chữ số)</string>
     <string name="basal_bolus_step">Bước điều chỉnh basal/bolus</string>
-    <string name="carbs_store_error">Carb có thể chưa được lưu đúng cách. Hãy kiểm tra thủ công và lưu lại nếu cần.</string>
+    <string name="connecting_to_pump">Đang kết nối với bơm…</string>
+    <string name="pairing_successful">Ghép nối thành công!</string>
+    <string name="pairing_successful_message">Bơm của bạn đã được kết nối và sẵn sàng sử dụng.</string>
+    <string name="cancel_pairing_title">Hủy ghép nối?</string>
+    <string name="cancel_pairing_message">Quá trình ghép nối sẽ bị hủy.</string>
+    <string name="done">Hoàn thành</string>
+    <string name="open_bluetooth_settings">Mở cài đặt Bluetooth</string>
+    <string name="enter_pump_password">Nhập mật khẩu bơm</string>
+    <string name="select_paired_device">Chọn thiết bị đã ghép nối</string>
+    <string name="no_paired_devices">Không có thiết bị Dana đã ghép. Hãy ghép bơm trong Bluetooth Android trước.</string>
+    <string name="password_hint">Mật khẩu 4 chữ số (0–9999)</string>
+    <string name="connecting_verifying">Đang kết nối và xác minh mật khẩu…</string>
+    <string name="password_ok">Xác minh mật khẩu thành công!</string>
+    <string name="password_wrong">Sai mật khẩu. Nhập lại.</string>
 </resources>

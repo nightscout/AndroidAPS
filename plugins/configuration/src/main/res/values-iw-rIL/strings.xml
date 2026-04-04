@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">בחרו את היחידות שבהן ברצונכם להציג ערכים</string>
     <string name="next_button">הבא</string>
     <string name="previous_button">הקודם</string>
-    <string name="nav_setupwizard">אשף ההתקנה</string>
     <string name="setupwizard_finish">סיום</string>
     <string name="welcome">ברוכים הבאים</string>
     <string name="welcometosetupwizard">ברוכים הבאים לאשף ההתקנה. האשף ידריך אתכם בתהליך ההתקנה\n</string>
@@ -18,18 +17,13 @@
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
     <string name="permission">הרשאה</string>
     <string name="need_system_window_permission">האפליקציה צריכה הרשאת מערכת של חלונות לצורך התראות</string>
-    <string name="need_location_permission">דרושה הרשאת מיקום עבור סריקת בלוטות\' וזיהוי WiFi</string>
-    <string name="need_storage_permission">דרושה הרשאת אחסון כדי שתוכלו לאחסן קובצי יומן והגדרות יצוא.</string>
     <string name="askforpermission">מבקש הרשאה</string>
-    <string name="need_whitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
     <string name="master_password_summary">הסיסמה הראשית משמשת להצפנת גיבוי וכדי לעקוף את האבטחה ביישום. זכרו אותה או שמרו אותה במקום בטוח.</string>
-    <string name="current_master_password">סיסמה ראשית נוכחית</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">השתמשו בערכים הגבוהים ביותר של מזונות שאתם אוכלים בדרך כלל\n</string>
     <string name="syncinfotext">סנכרון נתונים לענן. ניתן לדלג על החלק הזה עכשיו אבל לא תוכלו לעבור משימות עד שתגדירו את קליינט הנייטסקאוט או Tidepool.</string>
     <string name="status">סטטוס: </string>
-    <string name="patient_name">שם המטופל\\ת</string>
-    <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="diawarning">חשוב לזכור: פרופילי אינסולין חדשים דורשים משך פעילות אינסולין (DIA) של 5 ש\' לפחות. ערך של 5-6 ש\' בפרופיל חדש שווה לערך של 3 ש\' בפרופילים ישנים.</string>
     <string name="profile">פרופיל</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
@@ -51,25 +45,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">בונה התצורה</string>
-    <string name="configbuilder_pump">משאבה</string>
     <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
     <string name="configbuilder_profile">פרופיל</string>
-    <string name="configbuilder_profile_description">באיזה פרופיל על AndroidAPS להשתמש?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">איזה אלגוריתם של APS יבצע התאמות טיפול?</string>
-    <string name="configbuilder_general">כללי</string>
     <string name="configbuilder_general_description">מס\' תוספים כלליים שעשויים להיות יעילים.</string>
-    <string name="configbuilder_sync">סינכרון</string>
-    <string name="configbuilder_sync_description">תוספי העלאת נתונים וסינכרון.</string>
     <string name="configbuilder_constraints_description">אילו מגבלות פעילות?</string>
-    <string name="configbuilder_loop">לולאה</string>
     <string name="configbuilder_loop_description">השתמשו באפשרות זו כדי להפעיל את לולאת AndroidAPS.</string>
     <string name="configbuilder_insulin_description">באיזה סוג של אינסולין אתה משתמש?</string>
-    <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
-    <string name="configbuilder_smoothing">החלקה</string>
     <string name="configbuilder_smoothing_description">בחרו אלגוריתם החלקה</string>
-    <string name="configbuilder_sensitivity">זיהוי רגישות</string>
     <string name="configbuilder_sensitivity_description">באיזה אלגוריתם זיהוי רגישות להשתמש?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
@@ -80,21 +64,18 @@
     <string name="collapse_category">צמצם קטגוריה</string>
     <!--ImportExport-->
     <string name="nav_preferences">העדפות</string>
-    <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
-    <string name="preferences_export_canceled">ייצוא בוטל! ההגדרות לא יוצאו!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">ייבוא בוטל! ההעדפות לא הובאו!</string>
     <string name="preferences_import_impossible">לא ניתן לייבא את ההגדרות!</string>
     <string name="check_preferences_details_btn">הסבר בעיות ייבוא…</string>
     <string name="check_preferences_details_title">פרטי בעיות ייבוא</string>
     <string name="check_preferences_import_btn">ייבוא</string>
     <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
-    <string name="import_setting">ייבוא הגדרות</string>
-    <string name="aaps_directory">תיקיית AAPS</string>
-    <string name="select_aaps_directory">בחרו את התיקייה בה יישמרו הקבצים המיוצאים</string>
     <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
     <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
     <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
-    <string name="export_to">ייצא הגדרות ל-</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">יבא הגדרות מ-</string>
     <string name="setting_imported">הגדרות מיובאות</string>
     <string name="old_master_password">סיסמה ראשית ישנה</string>
@@ -106,26 +87,12 @@
     <string name="goto_main_try_again">נא לחזור למסך הראשי ולנסות שוב.</string>
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="ue_exported">רשומות המשתמש יוצאו</string>
-    <string name="protection">הגנה בסיסמאות</string>
-    <string name="master_password_missing">הסיסמה הראשית לא הוגדרה!\n\nנא להגדירה בהעדפות (%1$s)</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">תחזוקה</string>
     <string name="maintenance_shortname">תחזוקה</string>
-    <string name="description_maintenance">מספק מספר פונקציות של תחזוקה (כגון משלוח יומן, מחיקת יומן).</string>
-    <string name="database_cleanup">ניקיון מסד הנתונים</string>
-    <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="maintenance_settings">הגדרות תחזוקה</string>
     <string name="maintenance_email">נמען דוא\"ל</string>
     <string name="maintenance_amount">מספר הרשומות למשלוח</string>
-    <string name="send_all_logs">שלח יומנים בדוא\"ל</string>
-    <string name="delete_logs">מחק רישומים</string>
-    <string name="configbuilder_nightscoutversion_label">גירסת נייטסקאוט:</string>
-    <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
-    <string name="log_files">קבצי יומן</string>
-    <string name="nav_logsettings">הגדרות יומן רישום</string>
-    <string name="miscellaneous">שונות</string>
-    <string name="nav_resetdb">איפוס מסדי נתונים</string>
-    <string name="resettodefaults">אפס לברירת המחדל</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">יוצא לפני %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">יוצא ב-%1$s</string>
@@ -148,8 +115,6 @@
     <string name="prefdecrypt_issue_wrong_pass">שגיאת פענוח, הסיסמה שסופקה אינה חוקית או שקובץ ההגדרות שונה! יתכן שהקובץ המיובא יוצא עם סיסמה ראשית אחרת.</string>
     <string name="prefdecrypt_issue_wrong_format">תצורת הצפנה חסרה, פורמט ההגדרות אינו חוקי!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">אלגוריתם ההצפנה לא צוין או שלא נתמך!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">בחירת פני שעון מותאמים אישית</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">פורמט הקובץ</string>
     <string name="metadata_label_created_at">נוצר ב-</string>
@@ -161,6 +126,7 @@
     <string name="metadata_format_new">פורמט הצפנה חדש</string>
     <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">שגיאה בגישה למערכת הקבצים. אנא בחרו את תיקיית AAPS כראוי.</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <string name="export_options">אפשרויות ייצוא</string>
     <!-- Import source selection dialog -->

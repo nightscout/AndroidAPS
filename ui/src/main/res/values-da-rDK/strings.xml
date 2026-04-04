@@ -8,25 +8,18 @@
     <string name="start_eating_soon_tt">Start \"Spiser snart\" mål</string>
     <string name="start_hypo_tt">Begynd Hypo mål</string>
     <string name="time_offset">Tidsforskydning</string>
-    <string name="unit_minute_short">min.</string>
     <string name="remind_to_bolus_later">Påmind om at bolus senere</string>
-    <string name="a11y_carb_reminder">Indstil påmindelse</string>
     <!--    Widget-->
     <string name="configure">Indstil gennemsigtighed</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktivitetsovervågning</string>
     <string name="do_you_want_reset_stats">Ønsker du at nulstille aktivitetsstatistik?</string>
-    <string name="statistics">Statistikker</string>
     <string name="calculation_in_progress">Beregning i gang</string>
     <string name="invalid_age">Ugyldig angivelse af alder</string>
     <string name="invalid_weight">Ugyldig angivelse af vægt</string>
-    <string name="id">ID:</string>
-    <string name="submit">Send</string>
     <string name="age">Alder</string>
     <string name="weight_label">Vægt</string>
-    <string name="most_common_profile">Mest almindelige profil:</string>
-    <string name="survey_comment">Bemærk: Kun data synlige på denne skærm vil blive uploadet anonymt. ID tildeles til denne installation af AAPS. Du kan indsende data igen, hvis din hovedprofil bliver ændret, men lad det køre mindst en uge for at gøre resultatet synligt i tidsinterval. Din hjælp er værdsat.</string>
     <string name="glucose_type">Glukose type</string>
     <string name="bg_other">Andet</string>
     <string name="bg_meter">Meter</string>
@@ -43,6 +36,7 @@
     <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Ikke bolus, registrer kun</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Genbrug %1$d%% %2$dt</string>
     <string name="timeshift_label">Tidsskift</string>
@@ -75,7 +69,6 @@
     <string name="a11y_current_bg">nuværende blodglukose</string>
     <string name="carb_time_label">Kulhydrat tid</string>
     <string name="a11y_set_carb_timer">indstil KH alarm</string>
-    <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen poster tilgængelige</string>
     <string name="calculation_short">Beregn</string>
@@ -87,8 +80,6 @@
     <string name="meal_bolus">Måltid</string>
     <string name="prime">Klargør</string>
     <string name="carbs_and_bolus">Kulhydrater og bolus</string>
-    <string name="show_invalidated_records">Vis ugyldige / fjernede poster</string>
-    <string name="hide_invalidated_records">Skjul ugyldige / fjernede poster</string>
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
     <string name="careportal_remove_started_events">Fjern AAPS startede poster</string>
@@ -96,16 +87,10 @@
     <string name="show_loop">Vis loop</string>
     <string name="user_entry">Bruger indtastning</string>
     <string name="clone_label">Klon</string>
-    <string name="show_loop_records">Vis loop poster</string>
-    <string name="show_hide_records">Skjul loop poster</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profil 1</string>
-    <string name="profile2">Profil 2</string>
     <string name="profile_type">Profil type</string>
     <string name="basal_pct_from_tdd_label">% af basal</string>
     <string name="selected_profile">Valgt:</string>
-    <string name="compare_profile">Sammenlign profiler</string>
-    <string name="nav_profile_helper">Profil hjælper</string>
     <string name="motol_default_profile">Standard profil</string>
     <string name="current_profile">Nuværende profil</string>
     <string name="available_profile">Tilgængelig profil</string>
@@ -116,8 +101,6 @@
     <string name="invalid_pct">Ugyldig angivelse af %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Basalrate</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP TRYKKET</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">kun på ur</string>
     <string name="a11y_only_on_phone">kun på telefon</string>
@@ -125,4 +108,7 @@
     <string name="overview_edit_quickwizard_valid">Gyldig:</string>
     <string name="a11y_drag_and_drop_handle">træk og slip-håndtag</string>
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
 </resources>

@@ -14,22 +14,17 @@
     <string name="pump_setting_failed">La configuration des paramètres de la pompe a échoué!</string>
     <string name="pump_sync_error">Erreur lors de la synchronisation de l\'historique de la pompe, un enregistrement a été ignoré. Vérifiez l\'onglet de traitement pour vérifier si le bolus est correctement synchronisé. Mettez en veille et si l\'erreur continue d\'apparaître, changer le patch ou la pompe.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">État BT</string>
     <string name="last_connection_label">Dernière connexion</string>
     <string name="active_bolus_label">Bolus actif</string>
     <string name="pump_state_label">État de la pompe</string>
     <string name="active_alarms_label">Alarmes actives</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Type de Basale</string>
     <string name="basal_rate_label">Débit de Basal</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Type de pompe</string>
     <string name="fw_version_label">Version du FW</string>
     <string name="patch_no_label">N° du Patch</string>
     <string name="patch_expiry_label">Expiration du Patch</string>
     <string name="patch_activation_time_label">Activation</string>
-    <string name="refresh_label">Actualiser</string>
     <string name="reset_alarms_label">Réinitialiser les alarmes</string>
     <string name="change_patch_label">Changer le Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Demandé par l\'utilisateur</string>
@@ -57,8 +52,6 @@
     <string name="bolus_error">Erreur de bolus</string>
     <!-- wizard-->
     <string name="retry">Réessayer</string>
-    <string name="next">Suivant</string>
-    <string name="discard">Supprimer</string>
     <string name="step_prepare_patch">Activer le Patch</string>
     <string name="step_prepare_patch_connect">Connecter et remplir</string>
     <string name="step_prime">Amorcer</string>
@@ -73,8 +66,6 @@
     <string name="step_retry_activation">Activation en cours</string>
     <string name="unexpected_state">État inattendu : %1$s</string>
     <string name="no_profile_selected">Aucun profil sélectionné. Veuillez sélectionner un profil et réessayez.</string>
-    <string name="no_sn_in_settings">Aucun numéro de série connu. Veuillez entrer le numéro de série de la base de pompe dans les paramètres et réessayez.</string>
-    <string name="base_serial">N° de série de la base de la pompe : %1$X</string>
     <string name="patch_begin_activation">Aucun Patch actif. Appuyez sur <b>Suivant</b> pour commencer le processus d\'activation.</string>
     <string name="patch_not_active_note">La base de la pompe ne doit pas être connectée au Patch avant l\'étape suivante !</string>
     <string name="connect_pump_base">Connectez la base de la pompe à un nouveau Patch, retirez l\'air résiduel et remplissez avec de l\'insuline, puis appuyez sur <b>Suivant</b>.</string>
@@ -108,9 +99,7 @@
     <string name="enable_pump_unreachable_alert_summary">Alerte injoignable forcée, car le pod Medtrum peut échouer et être inaccessible.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Réglage à 30 minutes conseillé car le pod Medtrum peut échouer et être inaccessible.</string>
     <string name="sn_input_title">Numéro de série</string>
-    <string name="sn_input_summary">Entrez le numéro de série de la base de votre pompe.</string>
     <string name="sn_input_invalid">Numéro de série invalide !</string>
-    <string name="pump_unsupported">Pompe %1$s non testée ! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
     <string name="pump_warning_notification_title">Notification sur l\'alerte pompe</string>

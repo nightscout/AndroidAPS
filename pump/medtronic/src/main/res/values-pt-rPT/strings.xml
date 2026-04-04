@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Codificação Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Acordar e Sintonizar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Limpar Bloqueio de Bólus</string>
-    <string name="medtronic_custom_action_reset_rileylink">Reiniciar configuração RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipo de Bateria (Visualização Detalhada)</string>
     <string name="medtronic_pump_battery_no">Não seleccionado (Visualização simples)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Visualização estendida)</string>
     <string name="medtronic_pump_battery_lithium">Lítio (Visualização estendida)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Visualização estendida)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Erros</string>
-    <string name="medtronic_error_serial_not_set">Núm. Série não definido.</string>
     <string name="medtronic_error_serial_invalid">Núm. Série inválido.</string>
     <string name="medtronic_error_pump_type_not_set">Modelo de Bomba não definido.</string>
     <string name="medtronic_error_pump_type_invalid">Modelo de Bomba não suportado.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Frequência da Bomba não definida.</string>
     <string name="medtronic_error_pump_frequency_invalid">Frequência da Bomba não suportada.</string>
     <string name="medtronic_error_rileylink_address_invalid">Endereço RileyLink inválido.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">O Modelo de bomba detectada não é o mesmo do modelo configurado.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Cancelar Basal Temporária</string>
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Obter insulina restante</string>
-    <string name="medtronic_pump_status_pump_unreachable">Bomba inacessível</string>
-    <string name="medtronic_warning">Aviso</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Agora</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">atrás</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Agora</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">atrás</string>
     <string name="medtronic_notification_check_time_date">Necessário atualizar relógio da bomba</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Hora da bomba actualizada</string>
     <string name="set_neutral_temps_title">Definir basais temporárias neutras</string>
     <string name="set_neutral_temps_summary">Se activado, cancela a basal temporária antes de perfazer uma hora. Este método evita que as bombas Medtronic emitam um sinal sonoro e/ou vibrem quando a basal temporária se estende por mais de uma hora.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
     <string name="invalid_history_data">Detetados dados de histórico de bomba inválidos. Abra um novo problema e forneça registos.</string>
     <string name="riley_statistics">Estatísticas RL</string>
-    <string name="medtronic_history_type">Tipo:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Clicou em atualizar</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Atualização programada de estado</string>
 </resources>

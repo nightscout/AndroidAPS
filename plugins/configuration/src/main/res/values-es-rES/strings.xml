@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Seleccione las unidades en las que desea visualizar los valores</string>
     <string name="next_button">Siguiente</string>
     <string name="previous_button">Anterior</string>
-    <string name="nav_setupwizard">Asistente de configuración</string>
     <string name="setupwizard_finish">FINALIZAR</string>
     <string name="welcome">Bienvenido</string>
     <string name="welcometosetupwizard">Bienvenido al asistente de configuración. Te guiará a través del proceso de configuración\n</string>
@@ -18,19 +17,13 @@
     <string name="high_mark_comment">Valor de glucosa alta (sólo visualización)</string>
     <string name="permission">Permiso</string>
     <string name="need_system_window_permission">La aplicación necesita permisos del sistema para poder mostrar notificaciones sobre otras aplicaciones</string>
-    <string name="need_location_permission">La aplicación necesita permiso de ubicación para poder buscar dispositivos Bluetooth y redes WiFi</string>
-    <string name="need_background_location_permission">La aplicación necesita el permiso de ubicación en segundo plano para las automatizaciones</string>
-    <string name="need_storage_permission">La aplicación necesita permiso de almacenamiento para poder almacenar los archivos de registro y exportar las configuraciones</string>
     <string name="askforpermission">Pedir permiso</string>
-    <string name="need_whitelisting">%1$s necesita añadir la optimización de la batería a la lista blanca, para obtener un rendimiento adecuado</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
     <string name="master_password_summary">La contraseña maestra se utiliza para cifrar la copia de seguridad y para desbloquear la seguridad de la aplicación. Recuérdala o guárdala en un lugar seguro.</string>
-    <string name="current_master_password">Contraseña maestra actual</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
     <string name="syncinfotext">Sincronizar datos a la nube. Puedes saltarte esta parte ahora, pero no podrás pasar los objetivos hasta que configures el cliente Nightscout o Tidepool</string>
     <string name="status">Estado:</string>
-    <string name="patient_name">Nombre del paciente</string>
-    <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
     <string name="diawarning">Por favor, recuerde: nuevos perfiles de insulina requieren DIA de al menos 5h. DIA de 5-6h en nuevos perfiles es lo mismo que DIA de 3h en perfiles antiguos.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Hacer cambio de perfil</string>
@@ -62,25 +55,16 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por medio de los ajustes - pueden ocurrir problemas de rendimiento.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Tabla de configuraciones</string>
-    <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">¿Qué bomba quieres utilizar con AAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
-    <string name="configbuilder_profile_description">¿Qué perfil debería usar AAPS?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">¿Qué algoritmo APS quieres usar para ajustar tu tratamiento?</string>
-    <string name="configbuilder_general">Ajustes generales</string>
     <string name="configbuilder_general_description">Algunos ajustes generales que pueden ser de utilidad</string>
-    <string name="configbuilder_sync">Sincronización</string>
-    <string name="configbuilder_sync_description">Subida de datos y sincronización de plugins</string>
+    <string name="configbuilder_sync_description">Complementos de carga de datos, sincronización y comunicación.</string>
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
-    <string name="configbuilder_loop">Bucle</string>
     <string name="configbuilder_loop_description">Usa esto para habilitar la integración de bucle de AAPS.</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
-    <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
-    <string name="configbuilder_smoothing">Suavizado</string>
     <string name="configbuilder_smoothing_description">Elegir algoritmo de suavizado</string>
-    <string name="configbuilder_sensitivity">Detección de sensibilidad</string>
     <string name="configbuilder_sensitivity_description">¿Qué algoritmo de sensibilidad debería usar?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Utilizado para configurar los complementos activos</string>
@@ -91,21 +75,18 @@
     <string name="collapse_category">Contraer categoría</string>
     <!--ImportExport-->
     <string name="nav_preferences">Preferencias</string>
-    <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar los ajustes exportados</string>
-    <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">¡Importación cancelada! ¡Las preferencias NO se han importado!</string>
     <string name="preferences_import_impossible">¡No se pueden importar preferencias!</string>
     <string name="check_preferences_details_btn">Explicar problemas de importación…</string>
     <string name="check_preferences_details_title">Importar detalles del problema</string>
     <string name="check_preferences_import_btn">Importar</string>
     <string name="check_preferences_import_anyway_btn">Importar de todos modos (¡PELIGROSO!)</string>
-    <string name="import_setting">Importar ajustes</string>
-    <string name="aaps_directory">Directorio AAPS</string>
-    <string name="select_aaps_directory">Selecciona el directorio de AAPS para almacenar exportaciones, configuraciones, etc.</string>
     <string name="check_preferences_before_import">Por favor, comprueba los ajustes antes de importar:</string>
     <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
     <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
-    <string name="export_to">Exportar ajustes a</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Importar ajustes desde</string>
     <string name="setting_imported">Ajustes importados</string>
     <string name="old_master_password">Contraseña Maestra antigua</string>
@@ -117,27 +98,12 @@
     <string name="goto_main_try_again">Por favor, vuelve a la pantalla principal e inténtalo de nuevo.</string>
     <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
     <string name="ue_exported">Entradas de usuario exportadas</string>
-    <string name="protection">Protección</string>
-    <string name="master_password_missing">¡La contraseña maestra no está configurada!\n\nPor favor, configure su contraseña maestra dentro de las Preferencias (%1$s)</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Mantenimiento</string>
     <string name="maintenance_shortname">MANT</string>
-    <string name="description_maintenance">Accede a varias opciones de mantenimiento (p. ej. envío y borrado de registros)</string>
-    <string name="database_cleanup">Limpiar base de dados</string>
-    <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
-    <string name="reset_aps_results_confirm">¿Realmente quieres restablecer los resultados almacenados de APS?</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
     <string name="maintenance_email">Correo electrónico</string>
     <string name="maintenance_amount">Número de registros para enviar</string>
-    <string name="send_all_logs">Enviar registros por email</string>
-    <string name="delete_logs">Borrar registros</string>
-    <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
-    <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
-    <string name="log_files">Archivos de registro</string>
-    <string name="nav_logsettings">Ajustes de registros</string>
-    <string name="miscellaneous">Misceláneo</string>
-    <string name="nav_resetdb">Restablecer las bases de datos</string>
-    <string name="resettodefaults">Restablecer valores predeterminados</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado hace %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado en %1$s</string>
@@ -160,8 +126,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Error de descifrado. La contraseña proporcionada no es válida o se ha modificado el archivo de ajustes. Puede suceder que el archivo importado se haya exportado con una contraseña maestra diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Falta la configuración de cifrado, ¡el formato configuración no es válido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Seleccionar esfera por defecto</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formato de archivo</string>
     <string name="metadata_label_created_at">Creado el</string>
@@ -172,8 +136,8 @@
     <string name="metadata_label_encryption">Cifrado de archivos</string>
     <string name="metadata_format_new">Nuevo formato cifrado</string>
     <string name="metadata_format_other">Formato de exportación desconocido</string>
-    <string name="reset_aps_results">Restablecer resultados de APS</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Error al acceder al sistema de archivos. Selecciona el directorio de AAPS correctamente.</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <string name="storage_local">Almacenamiento local</string>
     <string name="storage_google_drive">Google Drive</string>

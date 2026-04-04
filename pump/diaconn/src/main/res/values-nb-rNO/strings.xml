@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Slett sammenkobling</string>
-    <string name="diaconn_no_device_available">Ingen enheter er tilgjengelige</string>
     <string name="diaconn_pairing">Diaconn pumpe sammenkobling</string>
-    <string name="pumperror">Pumpefeil</string>
     <string name="diaconn_g8_history_alarm">Alarmer</string>
     <string name="diaconn_g8_history_basalhours">Basal timer</string>
     <string name="diaconn_g8_history_bolus">Boluser</string>
     <string name="diaconn_g8_history_dailyinsulin">Daglig insulin</string>
     <string name="diaconn_g8_history_refill">Påfyll</string>
     <string name="diaconn_g8_history_suspend">Pauset</string>
-    <string name="invalidpairing">Ugyldig sammenkoblingsinformasjon. Ber om ny sammenkobling</string>
     <string name="gettingpumpsettings">Henter pumpe innstillinger</string>
     <string name="gettingpumptime">Henter pumpens tid</string>
     <string name="largetimediff">Stor tidsforskjell:\nKlokken i pumpen avviker mer enn 1,5 timer fra mobilen.\nVennligst juster klokke manuelt på pumpen og sørg for at lesing av loggen fra pumpen ikke fører til uventet oppførsel.\nHvis mulig, fjern loggen fra pumpen før du endrer klokkeslettet eller deaktiver lukket loop for én DIA periode etter siste feil oppføring i historikk, men minst én DIA periode fra nå.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Hastighetsfeil</string>
     <string name="insulinlimitviolation">Insulingrense nådd</string>
     <string name="boluserrorcode">Forespurt: %1$.2fE Levert: %2$.2fE Feilkode: %3$s</string>
-    <string name="bolusspeed">Bolus hastighet</string>
     <string name="selectedpump">Valgt pumpe</string>
     <string name="diaconn_g8_bluetooth_status">Bluetooth status</string>
     <string name="bolus_step">Bolus trinn</string>
     <string name="basal_step">Basal trinn</string>
-    <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">BRUKERVALG</string>
     <string name="pairfirst">Vennligst sammenkobl pumpen med mobilen!</string>
     <string name="processinghistory">"Behandler hendelse "</string>
@@ -133,4 +128,14 @@
     <string name="diaconn_g8_errorcode_36">Stopp av midlertidig basal avslått siden det ikke kjøres en midlertidig basal</string>
     <string name="diaconn_g8_cloudsend_summary">Send pumpe logger til Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
+    <string name="bolus_speed_1">1 E/min</string>
+    <string name="bolus_speed_2">2 E/min</string>
+    <string name="bolus_speed_3">3 E/min</string>
+    <string name="bolus_speed_4">4 E/min</string>
+    <string name="bolus_speed_5">5 E/min</string>
+    <string name="bolus_speed_6">6 E/min</string>
+    <string name="bolus_speed_7">7 E/min</string>
+    <string name="bolus_speed_8">8 E/min</string>
+    <string name="diaconn_pairing_successful">Paringen er vellykket!</string>
+    <string name="diaconn_pairing_successful_message">Pumpen din er nå tilkoblet og klar til bruk.</string>
 </resources>

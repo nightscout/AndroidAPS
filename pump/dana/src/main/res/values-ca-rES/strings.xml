@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Sincronitzant</string>
-    <string name="danars_no_device_available">Cap dispositiu trobat fins ara</string>
-    <string name="danars_pairingok">Sincronització OK</string>
     <string name="danars_pairingtimedout">Temps d\'espera excedit en sincronitzar</string>
-    <string name="danars_waitingforpairing">Esperant sincronitació a la bomba</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="maxbolusviolation">Superat el bolus màxim</string>
     <string name="commanderror">Ordre errònia</string>
@@ -57,7 +53,6 @@
     <string name="danar_history_bolus">Bolus</string>
     <string name="danar_history_carbohydrates">Carbohidrats</string>
     <string name="danar_history_dailyinsulin">Insulina diària</string>
-    <string name="danar_history_errors">Errors</string>
     <string name="danar_history_glucose">Glucèmia</string>
     <string name="danar_history_refill">Reomplir</string>
     <string name="danar_history_syspend">Suspendre</string>
@@ -66,7 +61,6 @@
     <string name="danar_time_display">Format de visualització de l\'hora</string>
     <string name="danar_button_scroll">Desplaçament de botons</string>
     <string name="danar_beep">Bip en clicar botó</string>
-    <string name="danar_pump_alarm">Alarma</string>
     <string name="danar_pump_alarm_sound">So</string>
     <string name="danar_pump_alarm_vibrate">Vibració</string>
     <string name="danar_pump_alarm_both">Ambdós</string>
@@ -80,7 +74,6 @@
     <string name="description_pump_dana_r_korean">Sincronització de bombes model DANA Diabecare R Corea</string>
     <string name="description_pump_dana_r_v2">Sincronització de bombes model DANA Diabecare R amb firmware actualitzat</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">No s\'ha trobat cap adaptador Bluetooth</string>
     <string name="devicenotfound">No s\'ha trobat el dispositiu seleccionat</string>
     <string name="danar_switchtouhmode">Canviar mode de U/d a U/h a la bomba</string>
     <string name="danarkoreanpump">DanaR Coreana</string>
@@ -89,24 +82,18 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Desactivar mode EasyUI a la bomba</string>
     <string name="profile_set_failed">Error en configurar el perfil basal</string>
-    <string name="danar_bluetooth_status">Estat Bluetooth</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Configuració bomba Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">On</string>
     <string name="option_off">Off</string>
-    <string name="danar_bt_name_title">Dispositiu Bluetooth DanaR</string>
     <string name="danars_password_title">Contrasenya bomba (només v1)</string>
     <string name="danar_password_title">Contrasenya bomba</string>
-    <string name="bolusspeed">Velocitat bolus</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="rs_loginsulinchange_title">Enregistrar canvi de reservori</string>
     <string name="rs_loginsulinchange_summary">Afegir event \"Canvi d\'insulina\" al portal de cures quan es detecti a l\'historial</string>
     <string name="rs_logcanulachange_title">Enregistrar canvi d cànula</string>
     <string name="rs_logcanulachange_summary">Afegir event \"Canvi de cànula\" al portal de cures quan es detecti a l\'historial</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Cliqueu OK a la bomba\ni introduïu els 2 números mostrats\nManteniu la pantalla de la bomba engegada clicant el botó \"minus\" fins que hagueu introduït el codi.</string>
     <string name="num1pin">1: (12 dígits)</string>
     <string name="num2pin">2: (8 dígits)</string>

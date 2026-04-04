@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Медтроник коодиране</string>
     <string name="medtronic_custom_action_wake_and_tune">Събуди и настрой</string>
     <string name="medtronic_custom_action_clear_bolus_block">Изчисти Bolus Block</string>
-    <string name="medtronic_custom_action_reset_rileylink">Изчисти RileyLink конфигурацията</string>
     <string name="medtronic_pump_battery_select">Тип батерия (напреднали)</string>
     <string name="medtronic_pump_battery_no">Не е избрано (общ)</string>
     <string name="medtronic_pump_battery_alkaline">Алкални</string>
     <string name="medtronic_pump_battery_lithium">Литиева</string>
     <string name="medtronic_pump_battery_nizn">NiZn батерия</string>
     <string name="medtronic_pump_battery_nimh">NiMH (батерия)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Батерия на RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Грешки</string>
-    <string name="medtronic_error_serial_not_set">Сериен номер не е зададен.</string>
     <string name="medtronic_error_serial_invalid">Грешен сериен номер.</string>
     <string name="medtronic_error_pump_type_not_set">Тип помпа не е зададен.</string>
     <string name="medtronic_error_pump_type_invalid">Този тип помпа не се поддържа.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Честота на помпата не е зададена.</string>
     <string name="medtronic_error_pump_frequency_invalid">Честотата не се поддържа.</string>
     <string name="medtronic_error_rileylink_address_invalid">Грешен RileyLink адрес.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Откритата помпа не е идентична с конфигурираната.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Откажи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Оставащ инсулин</string>
-    <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
-    <string name="medtronic_warning">Внимание</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Сега</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">преди</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Сега</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">преди</string>
     <string name="medtronic_notification_check_time_date">Необходимо е сверяване на часа в помпата</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="set_neutral_temps_title">Прилагане на неутрални временни базали</string>
     <string name="set_neutral_temps_summary">Ако е вкл, то ще анулира временен базал на всеки час. Това може да помогне за спиране на  звук/вибрация от някой помпи на всеки час.</string>
     <string name="mdt_tbr_remaining">%1$.1f Е/ч (%2$d мин остават)</string>
     <string name="invalid_history_data">Открити са невалидни данни за историята на помпата. Отворете \"нов проблем\" и предоставете логове.</string>
     <string name="riley_statistics">Статистика на RL</string>
-    <string name="medtronic_history_type">Тип:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Отбелязано обновяване</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Планирано обновяване на състоянието</string>
 </resources>

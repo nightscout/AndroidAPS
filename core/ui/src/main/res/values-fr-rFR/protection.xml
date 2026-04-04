@@ -13,10 +13,7 @@
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Rétention du mot de passe et du PIN [s]</string>
     <string name="protection_timeout_summary">Durée pour la saisie du mot de passe ou du code PIN</string>
-    <string name="biometric">Biométrique</string>
-    <string name="custom_password">Mot de passe personnalisé</string>
-    <string name="custom_pin">Code PIN personnalisé</string>
-    <string name="noprotection">Pas de Protection</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Retour arrière non sécurisé</string>
     <string name="unsecure_fallback_descriotion_biometric">Pour être effective, la protection biométrique nécessite un mot de passe principal pour revenir en arrière.\n\nMerci de définir un mot de passe principal !</string>
     <string name="password_set">Mot de passe défini !</string>
@@ -27,8 +24,6 @@
     <string name="password_not_changed">Mot de passe non modifié</string>
     <string name="pin_not_changed">Code PIN inchangé</string>
     <string name="pin_cleared">Code PIN effacé!</string>
-    <string name="password_hint">Entrez le mot de passe ici</string>
-    <string name="pin_hint">Saisir le code PIN ici</string>
     <string name="master_password_not_set">Mot de passe principal non défini</string>
     <string name="aaps_directory_not_selected">Répertoire AAPS non sélectionné</string>
 </resources>

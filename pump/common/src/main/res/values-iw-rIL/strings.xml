@@ -46,28 +46,4 @@
     <string name="ble_config_remove">הסרה</string>
     <!-- Pump History -->
     <string name="pump_history_type">סוג:</string>
-    <plurals name="duration_days">
-        <item quantity="one">יום %1$d</item>
-        <item quantity="two">יומיים</item>
-        <item quantity="many">%1$d ימים</item>
-        <item quantity="other">%1$d ימים</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">שעה</item>
-        <item quantity="two">שעתיים</item>
-        <item quantity="many">%1$d שעות</item>
-        <item quantity="other">%1$d שעות</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">לפני שעה</item>
-        <item quantity="two">לפני שעתיים</item>
-        <item quantity="many">לפני %1$d שעות</item>
-        <item quantity="other">לפני %1$d שעות</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">לפני יום אחד</item>
-        <item quantity="two">לפני יומיים</item>
-        <item quantity="many">לפני %1$d ימים</item>
-        <item quantity="other">לפני %1$d ימים</item>
-    </plurals>
 </resources>

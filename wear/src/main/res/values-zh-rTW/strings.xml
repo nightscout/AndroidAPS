@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 分鐘</string>
     <string name="pref_10_min">10 分鐘</string>
     <string name="pref_15_min">15 分鐘</string>
-    <string name="pref_input_design">輸入設計</string>
-    <string name="pref_default">預設</string>
-    <string name="pref_quick_righty">快速右手模式</string>
-    <string name="pref_quick_lefty">快速左手模式</string>
-    <string name="pref_modern_sparse">現代簡約</string>
     <string name="pref_big_numbers">大數字</string>
     <string name="pref_ring_history">環形歷史紀錄</string>
     <string name="pref_light_ring_history">輕量環形歷史紀錄</string>
@@ -90,7 +85,7 @@
     <string name="menu_default">預設</string>
     <string name="menu_menu">選單</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">持續時間\n[分鐘]</string>
+    <string name="action_duration_minutes">持續時間 [分鐘]</string>
     <string name="action_tempt_confirmation">已請求臨時目標</string>
     <string name="action_quick_wizard_confirmation">已請求快速嚮導</string>
     <string name="action_user_action_confirmation">用戶操作請求</string>
@@ -100,16 +95,26 @@
     <string name="action_fill_confirmation">已請求填充</string>
     <string name="action_ecarb_confirmation">已請求碳水化合物</string>
     <string name="action_profile_switch_confirmation">已請求設定檔切換</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">目標\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">低\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">高\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">目標 [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">低值 [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">高 [%s]</string>
     <string name="action_carbs">碳水化合物</string>
     <string name="action_carbs_gram">碳水化合物 [g]</string>
     <string name="action_ecarbs">碳水化合物</string>
     <string name="action_percentage">百分比\n[%]</string>
     <string name="action_start_minutes">開始\n[分鐘]</string>
+    <string name="action_start_minutes_format">%1$d 分鐘</string>
     <string name="action_duration_h">持續 [小時]</string>
     <string name="action_duration_hours">持續時間\n[小時]</string>
+    <string name="action_duration_hours_format">%1$d 小時</string>
+    <string name="action_duration_hours_minutes_format">%1$d 小時 %2$d 分鐘</string>
+    <string name="action_minutes_format">%1$d 分鐘</string>
+    <string name="ecarbs_start_format">%1$d 分鐘</string>
+    <string name="ecarbs_confirm_time">時間：%1$s</string>
+    <string name="ecarbs_confirm_duration">持續時間：%1$d 小時</string>
+    <string name="action_confirm_reason">原因：%1$s</string>
+    <string name="action_confirm_duration">持續時間：%1$s</string>
+    <string name="action_confirm_timeshift">時間偏移：%1$s</string>
     <string name="action_insulin">胰島素</string>
     <string name="action_insulin_units">胰島素 [U]</string>
     <string name="action_preset_1">預設 1</string>
@@ -199,7 +204,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">舊</string>
     <string name="old_warning">！舊！</string>
-    <string name="error">！錯誤！</string>
+    <string name="error">錯誤</string>
     <string name="pref_heartRateSampling">心率</string>
     <string name="pref_heartRateSmoothing">心率平滑</string>
     <string name="pref_stepsSampling">啟用步數計數</string>
@@ -231,14 +236,15 @@
     <string name="complication_iob_icon">IoB圖示</string>
     <string name="complication_iob_detailed">IoB詳細</string>
     <string name="complication_uploader_phone_battery">Uploader/顯示手機電池</string>
-    <string name="status_loop_state">循環狀態</string>
-    <string name="label_loop_state_title">AAPS（循環狀態）</string>
-    <string name="action_loop_state_selected">請求的循環狀態</string>
+    <string name="status_running_mode">執行模式</string>
+    <string name="label_running_mode_title">AAPS(執行模式)</string>
+    <string name="action_running_mode_selected">已請求執行模式</string>
+    <string name="title_activity_disconnect_pump">中斷幫浦連線</string>
+    <string name="title_activity_suspend_loop">暫停循環</string>
     <string name="wizard_total_insulin">總胰島素</string>
     <string name="wizard_calculation">計算</string>
     <string name="wizard_carbs_format">%1$d 克碳水化合物</string>
     <string name="wizard_settings_format">IC：%1$s ｜ ISF：%2$s</string>
-    <string name="wizard_swipe_left_confirm">向左滑動以確認</string>
     <string name="wizard_result_bg">血糖</string>
     <string name="wizard_result_bg_tt">血糖（目標時間：%1$s）</string>
     <string name="wizard_result_trend">15 分鐘趨勢</string>
@@ -250,7 +256,7 @@
     <string name="wizard_result_total">總計</string>
     <string name="wizard_insulin_format">%1$s 單位</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">修正 %1$d%%</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">點擊以展開計算詳細內容</string>
     <string name="wizard_confirmation_sent">已送出</string>
     <string name="tile_settings">資訊方塊設定</string>
@@ -268,6 +274,8 @@
     <string name="loop_status_lgs">低血糖暫停</string>
     <string name="loop_status_disabled">循環已停用</string>
     <string name="loop_status_suspended">循環已暫停</string>
+    <string name="loop_status_pump_suspended">幫浦已暫停</string>
+    <string name="loop_status_dst_suspended">因 DST 已暫停</string>
     <string name="loop_status_disconnected">幫浦已中斷連線</string>
     <string name="loop_status_superbolus">超級注射</string>
     <string name="loop_status_unknown">未知</string>
@@ -284,4 +292,8 @@
     <string name="loop_status_target_range">範圍</string>
     <string name="loop_status_target">目標</string>
     <string name="loop_status"> 循環狀態</string>
+    <string name="loop_status_refresh">重新整理</string>
+    <string name="confirm">確認</string>
+    <string name="request">請求</string>
+    <string name="constraint_applied">已套用限制！</string>
 </resources>

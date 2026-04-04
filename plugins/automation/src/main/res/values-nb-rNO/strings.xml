@@ -146,4 +146,12 @@
     <string name="newSmbMode">Ny SMB-modus:</string>
     <string name="on">PÅ</string>
     <string name="off">AV</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Velg fra kart</string>
+    <string name="tap_to_select_location">Trykk på kartet for å velge et sted</string>
+    <string name="selected_coords">Valgt: %1$.6f, %2$.6f</string>
+    <!-- Permission rationales -->
+    <string name="permission_location_title">Sted</string>
+    <string name="permission_location_description">Nødvendig for stedsbaserte automatiseringstriggere og identifisering av WiFi-nettverk</string>
+    <string name="permission_background_location_description">Nødvendig for at automatiseringstriggere skal fungere når appen er i bakgrunnen</string>
 </resources>

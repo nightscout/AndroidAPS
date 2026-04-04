@@ -45,28 +45,4 @@
     <string name="ble_config_remove">Pašalinti</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipas:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d d.</item>
-        <item quantity="few">%1$d d.</item>
-        <item quantity="many">%1$d d.</item>
-        <item quantity="other">%1$d d.</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d val.</item>
-        <item quantity="few">%1$d val.</item>
-        <item quantity="many">%1$d val.</item>
-        <item quantity="other">%1$d val.</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">Prieš %1$d val</item>
-        <item quantity="few">Prieš %1$d val</item>
-        <item quantity="many">Prieš %1$d val</item>
-        <item quantity="other">Prieš %1$d val</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">Prieš %1$d d.</item>
-        <item quantity="few">Prieš %1$d d.</item>
-        <item quantity="many">Prieš %1$d d.</item>
-        <item quantity="other">Prieš %1$d d.</item>
-    </plurals>
 </resources>

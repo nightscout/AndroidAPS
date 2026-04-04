@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">Preferencias de %1$s</string>
-    <string name="nav_exit">Salir</string>
     <string name="delta">Delta</string>
     <string name="save">Guardar</string>
     <string name="wear">Reloj</string>
-    <string name="nav_about">Acerca de</string>
     <string name="sensitivity_warning">Al activar Autosens, recuerda introducir todos carbohidratos que has comido, sino, las desviaciones de carbohidratos serán identificados incorrectamente, como un cambio de sensibilidad</string>
     <string name="invalid">INVÁLIDO</string>
-    <string name="gradually_increase_notification_volume">Aumentar gradualmente el volumen de las alertas y notificaciones</string>
-    <string name="localalertsettings_title">Alertas locales</string>
-    <string name="enable_missed_bg_readings_alert">Alerta si no llegan datos de glucosa</string>
-    <string name="enable_pump_unreachable_alert">Alerta si la bomba no es alcanzable</string>
     <string name="pump_unreachable_threshold">Bomba no alcanzable durante [min]</string>
-    <string name="enable_carbs_req_alert">Alerta si se necesitan carbohidratos</string>
-    <string name="open_navigation">Abrir navegación</string>
     <string name="close_navigation">Cerrar navegación</string>
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
@@ -27,7 +19,15 @@
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
     <string name="search">Buscar</string>
-    <string name="simple_mode">Modo simple</string>
+    <string name="use_compose_main_screen">Usar pantalla principal en Compose (experimental)</string>
+    <string name="switch_to_compose_ui">Cambiar a la interfaz Compose</string>
+    <string name="switch_to_classic_ui">Cambiar a la interfaz clásica</string>
     <string name="select">Seleccionar</string>
     <string name="set">Establecer</string>
+    <string name="migrating_preferences">Migrando preferencias…</string>
+    <string name="initializing_plugins">Inicializando complementos…</string>
+    <string name="initializing">Inicializando…</string>
+    <string name="migrating_profile_switches">Migrando cambios de perfil…</string>
+    <string name="migrating_effective_profile_switches">Migrando cambios de perfil vigentes…</string>
+    <string name="migrating_boluses">Migrando bolos…</string>
 </resources>

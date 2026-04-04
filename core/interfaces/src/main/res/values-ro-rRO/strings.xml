@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmare</string>
     <!--    Events-->
-    <string name="bolus_delivering">Se livrează %1$.2fU</string>
-    <string name="bolus_delivered_so_far">Livrat %1$.2fU / %2$.2fU</string>
-    <string name="bolus_delivered_successfully">Bolusul de %1$.2fU a fost livrat cu succes</string>
+    <string name="bolus_delivering">Se administrează %1$.2fU</string>
+    <string name="bolus_delivered_so_far">Administrat %1$.2fU / %2$.2fU</string>
+    <string name="bolus_delivered_successfully">Bolusul de %1$.2fU a fost administrat cu succes</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Driver-ul pompei a fost schimbat.</string>
     <!--    DateUtil-->
@@ -62,28 +64,28 @@
     <string name="metadata_label_watchface_author">Autor: %1$s</string>
     <string name="metadata_label_watchface_name">Nume: %1$s</string>
     <string name="metadata_wear_import_filename">Nume fișier: %1$s</string>
-    <string name="metadata_label_plugin_version">Versiune plugin: %1$s</string>
+    <string name="metadata_label_plugin_version">Versiune modul: %1$s</string>
     <string name="metadata_label_watchface_name_version">Nume: %1$s (%2$s)</string>
     <string name="metadata_label_watchface_infos">Info: %1$s</string>
-    <string name="pref_show_iob">Arată IOB</string>
-    <string name="pref_show_detailed_iob">Arată IOB detaliat</string>
-    <string name="pref_show_cob">Arată COB</string>
-    <string name="pref_show_delta">Arată Delta</string>
-    <string name="pref_show_detailed_delta">Arată variație detaliată</string>
-    <string name="pref_show_avgdelta">Arată Delta medie</string>
+    <string name="pref_show_iob">Arătați IOB</string>
+    <string name="pref_show_detailed_iob">Arătați IOB detaliat</string>
+    <string name="pref_show_cob">Arătați COB</string>
+    <string name="pref_show_delta">Arătați diferența</string>
+    <string name="pref_show_detailed_delta">Arătați variație detaliată</string>
+    <string name="pref_show_avgdelta">Arătați diferența medie</string>
     <string name="pref_show_tempTarget">Afișare țintă temporară</string>
     <string name="pref_show_reservoir_level">Afișare nivel rezervor</string>
-    <string name="pref_show_phone_battery">Arată baterie telefon</string>
-    <string name="pref_show_rig_battery">Arată Baterie Rig</string>
-    <string name="pref_show_basal_rate">Arată rata bazală</string>
-    <string name="pref_show_loop_status">Arată stare buclă</string>
-    <string name="pref_show_bg">Arată glicemia</string>
-    <string name="pref_show_bgi">Arată BGI</string>
-    <string name="pref_show_direction_arrow">Arată săgeată tendință</string>
-    <string name="pref_show_ago">Afişare în urmă</string>
-    <string name="pref_show_week_number">Arată numărul săptămânii</string>
-    <string name="pref_show_date">Arată data</string>
-    <string name="pref_show_seconds">Afișare secunde</string>
+    <string name="pref_show_phone_battery">Arătați baterie telefon</string>
+    <string name="pref_show_rig_battery">Arătați Baterie Dispozitiv</string>
+    <string name="pref_show_basal_rate">Arătați rata bazală</string>
+    <string name="pref_show_loop_status">Arătați stare buclă</string>
+    <string name="pref_show_bg">Arătați glicemia</string>
+    <string name="pref_show_bgi">Arătați BGI</string>
+    <string name="pref_show_direction_arrow">Arătați săgeată tendință</string>
+    <string name="pref_show_ago">Arătați în urmă</string>
+    <string name="pref_show_week_number">Arătați numărul săptămânii</string>
+    <string name="pref_show_date">Arătați data</string>
+    <string name="pref_show_seconds">Arătați secunde</string>
     <string name="default_custom_watchface_comment">Fațetă implicită. Poți apăsa pe butonul EXPORT pentru a genera un șablon</string>
     <string name="default_custom_watchface_external_comment">Cadran de ceas implicit, inclusiv vizualizări externe pentru urmăritori, puteți apăsa pe butonul EXPORTARE CADRAN pentru a genera un șablon</string>
     <string name="wear_default_watchface">Fațetă implicită</string>
@@ -92,4 +94,27 @@
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Pentru totdeauna</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">Aplicația necesită permisiunea Bluetooth pentru a comunica cu pompa</string>
+    <!-- Insulin -->
+    <string name="insulin_plugin">Insulină</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="unknown">Necunoscut</string>
+    <string name="rapid_acting_oref">Novorapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Timp de vârf [min]</string>
+    <string name="insulin_oref_peak">Timpul de vârf al curbei IOB</string>
+    <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
 </resources>

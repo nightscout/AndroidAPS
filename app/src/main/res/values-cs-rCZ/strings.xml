@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">Nastavení pluginu %1$s</string>
-    <string name="nav_exit">Konec</string>
     <string name="delta">Rozdíl</string>
     <string name="save">Uložit</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">O aplikaci</string>
     <string name="sensitivity_warning">Při zapnuté detekci sensitivity nezapomeňte vkládat všechny sacharidy. Jinak budou odchylky mylně vyhodnocovány jako změna sensitivity !!</string>
     <string name="invalid">NEPLATNÝ</string>
-    <string name="gradually_increase_notification_volume">Postupně zvyšovat hlasitost výstrah a oznámení</string>
-    <string name="localalertsettings_title">Místní výstrahy</string>
-    <string name="enable_missed_bg_readings_alert">Výstraha při nedostupných glykémiích</string>
-    <string name="enable_pump_unreachable_alert">Výstraha při nedostupné pumpě</string>
     <string name="pump_unreachable_threshold">Limit pro nedostupnost pumpy [min]</string>
-    <string name="enable_carbs_req_alert">Výstraha, jsou-li vyžadovány sacharidy</string>
-    <string name="open_navigation">Otevřít menu</string>
     <string name="close_navigation">Zavřít menu</string>
     <string name="remove_items">Odstranit položky</string>
     <string name="sort_items">Seřadit položky</string>
@@ -27,7 +19,6 @@
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="sort_label">Seřadit</string>
     <string name="search">Hledat</string>
-    <string name="simple_mode">Zjednodušený režim</string>
     <string name="select">Vybrat</string>
     <string name="set">Nastavit</string>
 </resources>

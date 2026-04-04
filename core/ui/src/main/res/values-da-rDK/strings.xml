@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Upload BG data til NS</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="value_unavailable_short">ikke tilgængelig</string>
-    <string name="master_password">Hovedadgangskode</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Eksporter brugerindtastninger til Excel (csv)</string>
     <string name="confirm">Bekræft</string>
     <string name="pump">Pumpe</string>
@@ -78,8 +78,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Vagthund</string>
-    <string name="btwatchdog_summary">Slår telefonens bluetooth fra i et sekund, hvis der ikke er mulighed for tilslutning til pumpen. Dette kan hjælpe på nogle telefoner, hvis bluetooth stakken fryser.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pumpetid opdateret</string>
     <string name="exit">Afslut</string>
@@ -108,7 +106,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Kør alarm om %1$d min</string>
-    <string name="bolus_reminder">Boluspåminder</string>
     <string name="duration_label">Varighed</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pumpe er afbrudt</string>
@@ -130,18 +127,15 @@
     <string name="a11y_inrange">inden for området</string>
     <string name="a11y_low">lav</string>
     <string name="average">Gennemsnit</string>
-    <string name="tir">Tid i målområde</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">FJERN</string>
     <string name="activate_profile">Aktivér profil</string>
-    <string name="reset">nulstil</string>
     <string name="profileswitch_ismissing">Profilskift mangler. Venligst lav et profilskift eller tryk \"Aktiver profil\" i LokalProfil.</string>
     <string name="profile">Profil</string>
     <string name="select_for_removal">Vælg for at fjerne</string>
     <string name="confirm_remove_multiple_items">Er du sikker på, at du vil fjerne %1$d elementer?</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opret ny profil fra denne profil?</string>
-    <string name="wear_wizard_settings">Guide indstillinger</string>
     <string name="bg_trend_label">15 min tendens</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -182,6 +176,7 @@
     <string name="duration">Varighed</string>
     <string name="reason">Årsag</string>
     <string name="nochangerequested">Ingen ændring efterspurgt</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
     <!--    Temptarget-->
@@ -247,7 +242,6 @@
     <string name="expweight">Eksponentielt Vægtet TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD</string>
     <string name="ratio">Ratio</string>
     <string name="amount_days"># Dage</string>
     <string name="weight">Vægt</string>
@@ -364,6 +358,7 @@
     <string name="valueoutofrange">»%1$s« er uden for absolutte grænser</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er uden for absolutte grænser</string>
     <string name="basal_value">Basalværdi</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f IE</string>
     <string name="carbs_g">KH %1$d g</string>
@@ -396,7 +391,6 @@
     <string name="autotune_tune_days">Justerings dage :</string>
     <string name="autotune_select_profile">Vælg profil, der skal justeres</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Brug systemnotifikationer til advarsler og notifikationer</string>
     <string name="urgent_alarm">Akut alarm</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -404,8 +398,6 @@
     <string name="bolus_advisor_message">Du har høj glycæmi. I stedet for at spise nu anbefales det at vente på bedre glycæmi. Ønsker du at lave en korrektionsbolus nu og minde dig om, hvornår det er tid til at spise? I dette tilfælde vil ingen kulhydrater blive registreret, og du skal bruge guiden igen, når vi påminder dig.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsomme kulhydrater opdaget: %2$d%% af tiden. Dobbelttjek din beregning. COB kan overvurderes og der kan således gives mere insulin !!!!!</font>]]></string>
-    <string name="partialboluswizard">Afgiv denne del af bolusguidens resultat [%]</string>
-    <string name="partialboluswizard_reset_time">Gammel glykæmi tidstærskel [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus-begrænsning anvendt: %1$.2f IE til %2$.2f IE</string>
     <string name="bolus_recorded_only">Bolus registreres kun (bliver ikke leveret af pumpe)</string>
     <string name="advisoralarm">Kør alarm når det er tid til at spise</string>
@@ -479,14 +471,18 @@
     <string name="message">Besked</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuller</string>
-    <string name="dismiss">AFVIS</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
     <string name="close">Luk</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du vil blive bedt om hovedadgangskode, som er nødvendig for at dekryptere importerede præferencer.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">fald %1$s af %2$s</string>
     <string name="a11y_plus_button_description">stigning %1$s af %2$s</string>
@@ -507,8 +503,10 @@
     <string name="location_not_found_message">Placeringen skal være aktiveret, hvis Bluetooth-opdagelsen skal fungere på nyere enheder. AAPS sporer ikke din placering, og det kan deaktiveres efter parring er lykkedes.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin indstillinger</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Manglende sms tilladelse</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Dræb ikke min app?</string>
     <string name="fabric_upload_disabled">Upload af Crash logs deaktiveret!</string>
@@ -549,4 +547,10 @@
     <string name="format_insulin_units1">%1$.1f IE</string>
     <string name="format_insulin_units">%1$.2f IE</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

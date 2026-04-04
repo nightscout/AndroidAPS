@@ -25,4 +25,17 @@
     <string name="short_status_reservoir">Reserv: %1$d E</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpen er ikke initialisert</string>
+    <!--    Permissions-->
+    <string name="permission_battery_title">Batterioptimisering</string>
+    <string name="permission_battery_description">Appen må ekskluderes fra batterioptimalisering for å kjøre pålitelig i bakgrunnen</string>
+    <string name="permission_directory_title">AAPS-mappe</string>
+    <string name="permission_directory_description">Velg en mappe for appinnstillinger og loggfiler</string>
+    <string name="permission_notifications_title">Varsler</string>
+    <string name="permission_notifications_description">Kreves for å vise varsler, alarmer og oppdateringer om pumpestatus</string>
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$sE (%2$.1fµl)</string>
+    <string name="insulin_concentration">E%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f CE/t</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CE/t</string>
 </resources>

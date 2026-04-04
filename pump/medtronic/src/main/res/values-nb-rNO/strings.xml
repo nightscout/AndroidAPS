@@ -12,22 +12,37 @@
     <string name="medtronic_pump_encoding">Medtronic koding</string>
     <string name="medtronic_custom_action_wake_and_tune">Oppstart og enhetssøk</string>
     <string name="medtronic_custom_action_clear_bolus_block">Nullstill Bolus blokk</string>
-    <string name="medtronic_custom_action_reset_rileylink">Tilbakestill RileyLink oppsett</string>
+    <string name="medtronic_custom_action_reset_rileylink">Tilbakestill RileyLink</string>
     <string name="medtronic_pump_battery_select">Batteri type (Strømvisning)</string>
     <string name="medtronic_pump_battery_no">Ikke valgt (Enkel visning)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (Utvidet visning)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (Utvidet visning)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Utvidet visning)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Utvidet visning)</string>
+    <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Annet (ikke støttet)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A eller lavere)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A eller lavere)</string>
+    <string name="medtronic_pump_type_554_eu">554 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (EU Fw. &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (CA Fw. &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (CA Fw. &lt;= 2.7A)</string>
+    <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink batteri</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Feil</string>
-    <string name="medtronic_error_serial_not_set">Serienummer ikke definert.</string>
     <string name="medtronic_error_serial_invalid">Serienummer ikke gyldig.</string>
     <string name="medtronic_error_pump_type_not_set">Pumpetype ikke definert.</string>
     <string name="medtronic_error_pump_type_invalid">Pumpetypen støttes ikke.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Pumpefrekvens ikke innstilt.</string>
     <string name="medtronic_error_pump_frequency_invalid">Pumpefrekvensen støttes ikke.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adressen er ugyldig.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Oppdaget pumpetype er forskjellig fra innstilt pumpetype.</string>
@@ -71,21 +86,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Avbryt midlertidig basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Angi Bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Oppdater status insulinvolum</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pumpe utilgjengelig</string>
-    <string name="medtronic_warning">Advarsel</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Nå</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">siden</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Nå</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">siden</string>
     <string name="medtronic_notification_check_time_date">Pumpens tid må oppdateres</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Pumpens tid ble oppdatert</string>
     <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en midlertidig basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
     <string name="mdt_tbr_remaining">%1$.1f E/t (%2$d min gjenstår)</string>
     <string name="invalid_history_data">Ugyldige data for pumpehistorikken er oppdaget. Rapporter hendelsen til APPS og legg ved logg.</string>
     <string name="riley_statistics">RL statistikk</string>
-    <string name="medtronic_history_type">Type:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Trykket på oppdater</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planlagt statusoppdatering</string>
 </resources>

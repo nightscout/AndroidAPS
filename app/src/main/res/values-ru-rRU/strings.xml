@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">Настройки %1$s</string>
-    <string name="nav_exit">Выход</string>
     <string name="delta">изменение</string>
     <string name="save">Сохранить</string>
     <string name="wear">Смарт-часы Wear</string>
-    <string name="nav_about">о приложении</string>
     <string name="sensitivity_warning">Активируя Autosense не забывайте вводить все съеденные углеводы. Иначе отклонения в углеводах будут неверно определены как изменение чувствительности !!</string>
     <string name="invalid">НЕВЕРНО</string>
-    <string name="gradually_increase_notification_volume">Постепенно увеличивать громкость оповещений и уведомлений</string>
-    <string name="localalertsettings_title">Локальные оповещения</string>
-    <string name="enable_missed_bg_readings_alert">Оповещать при отсутствии данных СК</string>
-    <string name="enable_pump_unreachable_alert">Оповещать в случае недоступности помпы</string>
     <string name="pump_unreachable_threshold">Порог недоступности помпы [min]</string>
-    <string name="enable_carbs_req_alert">Оповещать если требуются углеводы</string>
-    <string name="open_navigation">Показать панель навигации</string>
     <string name="close_navigation">Cкрыть панель навигации</string>
     <string name="remove_items">Удалить элементы</string>
     <string name="sort_items">Сортировать элементы</string>
@@ -27,7 +19,6 @@
     <string name="count_selected">%1$d выбрано</string>
     <string name="sort_label">Сортировать</string>
     <string name="search">Поиск</string>
-    <string name="simple_mode">Простой режим</string>
     <string name="select">Выбрать</string>
     <string name="set">Задать</string>
 </resources>

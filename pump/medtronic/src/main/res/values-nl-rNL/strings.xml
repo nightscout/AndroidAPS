@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Medtronic Codering</string>
     <string name="medtronic_custom_action_wake_and_tune">Ontwaak en maak verbinding</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Blokkering wissen</string>
-    <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink Configuratie</string>
     <string name="medtronic_pump_battery_select">Batterij type (batterij weergave)</string>
     <string name="medtronic_pump_battery_no">Niet geselecteerd (Eenvoudige weergave)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Uitgebreide weergave)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Batterij van de rileylink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Foutmeldingen</string>
-    <string name="medtronic_error_serial_not_set">Serie# niet ingesteld.</string>
     <string name="medtronic_error_serial_invalid">Serie# ongeldig.</string>
     <string name="medtronic_error_pump_type_not_set">Pomp type niet ingesteld.</string>
     <string name="medtronic_error_pump_type_invalid">Pomp type niet ondersteund.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Pomp frequentie niet ingesteld.</string>
     <string name="medtronic_error_pump_frequency_invalid">Pomp frequentie niet ondersteund.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adres ongeldig.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Gedetecteerde pomp type komt niet overeen met ingestelde pomp type.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Tijdelijk basaal annuleren</string>
     <string name="medtronic_cmd_desc_set_bolus">Instellen Bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Haal Resterende Insuline op</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pomp niet bereikbaar</string>
-    <string name="medtronic_warning">Waarschuwing</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Zojuist</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">voorbij</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Zojuist</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">voorbij</string>
     <string name="medtronic_notification_check_time_date">Pomp klok moet bijgesteld worden</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Pomp tijd bijgewerkt</string>
     <string name="set_neutral_temps_title">Stel neutraal tijdelijk basaal in</string>
     <string name="set_neutral_temps_summary">Als deze optie is ingeschakeld, wordt een tijdelijk basaal geannuleerd vlak voor het einde van elk uur. Handige optie voor sommige pompen die elk uur piepen/vibreren zolang een tijdelijk basaal actief is.</string>
     <string name="mdt_tbr_remaining">%1$.1f E/u (%2$d min resterend)</string>
     <string name="invalid_history_data">Ongeldige pompgeschiedenis gegevens gedetecteerd. Open een nieuw issue inclusief de logbestanden.</string>
     <string name="riley_statistics">RL Statistieken</string>
-    <string name="medtronic_history_type">Type:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Vernieuwen geklikt</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Status gepland actualiseren</string>
 </resources>

@@ -46,28 +46,4 @@
     <string name="ble_config_remove">Usuń</string>
     <!-- Pump History -->
     <string name="pump_history_type">Typ:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d dzień</item>
-        <item quantity="few">%1$d dni</item>
-        <item quantity="many">%1$d dni</item>
-        <item quantity="other">%1$d dni</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d godzina</item>
-        <item quantity="few">%1$d godziny</item>
-        <item quantity="many">%1$d godzin</item>
-        <item quantity="other">%1$d godzin</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d godzinę temu</item>
-        <item quantity="few">%1$d godziny temu</item>
-        <item quantity="many">%1$d godzin temu</item>
-        <item quantity="other">%1$d godzin temu</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d dzień temu</item>
-        <item quantity="few">%1$d dni temu</item>
-        <item quantity="many">%1$d dni temu</item>
-        <item quantity="other">%1$d dni temu</item>
-    </plurals>
 </resources>

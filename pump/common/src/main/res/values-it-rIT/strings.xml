@@ -65,20 +65,4 @@
     <string name="ble_config_remove">Rimuovi</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipo:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d giorno</item>
-        <item quantity="other">%1$d giorni</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d ora</item>
-        <item quantity="other">%1$d ore</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d ora fa</item>
-        <item quantity="other">%1$d ore fa</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d giorno fa</item>
-        <item quantity="other">%1$d giorni fa</item>
-    </plurals>
 </resources>

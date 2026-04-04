@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Párovanie</string>
-    <string name="danars_no_device_available">Zatiaľ nenájdené žiadne zariadenie</string>
-    <string name="danars_pairingok">Spárované</string>
     <string name="danars_pairingtimedout">Vypršal časový limit pre párovanie</string>
-    <string name="danars_waitingforpairing">Čakanie na párovanie na pumpe</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Integrácia pumpy pre pumpy DANA Diabecare RS a Dana-i</string>
@@ -59,7 +55,6 @@
     <string name="danar_history_bolus">Bolusy</string>
     <string name="danar_history_carbohydrates">Sacharidy</string>
     <string name="danar_history_dailyinsulin">Denný inzulín</string>
-    <string name="danar_history_errors">Chyby</string>
     <string name="danar_history_glucose">Glykémia</string>
     <string name="danar_history_refill">Plnenie</string>
     <string name="danar_history_syspend">Pozastavenia</string>
@@ -68,7 +63,6 @@
     <string name="danar_time_display">Formát času</string>
     <string name="danar_button_scroll">Posun pri stlačení tlačidla</string>
     <string name="danar_beep">Zvuk pri stlačení tlačidla</string>
-    <string name="danar_pump_alarm">Alarm</string>
     <string name="danar_pump_alarm_sound">Zvuk</string>
     <string name="danar_pump_alarm_vibrate">Vibrácie</string>
     <string name="danar_pump_alarm_both">Oboje</string>
@@ -82,7 +76,6 @@
     <string name="description_pump_dana_r_korean">Ovládač pumpy pre kórejskú verziu Dana Diabecare R</string>
     <string name="description_pump_dana_r_v2">Ovládač pumpy pre Dana Diabecare R s aktualizovaným firmvérom</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Bluetooth adaptér nenájdený</string>
     <string name="devicenotfound">Vybrané zariadenie nenájdené</string>
     <string name="danar_switchtouhmode">Zmeniť v pumpe režim z U/d na U/h</string>
     <string name="danarkoreanpump">Kórejská DanaR</string>
@@ -91,28 +84,21 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Deaktivovať v pumpe režim EasyUI</string>
     <string name="profile_set_failed">Nastavenie bazálneho profilu zlyhalo</string>
-    <string name="danar_bluetooth_status">Stav Bluetooth</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Nastavenie pumpy Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">ZAP</string>
     <string name="option_off">VYP</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth zariadenie</string>
     <string name="danars_password_title">Heslo pumpy (iba v1)</string>
     <string name="danar_password_title">Heslo do pumpy</string>
     <string name="danar_useextended_title">Použiť predĺžené bolusy pre &gt;200%</string>
-    <string name="bolusspeed">Rýchlosť bolusu</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="rs_loginsulinchange_title">Zaznamenať výmenu zásobníka</string>
     <string name="rs_loginsulinchange_summary">Pridať udalosť \"Výmena inzulínu\" do portálu starostlivosti, pokiaľ je zistená v histórii</string>
     <string name="rs_logcanulachange_title">Zaznamenať výmenu kanyly</string>
     <string name="rs_logcanulachange_summary">Pridať udalosť \"Výmena setu\" do portálu starostlivosti, pokiaľ je zistená v histórii</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Stlačte OK na pumpe\na zadajte 2 zobrazené čísla\nUdržujte display na pumpe zapnutý stlačením tlačítka mínus, kým nedokončíte zadanie kódu.</string>
     <string name="num1pin">1: (12 číslic)</string>
     <string name="num2pin">2: (8 číslic)</string>
     <string name="basal_bolus_step">Krok bazálu/bolusu</string>
-    <string name="carbs_store_error">Sacharidy pravdepodobne neboli správne uložené. Ručne ich skontrolujte a pokiaľ je to potrebné, opäť ich uložte.</string>
 </resources>

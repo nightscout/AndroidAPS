@@ -165,7 +165,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="autotune_update_local_profile_message">OtoAyar Profili ile %1$s profili güncellensin mi?</string>
     <string name="autotune_revert_local_profile_message">Giriş Profili ile %1$s profili geri alınsın mı?</string>
     <string name="autotune_profile_invalid">Profil geçersiz</string>
-    <string name="not_available_full">Mevcut değil</string>
     <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Yarım bazal egzersiz hedefi</string>

@@ -22,7 +22,7 @@
     <string name="settings">Postavke</string>
     <string name="configbuilder_insulin">Inzulin</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">Glavna lozinka</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Izvoz korisničkih unosa u Excel (csv)</string>
     <string name="confirm">Potvrdi</string>
     <string name="pump">Pumpa</string>
@@ -66,7 +66,6 @@
     <string name="bg_label">GUK</string>
     <string name="calibration">Kalibracija</string>
     <string name="alarminxmin">Uključi alarm za %1$d min</string>
-    <string name="bolus_reminder">Podsjetnik za bolus</string>
     <string name="duration_label">Trajanje</string>
     <string name="shortgramm">g</string>
     <string name="loopsuspended">Petlja suspendirana</string>
@@ -86,18 +85,15 @@
     <string name="a11y_inrange">u rasponu</string>
     <string name="a11y_low">nisko</string>
     <string name="average">Prosječno</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">UKLONITI</string>
     <string name="activate_profile">Aktiviraj profil</string>
-    <string name="reset">reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch nedostaje. Promijenite profil ili pritisnite \"Aktiviraj profil\" u lokalnom profilu.</string>
     <string name="profile">Profil</string>
     <string name="select_for_removal">Odaberite za uklanjanje</string>
     <string name="confirm_remove_multiple_items">Jeste li sigurni da želite ukloniti %1$d stavke</string>
     <string name="overview_treatment_label">Tretman</string>
     <string name="copytolocalprofile">Napraviti novi profil iz ovog profila?</string>
-    <string name="wear_wizard_settings">Postavke čarobnjaka</string>
     <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">Aktivni UGH</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -126,6 +122,7 @@
     <string name="rate">Stopa</string>
     <string name="duration">Trajanje</string>
     <string name="reason">Razlog</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
@@ -144,7 +141,6 @@
     <string name="expweight">Eksponencijalno ponderirani TDD</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD</string>
     <string name="ratio">Omjer</string>
     <string name="amount_days"># dana</string>
     <string name="weight">Težina</string>
@@ -208,6 +204,7 @@
     <string name="profile_max_daily_basal_value">Maksimalna bazalna vrijednost profila</string>
     <string name="current_basal_value">Trenutna bazalna vrijednost</string>
     <string name="profile_carbs_ratio_value">Vrijednost omjera ugljikohidrata profila</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="formatPercent">%1$.0f%%</string>
     <string name="a11y_file">datoteka</string>
@@ -216,7 +213,6 @@
     <string name="autotune_tune_days">Dani prilagodbe:</string>
     <string name="autotune_select_profile">Odaberite profil za podešavanje</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Koristite obavijesti sustava za upozorenja i obavijesti</string>
     <string name="urgent_alarm">Hitan alarm</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -253,11 +249,15 @@
     <string name="message">Poruka</string>
     <string name="ok">U redu</string>
     <string name="cancel">Otkaži</string>
-    <string name="dismiss">ODBACITI</string>
     <string name="close">Zatvori</string>
     <!-- TwoMessagesDialog -->
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="you_are_on_allowed_limit">Dosegnuto je dopušteno ograničenje</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
@@ -272,8 +272,10 @@
     <string name="location_not_found_title">Lokacija nije omogućena</string>
     <string name="location_not_found_message">Da bi Bluetooth otkrivanje radilo na novijim uređajima, lokacija mora biti omogućena. AAPS ne prati vašu lokaciju i može se onemogućiti nakon uspješnog uparivanja.</string>
     <!--    Preferences -->
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Nedostaje dopuštenje za SMS</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d dan</item>
@@ -292,4 +294,10 @@
     <string name="sunday_short">Ne</string>
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Vyberte jednotky, v ktorých chcete zobraziť hodnoty</string>
     <string name="next_button">Ďalšia</string>
     <string name="previous_button">Späť</string>
-    <string name="nav_setupwizard">Sprievodca nastavením</string>
     <string name="setupwizard_finish">Dokončiť</string>
     <string name="welcome">Vitajte</string>
     <string name="welcometosetupwizard">Vitajte v sprievodcovi nastavení. Prevedie Vás procesom nastavenia programu\n</string>
@@ -18,19 +17,13 @@
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="permission">Povolenie</string>
     <string name="need_system_window_permission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
-    <string name="need_location_permission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
-    <string name="need_background_location_permission">Aplikácia potrebuje povolenie na zisťovanie polohy na pozadí pre automatizáciu</string>
-    <string name="need_storage_permission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
     <string name="askforpermission">Vyžiadať si povolenie</string>
-    <string name="need_whitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
     <string name="storedsettingsfound">Nájdené uložené nastavenia</string>
     <string name="master_password_summary">Hlavné heslo sa používa na šifrovanie zálohy a na \"prebitie\" zabezpečenia v aplikácii. Dobre si ho zapamätajte, alebo uložte na bezpečnom mieste.</string>
-    <string name="current_master_password">Aktuálne hlavné heslo</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
     <string name="syncinfotext">Synchronizujte dáta s cloudom. Túto časť teraz môžete preskočit, ale nebudete schopní dokončiť ciele, pokiaľ nebude synchronizácia nastavená do NS, alebo Tidepool.</string>
     <string name="status">Stav:</string>
-    <string name="patient_name">Meno pacienta</string>
-    <string name="patient_name_summary">Zadajte meno pacienta, alebo prezývku pre rozlíšenie medzi viacerými nastaveniami</string>
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
@@ -62,25 +55,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigurácia</string>
-    <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Aký profil má používať AndroidAPS?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Aký APS algoritmus má byť použitý pre prispôsobenie liečby?</string>
-    <string name="configbuilder_general">Všeobecné</string>
     <string name="configbuilder_general_description">Toto sú všeobecné moduly, ktoré môžu byť užitočné.</string>
-    <string name="configbuilder_sync">Synchronizácia</string>
-    <string name="configbuilder_sync_description">Pluginy pre nahrávanie a synchronizáciu dát.</string>
     <string name="configbuilder_constraints_description">Aké obmedzenia sú použité?</string>
-    <string name="configbuilder_loop">Uzavretý okruh</string>
     <string name="configbuilder_loop_description">Použi toto, pre aktiváciu integrácie AndroidAPS uzavretého okruhu.</string>
     <string name="configbuilder_insulin_description">Aký druh inzulínu používate?</string>
-    <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
-    <string name="configbuilder_smoothing">Vyhladzovanie</string>
     <string name="configbuilder_smoothing_description">Vyberte algoritmus pre vyhladzovanie</string>
-    <string name="configbuilder_sensitivity">Detekcia citlivosti</string>
     <string name="configbuilder_sensitivity_description">Aký druh algoritmu pre detekciu citlivosti má byť použitý?</string>
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
@@ -91,21 +74,18 @@
     <string name="collapse_category">Zbaliť kategóriu</string>
     <!--ImportExport-->
     <string name="nav_preferences">Nastavenia</string>
-    <string name="password_preferences_encrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie exportovaných nastavení.</string>
-    <string name="preferences_export_canceled">Export zrušený! Nastavenia neboli exportované!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Import zrušený! Nastavenia neboli importované!</string>
     <string name="preferences_import_impossible">Nastavenia sa nedajú importovať!</string>
     <string name="check_preferences_details_btn">Vysvetli chyby pri importe...</string>
     <string name="check_preferences_details_title">Podrobnosti chýb pri importe</string>
     <string name="check_preferences_import_btn">Importovať</string>
     <string name="check_preferences_import_anyway_btn">Importovať rovnako (NEBEZPEČNÉ!)</string>
-    <string name="import_setting">Importovať nastavenia</string>
-    <string name="aaps_directory">AAPS priečinok</string>
-    <string name="select_aaps_directory">Vyberte adresár AAPS na ukladanie exportov, konfigurácií atď.</string>
     <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
     <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
     <string name="check_preferences_dangerous_import">Nastavenia by nemali byť importované!</string>
-    <string name="export_to">Exportovať nastavenia do</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Importovať nastavenia z</string>
     <string name="setting_imported">Nastavenia importované</string>
     <string name="old_master_password">Staré hlavné heslo</string>
@@ -117,27 +97,12 @@
     <string name="goto_main_try_again">Prosím, vráťte se späť na hlavnú obrazovku a skúste to znovu.</string>
     <string name="restartingapp">Zatváram aplikáciu, aby sa aplikovali nové nastavenia.</string>
     <string name="ue_exported">Užívateľské záznamy exportované</string>
-    <string name="protection">Ochrana</string>
-    <string name="master_password_missing">Hlavné heslo nie je nastavené!\n\nProsím nastavte svoje hlavné heslo v nastaveniach (%1$s)</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">Údržba</string>
-    <string name="description_maintenance">Poskytuje viaceré funkcie pre údržbu (ako napr. zasielanie logov, vymazanie logov).</string>
-    <string name="database_cleanup">Vyčistenie databázy</string>
-    <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
-    <string name="reset_aps_results_confirm">Naozaj chcete resetovať uložené výsledky AAPS?</string>
     <string name="maintenance_settings">Nastavenie údržby</string>
     <string name="maintenance_email">E-Mail</string>
     <string name="maintenance_amount">Počet protokolov na odoslanie</string>
-    <string name="send_all_logs">Zasielať logy E-mailom</string>
-    <string name="delete_logs">Vymazať logy</string>
-    <string name="configbuilder_nightscoutversion_label">Verzia Nightscoutu:</string>
-    <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
-    <string name="log_files">Log súbory</string>
-    <string name="nav_logsettings">Nastavenie logovania</string>
-    <string name="miscellaneous">Rôzne</string>
-    <string name="nav_resetdb">Vymaž databázu</string>
-    <string name="resettodefaults">Obnoviť predvolené</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportované pred %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportované v %1$s</string>
@@ -160,8 +125,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrovania, zadané heslo je neplatné, alebo bol súbor nastavení zmenený! Môže sa stať, že importovaný súbor bol exportovaný s iným hlavným heslom.</string>
     <string name="prefdecrypt_issue_wrong_format">Chýba konfigurácia šifrovania, formát nastavení je neplatný!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Vyberte vlastný ciferník</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formát súboru</string>
     <string name="metadata_label_created_at">Vytvorené</string>
@@ -172,8 +135,8 @@
     <string name="metadata_label_encryption">Šifrovanie súborov</string>
     <string name="metadata_format_new">Nový šifrovaný formát</string>
     <string name="metadata_format_other">Neznámy formát exportu</string>
-    <string name="reset_aps_results">Resetovať výsledky APS</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Chyba pri prístupe k súborom. Vyberte adresár AAPS.</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <string name="storage_local">Lokálne úložisko</string>
     <string name="storage_google_drive">Google Disk</string>

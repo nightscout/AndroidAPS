@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Vyberte jednotky, ve kterých chcete zobrazit hodnoty</string>
     <string name="next_button">Další</string>
     <string name="previous_button">Zpět</string>
-    <string name="nav_setupwizard">Průvodce nastavením</string>
     <string name="setupwizard_finish">Dokončit</string>
     <string name="welcome">Vítejte</string>
     <string name="welcometosetupwizard">Vítejte v průvodci nastavením. Provede Vás procesem nastavení programu\n</string>
@@ -18,19 +17,13 @@
     <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="permission">Povolení</string>
     <string name="need_system_window_permission">Pro oznámení vyžaduje aplikace oprávnění systémového okna</string>
-    <string name="need_location_permission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
-    <string name="need_background_location_permission">Aplikace potřebuje na pozadí oprávnění k přístupu k poloze zařízení kvůli automatizacím</string>
-    <string name="need_storage_permission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
     <string name="askforpermission">Získat povolení</string>
-    <string name="need_whitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
     <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
     <string name="master_password_summary">Hlavní heslo se používá pro šifrování zálohy a pro \"přebití\" zabezpečení v aplikaci. Dobře si ho zapamatujte nebo uložte na bezpečném místě.</string>
-    <string name="current_master_password">Aktuální hlavní heslo</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Použijte hodnoty pro největší jídlo, jaké obvykle jíte\n</string>
     <string name="syncinfotext">Synchronizujte data s cloudem. Tuto část nyní můžete přeskočit, ale nebudete schopni dokončit cíle, dokud nebude nastavena synchronizace do NS nebo Tidepoolu.</string>
     <string name="status">Status:</string>
-    <string name="patient_name">Jméno pacienta</string>
-    <string name="patient_name_summary">Zadejte jméno pacienta nebo přezdívku pro rozlišení mezi více nastaveními</string>
     <string name="diawarning">Pozor: Nové inzulínové profily vyžadují DIA minimálně 5h. DIA 5–6 hodin odpovídá zhruba nastavení 3h na starších typech profilů nebo v pumpě.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Proveďte přepnutí profilu</string>
@@ -62,25 +55,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigurace</string>
-    <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Jakou pumpu chcete s AAPS používat?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Jaký profil má AAPS použít?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Jaký algoritmus má AndroidAPS používat?</string>
-    <string name="configbuilder_general">Obecné</string>
     <string name="configbuilder_general_description">Obecné pluginy, které by se Vám mohly hodit.</string>
-    <string name="configbuilder_sync">Synchronizace</string>
-    <string name="configbuilder_sync_description">Moduly plug-in pro nahrávání a synchronizaci dat.</string>
     <string name="configbuilder_constraints_description">Jaká omezení byla použita?</string>
-    <string name="configbuilder_loop">Smyčka</string>
     <string name="configbuilder_loop_description">Použitím aktivujte integraci AAPS.</string>
     <string name="configbuilder_insulin_description">Jaký druh inzulínu používáte?</string>
-    <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
-    <string name="configbuilder_smoothing">Vyhlazování</string>
     <string name="configbuilder_smoothing_description">Vyberte algoritmus pro vyhlazování</string>
-    <string name="configbuilder_sensitivity">Detekce citlivosti</string>
     <string name="configbuilder_sensitivity_description">Jaký druh algoritmu pro detekci citlivosti chcete použít?</string>
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Nastavení konfigurace (povolování součástí systému)</string>
@@ -91,21 +74,18 @@
     <string name="collapse_category">Sbalit kategorii</string>
     <!--ImportExport-->
     <string name="nav_preferences">Nastavení</string>
-    <string name="password_preferences_encrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k šifrování exportovaných předvoleb.</string>
-    <string name="preferences_export_canceled">Export zrušen! Předvolby NEBYLY exportovány!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Import zrušen! Předvolby NEBYLY importovány!</string>
     <string name="preferences_import_impossible">Nelze naimportovat nastavení!</string>
     <string name="check_preferences_details_btn">Vysvětlení problémů při importu…</string>
     <string name="check_preferences_details_title">Detaily problémů importu</string>
     <string name="check_preferences_import_btn">Import</string>
     <string name="check_preferences_import_anyway_btn">Přesto importovat (NEBEZPEČNÉ!)</string>
-    <string name="import_setting">Importovat nastavení</string>
-    <string name="aaps_directory">Adresář AAPS</string>
-    <string name="select_aaps_directory">Vyberte adresář AAPS pro ukládání exportů, konfigurací atd.</string>
     <string name="check_preferences_before_import">Před importem zkontrolujte předvolby:</string>
     <string name="check_preferences_cannot_import">Předvolby nelze importovat!</string>
     <string name="check_preferences_dangerous_import">Předvolby by neměly být importovány!</string>
-    <string name="export_to">Exportovat nastavení do</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Importovat nastavení z</string>
     <string name="setting_imported">Nastavení importováno</string>
     <string name="old_master_password">Původní hlavní heslo</string>
@@ -117,27 +97,12 @@
     <string name="goto_main_try_again">Prosím vraťte se zpět na hlavní obrazovku a zkuste to znovu.</string>
     <string name="restartingapp">Ukončuji aplikaci, aby se nastavení projevilo.</string>
     <string name="ue_exported">Uživatelské záznamy exportovány</string>
-    <string name="protection">Ochrana</string>
-    <string name="master_password_missing">Hlavní heslo není nastaveno!\n\nNastavte si hlavní heslo v Nastavení (%1$s)</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">ÚDRŽBA</string>
-    <string name="description_maintenance">Poskytuje funkce pro údržbu (např. odesílání logů, čištění).</string>
-    <string name="database_cleanup">Vyčištění databáze</string>
-    <string name="reset_db_confirm">Opravdu resetovat všechny databáze?</string>
-    <string name="reset_aps_results_confirm">Opravdu chcete resetovat uložené výsledky APS?</string>
     <string name="maintenance_settings">Nastavení údržby</string>
     <string name="maintenance_email">Příjemce e-mailu</string>
     <string name="maintenance_amount">Počet logů k odeslání</string>
-    <string name="send_all_logs">Poslat logy e-mailem</string>
-    <string name="delete_logs">Smazat logy</string>
-    <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
-    <string name="engineering_mode_enabled">Expertní mód povolen</string>
-    <string name="log_files">Soubory protokolu</string>
-    <string name="nav_logsettings">Nastavení logování</string>
-    <string name="miscellaneous">Různé</string>
-    <string name="nav_resetdb">Inicializovat databáze</string>
-    <string name="resettodefaults">Obnovit výchozí</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportováno před %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportováno v %1$s</string>
@@ -160,8 +125,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrování, zadané heslo je neplatné, nebo byl soubor nastavení změněn! Může se stát, že importovaný soubor byl exportován s jiným hlavním heslem.</string>
     <string name="prefdecrypt_issue_wrong_format">Chybí konfigurace šifrování, formát nastavení je neplatný!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný nebo neurčený šifrovací algoritmus!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Vyberte vlastní ciferník</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formát souboru</string>
     <string name="metadata_label_created_at">Vytvořeno</string>
@@ -172,8 +135,8 @@
     <string name="metadata_label_encryption">Šifrování souboru</string>
     <string name="metadata_format_new">Nový zašifrovaný formát</string>
     <string name="metadata_format_other">Neznámý formát souboru</string>
-    <string name="reset_aps_results">Resetovat výsledky APS</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Chyba při přístupu k souborům. Vyberte adresář AAPS.</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <string name="storage_local">Lokální úložiště</string>
     <string name="storage_google_drive">Disk Google</string>

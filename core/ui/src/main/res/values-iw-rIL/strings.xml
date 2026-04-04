@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">שלח נתוני סוכר לנייטסקאוט</string>
     <string name="configbuilder_insulin">אינסולין</string>
     <string name="value_unavailable_short">לא זמין</string>
-    <string name="master_password">סיסמה ראשית</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">יצוא ערכי משתמש לאקסל (csv)</string>
     <string name="confirm">אישור</string>
     <string name="pump">משאבה</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">גר\'</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">בלוטות\'</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">מכבה את הבלוטות\' של הטלפון לשנייה אחת אם לא ניתן לתקשר עם המשאבה. זה עשוי לעזור במס\' דגמי טלפונים שבהם מערכת הבלוטות\' קופאת.</string>
     <string name="virtualpump_resultok">אישור</string>
     <string name="pump_time_updated">שעון המשאבה עודכן</string>
     <string name="exit">יציאה</string>
@@ -109,7 +107,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">כיול</string>
     <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
-    <string name="bolus_reminder">תזכורת בולוס</string>
     <string name="duration_label">משך</string>
     <string name="shortgramm">גר\'</string>
     <string name="pumpsuspended">משאבה מושהית</string>
@@ -131,18 +128,15 @@
     <string name="a11y_inrange">בטווח</string>
     <string name="a11y_low">נמוך</string>
     <string name="average">ממוצע</string>
-    <string name="tir">זמן בטווח</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">הסר</string>
     <string name="activate_profile">הפעלת פרופיל</string>
-    <string name="reset">איפוס</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
     <string name="profile">פרופיל</string>
     <string name="select_for_removal">בחרו להסרה</string>
     <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
-    <string name="wear_wizard_settings">הגדרות אשף</string>
     <string name="bg_trend_label">מגמת 15 דקות</string>
     <string name="treatments_wizard_cob_label">פחמ\' פעילות</string>
     <string name="bolus_iob_label">בולוס פעיל</string>
@@ -187,6 +181,7 @@
     <string name="duration">משך</string>
     <string name="reason">סיבה</string>
     <string name="nochangerequested">אין בקשות החלפה</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">פרופיל לא חוקי: %1$s</string>
     <!--    Temptarget-->
@@ -252,7 +247,6 @@
     <string name="expweight">TDD משוקלל אקספוננציאלי</string>
     <string name="basalrate">בזאלי</string>
     <string name="bolus">בולוס</string>
-    <string name="tdd">מינון יומי כולל (TDD)</string>
     <string name="ratio">יחס</string>
     <string name="amount_days"># ימים</string>
     <string name="weight">משקל</string>
@@ -371,6 +365,7 @@
     <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">בולוס %1$.2f יח\'</string>
     <string name="carbs_g">פחמימות %1$d גרם</string>
@@ -399,7 +394,6 @@
     <string name="sensitivity">רגישות</string>
     <string name="isf_for_carbs">פקטור הרגישות של המחשבון ושל ספיגת פחמימות: %1$.1f</string>
     <string name="autosens_long">ערך Autosens: %.0f%%</string>
-    <string name="autosens_short">רגישות: %.0f%%</string>
     <string name="algorithm_long">ערך Autosens באלגוריתם: %.0f%%</string>
     <string name="algorithm_short">אלגו\': %.0f%%</string>
     <string name="a11y_file">קובץ</string>
@@ -409,7 +403,6 @@
     <string name="autotune_tune_days">ימי כיוונון :</string>
     <string name="autotune_select_profile">בחרו פרופיל לכוונון</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">שימוש בהודעות מערכת עבור התראות ודיווחים</string>
     <string name="urgent_alarm">התראה דחופה</string>
     <string name="info">מידע</string>
     <!-- BolusWizard -->
@@ -417,8 +410,6 @@
     <string name="bolus_advisor_message">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
     <string name="cobvsiob">פחמ\' פעילות לעומת אינ\' פעיל</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!!! זוהתה ספיגת פחמימות איטית: %2$d%% מהזמן הצפוי. הערכת כמות הפחמימות הפעילות עלולה להיות ביתר ולכן תיתכן הזרקת אינסולין עודפת !!!!!!</font>]]></string>
-    <string name="partialboluswizard">ספק את חלק זה מתוצאת אשף הבולוס [%]</string>
-    <string name="partialboluswizard_reset_time">סף זמן נתונים ישנים [דק\']</string>
     <string name="bolus_constraint_applied_warn">מגבלת בולוס יושמה: %1$.2f עד %2$.2f יח\'</string>
     <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
@@ -495,16 +486,20 @@
     <string name="message">הודעה</string>
     <string name="ok">אישור</string>
     <string name="cancel">ביטול</string>
-    <string name="dismiss">בטל</string>
     <string name="yes">כן</string>
     <string name="no">לא</string>
     <string name="close">סגור</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש לפיענוח ההעדפות המיובאות.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">הגדרות יוצאו</string>
     <string name="export_result_message_failed">יצוא ההגדרות נכשל!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">הפחתת %1$s ב-%2$s</string>
     <string name="a11y_plus_button_description">תוספת %1$s ב-%2$s</string>
@@ -525,8 +520,10 @@
     <string name="location_not_found_message">בכדי שסריקת בלוטות\' תעבוד יש לאפשר מיקום. xDrip לא עוקב אחר המיקום חוץ מבמקרה שבו הפעלתם את אפשרות הודעות החירום</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">העדפות תוסף</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">הרשאות SMS חסרות</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
@@ -573,4 +570,10 @@
     <string name="format_insulin_units1">%1$.1f יח\'</string>
     <string name="format_insulin_units">%1$.2f יח\'</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

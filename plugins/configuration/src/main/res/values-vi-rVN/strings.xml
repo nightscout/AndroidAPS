@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Chọn đơn vị mà bạn muốn hiển thị giá trị</string>
     <string name="next_button">Tiếp theo</string>
     <string name="previous_button">Trước đó</string>
-    <string name="nav_setupwizard">Cài đặt nhanh</string>
     <string name="setupwizard_finish">KẾT THÚC</string>
     <string name="welcome">Chào mừng</string>
     <string name="welcometosetupwizard">Chào mừng đến với trình hướng dẫn cài đặt. Hệ thống sẽ hướng dẫn bạn từng bước trong quá trình thiết lập.\n</string>
@@ -18,19 +17,13 @@
     <string name="high_mark_comment">Giá trị cao nhất trong mục tiêu (chỉ hiển thị)</string>
     <string name="permission">Quyền truy cập</string>
     <string name="need_system_window_permission">Ứng dụng cần quyền hiển thị cửa sổ hệ thống để gửi thông báo</string>
-    <string name="need_location_permission">Ứng dụng cần quyền vị trí để quét Bluetooth và nhận dạng Wi-Fi</string>
-    <string name="need_background_location_permission">Ứng dụng cần quyền truy cập vị trí ở nền để thực hiện Automations</string>
-    <string name="need_storage_permission">Ứng dụng cần quyền truy cập lưu trữ để lưu file nhật ký và xuất cài đặt</string>
     <string name="askforpermission">Yêu cầu cấp quyền truy cập</string>
-    <string name="need_whitelisting">%1$s cần được loại trừ khỏi tối ưu pin để hoạt động đúng cách</string>
     <string name="storedsettingsfound">Đã tìm thấy cài đặt đã lưu</string>
     <string name="master_password_summary">Mật khẩu chính được dùng để mã hóa bản sao lưu và ghi đè các bảo mật trong ứng dụng. Hãy nhớ nó hoặc lưu ở nơi an toàn.</string>
-    <string name="current_master_password">Mật khẩu chính hiện tại</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Sử dụng giá trị của bữa ăn lớn nhất bạn thường ăn</string>
     <string name="syncinfotext">Đồng bộ dữ liệu lên đám mây. Bạn có thể bỏ qua bước này ngay bây giờ, nhưng sẽ không thể hoàn thành các mục tiêu cho đến khi bạn thiết lập client Nightscout hoặc Tidepool.</string>
     <string name="status">Trạng thái:</string>
-    <string name="patient_name">Tên người dùng</string>
-    <string name="patient_name_summary">Vui lòng cung cấp tên bệnh nhân hoặc biệt danh để phân biệt giữa nhiều thiết lập</string>
     <string name="diawarning">Lưu ý: Các Hồ sơ insulin mới yêu cầu DIA ít nhất 5 giờ. DIA 5–6 giờ trên Hồ sơ mới tương đương với DIA 3 giờ trên hồ sơ insulin cũ.</string>
     <string name="profile">Hồ sơ</string>
     <string name="doprofileswitch">Thực hiện chuyển Hồ sơ</string>
@@ -62,25 +55,16 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Thiết bị này dường như không hỗ trợ loại trừ khỏi tối ưu pin – bạn có thể gặp các vấn đề về hiệu suất.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Xây dựng Cấu hình</string>
-    <string name="configbuilder_pump">Bơm Insulin</string>
     <string name="configbuilder_pump_description">Bạn muốn sử dụng loại bơm nào với AAPS?</string>
     <string name="configbuilder_profile">Hồ sơ</string>
-    <string name="configbuilder_profile_description">AAPS nên dùng Hồ sơ điều trị nào?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Thuật toán APS nào sẽ thực hiện điều chỉnh điều trị?</string>
-    <string name="configbuilder_general">Cài đặt chung</string>
     <string name="configbuilder_general_description">Đây là một số Tiện ích chung mà bạn có thể thấy hữu ích.</string>
-    <string name="configbuilder_sync">Đồng bộ hóa</string>
-    <string name="configbuilder_sync_description">Các Tiện ích dùng để tải lên và đồng bộ dữ liệu.</string>
+    <string name="configbuilder_sync_description">Các plugin tải lên dữ liệu, đồng bộ hóa và giao tiếp.</string>
     <string name="configbuilder_constraints_description">Những giới hạn nào đang được áp dụng?</string>
-    <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Sử dụng tùy chọn này để kích hoạt tích hợp vòng lặp của AAPS.</string>
     <string name="configbuilder_insulin_description">Bạn đang dùng loại insulin gì?</string>
-    <string name="configbuilder_bgsource">Nguồn Đường huyết</string>
     <string name="configbuilder_bgsource_description">Bạn muốn AAPS lấy dữ liệu từ đâu?</string>
-    <string name="configbuilder_smoothing">Làm mượt</string>
     <string name="configbuilder_smoothing_description">Chọn thuật toán làm mượt</string>
-    <string name="configbuilder_sensitivity">Phát hiện độ nhạy insulin</string>
     <string name="configbuilder_sensitivity_description">Bạn muốn chọn thuật toán độ nhạy nào?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Được dùng để thiết lập các Tiện ích đang chạy</string>
@@ -91,21 +75,18 @@
     <string name="collapse_category">Thu gọn danh mục</string>
     <!--ImportExport-->
     <string name="nav_preferences">Tùy chọn</string>
-    <string name="password_preferences_encrypt_prompt">Hệ thống sẽ yêu cầu mật khẩu chính để mã hóa các thiết lập bạn xuất ra.</string>
-    <string name="preferences_export_canceled">Xuất dữ liệu đã bị hủy! Tùy chọn KHÔNG được xuất dữ liệu!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Nhập dữ liệu đã bị hủy! Tùy chọn KHÔNG được nhập dữ liệu!</string>
     <string name="preferences_import_impossible">Không thể nhập các tùy chọn!</string>
     <string name="check_preferences_details_btn">Giải thích sự cố nhập dữ liệu…</string>
     <string name="check_preferences_details_title">Chi tiết sự cố nhập dữ liệu</string>
     <string name="check_preferences_import_btn">Nhập dữ liệu</string>
     <string name="check_preferences_import_anyway_btn">Tiếp tục nhập (NGUY HIỂM!)</string>
-    <string name="import_setting">Nhập cài đặt</string>
-    <string name="aaps_directory">Thư mục AAPS</string>
-    <string name="select_aaps_directory">Chọn thư mục AAPS để lưu trữ các tệp xuất ra, cấu hình và dữ liệu khác.</string>
     <string name="check_preferences_before_import">Vui lòng xem lại các thiết lập trước khi nhập:</string>
     <string name="check_preferences_cannot_import">Không thể nhập các tùy chọn cài đặt!</string>
     <string name="check_preferences_dangerous_import">Không nên nhập các tùy chọn cài đặt này!</string>
-    <string name="export_to">Xuất cài đặt đến</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Nhập cài đặt từ</string>
     <string name="setting_imported">Các cài đặt đã được nhập</string>
     <string name="old_master_password">Mật khẩu chính cũ</string>
@@ -117,27 +98,12 @@
     <string name="goto_main_try_again">Vui lòng quay lại màn hình chính và thử lại.</string>
     <string name="restartingapp">Thoát ứng dụng để áp dụng thiết lập.</string>
     <string name="ue_exported">Dữ liệu người dùng đã được xuất</string>
-    <string name="protection">Bảo mật</string>
-    <string name="master_password_missing">Chưa thiết lập mật khẩu chính!\n\nVui lòng đặt mật khẩu chính trong Tùy chọn cài đặt (%1$s)</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Bảo trì hệ thống</string>
     <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">Cung cấp một số chức năng bảo trì (ví dụ: gửi nhật ký, xóa nhật ký).</string>
-    <string name="database_cleanup">Dọn dẹp cơ sở dữ liệu</string>
-    <string name="reset_db_confirm">Bạn có thật sự muốn đặt lại cơ sở dữ liệu không?</string>
-    <string name="reset_aps_results_confirm">Bạn có thật sự muốn đặt lại các kết quả APS đã lưu không?</string>
     <string name="maintenance_settings">Cấu hình bảo trì</string>
     <string name="maintenance_email">Người nhận email</string>
     <string name="maintenance_amount">Số lượng nhật ký gửi đi</string>
-    <string name="send_all_logs">Gửi nhật ký qua Email</string>
-    <string name="delete_logs">Xóa các nhật ký</string>
-    <string name="configbuilder_nightscoutversion_label">Phiên bản Nightscout:</string>
-    <string name="engineering_mode_enabled">Chế độ kỹ thuật đã bật</string>
-    <string name="log_files">Tập tin nhật ký</string>
-    <string name="nav_logsettings">Cài đặt nhật ký</string>
-    <string name="miscellaneous">Các tùy chọn khác</string>
-    <string name="nav_resetdb">Đặt lại dữ liệu</string>
-    <string name="resettodefaults">Đặt lại về mặc định</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">đã xuất dữ liệu cách đây %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">đã xuất vào lúc %1$s</string>
@@ -160,8 +126,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Lỗi giải mã, mật khẩu cung cấp không hợp lệ hoặc tệp cài đặt đã bị chỉnh sửa! Điều này có thể xảy ra nếu tệp nhập dữ liệu vào được xuất dữ liệu bằng mật khẩu khác.</string>
     <string name="prefdecrypt_issue_wrong_format">Thiếu cấu hình mã hóa, định dạng cài đặt không hợp lệ!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Thuật toán mã hóa không được hỗ trợ hoặc chưa được chỉ định!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Chọn mặt đồng hồ tùy chỉnh</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Định dạng tệp tin</string>
     <string name="metadata_label_created_at">Đã tạo lúc</string>
@@ -172,8 +136,8 @@
     <string name="metadata_label_encryption">Mã hóa tệp</string>
     <string name="metadata_format_new">Định dạng mã hóa mới</string>
     <string name="metadata_format_other">Định dạng xuất dữ liệu không xác định</string>
-    <string name="reset_aps_results">Đặt lại kết quả APS</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Lỗi truy cập hệ thống tệp. Hãy chọn đúng thư mục AAPS.</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <string name="storage_local">Lưu trữ Cục bộ</string>
     <string name="storage_google_drive">Google Drive</string>

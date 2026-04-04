@@ -3,27 +3,17 @@
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Intégration de la pompe Omnipod Eros (l\'ancien modèle avec un capuchon d\'aiguille transparent). Nécessite un RileyLink avec au moins la version 2.0.</string>
     <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Adresse RileyLink invalide.</string>
     <!-- Omnipod Eros - Preferences -->
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Afficher le bouton Journal d\'impulsions dans le menu de gestion des pods</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Afficher le bouton Stats RileyLink dans le menu de gestion du pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activer l\'enregistrement des changements de pile dans Actions</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Son pour les notifications DBT incertains activé</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Son pour les notifications SMB incertains activé</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Son pour les notifications bolus incertains activé</string>
-    <!-- Omnipod Eros - History -->
-    <string name="omnipod_eros_history_title">Historique Pod</string>
-    <string name="omnipod_eros_history_item_description">Description</string>
-    <string name="omnipod_eros_history_item_source">Source</string>
-    <string name="omnipod_eros_history_item_date">Date</string>
-    <string name="omnipod_eros_history_type">Type :</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, Gluc=%2$.1f g</string>
     <string name="omnipod_eros_history_tbr_value">Débit : %1$.2f U, durée : %2$d minutes</string>
-    <!-- Omnipod Eros - Short Status -->
-    <string name="omnipod_eros_short_status_riley_link_battery">Bat. RL : %1$d</string>
     <!-- Omnipod Eros - Error -->
-    <string name="omnipod_eros_error_riley_link_address_invalid">Adresse RileyLink invalide.</string>
     <string name="omnipod_eros_error_crc_mismatch">Echec de la communication: échec de la vérification de l\'intégrité du message</string>
     <string name="omnipod_eros_error_invalid_packet_type">Échec de communication : paquet invalide reçu du Pod</string>
     <string name="omnipod_eros_error_invalid_progress_state">Échec de communication : état du Pod incorrect</string>
@@ -48,18 +38,13 @@
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">La durée du DBT doit être supérieure à zéro et un multiple de %1$s minutes.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Le paramétrage de l\'heure a peut-être échoué. L\'injection peut être suspendue ! Actualisez manuellement l\'état du Pod à partir de l\'onglet Omnipod et reprenez l\'injection si nécessaire.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Le paramétrage de l\'heure a échoué. L\'injection est suspendue ! Veuillez poursuivre manuellement l\'injection à partir de l\'onglet Omnipod.</string>
-    <string name="omnipod_eros_error_failed_to_read_pulse_log">Échec lecture Journal d\'impulsions</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Échec pour changer automatiquement l\'heure sur le Pod. Vous devez synchroniser manuellement l\'heure dans l\'onglet Omnipod.</string>
-    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operation impossible.\n\nVous devez d\'abord configurer l\'Omnipod pour pouvoir faire cette operation.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Impossible de vérifier si le bolus a réussi. Veuillez vérifier manuellement que votre Pod est en train de délivrer un bolus en écoutant des clics. <b>Si vous êtes sûr que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée bolus des traitements, même si vous cliquez sur \'Annuler bolus\' maintenant !</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Impossible de vérifier si le bolus SMB (%1$.2f U) a réussi. <b>Si vous êtes certain que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée SMB des traitements.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Une basale temporaire est en cours d\'exécution sur le Pod, mais AAPS n\'est pas au courant de ce basal temporaire. Veuillez annuler votre basal temporaire manuellement.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Stats RileyLink</string>
-    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">En attente de connexion RileyLink...</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Réinitialiser la config. RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Lire journal d\'impulsion</string>
-    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Lecture journal d\'impulsion…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Enreg. Pulse</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Journal d\'impulsions (copié dans presse-papiers)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

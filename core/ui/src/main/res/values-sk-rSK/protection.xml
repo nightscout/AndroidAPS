@@ -13,10 +13,7 @@
     <string name="bolus_pin">PIN pre bolus</string>
     <string name="protection_timeout_title">Zachovanie hesla a PIN [s]</string>
     <string name="protection_timeout_summary">Čas pred zadaním hesla alebo PIN</string>
-    <string name="biometric">Biometria</string>
-    <string name="custom_password">Vlastné heslo</string>
-    <string name="custom_pin">Vlastný PIN</string>
-    <string name="noprotection">Bez ochrany</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Nezabezpečené záložné riešenie</string>
     <string name="unsecure_fallback_descriotion_biometric">Aby bolo biometrické zabezpečenie účinné, je potrebné pre záložné riešenie nastaviť hlavné heslo.\n\nProsím nastavte hlavné heslo!</string>
     <string name="password_set">Heslo nastavené!</string>
@@ -27,8 +24,6 @@
     <string name="password_not_changed">Heslo nezmenené</string>
     <string name="pin_not_changed">PIN nebol zmenený</string>
     <string name="pin_cleared">PIN bol vymazaný!</string>
-    <string name="password_hint">Zadajte heslo</string>
-    <string name="pin_hint">Zadajte PIN</string>
     <string name="master_password_not_set">Master password not set</string>
     <string name="aaps_directory_not_selected">Nebol vybratý priečinok AAPS</string>
 </resources>

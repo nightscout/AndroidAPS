@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Réinit. Appairage</string>
-    <string name="diaconn_no_device_available">Aucun appareil disponible</string>
     <string name="diaconn_pairing">Appairage pompe Diaconn</string>
-    <string name="pumperror">Erreur Pompe</string>
     <string name="diaconn_g8_history_alarm">Alarmes</string>
     <string name="diaconn_g8_history_basalhours">Heures Basal</string>
     <string name="diaconn_g8_history_bolus">Bolus</string>
     <string name="diaconn_g8_history_dailyinsulin">Insuline quotidienne</string>
     <string name="diaconn_g8_history_refill">Remplir</string>
     <string name="diaconn_g8_history_suspend">Suspendre</string>
-    <string name="invalidpairing">Appairage invalide. Demande de nouvel appairage</string>
     <string name="gettingpumpsettings">Obtenir les paramètres pompe</string>
     <string name="gettingpumptime">Obtenir l\'heure de la pompe</string>
     <string name="largetimediff">Différence horaire importante:\nL\'heure de la pompe est en écart de plus d\'une heure et demi.\nVeuillez ajuster manuellement l\'heure de la pompe et assurez-vous que la lecture de l\'historique de la pompe ne cause pas de dysfonctionnements.\nSi possible, effacez l\'historique de la pompe avant de modifier l\'heure ou désactivez la Boucle Fermée pour une DAI après la dernière entrée erronée de l\'historique et au minimum une DAI à partir de maintenant.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Erreur de vitesse</string>
     <string name="insulinlimitviolation">Violation de limite d\'insuline</string>
     <string name="boluserrorcode">Demandé : %1$.2fU Injecté : %2$.2fU code d’erreur : %3$s</string>
-    <string name="bolusspeed">Vitesse bolus</string>
     <string name="selectedpump">Pompe sélectionnée</string>
     <string name="diaconn_g8_bluetooth_status">État Bluetooth</string>
     <string name="bolus_step">Incrément Bolus</string>
     <string name="basal_step">Incrément Basal</string>
-    <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">OPTIONS UTILISATEUR</string>
     <string name="pairfirst">Veuillez appairer votre pompe avec votre téléphone !</string>
     <string name="processinghistory">"Traitement d'événement "</string>

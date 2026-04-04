@@ -4,30 +4,40 @@
     <string name="carbs_constraint_applied">Constrângere de carbohidrați aplicată</string>
     <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">Dialog anulat</string>
-    <string name="start_activity_tt">Start TT activitate</string>
-    <string name="start_eating_soon_tt">Start TT mănânc-în-curând</string>
-    <string name="start_hypo_tt">Start TT hipo</string>
+    <string name="start_activity_tt">Start Țintă Temporară activitate</string>
+    <string name="start_eating_soon_tt">Start Țintă Temporară mănânc-în-curând</string>
+    <string name="start_hypo_tt">Start Țintă Temporară hipoglicemie</string>
     <string name="time_offset">Decalaj</string>
-    <string name="unit_minute_short">min</string>
-    <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
-    <string name="a11y_carb_reminder">setați memento</string>
+    <string name="remind_to_bolus_later">Amintește-mi să fac bolus mai târziu</string>
+    <string name="a11y_carb_reminder">Setează memento pentru timpul carbohidraților</string>
     <!--    Widget-->
     <string name="configure">Configurați opacitatea</string>
     <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor activitate</string>
+    <string name="time_range">Interval de timp</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Pentagon glicemie (CGP) - 14 zile</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Medie</string>
+    <string name="cgp_reference">Persoană sănătoasă</string>
+    <string name="cgp_patient">Pacient</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Risc foarte scăzut</string>
+    <string name="cgp_pgr_low">Risc scăzut</string>
+    <string name="cgp_pgr_moderate">Risc moderat</string>
+    <string name="cgp_pgr_high">Risc ridicat</string>
+    <string name="cgp_pgr_extremely_high">Risc extrem de ridicat</string>
     <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
     <string name="do_you_want_recalculate_tdd_stats">Doriți să recalculați statisticile DZT?</string>
-    <string name="statistics">Statistici</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
     <string name="invalid_age">Valoare vârstă invalidă</string>
     <string name="invalid_weight">Valoare greutate invalidă</string>
-    <string name="id">ID:</string>
-    <string name="submit">Trimiteți</string>
     <string name="age">Vârstă</string>
     <string name="weight_label">Greutate</string>
-    <string name="most_common_profile">Cel mai frecvent profil:</string>
-    <string name="survey_comment">Notă: Doar datele vizibile pe acest ecran vor fi încărcate în mod anonim. ID-ul este alocat acestei instalări a AndroidAPS. Puteți trimite date din nou dacă profilul dumneavoastră principal se modifică, dar lăsați-l să ruleze cel puțin o săptămână pentru ca rezultatul să fie vizibil în interval de timp. Ajutorul dumneavoastră este apreciat.</string>
     <string name="glucose_type">Tip glicemie</string>
     <string name="bg_other">Altul</string>
     <string name="bg_meter">Glucometru</string>
@@ -47,38 +57,58 @@
     <string name="user_profile_description">Descrierea profilului utilizatorului este utilizată pentru a afișa cele mai frecvente locuri de inserție disponibile pentru bărbați, femei sau copii</string>
     <string name="site_management">Profil Administrare Loc Inserție</string>
     <string name="site_management_description">Veți seta aici dacă doriți să gestionați locul de inserție al pompei, al CGM-ului sau ambele. Această setare va fi folosită pentru a trimite automat dialogul de administrare al locului de inserție la fiecare intrare detectată nouă</string>
-    <string name="select_site">Apăsați mai jos pentru a selecta locul de inserție</string>
     <string name="record_site_change">Înregistrați locul de inserție</string>
+    <string name="update_site_change">Actualizați locul de inserție</string>
     <string name="edit_site">Editează</string>
     <string name="record_site_location">Locul de inserție: %1$s</string>
     <string name="record_site_arrow">Săgeata locului de inserție: %1$s</string>
     <string name="record_site_note">Notă: %1$s</string>
     <string name="delete_site_note">Notă ștearsă</string>
+    <string name="site_filter_info">Selectați tipul de eveniment de tratament pe care doriți să îl vedeți: Schimbare de Canulă și/sau Schimbare de Senzor</string>
     <!-- FillDialog -->
     <string name="fill_warning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
     <string name="record_pump_site_change">Înregistrare schimbare a locului pompei</string>
     <string name="record_insulin_cartridge_change">Înregistrare schimbare rezervor insulină</string>
+    <string name="fill_prime_amount">Cantitate de amorsare</string>
+    <string name="fill_pump_units_note">Cantitatea de amorsare este în unitățile pompei</string>
+    <string name="fill_insulin_change">Comutați insulina la: %1$s (se va aplica schimbarea profilului)</string>
+    <string name="fill_current_insulin">Insulina actuală</string>
+    <string name="fill_change_insulin">Schimbă insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
+    <!-- Insulin Management -->
+    <string name="missing_insulin_name">Lipsă nume insulină</string>
+    <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>
+    <string name="a11y_add_new_insulin">Adăugați o nouă insulină</string>
+    <string name="a11y_delete_current_insulin">Ștergeți insulina curentă</string>
+    <string name="save_or_reset_changes_first">Salvează sau resetează modificările curente mai întâi</string>
+    <string name="activate_insulin_no_profile">Niciun profil activ găsit</string>
+    <string name="activate_insulin_new_insulin">Noua insulină: %1$s</string>
+    <string name="activate_insulin_remaining">Rămase: %1$d min</string>
+    <string name="activate_insulin_profile_switch">Schimbarea profilului va fi creată:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Încarcă maxim de la</string>
+    <string name="cannot_delete_last_insulin">Nu se poate șterge ultima insulină</string>
+    <string name="cannot_delete_active_insulin">Nu se poate șterge insulina activă</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalare</string>
     <string name="percentage_label">Procentaj</string>
+    <string name="permanent_profile_switch">Permanent (0 = nicio limită de durată)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
     <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
     <string name="suspendloopfor10h">Suspendă bucla pentru 10h</string>
     <string name="disconnectpump">Deconectează pompa</string>
-    <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 min</string>
-    <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 min</string>
+    <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 minute</string>
+    <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 minute</string>
     <string name="disconnectpumpfor1h">Deconectează pompa pentru 1h</string>
     <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
     <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
     <string name="resume">Restabilește</string>
     <string name="reconnect">Reconectați pompa</string>
-    <string name="duration15m">15 min</string>
-    <string name="duration30m">30 min</string>
+    <string name="duration15m">15 minute</string>
+    <string name="duration30m">30 minute</string>
     <string name="duration1h">1 oră</string>
     <string name="duration2h">2 ore</string>
     <string name="duration3h">3 ore</string>
@@ -89,13 +119,17 @@
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="missing_carbs">Lipsă %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% carbohidrați imediați, fără carbohidrați extinși</string>
+    <string name="wizard_carbs_type_desc">Carbohidrați reduși cu %1$d%%, adăugați carbohidrați extinși %2$d%% întârziere %3$dmin pentru %4$dh</string>
+    <string name="wizard_include_info">Atingeți pentru a include/exclude din calcul:\n• BG - glicemie (inclusă la început)\n• TT - țintă temporară (inclusă la început)\n• Tendința Glicemiei (ultima stare amintită)\n• IOB - insulină la bord (inclusă la început)\n• COB - carbohidrați de la bord (ultima stare amintită)</string>
+    <string name="wizard_bg_age">Vârsta glicemiei: %1$d min</string>
     <string name="a11y_current_bg">valoarea actuală a glicemiei</string>
     <string name="carb_time_label">Ora carbohidrați</string>
     <string name="a11y_set_carb_timer">stabilește alarma pentru timpul carbohidraților</string>
-    <string name="show_calculation">Arată calculul</string>
+    <string name="show_calculation">Afișați calculul</string>
     <!-- Treatments -->
-    <string name="no_records_available">Nicio înregistrare disponibila</string>
-    <string name="calculation_short">Calc</string>
+    <string name="no_records_available">Nicio înregistrare disponibilă</string>
+    <string name="calculation_short">Calcul</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carbohidrați:</string>
     <string name="tempbasals_netratio_label_string">Raport:</string>
@@ -104,8 +138,6 @@
     <string name="meal_bolus">Masă</string>
     <string name="prime">Amorsare</string>
     <string name="carbs_and_bolus">Carbohidrați și bolusuri</string>
-    <string name="show_invalidated_records">Arată înregistrările invalidate / şterse</string>
-    <string name="hide_invalidated_records">Ascunde înregistrările invalidate / eliminate</string>
     <string name="show_invalidated">Arată invalidat</string>
     <string name="hide_invalidated">Ascunde invalidat</string>
     <string name="careportal_remove_started_events">Eliminare intrări pornire AAPS</string>
@@ -113,16 +145,32 @@
     <string name="show_loop">Arată bucla</string>
     <string name="user_entry">Înregistrare utilizator</string>
     <string name="clone_label">Clonează</string>
-    <string name="show_loop_records">Afișare înregistrări buclă</string>
-    <string name="show_hide_records">Ascundere înregistrări buclă</string>
+    <string name="add_new_profile">Adăugați un profil nou</string>
+    <string name="show_profile">Afișați profilul</string>
+    <string name="edit_label">Editați</string>
+    <string name="edit_profile">Editați profilul</string>
+    <string name="activate_label">Activați</string>
+    <string name="activate_profile">Activați profilul</string>
+    <string name="remove_label">Eliminați</string>
+    <string name="active_profile_indicator">ACTIV</string>
+    <string name="remaining_time_label">Rămas</string>
+    <string name="confirm_remove_profile">Eliminați profilul \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Clonați profilul \"%1$s\"?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profilul 1</string>
-    <string name="profile2">Profilul 2</string>
     <string name="profile_type">Tip profil</string>
+    <string name="profile_parameters">Parametrii profilului</string>
+    <string name="active_profile">Profil activ</string>
+    <string name="available_profiles">Profiluri disponibile</string>
+    <string name="profile_switches">Schimbări de profil</string>
     <string name="basal_pct_from_tdd_label">% din bazală</string>
     <string name="selected_profile">Selectat:</string>
-    <string name="compare_profile">Compară profilurile</string>
-    <string name="nav_profile_helper">Ajutor Profil</string>
+    <string name="comparation">Comparație</string>
+    <string name="profile_tab_1">Profilul 1</string>
+    <string name="profile_tab_2">Profilul 2</string>
     <string name="motol_default_profile">Profil implicit</string>
     <string name="current_profile">Profil curent</string>
     <string name="available_profile">Profil disponibil</string>
@@ -133,13 +181,14 @@
     <string name="invalid_pct">Intrare % invalidă</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Rată bazală</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP APĂSAT</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">numai pe ceas</string>
     <string name="a11y_only_on_phone">numai pe telefon</string>
     <string name="quickwizard_settings">Setări AsistentRapid</string>
     <string name="overview_edit_quickwizard_button_text">Text buton</string>
+    <string name="quick_wizard_mode_wizard">Asistent</string>
+    <string name="quick_wizard_mode_insulin">Insulină</string>
+    <string name="quick_wizard_mode_carbs">Carbohidrați</string>
     <string name="overview_edit_quickwizard_valid">Valabil:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Doar IOB pozitiv</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
@@ -147,8 +196,29 @@
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
     <string name="additional_ecarbs">Adaugă carbohidrați extinși</string>
     <string name="overview_edit_quickwizard_useforcalculation">Utilizați pentru calcul:</string>
+    <string name="calculator_options">Opţiuni calculator</string>
+    <string name="use_bg">Utilizați glicemia</string>
+    <string name="use_cob">Utilizați COB</string>
+    <string name="use_iob">Utilizați IOB</string>
+    <string name="use_trend">Utilizați tendința</string>
+    <string name="trend_all">Toate</string>
+    <string name="trend_positive_only">Doar pozitiv</string>
+    <string name="trend_negative_only">Doar negativ</string>
+    <string name="use_temp_target">Utilizați Ținta Temporară</string>
+    <string name="use_alarm">Utilizați alarma</string>
+    <string name="device_selection">Selectare dispozitiv</string>
+    <string name="show_on_phone">Afișați pe telefon</string>
+    <string name="show_on_watch">Afișați pe ceas</string>
+    <string name="ecarbs_additional">Carbohidrați suplimentari</string>
+    <string name="valid_from_to">Interval de timp valid</string>
+    <string name="carb_time">Timp carbohidrați</string>
+    <string name="no_quickwizard_entries">Fără intrări de Asistent Rapid. Atingeți + pentru a adăuga unul.</string>
+    <string name="save_changes_question">Salvați modificările acestei intrări?</string>
     <string name="constraints_violation">Încălcarea constrângerilor</string>
     <string name="change_your_input">Schimbați-vă intrarea!</string>
+    <string name="wizard_no_insulin_required">Nu este necesară insulină</string>
+    <string name="carbs_constraint_violation">Carbohidrații limitați de constrângeri</string>
+    <string name="insulin_constraint_violation">Insulină limitată de constrângeri</string>
     <string name="confirm_treatment">Vă rugăm să confirmați tratamentul</string>
     <string name="recalculate">Recalculați</string>
     <!--    Widget-->
@@ -156,9 +226,51 @@
     <string name="widget_configuration">Configurare widget</string>
     <string name="until_changed">Până la schimbare</string>
     <string name="limitations">Limitări</string>
+    <!--    Permissions-->
+    <string name="permission_sheet_title">Permisiuni necesare</string>
+    <string name="permission_sheet_subtitle">Unele permisiuni sunt necesare pentru ca aplicația să funcționeze corect</string>
+    <string name="permission_grant">Acordați</string>
+    <string name="permission_change">Schimbă</string>
+    <string name="permission_denied_go_to_settings">Permisiune refuzată definitiv. Vă rugăm să o activați în setările aplicației.</string>
+    <string name="permission_open_settings">Setări</string>
+    <string name="permission_directory_picker_error">Nu se poate lansa selectorul de dosare. De obicei o problemă legată de Android sau legată de Family Link.</string>
+    <string name="permission_nav_label">Permisiuni</string>
+    <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Decalaj de ciclu</string>
+    <string name="raw_tdd">DTZ (Doza totală zilnică) brută</string>
+    <string name="cleaned_tdd">DTZ (Doza totală zilnică) curățată</string>
+    <string name="cleaned_tdd_explanation">DTZ (doza totală zilnică) minus insulina pentru carbohidrați.</string>
+    <string name="cycle_lines_legend">Cicluri individuale</string>
+    <string name="cycles_found">%1$d cicluri (%2$d zile)</string>
+    <string name="cycle_day1_date">Ziua 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Se calculează… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Date insuficiente (necesită cel puțin 56 de zile pentru 2 cicluri)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambele</item>
         <item>Doar pozitiv</item>
         <item>Doar negativ</item>
     </string-array>
+    <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Acțiuni selectate</string>
+    <string name="quick_launch_available_actions">Acțiuni disponibile</string>
+    <string name="quick_launch_no_dynamic_items">Niciun element disponibil</string>
+    <string name="quick_launch_category_treatment">Tratament</string>
+    <string name="quick_launch_category_care">Care Portal</string>
+    <string name="quick_launch_category_profile">Profil</string>
+    <string name="quick_launch_category_temp_target">Ținte Temporare Presetate</string>
+    <string name="quick_launch_category_quick_wizard">Asistent Rapid</string>
+    <string name="quick_launch_category_automation">Automatizare</string>
+    <string name="quick_launch_all_selected">Toate articolele selectate</string>
+    <string name="quick_launch_no_quick_wizard">Adaugă intrările de Asistent rapid pentru a le folosi aici</string>
+    <string name="quick_launch_no_automation">Creați acțiuni automatizate ale utilizatorilor pentru a le folosi aici</string>
+    <string name="quick_launch_no_tt_presets">Adaugă Țintele Temporare presetate pentru a le folosi aici</string>
+    <string name="quick_launch_no_profiles">Creează profiluri în Profilul Local pentru a le folosi aici</string>
+    <string name="quick_launch_edit_profile_preset">Editează presetarea profilului</string>
+    <string name="quick_launch_profile_percentage">Procentaj</string>
+    <string name="quick_launch_profile_duration">Durată</string>
+    <string name="quick_launch_profile_permanent">Permanent</string>
+    <string name="quick_launch_profile_confirm">Activați profilul %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Selectați Săgeată</string>
 </resources>
