@@ -230,7 +230,10 @@
     <string name="mode_reverted">Modo revertido</string>
     <string name="insulin_shortname">INS</string>
     <string name="select_insulin">Seleccionar insulina</string>
+    <string name="insulin_template">Plantilla</string>
     <string name="dia">DIA</string>
+    <string name="peak">Pico de acción</string>
+    <string name="concentration">Concentración</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Error cancelando la basal temporal</string>
@@ -247,6 +250,10 @@
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Exportar ajustes</string>
     <string name="location_permission_not_granted">Permiso de ubicación no concedido. Permitir en la configuración de Android.</string>
+    <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
+    <string name="not_available_full">No disponible</string>
+    <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
+    <string name="back">Atrás</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
     <string name="wrongpin">Pin erróneo</string>
