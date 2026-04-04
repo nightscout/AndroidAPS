@@ -939,7 +939,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(enactResult.comment).thenReturn("ok")
         callbackCaptor.firstValue.result(enactResult).run()
 
-        verify(persistenceLayer).insertAndCancelCurrentTemporaryTarget(any(), eq(Action.TT), eq(Sources.NfcCommands), anyOrNull(), any())
+        runTest {
+            verify(persistenceLayer).insertAndCancelCurrentTemporaryTarget(any(), eq(Action.TT), eq(Sources.NfcCommands), anyOrNull(), any())
+        }
     }
 
     @Test
@@ -966,7 +968,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         whenever(enactResult.comment).thenReturn("ok")
         callbackCaptor.firstValue.result(enactResult).run()
 
-        verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
+        runTest {
+            verify(persistenceLayer, never()).insertAndCancelCurrentTemporaryTarget(any(), any(), any(), anyOrNull(), any())
+        }
     }
 
     // ── processCarbs tests ─────────────────────────────────────────────────────
@@ -1064,7 +1068,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val result = plugin.executeCommand("TARGET CANCEL")
 
         assertThat(result.success).isTrue()
-        verify(persistenceLayer).cancelCurrentTemporaryTargetIfAny(any(), eq(Action.CANCEL_TT), eq(Sources.NfcCommands), anyOrNull(), any())
+        runTest {
+            verify(persistenceLayer).cancelCurrentTemporaryTargetIfAny(any(), eq(Action.CANCEL_TT), eq(Sources.NfcCommands), anyOrNull(), any())
+        }
     }
 
     @Test
@@ -1117,8 +1123,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand PROFILE should create profile switch with default percentage`() {
         whenever(localProfileManager.profile).thenReturn(mockProfileStore)
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
-        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any()))
-            .thenReturn(true)
+        runTest {
+            whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any()))
+                .thenReturn(mock())
+        }
         whenever(rh.gs(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
         whenever(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
         whenever(dateUtil.now()).thenReturn(55_000L)
@@ -1126,18 +1134,21 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val result = plugin.executeCommand("PROFILE 1")
 
         assertThat(result.success).isTrue()
-        verify(profileFunction).createProfileSwitch(
-            eq(mockProfileStore),
-            eq("Default"),
-            eq(0),
-            eq(100),
-            eq(0),
-            eq(55_000L),
-            eq(Action.PROFILE_SWITCH),
-            eq(Sources.NfcCommands),
-            eq("Profile switch created"),
-            any(),
-        )
+        runTest {
+            verify(profileFunction).createProfileSwitch(
+                eq(mockProfileStore),
+                eq("Default"),
+                eq(0),
+                eq(100),
+                eq(0),
+                eq(55_000L),
+                eq(Action.PROFILE_SWITCH),
+                eq(Sources.NfcCommands),
+                eq("Profile switch created"),
+                any(),
+                any(),
+            )
+        }
     }
 
     @Test
@@ -1155,8 +1166,10 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
     fun `executeCommand PROFILE should fail when profile switch creation fails`() {
         whenever(localProfileManager.profile).thenReturn(mockProfileStore)
         whenever(mockProfileStore.getProfileList()).thenReturn(arrayListOf("Default"))
-        whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any()))
-            .thenReturn(false)
+        runTest {
+            whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any()))
+                .thenReturn(null)
+        }
         whenever(rh.gs(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
         whenever(rh.gsNotLocalised(R.string.nfccommands_profile_switch_created)).thenReturn("Profile switch created")
         whenever(rh.gs(app.aaps.core.ui.R.string.invalid_profile)).thenReturn("Invalid profile")
@@ -1635,7 +1648,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val result = plugin.executeCommand("PROFILE 0")
 
         assertThat(result.success).isFalse()
-        verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any())
+        runTest {
+            verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
+        }
     }
 
     @Test
@@ -1646,7 +1661,9 @@ class NfcCommandsPluginTest : TestBaseWithProfile() {
         val result = plugin.executeCommand("PROFILE 99")
 
         assertThat(result.success).isFalse()
-        verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any())
+        runTest {
+            verify(profileFunction, never()).createProfileSwitch(any(), any(), any(), any(), any(), any(), any(), any(), anyOrNull(), any(), any())
+        }
     }
 
     // processAapsClient – wrong argument count
