@@ -440,7 +440,7 @@ class ProfileManagementViewModel @Inject constructor(
                 ValueWithUnit.Hour(timeshiftHours).takeIf { timeshiftHours != 0 },
                 ValueWithUnit.Minute(durationMinutes).takeIf { durationMinutes != 0 }
             ),
-            iCfg = insulin.iCfg
+            iCfg = profileFunction.getProfile()?.iCfg ?: insulin.iCfg
         )
 
         if (success != null) {
