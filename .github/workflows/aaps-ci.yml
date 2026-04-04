@@ -51,8 +51,8 @@ jobs:
             echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
             echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
             echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
-          fi
-          echo "GDRIVE_OAUTH2=${{ secrets.GDRIVE_OAUTH2 }}" >> $GITHUB_ENV
+    
+          
 
       - name: Check Secrets
         run: |
