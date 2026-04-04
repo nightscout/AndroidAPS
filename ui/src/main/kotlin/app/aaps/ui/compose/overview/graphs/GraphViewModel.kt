@@ -153,8 +153,16 @@ class GraphViewModel @Inject constructor(
 
     // Secondary graph flows
     val iobGraphFlow = cache.iobGraphFlow
+    val absIobGraphFlow = cache.absIobGraphFlow
     val cobGraphFlow = cache.cobGraphFlow
     val activityGraphFlow = cache.activityGraphFlow
+    val bgiGraphFlow = cache.bgiGraphFlow
+    val deviationsGraphFlow = cache.deviationsGraphFlow
+    val ratioGraphFlow = cache.ratioGraphFlow
+    val devSlopeGraphFlow = cache.devSlopeGraphFlow
+    val varSensGraphFlow = cache.varSensGraphFlow
+    val heartRateGraphFlow = cache.heartRateGraphFlow
+    val stepsGraphFlow = cache.stepsGraphFlow
     val treatmentGraphFlow = cache.treatmentGraphFlow
     val epsGraphFlow = cache.epsGraphFlow
     val basalGraphFlow = cache.basalGraphFlow
