@@ -14,6 +14,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgInfoData
+import app.aaps.core.interfaces.overview.graph.GraphConfig
+import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -108,6 +110,7 @@ data class SensitivityUiState(
 @Stable
 class GraphViewModel @Inject constructor(
     cache: OverviewDataCache,
+    private val graphConfigRepository: GraphConfigRepository,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
@@ -145,6 +148,11 @@ class GraphViewModel @Inject constructor(
             .onEach { lowMark -> chartConfigFlow.update { it.copy(lowMark = lowMark) } }
             .launchIn(viewModelScope)
     }
+
+    // Graph configuration (which series on which graph)
+    val graphConfigFlow: StateFlow<GraphConfig> = graphConfigRepository.graphConfigFlow
+
+    fun updateGraphConfig(config: GraphConfig) = graphConfigRepository.update(config)
 
     // Individual series flows - each can trigger independent recomposition
     val bgReadingsFlow: StateFlow<List<BgDataPoint>> = cache.bgReadingsFlow

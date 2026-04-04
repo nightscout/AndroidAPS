@@ -22,6 +22,7 @@ enum class StringNonKey(
     TempTargetPresets(key = "temp_target_presets", defaultValue = "[]"),
     QuickLaunchActions(key = "quick_launch_actions", defaultValue = "[{\"type\":\"wizard\"},{\"type\":\"quick_launch_config\"}]"),
     InsulinConfiguration("insulin_configuration","{}"),
+    GraphConfig("graphconfig", ""),
 
     NotificationReaderPackages(key = "notification_reader_packages", defaultValue = ""),
 
