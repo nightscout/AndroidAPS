@@ -92,6 +92,9 @@
     <string name="danars_password_title">Mật khẩu bơm (chỉ v1)</string>
     <string name="danar_password_title">Mật khẩu bơm</string>
     <string name="danar_useextended_title">Sử dụng bolus kéo dài khi &gt;200%</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Bơm đã chọn</string>
     <string name="rs_loginsulinchange_title">Ghi lại thay đổi bình chứa</string>
     <string name="rs_loginsulinchange_summary">Thêm sự kiện \"Thay đổi insulin\" vào careportal khi phát hiện trong lịch sử</string>
@@ -101,4 +104,18 @@
     <string name="num1pin">1: (12 chữ số)</string>
     <string name="num2pin">2: (8 chữ số)</string>
     <string name="basal_bolus_step">Bước điều chỉnh basal/bolus</string>
+    <string name="connecting_to_pump">Đang kết nối với bơm…</string>
+    <string name="pairing_successful">Ghép nối thành công!</string>
+    <string name="pairing_successful_message">Bơm của bạn đã được kết nối và sẵn sàng sử dụng.</string>
+    <string name="cancel_pairing_title">Hủy ghép nối?</string>
+    <string name="cancel_pairing_message">Quá trình ghép nối sẽ bị hủy.</string>
+    <string name="done">Hoàn thành</string>
+    <string name="open_bluetooth_settings">Mở cài đặt Bluetooth</string>
+    <string name="enter_pump_password">Nhập mật khẩu bơm</string>
+    <string name="select_paired_device">Chọn thiết bị đã ghép nối</string>
+    <string name="no_paired_devices">Không có thiết bị Dana đã ghép. Hãy ghép bơm trong Bluetooth Android trước.</string>
+    <string name="password_hint">Mật khẩu 4 chữ số (0–9999)</string>
+    <string name="connecting_verifying">Đang kết nối và xác minh mật khẩu…</string>
+    <string name="password_ok">Xác minh mật khẩu thành công!</string>
+    <string name="password_wrong">Sai mật khẩu. Nhập lại.</string>
 </resources>
