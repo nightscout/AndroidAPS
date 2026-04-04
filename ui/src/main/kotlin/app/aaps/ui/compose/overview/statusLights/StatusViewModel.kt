@@ -4,6 +4,8 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -42,6 +44,7 @@ class StatusViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
+    private val config: Config,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val rxBus: RxBus,
@@ -116,8 +119,10 @@ class StatusViewModel @Inject constructor(
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)
         }
         val bgSource = activePlugin.activeBgSource
-        val level = if (bgSource.sensorBatteryLevel != -1) "${bgSource.sensorBatteryLevel}%" else null
-        val levelPercent = if (bgSource.sensorBatteryLevel != -1) bgSource.sensorBatteryLevel / 100f else -1f
+        // Sensor battery: not shown in Overview (compact), shown in Actions (expanded) unless AAPSCLIENT
+        val hasBattery = !config.AAPSCLIENT && bgSource.sensorBatteryLevel != -1
+        val level = if (hasBattery) "${bgSource.sensorBatteryLevel}%" else null
+        val levelPercent = if (hasBattery) bgSource.sensorBatteryLevel / 100f else -1f
 
         return StatusItem(
             label = rh.gs(R.string.sensor_label),
@@ -126,8 +131,9 @@ class StatusViewModel @Inject constructor(
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewSageCritical) } ?: 0f,
             level = level,
             levelStatus = if (levelPercent >= 0) getLevelStatus((levelPercent * 100).toDouble(), IntKey.OverviewSbatWarning, IntKey.OverviewSbatCritical) else StatusLevel.UNSPECIFIED,
-            levelPercent = if (levelPercent >= 0) 1f - levelPercent else -1f, // Invert: 100% battery = 0% toward empty
-            icon = IcCgmInsert
+            levelPercent = if (levelPercent >= 0) 1f - levelPercent else -1f,
+            icon = IcCgmInsert,
+            compactLevel = false // Overview: sensor battery not shown
         )
     }
 
@@ -155,7 +161,9 @@ class StatusViewModel @Inject constructor(
             level = level,
             levelStatus = if (reservoirLevel > 0) getLevelStatus(reservoirLevel, IntKey.OverviewResWarning, IntKey.OverviewResCritical) else StatusLevel.UNSPECIFIED,
             levelPercent = -1f, // No progress bar - reservoir sizes vary by pump
-            icon = IcPumpCartridge
+            icon = IcPumpCartridge,
+            compactAge = !isPatchPump, // Overview: insulin age hidden for patch pumps
+            expandedLevel = !config.AAPSCLIENT // Actions: AAPSCLIENT suppresses reservoir level
         )
     }
 
@@ -183,25 +191,38 @@ class StatusViewModel @Inject constructor(
             level = if (usage > 0) decimalFormatter.to0Decimal(usage, insulinUnit) else null,
             levelStatus = StatusLevel.UNSPECIFIED, // Usage doesn't have warning thresholds
             levelPercent = -1f,
-            icon = icon
+            icon = icon,
+            compactLevel = false // Overview: cannula usage not shown
         )
     }
 
     private suspend fun buildBatteryStatus(): StatusItem? {
         val pump = activePlugin.activePump
-        if (!pump.pumpDescription.isBatteryReplaceable && !pump.isBatteryChangeLoggingEnabled()) {
-            return null
-        }
+        val hasAge = pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()
 
-        val event = withContext(Dispatchers.IO) {
+        // Eros doesn't report battery itself, but RileyLink alternatives may
+        val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
+        val batteryLevelValue = pump.batteryLevel.value?.toDouble()
+        val hasLevel = batteryLevelValue != null && (pump.model().supportBatteryLevel || erosBatteryLinkAvailable)
+
+        // If neither age nor level can be shown, skip entirely
+        if (!hasAge && !hasLevel) return null
+
+        val event = if (hasAge) withContext(Dispatchers.IO) {
             persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)
-        }
-        val batteryLevel = pump.batteryLevel.value
-        val level = if (batteryLevel != null && pump.model().supportBatteryLevel) {
-            "${batteryLevel}%"
+        } else null
+
+        // AAPSCLIENT: handler never calls handleLevel, so level value is suppressed
+        val showLevel = !config.AAPSCLIENT && hasLevel
+        val level = if (showLevel) {
+            "${batteryLevelValue!!.toInt()}%"
         } else {
             rh.gs(R.string.value_unavailable_short)
         }
+
+        // Overview compact: pbLevel.visibility based on pump model only (Eros OR not Combo/Dash)
+        val useBatteryLevel = pump.model() == PumpType.OMNIPOD_EROS
+            || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
 
         return StatusItem(
             label = rh.gs(R.string.pb_label),
@@ -209,9 +230,12 @@ class StatusViewModel @Inject constructor(
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewBageCritical) } ?: 0f,
             level = level,
-            levelStatus = if (batteryLevel != null) getLevelStatus(batteryLevel.toDouble(), IntKey.OverviewBattWarning, IntKey.OverviewBattCritical) else StatusLevel.UNSPECIFIED,
-            levelPercent = batteryLevel?.let { 1f - (it / 100f) } ?: -1f, // Invert: 100% battery = 0% toward empty
-            icon = IcPumpBattery
+            levelStatus = if (showLevel) getLevelStatus(batteryLevelValue!!, IntKey.OverviewBattWarning, IntKey.OverviewBattCritical) else StatusLevel.UNSPECIFIED,
+            levelPercent = if (showLevel) 1f - (batteryLevelValue!!.toFloat() / 100f) else -1f,
+            icon = IcPumpBattery,
+            compactAge = hasAge, // Overview: pbAge shown only if replaceable/logging
+            compactLevel = useBatteryLevel, // Overview: pbLevel visibility based on pump model only
+            expandedLevel = !config.AAPSCLIENT // Actions: AAPSCLIENT suppresses battery level
         )
     }
 

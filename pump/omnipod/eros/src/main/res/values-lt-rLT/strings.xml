@@ -3,26 +3,16 @@
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Omnipod Eros pompos integracija (senesnis modelis su skaidriu adatos dangteliu). Reikalingas RileyLink įrenginys, su 2.0 ar naujesne programinės įrangos versija.</string>
     <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adresas neteisingas.</string>
     <!-- Omnipod Eros - Preferences -->
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pod valdymo meniu rodyti mygtuką Pulse log</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pod valdymo meniu rodyti mygtuką RileyLink statistika</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Įjungti baterijos keitimo registravimą veiksmuose</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Įjungtas garsas neaiškiems laikinos bazės perspėjimams</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Įjungtas garsas neaiškiems SMB perspėjimams</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Įjungtas garsas neaiškiems bolusų perspėjimams</string>
-    <!-- Omnipod Eros - History -->
-    <string name="omnipod_eros_history_title">Pod istorija</string>
-    <string name="omnipod_eros_history_item_description">Aprašymas</string>
-    <string name="omnipod_eros_history_item_source">Šaltinis</string>
-    <string name="omnipod_eros_history_item_date">Data</string>
-    <string name="omnipod_eros_history_type">Tipas:</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f v</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f v, AV=%2$.1f g</string>
     <string name="omnipod_eros_history_tbr_value">Kiekis: %1$.2f v, trukmė: %2$d min</string>
-    <!-- Omnipod Eros - Short Status -->
-    <string name="omnipod_eros_short_status_riley_link_battery">RLbat: %1$d</string>
     <!-- Omnipod Eros - Error -->
-    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adresas neteisingas.</string>
     <string name="omnipod_eros_error_crc_mismatch">Ryšio klaida: pranešimo vientisumo patikra nepavyko</string>
     <string name="omnipod_eros_error_invalid_packet_type">Ryšio klaida: netinkami įvesties iš Pod parametrai</string>
     <string name="omnipod_eros_error_invalid_progress_state">Ryšio klaida: Pod būklė yra netinkama</string>
@@ -47,18 +37,13 @@
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Laikinos bazės trukmė turi būti didesnis už nulį %1$s min. kartotinis.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Gali būti, kad laikas nebuvo nustatytas. Insulino tiekimas gali būti nutrauktas! Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke ir, jei reikia, atnaujinkite insulino tiekimą.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Nepavyko nustatyti laiko. Insulino tiekimas sustabdytas! Rankiniu būdu atnaujinkite insulino tiekimą Omnipod skirtuke.</string>
-    <string name="omnipod_eros_error_failed_to_read_pulse_log">Nepavyko perskaityti Pulse žurnalo</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Nepavyko automatiškai pakeisti Pod laiko. Jūs turėtumėte sinchronizuoti laiką rankiniu būdu Omnipod skirtuke.</string>
-    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operacija negalima.\n\nPirmiausia turite sukonfigūruoti Omnipod pompą prieš atliekant šią operaciją.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Nepavyko patikrinti, ar buvo suleistas bolusas. Patikrinkite, ar Pod leidžia bolusą (klausantis boluso garsų). <b>Jei esate tikri, kad bolusas nebuvo suleistas, turite rankiniu būdu ištrinti boluso įrašą iš Terapijos, net jei dabar spustelėjote mygtuką „Atšaukti bolusą“!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nepavyko patikrinti, ar SMB (%1$.2fvv) suleistas. <b>Jei esate tikri, kad bolusas nebuvo suleistas, turite rankiniu būdu pašalinti SMB įrašą iš Terapijos.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pod veikia laikina bazė, bet AAPS neinformuota apie šią laikiną bazę. Atšaukite laikiną bazę rankiniu būdu.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink statistika</string>
-    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Laukiama ryšio su RileyLink…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Išvalyti RileyLink nustatymus</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Skaityti Pulse žurnalą</string>
-    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Skaitomas Pulse žurnalas…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse žurnalas</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse žurnalas (nukopijuotas į mainų sritį)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

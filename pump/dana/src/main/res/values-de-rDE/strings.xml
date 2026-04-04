@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Koppeln</string>
-    <string name="danars_no_device_available">Pumpe noch nicht gefunden</string>
-    <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Zeitüberschreitung beim Pairing</string>
-    <string name="danars_waitingforpairing">Auf Verbindung warten</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pumpen-Integration für Dana Diabecare RS und Dana-i Pumpen</string>
@@ -59,7 +55,6 @@
     <string name="danar_history_bolus">Boli</string>
     <string name="danar_history_carbohydrates">Kohlenhydrate</string>
     <string name="danar_history_dailyinsulin">Insulin-Tagesmengen</string>
-    <string name="danar_history_errors">Fehler</string>
     <string name="danar_history_glucose">Glukose</string>
     <string name="danar_history_refill">Füllmenge</string>
     <string name="danar_history_syspend">Unterbrechungen</string>
@@ -68,7 +63,6 @@
     <string name="danar_time_display">Zeitformat</string>
     <string name="danar_button_scroll">Scrollfunktion</string>
     <string name="danar_beep">Piepen (Tastentöne)</string>
-    <string name="danar_pump_alarm">Alarm</string>
     <string name="danar_pump_alarm_sound">Töne</string>
     <string name="danar_pump_alarm_vibrate">Vibration</string>
     <string name="danar_pump_alarm_both">Beides</string>
@@ -82,7 +76,6 @@
     <string name="description_pump_dana_r_korean">Pumpen-Integration für koreanische DANA Diabecare R Pumpen</string>
     <string name="description_pump_dana_r_v2">Pumpen-Integration für DANA Diabecare R Pumpen mit aktualisierter Firmware</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Kein Bluetooth-Adapter gefunden</string>
     <string name="devicenotfound">Ausgewähltes Gerät nicht gefunden</string>
     <string name="danar_switchtouhmode">Wechsel den Modus von IE/d zu IE/h in der Pumpe</string>
     <string name="danarkoreanpump">DanaR Korean</string>
@@ -91,27 +84,20 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">EasyUI-Modus in der Pumpe deaktivieren</string>
     <string name="profile_set_failed">Setzen des Basal-Profils fehlgeschlagen</string>
-    <string name="danar_bluetooth_status">Bluetooth-Status</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana Pumpen-Einstellungen</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">Ein</string>
     <string name="option_off">Aus</string>
-    <string name="danar_bt_name_title">DanaR Blueetooth--Gerät</string>
     <string name="danars_password_title">Pumpen-Passwort (nur v1)</string>
     <string name="danar_password_title">Pumpen-Passwort</string>
-    <string name="bolusspeed">Bolus-Geschwindigkeit</string>
     <string name="selectedpump">Ausgewählte Pumpe</string>
     <string name="rs_loginsulinchange_title">Reservoirwechsel aufzeichnen</string>
     <string name="rs_loginsulinchange_summary">Reservoirwechsel im Careportal hinzufügen, falls dies in der Historie gefunden wird.</string>
     <string name="rs_logcanulachange_title">Kanülenwechsel dokumentieren</string>
     <string name="rs_logcanulachange_summary">Kanülenwechsel im Careportal hinzufügen, falls dies in der Historie gefunden wird.</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Drücke OK auf der Pumpe\nund gib die beiden angezeigten Ziffernfolgen ein.\nHalte das Pumpendisplay aktiv indem Du den Minus-Button gedrückt hälst, bis Du den Code eingegeben hast.</string>
     <string name="num1pin">1: (12 Zeichen)</string>
     <string name="num2pin">2: (8 Zeichen)</string>
     <string name="basal_bolus_step">Basal/Bolus Schrittgröße</string>
-    <string name="carbs_store_error">Kohlenhydrate wurden wahrscheinlich nicht korrekt gespeichert. Manuell prüfen und speichern, falls nötig.</string>
 </resources>

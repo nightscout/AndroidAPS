@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Diseño de entrada</string>
-    <string name="pref_default">Por defecto</string>
-    <string name="pref_quick_righty">Rápido a la derecha</string>
-    <string name="pref_quick_lefty">Rápido a la izquierda</string>
-    <string name="pref_modern_sparse">Disperso moderno</string>
     <string name="pref_big_numbers">Números grandes</string>
     <string name="pref_ring_history">Historial del aro</string>
     <string name="pref_light_ring_history">Historial de aro ligero</string>
@@ -90,7 +85,7 @@
     <string name="menu_default">Por defecto</string>
     <string name="menu_menu">Menú</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Duración\n[minutos]</string>
+    <string name="action_duration_minutes">Duración [min]</string>
     <string name="action_tempt_confirmation">Objetivo Temporal Solicitado</string>
     <string name="action_quick_wizard_confirmation">Asistente Rápido Solicitado</string>
     <string name="action_user_action_confirmation">Acción de usuario solicitada</string>
@@ -100,16 +95,26 @@
     <string name="action_fill_confirmation">Llenado Solicitado</string>
     <string name="action_ecarb_confirmation">Carbohidratos Solicitados</string>
     <string name="action_profile_switch_confirmation">Solicitado cambio de perfil</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Objetivo\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Bajo\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Alto\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Objetivo [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Bajo [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Alto [%s]</string>
     <string name="action_carbs">Carbohidratos</string>
     <string name="action_carbs_gram">Carbohidratos [g]</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Porcentaje\n[%]</string>
     <string name="action_start_minutes">Iniciar\n[minutos]</string>
+    <string name="action_start_minutes_format">%1$d min</string>
     <string name="action_duration_h">Duración [h]</string>
     <string name="action_duration_hours">Duración\n[horas]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Hora: %1$s</string>
+    <string name="ecarbs_confirm_duration">Duración: %1$d h</string>
+    <string name="action_confirm_reason">Motivo: %1$s</string>
+    <string name="action_confirm_duration">Duración: %1$s</string>
+    <string name="action_confirm_timeshift">Desplazamiento temporal: %1$s</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_insulin_units">Insulina [U]</string>
     <string name="action_preset_1">Botón 1</string>
@@ -199,7 +204,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">antiguo</string>
     <string name="old_warning">¡antiguo!</string>
-    <string name="error">!err!</string>
+    <string name="error">Error</string>
     <string name="pref_heartRateSampling">Ritmo cardíaco</string>
     <string name="pref_heartRateSmoothing">Suavizado de RC</string>
     <string name="pref_stepsSampling">Habilitar contador de pasos</string>
@@ -231,14 +236,15 @@
     <string name="complication_iob_icon">Icono IOB</string>
     <string name="complication_iob_detailed">IOB detallado</string>
     <string name="complication_uploader_phone_battery">Batería de teléfono que sube los datos</string>
-    <string name="status_loop_state">Estado del lazo</string>
-    <string name="label_loop_state_title">AAPS(Estado del lazo)</string>
-    <string name="action_loop_state_selected">Estado del lazo solicitado</string>
+    <string name="status_running_mode">Modo de funcionamiento</string>
+    <string name="label_running_mode_title">AAPS (Modo de funcionamiento)</string>
+    <string name="action_running_mode_selected">Modo de funcionamiento solicitado</string>
+    <string name="title_activity_disconnect_pump">Desconectar bomba</string>
+    <string name="title_activity_suspend_loop">Suspender lazo</string>
     <string name="wizard_total_insulin">Insulina total</string>
     <string name="wizard_calculation">Cálculos</string>
     <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Deslice a la izquierda para confirmar</string>
     <string name="wizard_result_bg">Glucosa</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">Tend. 15 min</string>
@@ -250,7 +256,7 @@
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Corr. %1$d%%</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">Haga clic para expandir los detalles de cálculo</string>
     <string name="wizard_confirmation_sent">Enviado</string>
     <string name="tile_settings">Ajustes de tarjetas</string>
@@ -268,6 +274,8 @@
     <string name="loop_status_lgs">Suspensión por glucosa baja (LGS)</string>
     <string name="loop_status_disabled">Lazo desactivado</string>
     <string name="loop_status_suspended">Lazo suspendido</string>
+    <string name="loop_status_pump_suspended">Bomba suspendida</string>
+    <string name="loop_status_dst_suspended">Suspendido por cambio de hora (DST)</string>
     <string name="loop_status_disconnected">Bomba desconectada</string>
     <string name="loop_status_superbolus">Superbolo</string>
     <string name="loop_status_unknown">Desconocido</string>
@@ -284,4 +292,8 @@
     <string name="loop_status_target_range">Rango</string>
     <string name="loop_status_target">Objetivo</string>
     <string name="loop_status">Estado del lazo</string>
+    <string name="loop_status_refresh">Actualizar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="request">Petición</string>
+    <string name="constraint_applied">¡Restricción aplicada!</string>
 </resources>

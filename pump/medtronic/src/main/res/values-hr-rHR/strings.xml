@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Medtronic kodiranje</string>
     <string name="medtronic_custom_action_wake_and_tune">Buđenje i podešavanje</string>
     <string name="medtronic_custom_action_clear_bolus_block">Izbriši bolusni blok</string>
-    <string name="medtronic_custom_action_reset_rileylink">Resetirajte konfiguraciju RileyLink</string>
     <string name="medtronic_pump_battery_select">Vrsta baterije (Power View)</string>
     <string name="medtronic_pump_battery_no">Nije odabrano (jednostavan prikaz)</string>
     <string name="medtronic_pump_battery_alkaline">Alkalno (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_lithium">Litij (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_nizn">Nikal-Cink (prošireni prikaz)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (prošireni prikaz)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Baterija RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Greške</string>
-    <string name="medtronic_error_serial_not_set">Serijski broj nije unesen.</string>
     <string name="medtronic_error_serial_invalid">Greška serijskog broja.</string>
     <string name="medtronic_error_pump_type_not_set">Vrsta pumpe nije postavljena.</string>
     <string name="medtronic_error_pump_type_invalid">Vrsta pumpe nije podržana.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Frekvencija pumpe nije postavljena.</string>
     <string name="medtronic_error_pump_frequency_invalid">Frekvencija pumpe nije podržana.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adresa nevažeća.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Otkrivena vrsta pumpe nije ista kao konfigurirana vrsta.</string>
@@ -57,10 +55,6 @@
     <string name="medtronic_cmd_cant_cancel_tbr">Nije moguće otkazati trenutni TBR.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Bazalni profil nije mogao biti postavljen.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Bazalni profil je isti, tako da se više neće postavljati.</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pumpa nedostupna</string>
-    <!-- medtronic_warning -->
-    <!-- combo_pump_connected_now -->
     <!-- combo_notification_check_time_date -->
     <string name="riley_statistics">RL statistika</string>
-    <string name="medtronic_history_type">Tip:</string>
 </resources>

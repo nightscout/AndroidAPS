@@ -12,22 +12,37 @@
     <string name="medtronic_pump_encoding">Medtronic 編碼</string>
     <string name="medtronic_custom_action_wake_and_tune">喚醒並調整</string>
     <string name="medtronic_custom_action_clear_bolus_block">清除注射阻塞</string>
-    <string name="medtronic_custom_action_reset_rileylink">重置 RileyLink 配置</string>
+    <string name="medtronic_custom_action_reset_rileylink">重設 RileyLink</string>
     <string name="medtronic_pump_battery_select">電池類型（電源檢視）</string>
     <string name="medtronic_pump_battery_no">未選擇（簡易檢視）</string>
     <string name="medtronic_pump_battery_alkaline">鹼性電池（延長檢視）</string>
     <string name="medtronic_pump_battery_lithium">鋰電池（延長檢視）</string>
     <string name="medtronic_pump_battery_nizn">鎳鋅電池（延長檢視）</string>
     <string name="medtronic_pump_battery_nimh">鎳氫電池（延長檢視）</string>
+    <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">其他（不支援）</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523（韌體 2.4A 或以下）</string>
+    <string name="medtronic_pump_type_723_24a">723（韌體 2.4A 或以下）</string>
+    <string name="medtronic_pump_type_554_eu">554（歐盟韌體 &lt;= 2.6A）</string>
+    <string name="medtronic_pump_type_754_eu">754（歐盟韌體 &lt;= 2.6A）</string>
+    <string name="medtronic_pump_type_554_ca">554（加拿大韌體 &lt;= 2.7A）</string>
+    <string name="medtronic_pump_type_754_ca">754（加拿大韌體 &lt;= 2.7A）</string>
+    <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 秒</string>
+    <string name="medtronic_bolus_delay_10s">10 秒</string>
+    <string name="medtronic_bolus_delay_15s">15 秒</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink 電池</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">錯誤</string>
-    <string name="medtronic_error_serial_not_set">未設定序號。</string>
     <string name="medtronic_error_serial_invalid">序號無效。</string>
     <string name="medtronic_error_pump_type_not_set">未設定幫浦型號。</string>
     <string name="medtronic_error_pump_type_invalid">幫浦型號不支援。</string>
-    <string name="medtronic_error_pump_frequency_not_set">未設定幫浦頻率。</string>
     <string name="medtronic_error_pump_frequency_invalid">幫浦頻率不支援。</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink 地址無效。</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">偵測到的幫浦型號與配置的型號不同。</string>
@@ -71,21 +86,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">取消臨時基礎</string>
     <string name="medtronic_cmd_desc_set_bolus">設置胰島素注射</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">獲取剩餘胰島素</string>
-    <string name="medtronic_pump_status_pump_unreachable">無法連線幫浦</string>
-    <string name="medtronic_warning">警告</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">現在</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">前</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">現在</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">前</string>
     <string name="medtronic_notification_check_time_date">需要更新幫浦時鐘</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">幫浦時間已更新</string>
     <string name="set_neutral_temps_title">設置中性臨時基礎率</string>
     <string name="set_neutral_temps_summary">如果啟用，將在每小時結束前取消臨時基礎率。這種方法可以幫助防止某些幫浦在整點發出聲音/震動。</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h（剩餘 %2$d 分鐘）</string>
     <string name="invalid_history_data">偵測到無效的幫浦歷史紀錄資料。打開新問題並提供日誌。</string>
     <string name="riley_statistics">RL 統計</string>
-    <string name="medtronic_history_type">類型：</string>
     <string name="clicked_refresh" comment="26 characters max for translation">點擊重新整理</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">排程狀態重新整理</string>
 </resources>

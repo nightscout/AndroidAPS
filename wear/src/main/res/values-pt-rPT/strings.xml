@@ -45,11 +45,6 @@
     <string name="pref_3_hours">3 horas</string>
     <string name="pref_4_hours">4 horas</string>
     <string name="pref_5_hours">5 horas</string>
-    <string name="pref_input_design">Design de Entrada</string>
-    <string name="pref_default">Padrão</string>
-    <string name="pref_quick_righty">Rápido Direito</string>
-    <string name="pref_quick_lefty">Rápido Esquerdo</string>
-    <string name="pref_modern_sparse">Moderno Esparso</string>
     <string name="pref_big_numbers">Números Grandes</string>
     <string name="pref_ring_history">Anel Histórico</string>
     <string name="pref_light_ring_history">Anel Suave Histórico</string>
@@ -171,6 +166,5 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">antigo</string>
     <string name="old_warning">!antigo!</string>
-    <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Frequência cardíaca</string>
 </resources>

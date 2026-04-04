@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s configuració</string>
-    <string name="nav_exit">Sortir</string>
     <string name="delta">Delta</string>
     <string name="save">Desar</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">Quant a</string>
     <string name="sensitivity_warning">En activar la funció Autosens, recordeu introduir tots els carbs consumits. En cas contrari, les desviacions de carbs seran identificades erroniament com canvis de sensibilitat!!</string>
     <string name="invalid">NO VÀLID</string>
-    <string name="gradually_increase_notification_volume">Augmentar gradualment el volum d\'alertes i avisos</string>
-    <string name="localalertsettings_title">Alertes locals</string>
-    <string name="enable_missed_bg_readings_alert">Alerta si no es reben dades de glucèmia</string>
-    <string name="enable_pump_unreachable_alert">Alerta si bomba no accessible</string>
     <string name="pump_unreachable_threshold">Umbral bomba no accessible [min]</string>
-    <string name="enable_carbs_req_alert">Alerta si calen carbohidrats</string>
-    <string name="open_navigation">Obrir navegació</string>
     <string name="close_navigation">Tancar navegació</string>
     <string name="unitsnosemicolon">Unitats</string>
     <string name="authorizationfailed">L\'autorització ha fallat</string>

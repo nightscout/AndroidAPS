@@ -65,20 +65,4 @@
     <string name="ble_config_remove">Fjern</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dager</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d time</item>
-        <item quantity="other">%1$d timer</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d time siden</item>
-        <item quantity="other">%1$d timer siden</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d dag siden</item>
-        <item quantity="other">%1$d dager siden</item>
-    </plurals>
 </resources>

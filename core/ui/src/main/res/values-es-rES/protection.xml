@@ -13,10 +13,7 @@
     <string name="bolus_pin">PIN para bolos</string>
     <string name="protection_timeout_title">Contraseña y retención de PIN [s]</string>
     <string name="protection_timeout_summary">Tiempo previo a que se introduzca el PIN o la password</string>
-    <string name="biometric">Biométrico</string>
-    <string name="custom_password">Contraseña personalizada</string>
-    <string name="custom_pin">PIN personalizado</string>
-    <string name="noprotection">Sin protección</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">No es seguro volver atrás</string>
     <string name="unsecure_fallback_descriotion_biometric">Para ser eficaz, la protección biométrica necesita una contraseña maestra establecida para el respaldo.\n\nPor favor, establezca una contraseña maestra!</string>
     <string name="password_set">¡Contraseña establecida!</string>
@@ -27,8 +24,13 @@
     <string name="password_not_changed">Contraseña no cambiada</string>
     <string name="pin_not_changed">PIN no cambiado</string>
     <string name="pin_cleared">PIN eliminado</string>
-    <string name="password_hint">Introducir contraseña aquí</string>
-    <string name="pin_hint">Introducir PIN aquí</string>
+    <string name="protection_password_hint">Introduce la contraseña aquí</string>
+    <string name="protection_pin_hint">Introduce el PIN aquí</string>
+    <string name="auth_hint_master_password">Introduce la contraseña maestra</string>
+    <string name="auth_hint_master_or_pin">Introduce la contraseña maestra o el PIN</string>
+    <string name="auth_hint_master_or_password">Introduce la contraseña maestra o la contraseña personalizada</string>
+    <string name="use_pin_password">Usar PIN/Contraseña</string>
+    <string name="current_master_password">Contraseña maestra actual</string>
     <string name="master_password_not_set">Contraseña maestra no establecida</string>
     <string name="aaps_directory_not_selected">Directorio de AAPS no seleccionado</string>
 </resources>

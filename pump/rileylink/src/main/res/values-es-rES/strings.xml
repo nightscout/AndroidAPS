@@ -7,32 +7,18 @@
     <string name="pump_status_active">Activo</string>
     <string name="pump_status_error_comm">Error en la comunicación</string>
     <string name="pump_status_timeout_comm">Tiempo de espera agotado en la comunicación</string>
-    <string name="pump_status_pump_unreachable">Bomba inaccesible</string>
     <string name="pump_status_invalid_config">Configuración inválida</string>
+    <string name="medtronic_pump_encoding_title">Codificación Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">Codificación de software 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Codificación de hardware 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">En todo el mundo (868 Mhz)</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Escanear</string>
-    <string name="riley_link_ble_config_scan_stop">Detener</string>
-    <string name="riley_link_ble_config_scan_selected">Seleccionado</string>
-    <string name="riley_link_ble_config_scan_title">Escaneo de RileyLink</string>
     <string name="riley_link_ble_config_scan_scanning">Buscando</string>
-    <string name="riley_link_ble_config_scan_finished">Búsqueda Finalizada</string>
-    <string name="riley_link_ble_config_scan_error">Error de escaneo: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Nunca</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink seleccionado</string>
-    <string name="riley_link_ble_config_remove_riley_link">Eliminar</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">¿Está seguro de que desea eliminar RileyLink?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Eliminar RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">No se ha seleccionado RileyLink</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Configuración</string>
-    <string name="rileylink_settings_tab2">Historico</string>
     <string name="rileylink_status">Estado RileyLink</string>
     <string name="medtronic_pump_status">Estado de Infusora</string>
-    <string name="title_activity_rileylink_settings">Ajustes de RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Dirección:</string>
     <string name="rileylink_name">Nombre:</string>
@@ -69,7 +55,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth está desactivado</string>
     <string name="rileylink_error_no_bt_adapter">No hay adaptador Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Error al configurar</string>
-    <string name="rileylink_error_pump_unreachable">Bomba no alcanzable</string>
     <string name="rileylink_error_pod_unreachable">Infusora no alcanzable</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Infusora Medtronic</string>
@@ -87,5 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Usar escaneo</string>
     <string name="orange_use_scanning_level_summary">Escanear antes de conectarse a OrangeLink, debería mejorar las conexiones (también se puede utilizar con otros clones de RileyLink, si es necesario)</string>
-    <string name="rileylink_configuration">Configuración de RileyLink</string>
+    <string name="rileylink_pair">Emparejar RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink emparejado correctamente</string>
+    <string name="rileylink_config_reset">Configuración de RileyLink restablecida\"</string>
 </resources>

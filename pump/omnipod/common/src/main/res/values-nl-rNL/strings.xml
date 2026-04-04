@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_title">Pod Management</string>
-    <string name="omnipod_common_pod_management_heading_actions">Acties</string>
-    <string name="omnipod_common_pod_management_heading_tools">Hulpmiddelen</string>
     <string name="omnipod_common_pod_management_button_activate_pod">Activeer Pod</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Deactiveer Pod</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Pod verwijderen</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Als je de Pod verwijderd, kun je er niet meer mee communiceren. Doe dit alleen als communicatie met de Pod aanhoudend mislukt. Als je nog steeds kunt communiceren met de Pod, gebruik dan de <b>Pod deactiveren</b> optie.\n\nVerwijder de Pod van je lichaam als je ervoor kiest om door te gaan!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Testpieptoon afspelen</string>
-    <string name="omnipod_common_pod_management_button_playing_test_beep">Testpieptoon wordt afgespeeld…</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod Historie</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">Geen actieve Pod</string>
@@ -33,17 +29,12 @@
     <string name="omnipod_common_error_time_out_of_sync">De tijd op de Pod wijkt af. Werk de tijd bij op het Omnipod-tabblad.</string>
     <string name="omnipod_common_error_unexpected_exception">Er is een onverwachte fout opgetreden. A.u.b. rapporteren! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation">Bevestiging</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">De instellingen voor meldingen zijn bijgewerkt in de Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">De tijd in de Pod is geüpdatet.</string>
-    <string name="omnipod_common_confirmation_suspended_delivery">Alle insulinetoediening is onderbroken.</string>
-    <string name="omnipod_common_confirmation_silenced_alerts">Actieve alarmen zijn op stil gezet.</string>
-    <string name="omnipod_common_confirmation_delivery_resumed">Insulinetoediening is hervat.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Tijd instellen</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Onderbreken</string>
     <string name="omnipod_common_overview_button_resume_delivery">Toediening hervatten</string>
-    <string name="omnipod_common_overview_button_pod_management">Pod Beheer</string>
     <string name="omnipod_common_overview_button_silence_alerts">Alarmen Stil</string>
     <string name="omnipod_common_overview_pod_status">Pod Status</string>
     <string name="omnipod_common_overview_total_delivered">Totaal toegediend</string>
@@ -56,22 +47,12 @@
     <string name="omnipod_common_overview_last_bolus">Laatste bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Tijdelijke basaalstand</string>
     <string name="omnipod_common_overview_base_basal_rate">Basis basaalstand</string>
-    <string name="omnipod_common_overview_reservoir">Reservoir</string>
     <string name="omnipod_common_overview_pod_active_alerts">Actieve pod alarmen</string>
     <string name="omnipod_common_overview_firmware_version">Firmware versie</string>
     <string name="omnipod_common_overview_time_on_pod">Tijd op Pod</string>
-    <string name="omnipod_common_overview_temp_basal_value">%1$.2fE/u @%2$s (%3$d/%4$d minuten)</string>
-    <string name="omnipod_common_overview_reservoir_value">%1$.2f E over</string>
-    <string name="omnipod_common_overview_reservoir_value_over50">Meer dan 50 E over</string>
-    <string name="omnipod_common_overview_errors">Storing</string>
     <string name="omnipod_common_uncertain">onzeker</string>
     <!-- Omnipod - Wizard Base -->
-    <string name="omnipod_common_wizard_button_cancel">Afbreken</string>
-    <string name="omnipod_common_wizard_button_finish">Voltooien</string>
-    <string name="omnipod_common_wizard_button_next">Volgende</string>
-    <string name="omnipod_common_wizard_button_retry">Opnieuw proberen</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">Deactiveer Pod</string>
-    <string name="omnipod_common_wizard_button_discard_pod">Pod weggooien</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Je hebt nog niet alle stappen voltooid. Weet je zeker dat je wilt afsluiten?</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">Afsluiten</string>
     <!-- Omnipod - Pod Activation Wizard -->
@@ -124,50 +105,36 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Setup wordt uitgevoerd (in afwachting van Pod activering)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Setup wordt uitgevoerd (in afwachting van het inbrengen van de canule)</string>
     <string name="omnipod_common_pod_status_running">Actief</string>
-    <string name="omnipod_common_pod_status_normal">Normaal</string>
     <string name="omnipod_common_pod_status_suspended">Onderbroken</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod fout</string>
     <string name="omnipod_common_pod_status_inactive">Inactief</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod foutmelding: %1$03d %2$s</string>
-    <!-- Omnipod - Commands -->
-    <string name="omnipod_common_cmd_deactivate_pod">Deactiveer Pod</string>
-    <string name="omnipod_common_cmd_discard_pod">Pod verwerpen</string>
-    <string name="omnipod_common_cmd_set_bolus">Bolus instellen</string>
-    <string name="omnipod_common_cmd_cancel_bolus">Annuleer Bolus</string>
-    <string name="omnipod_common_cmd_set_tbr">Instellen Tijdelijk Basaal</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Tijdelijk basaal annuleren (intern door driver)</string>
-    <string name="omnipod_common_cmd_cancel_tbr">Tijdelijk basaal annuleren</string>
-    <string name="omnipod_common_cmd_set_basal_schedule">Basaalprofiel instellen</string>
-    <string name="omnipod_common_cmd_get_pod_status">Pod status verversen</string>
-    <string name="omnipod_common_cmd_get_pod_info">Pod info verversen</string>
-    <string name="omnipod_common_cmd_set_time">Tijd instellen</string>
-    <string name="omnipod_common_cmd_configure_alerts">Configureer alarmen</string>
-    <string name="omnipod_common_cmd_silence_alerts">Alarmen dempen</string>
-    <string name="omnipod_common_cmd_suspend_delivery">Onderbreek toediening</string>
-    <string name="omnipod_common_cmd_resume_delivery">Toediening hervatten</string>
-    <string name="omnipod_common_cmd_unknown_entry">Onbekende invoer</string>
-    <string name="omnipod_common_cmd_initialize_pod">Pod initialiseren</string>
-    <string name="omnipod_common_cmd_insert_cannula">Canule inbrengen</string>
-    <string name="omnipod_common_cmd_read_pulse_log">Pulslog uitlezen</string>
-    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Vals tijdelijk basaal omdat insuline toediening onderbroken is</string>
-    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Annuleren van vals tijdelijk basaal wat was aangemaakt vanwege Pod onderbreking</string>
-    <string name="omnipod_common_cmd_split_tbr">Tijdelijke basaal gesplitst als gevolg van een onzekere fout bij annulering</string>
-    <string name="omnipod_common_cmd_play_test_beep">Test pieptoon afspelen</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">Herinnering koppeling afronden</string>
-    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Herinnering setup afronden</string>
     <string name="omnipod_common_alert_expiration">Pod verloopt binnenkort</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod verloopt binnenkort</string>
     <string name="omnipod_common_alert_shutdown_imminent">Schakelt zeer binnenkort uit</string>
     <string name="omnipod_common_alert_low_reservoir">Laag reservoir niveau</string>
     <string name="omnipod_common_alert_unknown_alert">Onbekend alarm</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_initialize_pod">Pod initialiseren</string>
+    <string name="omnipod_common_cmd_insert_cannula">Canule inbrengen</string>
+    <string name="omnipod_common_cmd_deactivate_pod">Deactiveer Pod</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Basaalprofiel instellen</string>
+    <string name="omnipod_common_cmd_set_bolus">Bolus instellen</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Annuleer Bolus</string>
+    <string name="omnipod_common_cmd_discard_pod">Pod verwerpen</string>
+    <string name="omnipod_common_cmd_get_pod_status">Pod status verversen</string>
+    <string name="omnipod_common_cmd_set_time">Tijd instellen</string>
+    <string name="omnipod_common_cmd_configure_alerts">Configureer alarmen</string>
+    <string name="omnipod_common_cmd_silence_alerts">Alarmen dempen</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Pulslog uitlezen</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Onderbreek toediening</string>
+    <string name="omnipod_common_cmd_resume_delivery">Toediening hervatten</string>
+    <string name="omnipod_common_cmd_get_pod_info">Pod info verversen</string>
+    <string name="omnipod_common_cmd_play_test_beep">Test pieptoon afspelen</string>
+    <string name="omnipod_common_cmd_unknown_entry">Onbekende invoer</string>
+    <!-- Omnipod - Alerts -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_common_yes">Ja</string>
-    <string name="omnipod_common_no">Nee</string>
-    <string name="omnipod_common_ok">OK</string>
-    <string name="omnipod_common_cancel">Afbreken</string>
-    <string name="omnipod_common_warning">Waarschuwing</string>
-    <string name="omnipod_common_disable_suspend_alerts">UITSCHAKELEN SUSPEND ALARM</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Zojuist</string>
     <string name="omnipod_common_less_than_a_minute_ago">Minder dan een minuut geleden</string>

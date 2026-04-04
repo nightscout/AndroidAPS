@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Appairage</string>
-    <string name="danars_no_device_available">Aucun appareil trouvé jusqu\'à présent</string>
-    <string name="danars_pairingok">Appairage OK</string>
     <string name="danars_pairingtimedout">Délai d\'appairage expiré</string>
-    <string name="danars_waitingforpairing">Attente appairage pompe</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Intégration des pompes DANA Diabecare RS et Dana-i</string>
@@ -59,7 +55,6 @@
     <string name="danar_history_bolus">Bolus</string>
     <string name="danar_history_carbohydrates">Glucides</string>
     <string name="danar_history_dailyinsulin">Insuline quotidienne</string>
-    <string name="danar_history_errors">Erreurs</string>
     <string name="danar_history_glucose">Glycémie</string>
     <string name="danar_history_refill">Remplir</string>
     <string name="danar_history_syspend">Arrêter</string>
@@ -68,7 +63,6 @@
     <string name="danar_time_display">Format d\'affichage de l\'heure</string>
     <string name="danar_button_scroll">Bouton défiler</string>
     <string name="danar_beep">Bip sur appui bouton</string>
-    <string name="danar_pump_alarm">Alarme</string>
     <string name="danar_pump_alarm_sound">Son</string>
     <string name="danar_pump_alarm_vibrate">Vibrer</string>
     <string name="danar_pump_alarm_both">Les deux</string>
@@ -82,7 +76,6 @@
     <string name="description_pump_dana_r_korean">Intégration des pompes coréennes Diabecare DANA RS</string>
     <string name="description_pump_dana_r_v2">Intégration des pompes DANA Diabecare R avec firmware mis à jour</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Adaptateur bluetooth introuvable</string>
     <string name="devicenotfound">Appareil sélectionné introuvable</string>
     <string name="danar_switchtouhmode">Changer le mode de U/j vers U/h sur la pompe</string>
     <string name="danarkoreanpump">DanaR Coréenne</string>
@@ -91,28 +84,21 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Désactiver le mode FacileUI (EasyUI) de la pompe</string>
     <string name="profile_set_failed">Echec Paramétrage Profil Basal</string>
-    <string name="danar_bluetooth_status">État Bluetooth</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Paramètres pompe Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
     <string name="option_on">Activé</string>
     <string name="option_off">Désactivé</string>
-    <string name="danar_bt_name_title">Dispositif Bluetooth DanaR</string>
     <string name="danars_password_title">Mot de passe pompe (v1 uniquement)</string>
     <string name="danar_password_title">Mot de passe pompe</string>
     <string name="danar_useextended_title">Utiliser les bolus étendus pour &gt; 200%</string>
-    <string name="bolusspeed">Vitesse bolus</string>
     <string name="selectedpump">Pompe sélectionnée</string>
     <string name="rs_loginsulinchange_title">Enreg. changement de réservoir</string>
     <string name="rs_loginsulinchange_summary">Ajouter un évènement \"Changement d\'Insuline\" dans careportal si détecté dans l\'historique</string>
     <string name="rs_logcanulachange_title">Enreg. changement de site</string>
     <string name="rs_logcanulachange_summary">Ajouter l\'évènement \"Changement de Site\" dans careportal si détecté dans l\'historique</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Appuyez sur OK sur la pompe\net entrez les 2 numéros affichés\nConserver l\'affichage ACTIF sur la pompe en appuyant sur le bouton &lt;b&gt;moins&lt;b&gt; jusqu\'à ce que le code soit entré.</string>
     <string name="num1pin">1: (12 chiffres)</string>
     <string name="num2pin">2: (8 chiffres)</string>
     <string name="basal_bolus_step">Étape Basal/Bolus</string>
-    <string name="carbs_store_error">Les glucides n\'étaient probablement pas enregistrées correctement. Vérifiez manuellement et renseignez les à nouveau si nécessaire.</string>
 </resources>

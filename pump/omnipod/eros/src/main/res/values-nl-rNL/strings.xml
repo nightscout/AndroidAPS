@@ -3,27 +3,17 @@
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Pompintegratie voor Omnipod Eros (het oudere model met een transparante naalddop). Vereist een RileyLink-apparaat met ten minste firmwareversie 2.0.</string>
     <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adres ongeldig.</string>
     <!-- Omnipod Eros - Preferences -->
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Knop voor het uitlezen van het Pulslog weergeven in het Podbeheer menu</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Knop voor RileyLink statistieken weergeven in het Omnipod-tabblad</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Loggen van batterijwissel in Acties inschakelen</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Geluid voor onzekere TBR notificaties ingeschakeld</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Geluid voor onzekere SMB notificaties ingeschakeld</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Geluid voor onzekere bolus notificaties ingeschakeld</string>
-    <!-- Omnipod Eros - History -->
-    <string name="omnipod_eros_history_title">Pod Historie</string>
-    <string name="omnipod_eros_history_item_description">Beschrijving</string>
-    <string name="omnipod_eros_history_item_source">Bron</string>
-    <string name="omnipod_eros_history_item_date">Datum</string>
-    <string name="omnipod_eros_history_type">Type:</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
     <string name="omnipod_eros_history_tbr_value">Basaal: %1$.2f E, Duur: %2$d min</string>
-    <!-- Omnipod Eros - Short Status -->
-    <string name="omnipod_eros_short_status_riley_link_battery">RL Batterij: %1$d</string>
     <!-- Omnipod Eros - Error -->
-    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink adres ongeldig.</string>
     <string name="omnipod_eros_error_crc_mismatch">Communicatie mislukt: berichtintegriteit kon niet worden geverifieerd</string>
     <string name="omnipod_eros_error_invalid_packet_type">Communicatie mislukt: ongeldige gegevens ontvangen van de Pod</string>
     <string name="omnipod_eros_error_invalid_progress_state">Communicatie mislukt: de Pod bevindt zich in een verkeerde staat</string>
@@ -48,18 +38,13 @@
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Instellen van de tijd is misschien mislukt. De insulinetoediening kan onderbroken zijn! Vernieuw de Pod-status handmatig in het Omnipod tabblad en hervat de toediening indien nodig.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Het instellen van de tijd is mislukt. Insulinetoediening is onderbroken! Hervat de toediening handmatig vanaf het Omnipod tabblad.</string>
-    <string name="omnipod_eros_error_failed_to_read_pulse_log">Lezen van Pulse log is mislukt</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Het automatisch wijzigen van de tijd op de Pod is mislukt. Synchroniseer de tijd handmatig via het Omnipod-tabblad.</string>
-    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Bewerking is niet mogelijk.\n\nJe moet eerst Omnipod ingesteld hebben, voordat je deze bewerking kunt gebruiken.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Kan niet controleren of de bolus is geslaagd. Controleer handmatig of de Pod aan het bolussen is door te luisteren naar klik-geluidjes van de Pod. <b>Als je zeker weet dat de bolus niet is geslaagd, moet je deze bolus handmatig uit \'Behandelingen\' verwijderen, zelfs als je nu op \'Annuleren\' drukt!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Kan niet controleren of SMB bolus (%1$.2f E) geslaagd is. <b>Als je zeker weet dat de bolus niet is geslaagd, moet je deze handmatig verwijderen uit \'Behandelingen\'.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Er loopt een tijdelijk basaal op de Pod, maar AndroidAPS is zich niet bewust van deze tijdelijke basaal. Annuleer de tijdelijke basal handmatig.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink status</string>
-    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Wachten op verbinding met RileyLink…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">RileyLink Configuratie resetten</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Pulse log uitlezen</string>
-    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Pulse log aan het uitlezen…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse Log</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse log (gekopieerd naar klembord)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

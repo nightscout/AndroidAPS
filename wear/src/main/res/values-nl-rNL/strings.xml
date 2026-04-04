@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Invoer ontwerp</string>
-    <string name="pref_default">Standaard</string>
-    <string name="pref_quick_righty">Snel rechts</string>
-    <string name="pref_quick_lefty">Snel links</string>
-    <string name="pref_modern_sparse">Modern spaarzaam</string>
     <string name="pref_big_numbers">Grote nummers</string>
     <string name="pref_ring_history">Ring geschiedenis</string>
     <string name="pref_light_ring_history">Lichte ring geschiedenis</string>
@@ -90,7 +85,6 @@
     <string name="menu_default">Standaard</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Duur\n[minuten]</string>
     <string name="action_tempt_confirmation">Tijdelijk streefdoel aangevraagd</string>
     <string name="action_quick_wizard_confirmation">QuickWizard aangevraagd</string>
     <string name="action_user_action_confirmation">Gebruiker actie aangevraagd</string>
@@ -100,9 +94,6 @@
     <string name="action_fill_confirmation">Vullen aangevraagd</string>
     <string name="action_ecarb_confirmation">Koolhydraten aangevraagd</string>
     <string name="action_profile_switch_confirmation">Profiel wisselen aangevraagd</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Streefdoel\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Laag\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Hoog\n[%s]</string>
     <string name="action_carbs">Koolhydraten</string>
     <string name="action_carbs_gram">Koolhydraten [g]</string>
     <string name="action_ecarbs">eCarbs</string>
@@ -199,7 +190,6 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">oud</string>
     <string name="old_warning">!oud!</string>
-    <string name="error">!fout!</string>
     <string name="pref_heartRateSampling">Hartslag</string>
     <string name="pref_heartRateSmoothing">HR Vloeiend maken</string>
     <string name="pref_stepsSampling">Stappenteller inschakelen</string>
@@ -231,14 +221,10 @@
     <string name="complication_iob_icon">IoB icoon</string>
     <string name="complication_iob_detailed">Gedetailleerde IoB</string>
     <string name="complication_uploader_phone_battery">Uploader/Telefoon Batterij</string>
-    <string name="status_loop_state">Loop status</string>
-    <string name="label_loop_state_title">AAPS(Loop status)</string>
-    <string name="action_loop_state_selected">Loop status aangevraagd</string>
     <string name="wizard_total_insulin">Totale insuline</string>
     <string name="wizard_calculation">Berekening</string>
     <string name="wizard_carbs_format">%1$d gr koolhydraten</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Veeg naar links om te bevestigen</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">15min trend</string>
@@ -250,7 +236,6 @@
     <string name="wizard_result_total">Totaal</string>
     <string name="wizard_insulin_format">%1$s E</string>
     <string name="insulin_unit_short">E</string>
-    <string name="wizard_result_correction_percentage">Corr. %1$d%%</string>
     <string name="expand_calculation_details">Klik om rekendetails uit te vouwen</string>
     <string name="wizard_confirmation_sent">Verzonden</string>
     <string name="tile_settings">Tegel instellingen</string>

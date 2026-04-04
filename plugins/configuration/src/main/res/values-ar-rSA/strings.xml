@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <!-- Provider-agnostic cloud export/import strings -->
     <!--    ConfigBuilder-->
     <!--ImportExport-->
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
+    <!-- export_to moved to core:ui -->
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
     <!-- Maintenance -->
-    <!-- Custom Watchface -->
     <!-- Maintenance -->
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- SMS Communicator & OTP Authenticator -->
     <!-- Food-->
-    <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
+    <!-- localprofile moved to core:ui module -->
     <!-- Actions -->
+    <!-- manage moved to core:ui module -->
     <!-- Overview -->
+    <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
     <!-- Skins -->
     <!--    Iob-->

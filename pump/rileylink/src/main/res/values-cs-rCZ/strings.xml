@@ -7,32 +7,17 @@
     <string name="pump_status_active">Aktivní</string>
     <string name="pump_status_error_comm">Chyba komunikace</string>
     <string name="pump_status_timeout_comm">Vypršel časový limit komunikace</string>
-    <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
     <string name="pump_status_invalid_config">Neplatná konfigurace</string>
     <string name="medtronic_pump_encoding_4b6b_local">Softwarové 4b6b kódování</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardwarové 4b6b kódování</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Celosvětové (868 Mhz)</string>
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Skenovat</string>
-    <string name="riley_link_ble_config_scan_stop">Stop</string>
-    <string name="riley_link_ble_config_scan_selected">Vybráno</string>
-    <string name="riley_link_ble_config_scan_title">Vyhledávání RileyLinku</string>
     <string name="riley_link_ble_config_scan_scanning">Vyhledávání</string>
-    <string name="riley_link_ble_config_scan_finished">Vyhledávání dokončeno</string>
-    <string name="riley_link_ble_config_scan_error">Chyba při vyhledávání: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Nikdy</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Aktuálně vybraný RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">Odstranit</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">Jste si jistí, že si přejete odstranit Váš RileyLink?</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Odstranit RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">Nebyl vybrán RileyLink</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Nastavení</string>
-    <string name="rileylink_settings_tab2">Historie</string>
     <string name="rileylink_status">Status RileyLink</string>
     <string name="medtronic_pump_status">Stav pumpy</string>
-    <string name="title_activity_rileylink_settings">Nastavení RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adresa:</string>
     <string name="rileylink_name">Jméno:</string>
@@ -69,7 +54,6 @@
     <string name="rileylink_error_bt_disabled">Bluetooth je zakázáno</string>
     <string name="rileylink_error_no_bt_adapter">Žádný Bluetooth adaptér</string>
     <string name="rileylink_error_tuneup_failed">Spojování selhalo</string>
-    <string name="rileylink_error_pump_unreachable">Pumpa nedostupná</string>
     <string name="rileylink_error_pod_unreachable">Pod nedostupný</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
@@ -91,5 +75,4 @@
     </plurals>
     <string name="orange_use_scanning_level">Použít vyhledávání</string>
     <string name="orange_use_scanning_level_summary">Vyhledat před připojením k OrangeLink. Mělo by to zlepšit spojení (může být také použito s ostatními klony RileyLink, pokud je to nutné)</string>
-    <string name="rileylink_configuration">Konfigurace RileyLinku</string>
 </resources>

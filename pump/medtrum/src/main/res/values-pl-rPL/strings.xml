@@ -14,22 +14,17 @@
     <string name="pump_setting_failed">Wpisanie ustawień użytkownika do pompy nie powiodło się!</string>
     <string name="pump_sync_error">Wystąpił błąd podczas synchronizacji historii z pompy, rekord został pominięty. Zajżyj to dialogu Terapia, aby sprawdzić, czy bolus został poprawnie zsynchronizowany. Wycisz to powiadomienie, a jeśli błąd nadal występuje zmień patch lub bazę pompy.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Status Bluetooth Low Energy</string>
     <string name="last_connection_label">Ostatnie połączenie</string>
     <string name="active_bolus_label">Aktywny bolus</string>
     <string name="pump_state_label">Status pompy</string>
     <string name="active_alarms_label">Aktywne alarmy</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Typ bazy</string>
     <string name="basal_rate_label">Dawka bazowa</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Typ pompy</string>
     <string name="fw_version_label">Wersja FW</string>
     <string name="patch_no_label">Nr Patcha</string>
     <string name="patch_expiry_label">Patch wygasa</string>
     <string name="patch_activation_time_label">Aktywacja</string>
-    <string name="refresh_label">Odśwież</string>
     <string name="reset_alarms_label">Zresetuj alarmy</string>
     <string name="change_patch_label">Zmień Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Na życzenie użytkownika</string>
@@ -57,8 +52,6 @@
     <string name="bolus_error">Błąd bolusa</string>
     <!-- wizard-->
     <string name="retry">Spróbuj ponownie</string>
-    <string name="next">Dalej</string>
-    <string name="discard">Odrzuć</string>
     <string name="step_prepare_patch">Aktywuj Patch</string>
     <string name="step_prepare_patch_connect">Połącz i wypełnij</string>
     <string name="step_prime">Napełnienie</string>
@@ -73,8 +66,6 @@
     <string name="step_retry_activation">Aktywacja w toku...</string>
     <string name="unexpected_state">Nieoczekiwany stan: %1$s</string>
     <string name="no_profile_selected">Nie wybrano profilu. Wybierz profil i spróbuj ponownie.</string>
-    <string name="no_sn_in_settings">Nieznany Numer seryjny. Proszę wprowadzić numer seryjny bazy pompy w ustawieniach i spróbować ponownie.</string>
-    <string name="base_serial">Nr seryjny bazy pompy: %1$X</string>
     <string name="patch_begin_activation">Brak aktywnego Patcha. Naciśnij <b>Dalej</b>, aby rozpocząć proces aktywacji.</string>
     <string name="patch_not_active_note">Baza pompy nie powinna być podłączona do Patcha aż do następnego kroku!</string>
     <string name="connect_pump_base">Podłącz bazę pompy do nowego Patcha, usuń pozostałe powietrze i napełnij insuliną, a następnie naciśnij <b>Dalej</b>.</string>
@@ -108,9 +99,7 @@
     <string name="enable_pump_unreachable_alert_summary">Wymuszono włączenie alarmu nieosiągalności, ponieważ Patch Medtrum może przestać działać i być nieosiągalny.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Zaleca się ustawić na 30 minut, ponieważ Patch Medtrum może przestać działać i być nieosiągalny.</string>
     <string name="sn_input_title">Numer seryjny</string>
-    <string name="sn_input_summary">Wprowadź numer seryjny bazy pompy.</string>
     <string name="sn_input_invalid">Nieprawidłowy numer seryjny!</string>
-    <string name="pump_unsupported">Pompa nieprzetestowana: %1$s! Skontaktuj się z nami na Discordzie lub github, aby uzyskać wsparcie</string>
     <string name="alarm_setting_title">Ustawienia alarmu</string>
     <string name="alarm_setting_summary">Wybierz preferowaną konfigurację alarmu pompy.</string>
     <string name="pump_warning_notification_title">Powiadomienie o ostrzeżeniu pompy</string>

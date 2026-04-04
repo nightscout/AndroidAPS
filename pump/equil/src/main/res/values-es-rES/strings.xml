@@ -3,16 +3,9 @@
     <string name="equil_pump_description">Integración de bomba parche Equil 5.3 o superior</string>
     <!--  start  -->
     <string name="equil_basal_speed">Basal base</string>
-    <string name="equil_btn_cancel">Cancelar</string>
-    <string name="equil_btn_need">Necesitas</string>
-    <string name="equil_btn_skip">Saltar</string>
-    <string name="equil_date_device">Última conexión</string>
     <string name="equil_dressing">Cambiar reservorio</string>
     <string name="equil_dressing_onkey_msg">Desplazamiento automático del émbolo hasta el fondo del depósito. Se detendrá automáticamente al llegar al fondo. Haga clic en \"Detener\" para interrumpir si es necesario.</string>
-    <string name="equil_finish">Finalizar</string>
-    <string name="equil_next">Siguiente</string>
     <string name="equil_hint_dressing">Esta operación detendrá la infusión de insulina y hará que el émbolo de la bomba se retraiga hasta el fondo</string>
-    <string name="equil_history">Historial</string>
     <string name="equil_insulin_reservoir">Reservorio de insulina</string>
     <string name="equil_mode">Modo en ejecución</string>
     <string name="equil_mode_running">Funcionando</string>
@@ -22,17 +15,21 @@
     <string name="equil_stop">Detener</string>
     <string name="equil_success">Éxito</string>
     <string name="equil_title_dressing">Cambiar cartucho</string>
+    <string name="equil_title_assemble">Montar la bomba</string>
+    <string name="equil_title_serial">Emparejar dispositivo</string>
+    <string name="equil_title_fill">Cebado / Llenado</string>
+    <string name="equil_title_attach">Acoplar la bomba</string>
+    <string name="equil_title_air">Cebado de la cánula</string>
+    <string name="equil_title_unpair_detach">Desacoplar la bomba</string>
+    <string name="equil_title_unpair_confirm">Confirmar desvinculación</string>
     <string name="equil_title_history_events">Historial de eventos</string>
-    <string name="equil_title_tips">Consejos</string>
     <string name="equil_tone">Tono de alerta</string>
     <string name="equil_tone_mode_mute">Silenciar</string>
     <string name="equil_tone_mode_shake">Sólo vibrar</string>
     <string name="equil_tone_mode_tone">Sólo sonido</string>
     <string name="equil_tone_mode_tone_and_shake">Vibración y sonido</string>
     <string name="equil_unit_u">%1$s U</string>
-    <string name="equil_unit_u_hours">%1$s U/H</string>
-    <string name="equil_unbind_content">¡Esta operación detendrá la infusión de insulina y retraerá el émbolo de la bomba hasta el fondo! Además, borrará el estado de vinculación！</string>
-    <string name="equil_error_no_devices">Sin dispositivo</string>
+    <string name="equil_unbind_content">¡Esta operación detendrá la infusión de insulina y retraerá el émbolo de la bomba hasta el fondo! ¡Además, eliminará el estado de vinculación!</string>
     <string name="equil_ble_config_confirmation_title">Emparejar bomba parche Equil</string>
     <string name="equil_error">Error de conexión</string>
     <string name="equil_change">Cambiar bomba</string>
@@ -49,18 +46,15 @@
     <string name="equil_pump_not_run">La bomba no está funcionando</string>
     <string name="equil_pair">Emparejar</string>
     <string name="equil_pair_error">Error de emparejamiento</string>
-    <string name="equil_retry">Reintentar</string>
     <string name="equil_fill">Cebar/Llenar</string>
     <string name="equil_air">Purgar aire</string>
     <string name="equil_temp_basal_rate">Basal temporal</string>
     <string name="equil_total_delivered">Total entregado</string>
-    <string name="equil_last_bolus">Último bolo</string>
     <string name="equil_firmware_version">Versión del firmware</string>
     <string name="equil_shutdown_be">Equil se apagará automáticamente</string>
     <string name="equil_shutdown">Apagado automático de Equil</string>
     <string name="equil_common_history_tbr_value">Ratio： %1$.2f U/H，duración： %2$d minutos</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
-    <string name="equil_history_type">Tipo：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Establecer bolo</string>
     <string name="equil_common_cmd_cancel_bolus">Cancelar bolo</string>
@@ -73,7 +67,6 @@
     <string name="equil_common_cmd_pair">Emparejar Equil</string>
     <string name="equil_common_cmd_insert_cannula">Insertar cánula</string>
     <string name="equil_common_cmd_unpair">Desenparejar Equil</string>
-    <string name="equil_common_cmd_alarm">Alarma</string>
     <string name="equil_common_cmd_set_extended_bolus">Establecer bolo extendido</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Cancelar bolo extendido</string>
     <!--    推杆回退-->
@@ -89,7 +82,7 @@
     <string name="equil_command_connect_error">Error de conexión de la bomba</string>
     <string name="equil_command_connect_no_response">Sin respuesta de la bomba</string>
     <string name="equil_command__unknown">Estado desconocido para el comando</string>
-    <string name="equil_install">Colocar la bomba en el cuerpo\"</string>
+    <string name="equil_install">Colocar la bomba en el cuerpo</string>
     <string name="equil_settings_alarm_battery">Alarma de batería baja</string>
     <string name="equil_settings_alarm_insulin">Alarma de reservorio bajo</string>
     <string name="equil_init_insulin_error">La inicialización del reservorio no se ha completado</string>
@@ -127,8 +120,6 @@
     <string name="equil_common_less_than_a_minute_ago">Hace menos de un minuto</string>
     <string name="equil_common_time_ago">%1$s ago</string>
     <string name="equil_common_composite_time">%1$s and %2$s</string>
-    <string name="equil_common_wizard_button_finish">Finalizar</string>
-    <string name="equil_common_wizard_button_next">Siguiente</string>
     <string name="equil_common_wizard_exit_confirmation_text">Aún no has completado todos los pasos. ¿Estás seguro de que quieres salir?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Salir</string>
     <plurals name="equil_common_minutes">
@@ -144,20 +135,18 @@
         <item quantity="other">%1$d días</item>
     </plurals>
     <string name="equil_support_error">Versión del firmware demasiado baja. No compatible</string>
-    <string name="equil_password_tips">Establezca una nueva contraseña para el emparejamiento con la bomba Equil v5.3. Esta contraseña también se utilizará para el desemparejamiento con la bomba actual en el futuro, así que asegúrese de recordarla. Regla de la contraseña: Debe tener 4 caracteres, elegidos entre ABCDEF0123456789.</string>
-    <string name="delete">Borrar</string>
+    <string name="equil_password_tips">Opcionalmente, establezca una contraseña para el emparejamiento con la bomba Equil v5.3. Esta contraseña también se usará para desvincularla en el futuro, así que asegúrese de recordarla. Regla de la contraseña: Debe tener 4 caracteres, elegidos entre ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Establecer la contraseña de emparejamiento</string>
     <string name="equil_hint1">Después de instalar la bomba en su base, selecciona si deseas purgar el aire de la aguja.</string>
     <string name="equil_unbind">Desemparejar dispositivo</string>
     <string name="equil_device_unpaired">Dispositivo desemparejado</string>
     <string name="equil_assemble">Por favor, monta la bomba, el reservorio lleno y la batería cargada</string>
     <string name="equil_devices_number">Introducir nuevo ID de la bomba</string>
+    <string name="equil_pair_password_title">Introducir contraseña para %1$s</string>
     <string name="equil_insert">Ceba el depósito hasta que haya una gota de insulina en la punta de la aguja</string>
     <string name="equil_insert2">La bomba no debe estar sobre su base.</string>
     <string name="equil_attach">Por favor, añade la bomba a su base</string>
     <string name="equil_hint2">Cebado de cánula</string>
-    <string name="equil_hint_dressing2">Por favor, desconecta la bomba de su base</string>
-    <string name="equil_unpair">Desactivar la vieja bomba %1$s?</string>
     <string name="equil_pump_updated">Bomba actualizada</string>
     <string name="equil_replace_reservoir">El reservorio está vacío. Por favor, sustituya el reservorio</string>
     <string name="error_mustbe6hexadidits">Debe contener 6 caracteres de ABCDEF0123456789</string>

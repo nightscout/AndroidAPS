@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 phút</string>
     <string name="pref_10_min">10 phút</string>
     <string name="pref_15_min">15 phút</string>
-    <string name="pref_input_design">Thiết kế đầu vào</string>
-    <string name="pref_default">Mặc định</string>
-    <string name="pref_quick_righty">Nhanh bên phải</string>
-    <string name="pref_quick_lefty">Nhanh bên trái</string>
-    <string name="pref_modern_sparse">Hiện đại – Tối giản</string>
     <string name="pref_big_numbers">Số lớn</string>
     <string name="pref_ring_history">Lịch sử vòng tròn</string>
     <string name="pref_light_ring_history">Lịch sử vòng tròn (nhẹ)</string>
@@ -90,7 +85,7 @@
     <string name="menu_default">Mặc định</string>
     <string name="menu_menu">Danh Mục</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Thời lượng\n[phút]</string>
+    <string name="action_duration_minutes">Thời lượng [phút]</string>
     <string name="action_tempt_confirmation">Mục tiêu tạm thời được yêu cầu</string>
     <string name="action_quick_wizard_confirmation">Yêu cầu Quick Wizard</string>
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
@@ -100,16 +95,26 @@
     <string name="action_fill_confirmation">Yêu cầu nạp insulin</string>
     <string name="action_ecarb_confirmation">Lượng carb cần nạp</string>
     <string name="action_profile_switch_confirmation">Yêu cầu chuyển đổi Hồ sơ</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Mục tiêu\n [%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Thấp\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Cao\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Mục tiêu [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Thấp[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Cao[%s]</string>
     <string name="action_carbs">Carbs</string>
     <string name="action_carbs_gram">Carbs [g]</string>
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Phần trăm\n[%]</string>
     <string name="action_start_minutes">Bắt đầu\n[phút]</string>
+    <string name="action_start_minutes_format">%1$d phút</string>
     <string name="action_duration_h">Thời lượng [giờ]</string>
     <string name="action_duration_hours">Thời lượng\n[giờ]</string>
+    <string name="action_duration_hours_format">%1$d giờ</string>
+    <string name="action_duration_hours_minutes_format">%1$d g %2$d phút</string>
+    <string name="action_minutes_format">%1$d phút</string>
+    <string name="ecarbs_start_format">%1$d phút</string>
+    <string name="ecarbs_confirm_time">Thời gian %1$s</string>
+    <string name="ecarbs_confirm_duration">Thời lượng: %1$d giờ</string>
+    <string name="action_confirm_reason">Lý do: %1$s</string>
+    <string name="action_confirm_duration">Thời lượng: %1$s</string>
+    <string name="action_confirm_timeshift">Điều chỉnh thời gian: %1$s</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_insulin_units">Insulin [U]</string>
     <string name="action_preset_1">Cài đặt sẵn 1</string>
@@ -199,7 +204,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">old</string>
     <string name="old_warning">!old!</string>
-    <string name="error">!err!</string>
+    <string name="error">Lỗi</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
     <string name="pref_heartRateSmoothing">Làm mượt HR</string>
     <string name="pref_stepsSampling">Bật đếm bước chân</string>
@@ -231,14 +236,15 @@
     <string name="complication_iob_icon">Biểu tượng IoB</string>
     <string name="complication_iob_detailed">Chi tiết IoB</string>
     <string name="complication_uploader_phone_battery">Pin thiết bị gửi dữ liệu / Điện thoại</string>
-    <string name="status_loop_state">Trạng thái vòng lặp</string>
-    <string name="label_loop_state_title">AAPS(Trạng thái vòng lặp)</string>
-    <string name="action_loop_state_selected">Đã yêu cầu trạng thái vòng lặp</string>
+    <string name="status_running_mode">Chế độ thể dục</string>
+    <string name="label_running_mode_title">AAPS(Chế độ thể dục)</string>
+    <string name="action_running_mode_selected">Đã yêu cầu chế độ thể dục</string>
+    <string name="title_activity_disconnect_pump">Ngắt kết nối bơm</string>
+    <string name="title_activity_suspend_loop">Tạm dừng vòng lặp</string>
     <string name="wizard_total_insulin">Tổng Insulin</string>
     <string name="wizard_calculation">Tính toán</string>
     <string name="wizard_carbs_format">%1$d g carbs</string>
     <string name="wizard_settings_format">IC: %1$s | ISF: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Vuốt sang trái để xác nhận</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">Xu hướng 15 phút</string>
@@ -250,7 +256,7 @@
     <string name="wizard_result_total">Tổng</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Hiệu chỉnh. %1$d%%</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">Nhấn để mở rộng chi tiết tính toán</string>
     <string name="wizard_confirmation_sent">Gửi</string>
     <string name="tile_settings">Cài đặt Tile</string>
@@ -268,6 +274,8 @@
     <string name="loop_status_lgs">Tạm ngừng khi đường huyết thấp</string>
     <string name="loop_status_disabled">Đã tắt vòng lặp</string>
     <string name="loop_status_suspended">Đã tạm dừng vòng lặp</string>
+    <string name="loop_status_pump_suspended">Bơm đã tạm dừng</string>
+    <string name="loop_status_dst_suspended">Bị tạm dừng do thay đổi múi giờ (DST)</string>
     <string name="loop_status_disconnected">Bơm đã ngắt kết nối</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Không xác định</string>
@@ -284,4 +292,8 @@
     <string name="loop_status_target_range">Phạm vi</string>
     <string name="loop_status_target">Mục tiêu</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
+    <string name="loop_status_refresh">Làm mới</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="request">Yêu cầu</string>
+    <string name="constraint_applied">Đã áp dụng giới hạn!</string>
 </resources>

@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Ανέβασμα δεδομένων BG στο NS</string>
     <string name="configbuilder_insulin">Ινσουλίνη</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">Κύριος κωδικός</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Εξαγωγή καταχωρήσεων χρήστη σε Excel (csv)</string>
     <string name="confirm">Επιβεβαίωση</string>
     <string name="pump">Αντλία</string>
@@ -78,8 +78,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Απενεργοποιεί το bluetooth του τηλεφώνου για ένα δευτερόλεπτο αν δεν είναι δυνατή η σύνδεση με την αντλία. Αυτό μπορεί να βοηθήσει σε ορισμένα τηλέφωνα όπου το bluetooth παγώνει.</string>
     <string name="virtualpump_resultok">ΟΚ</string>
     <string name="pump_time_updated">Η ώρα στην αντλία άλλαξε</string>
     <string name="exit">Έξοδος</string>
@@ -108,7 +106,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Καλιμπράρισμα</string>
     <string name="alarminxmin">Εκτέλεση συναγερμού σε %1$d λεπτά</string>
-    <string name="bolus_reminder">Υπενθύμιση Bolus</string>
     <string name="duration_label">Διάρκεια</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
@@ -130,18 +127,15 @@
     <string name="a11y_inrange">εντός στόχου</string>
     <string name="a11y_low">χαμηλό</string>
     <string name="average">Μέση</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<κενό>]]></string>
     <string name="remove_label">ΜΕΤΑΚΙΝΗΣΗ</string>
     <string name="activate_profile">Ενεργοποίηση προφίλ</string>
-    <string name="reset">επαναφορά</string>
     <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>
     <string name="profile">Προφίλ</string>
     <string name="select_for_removal">Επιλέξτε για αφαίρεση</string>
     <string name="confirm_remove_multiple_items">Είστε βέβαιοι ότι θέλετε να καταργήσετε %1$d στοιχεία</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="copytolocalprofile">Δημιουργία νέου προφίλ από αυτό το προφίλ;</string>
-    <string name="wear_wizard_settings">Ρυθμίσεις Γρήγορου Οδηγού</string>
     <string name="bg_trend_label">Γραφική 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -182,6 +176,7 @@
     <string name="duration">Διάρκεια</string>
     <string name="reason">Αιτιολογία</string>
     <string name="nochangerequested">Δεν απαιτείται αλλαγή</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Μη έγκυρο προφίλ: %1$s</string>
     <!--    Temptarget-->
@@ -247,7 +242,6 @@
     <string name="expweight">Εκθετικά Σταθμισμένο TDD</string>
     <string name="basalrate">Βασικός Ρυθμός</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD</string>
     <string name="ratio">Αναλογία</string>
     <string name="amount_days"># Ημέρες</string>
     <string name="weight">Βάρος</string>
@@ -364,6 +358,7 @@
     <string name="valueoutofrange">» Το%1$s« είναι εκτός ορίων</string>
     <string name="value_out_of_hard_limits">Η τιμή »%1$s« %2$.2f είναι εκτός ορίων</string>
     <string name="basal_value">Τιμή Βασικού ρυθμού</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">ΥΔΑΤΑΝΘΡΑΚΕΣ %1$d g</string>
@@ -396,7 +391,6 @@
     <string name="autotune_tune_days">Ημέρες συντονισμού:</string>
     <string name="autotune_select_profile">Επιλέξτε προφίλ για συντονισμό</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Χρησιμοποιήστε ειδοποιήσεις συστήματος για ειδοποιήσεις και συναγερμούς</string>
     <string name="urgent_alarm">Συναγερμός έκτακτης ανάγκης</string>
     <string name="info">Πληροφορίες</string>
     <!-- BolusWizard -->
@@ -404,8 +398,6 @@
     <string name="bolus_advisor_message">Έχετε υπεργλυκαιμία. Αντί να φάτε τώρα συνιστάτε να περιμένετε μια καλύτερη γλυκαιμία. Θέλετε να κάνετε ένα διορθωτικό bolus τώρα και να γίνει υπενθύμιση όταν έρθει η ώρα να φάτε; Σε αυτή την περίπτωση δε θα καταγραφούν καθόλου υδατάνθρακες και θα πρέπει να χρησιμοποιήσετε τον οδηγό ξανά μετά την υπενθύμιση.</string>
     <string name="cobvsiob">COB vs IOB (ενεργοί υδατάνθρακες vs ενεργή ινσουλίνη)</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
-    <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
-    <string name="partialboluswizard_reset_time">Χρονικό όριο παλιάς γλυκαιμίας [min]</string>
     <string name="bolus_constraint_applied_warn">Ορίστηκε περιορισμός Bolus: %1$.2f U σε %2$.2f U</string>
     <string name="bolus_recorded_only">Το Bolus μόνο θα καταγραφεί (δε θα χορηγηθεί από την αντλία)</string>
     <string name="advisoralarm">Εκτέλεση συναγερμού όταν έρθει η ώρα να φάτε</string>
@@ -479,14 +471,18 @@
     <string name="message">Μήνυμα</string>
     <string name="ok">ΟΚ</string>
     <string name="cancel">Ακύρωση</string>
-    <string name="dismiss">ΑΠΟΡΡΙΨΗ</string>
     <string name="yes">Ναι</string>
     <string name="no">Όχι</string>
     <string name="close">Κλείσιμο</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Θα σας ζητηθεί ο βασικός κωδικός πρόσβασης, ο οποίος είναι απαραίτητος για την αποκωδικοποίηση των εισαγώμενων προτιμήσεων.</string>
     <!-- <unattended_export> -->
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">μείωση %1$s κατά %2$s</string>
     <string name="a11y_plus_button_description">αύξηση %1$s κατά %2$s</string>
@@ -507,8 +503,10 @@
     <string name="location_not_found_message">Για την εύρεση Bluetooth σε νεότερες συσκευές, η τοποθεσία πρέπει να είναι ενεργοποιημένη. Το AAPS δεν παρακολουθεί την τοποθεσία σας και μπορεί να απενεργοποιηθεί μετά την επιτυχή σύζευξη.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Επιλογές προσθήκης</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Απουσία δικαιωμάτων SMS</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Μην σκοτώσεις την εφαρμογή μου;</string>
     <string name="fabric_upload_disabled">Η μεταφόρτωση των αρχείων καταγραφής σφαλμάτων απενεργοποιήθηκε!</string>
@@ -549,4 +547,10 @@
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
     <!--    Playback-->
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

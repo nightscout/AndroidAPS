@@ -39,4 +39,12 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino app</string>
     <string name="description_source_patched_sino_app">Motta BS-verdier fra den patchede appen Sino.</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Varslingsleser</string>
+    <string name="description_source_notification_reader">Les glukoseverdier fra varsler lagt ut av offisielle CGM-apper (Dexcom, Medtronic, Eversense osv.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Appen trenger tillatelse til å motta CGM-data fra Dexcom-appen</string>
+    <string name="permission_notification_listener_title">Tilgang til varsler</string>
+    <string name="permission_notification_listener_description">Kreves for å lese blodsukkerverdier fra CGM-appens varsler</string>
 </resources>

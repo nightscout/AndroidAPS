@@ -3,7 +3,7 @@
     <!-- PumpCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operațiunea nu este suportată de către pompă și/sau driver.</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_not_initialized">Neiniţializat</string>
+    <string name="pump_status_not_initialized">Neinițializat</string>
     <string name="pump_status_initialized">Pornit</string>
     <string name="pump_status_encrypt">Criptare comunicație</string>
     <string name="pump_status_ready">Gata</string>
@@ -65,24 +65,4 @@
     <string name="ble_config_remove">Șterge</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d zi</item>
-        <item quantity="few">%1$d zile</item>
-        <item quantity="other">%1$d zile</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d oră</item>
-        <item quantity="few">%1$d ore</item>
-        <item quantity="other">%1$d ore</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d ore în urmă</item>
-        <item quantity="few">%1$d ore în urmă</item>
-        <item quantity="other">%1$d ore în urmă</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">cu %1$d zile în urmă</item>
-        <item quantity="few">%1$d zile în urmă</item>
-        <item quantity="other">%1$d zile în urmă</item>
-    </plurals>
 </resources>

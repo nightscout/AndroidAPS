@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Επαναφορά σύζευξης</string>
-    <string name="diaconn_no_device_available">Καμία διαθέσιμη συσκευή</string>
     <string name="diaconn_pairing">Σύζευξη Αντλίας Diaconn</string>
-    <string name="pumperror">Σφάλμα Αντλίας</string>
     <string name="diaconn_g8_history_alarm">Συναγερμοί</string>
     <string name="diaconn_g8_history_basalhours">Ώρες Βασικού</string>
     <string name="diaconn_g8_history_bolus">Bolus</string>
     <string name="diaconn_g8_history_dailyinsulin">Ημερήσια Ινσουλίνη</string>
     <string name="diaconn_g8_history_refill">Ξαναγέμισμα</string>
     <string name="diaconn_g8_history_suspend">Αναστολή</string>
-    <string name="invalidpairing">Μη έγκυρες πληροφορίες σύζευξης. Αίτηση νέας σύζευξης</string>
     <string name="gettingpumpsettings">Λήψη ρυθμίσεων αντλίας</string>
     <string name="gettingpumptime">Λήψη ώρας αντλίας</string>
     <string name="largetimediff">Μεγάλη χρονική διαφορά:\nΗ ώρα στην αντλία διαφέρει περισσότερο από 1,5 ώρες. \nΠαρακαλώ ρυθμίστε την ώρα χειροκίνητα στην αντλία και βεβαιωθείτε ότι η ανάγνωση του ιστορικού από την αντλία δεν προκαλεί απροσδόκητη συμπεριφορά. \nΑν είναι δυνατόν, αφαιρέστε το ιστορικό από την αντλία πριν την αλλαγή της ώρας ή κλείστε το κλειστό κύκλωμα για μία DIA μετά την τελευταία λάθος καταχώρηση ιστορικού αλλά κατ΄ελάχιστο μία DIA από τώρα.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Σφάλμα ταχύτητας</string>
     <string name="insulinlimitviolation">Υπέρβαση του ορίου ινσουλίνης</string>
     <string name="boluserrorcode">Απαιτείται: %1$.2fU Παραδόθηκε: %2$.2fU Κωδικός σφάλματος: %3$s</string>
-    <string name="bolusspeed">Ταχύτητα Bolus</string>
     <string name="selectedpump">Επιλεγμένη αντλία</string>
     <string name="diaconn_g8_bluetooth_status">Κατάσταση Bluetooth</string>
     <string name="bolus_step">Βήμα Bolus</string>
     <string name="basal_step">Βήμα Βασικού</string>
-    <string name="pump_firmware_label">Έκδοση</string>
     <string name="diaconn_g8_user_options">ΕΠΙΛΟΓΕΣ ΧΡΗΣΤΗ</string>
     <string name="pairfirst">Παρακαλώ συνδέστε την αντλία στο τηλέφωνο!</string>
     <string name="processinghistory">"Επεξεργασία συμβάντος "</string>

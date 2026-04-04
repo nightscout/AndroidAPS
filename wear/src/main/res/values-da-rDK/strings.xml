@@ -47,11 +47,6 @@
     <string name="pref_3_hours">3 timer</string>
     <string name="pref_4_hours">4 timer</string>
     <string name="pref_5_hours">5 timer</string>
-    <string name="pref_input_design">Input Design</string>
-    <string name="pref_default">Standard</string>
-    <string name="pref_quick_righty">Hurtigt højre</string>
-    <string name="pref_quick_lefty">Hurtig venstre</string>
-    <string name="pref_modern_sparse">Moderne spreder</string>
     <string name="pref_big_numbers">Store Tal</string>
     <string name="pref_ring_history">Ring Historik</string>
     <string name="pref_light_ring_history">Lys Ring Historik</string>
@@ -173,6 +168,5 @@
     <string name="hour_minute_second">%1$s %2$s %3$s</string>
     <string name="old">gammel</string>
     <string name="old_warning">!gammel!</string>
-    <string name="error">!fejl!</string>
     <string name="pref_heartRateSampling">Puls</string>
 </resources>

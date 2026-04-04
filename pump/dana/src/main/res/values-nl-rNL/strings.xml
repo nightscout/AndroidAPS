@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Aan het koppelen</string>
-    <string name="danars_no_device_available">Nog geen apparaat gevonden</string>
-    <string name="danars_pairingok">Koppeling geslaagd</string>
     <string name="danars_pairingtimedout">Koppeling verlopen</string>
-    <string name="danars_waitingforpairing">Wachten op koppelen van de pomp</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">Pomp integratie voor DANA RS en Dana-i pompen</string>
@@ -59,7 +55,6 @@
     <string name="danar_history_bolus">Bolussen</string>
     <string name="danar_history_carbohydrates">Koolhydraten</string>
     <string name="danar_history_dailyinsulin">Dagtotaal insuline</string>
-    <string name="danar_history_errors">Storing</string>
     <string name="danar_history_glucose">Glucose</string>
     <string name="danar_history_refill">Reservoir vullen</string>
     <string name="danar_history_syspend">Onderbreken</string>
@@ -68,7 +63,6 @@
     <string name="danar_time_display">Tijdnotatie</string>
     <string name="danar_button_scroll">Scroll-functie</string>
     <string name="danar_beep">Geef een \'piep\' als op een knop gedrukt wordt</string>
-    <string name="danar_pump_alarm">Alarm</string>
     <string name="danar_pump_alarm_sound">Geluid</string>
     <string name="danar_pump_alarm_vibrate">Trillen</string>
     <string name="danar_pump_alarm_both">Beide</string>
@@ -82,7 +76,6 @@
     <string name="description_pump_dana_r_korean">Pomp integratie voor Koreaanse DANA Diabecare R pompen</string>
     <string name="description_pump_dana_r_v2">Pomp integratie voor DANA Diabecare R pompen met geupgrade firmware</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="nobtadapter">Geen bluetooth adapter gevonden</string>
     <string name="devicenotfound">Geselecteerd toestel niet gevonden</string>
     <string name="danar_switchtouhmode">Wijzig de modus E/dag naar E/uur op de pomp</string>
     <string name="danarkoreanpump">DanaR Koreaans</string>
@@ -91,28 +84,21 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">EasyUI modus in pomp deactiveren</string>
     <string name="profile_set_failed">Instellen van basaal profiel mislukt</string>
-    <string name="danar_bluetooth_status">Bluetooth status</string>
-    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pomp instellingen</string>
     <string name="time_format_12h">12u</string>
     <string name="time_format_24h">24u</string>
     <string name="option_on">Aan</string>
     <string name="option_off">Uit</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth apparaat</string>
     <string name="danars_password_title">Pomp wachtwoord (alleen v1)</string>
     <string name="danar_password_title">Pomp wachtwoord</string>
     <string name="danar_useextended_title">Gebruik vertraagde bolussen voor &gt;200%</string>
-    <string name="bolusspeed">Bolus snelheid</string>
     <string name="selectedpump">Geselecteerde pomp</string>
     <string name="rs_loginsulinchange_title">Reservoir wissel noteren</string>
     <string name="rs_loginsulinchange_summary">Zet \"Reservoir wissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
     <string name="rs_logcanulachange_title">Infuus wissel noteren</string>
     <string name="rs_logcanulachange_summary">Zet \"Infuuswissel\" melding in Nightscout als deze in pompgeschiedenis wordt uitgelezen</string>
-    <string name="pin1">PIN1</string>
-    <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Druk op OK op de pomp\nen voer 2 weergegeven nummers in.\nHoud het scherm vd pomp actief door de min-knop op de pomp ingedrukt te houden totdat je klaar bent met het invoeren van de codes.</string>
     <string name="num1pin">1: (12 cijfers)</string>
     <string name="num2pin">2: (8 cijfers)</string>
     <string name="basal_bolus_step">Basaal/bolus stap</string>
-    <string name="carbs_store_error">Koolhydraten zijn waarschijnlijk niet correct opgeslagen. Handmatig controleren en opnieuw opslaan indien nodig.</string>
 </resources>

@@ -48,7 +48,7 @@
     <string name="cwf_comment_month">Nume lună (scurt)</string>
     <string name="cwf_comment_loop">Starea buclei și în urmă</string>
     <string name="cwf_comment_direction">Săgeată tendință</string>
-    <string name="cwf_comment_timestamp">Minute în urmă pt ultima glicemie</string>
+    <string name="cwf_comment_timestamp">Minute în urmă pentru ultima glicemie</string>
     <string name="cwf_comment_sgv">Valoare glicemie</string>
     <string name="cwf_comment_cover_plate">Imaginea de copertă în fața textului (butoane)</string>
     <string name="cwf_comment_hour_hand">Imagine oră (ceas analogic)</string>

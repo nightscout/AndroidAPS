@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Resetta associazione</string>
-    <string name="diaconn_no_device_available">Nessun dispositivo disponibile</string>
     <string name="diaconn_pairing">Associazione micro Diaconn</string>
-    <string name="pumperror">Errore micro</string>
     <string name="diaconn_g8_history_alarm">Allarmi</string>
     <string name="diaconn_g8_history_basalhours">Ore basali</string>
     <string name="diaconn_g8_history_bolus">Boli</string>
     <string name="diaconn_g8_history_dailyinsulin">Insulina giornaliera</string>
     <string name="diaconn_g8_history_refill">Riempimento</string>
     <string name="diaconn_g8_history_suspend">Sospensione</string>
-    <string name="invalidpairing">Informazioni associazione non valide. Richiesta nuova associazione</string>
     <string name="gettingpumpsettings">Ricezione impostazioni micro</string>
     <string name="gettingpumptime">Ricezione ora micro</string>
     <string name="largetimediff">Grande differenza oraria:\nL\'ora nel micro differisce per più di 1h e 30m. \nRegola l\'ora manualmente e assicurati che la lettura dello storico dal micro non causi comportamenti imprevisti.\nSe possibile, cancella lo storico del micro prima di cambiare l\'ora oppure disabilita il loop chiuso per un tempo corrispondente al tuo valore DIA.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Errore velocità</string>
     <string name="insulinlimitviolation">Violazione limite insulina</string>
     <string name="boluserrorcode">Chiesto: %1$.2fU Erogato: %2$.2fU Codice errore: %3$s</string>
-    <string name="bolusspeed">Velocità bolo</string>
     <string name="selectedpump">Micro selezionato</string>
     <string name="diaconn_g8_bluetooth_status">Stato bluetooth</string>
     <string name="bolus_step">Incremento bolo</string>
     <string name="basal_step">Incremento basale</string>
-    <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">OPZIONI UTENTE</string>
     <string name="pairfirst">Associa il micro col tuo telefono!</string>
     <string name="processinghistory">"Elaborazione "</string>

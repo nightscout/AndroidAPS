@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Innstillinger</string>
-    <string name="nav_exit">Avslutt</string>
     <string name="delta">Delta</string>
     <string name="save">Lagre</string>
     <string name="wear">Klokke</string>
-    <string name="nav_about">Om</string>
     <string name="sensitivity_warning">Hvis du slår på Autosens-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil Karbo-avvik bli identifisert feil som sensitivitetsendring !!</string>
     <string name="invalid">UGYLDIG</string>
-    <string name="gradually_increase_notification_volume">Øk volumet gradvis for alarmer og varsler</string>
-    <string name="localalertsettings_title">Lokale varsler</string>
-    <string name="enable_missed_bg_readings_alert">Varsel hvis ingen BS-data mottas</string>
-    <string name="enable_pump_unreachable_alert">Varsel hvis pumpen er utilgjengelig</string>
     <string name="pump_unreachable_threshold">Pumpen er ikke tilgjengelig etter [min]</string>
-    <string name="enable_carbs_req_alert">Varsel hvis karbohydrater må tilføres</string>
-    <string name="open_navigation">Åpne meny</string>
     <string name="close_navigation">Lukk meny</string>
     <string name="remove_items">Fjern oppføringer</string>
     <string name="sort_items">Sorter elementer</string>
@@ -27,7 +19,15 @@
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
     <string name="search">Søk</string>
-    <string name="simple_mode">Enkelmodus</string>
+    <string name="use_compose_main_screen">Bruk Compose hovedskjerm (eksperimentelt)</string>
+    <string name="switch_to_compose_ui">Bytt til Compose UI</string>
+    <string name="switch_to_classic_ui">Bytt til klassisk UI</string>
     <string name="select">Velg</string>
     <string name="set">Angi</string>
+    <string name="migrating_preferences">Migrerer innstillinger…</string>
+    <string name="initializing_plugins">Initialiserer plugins…</string>
+    <string name="initializing">Initialiserer…</string>
+    <string name="migrating_profile_switches">Migrerer profilbytter…</string>
+    <string name="migrating_effective_profile_switches">Migrerer effektive profilbytter…</string>
+    <string name="migrating_boluses">Migrerer boluser…</string>
 </resources>

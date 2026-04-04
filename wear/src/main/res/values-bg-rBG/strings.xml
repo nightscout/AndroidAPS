@@ -40,11 +40,6 @@
     <string name="pref_3_hours">3 часа</string>
     <string name="pref_4_hours">4 часа</string>
     <string name="pref_5_hours">5 часа</string>
-    <string name="pref_input_design">Дизайн на въвеждане</string>
-    <string name="pref_default">Стандартен</string>
-    <string name="pref_quick_righty">Десничар</string>
-    <string name="pref_quick_lefty">Левичар</string>
-    <string name="pref_modern_sparse">Модерен</string>
     <string name="pref_big_numbers">Големи Цифри</string>
     <string name="pref_ring_history">История</string>
     <string name="pref_light_ring_history">Олекотена история</string>
@@ -165,6 +160,5 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">стар</string>
     <string name="old_warning">!старо!</string>
-    <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Сърдечен ритъм</string>
 </resources>

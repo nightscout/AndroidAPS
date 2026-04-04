@@ -110,8 +110,8 @@ private fun StatusRow(
             progressColor = ageColor
         )
 
-        // Level with vertical progress (if available)
-        if (item.level != null) {
+        // Level with vertical progress (if available and allowed in expanded view)
+        if (item.level != null && item.expandedLevel) {
             StatusValueWithProgress(
                 value = item.level,
                 valueColor = levelColor,

@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Preferências</string>
-    <string name="nav_exit">Sair</string>
     <string name="delta">Delta</string>
     <string name="save">Salvar</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">Sobre</string>
     <string name="sensitivity_warning">Ao ativar a função Autosense lembre-se de introduzir todos os carboidratos (carbs) que comeu. Caso contra contrário os desvios de carbs serão erroneamente identificados como uma variação da sensibilidade!!</string>
     <string name="invalid">INVÁLIDO</string>
-    <string name="gradually_increase_notification_volume">Aumentar o volume de alerta e notificações gradualmente</string>
-    <string name="localalertsettings_title">Alertas local</string>
-    <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma glicemia seja recebida</string>
-    <string name="enable_pump_unreachable_alert">Alerta caso não seja possivel alcançar a bomba</string>
     <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
-    <string name="enable_carbs_req_alert">Alertar se carboidratos forem necessários</string>
-    <string name="open_navigation">Abrir a navegação</string>
     <string name="close_navigation">Fechar a navegação</string>
     <string name="remove_items">Remover itens</string>
     <string name="sort_items">Ordenar itens</string>

@@ -25,4 +25,17 @@
     <string name="short_status_reservoir">Reserv: %1$dU</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Bơm chưa sẵn sàng</string>
+    <!--    Permissions-->
+    <string name="permission_battery_title">Tối ưu pin</string>
+    <string name="permission_battery_description">Cần tắt tối ưu hóa pin để ứng dụng chạy ổn định trong nền</string>
+    <string name="permission_directory_title">Thư mục AAPS</string>
+    <string name="permission_directory_description">Chọn thư mục cho cài đặt ứng dụng và tệp nhật ký</string>
+    <string name="permission_notifications_title">Thông báo</string>
+    <string name="permission_notifications_description">Cần để hiển thị cảnh báo, báo động và trạng thái bơm</string>
+    <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
 </resources>

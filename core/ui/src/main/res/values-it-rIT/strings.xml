@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Carica dati BG su NS</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">Password Master</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Esporta voci utente in Excel (csv)</string>
     <string name="confirm">Conferma</string>
     <string name="pump">Micro</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Spegne il bluetooth del telefono per qualche secondo se non è possibile alcuna connessione al micro. Questo può essere utile su alcuni telefoni.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Ora del micro aggiornata</string>
     <string name="exit">Esci</string>
@@ -113,7 +111,6 @@
     <string name="calibration">Calibrazione</string>
     <string name="alarminxmin">Esegui allarme in %1$d min</string>
     <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
-    <string name="bolus_reminder">Promemoria bolo</string>
     <string name="duration_label">Durata</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Micro sospeso</string>
@@ -137,18 +134,15 @@
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">basso</string>
     <string name="average">Media</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">RIMUOVI</string>
     <string name="activate_profile">Attiva profilo</string>
-    <string name="reset">reset</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
     <string name="select_for_removal">Seleziona per la rimozione</string>
     <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
-    <string name="wear_wizard_settings">Impostazioni Calcolatore</string>
     <string name="bg_trend_label">Trend di 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">IOB da bolo</string>
@@ -204,6 +198,7 @@
     <string name="duration">Durata</string>
     <string name="reason">Motivo</string>
     <string name="nochangerequested">Nessun cambiamento richiesto</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Profilo non valido: %1$s</string>
     <!--    Temptarget-->
@@ -308,7 +303,6 @@
     <string name="expweight">TDD esponenzialmente ponderato</string>
     <string name="basalrate">Basale</string>
     <string name="bolus">Bolo</string>
-    <string name="tdd">TDD</string>
     <string name="ratio">Rapporto</string>
     <string name="amount_days"># Giorni</string>
     <string name="weight">Peso</string>
@@ -434,6 +428,7 @@
     <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CHO %1$d g</string>
@@ -462,7 +457,6 @@
     <string name="sensitivity">Sensibilità</string>
     <string name="isf_for_carbs">ISF per Calcolatrice e Assorbimento di Carbo: %1$.1f</string>
     <string name="autosens_long">Valore Autosens: %.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">Autosens nell\'algoritmo: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">file</string>
@@ -472,7 +466,6 @@
     <string name="autotune_tune_days">Giorni regolazione :</string>
     <string name="autotune_select_profile">Seleziona il profilo da regolare</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Usa le notifiche di sistema per gli avvisi</string>
     <string name="urgent_alarm">Allarme urgente</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -480,8 +473,6 @@
     <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed ricevere un promemoria quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. I COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
-    <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
-    <string name="partialboluswizard_reset_time">Soglia tempo glicemia \"vecchia\" [min]</string>
     <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
@@ -558,7 +549,6 @@
     <string name="message">Messaggio</string>
     <string name="ok">OK</string>
     <string name="cancel">Annulla</string>
-    <string name="dismiss">RIMUOVI</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
     <string name="close">Chiudi</string>
@@ -571,12 +561,17 @@
     <string name="export_disabled">Disabilitato</string>
     <string name="export_failed">Fallito</string>
     <string name="export_alert">SEGNALAZIONE</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Impostazioni esportate</string>
     <string name="export_result_message_failed">Esportazione Impostazioni FALLITA!</string>
     <string name="export_result_message_about_to_expire">Impostazioni esportate: la password sta per scadere presto. Esporta manualmente e (re)inserisci la password.</string>
     <string name="export_result_message_expired">Esportazione impostazioni annullata: password scaduta. Esporta manualmente e (re)inserisci!</string>
     <string name="export_result_message_disabled">Attenzione (automazione): Esportazione impostazioni non abilitata!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decremento %1$s di %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>
@@ -597,8 +592,10 @@
     <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferenze plugin</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
@@ -644,4 +641,10 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Velocità</b>: %1$.2f U/h (%2$.2f%%) <br><b>Durata</b>: %3$d min<br>]]></string>
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS riproduce audio"</string>
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

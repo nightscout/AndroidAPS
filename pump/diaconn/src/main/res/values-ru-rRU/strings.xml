@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Сбросить сопряжение</string>
-    <string name="diaconn_no_device_available">Нет доступных устройств</string>
     <string name="diaconn_pairing">Сопражение с помпой Diaconn</string>
-    <string name="pumperror">Ошибка помпы</string>
     <string name="diaconn_g8_history_alarm">Оповещения</string>
     <string name="diaconn_g8_history_basalhours">Почасовой базал</string>
     <string name="diaconn_g8_history_bolus">Болюсы</string>
     <string name="diaconn_g8_history_dailyinsulin">Суточный инсулин</string>
     <string name="diaconn_g8_history_refill">Перезаправка</string>
     <string name="diaconn_g8_history_suspend">Приостановка</string>
-    <string name="invalidpairing">Информация о неверном сопряжении. Запрос нового сопряжения</string>
     <string name="gettingpumpsettings">Получение настроек помпы</string>
     <string name="gettingpumptime">Получение времени помпы</string>
     <string name="largetimediff">Большая разница во времени: \n Время в помпе расходится более чем 1,5 ч. \n. Установите время на помпе вручную и убедитесь, что чтение истории помпы не вызывает неожиданное поведение.\n если возможно, удалите историю из помпы перед изменением времени или отключите замкнутый цикл на один DIA после последней неверной записи в журнале, и как минимум на один DIA с настоящего момента.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Ошибка в скорости</string>
     <string name="insulinlimitviolation">Нарушение лимита инсулина</string>
     <string name="boluserrorcode">Запрошено: %1$.2f ед. Подано: %2$.2f ед. Код ошибки: %3$s</string>
-    <string name="bolusspeed">Скорость болюса</string>
     <string name="selectedpump">Выбранная помпа</string>
     <string name="diaconn_g8_bluetooth_status">Состояние Bluetooth</string>
     <string name="bolus_step">Шаг болюса</string>
     <string name="basal_step">Шаг базала</string>
-    <string name="pump_firmware_label">Прошивка</string>
     <string name="diaconn_g8_user_options">НАСТРОЙКИ ПОЛЬЗОВАТЕЛЯ</string>
     <string name="pairfirst">Пожалуйста, выполните сопряжение помпы с телефоном!</string>
     <string name="processinghistory">"Обработка события "</string>

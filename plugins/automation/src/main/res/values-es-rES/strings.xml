@@ -146,4 +146,12 @@
     <string name="newSmbMode">Nuevo modo SMB:</string>
     <string name="on">ACTIVADO</string>
     <string name="off">DESACTIVADO</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Elegir en el mapa</string>
+    <string name="tap_to_select_location">Toca en el mapa para seleccionar una ubicación</string>
+    <string name="selected_coords">Seleccionado: %1$.6f, %2$.6f</string>
+    <!-- Permission rationales -->
+    <string name="permission_location_title">Ubicación</string>
+    <string name="permission_location_description">Necesario para activadores de automatización basados en la ubicación e identificación de redes WiFi</string>
+    <string name="permission_background_location_description">Necesario para que los activadores de automatización funcionen cuando la aplicación está en segundo plano</string>
 </resources>

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_heading_actions">Aktionen</string>
     <string name="omnipod_common_pod_management_button_activate_pod">Pod aktivieren</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Pod deaktivieren</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Pod verwerfen</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Wenn Du den Pod verwirfst, kannst Du nicht mehr mit ihm kommunizieren. Mache das nur, wenn jede Kommunikation mit dem Pod dauerhaft fehlschlägt. Falls Du noch mit dem Pod kommunizieren kannst, verwende bitte die Option <b>Pod deaktivieren</b>.\n\nWenn Du fortfahren willst, entferne jetzt den Pod von Deinem Körper!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Testton abspielen</string>
-    <string name="omnipod_common_pod_management_button_playing_test_beep">Spiele Testton ab....</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod Historie</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">Kein aktiver Pod</string>
@@ -31,12 +29,8 @@
     <string name="omnipod_common_error_time_out_of_sync">Zeit auf dem Pod ist nicht synchron. Aktualisiere die Zeit auf der Registerkarte \"Omnipod\".</string>
     <string name="omnipod_common_error_unexpected_exception">Es ist ein unerwarteter Fehler aufgetreten. Bitte melden! (%1$s: %2$s)</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation">Bestätigung</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alarm-Einstellungen auf dem Pod geändert.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Zeit auf dem Pod geändert.</string>
-    <string name="omnipod_common_confirmation_suspended_delivery">Insulinabgabe komplett ausgesetzt.</string>
-    <string name="omnipod_common_confirmation_silenced_alerts">Aktive Alarme stummgeschaltet.</string>
-    <string name="omnipod_common_confirmation_delivery_resumed">Insulinabgabe wieder aufgenommen.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Zeit einstellen</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Unterbrechungen</string>
@@ -55,17 +49,8 @@
     <string name="omnipod_common_overview_pod_active_alerts">Aktive Pod-Warnungen</string>
     <string name="omnipod_common_overview_firmware_version">Firmware-Version</string>
     <string name="omnipod_common_overview_time_on_pod">Zeit auf dem Pod</string>
-    <string name="omnipod_common_overview_temp_basal_value">%1$.2fIE/h @%2$s (%3$d/%4$d min.)</string>
-    <string name="omnipod_common_overview_reservoir_value">%1$.2f IE übrig</string>
-    <string name="omnipod_common_overview_reservoir_value_over50">Mehr als 50 IE verbleibend</string>
-    <string name="omnipod_common_overview_errors">Fehler</string>
     <!-- Omnipod - Wizard Base -->
-    <string name="omnipod_common_wizard_button_cancel">Abbrechen</string>
-    <string name="omnipod_common_wizard_button_finish">Beenden</string>
-    <string name="omnipod_common_wizard_button_next">Weiter</string>
-    <string name="omnipod_common_wizard_button_retry">Erneut versuchen</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">Pod deaktivieren</string>
-    <string name="omnipod_common_wizard_button_discard_pod">Pod verwerfen</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Du hast noch nicht alle Schritte abgeschlossen. Willst Du wirklich beenden?</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">Schließen</string>
     <!-- Omnipod - Pod Activation Wizard -->
@@ -115,43 +100,32 @@
     <string name="omnipod_common_pod_status_pod_fault">Pod-Fehler</string>
     <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod-Fehler: %1$03d %2$s</string>
-    <!-- Omnipod - Commands -->
-    <string name="omnipod_common_cmd_deactivate_pod">Pod deaktivieren</string>
-    <string name="omnipod_common_cmd_discard_pod">Pod verwerfen</string>
-    <string name="omnipod_common_cmd_set_bolus">Mahlzeiten Bolus abgeben</string>
-    <string name="omnipod_common_cmd_cancel_bolus">Bolus abbrechen</string>
-    <string name="omnipod_common_cmd_set_tbr">Setze Temporäre Basalrate</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Temporäre Basalrate abbrechen (intern über den Treiber)</string>
-    <string name="omnipod_common_cmd_cancel_tbr">Temp. Basalrate abbrechen</string>
-    <string name="omnipod_common_cmd_set_basal_schedule">Basalrate festlegen</string>
-    <string name="omnipod_common_cmd_get_pod_status">Pod-Status abrufen</string>
-    <string name="omnipod_common_cmd_get_pod_info">Pod-Info abrufen</string>
-    <string name="omnipod_common_cmd_set_time">Zeit einstellen</string>
-    <string name="omnipod_common_cmd_configure_alerts">Warnungen konfigurieren</string>
-    <string name="omnipod_common_cmd_silence_alerts">Alarme stummschalten</string>
-    <string name="omnipod_common_cmd_suspend_delivery">Abgabe unterbrechen</string>
-    <string name="omnipod_common_cmd_resume_delivery">Abgabe fortsetzen</string>
-    <string name="omnipod_common_cmd_unknown_entry">Unbekannte Eingabe</string>
-    <string name="omnipod_common_cmd_initialize_pod">Pod initialisieren</string>
-    <string name="omnipod_common_cmd_insert_cannula">Kanüle setzen</string>
-    <string name="omnipod_common_cmd_read_pulse_log">Pulse-Log lesen</string>
-    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Fake TBR gesetzt, da der Pod pausiert ist.</string>
-    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Abbruch der Fake TBR. Diese wurde eingestellt, da der Pod pausiert war.</string>
-    <string name="omnipod_common_cmd_split_tbr">Temp. Basalrate wegen unbekanntem Fehler bei TBR-Abbruch aufgeteilt</string>
-    <string name="omnipod_common_cmd_play_test_beep">Testton abspielen</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">Erinnerung Kopplung beendet</string>
-    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Erinnerung Setup beendet</string>
     <string name="omnipod_common_alert_expiration">Pod läuft in Kürze ab</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod läuft in Kürze ab</string>
     <string name="omnipod_common_alert_shutdown_imminent">Herunterfahren steht unmittelbar bevor</string>
     <string name="omnipod_common_alert_low_reservoir">Niedriger Reservoirstand</string>
     <string name="omnipod_common_alert_unknown_alert">Unbekannter Alarm</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_initialize_pod">Pod initialisieren</string>
+    <string name="omnipod_common_cmd_insert_cannula">Kanüle setzen</string>
+    <string name="omnipod_common_cmd_deactivate_pod">Pod deaktivieren</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Basalrate festlegen</string>
+    <string name="omnipod_common_cmd_set_bolus">Mahlzeiten Bolus abgeben</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Bolus abbrechen</string>
+    <string name="omnipod_common_cmd_discard_pod">Pod verwerfen</string>
+    <string name="omnipod_common_cmd_get_pod_status">Pod-Status abrufen</string>
+    <string name="omnipod_common_cmd_set_time">Zeit einstellen</string>
+    <string name="omnipod_common_cmd_configure_alerts">Warnungen konfigurieren</string>
+    <string name="omnipod_common_cmd_silence_alerts">Alarme stummschalten</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Pulse-Log lesen</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Abgabe unterbrechen</string>
+    <string name="omnipod_common_cmd_resume_delivery">Abgabe fortsetzen</string>
+    <string name="omnipod_common_cmd_get_pod_info">Pod-Info abrufen</string>
+    <string name="omnipod_common_cmd_play_test_beep">Testton abspielen</string>
+    <string name="omnipod_common_cmd_unknown_entry">Unbekannte Eingabe</string>
+    <!-- Omnipod - Alerts -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_common_yes">Ja</string>
-    <string name="omnipod_common_no">Nein</string>
-    <string name="omnipod_common_cancel">Abbrechen</string>
-    <string name="omnipod_common_warning">Warnung</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">gerade eben</string>
     <string name="omnipod_common_less_than_a_minute_ago">vor weniger als einer Minute</string>

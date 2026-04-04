@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">מחיקת צימוד</string>
-    <string name="diaconn_no_device_available">אין מכשירים זמינים</string>
     <string name="diaconn_pairing">צימוד משאבת Diaconn</string>
-    <string name="pumperror">תקלת משאבה</string>
     <string name="diaconn_g8_history_alarm">התראות</string>
     <string name="diaconn_g8_history_basalhours">שעות בזאליות</string>
     <string name="diaconn_g8_history_bolus">בולוסים</string>
     <string name="diaconn_g8_history_dailyinsulin">אינסולין יומי</string>
     <string name="diaconn_g8_history_refill">מילוי מחדש</string>
     <string name="diaconn_g8_history_suspend">השהיה</string>
-    <string name="invalidpairing">נתוני הצימוד אינם חוקיים. מבצע צימוד מחדש</string>
     <string name="gettingpumpsettings">מאחזר הגדרות משאבה</string>
     <string name="gettingpumptime">מאחזר שעון המשאבה</string>
     <string name="largetimediff">הפרש זמנים גדול:\nשעון המשאבה לא מכוון במעלה משעה וחצי.\n נא להתאים את שעון המשאבה באופן ידני ולוודא כי קריאת ההיסטוריה מהמשאבה אינה גורמת להתנהגות בלתי צפויה.\nבמידת האפשר, מחקו את ההיסטוריה מהמשאבה לפני שתשנו את השעה או השביתו את הלולאה הסגורה למשך פעילות אינסולין (DIA) לאחר רשומת ההיסטוריה השגויה האחרונה אך לפחות DIA אחד מעכשיו.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">שגיאת מהירות</string>
     <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
     <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
-    <string name="bolusspeed">מהירות בולוס</string>
     <string name="selectedpump">משאבה נבחרת</string>
     <string name="diaconn_g8_bluetooth_status">מצב בלוטות\'</string>
     <string name="bolus_step">צעד במינון בולוס</string>
     <string name="basal_step">צעד במינון בזאלי</string>
-    <string name="pump_firmware_label">קושחה</string>
     <string name="diaconn_g8_user_options">אפשרויות משתמש</string>
     <string name="pairfirst">נא לצמד את המשאבה עם הטלפון שלכם!</string>
     <string name="processinghistory">"מעבד אירוע "</string>

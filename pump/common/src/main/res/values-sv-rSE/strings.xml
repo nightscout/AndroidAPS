@@ -46,20 +46,4 @@
     <string name="ble_config_remove">Ta bort</string>
     <!-- Pump History -->
     <string name="pump_history_type">Typ:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dagar</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="one">%1$d tim</item>
-        <item quantity="other">%1$d tim</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d tim sedan</item>
-        <item quantity="other">%1$d timmar sedan</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d dag sedan</item>
-        <item quantity="other">%1$d dagar sedan</item>
-    </plurals>
 </resources>

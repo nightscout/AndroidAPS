@@ -14,22 +14,17 @@
     <string name="pump_setting_failed">Errore nella configurazione delle impostazioni utente sul micro!</string>
     <string name="pump_sync_error">Errore durante la sincronizzazione della cronologia del micro, un record è stato saltato. Controllare la scheda trattamenti per verificare se il bolo è stato sincronizzato correttamente. Posporre l\'allarme e se l\'errore continua a riproporsi cambiare patch o pompa.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Stato BLE</string>
     <string name="last_connection_label">Ultima connessione</string>
     <string name="active_bolus_label">Bolo attivo</string>
     <string name="pump_state_label">Stato micro</string>
     <string name="active_alarms_label">Attiva allarmi</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Tipo basale</string>
     <string name="basal_rate_label">Velocità basale</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Tipo micro</string>
     <string name="fw_version_label">Versione FW</string>
     <string name="patch_no_label">Patch no</string>
     <string name="patch_expiry_label">Patch scaduta</string>
     <string name="patch_activation_time_label">Attivazione</string>
-    <string name="refresh_label">Aggiorna</string>
     <string name="reset_alarms_label">Reset allarmi</string>
     <string name="change_patch_label">Cambia patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Richiesto da utente</string>
@@ -57,8 +52,6 @@
     <string name="bolus_error">Errore bolo</string>
     <!-- wizard-->
     <string name="retry">Riprova</string>
-    <string name="next">Avanti</string>
-    <string name="discard">Scarta</string>
     <string name="step_prepare_patch">Attiva patch</string>
     <string name="step_prepare_patch_connect">Connetti e riempi</string>
     <string name="step_prime">Caricamento</string>
@@ -73,8 +66,6 @@
     <string name="step_retry_activation">Attivazione in corso</string>
     <string name="unexpected_state">Stato inaspettato: %1$s</string>
     <string name="no_profile_selected">Nessun profilo selezionato. Seleziona un profilo e riprova.</string>
-    <string name="no_sn_in_settings">Nessun numero di serie noto. Inserisci il numero di serie del micro nelle impostazioni e riprova.</string>
-    <string name="base_serial">Seriale base micro: %1$X</string>
     <string name="patch_begin_activation">Nessuna patch attiva. Premi <b>Avanti</b> per iniziare il processo di attivazione.</string>
     <string name="patch_not_active_note">La base del micro non deve essere collegata alla patch fino alla fase successiva!</string>
     <string name="connect_pump_base">Collegare la base del micro a una nuova patch, rimuovere l\'aria residua e riempire con insulina, quindi premere <b>Avanti</b>.</string>
@@ -108,9 +99,7 @@
     <string name="enable_pump_unreachable_alert_summary">Abilitazione avviso irraggiungibilità forzato perché Medtrum patch può fallire e non essere raggiungibile.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Consigliata l\'impostazione a 30 minuti, perché Medtrum patch può fallire e non essere raggiungibile.</string>
     <string name="sn_input_title">Numero seriale</string>
-    <string name="sn_input_summary">Inserisci il numero di serie della base del micro.</string>
     <string name="sn_input_invalid">Numero di serie non valido!</string>
-    <string name="pump_unsupported">Micro non testato: %1$s! Contattaci su discord o github per supporto</string>
     <string name="alarm_setting_title">Impostazioni allarmi</string>
     <string name="alarm_setting_summary">Seleziona le tue impostazioni di allarme del micro preferite.</string>
     <string name="pump_warning_notification_title">Notifica di avviso del micro</string>

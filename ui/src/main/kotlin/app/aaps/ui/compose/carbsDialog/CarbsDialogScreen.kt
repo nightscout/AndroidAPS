@@ -268,7 +268,7 @@ private fun CarbsDialogContent(
             )
         },
         bottomBar = {
-            val hasAction = uiState.carbs > 0 || uiState.hypoTtChecked || uiState.eatingSoonTtChecked || uiState.activityTtChecked
+            val hasAction = uiState.carbs != 0 || uiState.hypoTtChecked || uiState.eatingSoonTtChecked || uiState.activityTtChecked
             Button(
                 onClick = onConfirmClick,
                 enabled = hasAction,

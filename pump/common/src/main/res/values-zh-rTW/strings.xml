@@ -65,16 +65,4 @@
     <string name="ble_config_remove">移除</string>
     <!-- Pump History -->
     <string name="pump_history_type">類型：</string>
-    <plurals name="duration_days">
-        <item quantity="other">%1$d 天</item>
-    </plurals>
-    <plurals name="duration_hours">
-        <item quantity="other">%1$d 小時</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="other">%1$d 小時前</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="other">%1$d 天前</item>
-    </plurals>
 </resources>

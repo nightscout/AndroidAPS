@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Нулиране на сдвояването</string>
-    <string name="diaconn_no_device_available">Няма налично устройство</string>
     <string name="diaconn_pairing">Сдвояване на помпа Diaconn</string>
-    <string name="pumperror">Грешка в помпата</string>
     <string name="diaconn_g8_history_alarm">Аларми</string>
     <string name="diaconn_g8_history_basalhours">Базален по часове</string>
     <string name="diaconn_g8_history_bolus">Болуси</string>
     <string name="diaconn_g8_history_dailyinsulin">Инсулин за деня</string>
     <string name="diaconn_g8_history_refill">Презареждане</string>
     <string name="diaconn_g8_history_suspend">Спиране</string>
-    <string name="invalidpairing">Невалидна информация при сдвояване. Нов опит </string>
     <string name="gettingpumpsettings">Получава настройките на помпата</string>
     <string name="gettingpumptime">Получава времето на помпата</string>
     <string name="largetimediff">Голяма времева разлика: Помпата е изключена за повече от 1,5 часа. Моля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение. Ако е възможно, премахнете историята от помпата, преди да промените времето или да изключите затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Скорост грешка</string>
     <string name="insulinlimitviolation">Нарушение на макс дневен инсулин</string>
     <string name="boluserrorcode">Стартирано: %1$.2fЕ Доставено: %2$.2fЕ Код на грешка: %3$s</string>
-    <string name="bolusspeed">Скорост на болус</string>
     <string name="selectedpump">Избрана помпа</string>
     <string name="diaconn_g8_bluetooth_status">Състояние на Bluetooth</string>
     <string name="bolus_step">Стъпка при болус</string>
     <string name="basal_step">Стъпка при базал</string>
-    <string name="pump_firmware_label">Фърмуер</string>
     <string name="diaconn_g8_user_options">ОПЦИИ НА ПОТРЕБИТЕЛЯ</string>
     <string name="pairfirst">Моля първо свържете помпата с телефона от Bluetooth настройките </string>
     <string name="processinghistory">"Обработва се събитие "</string>

@@ -91,6 +91,7 @@ fun TreatmentBeltGraphCompose(
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
+    nowTimestamp: Long,
     modifier: Modifier = Modifier
 ) {
     // Collect flows independently
@@ -469,17 +470,18 @@ fun TreatmentBeltGraphCompose(
 
     // Now line decoration
     val nowLineColor = MaterialTheme.colorScheme.onSurface
-    val nowTimestamp by viewModel.nowTimestamp.collectAsStateWithLifecycle()
     val nowLine = rememberNowLine(minTimestamp, nowTimestamp, nowLineColor)
     val beltDecorations = remember(nowLine) { listOf(nowLine) }
+
+    val rangeProvider = remember(maxX) {
+        CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
+    }
 
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
                 lineProvider = LineCartesianLayer.LineProvider.series(lines),
-                rangeProvider = remember(maxX) {
-                    CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = 0.0, maxY = 1.0)
-                }
+                rangeProvider = rangeProvider
             ),
             marker = beltMarker,
             markerController = CartesianMarkerController.rememberToggleOnTap(),

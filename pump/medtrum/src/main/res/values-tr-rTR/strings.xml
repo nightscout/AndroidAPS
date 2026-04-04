@@ -14,21 +14,16 @@
     <string name="pump_setting_failed">Kullanıcı ayarlarının pompada ayarlanması başarısız oldu!</string>
     <string name="pump_sync_error">Geçmiş senkronize edilirken hata oluştu; bir kayıt atlandı. Bolusun doğru şekilde senkronize edilip edilmediğini kontrol etmek için tedavi sekmesini kontrol edin. Erteleyin ve hata tekrarlanmaya devam ederse patch veya pompa tabanını değiştirin.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">BLE Durumu</string>
     <string name="last_connection_label">Son bağlantı</string>
     <string name="active_bolus_label">Aktif bolus</string>
     <string name="pump_state_label">Pompa durumu</string>
     <string name="active_alarms_label">Aktif alarmlar</string>
-    <string name="reservoir_level"> %.2f Ü</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Bazal tipi</string>
     <string name="basal_rate_label">Bazal oranı</string>
-    <string name="current_basal_rate"> %.2f Ü/sa</string>
     <string name="pump_type_label">Pompa tipi</string>
     <string name="fw_version_label">Sürüm</string>
     <string name="patch_no_label">Patch no</string>
     <string name="patch_expiry_label">Patch süresi doluyor</string>
-    <string name="refresh_label">Yenile</string>
     <string name="reset_alarms_label">Alarmları sıfırla</string>
     <string name="change_patch_label">Patch\'i Değiştir</string>
     <string name="requested_by_user" comment="26 characters max for translation">Kullanıcı talebi</string>
@@ -56,8 +51,6 @@
     <string name="bolus_error">Bolus hatası</string>
     <!-- wizard-->
     <string name="retry">Tekrar dene</string>
-    <string name="next">İleri</string>
-    <string name="discard">Çıkar</string>
     <string name="step_prepare_patch">Pompa Etkinleştirme</string>
     <string name="step_prepare_patch_connect">Bağlan ve Doldur</string>
     <string name="step_prime">Doldur</string>
@@ -72,8 +65,6 @@
     <string name="step_retry_activation">Etkinleştirme devam ediyor</string>
     <string name="unexpected_state">Beklenmeyen durum: %1$s</string>
     <string name="no_profile_selected">Profil seçilmedi. Lütfen bir profil seçin ve tekrar deneyin.</string>
-    <string name="no_sn_in_settings">Seri numarası bilinmiyor. Lütfen ayarlara pompa seri numarasını girin ve tekrar deneyin.</string>
-    <string name="base_serial">Pompa Tabanı Seri: %1$X</string>
     <string name="patch_begin_activation">Aktif patch yok. Etkinleştirme işlemine başlamak için <b>İleri</b>\'ye basın.</string>
     <string name="patch_not_active_note">Bir sonraki adıma kadar pompa tabanı patch\'a bağlanmamalıdır!</string>
     <string name="connect_pump_base">Pompa tabanını yeni bir patch\'a bağlayın, kalan havayı çıkarın ve insülinle doldurun, ardından <b>İleri</b>\'ye basın.</string>
@@ -107,9 +98,7 @@
     <string name="enable_pump_unreachable_alert_summary">Medtrum yaması başarısız olabileceği ve erişilemeyebileceği için ulaşılamıyor uyarısı zorunlu olarak etkinleştirildi.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Medtrum yaması başarısız olabileceği ve erişilemeyebileceği için 30 dakikaya ayarlanması önerilir.</string>
     <string name="sn_input_title">Seri Numarası</string>
-    <string name="sn_input_summary">Pompa tabanınızın seri numarasını girin.</string>
     <string name="sn_input_invalid">Geçersiz seri numarası!</string>
-    <string name="pump_unsupported">Pompa test edilmedi: %1$s! Destek için lütfen discord veya github üzerinden bizimle iletişime geçin.</string>
     <string name="alarm_setting_title">Alarm Ayarları</string>
     <string name="alarm_setting_summary">Tercih ettiğiniz pompa alarm ayarlarını seçin.</string>
     <string name="pump_warning_notification_title">Pompa uyarısı hakkında bildirim</string>

@@ -120,4 +120,6 @@
     <string name="autotune_run_cancelled">Друго стартиране на Autotune е засечено, текущото е отказано</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>

@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Seleccioneu en quines unitats voleu mostrar els valors</string>
     <string name="next_button">Següent</string>
     <string name="previous_button">Previ</string>
-    <string name="nav_setupwizard">Assistent de configuració</string>
     <string name="setupwizard_finish">FINALITZAR</string>
     <string name="welcometosetupwizard">Benvinguts a l\'assistent de configuració. Us guiarà durant tot el procés\n</string>
     <string name="end_user_license_agreement">Acord de llicència per a l\'usuari final</string>
@@ -17,16 +16,12 @@
     <string name="high_mark_comment">Valor superior de l\'area \"en rang\" (només visualització)</string>
     <string name="permission">Permís</string>
     <string name="need_system_window_permission">L\'aplicació necessita permisos a la finestra del sistema pels avisos</string>
-    <string name="need_location_permission">L\'aplicació necessita permisos de localització per poder utilitzar Bluetooth i identificació WiFi</string>
-    <string name="need_storage_permission">L\'aplicació necessita permisos d\'emmagatzematge per poder desar fitxers de registres i exportar la configuració</string>
     <string name="askforpermission">Demanar permís</string>
     <string name="storedsettingsfound">Trobada configuració emmagatzemada</string>
     <string name="master_password_summary">La clau mestra es fa servir per encriptar la còpia de seguretat i per editar la seguretat a l\'aplicació. Recordeu-la o emmagatzemeu-la en un lloc segur.</string>
-    <string name="current_master_password">Clau mestra actual</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Utilitzeu valors del vostre àpat més gros habitualment\n</string>
     <string name="status">Estat:</string>
-    <string name="patient_name">Nom del pacient</string>
-    <string name="patient_name_summary">Si us plau, proporcioneu el nom o sobrenom del pacient per diferenciar entre diverses configuracions</string>
     <string name="diawarning">Si us plau recordeu: els nous perfils d\'insulina requereixen una DIA de al menys 5h. Una DIA de 5-6h a un perfil nou és equivalent a DIA de 3h d\'un perfil antic.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Canviar de perfil</string>
@@ -47,36 +42,28 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Configurador</string>
-    <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_profile">Perfil</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Quin algoritme APS ha d\'anar fent ajustos de teràpia?</string>
-    <string name="configbuilder_general">General</string>
     <string name="configbuilder_general_description">Plugins diversos que us poden ser útils.</string>
-    <string name="configbuilder_sync">Sincronització</string>
     <string name="configbuilder_constraints_description">Quines restriccions s\'estan aplicant?</string>
-    <string name="configbuilder_loop">Llaços</string>
     <string name="configbuilder_insulin_description">Quin tipus d\'insulina feu servir?</string>
-    <string name="configbuilder_bgsource">Origen glucèmia</string>
-    <string name="configbuilder_sensitivity">Detecció de sensibilitat</string>
     <string name="configbuilder_sensitivity_description">Quin algoritme de sensibilitat voleu utilitzar?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <!--ImportExport-->
     <string name="nav_preferences">Configuració</string>
-    <string name="password_preferences_encrypt_prompt">Se us demanarà una clau mestra, es farà servir per encriptar la configuració exportada.</string>
-    <string name="preferences_export_canceled">Exportació cancel·lada! Configuració NO exportada!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Importació cancel·lada! Configuració NO importada!</string>
     <string name="preferences_import_impossible">No s\'ha pogut importar la configuració!</string>
     <string name="check_preferences_details_btn">Expliqueu problemes d\'importació…</string>
     <string name="check_preferences_details_title">Detall problemes d\'importació</string>
     <string name="check_preferences_import_btn">Importar</string>
     <string name="check_preferences_import_anyway_btn">Importar en qualsevol cas (PERILLÓS!)</string>
-    <string name="import_setting">Importar configuració</string>
     <string name="check_preferences_before_import">Si us plau comproveu la configuració abans d\'importar:</string>
     <string name="check_preferences_cannot_import">La configuració no pot ser importada!</string>
     <string name="check_preferences_dangerous_import">La configuració no s\'hauria d\'importar!</string>
-    <string name="export_to">Exportar configuració a</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Importar configuració de</string>
     <string name="setting_imported">Configuració importada</string>
     <string name="old_master_password">Clau mestra antiga</string>
@@ -87,21 +74,12 @@
     <string name="goto_main_try_again">Si us plau, torneu a la pantalla principal i torneu-ho a intentar.</string>
     <string name="restartingapp">Sortint de l\'app per aplicar configuració.</string>
     <string name="ue_exported">Entrades d\'usuari exportades</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Manteniment</string>
     <string name="maintenance_shortname">MANT</string>
-    <string name="description_maintenance">Proporciona diverses funcions de manteniment (p. ex. enviar logs, eliminar logs).</string>
-    <string name="reset_db_confirm">Esteu segurs que voleu restablir les bases de dades?</string>
     <string name="maintenance_settings">Configuració de manteniments</string>
     <string name="maintenance_email">Email destinatari</string>
     <string name="maintenance_amount">Nr. de logs a enviar</string>
-    <string name="send_all_logs">Enviar logs per email</string>
-    <string name="delete_logs">Eliminar logs</string>
-    <string name="configbuilder_nightscoutversion_label">Versió de Nightscout:</string>
-    <string name="engineering_mode_enabled">Mode enginyeria actiu</string>
-    <string name="nav_logsettings">Configuració logs</string>
-    <string name="nav_resetdb">Restablir bases de dades</string>
-    <string name="resettodefaults">Restablir valors per defecte</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportat fa %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportat a les %1$s</string>
@@ -124,7 +102,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Error de desencriptació, la clau proporcionada no és vàlida o l\'arxiu de configuració ha estat alterat! Pot donar-se si l\'arxiu importat va ser exportat amb una clau mestra diferent.</string>
     <string name="prefdecrypt_issue_wrong_format">Falta la configuració per encriptar, el format de la configuració és incorrecte!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
-    <!-- Custom Watchface -->
     <!-- Maintenance -->
     <string name="metadata_label_format">Format del fitxer</string>
     <string name="metadata_label_created_at">Creat:</string>
@@ -135,6 +112,7 @@
     <string name="metadata_label_encryption">Encriptació d\'arxius</string>
     <string name="metadata_format_new">Format nou d\'encriptació</string>
     <string name="metadata_format_other">Format d\'exportació desconegut</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->

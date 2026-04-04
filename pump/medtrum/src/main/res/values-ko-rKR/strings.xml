@@ -11,21 +11,16 @@
     <string name="patch_not_active">Patch가 활성화되지 않음</string>
     <string name="pump_setting_failed">펌프에 사용자 설정 실패함!</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">블루투스 상태</string>
     <string name="last_connection_label">마지막 연결</string>
     <string name="active_bolus_label">활성 bolus</string>
     <string name="pump_state_label">펌프 상태</string>
     <string name="active_alarms_label">알람 활성화</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Basal 종류</string>
     <string name="basal_rate_label">Basal 양</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">펌프 종류</string>
     <string name="fw_version_label">펌웨어 버전</string>
     <string name="patch_no_label">Patch 번호</string>
     <string name="patch_expiry_label">Patch 만료</string>
-    <string name="refresh_label">새로 고침</string>
     <string name="reset_alarms_label">알람 재설정</string>
     <string name="change_patch_label">Patch 교체</string>
     <string name="requested_by_user" comment="26 characters max for translation">사용자에 의해 요청됨</string>
@@ -52,8 +47,6 @@
     <string name="pump_time_update_failed">펌프 시간대 업데이트가 실패함, 메시지를 스누즈하고 수동으로 새로 고침하세요.</string>
     <!-- wizard-->
     <string name="retry">재시도</string>
-    <string name="next">다음</string>
-    <string name="discard">폐기</string>
     <string name="step_prepare_patch">Patch 활성화</string>
     <string name="step_prepare_patch_connect">연결과 채우기</string>
     <string name="step_prime">프라임</string>
@@ -68,7 +61,6 @@
     <string name="step_retry_activation">활성화 진행 중</string>
     <string name="unexpected_state">예상치 못한 상태: %1$s</string>
     <string name="no_profile_selected">프로파일이 선택되지 않았습니다. 프로파일을 선택하고 다시 시도하세요.</string>
-    <string name="base_serial">펌프 베이스 시리얼: %1$X</string>
     <string name="patch_begin_activation">활성화된 patch가 없습니다. 활성화 과정을 시작하려면 <b>다음</b>을 누르세요.</string>
     <string name="patch_not_active_note">다음 단계까지 펌프 베이스를 patch에 연결하면 안됩니다!</string>
     <string name="connect_pump_base">새로운 patch에 펌프 베이스를 연결한 뒤, 잔여 공기를 제거하고 인슐린을 채웁니다. 이후 <b>다음</b>을 누르세요.</string>
@@ -98,7 +90,6 @@
     <string name="reading_activation_status">펌프에서 활성화 상태를 읽어오는 중이므로 기다려주세요.</string>
     <!-- settings-->
     <string name="sn_input_title">시리얼 넘버</string>
-    <string name="sn_input_summary">펌프 베이스의 시리얼 넘버를 입력하세요.</string>
     <string name="sn_input_invalid">유효하지 않은 시리얼 넘버!</string>
     <string name="alarm_setting_title">알람 설정</string>
     <string name="alarm_setting_summary">선호하는 펌프 알람 설정을 선택하세요.</string>

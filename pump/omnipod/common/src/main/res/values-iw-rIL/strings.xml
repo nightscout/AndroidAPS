@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_title">ניהול פוד</string>
-    <string name="omnipod_common_pod_management_heading_actions">פעולות</string>
-    <string name="omnipod_common_pod_management_heading_tools">כלים</string>
     <string name="omnipod_common_pod_management_button_activate_pod">הפעל פוד</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">כבה פוד</string>
     <string name="omnipod_common_pod_management_button_discard_pod">היפטר מהפוד</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">אם תזרקו את פוד, לא תוכלו לתקשר איתו יותר. כדאי לעשות את זה רק כאשר כל התקשורת עם הניצן תמיד נכשלת. אם אתם עדיין יכולים לתקשר עם הפוד, אנא השתמשו באפשרות <b>השבתה</b>.\n\n אם ברצונכם להמשיך, אנא הקפידו להסיר את הפוד מהגוף!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">השמע צפצוף ניסיון</string>
-    <string name="omnipod_common_pod_management_button_playing_test_beep">משמיע צפצוף ניסיון…</string>
     <string name="omnipod_common_pod_management_button_pod_history">היסטוריית הפוד</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">אין פוד פעיל</string>
@@ -33,17 +29,12 @@
     <string name="omnipod_common_error_time_out_of_sync">השעון בפוד אינו מסונכרן. בבקשה עדכנו את השעה בלשונית Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">אירעה שגיאה לא צפויה. נא לדווח! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation">אישור</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">הגדרת ההתראות בפוד עודכנה.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">שעון הפוד עודכן.</string>
-    <string name="omnipod_common_confirmation_suspended_delivery">כל הזרקות האינסולין הושהו.</string>
-    <string name="omnipod_common_confirmation_silenced_alerts">התראות פעילות הושתקו.</string>
-    <string name="omnipod_common_confirmation_delivery_resumed">מתן האינסולין חודש.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">הגדרת שעה</string>
     <string name="omnipod_common_overview_button_suspend_delivery">השהיה</string>
     <string name="omnipod_common_overview_button_resume_delivery">חידוש הזרקה</string>
-    <string name="omnipod_common_overview_button_pod_management">ניהול הפוד</string>
     <string name="omnipod_common_overview_button_silence_alerts">השתקת התראות</string>
     <string name="omnipod_common_overview_pod_status">סטטוס הפוד</string>
     <string name="omnipod_common_overview_total_delivered">סה\"כ שהוזרק</string>
@@ -56,21 +47,11 @@
     <string name="omnipod_common_overview_last_bolus">בולוס אחרון</string>
     <string name="omnipod_common_overview_temp_basal_rate">מינון בזאלי זמני</string>
     <string name="omnipod_common_overview_base_basal_rate">ערך בזאלי בסיסי</string>
-    <string name="omnipod_common_overview_reservoir">מכל</string>
     <string name="omnipod_common_overview_pod_active_alerts">התראות פוד פעילות</string>
     <string name="omnipod_common_overview_firmware_version">גרסת קושחה</string>
     <string name="omnipod_common_overview_time_on_pod">השעה בפוד</string>
-    <string name="omnipod_common_overview_temp_basal_value">%1$.2f יח\'\\ש\' @ %2$s (%3$d\%4$d דק\')</string>
-    <string name="omnipod_common_overview_reservoir_value">נותרו %1$.2f יח\' </string>
-    <string name="omnipod_common_overview_reservoir_value_over50">נותרו יותר מ-50 יח\'</string>
-    <string name="omnipod_common_overview_errors">שגיאות</string>
     <!-- Omnipod - Wizard Base -->
-    <string name="omnipod_common_wizard_button_cancel">ביטול</string>
-    <string name="omnipod_common_wizard_button_finish">סיום</string>
-    <string name="omnipod_common_wizard_button_next">הבא</string>
-    <string name="omnipod_common_wizard_button_retry">נסה שוב</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">כבה פוד</string>
-    <string name="omnipod_common_wizard_button_discard_pod">היפטר מהפוד</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">עוד לא סיימתם את כל הצעדים. אתם בטוחים שברצונכם לצאת?</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">יציאה</string>
     <!-- Omnipod - Pod Activation Wizard -->
@@ -121,50 +102,36 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">התקנה בביצוע (ממתין להפעלת הפוד)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">התקנה בביצוע (ממתין להכנסת הפרפרית)</string>
     <string name="omnipod_common_pod_status_running">פועל</string>
-    <string name="omnipod_common_pod_status_normal">נורמלי</string>
     <string name="omnipod_common_pod_status_suspended">מושהה</string>
     <string name="omnipod_common_pod_status_pod_fault">תקלה בפוד</string>
     <string name="omnipod_common_pod_status_inactive">לא פעיל</string>
     <string name="omnipod_common_pod_status_pod_fault_description">תקלת פוד: %1$03d %2$s</string>
-    <!-- Omnipod - Commands -->
-    <string name="omnipod_common_cmd_deactivate_pod">כבה פוד</string>
-    <string name="omnipod_common_cmd_discard_pod">היפטר מהפוד</string>
-    <string name="omnipod_common_cmd_set_bolus">הגדרת בולוס</string>
-    <string name="omnipod_common_cmd_cancel_bolus">ביטול בולוס</string>
-    <string name="omnipod_common_cmd_set_tbr">הגדרת בזאלי זמני</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">ביטול בזאלי זמני (פנימית על ידי הדרייבר)</string>
-    <string name="omnipod_common_cmd_cancel_tbr">ביטול בזאלי זמני</string>
-    <string name="omnipod_common_cmd_set_basal_schedule">הגדרת לו\"ז בזאלי</string>
-    <string name="omnipod_common_cmd_get_pod_status">קבל את סטטוס הפוד</string>
-    <string name="omnipod_common_cmd_get_pod_info">קבל מידע על הפוד</string>
-    <string name="omnipod_common_cmd_set_time">הגדרת שעה</string>
-    <string name="omnipod_common_cmd_configure_alerts">הגדרת התראות</string>
-    <string name="omnipod_common_cmd_silence_alerts">השתקת התראות</string>
-    <string name="omnipod_common_cmd_suspend_delivery">השהיית הזרקה</string>
-    <string name="omnipod_common_cmd_resume_delivery">חידוש הזרקה</string>
-    <string name="omnipod_common_cmd_unknown_entry">רשומה לא ידועה</string>
-    <string name="omnipod_common_cmd_initialize_pod">אתחול פוד</string>
-    <string name="omnipod_common_cmd_insert_cannula">הכנסת צינורית</string>
-    <string name="omnipod_common_cmd_read_pulse_log">קרא יומן פעימות</string>
-    <string name="omnipod_common_cmd_set_fake_suspended_tbr">הגדר בזאלי זמני מזויף כי הפוד מושהה</string>
-    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">בטל בזאלי זמני מזויף שנוצר מפני שהפוד הושהה</string>
-    <string name="omnipod_common_cmd_split_tbr">פיצול הבזאלי הזמני עקב כשל לא ודאי בביטול</string>
-    <string name="omnipod_common_cmd_play_test_beep">השמע צפצוף ניסיון</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">תזכורת לסיום הצימוד</string>
-    <string name="omnipod_common_alert_finish_setup_reminder_reminder">תזכורת לסיום התקנה</string>
     <string name="omnipod_common_alert_expiration">תוקף הפוד יפוג בקרוב</string>
     <string name="omnipod_common_alert_expiration_advisory">תוקף הפוד יפוג בקרוב</string>
     <string name="omnipod_common_alert_shutdown_imminent">כיבוי בלתי נמנע</string>
     <string name="omnipod_common_alert_low_reservoir">מכל נמוך</string>
     <string name="omnipod_common_alert_unknown_alert">התראה לא ידועה</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_initialize_pod">אתחול פוד</string>
+    <string name="omnipod_common_cmd_insert_cannula">הכנסת צינורית</string>
+    <string name="omnipod_common_cmd_deactivate_pod">כבה פוד</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">הגדרת לו\"ז בזאלי</string>
+    <string name="omnipod_common_cmd_set_bolus">הגדרת בולוס</string>
+    <string name="omnipod_common_cmd_cancel_bolus">ביטול בולוס</string>
+    <string name="omnipod_common_cmd_discard_pod">היפטר מהפוד</string>
+    <string name="omnipod_common_cmd_get_pod_status">קבל את סטטוס הפוד</string>
+    <string name="omnipod_common_cmd_set_time">הגדרת שעה</string>
+    <string name="omnipod_common_cmd_configure_alerts">הגדרת התראות</string>
+    <string name="omnipod_common_cmd_silence_alerts">השתקת התראות</string>
+    <string name="omnipod_common_cmd_read_pulse_log">קרא יומן פעימות</string>
+    <string name="omnipod_common_cmd_suspend_delivery">השהיית הזרקה</string>
+    <string name="omnipod_common_cmd_resume_delivery">חידוש הזרקה</string>
+    <string name="omnipod_common_cmd_get_pod_info">קבל מידע על הפוד</string>
+    <string name="omnipod_common_cmd_play_test_beep">השמע צפצוף ניסיון</string>
+    <string name="omnipod_common_cmd_unknown_entry">רשומה לא ידועה</string>
+    <!-- Omnipod - Alerts -->
     <!-- Omnipod - Other -->
-    <string name="omnipod_common_yes">כן</string>
-    <string name="omnipod_common_no">לא</string>
-    <string name="omnipod_common_ok">אישור</string>
-    <string name="omnipod_common_cancel">ביטול</string>
-    <string name="omnipod_common_warning">אזהרה</string>
-    <string name="omnipod_common_disable_suspend_alerts">בטל התראות השהיה</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">לפני כמה רגעים</string>
     <string name="omnipod_common_less_than_a_minute_ago">לפני פחות מדקה</string>

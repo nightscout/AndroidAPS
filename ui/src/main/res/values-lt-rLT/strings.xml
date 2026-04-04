@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
     <string name="start_hypo_tt">Pradėti \"Hipo\" LT</string>
     <string name="time_offset">Laiko poslinkis</string>
-    <string name="unit_minute_short">min.</string>
     <string name="remind_to_bolus_later">Priminti apie bolusą vėliau</string>
-    <string name="a11y_carb_reminder">nustatyti priminimą</string>
     <!--    Widget-->
     <string name="configure">Derinti skaidrumą</string>
     <string name="widget_description">AAPS valdiklis</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">Aktyvumo stebėjimas</string>
     <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
     <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
-    <string name="statistics">Statistika</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
     <string name="invalid_age">Neteisingas amžiaus įrašas</string>
     <string name="invalid_weight">Neteisingas svorio įrašas</string>
-    <string name="id">ID:</string>
-    <string name="submit">Pateikti</string>
     <string name="age">Laikas</string>
     <string name="weight_label">Svoris</string>
-    <string name="most_common_profile">Dažniausiai naudojamas profilis:</string>
-    <string name="survey_comment">Pastaba: anonimiškai bus įkelti tik tie duomenys, kurie matomi šiame ekrane. Šiai AndroidAPS instaliacijai priskirtas ID. Galite pateikti duomenis dar kartą, jei pasikeitė jūsų pagrindinis profilis. Vis dėlto leiskite jam veikti bent savaitę, kad rezultatas atsispindėtų laike normos ribose. Ačiū už palaikymą.</string>
     <string name="glucose_type">Glikemijos tipas</string>
     <string name="bg_other">Kiti</string>
     <string name="bg_meter">Matuoklis</string>
@@ -44,6 +37,7 @@
     <string name="record_insulin_cartridge_change">Įrašas apie rezervuaro keitimą</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
     <string name="timeshift_label">Laiko perstūmimas</string>
@@ -76,7 +70,6 @@
     <string name="a11y_current_bg">dabartinė glikemija</string>
     <string name="carb_time_label">AV laikas</string>
     <string name="a11y_set_carb_timer">nustatyti AV laiko perspėjimą</string>
-    <string name="show_calculation">Rodyti skaičiavimą</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
     <string name="calculation_short">Skaič.</string>
@@ -88,8 +81,6 @@
     <string name="meal_bolus">Maistas</string>
     <string name="prime">Užpildyti sistemą</string>
     <string name="carbs_and_bolus">AV ir bolusai</string>
-    <string name="show_invalidated_records">Rodyti negaliojančius / ištrintus įrašus</string>
-    <string name="hide_invalidated_records">Slėpti negaliojančius / ištrintus įrašus</string>
     <string name="show_invalidated">Rodyti negaliojančius</string>
     <string name="hide_invalidated">Slėpti negaliojančius</string>
     <string name="careportal_remove_started_events">Ištrinti AAPS paleidimo žymas</string>
@@ -97,16 +88,10 @@
     <string name="show_loop">Rodyti ciklą</string>
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="clone_label">Klonuoti</string>
-    <string name="show_loop_records">Rodyti ciklo įrašus</string>
-    <string name="show_hide_records">Slėpti ciklo įrašus</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profilis 1</string>
-    <string name="profile2">Profilis 2</string>
     <string name="profile_type">Profilio tipas</string>
     <string name="basal_pct_from_tdd_label">% bazės</string>
     <string name="selected_profile">Parinkta:</string>
-    <string name="compare_profile">Palyginti profilius</string>
-    <string name="nav_profile_helper">Profilio pagalbininkas</string>
     <string name="motol_default_profile">Numatytasis profilis</string>
     <string name="current_profile">Dabartinis profilis</string>
     <string name="available_profile">Galimas profilis</string>
@@ -117,8 +102,6 @@
     <string name="invalid_pct">Netinkamas % įrašas</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Valandinė bazė</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">Paspausta STOP</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">tik laikrodyje</string>
     <string name="a11y_only_on_phone">tik telefone</string>
@@ -136,9 +119,12 @@
     <string name="confirm_treatment">Patvirtinkite terapiją</string>
     <string name="recalculate">Perskaičiuoti</string>
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Abu</item>
         <item>Tik teigiamas</item>
         <item>Tik neigiamas</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>

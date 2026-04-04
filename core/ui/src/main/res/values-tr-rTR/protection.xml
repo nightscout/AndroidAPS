@@ -13,10 +13,7 @@
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Şifre ve PIN saklama [s]</string>
     <string name="protection_timeout_summary">Parola veya PIN girilmeden önceki süre</string>
-    <string name="biometric">Biyometrik</string>
-    <string name="custom_password">Özel parola</string>
-    <string name="custom_pin">Özel PIN</string>
-    <string name="noprotection">Koruma yok</string>
+    <!-- Protection type entries moved to core/keys/strings.xml -->
     <string name="unsecure_fallback_biometric">Güvensiz Yedek</string>
     <string name="unsecure_fallback_descriotion_biometric">Biyometrik korumanın etkili olabilmesi için, geri dönüş için bir ana parola ayarlanması gerekir.\n\nLütfen bir ana parola belirleyin!</string>
     <string name="password_set">Şifre belirlendi!</string>
@@ -27,8 +24,6 @@
     <string name="password_not_changed">Şifre değiştirilmedi</string>
     <string name="pin_not_changed">PIN değiştirilmedi</string>
     <string name="pin_cleared">PIN temizlendi!</string>
-    <string name="password_hint">Parolayı buraya girin</string>
-    <string name="pin_hint">PIN Kodunu buraya girin</string>
     <string name="master_password_not_set">Ana parola ayarlanmadı</string>
     <string name="aaps_directory_not_selected">AAPS dizini seçilmedi</string>
 </resources>

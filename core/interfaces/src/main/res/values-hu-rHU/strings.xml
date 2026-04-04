@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    Dialogs-->
     <!--    Events-->
     <!-- PumpPluginBase -->
     <!--    DateUtil-->
@@ -53,4 +54,7 @@
     <string name="pref_show_bg">VC megjelenítése</string>
     <string name="pref_show_bgi">BGI megjelenítése</string>
     <string name="pref_show_direction_arrow">Trend nyíl megjelenítése</string>
+    <!-- Permission rationales (used by PumpPluginBase) -->
+    <!-- Insulin -->
+    <!-- Concentration -->
 </resources>

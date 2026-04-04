@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">選擇您要顯示值的單位</string>
     <string name="next_button">下一步</string>
     <string name="previous_button">上一步</string>
-    <string name="nav_setupwizard">設定嚮導</string>
     <string name="setupwizard_finish">完成</string>
     <string name="welcome">歡迎</string>
     <string name="welcometosetupwizard">歡迎使用設定嚮導。它將引導您完成設置過程\n</string>
@@ -18,19 +17,13 @@
     <string name="high_mark_comment">範圍內區域的上限值（僅顯示）</string>
     <string name="permission">權限</string>
     <string name="need_system_window_permission">應用程式需要系統窗口權限以顯示通知</string>
-    <string name="need_location_permission">應用程式需要位置權限來掃描藍牙和識別WiFi</string>
-    <string name="need_background_location_permission">應用程式需要背景位置權限，以便進行自動化</string>
-    <string name="need_storage_permission">應用程式需要存儲權限以便儲存日誌檔案和匯出設定</string>
     <string name="askforpermission">請求權限</string>
-    <string name="need_whitelisting">%1$s需要電池優化白名單以達到最佳效能</string>
     <string name="storedsettingsfound">找到已存儲的設定</string>
     <string name="master_password_summary">主密碼用於備份加密和覆蓋應用程式中的安全設置。請記住它或將其存放在安全的地方。</string>
-    <string name="current_master_password">目前主密碼</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">使用您通常吃的最大食物的值\n</string>
     <string name="syncinfotext">將資料同步到雲端。您現在可以跳過此部分，但在設置Nightscout或Tidepool客戶端之前，您將無法完成目標。</string>
     <string name="status">狀態：</string>
-    <string name="patient_name">患者姓名</string>
-    <string name="patient_name_summary">請提供患者姓名或暱稱以區分多個設置</string>
     <string name="diawarning">請記住：新胰島素檔案需要至少5小時的DIA。在新檔案上DIA 5-6小時等於舊胰島素檔案上的DIA 3小時。</string>
     <string name="profile">檔案</string>
     <string name="doprofileswitch">切換檔案</string>
@@ -62,25 +55,16 @@
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">組態建置工具</string>
-    <string name="configbuilder_pump">幫浦</string>
     <string name="configbuilder_pump_description">您想用AAPS使用哪個幫浦？</string>
     <string name="configbuilder_profile">檔案</string>
-    <string name="configbuilder_profile_description">AAPS應使用哪個檔案？</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">哪個APS算法應進行療法調整？</string>
-    <string name="configbuilder_general">一般</string>
     <string name="configbuilder_general_description">這些是一些您可能覺得有用的一般外掛。</string>
-    <string name="configbuilder_sync">同步</string>
-    <string name="configbuilder_sync_description">資料上傳和同步外掛。</string>
+    <string name="configbuilder_sync_description">資料上傳、同步與通訊外掛。</string>
     <string name="configbuilder_constraints_description">哪些約束條件應用？</string>
-    <string name="configbuilder_loop">循環</string>
     <string name="configbuilder_loop_description">使用此功能啟用AAPS的循環集成。</string>
     <string name="configbuilder_insulin_description">您正在使用哪種類型的胰島素？</string>
-    <string name="configbuilder_bgsource">血糖來源</string>
     <string name="configbuilder_bgsource_description">AAPS應從哪裡獲取資料？</string>
-    <string name="configbuilder_smoothing">平滑處理</string>
     <string name="configbuilder_smoothing_description">選擇平滑算法</string>
-    <string name="configbuilder_sensitivity">敏感度偵測</string>
     <string name="configbuilder_sensitivity_description">應使用哪個敏感度算法？</string>
     <string name="config_builder_shortname">組態</string>
     <string name="description_config_builder">用於配置活動外掛</string>
@@ -91,21 +75,18 @@
     <string name="collapse_category">隱藏分類</string>
     <!--ImportExport-->
     <string name="nav_preferences">偏好設定</string>
-    <string name="password_preferences_encrypt_prompt">您將被要求提供主密碼，該密碼將用於加密匯出的偏好設定。</string>
-    <string name="preferences_export_canceled">匯出取消！偏好設定未匯出！</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">匯入取消！偏好設定未匯入！</string>
     <string name="preferences_import_impossible">無法匯入偏好設定！</string>
     <string name="check_preferences_details_btn">說明匯入問題...</string>
     <string name="check_preferences_details_title">匯入問題詳細資訊</string>
     <string name="check_preferences_import_btn">匯入</string>
     <string name="check_preferences_import_anyway_btn">仍然匯入（危險！）</string>
-    <string name="import_setting">匯入設定</string>
-    <string name="aaps_directory">AAPS 目錄</string>
-    <string name="select_aaps_directory">選擇 AAPS 目錄來儲存匯出檔案、設定檔等。</string>
     <string name="check_preferences_before_import">請在匯入前檢查偏好設定：</string>
     <string name="check_preferences_cannot_import">無法匯入偏好設定！</string>
     <string name="check_preferences_dangerous_import">不應匯入偏好設定！</string>
-    <string name="export_to">匯出設定到</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">從...匯入設定</string>
     <string name="setting_imported">設定已匯入</string>
     <string name="old_master_password">舊主密碼</string>
@@ -117,27 +98,12 @@
     <string name="goto_main_try_again">請返回主畫面並重試。</string>
     <string name="restartingapp">退出應用程式以應用設定。</string>
     <string name="ue_exported">用戶條目已匯出</string>
-    <string name="protection">保護</string>
-    <string name="master_password_missing">未設置主密碼！\n\n請在偏好設定中設置您的主密碼（%1$s）</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">維護</string>
     <string name="maintenance_shortname">維護</string>
-    <string name="description_maintenance">提供多個維護功能（例如：日誌發送，日誌刪除）。</string>
-    <string name="database_cleanup">資料庫清理</string>
-    <string name="reset_db_confirm">您真的要重置資料庫嗎？</string>
-    <string name="reset_aps_results_confirm">您真的要重置存儲的APS結果嗎？</string>
     <string name="maintenance_settings">維護設定</string>
     <string name="maintenance_email">電子郵件收件人</string>
     <string name="maintenance_amount">要發送的日誌數量</string>
-    <string name="send_all_logs">通過電子郵件發送日誌</string>
-    <string name="delete_logs">刪除日誌</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout版本：</string>
-    <string name="engineering_mode_enabled">工程模式已啟用</string>
-    <string name="log_files">日誌文件</string>
-    <string name="nav_logsettings">日誌設置</string>
-    <string name="miscellaneous">其他</string>
-    <string name="nav_resetdb">重置資料庫</string>
-    <string name="resettodefaults">重置為預設值</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">於 %1$s 前匯出</string>
     <string name="exported_at" comment="at placeholder we add export date">匯出於 %1$s</string>
@@ -160,8 +126,6 @@
     <string name="prefdecrypt_issue_wrong_pass">解密錯誤，提供的密碼無效或設定文件已被修改！可能是因為匯出的文件使用了不同的主密碼。</string>
     <string name="prefdecrypt_issue_wrong_format">缺少加密配置，設定格式無效！</string>
     <string name="prefdecrypt_issue_wrong_algorithm">不支援或未指定的加密算法！</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">選擇自定義手錶界面</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">文件格式</string>
     <string name="metadata_label_created_at">建立於</string>
@@ -172,8 +136,8 @@
     <string name="metadata_label_encryption">文件加密</string>
     <string name="metadata_format_new">新加密格式</string>
     <string name="metadata_format_other">未知的匯出格式</string>
-    <string name="reset_aps_results">重置APS結果</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">無法存取檔案系統。請正確選擇 AAPS 目錄。</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <string name="storage_local">本機儲存空間</string>
     <string name="storage_google_drive">Google 雲端硬碟</string>
