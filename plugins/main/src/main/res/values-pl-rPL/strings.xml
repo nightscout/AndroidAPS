@@ -94,15 +94,7 @@
     <string name="overview_show_variable_sens">Zmienna czułość</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
-    <string name="deviation_shortname">ODCH</string>
-    <string name="activity_shortname">AKT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">KRZOD</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Skala wykresu</string>
     <string name="graph_menu_divider_header">Wykres</string>
     <string name="temp_basal_overview_short_name">T:</string>
@@ -118,6 +110,5 @@
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
     <string name="overview_show_steps">Kroki</string>
-    <string name="steps_shortname">KROKI</string>
     <string name="simple_mode_enabled">Włączony tryb uproszczony</string>
 </resources>
