@@ -70,7 +70,6 @@ import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
@@ -115,7 +114,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.APS)
-        .fragmentClass(OpenAPSFragment::class.java.name)
         .composeContent { plugin ->
             app.aaps.plugins.aps.compose.OpenAPSComposeContent(
                 apsPlugin = plugin as APS,

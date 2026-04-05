@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="unsupported_ns_version">Nem támogatott Nightscout verzió</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">FELT</string>
     <!-- AAPSClient -->
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="status">Állapot:</string>
     <string name="clear_log">Napló törlése</string>
     <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
@@ -36,4 +40,5 @@
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="today">Ma</string>
     <string name="weighted">súlyozott</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

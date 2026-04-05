@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">메드트로닉 인코딩</string>
     <string name="medtronic_custom_action_wake_and_tune">켜기 및 튜닝</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus 블록 삭제</string>
-    <string name="medtronic_custom_action_reset_rileylink">RileyLink 구성 재설정</string>
     <string name="medtronic_pump_battery_select">배터리 타입(파워뷰)</string>
     <string name="medtronic_pump_battery_no">선택되지 않음(심플뷰)</string>
     <string name="medtronic_pump_battery_alkaline">알카라인(확장뷰)</string>
     <string name="medtronic_pump_battery_lithium">리튬(확장뷰)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (확장 뷰)</string>
     <string name="medtronic_pump_battery_nimh">니켈수소전지 (연장 뷰)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink 배터리</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">에러</string>
-    <string name="medtronic_error_serial_not_set">일련번호 # 설정되지 않음</string>
     <string name="medtronic_error_serial_invalid">일련번호 # 유효하지않음.</string>
     <string name="medtronic_error_pump_type_not_set">펌프 타입이 설정되지 않았습니다.</string>
     <string name="medtronic_error_pump_type_invalid">지원되지 않는 펌프 타입입니다.</string>
-    <string name="medtronic_error_pump_frequency_not_set">펌프 주파수가 설정되지 않았습니다.</string>
     <string name="medtronic_error_pump_frequency_invalid">지원되지 않는 펌프 주파수입니다.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink 주소가 유효하지 않습니다.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">감지된 펌프타입이 설정된 타입과 다릅니다.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">임시 basal 취소</string>
     <string name="medtronic_cmd_desc_set_bolus">Bolus 설정</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">잔여 인슐린 확인</string>
-    <string name="medtronic_pump_status_pump_unreachable">펌프에 연결할 수 없습니다</string>
-    <string name="medtronic_warning">경고</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">현재</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">전</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">현재</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">전</string>
     <string name="medtronic_notification_check_time_date">펌프 시간 업데이트가 필요합니다.</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">펌프 시간 업데이트</string>
     <string name="set_neutral_temps_title">기본 임시 basal 설정</string>
     <string name="set_neutral_temps_summary">활성화되면, 매 한 시간 전에 임시 basal을 취소할 것입니다. 이 기능은 일부 펌프에서 한 시간마다 울리는 소리/진동 경고를 멈추게 합니다.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 분 남음)</string>
     <string name="invalid_history_data">잘못된 펌프 기록 데이터가 탐지되었습니다. 새 이슈를 열고 로그를 제공합니다.</string>
     <string name="riley_statistics">RL Stats</string>
-    <string name="medtronic_history_type">종류:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">새로고침 클릭</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">스케쥴 상태 새로고침</string>
 </resources>

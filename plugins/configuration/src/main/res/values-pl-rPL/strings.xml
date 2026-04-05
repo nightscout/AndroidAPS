@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Wybierz jednostki, w których chcesz wyświetlać wartości</string>
     <string name="next_button">Dalej</string>
     <string name="previous_button">Poprzedni</string>
-    <string name="nav_setupwizard">Kreator konfiguracji</string>
     <string name="setupwizard_finish">ZAKOŃCZ</string>
     <string name="welcome">Witaj</string>
     <string name="welcometosetupwizard">Witaj w kreatorze konfiguracji. Poprowadzi Cię on przez proces instalacji\n</string>
@@ -18,19 +17,13 @@
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="permission">Uprawnienia</string>
     <string name="need_system_window_permission">Aplikacja wymaga uprawnienia systemowego okna dla powiadomień</string>
-    <string name="need_location_permission">Aplikacja wymaga dostępu do lokalizacji dla zarządzania bluetoothem i identyfikacją Wi-Fi</string>
-    <string name="need_background_location_permission">Aplikacja potrzebuje uprawnień do lokalizacji w tle dla automatyzacji</string>
-    <string name="need_storage_permission">Aplikacja wymaga zgody na zapis do pamięci, aby móc przechować pliki logów i eksportować ustawienia</string>
     <string name="askforpermission">Zapytaj o uprawnienia</string>
-    <string name="need_whitelisting">%1$s potrzebuje wyłączenia z optymalizacji baterii, w celu zapewnienia poprawnego działania</string>
     <string name="storedsettingsfound">Znaleziono zapisane ustawienia</string>
     <string name="master_password_summary">Hasło główne jest używane do szyfrowania kopii zapasowych i przełamania zabezpieczeń w aplikacji. Zapamiętaj je i przechowuj w bezpiecznym miejscu (np.: managerze haseł).</string>
-    <string name="current_master_password">Aktualne hasło główne</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
     <string name="syncinfotext">Synchronizuj dane z chmurą. Możesz teraz pominąć ten krok, ale nie będziesz w stanie przejść zadań dopóki nie skonfigurujesz połączenia z Nightscout lub Tidepool.</string>
     <string name="status">Status:</string>
-    <string name="patient_name">Nazwa pacjenta</string>
-    <string name="patient_name_summary">Proszę podać nazwę pacjenta lub pseudonim w celu rozróżnienia pomiędzy różnymi konfiguracjami</string>
     <string name="diawarning">Pamiętaj: nowe profile insuliny wymagają ustawienia DIA (czas działania insuliny) powyżej 5h. DIA między 5-6h na nowym profilu odpowiada 3h DIA na starych profilach insuliny.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Zmień profil</string>
@@ -55,25 +48,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfiguracja</string>
-    <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Którą pompę chcesz użyć do AAPS?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Który profil będzie używany w AAPS?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Który algorytm APS powinien dokonywać korekcji terapii?</string>
-    <string name="configbuilder_general">Ogólne</string>
     <string name="configbuilder_general_description">To są główne wtyczki, które mogą okazać się użyteczne.</string>
-    <string name="configbuilder_sync">Synchronizacja</string>
-    <string name="configbuilder_sync_description">Wtyczki do przesyłania danych i synchronizacji.</string>
     <string name="configbuilder_constraints_description">Które ograniczenia są zastosowane?</string>
-    <string name="configbuilder_loop">Pętla</string>
     <string name="configbuilder_loop_description">Użyj, aby aktywować integrację pętli AAPS.</string>
     <string name="configbuilder_insulin_description">Jakiego typu insuliny używasz?</string>
-    <string name="configbuilder_bgsource">Źródło BG</string>
     <string name="configbuilder_bgsource_description">Skąd AAPS powinien czerpać dane?</string>
-    <string name="configbuilder_smoothing">Wygładzanie</string>
     <string name="configbuilder_smoothing_description">Wybierz algorytm wygładzania</string>
-    <string name="configbuilder_sensitivity">Detekcja wrażliwości (sensitivity)</string>
     <string name="configbuilder_sensitivity_description">Który algorytm wrażliwości powinien być używany?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
@@ -84,21 +67,18 @@
     <string name="collapse_category">Zwiń kategorię</string>
     <!--ImportExport-->
     <string name="nav_preferences">Ustawienia</string>
-    <string name="password_preferences_encrypt_prompt">Zostaniesz poproszony o hasło główne, które będzie użyte do szyfrowania wyeksportowanych ustawień.</string>
-    <string name="preferences_export_canceled">Eksportowanie anulowane! Ustawienia NIE zostały wyeksportowane!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Import anulowany! Ustawienia NIE zostały zaimportowane!</string>
     <string name="preferences_import_impossible">Nie można zaimportować ustawień!</string>
     <string name="check_preferences_details_btn">Wyjaśnij problemy z importem…</string>
     <string name="check_preferences_details_title">Szczegóły problemów z importem</string>
     <string name="check_preferences_import_btn">Importuj</string>
     <string name="check_preferences_import_anyway_btn">Importuj mimo to (NIEBEZPIECZNE!)</string>
-    <string name="import_setting">Importuj ustawienia</string>
-    <string name="aaps_directory">katalog AAPS</string>
-    <string name="select_aaps_directory">Wybierz katalog AAPS do przechowywania eksportów, konfiguracji itp.</string>
     <string name="check_preferences_before_import">Proszę sprawdzić ustawienia przed importem:</string>
     <string name="check_preferences_cannot_import">Ustawienia nie mogą być zaimportowane!</string>
     <string name="check_preferences_dangerous_import">Ustawienia nie powinny być importowane!</string>
-    <string name="export_to">Eksportuj ustawienia do</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Importuj ustawienia z</string>
     <string name="setting_imported">Ustawienia zaimportowane</string>
     <string name="old_master_password">Stare hasło główne</string>
@@ -110,27 +90,12 @@
     <string name="goto_main_try_again">Wróć do ekranu głównego i spróbuj ponownie.</string>
     <string name="restartingapp">Zamykanie aplikacji w celu wprowadzenia ustawień.</string>
     <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
-    <string name="protection">Z ochroną</string>
-    <string name="master_password_missing">Hasło główne nie jest ustawione!\n\nProszę ustawić swoje hasło główne w Ustawieniach (%1$s)</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Konserwacja</string>
     <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">Dostarcza kilka funkcji używanych do konserwacji (np. wysyłanie logów, kasowanie logów).</string>
-    <string name="database_cleanup">Czyszczenie bazy danych</string>
-    <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
-    <string name="reset_aps_results_confirm">Czy na pewno chcesz zresetować zapisane wyniki APS?</string>
     <string name="maintenance_settings">Ustawienia Konserwacji</string>
     <string name="maintenance_email">Odbiorca E-maila</string>
     <string name="maintenance_amount">Liczba logów do wysłania</string>
-    <string name="send_all_logs">Wyślij Logi Emailem</string>
-    <string name="delete_logs">Usuń logi</string>
-    <string name="configbuilder_nightscoutversion_label">Wersja Nightscout:</string>
-    <string name="engineering_mode_enabled">Tryb Inżynierski włączony</string>
-    <string name="log_files">Log files</string>
-    <string name="nav_logsettings">Ustawienia logów</string>
-    <string name="miscellaneous">Pozostałe</string>
-    <string name="nav_resetdb">Zresetuj bazy danych</string>
-    <string name="resettodefaults">Przywróć ustawienia domyślne</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">wyeksportowano %1$s temu</string>
     <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
@@ -153,8 +118,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Błąd deszyfrowania, podane hasło jest niepoprawne lub plik ustawień został zmodyfikowany! Może się zdarzyć, że zaimportowany plik został wyeksportowany z innym hasłem głównym.</string>
     <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Wybierz niestandardową tarczę</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Format pliku</string>
     <string name="metadata_label_created_at">Utworzono</string>
@@ -165,8 +128,8 @@
     <string name="metadata_label_encryption">Szyfrowanie pliku</string>
     <string name="metadata_format_new">Nowy zaszyfrowany format</string>
     <string name="metadata_format_other">Nieznany format eksportu</string>
-    <string name="reset_aps_results">Zresetuj wyniki APS</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Błąd dostępu do systemu plików. Wybierz prawidłowo katalog AAPS.</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->

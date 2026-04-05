@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">使用行動網路連線</string>
     <string name="ns_wifi">使用 WiFi 連線</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">在充電時</string>
     <string name="ns_battery">使用電池時</string>
     <string name="connection_settings_title">連線設定</string>
-    <string name="ns_wifi_allowed_ssids">允許的 SSID (以分號分隔)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">允許漫遊連線</string>
     <string name="ns_create_announcements_from_errors_title">從錯誤中建立公告</string>
     <string name="ns_create_announcements_from_carbs_req_title">從碳水化合物需求警報中建立公告</string>
@@ -19,8 +19,6 @@
     <string name="blocked_by_connectivity">被連線選項阻止</string>
     <string name="no_connectivity">無連線</string>
     <string name="unsupported_ns_version">不支援的 Nightscout 版本</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <string name="ns_malfunction">NSClient 發生異常。請考慮重新啟動 NS 與 NSClient。</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT 沒有寫入權限。API 密碼錯誤？</string>
@@ -28,15 +26,14 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">重新啟動</string>
     <string name="ns_client_title">NSClientV1</string>
     <string name="ns_client_v3_title">NSClientV3</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">輸入你的 Nightscout 網址 (例如:https://yoursitename.dom)</string>
-    <string name="ns_client_secret_title">Nightscout API 密鑰</string>
-    <string name="ns_client_secret_dialog_message">輸入您的 Nightscout API 密鑰（需為至少 12 個字元的密碼，並已記錄在您的 Nightscout 變數中）。</string>
-    <string name="nsclient_token_title">Nightscout 存取權杖</string>
-    <string name="nsclient_token_dialog_message">輸入您在 Nightscout 管理工具中生成的管理層級存取權杖（至少 17 個字元，不是您的 API 密鑰！）。</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">立即傳送</string>
     <string name="queue">佇列:</string>
     <string name="status">狀態:</string>
@@ -71,7 +68,6 @@
     <string name="ns_alarm_stale_data_value_label">未接收資料門檻值 [分鐘]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">緊急未接收資料門檻值 [分鐘]</string>
     <string name="ns_log_app_started_event">將應用啟動紀錄到 NS</string>
-    <string name="copy_existing_values">複製現有設置（如果存在）？</string>
     <string name="ns_use_ws_title">連線到 Websockets</string>
     <string name="ns_use_ws_summary">啟用意味著：更快的更新、接收警報和公告以及更高的電池消耗，類似於 v1。所有其他上傳器到 NS 必須使用 v3 協議。</string>
     <!-- Tidepool -->
@@ -148,9 +144,12 @@
     <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">重新發送所有資料</string>
     <string name="open_settings_on_wear">在 Wear 上打開設定</string>
+    <string name="wear_import_custom_watchface_title">選擇自訂錶盤</string>
     <string name="cwf_infos_pref_locked">錶盤鎖定的偏好設定列表</string>
     <string name="cwf_infos_pref_required">錶盤所需的偏好設定列表</string>
     <string name="cwf_infos_view_title">錶盤包含的欄位列表</string>
+    <string name="enabled">啟用</string>
+    <string name="disabled">停用</string>
     <string name="pump_fetching_data">嘗試從幫浦獲取資料。</string>
     <string name="pump_old_data">TDD: 資料仍然是舊的！無法從幫浦載入。</string>
     <string name="units_short">U</string>
@@ -185,18 +184,125 @@
     <string name="wear_action_loop_state_profile_invalid">設定檔無效！</string>
     <string name="wear_action_loop_state_unauthorized">請再試一次。</string>
     <string name="wear_action_loop_state_invalid">請求的循環狀態無效</string>
-    <string name="wear_action_loop_state_title">循環狀態</string>
+    <string name="wear_action_running_mode_title">執行模式</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\n時長：%2$d 分鐘</string>
-    <string name="wear_action_loop_state_now_closed">已關閉</string>
-    <string name="wear_action_loop_state_now_lgs">LGS</string>
-    <string name="wear_action_loop_state_now_open">已開啟</string>
-    <string name="wear_action_loop_state_now_suspended">已暫停</string>
-    <string name="wear_action_loop_state_now_resumed">已恢復</string>
-    <string name="wear_action_loop_state_now_disabled">已停用</string>
+    <string name="wear_action_loop_state_now_closed">封閉循環</string>
+    <string name="wear_action_loop_state_now_lgs">低血糖暫停</string>
+    <string name="wear_action_loop_state_now_open">開放循環</string>
+    <string name="wear_action_loop_state_now_suspended">暫停循環</string>
+    <string name="wear_action_loop_state_now_resumed">恢復循環</string>
+    <string name="wear_action_loop_state_now_disabled">停用循環</string>
     <string name="wear_action_loop_state_now_pump_suspended">幫浦已暫停</string>
     <string name="wear_action_loop_state_now_superbolus">超級注射</string>
     <string name="wear_action_loop_state_now_invalid">無效</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">幫浦已中斷連線</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">中斷幫浦連線</string>
+    <string name="wear_action_loop_state_now_pump_reconnected">重新連線至幫浦</string>
     <string name="garmin_request_key">請求金鑰</string>
     <string name="garmin_request_key_summary">可選金鑰，用來加密 Garmin 裝置與 AAPS 的 HTTP 通訊。</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS 通訊器</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">使用 SMS 指令遠端控制 AAPS。</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">來自驗證器應用程式，針對：%1$s，後接 PIN 碼</string>
+    <string name="smscommunicator_tab_otp_label">驗證器設定</string>
+    <string name="smscommunicator_code_verify_label">要檢查的代碼：</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">驗證代碼由驗證器應用程式顯示的 6 位數字（稱為 OTP）後接至少 3 位的必要 PIN 組成。</string>
+    <string name="smscommunicator_otp_reset_btn">重設驗證器</string>
+    <string name="smscommunicator_otp_reset_title">重設驗證器金鑰</string>
+    <string name="smscommunicator_otp_reset_prompt">確定要重設驗證器金鑰？這會使所有目前已設定的驗證器失效，您需要重新設定它們。</string>
+    <string name="smscommunicator_otp_reset_successful">已產生新的驗證器金鑰！請使用更新的 QR Code 來設定驗證器。</string>
+    <string name="smscommunicator_otp_export_title">匯出 OTP 祕密金鑰</string>
+    <string name="smscommunicator_otp_export_prompt">確定要將 OTP 祕密金鑰複製到剪貼簿嗎？\n\n僅當您的驗證器應用程式無法掃描 QR Code、您想手動輸入，或您想透過專用應用程式設定硬體 OTP 權杖時，才需要這麼做。</string>
+    <string name="smscommunicator_otp_export_successful">已匯出並複製 OTP 祕密金鑰（Base32 格式）到剪貼簿。將它貼到驗證器或硬體 OTP 燒錄器中！</string>
+    <string name="smscommunicator_otp_step1_install_header">1. 安裝驗證器</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. 掃描代碼以設定 AAPS 的 OTP 代碼</string>
+    <string name="smscommunicator_otp_step3_test_header">3. 測試一次性密碼</string>
+    <string name="smscommunicator_otp_reset_header">重設驗證器</string>
+    <string name="smscommunicator_otp_install_info">在每台追蹤者智慧型手機上安裝支援 RFC 6238 TOTP 權杖的驗證器應用程式。常見的免費應用程式有：\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">重設驗證器會使所有已設定的驗證器失效。您需要重新設定它們！</string>
+    <string name="smscommunicator_otp_verification_ok">確定</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">無效的大小！</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN 錯誤</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP 錯誤</string>
+    <string name="sms_wrong_code">代碼錯誤。已取消指令。</string>
+    <string name="sms_timeout_while_waiting">等待先前與幫浦的通訊完成時逾時</string>
+    <string name="smscommunicator_bolus_reply_with_code">要執行注射 %1$.2f U，請回覆代碼 %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">要執行餐前注射 %1$.2f U，請回覆代碼 %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">要設定臨時目標 %1$s，請回覆代碼 %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">要取消臨時目標，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">要停用 SMS 遠端服務，請回覆代碼 %1$s。\n\n請注意，您只能在 AAPS 主智慧型手機上直接重新啟用它。</string>
+    <string name="smscommunicator_stopped_sms">已停止 SMS 遠端服務。若要重新啟用，請在主智慧型手機上的 AAPS 中操作。</string>
+    <string name="smscommunicator_calibration_reply_with_code">要送出校正 %1$.2f，請回覆代碼 %2$s</string>
+    <string name="smscommunicator_bolus_failed">注射失敗。送出下一個指令前請先確認實際狀態！</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">兩次遠端注射之間必須間隔的最少分鐘數</string>
+    <string name="smscommunicator_remote_bolus_min_distance">兩次注射之間至少必須間隔多少分鐘。為了您的安全，若要編輯此偏好設定，您需要新增至少 2 個電話號碼。否則將使用 15 分鐘。</string>
+    <string name="smscommunicator_bolus_delivered">已成功注射 %1$.2f U</string>
+    <string name="smscommunicator_meal_bolus_delivered">已成功完成餐前注射 %1$.2f U</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">目標 %1$s，持續 %2$d 分鐘</string>
+    <string name="smscommunicator_tt_set">已成功設定目標 %1$s，持續 %2$d 分鐘</string>
+    <string name="smscommunicator_tt_canceled">已成功取消臨時目標</string>
+    <string name="smscommunicator_remote_commands_allowed">允許透過 SMS 執行遠端指令</string>
+    <string name="smscommunicator_loop_has_been_disabled">循環已停用</string>
+    <string name="smscommunicator_loop_is_enabled">循環已啟用</string>
+    <string name="smscommunicator_pump_connect_with_code">若要將幫浦連線，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">連線至幫浦失敗</string>
+    <string name="smscommunicator_pump_disconnect_with_code">若要將幫浦中斷連線 %1$d 分鐘，請回覆代碼 %2$s</string>
+    <string name="smscommunicator_pump_disconnected">幫浦已中斷連線</string>
+    <string name="smscommunicator_reconnect">幫浦已重新連線</string>
+    <string name="smscommunicator_remote_command_not_allowed">不允許遠端指令</string>
+    <string name="smscommunicator_remote_command_not_possible">無法執行遠端指令</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">無法進行遠端注射。請稍後再試。</string>
+    <string name="smscommunicator_basal_reply_with_code">若要開始臨時基礎率 %1$.2f U/h，持續 %2$d 分鐘，請回覆代碼 %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">若要將設定檔切換為 %1$s %2$d%%，請回覆代碼 %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">若要開始延長注射 %1$.2f U，持續 %2$d 分鐘，請回覆代碼 %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">若要在 %2$s 輸入 %1$d g，請回覆代碼 %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">若要開始臨時基礎率 %1$d%%，持續 %2$d 分鐘，請回覆代碼 %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">若要暫停循環 %1$d 分鐘，請回覆代碼 %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">若要恢復循環，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">若要停用循環，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">若要重新啟動 AAPS，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_restarting">AAPS 正在重新啟動</string>
+    <string name="smscommunicator_tempbasal_set">臨時基礎率 %1$.2f U/h，持續 %2$d 分鐘，已成功開始</string>
+    <string name="smscommunicator_extended_set">延長注射 %1$.2f U，持續 %2$d 分鐘，已成功開始</string>
+    <string name="smscommunicator_carbs_set">已成功輸入碳水 %1$d g</string>
+    <string name="smscommunicator_carbs_failed">輸入 %1$d g 碳水失敗</string>
+    <string name="smscommunicator_tempbasal_set_percent">臨時基礎率 %1$d%%，持續 %2$d 分鐘，已成功開始</string>
+    <string name="smscommunicator_tempbasal_failed">啟動臨時基礎率失敗</string>
+    <string name="smscommunicator_extended_failed">啟動延長注射失敗</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">若要停止臨時基礎率，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">若要停止延長注射，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">已取消臨時基礎率</string>
+    <string name="smscommunicator_extended_canceled">已取消延長注射</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">取消臨時基礎率失敗</string>
+    <string name="smscommunicator_extended_cancel_failed">取消延長注射失敗</string>
+    <string name="smscommunicator_unknown_command">未知指令或回覆錯誤</string>
+    <string name="smscommunicator_another_bolus_in_queue">佇列中已有其他注射。請稍後再試。</string>
+    <string name="smscommunicator_wrong_duration">持續時間不正確</string>
+    <string name="smscommunicator_loop_suspended">循環已暫停</string>
+    <string name="smscommunicator_loop_resumed">循環已恢復</string>
+    <string name="smscommunicator_invalid_phone_number">簡訊電話號碼無效</string>
+    <string name="smscommunicator_calibration_sent">已送出校正。必須在 xDrip+ 中啟用接收功能。</string>
+    <string name="smscommunicator_calibration_failed">xDrip+ 未接收校正</string>
+    <string name="smscommunicator_message_body">訊息內文無效</string>
+    <string name="smscommunicator_report_pump_unreachable_summary">當觸發幫浦無法連線事件時傳送簡訊</string>
+    <string name="smscommunicator_pump_unreachable">回報幫浦無法連線</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">若要將循環模式切換為 LGS（Low Glucose Suspend，低血糖暫停），請回覆代碼 %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">若要將循環模式切換為封閉循環，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_current_loop_mode">目前循環模式：%1$s</string>
+    <string name="wrong_format">格式錯誤</string>
+    <string name="sms_actual_bg">血糖：</string>
+    <string name="sms_last_bg">最近血糖：</string>
+    <string name="sms_delta">變化量:</string>
+    <string name="sms_iob">活性胰島素:</string>
+    <string name="sms_bolus">注射:</string>
+    <string name="sms_basal">基礎率:</string>
+    <string name="sms_min_ago">%1$d 分鐘前</string>
+    <string name="sms_loop_suspended_for">已暫停 (%1$d 分)</string>
+    <string name="sms_read_status_failed">讀取狀態失敗</string>
+    <string name="sms_profile_switch_created">已建立設定檔切換</string>
+    <string name="sms_wrong_tbr_duration">臨時基礎率的持續時間必須是 %1$d 分鐘的倍數，且大於 0。</string>
+    <string name="a11y_otp_qr_code">用於設定一次性密碼的 QR Code</string>
+    <string name="permission_sms_title">SMS</string>
+    <string name="permission_sms_description">應用程式需要 SMS 權限，才能透過文字訊息進行遠端控制</string>
 </resources>

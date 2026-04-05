@@ -39,4 +39,12 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Ứng dụng Sino</string>
     <string name="description_source_patched_sino_app">Nhận dữ liệu đường huyết từ ứng dụng Sino.</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">Đọc thông báo</string>
+    <string name="description_source_notification_reader">Đọc giá trị đường huyết từ các thông báo do ứng dụng CGM chính thức gửi (Dexcom, Medtronic, Eversense, v.v.).</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Ứng dụng cần quyền để nhận dữ liệu CGM từ ứng dụng Dexcom</string>
+    <string name="permission_notification_listener_title">Truy cập thông báo</string>
+    <string name="permission_notification_listener_description">Cần để đọc đường huyết từ thông báo CGM</string>
 </resources>

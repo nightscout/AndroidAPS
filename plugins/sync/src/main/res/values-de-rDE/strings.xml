@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Mobilfunkverbindung verwenden</string>
     <string name="ns_wifi">WLAN Verbindung verwenden</string>
-    <string name="ns_wifi_ssids">WLAN SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Während des Ladevorgangs</string>
     <string name="ns_battery">Bei Batteriebetrieb</string>
     <string name="connection_settings_title">Verbindungs-Einstellungen</string>
-    <string name="ns_wifi_allowed_ssids">Erlaubte SSIDs (durch Semikolon getrennt)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Erlaube Verbindung bei Roaming</string>
     <string name="ns_create_announcements_from_errors_title">Ankündigungen aus Fehlern generieren</string>
     <string name="ns_create_announcements_from_carbs_req_title">Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
@@ -17,13 +17,15 @@
     <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
     <string name="unsupported_ns_version">Nicht unterstützte Nightscout-Version</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">Nightscout-Client hat keine Schreibrechte. Falscher API-Key?</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Neustart</string>
-    <string name="ns_client_url_title">Nightscout-URL</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Jetzt abgeben</string>
     <string name="queue">Warteschlange:</string>
     <string name="status">Status:</string>
@@ -51,7 +53,6 @@
     <string name="ns_alarm_stale_data_value_label">Veraltete Daten seit [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Stark veraltete Daten seit [min]</string>
     <string name="ns_log_app_started_event">Logge App-Start in Nightscout</string>
-    <string name="copy_existing_values">NS-Einstellungen kopieren (falls vorhanden)?</string>
     <string name="ns_use_ws_title">Mit Websockets verbinden</string>
     <string name="ns_use_ws_summary">Aktivieren bedeutet: schnellere Updates, Empfang von Alarmen und Ankündigungen und ein höherer Akkuverbrauch ähnlich v1. Alle anderen Uploader zu NS müssen v3-Protokoll verwenden.</string>
     <!-- Tidepool -->
@@ -138,4 +139,5 @@
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="today">Heute</string>
     <string name="weighted">gewichtet</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

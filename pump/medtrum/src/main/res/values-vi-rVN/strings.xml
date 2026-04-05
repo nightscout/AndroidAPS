@@ -14,22 +14,17 @@
     <string name="pump_setting_failed">Thiết lập cài đặt người dùng cho Bơm thất bại!</string>
     <string name="pump_sync_error">Lỗi khi đồng bộ lịch sử từ Bơm, một bản ghi đã bị bỏ qua. Kiểm tra tab Điều trị để xem bolus đã được đồng bộ chính xác chưa. Tạm bỏ qua, và nếu lỗi tiếp tục xuất hiện, hãy thay Patch hoặc PumpBase.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Trạng thái BLE</string>
     <string name="last_connection_label">Kết nối trước</string>
     <string name="active_bolus_label">Đang tiêm Bolus</string>
     <string name="pump_state_label">Trạng thái Bơm</string>
     <string name="active_alarms_label">Bật cảnh báo</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Kiểu liều nền</string>
     <string name="basal_rate_label">Tỷ lệ liều nền</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Loại Bơm</string>
     <string name="fw_version_label">Phiên bản FW</string>
     <string name="patch_no_label">Patch no</string>
     <string name="patch_expiry_label">Patch hết hạn</string>
     <string name="patch_activation_time_label">Kích hoạt</string>
-    <string name="refresh_label">Làm tươi</string>
     <string name="reset_alarms_label">Đặt lại cảnh báo</string>
     <string name="change_patch_label">Thay Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Người dùng yêu cầu</string>
@@ -57,10 +52,9 @@
     <string name="bolus_error">Lỗi Bolus</string>
     <!-- wizard-->
     <string name="retry">Thử lại</string>
-    <string name="next">Tiếp theo</string>
-    <string name="discard">Bỏ qua</string>
     <string name="step_prepare_patch">Kích hoạt Patch</string>
     <string name="step_prepare_patch_connect">Kết nối và nạp insulin</string>
+    <string name="step_select_insulin">Chọn loại Insulin</string>
     <string name="step_prime">Mồi Bơm</string>
     <string name="step_priming">Đang mồi</string>
     <string name="step_priming_complete">Hoàn thành mồi Bơm</string>
@@ -73,8 +67,6 @@
     <string name="step_retry_activation">Đang kích hoạt</string>
     <string name="unexpected_state">Trạng thái không mong đợi: %1$s</string>
     <string name="no_profile_selected">Chưa chọn Hồ sơ. Vui lòng chọn Hồ sơ và thử lại.</string>
-    <string name="no_sn_in_settings">Chưa biết số serial. Vui lòng nhập số serial của pumpbase trong cài đặt và thử lại.</string>
-    <string name="base_serial">Số serial Pump Base: %1$X</string>
     <string name="patch_begin_activation">Chưa có patch đang hoạt động. Nhấn <b>Tiếp theo</b> để bắt đầu quá trình kích hoạt.</string>
     <string name="patch_not_active_note">Không được kết nối Pump Base với patch cho đến bước tiếp theo!</string>
     <string name="connect_pump_base">Kết nối pump base với Patch mới, loại bỏ bọt khí và nạp insulin, rồi nhấn <b>Tiếp theo</b>.</string>
@@ -103,16 +95,24 @@
     <string name="press_next_or_OK">Nhấn <b>ĐỒNG Ý</b> để quay về màn hình chính. Nhấn <b>Tiếp theo</b> để bắt đầu kích hoạt Patch mới.</string>
     <string name="activation_in_progress">Rất tiếc! Đã xảy ra lỗi, có vẻ như một quá trình kích hoạt khác đang diễn ra.</string>
     <string name="press_retry_or_discard">Nhấn <b>Tiếp theo</b> để tiếp tục kích hoạt hoặc <b>Bỏ qua</b> để đặt lại trạng thái kích hoạt.</string>
+    <string name="retry_activation_filled_error">Không thể tiếp tục kích hoạt. Trạng thái bơm đã bị mất. KHÔNG làm đầy lại, vì miếng dán có thể đã được gắn. Hãy bỏ miếng dán và bắt đầu kích hoạt mới.</string>
     <string name="reading_activation_status">Vui lòng chờ, đang đọc trạng thái kích hoạt từ Bơm.</string>
     <!-- settings-->
     <string name="enable_pump_unreachable_alert_summary">Cảnh báo không thể kết nối đã được buộc bật, vì Patch Medtrum có thể gặp lỗi và trở nên không thể kết nối.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Khuyến nghị đặt là 30 phút, vì Patch Medtrum có thể gặp lỗi và trở nên không thể kết nối.</string>
     <string name="sn_input_title">Số sê-ri</string>
-    <string name="sn_input_summary">Nhập số sê-ri của pump base của bạn.</string>
     <string name="sn_input_invalid">Số sê-ri không hợp lệ!</string>
-    <string name="pump_unsupported">Bơm chưa được kiểm thử: %1$s! Vui lòng liên hệ với chúng tôi trên Discord hoặc GitHub để được hỗ trợ</string>
+    <string name="change_sn">Thay đổi</string>
     <string name="alarm_setting_title">Cài đặt cảnh báo</string>
     <string name="alarm_setting_summary">Chọn cài đặt báo động Bơm mà bạn muốn.</string>
+    <string name="alarm_setting_light_vibrate_beep">Đèn, rung và tiếng bíp</string>
+    <string name="alarm_setting_light_vibrate">Đèn và rung</string>
+    <string name="alarm_setting_light_beep">Đèn và tiếng bíp</string>
+    <string name="alarm_setting_light">Đèn</string>
+    <string name="alarm_setting_vibrate_beep">Rung và tiếng bíp</string>
+    <string name="alarm_setting_vibrate">Rung</string>
+    <string name="alarm_setting_beep">Tiếng bíp</string>
+    <string name="alarm_setting_silent">Im lặng</string>
     <string name="pump_warning_notification_title">Thông báo khi có cảnh báo từ Bơm</string>
     <string name="pump_warning_notification_summary">Hiển thị thông báo cho các cảnh báo không nghiêm trọng từ Bơm: pin yếu, lượng insulin còn ít (20 đơn vị) và sắp hết hạn. Khuyến nghị nên để bật khi báo động của Bơm được đặt ở chế độ im lặng.</string>
     <string name="pump_warning_expiry_hour_title">Cảnh báo Bơm hết hạn [giờ]</string>

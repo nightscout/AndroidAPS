@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Preferințe</string>
-    <string name="nav_exit">Ieșire</string>
     <string name="delta">Diferență</string>
     <string name="save">Salvează</string>
     <string name="wear">Ceas</string>
-    <string name="nav_about">Despre</string>
     <string name="sensitivity_warning">Trebuie introduși toți carbohidrații după pornirea Autosens. În caz contrar, deviațiile cauzate de carbohidrați vor fi percepute ca schimbări ale sensibilității!</string>
     <string name="invalid">INVALID</string>
-    <string name="gradually_increase_notification_volume">Creșterea treptată a volumului pentru alerte și notificări</string>
-    <string name="localalertsettings_title">Alerte locale</string>
-    <string name="enable_missed_bg_readings_alert">Alertează dacă nu se primesc glicemii</string>
-    <string name="enable_pump_unreachable_alert">Alertează dacă pompa este indisponibilă</string>
     <string name="pump_unreachable_threshold">Prag pompă indisponibilă [min]</string>
-    <string name="enable_carbs_req_alert">Alertează dacă sunt necesari carbohidrați</string>
-    <string name="open_navigation">Afișare navigație</string>
     <string name="close_navigation">Închidere navigație</string>
     <string name="remove_items">Elimină obiecte</string>
     <string name="sort_items">Sortează obiecte</string>
@@ -24,10 +16,18 @@
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
     <!-- WEAR OS-->
     <string name="remove_selected_items">Șterge obiectele selectate</string>
-    <string name="count_selected">%1$d selectat(e)</string>
+    <string name="count_selected">%1$d selectat(e)1</string>
     <string name="sort_label">Sortează</string>
     <string name="search">Caută</string>
-    <string name="simple_mode">Mod simplu</string>
+    <string name="use_compose_main_screen">Utilizare ecran principal compunere (experimental)</string>
+    <string name="switch_to_compose_ui">Comutare la Compose UI</string>
+    <string name="switch_to_classic_ui">Comutare la interfața clasică</string>
     <string name="select">Selectează</string>
     <string name="set">Setează</string>
+    <string name="migrating_preferences">Se migrează preferințele…</string>
+    <string name="initializing_plugins">Se inițializează modulele…</string>
+    <string name="initializing">Se inițializează…</string>
+    <string name="migrating_profile_switches">Se migrează modificările de profil…</string>
+    <string name="migrating_effective_profile_switches">Se migrează modificările de profil active…</string>
+    <string name="migrating_boluses">Migrarea bolusurilor…</string>
 </resources>

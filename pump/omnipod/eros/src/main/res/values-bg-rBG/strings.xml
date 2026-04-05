@@ -3,26 +3,16 @@
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Интеграцията за помпа Omnipod Eros (по-стария модел с прозрачната капачка на иглата). Изисква се RileyLink с минимална версия 2.0.</string>
     <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Грешен RileyLink адрес.</string>
     <!-- Omnipod Eros - Preferences -->
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Показване на PULSE LOG в менюто на Pod Management</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Показване на RileyLink Stats бутон в меню Управление на Pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Позволи на записване на смяна на батерията в Действия</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Сигнал при неясни TBR известия, разрешен</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Сигнал при неясни SMB известия, разрешен</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Сигнал при неясни болус известия, разрешен</string>
-    <!-- Omnipod Eros - History -->
-    <string name="omnipod_eros_history_title">История в Pod</string>
-    <string name="omnipod_eros_history_item_description">Описание</string>
-    <string name="omnipod_eros_history_item_source">Източник</string>
-    <string name="omnipod_eros_history_item_date">Дата</string>
-    <string name="omnipod_eros_history_type">Тип:</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2fЕ</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f Е, Вх=%2$.1f гр</string>
     <string name="omnipod_eros_history_tbr_value">Количество: %1$.2f U, Продължителност: %2$d мин</string>
-    <!-- Omnipod Eros - Short Status -->
-    <string name="omnipod_eros_short_status_riley_link_battery">RL бат: %1$d</string>
     <!-- Omnipod Eros - Error -->
-    <string name="omnipod_eros_error_riley_link_address_invalid">Грешен RileyLink адрес.</string>
     <string name="omnipod_eros_error_crc_mismatch">Неуспешна комуникация: проверката на цялостта на съобщението е неуспешна</string>
     <string name="omnipod_eros_error_invalid_packet_type">Неуспешна комуникация: получиен невалиден пакет от под</string>
     <string name="omnipod_eros_error_invalid_progress_state">Неуспешна комуникация: под е в грешно състояние</string>
@@ -47,18 +37,13 @@
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Продължителността трябва да бъде по-голяма от нула и кратно на %1$s минути.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Неуспешно задаване на базален профил. Доставката на инсулин може да бъде спряна! Моля, ръчно опреснете състоянието на Pod от раздел Omnipod и възобновете доставката, ако е необходимо.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Неуспешно задаване на време. Инсулинът е спрян! Моля, ръчно подновяване на доставката от раздела Omnipod.</string>
-    <string name="omnipod_eros_error_failed_to_read_pulse_log">Неуспешно прочитане на Pulse Log</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Неуспешно променяне на времето на под. Трябва ръчно да синхронизирате времето в раздела Omnipod.</string>
-    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Забранено действие.\n\n Първо трябва да конфигурурате Omnipod , преди да използвате тази операция,.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Не може да се провери дали болус е поставен. Моля, уверете се ръчно, че Вашият Pod се активира чрез слушане на кликвания. <b>Ако сте сигурни, че болус не е успял, вие трябва ръчно да изтриете болния запис от лечение, дори ако щракнете върху \'Отказ от болус\' сега!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Не може да се провери дали SMB болус(%1$.2f Е) е успешен. <b>Ако сте сигурни, че не е успял, трябва ръчно да изтриете запис SMB от леченията.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">В Pod има пуснат временен базал но AAPS не знае за него. Моля, отменете временния си базал ръчно.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink статистика</string>
-    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Изчакване на RileyLink връзка…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Изчисти RileyLink конфигурацията</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Прочети Pulse log</string>
-    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Четене на Pulse log…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse лог</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse log(копиран в клипборда)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

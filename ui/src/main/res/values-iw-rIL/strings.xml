@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
     <string name="start_hypo_tt">הפעלת היפו TT</string>
     <string name="time_offset">היסט זמן</string>
-    <string name="unit_minute_short">דק\'</string>
     <string name="remind_to_bolus_later">תזכורת להזרקת בולוס אח\"כ</string>
-    <string name="a11y_carb_reminder">קביעת תזכורת</string>
     <!--    Widget-->
     <string name="configure">הגדרת אטימות</string>
     <string name="widget_description">ווידג\'ט AAPS</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">מוניטור פעילות</string>
     <string name="do_you_want_reset_stats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="do_you_want_recalculate_tdd_stats">האם ברצונכם לאפס את סטטיסטיקת המינונים היומיים הכוללים?</string>
-    <string name="statistics">סטטיסטיקה</string>
     <string name="calculation_in_progress">מבצע חישוב</string>
     <string name="invalid_age">רשומת גיל לא חוקית</string>
     <string name="invalid_weight">רשומת משקל לא חוקית</string>
-    <string name="id">מס\' זיהוי:</string>
-    <string name="submit">עדכן</string>
     <string name="age">גיל</string>
     <string name="weight_label">משקל</string>
-    <string name="most_common_profile">הפרופיל הנפוץ ביותר:</string>
-    <string name="survey_comment">הערה: רק נתונים הגלויים במסך זה יועלו, באופן אנונימי. מספר זיהוי מוקצה להתקנה זו של AndroidAPS. תוכלו לשלוח שוב נתונים אם הפרופיל הראשי שלכם ישונה, אך תנו לו לרוץ במשך שבוע לפחות כדי להפוך את תוצאת הזמן בטווח לגלויה. עזרתכם מוערכת.</string>
     <string name="glucose_type">סוג גלוקוז</string>
     <string name="bg_other">אחר</string>
     <string name="bg_meter">מד</string>
@@ -44,6 +37,7 @@
     <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">רישום בולוס ללא הזרקה</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
     <string name="timeshift_label">היסט זמן</string>
@@ -76,7 +70,6 @@
     <string name="a11y_current_bg">רמת סוכר נוכחית</string>
     <string name="carb_time_label">זמן פחמימות</string>
     <string name="a11y_set_carb_timer">הגדרת אזעקה טיימר פחמימות</string>
-    <string name="show_calculation">הצג חישוב</string>
     <!-- Treatments -->
     <string name="no_records_available">אין רישומים זמינים</string>
     <string name="calculation_short">חישוב</string>
@@ -88,8 +81,6 @@
     <string name="meal_bolus">ארוחה</string>
     <string name="prime">תיחול</string>
     <string name="carbs_and_bolus">פחמ\' ובולוס</string>
-    <string name="show_invalidated_records">הצג רשומות מבוטלות\\מחוקות</string>
-    <string name="hide_invalidated_records">הסתר רשומות מבוטלות\\מחוקות</string>
     <string name="show_invalidated">הצג פסולים</string>
     <string name="hide_invalidated">הסתר פסולים</string>
     <string name="careportal_remove_started_events">הסרת רשומות הפעלת AAPS</string>
@@ -97,16 +88,10 @@
     <string name="show_loop">הצג לולאה</string>
     <string name="user_entry">קלט המשתמש</string>
     <string name="clone_label">שכפול</string>
-    <string name="show_loop_records">הצג רשומות לולאה</string>
-    <string name="show_hide_records">החבא רשומות לולאה</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">פרופיל 1</string>
-    <string name="profile2">פרופיל 2</string>
     <string name="profile_type">סוג פרופיל</string>
     <string name="basal_pct_from_tdd_label">% של הבזאלי</string>
     <string name="selected_profile">נבחר:</string>
-    <string name="compare_profile">השוואת פרופילים</string>
-    <string name="nav_profile_helper">עוזר הפרופילים</string>
     <string name="motol_default_profile">פרופיל ברירת מחדל</string>
     <string name="current_profile">פרופיל נוכחי</string>
     <string name="available_profile">פרופיל זמין</string>
@@ -117,8 +102,6 @@
     <string name="invalid_pct">רשומת אחוזים לא חוקית</string>
     <!-- Other dialogs -->
     <string name="basal_rate">מינון בזאלי</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">עצור נלחץ!</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">על השעון בלבד</string>
     <string name="a11y_only_on_phone">על הטלפון בלבד</string>
@@ -131,4 +114,7 @@
     <!--    Widget-->
     <string name="use_black_color">השתמש בצבע שחור</string>
     <string name="widget_configuration">תצורת ווידג\'ט</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
 </resources>

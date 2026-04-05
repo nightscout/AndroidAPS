@@ -2,15 +2,7 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Интегриране на помпа за Omnipod Dash (новият модел с активиран Bluetooth, със синя капачка на иглата).</string>
-    <!-- Omnipod Dash - History -->
-    <string name="omnipod_dash_history_title">История на под</string>
-    <string name="omnipod_dash_history_item_description">Описание</string>
-    <string name="omnipod_dash_history_item_amount">Количество</string>
-    <string name="omnipod_dash_history_item_source">Източник</string>
-    <string name="omnipod_dash_history_item_date">Дата</string>
-    <string name="omnipod_dash_history_type">Тип:</string>
     <!-- Omnipod Dash - Overview -->
-    <string name="omnipod_dash_overview_bluetooth_status">Bluetooh статус</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth адрес</string>
     <string name="omnipod_dash_overview_firmware_version_value">Фърмуер %1$s / Bluetooth %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Качество на връзката</string>
@@ -19,11 +11,7 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Напълнете новия Pod
         с достатъчно инсулин за 3 дни.\n\nИзчакайте два сигнала от Pod по време на процеса на зареждане. Те показват, че е сложен минималният размер от 80Е. Уверете се, че сте изпразнили напълно спринцовката, дори след като сте чули двата сигнала.\n\nСлед пълнене на Pod, моля натиснете <b>Следващ</b>.\n\n<b>Забележка:</b> не вадете капачката на иглата на Pod в този момент.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Опитвате се да се сдвоите с новия Pod и да го заредите.\n\nКогато процесът на инициализация приключи успешно, можете да натиснете <b>Напред</b>.</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Сигнализирай при активирано известие за спряна доставка</string>
     <!-- Exceptions -->
-    <string name="omnipod_dash_failed_to_connect">Неуспешна връзка с pod</string>
-    <string name="omnipod_dash_found_too_many_pods">Намерени са твърде много подове за активиране</string>
-    <string name="omnipod_dash_scan_failed">Не може да се намери наличен pod за активиране</string>
     <string name="omnipod_dash_generic_error">Обща грешка: %1$s</string>
     <string name="omnipod_dash_failed_to_send">Грешка при изпращане на команда</string>
     <string name="omnipod_dash_command_not_sent">Командата не е изпратена</string>
@@ -33,7 +21,6 @@
     <string name="omnipod_common_history_bolus_value">%1$.2fЕ</string>
     <string name="omnipod_common_alert_delivery_suspended">Доставянето на инсулин е спряно</string>
     <string name="omnipod_common_history_total_delivered">Общо доставени: %1$.2f Ед.</string>
-    <string name="omnipod_dash_connection_lost">Загубена връзка с pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Доставя се друг болус</string>
     <string name="omnipod_dash_not_enough_insulin">Недостатъчно инсулин в резервоара</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Непотвърдена команда</string>

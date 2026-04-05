@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">사용하시는 혈당 단위를 선택하세요</string>
     <string name="next_button">다음</string>
     <string name="previous_button">이전</string>
-    <string name="nav_setupwizard">설정 마법사</string>
     <string name="setupwizard_finish">완료</string>
     <string name="welcome">환영합니다</string>
     <string name="welcometosetupwizard">설정 마법사에 오신것을 환영합니다. 설정 마법사가 설정 과정을 안내하여 줄것입니다.</string>
@@ -18,18 +17,13 @@
     <string name="high_mark_comment">혈당 정상범위의 상한값(표시 전용)</string>
     <string name="permission">권한</string>
     <string name="need_system_window_permission">알림에 대한 시스템 창 권한이 필요합니다</string>
-    <string name="need_location_permission">어플은 BT scan과 WiFi 식별을 위해 \"위치 허용\"이 요구됩니다.</string>
-    <string name="need_storage_permission">어플은 로그 파일 저장과 설정 내보내기를 위해 \"저장공간 허용\"이 요구됩니다.</string>
     <string name="askforpermission">권한 요청하기</string>
-    <string name="need_whitelisting">%1$s를 사용하기 위해서는 배터리 최적화 화이트리스팅이 필요합니다</string>
     <string name="storedsettingsfound">저장된 설정이 있습니다.</string>
     <string name="master_password_summary">마스터 비밀번호는 백업 암호 또는 보안 해제를 위해 사용됩니다. 이를 기억하거나 안전한 곳에 저장해두세요.</string>
-    <string name="current_master_password">현재 마스터 비밀번호</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">평소 섭취하는 가장 많은 양의 탄수화물 값을 사용하세요.\n</string>
     <string name="syncinfotext">데이터 클라우드에 동기화합니다. 지금 이 부분을 건너뛸 수 있지만 Nightscout 또는 Tidepool 클라이언트를 설정할 때까지목표를 전달할 수 없습니다.</string>
     <string name="status">상태:</string>
-    <string name="patient_name">환자 이름</string>
-    <string name="patient_name_summary">다양한 설정들을 구별하기 위하여 환자 이름 또는 별명을 입력합니다.</string>
     <string name="diawarning">새로운 인슐린 프로파일은 최소 5시간의 DIA가 요구됩니다. 새로운 프로파일의 DIA 5-6시간은 구식 인슐린 프로파일의 DIA 3시간과 동일합니다.</string>
     <string name="profile">프로파일</string>
     <string name="doprofileswitch">프로파일 변경 실행</string>
@@ -51,25 +45,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">구성 관리자</string>
-    <string name="configbuilder_pump">펌프</string>
     <string name="configbuilder_pump_description">어떤 펌프를 AAPS에서 사용하시겠습니까?</string>
     <string name="configbuilder_profile">프로파일</string>
-    <string name="configbuilder_profile_description">어떤 프로파일을 AAPS에서 사용하시겠습니까?</string>
-    <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">어떤 APS 알고리즘을 사용합니까?</string>
-    <string name="configbuilder_general">일반</string>
     <string name="configbuilder_general_description">유용한 여러가지 플러그인</string>
-    <string name="configbuilder_sync">동기화</string>
-    <string name="configbuilder_sync_description">데이터 업로드 및 동기화 플러그인.</string>
     <string name="configbuilder_constraints_description">어떤 제약을 적용합니까?</string>
-    <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">AAPS의 루프를 활성하기 위해서 이것을 사용하십시오.</string>
     <string name="configbuilder_insulin_description">어떤 종류의 인슐린을 사용합니까?</string>
-    <string name="configbuilder_bgsource">혈당 출처</string>
     <string name="configbuilder_bgsource_description">AAPS가 어디에서 데이터를 가져옵니까?</string>
-    <string name="configbuilder_smoothing">평탄화</string>
     <string name="configbuilder_smoothing_description">평탄화 알고리즘을 선택합니다</string>
-    <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">활성화된 플러그인을 구성하는 데 사용됩니다.</string>
@@ -78,19 +62,18 @@
     <string name="nsclient_version_does_not_match">AAPS 클라이언트 버전이 AAPS 버전과 일치하지 않습니다. 업데이트 하십시오.</string>
     <!--ImportExport-->
     <string name="nav_preferences">설정</string>
-    <string name="password_preferences_encrypt_prompt">내보낸 preferences 암호화 하기 위해 마스터 비밀번호가 필요합니다.</string>
-    <string name="preferences_export_canceled">내보내기 취소됩니다! 환경 설정을 내보내지 않았습니다!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">가져오고 취소됩니다! 환경설정을 가져오지 않았습니다.</string>
     <string name="preferences_import_impossible">기본 설정을 가져올 수 없습니다.</string>
     <string name="check_preferences_details_btn">환경설정 가져오기 문제 설명</string>
     <string name="check_preferences_details_title">환경설정 가져오기 문제의 상세정보</string>
     <string name="check_preferences_import_btn">가져오기</string>
     <string name="check_preferences_import_anyway_btn">무시하고 가져오기 (위험!)</string>
-    <string name="import_setting">설정 불러오기</string>
     <string name="check_preferences_before_import">가져오기 전에 환경설정을 확인하세요.</string>
     <string name="check_preferences_cannot_import">환경 설정을 가져올 수가 없습니다.</string>
     <string name="check_preferences_dangerous_import">환경 설정을 가져오면 안됩니다.</string>
-    <string name="export_to">다음 위치에 설정을 저장하시겠습니까</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">다음 위치에서 설정을 불러오시겠습니까</string>
     <string name="setting_imported">설정을 불러왔습니다</string>
     <string name="old_master_password">이전 마스터 비밀번호</string>
@@ -101,25 +84,12 @@
     <string name="goto_main_try_again">기본 화면으로 돌아가서 다시 시도하십시오.</string>
     <string name="restartingapp">설정을 적용하기위해 앱을 종료합니다.</string>
     <string name="ue_exported">사용자 입력 사항들이 저장됨</string>
-    <string name="protection">보안</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">정비</string>
     <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">정비를 위한 여러가지 기능을 제공합니다.(예, 로그 전송,로그 삭제 등)</string>
-    <string name="database_cleanup">데이터베이스 정리하기</string>
-    <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="maintenance_settings">정비 설정</string>
     <string name="maintenance_email">Email</string>
     <string name="maintenance_amount">전송할 로그 수</string>
-    <string name="send_all_logs">Email로 로그 전송하기</string>
-    <string name="delete_logs">로그 삭제하기</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
-    <string name="engineering_mode_enabled">전문가 모드 사용</string>
-    <string name="log_files">로그 파일</string>
-    <string name="nav_logsettings">로그 설정</string>
-    <string name="miscellaneous">기타 설정</string>
-    <string name="nav_resetdb">데이터베이스 초기화</string>
-    <string name="resettodefaults">기본값으로 초기화</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s 전에 내보내기 함</string>
     <string name="exported_at" comment="at placeholder we add export date">%1$s에 내보내기 함</string>
@@ -142,8 +112,6 @@
     <string name="prefdecrypt_issue_wrong_pass">해독 에러, 입력한 비밀번호가 유효하지 않거나 설정 파일이 수정되었습니다. 가져온 파일이 다른 마스터 비밀번호로 내보내기 되었을 가능성이 있습니다.</string>
     <string name="prefdecrypt_issue_wrong_format">암호화 설정이 누락되었음, 설정 형식이 유효하지 않습니다!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">지원되지 않는 또는 명시되지 않은 암호화 알고리즘!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">사용자 지정 워치페이스 선택하기</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">파일 형식</string>
     <string name="metadata_label_created_at">생성 일자</string>
@@ -154,6 +122,7 @@
     <string name="metadata_label_encryption">파일 암호화</string>
     <string name="metadata_format_new">암호화된 새로운 형식</string>
     <string name="metadata_format_other">알려지지 않은 내보내기 형식</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->

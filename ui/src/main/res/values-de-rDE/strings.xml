@@ -8,25 +8,18 @@
     <string name="start_eating_soon_tt">Starte Essens-TT</string>
     <string name="start_hypo_tt">Starte Hypo-TT</string>
     <string name="time_offset">Zeitversatz</string>
-    <string name="unit_minute_short">Min.</string>
     <string name="remind_to_bolus_later">Später an Bolus erinnern</string>
-    <string name="a11y_carb_reminder">Erinnerung einstellen</string>
     <!--    Widget-->
     <string name="configure">Deckkraft konfigurieren</string>
     <string name="widget_description">AAPS Widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktivitätsmonitor</string>
     <string name="do_you_want_reset_stats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
-    <string name="statistics">Statistiken</string>
     <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
     <string name="invalid_age">Ungültige Altersangabe</string>
     <string name="invalid_weight">Ungültige Gewichtsangabe</string>
-    <string name="id">ID:</string>
-    <string name="submit">Senden</string>
     <string name="age">Alter</string>
     <string name="weight_label">Gewicht</string>
-    <string name="most_common_profile">Meistgenutztes Profil:</string>
-    <string name="survey_comment">Hinweis: Nur Daten, die auf diesem Bildschirm sichtbar sind, werden anonym hochgeladen. Die ID wird dieser Installation von AndroidAPS zugeordnet. Du kannst erneut Daten senden, wenn sich Dein Hauptprofil geändert hat. Lasse es aber es mindestens eine Woche lang laufen, damit dessen Ergebnis in der Time in Range sichtbar wird. Danke für Deine Unterstützung.</string>
     <string name="glucose_type">Glukoseart</string>
     <string name="bg_other">Anderes</string>
     <string name="bg_meter">Messgerät</string>
@@ -43,6 +36,7 @@
     <string name="record_insulin_cartridge_change">Reservoir-Wechsel erfassen</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Bolus nur erfassen</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Erneut verwenden %1$d%% %2$dh</string>
     <string name="timeshift_label">Zeitverschiebung</string>
@@ -75,7 +69,6 @@
     <string name="a11y_current_bg">Aktueller Blutzucker</string>
     <string name="carb_time_label">KH-Zeit</string>
     <string name="a11y_set_carb_timer">setze Alarm für KH Timer</string>
-    <string name="show_calculation">Berechnung anzeigen</string>
     <!-- Treatments -->
     <string name="no_records_available">Keine Datensätze verfügbar</string>
     <string name="calculation_short">Berech.</string>
@@ -87,8 +80,6 @@
     <string name="meal_bolus">Essensbolus</string>
     <string name="prime">Füllen</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
-    <string name="show_invalidated_records">Zeige ungültige / gelöschte Einträge</string>
-    <string name="hide_invalidated_records">Verberge ungültige / gelöschte Einträge</string>
     <string name="show_invalidated">Zeige Ungültige</string>
     <string name="hide_invalidated">Verstecke Ungültige</string>
     <string name="careportal_remove_started_events">AAPS gestartete Einträge entfernen</string>
@@ -96,16 +87,10 @@
     <string name="show_loop">Zeige Loop an</string>
     <string name="user_entry">Benutzereingabe</string>
     <string name="clone_label">Klonen</string>
-    <string name="show_loop_records">Zeige Loop Datensätze</string>
-    <string name="show_hide_records">Verberge Loop Datensätze</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profil 1</string>
-    <string name="profile2">Profil 2</string>
     <string name="profile_type">Profil-Typ</string>
     <string name="basal_pct_from_tdd_label">% der Basalrate</string>
     <string name="selected_profile">Ausgewählt:</string>
-    <string name="compare_profile">Profile vergleichen</string>
-    <string name="nav_profile_helper">Profil-Helfer</string>
     <string name="motol_default_profile">Standard-Profil</string>
     <string name="current_profile">Aktuelles Profil</string>
     <string name="available_profile">Verfügbares Profil</string>
@@ -116,8 +101,6 @@
     <string name="invalid_pct">Ungültige % Eingabe</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Basalrate</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOPP GEDRÜCKT</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">nur auf Uhr</string>
     <string name="a11y_only_on_phone">nur auf Smartphone</string>
@@ -125,4 +108,7 @@
     <string name="overview_edit_quickwizard_valid">Gültigkeit:</string>
     <string name="a11y_drag_and_drop_handle">Drag and Drop Handle</string>
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
 </resources>

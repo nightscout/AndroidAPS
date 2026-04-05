@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Medtronic公司的编码</string>
     <string name="medtronic_custom_action_wake_and_tune">唤醒和调整</string>
     <string name="medtronic_custom_action_clear_bolus_block">清除大剂量锁定</string>
-    <string name="medtronic_custom_action_reset_rileylink">重置 RileyLink 配置</string>
     <string name="medtronic_pump_battery_select">电池类型 (电源视图)</string>
     <string name="medtronic_pump_battery_no">未选择 (简单视图)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (扩展视图)</string>
     <string name="medtronic_pump_battery_lithium">锂(扩展视图)</string>
     <string name="medtronic_pump_battery_nizn">锂(扩展视图)</string>
     <string name="medtronic_pump_battery_nimh">镍氢电池 (扩展视图)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink 电池</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">错误</string>
-    <string name="medtronic_error_serial_not_set">未设置序列号。</string>
     <string name="medtronic_error_serial_invalid">序列号无效。</string>
     <string name="medtronic_error_pump_type_not_set">未设置泵类型。</string>
     <string name="medtronic_error_pump_type_invalid">不支持该泵类型。</string>
-    <string name="medtronic_error_pump_frequency_not_set">未设置泵频率。</string>
     <string name="medtronic_error_pump_frequency_invalid">不支持该泵类型。</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink 地址无效。</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">检测到的泵类型与配置的类型不同。</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">取消临时基础率</string>
     <string name="medtronic_cmd_desc_set_bolus">设置大剂量</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">获取剩余胰岛素</string>
-    <string name="medtronic_pump_status_pump_unreachable">泵无法连接</string>
-    <string name="medtronic_warning">警告</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">现在</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">之前</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">现在</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">之前</string>
     <string name="medtronic_notification_check_time_date">泵的时间需要更新</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">泵时间已经更新</string>
     <string name="set_neutral_temps_title">设置中性临时基础率</string>
     <string name="set_neutral_temps_summary">如果启用，它将在每小时结束前取消临时基础率。 此方法可帮助阻止某些泵在一小时内进行蜂鸣/振动。</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 分钟剩余)</string>
     <string name="invalid_history_data">检测到无效的泵历史数据。打开新问题并提供日志。</string>
     <string name="riley_statistics">RileyLink状态</string>
-    <string name="medtronic_history_type">类型：</string>
     <string name="clicked_refresh" comment="26 characters max for translation">点击刷新</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">计划状态刷新</string>
 </resources>

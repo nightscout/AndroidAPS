@@ -12,6 +12,7 @@ import android.os.HandlerThread
 import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -27,6 +28,7 @@ import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -137,14 +139,17 @@ class MainApp : Application(), HasAndroidInjector {
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var localProfileManager: LocalProfileManager
+    @Inject lateinit var localInsulinManager: InsulinManager
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
-    lateinit var insulinLabel: String
-    var insulinPeakTime: Long = 0L
+
+    private lateinit var insulinLabel: String
+    private var insulinPeakTime: Long = 0L
+    private var profileNameToDia: Map<String, Double> = emptyMap()
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshWidget: Runnable
@@ -467,6 +472,8 @@ class MainApp : Application(), HasAndroidInjector {
             }
         }
         // Migrate Profile
+        val indexToName = mutableMapOf<Int, String>()
+        val indexToDia = mutableMapOf<Int, Double>()
         for ((key, value) in keys) {
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_mgdl")) {
                 val number = key.split("_")[1]
@@ -505,16 +512,28 @@ class MainApp : Application(), HasAndroidInjector {
             }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name")) {
                 val number = key.split("_")[1]
-                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, SafeParse.stringToInt(number), value = value as String)
+                indexToName[SafeParse.stringToInt(number)] = value as String
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, SafeParse.stringToInt(number), value = value)
                 sp.remove(key)
             }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_name_")) {
+                val number = key.split("_")[2]
+                indexToName[SafeParse.stringToInt(number)] = value as String
+            }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia")) {
+                val number = SafeParse.stringToInt(key.split("_")[1])
+                indexToDia[number] = SafeParse.stringToDouble(value.toString())
                 sp.remove(key)
             }
             if (key.startsWith(Constants.LOCAL_PROFILE + "_dia_")) {
+                val number = SafeParse.stringToInt(key.split("_")[2])
+                indexToDia[number] = SafeParse.stringToDouble(value.toString())
                 sp.remove(key)
             }
         }
+        profileNameToDia = indexToDia.mapNotNull { (index, dia) ->
+            indexToName[index]?.let { name -> name to dia }
+        }.toMap()
 
         // Migrate Tidepool from username/password to OAuth2
         if (sp.contains("tidepool_username") || sp.contains("tidepool_password")) {
@@ -589,8 +608,6 @@ class MainApp : Application(), HasAndroidInjector {
             sp.remove("ConfigBuilder_Enabled_INSULIN_InsulinLyumjevPlugin")
             sp.remove("insulin_oref_peak")
         }
-        // TODO Migrate insulin configurations
-
     }
 
     /**
@@ -671,14 +688,24 @@ class MainApp : Application(), HasAndroidInjector {
     }
 
     private suspend fun dataMigrations() {
-        // Migrate to database 32 (ICfg)
+        // Migrate to database 33 (ICfg)
         // Grab default value first
-        val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
-            localProfileManager.profile?.getSpecificProfile(profileName)?.iCfg?.dia
+        var runningICfg = if (profileNameToDia.size == 0) // no migration, get running iCfg from running Profile
+            profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
+        else {  // migration, create running iCfg from previous runningProfile dia and slected InsulinPlugin for peak
+            val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
+                profileNameToDia[profileName]
+            }
+            val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
+            ICfg("", insulinEndTime, insulinPeakTime, 1.0).also {
+                it.insulinNickname = insulinLabel
+                it.insulinLabel = "$insulinLabel ${localInsulinManager.buildSuffix(it.peak, it.dia, it.concentration)}"
+            }
         }
-        val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
 
-        val concentration = 1.0
+        if (!localInsulinManager.insulinAlreadyExists(runningICfg)) { // Add running insulin in InsulinManager if missing
+            localInsulinManager.addNewInsulin(runningICfg, keepName = true)
+        }
 
         var totalMigrated = 0
 
@@ -690,10 +717,10 @@ class MainApp : Application(), HasAndroidInjector {
             val step = rh.get().gs(R.string.migrating_profile_switches)
             config.updateInitProgress(step, 0, total)
             unmigrated.forEachIndexed { index, ps ->
-                ps.iCfg.insulinLabel = insulinLabel
-                ps.iCfg.insulinEndTime = insulinEndTime
-                ps.iCfg.insulinPeakTime = insulinPeakTime
-                ps.iCfg.concentration = concentration
+                ps.iCfg.insulinLabel = runningICfg.insulinLabel
+                ps.iCfg.insulinEndTime = runningICfg.insulinEndTime
+                ps.iCfg.insulinPeakTime = runningICfg.insulinPeakTime
+                ps.iCfg.concentration = runningICfg.concentration
                 persistenceLayer.updateProfileSwitchNoLogging(ps)
                 if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
                     config.updateInitProgress(step, index + 1, total)
@@ -709,10 +736,10 @@ class MainApp : Application(), HasAndroidInjector {
             val step = rh.get().gs(R.string.migrating_effective_profile_switches)
             config.updateInitProgress(step, 0, total)
             unmigratedEps.forEachIndexed { index, eps ->
-                eps.iCfg.insulinLabel = insulinLabel
-                eps.iCfg.insulinEndTime = insulinEndTime
-                eps.iCfg.insulinPeakTime = insulinPeakTime
-                eps.iCfg.concentration = concentration
+                eps.iCfg.insulinLabel = runningICfg.insulinLabel
+                eps.iCfg.insulinEndTime = runningICfg.insulinEndTime
+                eps.iCfg.insulinPeakTime = runningICfg.insulinPeakTime
+                eps.iCfg.concentration = runningICfg.concentration
                 persistenceLayer.updateEffectiveProfileSwitchNoLogging(eps)
                 if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
                     config.updateInitProgress(step, index + 1, total)
@@ -728,10 +755,10 @@ class MainApp : Application(), HasAndroidInjector {
             val step = rh.get().gs(R.string.migrating_boluses)
             config.updateInitProgress(step, 0, total)
             unmigratedBoluses.forEachIndexed { index, bolus ->
-                bolus.iCfg.insulinLabel = insulinLabel
-                bolus.iCfg.insulinEndTime = insulinEndTime
-                bolus.iCfg.insulinPeakTime = insulinPeakTime
-                bolus.iCfg.concentration = concentration
+                bolus.iCfg.insulinLabel = runningICfg.insulinLabel
+                bolus.iCfg.insulinEndTime = runningICfg.insulinEndTime
+                bolus.iCfg.insulinPeakTime = runningICfg.insulinPeakTime
+                bolus.iCfg.concentration = runningICfg.concentration
                 persistenceLayer.updateBolusNoLogging(bolus)
                 if ((index + 1) % PROGRESS_UPDATE_INTERVAL == 0 || index + 1 == total)
                     config.updateInitProgress(step, index + 1, total)
@@ -741,12 +768,12 @@ class MainApp : Application(), HasAndroidInjector {
 
         // Log a single user entry for the entire migration
         if (totalMigrated > 0) {
-            aapsLogger.debug(LTag.CORE, "Migration to DB 32 complete: $totalMigrated records updated")
+            aapsLogger.debug(LTag.CORE, "Migration to DB 33 complete: $totalMigrated records updated")
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE(
                     timestamp = dateUtil.now(),
                     type = TE.Type.NOTE,
-                    note = "Database migration to v32: $totalMigrated records updated (insulin configuration)",
+                    note = "Database migration to v33: $totalMigrated records updated (insulin configuration)",
                     glucoseUnit = GlucoseUnit.MGDL
                 ),
                 action = Action.START_AAPS,

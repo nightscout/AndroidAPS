@@ -3,15 +3,9 @@
     <string name="equil_pump_description">Equil 5.3 veya daha yeni Patch Pompa </string>
     <!--  start  -->
     <string name="equil_basal_speed">Temel Bazal</string>
-    <string name="equil_btn_cancel">İptal</string>
-    <string name="equil_btn_need">İhtiyaç</string>
-    <string name="equil_btn_skip">Atla</string>
-    <string name="equil_date_device">Son bağlantı</string>
     <string name="equil_dressing">Rezervuarı Değiştir</string>
     <string name="equil_dressing_onkey_msg">Pistonu otomatik olarak rezervuar tabanına hareket ettirin. Dibe ulaştığında otomatik olarak duracaktır. Gerekirse kesintiye uğratmak için \'Durdur\'a tıklayın.</string>
-    <string name="equil_next">İleri</string>
     <string name="equil_hint_dressing">Bu işlem insülin infüzyonunu durduracak ve pompa pistonunun aşağıya doğru çekilmesine neden olacaktır!</string>
-    <string name="equil_history">Geçmiş</string>
     <string name="equil_insulin_reservoir">İnsülin rezervuarı</string>
     <string name="equil_mode">Çalışma modu</string>
     <string name="equil_mode_running">Çalışıyor</string>
@@ -22,16 +16,12 @@
     <string name="equil_success">Başarılı</string>
     <string name="equil_title_dressing">Kartuşu değiştir</string>
     <string name="equil_title_history_events">Olay Geçmişi</string>
-    <string name="equil_title_tips">İpuçları</string>
     <string name="equil_tone">Uyarı tonu</string>
     <string name="equil_tone_mode_mute">Sessiz</string>
     <string name="equil_tone_mode_shake">Sadece titreşim</string>
     <string name="equil_tone_mode_tone">Sadece ses</string>
     <string name="equil_tone_mode_tone_and_shake">Titreşim ve ses</string>
     <string name="equil_unit_u">%1$s Ü</string>
-    <string name="equil_unit_u_hours">%1$s Ü/Sa</string>
-    <string name="equil_unbind_content">Bu işlem insülin infüzyonunu durduracak ve pompa pistonunu aşağıya doğru çekecektir! Ayrıca bağlanma durumunu da silecektir.！</string>
-    <string name="equil_error_no_devices">Cihaz yok</string>
     <string name="equil_ble_config_confirmation_title">Equil Patch pompasını eşleştirin</string>
     <string name="equil_error">Bağlantı Hatası</string>
     <string name="equil_change">Pompayı değiştir</string>
@@ -48,18 +38,15 @@
     <string name="equil_pump_not_run">Pompa çalışmıyor</string>
     <string name="equil_pair">Eşleştir</string>
     <string name="equil_pair_error">Eşleşme hatası</string>
-    <string name="equil_retry">Tekrar dene</string>
     <string name="equil_fill">Hazırla/doldur</string>
     <string name="equil_air">Havayı temizleyin</string>
     <string name="equil_temp_basal_rate">Geçici bazal</string>
     <string name="equil_total_delivered">Toplam İletilen</string>
-    <string name="equil_last_bolus">Son bolus</string>
     <string name="equil_firmware_version">Cihaz Yazılımı Sürümü</string>
     <string name="equil_shutdown_be">Equil otomatik olarak kapanacak</string>
     <string name="equil_shutdown">Equil otomatik kapanma</string>
     <string name="equil_common_history_tbr_value">Oran: %1$.2f Ü/S, süre: %2$d dakika</string>
     <string name="equil_common_history_bolus_value">%1$.2f Ü</string>
-    <string name="equil_history_type">Tip：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Bolusu ayarla</string>
     <string name="equil_common_cmd_cancel_bolus">Bolusu İptal et</string>
@@ -72,7 +59,6 @@
     <string name="equil_common_cmd_pair">Pompa Eşleştir</string>
     <string name="equil_common_cmd_insert_cannula">Kanül yerleştir</string>
     <string name="equil_common_cmd_unpair">Pompa eşleştirmeyi kaldır</string>
-    <string name="equil_common_cmd_alarm">Alarm</string>
     <string name="equil_common_cmd_set_extended_bolus">Yayma bolusu ayarla</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Yayma bolusu İptal et</string>
     <!--    推杆回退-->
@@ -88,7 +74,6 @@
     <string name="equil_command_connect_error">Pompa bağlantı hatası</string>
     <string name="equil_command_connect_no_response">Pompa Yanıt vermiyor</string>
     <string name="equil_command__unknown">Bilinmeyen komut durumu</string>
-    <string name="equil_install">Pompayı vücuda yerleştirin\"</string>
     <string name="equil_settings_alarm_battery">Düşük pil uyarısı</string>
     <string name="equil_settings_alarm_insulin">Düşük rezervuar uyarısı</string>
     <string name="equil_init_insulin_error">Rezervuarın başlatılması tamamlanmadı</string>
@@ -126,8 +111,6 @@
     <string name="equil_common_less_than_a_minute_ago">Bir dakikadan az önce</string>
     <string name="equil_common_time_ago">%1$s dak önce</string>
     <string name="equil_common_composite_time">%1$s ve %2$s</string>
-    <string name="equil_common_wizard_button_finish">Bitti</string>
-    <string name="equil_common_wizard_button_next">İleri</string>
     <string name="equil_common_wizard_exit_confirmation_text">Henüz tüm adımları tamamlamadınız. Çıkmak istediğinize emin misin?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Çıkış</string>
     <plurals name="equil_common_minutes">
@@ -143,8 +126,6 @@
         <item quantity="other">%1$d gün</item>
     </plurals>
     <string name="equil_support_error">Cihaz yazılımı sürümü çok düşük. Desteklenmiyor</string>
-    <string name="equil_password_tips">Lütfen Equil v5.3 pompasıyla eşleştirme için yeni bir şifre belirleyin. Bu şifre gelecekte mevcut pompayla eşleştirmeyi kaldırmak için de kullanılacaktır. Bu nedenle lütfen bu şifreyi unutmayın. Şifre kuralı: ABCDEF0123456789 karakterlerinden seçilmeli ve 4 karakter uzunluğunda olmalıdır.</string>
-    <string name="delete">Sil</string>
     <string name="equil_set_pair_password">Paylaşım şifresini belirleyin</string>
     <string name="equil_hint1">Pompayı tabana yerleştirdikten sonra, havanın kalıcı iğneden boşaltılıp boşaltılmayacağını seçin.</string>
     <string name="equil_unbind">Eşleştirmeyi sonlandır</string>
@@ -154,8 +135,6 @@
     <string name="equil_insert2">Pompa, pompa tabanı üzerinde olmamalıdır.</string>
     <string name="equil_attach">Lütfen pompayı tabana takın</string>
     <string name="equil_hint2">Kanul dolumu</string>
-    <string name="equil_hint_dressing2">Lütfen pompayı tabandan çıkarın</string>
-    <string name="equil_unpair">Eski pompa %1$s devre dışı bırakılsın mı?</string>
     <string name="equil_pump_updated">Pompa güncellendi</string>
     <string name="equil_replace_reservoir">Rezervuar boş. Lütfen rezervuarı değiştirin</string>
     <string name="error_mustbe6hexadidits">6 karakter olmalı ve ABCDEF0123456789 kullanılmalıdır</string>

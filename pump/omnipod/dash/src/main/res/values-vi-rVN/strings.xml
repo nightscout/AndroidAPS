@@ -2,15 +2,7 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Tích hợp bơm cho Omnipod Dash (mẫu mới hỗ trợ Bluetooth, có nắp kim màu xanh).</string>
-    <!-- Omnipod Dash - History -->
-    <string name="omnipod_dash_history_title">Lịch sử Pod</string>
-    <string name="omnipod_dash_history_item_description">Mô tả</string>
-    <string name="omnipod_dash_history_item_amount">Số lượng</string>
-    <string name="omnipod_dash_history_item_source">Nguồn</string>
-    <string name="omnipod_dash_history_item_date">Ngày</string>
-    <string name="omnipod_dash_history_type">Loại:</string>
     <!-- Omnipod Dash - Overview -->
-    <string name="omnipod_dash_overview_bluetooth_status">Trạng thái Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Địa chỉ Bluetooth</string>
     <string name="omnipod_dash_overview_firmware_version_value">Phần mềm %1$s / Bluetooth %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Chất lượng kết nối</string>
@@ -20,12 +12,12 @@
         với lượng insulin đủ dùng cho 3 ngày.\n\nTrong quá trình đổ, hãy lắng nghe hai tiếng bíp từ Pod. Điều này cho biết đã nạp tối thiểu 80U.
 Hãy chắc chắn bơm hết toàn bộ lượng insulin trong ống tiêm, ngay cả sau khi nghe hai tiếng bíp.\n\nSau khi đổ insulin vào Pod, vui lòng nhấn<b> Tiếp theo</b>.\n\n<b>Lưu ý: </b>Đừng tháo nắp kim của Pod ở bước này.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Đang cố gắng ghép đôi với Pod mới và mồi nó.\n\nKhi quá trình khởi tạo đã hoàn tất thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Âm thanh khi thông báo tạm dừng tiêm được bật</string>
     <!-- Exceptions -->
-    <string name="omnipod_dash_failed_to_connect">Không thể kết nối với pod</string>
-    <string name="omnipod_dash_found_too_many_pods">Phát hiện quá nhiều Pod để kích hoạt</string>
-    <string name="omnipod_dash_scan_failed">Không có Pod nào sẵn sàng để kích hoạt</string>
+    <string name="omnipod_dash_failed_to_connect">Không thể kết nối</string>
+    <string name="omnipod_dash_found_too_many_pods">Tìm thấy quá nhiều Pods</string>
+    <string name="omnipod_dash_scan_failed">Quét không thành công</string>
     <string name="omnipod_dash_generic_error">Lỗi chung: %1$s</string>
+    <string name="omnipod_dash_connection_lost">Mất kết nối</string>
     <string name="omnipod_dash_failed_to_send">Không thể gửi lệnh</string>
     <string name="omnipod_dash_command_not_sent">Lệnh chưa được gửi</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Pod không nhận được lệnh</string>
@@ -34,7 +26,6 @@ Hãy chắc chắn bơm hết toàn bộ lượng insulin trong ống tiêm, nga
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Việc tiêm insulin đã bị tạm dừng</string>
     <string name="omnipod_common_history_total_delivered">Tổng lượng đã tiêm: %1$.2f U</string>
-    <string name="omnipod_dash_connection_lost">Mất kết nối với pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Một liều bolus khác đang tiêm</string>
     <string name="omnipod_dash_not_enough_insulin">Insulin trong pod không đủ</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Lệnh chưa được xác nhận</string>

@@ -51,16 +51,4 @@
     <string name="ble_config_remove">Μετακίνηση</string>
     <!-- Pump History -->
     <string name="pump_history_type">Τύπος:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d ημέρες</item>
-        <item quantity="other">%1$d ημέρες</item>
-    </plurals>
-    <plurals name="hoursago">
-        <item quantity="one">%1$d ώρα πριν</item>
-        <item quantity="other">%1$d ώρες πριν</item>
-    </plurals>
-    <plurals name="daysago">
-        <item quantity="one">%1$d ημέρα πριν</item>
-        <item quantity="other">%1$d ημέρες πριν</item>
-    </plurals>
 </resources>

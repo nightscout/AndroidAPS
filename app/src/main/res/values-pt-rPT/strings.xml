@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Preferências</string>
-    <string name="nav_exit">Sair</string>
     <string name="delta">Delta</string>
     <string name="save">Guardar</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">Acerca</string>
     <string name="sensitivity_warning">Ao activar a função Autosense lembre-se de introduzir todos os hidratos de carbono (HC) que comeu. Caso contrário os desvios de hidratos serão erroneamente identificados como uma variação da sensibilidade !!</string>
     <string name="invalid">INVÁLIDO</string>
-    <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
-    <string name="localalertsettings_title">Alertas locais</string>
-    <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma Glicose seja recebida</string>
-    <string name="enable_pump_unreachable_alert">Alertar caso não seja possível alcançar a bomba</string>
     <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
-    <string name="enable_carbs_req_alert">Alertar se forem necessários Hidratos</string>
-    <string name="open_navigation">Abrir a navegação</string>
     <string name="close_navigation">Fechar a navegação</string>
     <string name="remove_items">Remover items</string>
     <string name="sort_items">Ordenar itens</string>

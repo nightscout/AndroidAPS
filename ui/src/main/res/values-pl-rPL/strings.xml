@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
     <string name="start_hypo_tt">Rozpocznij TT Hipo</string>
     <string name="time_offset">Przesunięcie czasu</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Przypomnij o bolusie</string>
-    <string name="a11y_carb_reminder">ustaw przypomnienie</string>
     <!--    Widget-->
     <string name="configure">Skonfiguruj przezroczystość</string>
     <string name="widget_description">Widżet AAPS</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">Monitor aktywności</string>
     <string name="do_you_want_reset_stats">Czy chcesz zresetować statystyki aktywności?</string>
     <string name="do_you_want_recalculate_tdd_stats">Czy chcesz ponownie przeliczyć statystyki DDI?</string>
-    <string name="statistics">Statystyki</string>
     <string name="calculation_in_progress">Trwa obliczanie</string>
     <string name="invalid_age">Nieprawidłowy wpis wieku</string>
     <string name="invalid_weight">Nieprawidłowy wpis wagi</string>
-    <string name="id">ID:</string>
-    <string name="submit">Wyślij</string>
     <string name="age">Czas</string>
     <string name="weight_label">Waga</string>
-    <string name="most_common_profile">Najczęściej używany profil:</string>
-    <string name="survey_comment">Uwaga: Tylko dane widoczne na tym ekranie zostaną anonimowo przesłane. Tej instalacji AAPS przypisano ID. Możesz przesłać dane ponownie jeśli twój główny profil ulegnie zmianie, ale pozwól mu działać przez co najmniej tydzień aby zobaczyć jego wpływ na wartość czasu w zakresie. Dziękujemy za wsparcie i pomoc.</string>
     <string name="glucose_type">Typ glukozy</string>
     <string name="bg_other">Inne</string>
     <string name="bg_meter">Glukometr</string>
@@ -47,7 +40,6 @@
     <string name="user_profile_description">Profil użytkownika pokazuje najczęstsze miejsca wkłucia sensorów, pomp i kaniul dostępne u mężczyzn, kobiet lub dzieci</string>
     <string name="site_management">Zarządzanie miejscami</string>
     <string name="site_management_description">Tutaj ustawisz czy chcesz odnotowywać miejsca wkłucia sensora CGM, pompy bezdrenowej lub kaniuli, czy oba te typy miejsc. To ustawienie decyduje, czy przy wykrytej zmianie sensora CGM lub miejsca wkłucia - pokazać okno dialogowe do wskazania miejsca wkłucia.</string>
-    <string name="select_site">Kliknij poniżej, aby wybrać miejsce</string>
     <string name="record_site_change">Zapisz miejsce wkłucia</string>
     <string name="edit_site">Edytuj</string>
     <string name="record_site_location">Miejsce: %1$s</string>
@@ -60,6 +52,7 @@
     <string name="record_insulin_cartridge_change">Zapisz zmianę zasobnika insuliny</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Użyj ponownie %1$d%% %2$dh</string>
     <string name="timeshift_label">Zmiana czasu</string>
@@ -92,7 +85,6 @@
     <string name="a11y_current_bg">bieżąca glikemia</string>
     <string name="carb_time_label">Czas węglow.</string>
     <string name="a11y_set_carb_timer">ustaw alarm dla węglowodanów</string>
-    <string name="show_calculation">Pokaż obliczenia</string>
     <!-- Treatments -->
     <string name="no_records_available">Brak wpisów</string>
     <string name="calculation_short">Kalk</string>
@@ -104,8 +96,6 @@
     <string name="meal_bolus">Posiłek</string>
     <string name="prime">Wypełnianie</string>
     <string name="carbs_and_bolus">Węglowodany i bolus</string>
-    <string name="show_invalidated_records">Pokaż niepoprawne / usunięte wpisy</string>
-    <string name="hide_invalidated_records">Ukryj niepoprawne / usunięte wpisy</string>
     <string name="show_invalidated">Pokaż niepoprawne</string>
     <string name="hide_invalidated">Ukryj niepoprawne</string>
     <string name="careportal_remove_started_events">Usuń wpisy o uruchomieniu AAPS</string>
@@ -113,16 +103,10 @@
     <string name="show_loop">Pokaż pętlę</string>
     <string name="user_entry">Wpis użytkownika</string>
     <string name="clone_label">Sklonuj</string>
-    <string name="show_loop_records">Pokaż wpisy pętli</string>
-    <string name="show_hide_records">Ukryj wpisy pętli</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profil 1</string>
-    <string name="profile2">Profil 2</string>
     <string name="profile_type">Typ profilu</string>
     <string name="basal_pct_from_tdd_label">% bazy</string>
     <string name="selected_profile">Wybrany:</string>
-    <string name="compare_profile">Porównaj profile</string>
-    <string name="nav_profile_helper">Pomocnik profilu</string>
     <string name="motol_default_profile">Profil domyślny</string>
     <string name="current_profile">Bieżący profil</string>
     <string name="available_profile">Dostępny profil</string>
@@ -133,8 +117,6 @@
     <string name="invalid_pct">Nieprawidłowa wartość procentowa</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Dawka bazowa</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">NACIŚNIĘTY STOP</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">tylko na zegarku</string>
     <string name="a11y_only_on_phone">tylko na telefonie</string>
@@ -156,9 +138,12 @@
     <string name="widget_configuration">Konfiguracja widżetu</string>
     <string name="until_changed">Do zmiany</string>
     <string name="limitations">Ograniczenia</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Obie</item>
         <item>Tylko pozytywne</item>
         <item>Tylko negatywne</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>

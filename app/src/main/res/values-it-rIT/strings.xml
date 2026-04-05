@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Preferenze</string>
-    <string name="nav_exit">Esci</string>
     <string name="delta">Delta</string>
     <string name="save">Salva</string>
     <string name="wear">Smartwatch</string>
-    <string name="nav_about">Informazioni su</string>
     <string name="sensitivity_warning">Attivando la funzione Autosense, ricorda di inserire tutti i carboidrati assunti. Altrimenti le deviazioni di glicemia dovute ai carboidrati saranno identificate erroneamente come variazione di sensibilità !!</string>
     <string name="invalid">NON VALIDO</string>
-    <string name="gradually_increase_notification_volume">Aumenta gradualmente il volume per avvisi e notifiche</string>
-    <string name="localalertsettings_title">Avvisi locali</string>
-    <string name="enable_missed_bg_readings_alert">Avviso se non si ricevono dati BG</string>
-    <string name="enable_pump_unreachable_alert">Avviso se il micro è irraggiungibile</string>
     <string name="pump_unreachable_threshold">Soglia micro irraggiungibile [min]</string>
-    <string name="enable_carbs_req_alert">Avviso se sono richiesti CHO</string>
-    <string name="open_navigation">Apri navigazione</string>
     <string name="close_navigation">Chiudi navigazione</string>
     <string name="remove_items">Rimuovi elementi</string>
     <string name="sort_items">Ordina elementi</string>
@@ -27,7 +19,6 @@
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
     <string name="search">Cerca</string>
-    <string name="simple_mode">Modalità semplice</string>
     <string name="select">Seleziona</string>
     <string name="set">Imposta</string>
 </resources>

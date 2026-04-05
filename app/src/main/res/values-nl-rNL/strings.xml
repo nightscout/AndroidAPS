@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Instellingen</string>
-    <string name="nav_exit">Afsluiten</string>
     <string name="delta">Verschil</string>
     <string name="save">Opslaan</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">Over</string>
     <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
     <string name="invalid">Ongeldig</string>
-    <string name="gradually_increase_notification_volume">Volume van notificaties en meldingen geleidelijk verhogen</string>
-    <string name="localalertsettings_title">Lokaal gegenereerde waarschuwingen</string>
-    <string name="enable_missed_bg_readings_alert">Alarm als er geen BG gegevens ontvangen zijn</string>
-    <string name="enable_pump_unreachable_alert">Waarschuwing bij niet bereikbare pomp</string>
     <string name="pump_unreachable_threshold">Pomp niet beschikbaar sinds [min]</string>
-    <string name="enable_carbs_req_alert">Waarschuwen als koolhydraten nodig zijn</string>
-    <string name="open_navigation">Open navigatie</string>
     <string name="close_navigation">Sluit navigatie</string>
     <string name="remove_items">Items verwijderen</string>
     <string name="sort_items">Sorteer items</string>
@@ -27,7 +19,6 @@
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
     <string name="search">Zoeken</string>
-    <string name="simple_mode">Eenvoudige modus</string>
     <string name="select">Selecteer</string>
     <string name="set">Stel in</string>
 </resources>

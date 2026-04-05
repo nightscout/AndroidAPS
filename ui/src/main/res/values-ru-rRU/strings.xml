@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
     <string name="start_hypo_tt">Начать временную цель ТТ Гипо</string>
     <string name="time_offset">Смещение по времени</string>
-    <string name="unit_minute_short">мин</string>
     <string name="remind_to_bolus_later">Напомнить о болюсе позже</string>
-    <string name="a11y_carb_reminder">установить напоминание</string>
     <!--    Widget-->
     <string name="configure">Настроить прозрачность</string>
     <string name="widget_description">Виджет AAPS</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">Монитор активности</string>
     <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
     <string name="do_you_want_recalculate_tdd_stats">Хотите пересчитать статистику суточной дозировки TDD?</string>
-    <string name="statistics">Статистика</string>
     <string name="calculation_in_progress">Идет подсчет</string>
     <string name="invalid_age">Некорректное значение возраст</string>
     <string name="invalid_weight">Некорректное значение вес</string>
-    <string name="id">Идентификатор:</string>
-    <string name="submit">Отправить</string>
     <string name="age">Возраст</string>
     <string name="weight_label">Вес</string>
-    <string name="most_common_profile">Наиболее часто применяемый профиль:</string>
-    <string name="survey_comment">Примечание: Данные, видимые на этом экране, будут загружены анонимно. Для этой установки AAPS назначен идентификатор. Вы можете снова передать данные, если ваш основной профиль будет изменен, но пусть он работает по крайней мере в течение недели, чтобы результат был виден в динамике. Ваша помощь ценна.</string>
     <string name="glucose_type">Тип глюкозы</string>
     <string name="bg_other">Другое</string>
     <string name="bg_meter">Глюкометр</string>
@@ -47,7 +40,6 @@
     <string name="user_profile_description">Описание профиля пользователя включает часто используемые места установки катетера для мужчин, женщин, детей</string>
     <string name="site_management">Профиль контроля места установки</string>
     <string name="site_management_description">Отсюда можно контролировать место установки катетера помпы и/или сенсора НМГ. Эта настройка будет автоматически открывать диалоговое окно при каждой новой обнаруженной установке</string>
-    <string name="select_site">Нажмите ниже, чтобы выбрать место установки</string>
     <string name="record_site_change">Записать расположение места установки</string>
     <string name="edit_site">Редактировать</string>
     <string name="record_site_location">Место установки: %1$s</string>
@@ -60,6 +52,7 @@
     <string name="record_insulin_cartridge_change">Внести запись о замене картриджа инсулина</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Не вводить болюс, только внести запись</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Повторно использовать %1$d%%%2$dч</string>
     <string name="timeshift_label">Сдвиг по времени</string>
@@ -92,7 +85,6 @@
     <string name="a11y_current_bg">текущий уровень глюкозы крови</string>
     <string name="carb_time_label">Время приема углеводов</string>
     <string name="a11y_set_carb_timer">установить будильник приема углеводов</string>
-    <string name="show_calculation">Показать расчет</string>
     <!-- Treatments -->
     <string name="no_records_available">Нет доступных записей</string>
     <string name="calculation_short">Кальк</string>
@@ -104,8 +96,6 @@
     <string name="meal_bolus">На еду</string>
     <string name="prime">Заполн инфуз системы</string>
     <string name="carbs_and_bolus">Углеводы и болюс</string>
-    <string name="show_invalidated_records">Показать недействительные / удаленные записи</string>
-    <string name="hide_invalidated_records">Скрыть недействительные / удаленные записи</string>
     <string name="show_invalidated">Показать недействительные</string>
     <string name="hide_invalidated">Скрыть недействительные</string>
     <string name="careportal_remove_started_events">Удалить записи о начале работы AAPS</string>
@@ -113,16 +103,10 @@
     <string name="show_loop">Показать цикл</string>
     <string name="user_entry">Запись пользователя</string>
     <string name="clone_label">Клонировать</string>
-    <string name="show_loop_records">Показать записи цикла</string>
-    <string name="show_hide_records">Скрыть записи цикла</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Профиль 1</string>
-    <string name="profile2">Профиль 2</string>
     <string name="profile_type">Тип профиля</string>
     <string name="basal_pct_from_tdd_label">% базального</string>
     <string name="selected_profile">Выбрано:</string>
-    <string name="compare_profile">Сравнить профили</string>
-    <string name="nav_profile_helper">Помощник профиля</string>
     <string name="motol_default_profile">Профиль по умолчанию</string>
     <string name="current_profile">Текущий профиль</string>
     <string name="available_profile">Доступный профиль</string>
@@ -133,8 +117,6 @@
     <string name="invalid_pct">Некорректное значение</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Базальная скорость</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">НАЖАТ СТОП</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">только на часах</string>
     <string name="a11y_only_on_phone">только на телефоне</string>
@@ -156,9 +138,12 @@
     <string name="widget_configuration">Настройки виджета</string>
     <string name="until_changed">До изменения</string>
     <string name="limitations">Ограничения</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Оба варианта</item>
         <item>Только положительный</item>
         <item>Только отрицательный</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>

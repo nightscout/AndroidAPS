@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.overview.graph.BasalGraphData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.EpsGraphPoint
+import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.overview.graph.TargetLineData
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.icons.IcProfile
@@ -45,6 +46,10 @@ import com.patrykandpatrick.vico.compose.common.component.TextComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 
 /** Series identifiers */
+/** Basal on BG graph — deprecated, now shown as flipped overlay on IOB graph. Set to true to restore. */
+@Deprecated("Basal moved to IOB graph as flipped overlay")
+private const val showBasalOnBgGraph = false
+
 private const val SERIES_REGULAR = "regular"
 private const val SERIES_BUCKETED = "bucketed"
 private const val SERIES_PRED_IOB = "pred_iob"
@@ -71,6 +76,7 @@ private val PREDICTION_SERIES = listOf(SERIES_PRED_IOB, SERIES_PRED_COB, SERIES_
 @Composable
 fun BgGraphCompose(
     viewModel: GraphViewModel,
+    bgOverlays: List<SeriesType>,
     scrollState: VicoScrollState,
     zoomState: VicoZoomState,
     derivedTimeRange: Pair<Long, Long>?,
@@ -81,9 +87,15 @@ fun BgGraphCompose(
     val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
     val bucketedData by viewModel.bucketedDataFlow.collectAsStateWithLifecycle()
     val predictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
-    val basalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
+    val rawBasalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
     val targetData by viewModel.targetLineFlow.collectAsStateWithLifecycle()
+
+    // Basal on BG graph is deprecated — now shown as flipped overlay on IOB graph instead.
+    // Keep the layer structure intact (dummy data) to avoid chart restructuring.
+    @Suppress("DEPRECATION")
+    val basalData = if (showBasalOnBgGraph) rawBasalData else BasalGraphData(emptyList(), emptyList(), 0.0)
     val epsPoints by viewModel.epsGraphFlow.collectAsStateWithLifecycle()
+    val showActivity = SeriesType.ACTIVITY in bgOverlays
     val activityData by viewModel.activityGraphFlow.collectAsStateWithLifecycle()
     val chartConfig by viewModel.chartConfigFlow.collectAsStateWithLifecycle()
 
@@ -235,11 +247,10 @@ fun BgGraphCompose(
 
             // Block 5 → Activity layer (layer 4, start axis — Y-values normalized to BG coordinate space)
             // Scale so maxActivity maps to 80% of maxBgY (same as legacy: maxY * 0.8 / maxIAValue)
-            // TODO: respect OverviewMenus.CharType.ACT toggle
             lineSeries {
                 val maxAct = currentActivityData.maxActivity
-                if (maxAct <= 0.0 || currentActivityData.activity.size < 2) {
-                    // No activity data — emit dummy series (history + prediction)
+                if (!showActivity || maxAct <= 0.0 || currentActivityData.activity.size < 2) {
+                    // Activity disabled or no data — emit dummy series (history + prediction)
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                     series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0))
                     return@lineSeries
@@ -275,7 +286,7 @@ fun BgGraphCompose(
     }
 
     // Single LaunchedEffect for all data - ensures atomic updates
-    LaunchedEffect(bgReadings, bucketedData, predictionsByType, basalData, targetData, epsPoints, activityData, chartConfig, stableTimeRange) {
+    LaunchedEffect(bgReadings, bucketedData, predictionsByType, basalData, targetData, epsPoints, activityData, showActivity, chartConfig, stableTimeRange) {
         seriesRegistry[SERIES_REGULAR] = bgReadings
         seriesRegistry[SERIES_BUCKETED] = bucketedData
         for ((key, points) in predictionsByType) {

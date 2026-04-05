@@ -3,27 +3,17 @@
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Integrácia pumpy pre Omnipod Eros (starší model s priehľadným krytom ihly). Vyžaduje zariadenie RileyLink s firmware aspoň verzie 2.0.</string>
     <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Neplatná adresa RileyLinku.</string>
     <!-- Omnipod Eros - Preferences -->
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Zobraziť tlačítko Pulzný Log v menu Správa Podu</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Zobraziť tlačítko Štatistika RileyLink v menu Správa Podu</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">V Akciách povoliť zaznamenávanie výmeny batérie</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Zvuk upozornenia pre neistý dočasný bazál povolený</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Zvuk upozornenia pre neistý SMB povolený</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Zvuk upozornenia pre neistý bolus povolený</string>
-    <!-- Omnipod Eros - History -->
-    <string name="omnipod_eros_history_title">História Podu</string>
-    <string name="omnipod_eros_history_item_description">Popis</string>
-    <string name="omnipod_eros_history_item_source">Zdroj</string>
-    <string name="omnipod_eros_history_item_date">Dátum</string>
-    <string name="omnipod_eros_history_type">Typ:</string>
     <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, SACH=%2$.1f g</string>
     <string name="omnipod_eros_history_tbr_value">Rýchlosť: %1$.2f U, Doba trvania: %2$d minút</string>
-    <!-- Omnipod Eros - Short Status -->
-    <string name="omnipod_eros_short_status_riley_link_battery">RLBat: %1$d</string>
     <!-- Omnipod Eros - Error -->
-    <string name="omnipod_eros_error_riley_link_address_invalid">Neplatná adresa RileyLinku.</string>
     <string name="omnipod_eros_error_crc_mismatch">Komunikácia zlyhala: overenie integrity správy zlyhalo</string>
     <string name="omnipod_eros_error_invalid_packet_type">Komunikácia zlyhala: boli prijaté neplatné pakety z Podu</string>
     <string name="omnipod_eros_error_invalid_progress_state">Komunikácia zlyhala: Pod je v chybnom stave</string>
@@ -48,18 +38,13 @@
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">Doba trvania TBR musí byť väčšia ako nula, a musí byť násobkom %1$s minút.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Nastavenie času, pravdepodobne zlyhalo. Podávanie môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní, ak je to potrebné.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Nastavenie času zlyhalo. Podávanie je pozastavené! Manuálne obnovte podávanie zo záložky Omnipod.</string>
-    <string name="omnipod_eros_error_failed_to_read_pulse_log">Zlyhalo načítanie Pulse Log</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Nepodarilo sa automaticky zmeniť čas na Pode. Mali by ste ručne synchronizovať čas na záložke Omnipod.</string>
-    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operácia nie je možná.\n\nNajskôr je nutné nakonfigurovať Omnipod, kým bude možné túto funkciu použiť.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Nedá sa overiť, či bol bolus úspešný. Prosím manuálne overte, či Váš Pod podáva bolus počúvaním klikania. <b>Ak ste si istý, že bolus nebol úspešný, mali by ste ručne odstrániť záznam o boluse z ošetrení, aj keď kliknete na \'Zrušiť bolus\' teraz!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Nedá sa overiť, či bol bolus SMB (%1$.2f U) úspešne podaný. <b>Pokiaľ ste si istý, že bolus nebol podaný, mali by ste ručne odstrániť položku SMB z Ošetrení.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Dočasný bazál na Pode prebieha, ale AAPS o tomto dočasnom bazále nevie. Prosím zrušte svoj dočasný bazál ručne.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Štatistika RileyLink</string>
-    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Čakám na pripojenie RileyLink…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetovať konfiguráciu RileyLinku</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Čítať protokol pulzov</string>
-    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Čítanie protokolu pulzov…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Protokol pulzov</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Protokol pulzov (skopírované do schránky)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

@@ -1056,4 +1056,22 @@
     <string name="ble_scan_select_pump">Select your pump from the list below</string>
     <string name="ble_scan_scanning">Scanning for devices…</string>
 
+    <!-- Graph configuration -->
+    <string name="graph_add">Add graph</string>
+    <string name="graph_new">New graph</string>
+    <string name="graph_edit">Edit graph</string>
+    <string name="graph_number">Graph %1$d</string>
+    <string name="graph_bg">BG graph</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
+    <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+
 </resources>

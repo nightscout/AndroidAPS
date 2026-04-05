@@ -14,22 +14,17 @@
     <string name="pump_setting_failed">Error al configurar los ajustes del usuario en la bomba</string>
     <string name="pump_sync_error">Error al sincronizar el historial de la bomba, se ha omitido un registro. Verifique la pestaña de tratamientos para asegurarse de que el bolo se haya sincronizado correctamente. Silencia y si el error sigue apareciendo, cambia el parche o la base de la bomba.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Estado BLE</string>
     <string name="last_connection_label">Última conexión</string>
     <string name="active_bolus_label">Bolo activo</string>
     <string name="pump_state_label">Estado de la bomba</string>
     <string name="active_alarms_label">Alarmas activas</string>
-    <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Tipo de basal</string>
     <string name="basal_rate_label">Tasa basal</string>
-    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Tipo de bomba</string>
     <string name="fw_version_label">Versión de firmware</string>
     <string name="patch_no_label">Parche n°</string>
     <string name="patch_expiry_label">El parche expira</string>
     <string name="patch_activation_time_label">Activación</string>
-    <string name="refresh_label">Actualizar</string>
     <string name="reset_alarms_label">Restablecer alarmas</string>
     <string name="change_patch_label">Cambiar parche</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado por el usuario</string>
@@ -57,10 +52,9 @@
     <string name="bolus_error">Error de bolo</string>
     <!-- wizard-->
     <string name="retry">Reintentar</string>
-    <string name="next">Siguiente</string>
-    <string name="discard">Descartar</string>
     <string name="step_prepare_patch">Activar parche</string>
     <string name="step_prepare_patch_connect">Conectar y llenar</string>
+    <string name="step_select_insulin">Seleccionar insulina</string>
     <string name="step_prime">Purgar</string>
     <string name="step_priming">Purgando</string>
     <string name="step_priming_complete">Purgado completado</string>
@@ -73,8 +67,6 @@
     <string name="step_retry_activation">Activación en progreso</string>
     <string name="unexpected_state">Estado inesperado: %1$s</string>
     <string name="no_profile_selected">No se ha seleccionado ningún perfil. Seleccione un perfil e inténtelo de nuevo.</string>
-    <string name="no_sn_in_settings">Número de serie desconocido. Por favor, introduce el número de serie de la base de la bomba en la configuración y vuelve a intentarlo.</string>
-    <string name="base_serial">Número de serie de base de la bomba: %1$X</string>
     <string name="patch_begin_activation">No hay ningún parche activo. Presiona <b>Siguiente</b> para iniciar el proceso de activación.</string>
     <string name="patch_not_active_note">¡La base de la bomba no debe conectarse al parche hasta el siguiente paso!</string>
     <string name="connect_pump_base">Conecta la base de la bomba a un nuevo parche, elimina el aire residual y rellena con insulina. Después pulsa <b>Siguiente</b>.</string>
@@ -103,16 +95,24 @@
     <string name="press_next_or_OK">Presiona <b>OK</b> para volver a la pantalla principal. Presiona <b>Siguiente</b> para iniciar la activación de un nuevo parche.</string>
     <string name="activation_in_progress">¡Ups! Algo ha ido mal, parece que hay una activación en curso.</string>
     <string name="press_retry_or_discard">Presiona <b>Siguiente</b> para reanudar la activación o <b>Descartar</b> para restablecer el estado de activación.</string>
+    <string name="retry_activation_filled_error">No se puede reanudar la activación. Se ha perdido el estado de la bomba. NO realices un purgado (cebado), ya que el parche podría estar insertado. Por favor, desecha el parche y comienza una nueva activación.</string>
     <string name="reading_activation_status">Por favor, espera, leyendo el estado de activación de la bomba.</string>
     <!-- settings-->
     <string name="enable_pump_unreachable_alert_summary">Se ha habilitado la alerta de \"Inaccesible forzada\" debido a la posibilidad de que el parche de Medtrum falle y no pueda ser contactado.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Se recomienda configurarlo a 30 minutos, debido a que el parche de Medtrum puede presentar fallos y quedar inaccesible.</string>
     <string name="sn_input_title">Número de serie</string>
-    <string name="sn_input_summary">Introduce el número de serie de la base de la bomba.</string>
     <string name="sn_input_invalid">¡Número de serie inválido!</string>
-    <string name="pump_unsupported">Bomba no probada: %1$s! Por favor, contacta con nosotros en Discord o GitHub para obtener soporte</string>
+    <string name="change_sn">Cambiar</string>
     <string name="alarm_setting_title">Ajustes de las alarmas</string>
     <string name="alarm_setting_summary">Selecciona los ajustes de la alarma de la bomba que prefieras.</string>
+    <string name="alarm_setting_light_vibrate_beep">Luz, vibración y pitido</string>
+    <string name="alarm_setting_light_vibrate">Luz y vibración</string>
+    <string name="alarm_setting_light_beep">Luz y pitido</string>
+    <string name="alarm_setting_light">Luz</string>
+    <string name="alarm_setting_vibrate_beep">Vibración y pitido</string>
+    <string name="alarm_setting_vibrate">Vibración</string>
+    <string name="alarm_setting_beep">Pitido</string>
+    <string name="alarm_setting_silent">Silencio</string>
     <string name="pump_warning_notification_title">Notificación sobre advertencia de la bomba</string>
     <string name="pump_warning_notification_summary">Mostrar notificación en advertencias de la bomba no críticas: batería baja, reserva baja (20 unidades) y próxima a caducar. Se recomienda dejarlo habilitado cuando las alarmas de la bomba estén configuradas en silencio.</string>
     <string name="pump_warning_expiry_hour_title">Aviso de expiración de la bomba [horas]</string>

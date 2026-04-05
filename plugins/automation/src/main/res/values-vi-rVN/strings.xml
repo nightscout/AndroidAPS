@@ -146,4 +146,12 @@
     <string name="newSmbMode">Chế độ SMB mới:</string>
     <string name="on">BẬT</string>
     <string name="off">TẮT</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Chọn từ bản đồ</string>
+    <string name="tap_to_select_location">Chạm vào bản đồ để chọn vị trí</string>
+    <string name="selected_coords">Đã chọn: %1$.6f, %2$.6f</string>
+    <!-- Permission rationales -->
+    <string name="permission_location_title">Vị trí</string>
+    <string name="permission_location_description">Cần thiết cho các kích hoạt tự động dựa trên vị trí và nhận diện mạng WiFi</string>
+    <string name="permission_background_location_description">Cần để tự động hóa hoạt động khi ứng dụng chạy nền</string>
 </resources>

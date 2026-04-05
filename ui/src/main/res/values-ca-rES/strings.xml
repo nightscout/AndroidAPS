@@ -7,21 +7,16 @@
     <string name="start_eating_soon_tt">Iniciar OT: Menjar aviat</string>
     <string name="start_hypo_tt">Iniciar OT: Hipo</string>
     <string name="time_offset">Decalatge horari</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Recordar aplicar bolus més tard</string>
     <!--    Widget-->
     <!--     Activities-->
     <string name="activity_monitor">Monitor d\'activitat</string>
     <string name="do_you_want_reset_stats">Voleu restablir les estadístiques d\'activitat?</string>
-    <string name="statistics">Estadístiques</string>
     <string name="calculation_in_progress">Càlculs en procés</string>
     <string name="invalid_age">Dada \"edat\" no vàlida</string>
     <string name="invalid_weight">Dada \"pes\" no vàlida</string>
-    <string name="id">ID:</string>
-    <string name="submit">Enviar</string>
     <string name="age">Edat</string>
     <string name="weight_label">Ponderació</string>
-    <string name="most_common_profile">Perfil més habitual:</string>
     <string name="glucose_type">Tipus de glucèmia</string>
     <string name="bg_other">Altres</string>
     <string name="bg_meter">Glucòmetre</string>
@@ -38,6 +33,7 @@
     <string name="record_insulin_cartridge_change">Anotar canvi reservori d\'insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">No lliurar bolus, només anotar</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilitzar %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalatge horari</string>
@@ -66,7 +62,6 @@
     <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Falten %1$d g</string>
     <string name="carb_time_label">Temps d\'absorció</string>
-    <string name="show_calculation">Mostrar càlcul</string>
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -82,8 +77,6 @@
     <string name="profile_type">Tipus de perfil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Seleccionat:</string>
-    <string name="compare_profile">Comparar perfils</string>
-    <string name="nav_profile_helper">Assistent de perfil</string>
     <string name="motol_default_profile">Perfil per defecte</string>
     <string name="current_profile">Perfil actual</string>
     <string name="available_profile">Perfil disponible</string>
@@ -94,8 +87,9 @@
     <string name="invalid_pct">Dada % no vàlida</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Ràtio de basal</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP polsat</string>
     <!--QuickWizard-->
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
 </resources>

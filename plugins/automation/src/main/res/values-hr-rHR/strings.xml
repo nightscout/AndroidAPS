@@ -17,4 +17,6 @@
     <string name="autotune_run_cancelled">Otkriveno je još jedno pokretanje Autotunea, pokretanje je otkazano</string>
     <!--    Steps count-->
     <!--    SMB mode-->
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>

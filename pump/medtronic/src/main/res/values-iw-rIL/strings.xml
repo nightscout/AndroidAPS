@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">קידוד מדטרוניק</string>
     <string name="medtronic_custom_action_wake_and_tune">התעוררות וכוונון</string>
     <string name="medtronic_custom_action_clear_bolus_block">ביטול חסימת בולוס</string>
-    <string name="medtronic_custom_action_reset_rileylink">איפוס תצורת ריילילינק</string>
     <string name="medtronic_pump_battery_select">סוג סוללה (תצוגת חשמל)</string>
     <string name="medtronic_pump_battery_no">לא נבחר (תצוגה פשוטה)</string>
     <string name="medtronic_pump_battery_alkaline">אלקליין (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_lithium">ליתיום (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (תצוגה מורחבת)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">סוללת ריילילינק</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">שגיאות</string>
-    <string name="medtronic_error_serial_not_set">מס\' סידורי לא הוגדר.</string>
     <string name="medtronic_error_serial_invalid">מס\' סידורי לא חוקי.</string>
     <string name="medtronic_error_pump_type_not_set">סוג המשאבה לא הוגדר.</string>
     <string name="medtronic_error_pump_type_invalid">סוג המשאבה לא נתמך.</string>
-    <string name="medtronic_error_pump_frequency_not_set">תדר המשאבה לא הוגדר.</string>
     <string name="medtronic_error_pump_frequency_invalid">תדר המשאבה לא חוקי.</string>
     <string name="medtronic_error_rileylink_address_invalid">כתובת ריילילינק לא חוקית.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">סוג המשאבה מזוהה אך אינו זהה לסוג מוגדר.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">ביטול בזאלי זמני</string>
     <string name="medtronic_cmd_desc_set_bolus">הגדרת בולוס</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">אחזור אינסולין שנותר</string>
-    <string name="medtronic_pump_status_pump_unreachable">המשאבה אינה זמינה</string>
-    <string name="medtronic_warning">אזהרה</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">עכשיו</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">לפני</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">עכשיו</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">לפני</string>
     <string name="medtronic_notification_check_time_date">דרוש עדכון שעון המשאבה</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">שעון המשאבה עודכן</string>
     <string name="set_neutral_temps_title">הגדרת מינון בזאלי ניטרלי</string>
     <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>
     <string name="mdt_tbr_remaining">%1$.1f יחידות\\שעה (נותרו %2$d דקות) </string>
     <string name="invalid_history_data">זוהתה היסטוריית משאבה פסולה. נא לפתוח תלונה ולספק רישומים (לוג).</string>
     <string name="riley_statistics">סטטיסטיקות ריילילינק</string>
-    <string name="medtronic_history_type">סוג:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">נלחץ ריענון</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">רענון סטטוס מתוכנן</string>
 </resources>

@@ -135,7 +135,6 @@ class LoopPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.LOOP)
-        .fragmentClass(LoopFragment::class.java.name)
         .composeContent { plugin ->
             app.aaps.plugins.aps.loop.compose.LoopComposeContent(
                 loop = plugin as Loop,

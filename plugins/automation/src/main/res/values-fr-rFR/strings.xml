@@ -146,4 +146,6 @@
     <string name="newSmbMode">Nouveau mode SMB :</string>
     <string name="on">ACTIVÉ</string>
     <string name="off">DÉSACTIVÉ</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>

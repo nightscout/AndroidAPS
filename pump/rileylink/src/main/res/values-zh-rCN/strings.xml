@@ -2,25 +2,11 @@
 <resources>
     <!-- PumpDeviceState -->
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">扫描</string>
-    <string name="riley_link_ble_config_scan_stop">停止</string>
-    <string name="riley_link_ble_config_scan_selected">已选择</string>
-    <string name="riley_link_ble_config_scan_title">RileyLink 扫描</string>
     <string name="riley_link_ble_config_scan_scanning">扫描中</string>
-    <string name="riley_link_ble_config_scan_finished">扫描完成</string>
-    <string name="riley_link_ble_config_scan_error">扫描错误: %1$d</string>
     <string name="riley_link_ble_config_connected_never">从不</string>
-    <string name="riley_link_ble_config_scan_currently_selected_riley_link">当前选定的RileyLink</string>
-    <string name="riley_link_ble_config_remove_riley_link">删除</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation">您确定要删除RileLink吗？</string>
-    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">删除 RileyLink</string>
-    <string name="riley_link_ble_config_no_riley_link_selected">没有选定 RileyLink</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">设置</string>
-    <string name="rileylink_settings_tab2">历史</string>
     <string name="rileylink_status">RileyLink 状态</string>
     <string name="medtronic_pump_status">泵状态</string>
-    <string name="title_activity_rileylink_settings">RileyLink 设置</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">地址：</string>
     <string name="rileylink_name">名称:</string>
@@ -57,7 +43,6 @@
     <string name="rileylink_error_bt_disabled">蓝牙已禁用</string>
     <string name="rileylink_error_no_bt_adapter">未找到蓝牙适配器</string>
     <string name="rileylink_error_tuneup_failed">调整失败</string>
-    <string name="rileylink_error_pump_unreachable">泵无法连接</string>
     <string name="rileylink_error_pod_unreachable">无法连接主机</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">美敦力泵</string>
@@ -73,5 +58,4 @@
     </plurals>
     <string name="orange_use_scanning_level">使用扫描</string>
     <string name="orange_use_scanning_level_summary">在连接到OrangeLink之前进行扫描，它应该可以改善连接 (如果需要，也可以用于其他RileyLink 克隆版本)</string>
-    <string name="rileylink_configuration">RileyLink 配置</string>
 </resources>

@@ -40,8 +40,8 @@
     <string name="glucosecomparedmgdl">Glicemie %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glicemie %1$s %2$.1f %3$s</string>
     <string name="notemptarget">Ținta temporară nu există</string>
-    <string name="temptargetcomparedmgdl">Tinta temporara %1$s %2$.0f %3$s</string>
-    <string name="temptargetcomparedmmol">Tinta temporara %1$s %2$.1f %3$s</string>
+    <string name="temptargetcomparedmgdl">Ținta temporară %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Ținta temporară %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Sau</string>
@@ -65,9 +65,9 @@
     <string name="time_range">Interval de timp</string>
     <string name="timerange_value">Timpul este între %1$s și %2$s</string>
     <string name="between">Între </string>
-    <string name="delete_short">ȘTRG</string>
-    <string name="add_short">ADAU</string>
-    <string name="copy_short">COPI</string>
+    <string name="delete_short">ȘTERGE</string>
+    <string name="add_short">ADAUGĂ</string>
+    <string name="copy_short">COPIAZĂ</string>
     <string name="temptargetcompared">Țintă temporară %1$s</string>
     <string name="btdevicecompared">Conexiune Bluetooth cu dispozitivul %1$s %2$s</string>
     <string name="btdevice">Conexiune la dispozitivul Bluetooth </string>
@@ -81,9 +81,9 @@
     <string name="choose_from_map">Alegeți de pe hartă</string>
     <string name="location">Localizare</string>
     <string name="glucose_u">Glicemie [%1$s]:</string>
-    <string name="target_u">Tinta [%1$s]:</string>
+    <string name="target_u">Ținta [%1$s]:</string>
     <string name="lastboluslabel">Ultimul bolus</string>
-    <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s min</string>
+    <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s minut</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Ritm cardiac</string>
@@ -103,7 +103,7 @@
     <string name="triggerPumpBatteryLevelLabel">Nivel baterie pompă</string>
     <string name="triggerPumpBatteryLevelDesc">Nivel baterie pompă %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
-    <string name="distance_short">Dist [m]:</string>
+    <string name="distance_short">Distanță [m]:</string>
     <string name="recurringTime">Timp recurent</string>
     <string name="every">La fiecare</string>
     <string name="never">Niciodată</string>
@@ -146,4 +146,12 @@
     <string name="newSmbMode">Noul mod SMB:</string>
     <string name="on">PORNIT</string>
     <string name="off">OPRIT</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Alegeți de pe hartă</string>
+    <string name="tap_to_select_location">Apăsați pe hartă pentru a selecta un loc</string>
+    <string name="selected_coords">Selectat: %1$.6f, %2$.6f</string>
+    <!-- Permission rationales -->
+    <string name="permission_location_title">Locație</string>
+    <string name="permission_location_description">Necesar pentru declanșarea automatizării bazate pe locație și identificarea rețelei Wi-Fi</string>
+    <string name="permission_background_location_description">Necesar pentru declanșatorii automatizărilor să funcționeze atunci când aplicația este în fundal</string>
 </resources>

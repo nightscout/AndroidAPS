@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Panaikinti sąsają</string>
-    <string name="diaconn_no_device_available">Nėra prieinamų įrenginių</string>
     <string name="diaconn_pairing">Diaconn pompos sąsaja</string>
-    <string name="pumperror">Pompos klaida</string>
     <string name="diaconn_g8_history_alarm">Aliarmai</string>
     <string name="diaconn_g8_history_basalhours">Valandinė bazė</string>
     <string name="diaconn_g8_history_bolus">Bolusai</string>
     <string name="diaconn_g8_history_dailyinsulin">Paros insulinas</string>
     <string name="diaconn_g8_history_refill">Užpildymas</string>
     <string name="diaconn_g8_history_suspend">Sustabdyta</string>
-    <string name="invalidpairing">Netinkama susiejimo informacija. Bandoma susieti iš naujo</string>
     <string name="gettingpumpsettings">Gaunami pompos nustatymai</string>
     <string name="gettingpumptime">Gaunamas pompos laikas</string>
     <string name="largetimediff">Didelis laiko skirtumas:\nLaikas pompoje skiriasi daugiau nei 1,5 val.\nNustatykite laiką pompoje rankiniu būdu ir įsitikinkite, kad įrašai iš pompos istorijos nesukels netikėtų sistemos veiksmų.\nJei įmanoma, ištrinkite istoriją pompoje prieš keisdami laiką arba atjunkite uždarąjį ciklą vienai IVT po paskutinio neteisingo istorijos įrašo ar mažiausiai vienai IVT nuo dabar.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
     <string name="boluserrorcode">Įvesta: %1$.2fvv Suleista: %2$.2fvv Klaidos kodas: %3$s</string>
-    <string name="bolusspeed">Boluso greitis</string>
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="diaconn_g8_bluetooth_status">Bluetooth statusas</string>
     <string name="bolus_step">Boluso žingsnis</string>
     <string name="basal_step">Bazės žingsnis</string>
-    <string name="pump_firmware_label">Programinė įranga</string>
     <string name="diaconn_g8_user_options">NAUDOTOJO PARINKTYS</string>
     <string name="pairfirst">Susiekite pompą su telefonu!</string>
     <string name="processinghistory">"Apdorojama "</string>

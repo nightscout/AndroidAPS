@@ -6,13 +6,16 @@
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <!-- InsulinDialog -->
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
-    <!--    BolusProgressDialog-->
     <!--QuickWizard-->
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
 </resources>

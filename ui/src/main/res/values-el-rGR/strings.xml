@@ -8,25 +8,18 @@
     <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
     <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
     <string name="time_offset">Χρονική μετατόπιση</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Υπενθύμιση για Δόση bolus αργότερα</string>
-    <string name="a11y_carb_reminder">ορισμός υπενθύμισης</string>
     <!--    Widget-->
     <string name="configure">Ρύθμιση διαφάνειας</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Παρακολούθηση δραστηριότητας</string>
     <string name="do_you_want_reset_stats">Θέλετε να επαναφέρετε τα στατιστικά δραστηριότητας;</string>
-    <string name="statistics">Στατιστικά</string>
     <string name="calculation_in_progress">Υπολογισμός σε εξέλιξη</string>
     <string name="invalid_age">Μη έγκυρη καταχώρηση ηλικίας</string>
     <string name="invalid_weight">Μη έγκυρη καταχώρηση βάρους</string>
-    <string name="id">Ταυτότητα ID:</string>
-    <string name="submit">Υποβολή</string>
     <string name="age">Ηλικία</string>
     <string name="weight_label">Βάρος</string>
-    <string name="most_common_profile">Πιο κοινό προφίλ:</string>
-    <string name="survey_comment">Σημείωση: Μόνο δεδομένα που είναι ορατά σε αυτήν την οθόνη θα φορτωθούν ανώνυμα. Το ID αντιστοιχιστεί σε αυτή την εγκατάσταση του AAPS. Μπορείτε να υποβάλετε και πάλι δεδομένα αν το κύριο προφίλ σας αλλάξει αλλά αφήστε το να τρέχει τουλάχιστον για μια εβδομάδα για να υπάχρει ορατό αποτέλεσμα για τον χρόνο εντός στόχου. Η βοήθειά σας εκτιμάται.</string>
     <string name="glucose_type">Τύπος Γλυκόζης</string>
     <string name="bg_other">Άλλο</string>
     <string name="bg_meter">Μετρητής</string>
@@ -43,6 +36,7 @@
     <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Επαναχρησιμοποίηση %1$d%% %2$dh</string>
     <string name="timeshift_label">Αλλαγή της ώρας</string>
@@ -75,7 +69,6 @@
     <string name="a11y_current_bg">τρέχουσα γλυκόζη αίματος</string>
     <string name="carb_time_label">Ώρα γεύματος</string>
     <string name="a11y_set_carb_timer">ορισμός ειδοποίησης χρονομέτρου υδατανθράκων</string>
-    <string name="show_calculation">Εμφάνιση υπολογισμού</string>
     <!-- Treatments -->
     <string name="no_records_available">Δεν υπάρχουν διαθέσιμες εγγραφές</string>
     <string name="calculation_short">Υπολογ</string>
@@ -87,8 +80,6 @@
     <string name="meal_bolus">Γεύμα</string>
     <string name="prime">Πλήρωση</string>
     <string name="carbs_and_bolus">Υδατάνθρακες και bolus</string>
-    <string name="show_invalidated_records">Εμφάνιση ακυρωμένων / καταργημένων εγγραφών</string>
-    <string name="hide_invalidated_records">Απόκρυψη ακυρωμένων / καταργημένων εγγραφών</string>
     <string name="show_invalidated">Εμφάνιση ακυρωμένων</string>
     <string name="hide_invalidated">Απόκρυψη ακυρωμένων</string>
     <string name="careportal_remove_started_events">Αφαίρεση καταχωρήσεων έναρξης AAPS</string>
@@ -96,16 +87,10 @@
     <string name="show_loop">Εμφάνιση κυκλώματος</string>
     <string name="user_entry">Καταχώρηση χρήστη</string>
     <string name="clone_label">Κλώνος</string>
-    <string name="show_loop_records">Εμφάνιση εγγραφών κυκλώματος</string>
-    <string name="show_hide_records">Απόκρυψη εγγραφών κυκλώματος</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Προφίλ 1</string>
-    <string name="profile2">Προφίλ 2</string>
     <string name="profile_type">Τύπος προφίλ</string>
     <string name="basal_pct_from_tdd_label">% Ποσοστό βασικού ρυθμού basal</string>
     <string name="selected_profile">Επιλεγμένο:</string>
-    <string name="compare_profile">Σύγκριση προφίλ</string>
-    <string name="nav_profile_helper">Βοηθός ρύθμισης προφίλ</string>
     <string name="motol_default_profile">Προεπιλεγμένο προφίλ</string>
     <string name="current_profile">Τρέχον προφίλ</string>
     <string name="available_profile">Διαθέσιμα προφίλ</string>
@@ -116,8 +101,6 @@
     <string name="invalid_pct">Μη Έγκυρη Καταχώρηση %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Βασικός Ρυθμός</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">Πιέστε STOP</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">μόνο στο ρολόι</string>
     <string name="a11y_only_on_phone">μόνο στο τηλέφωνο</string>
@@ -125,4 +108,7 @@
     <string name="overview_edit_quickwizard_valid">Έγκυρο:</string>
     <string name="a11y_drag_and_drop_handle">διαχείριση μεταφοράς και απόθεσης</string>
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
 </resources>

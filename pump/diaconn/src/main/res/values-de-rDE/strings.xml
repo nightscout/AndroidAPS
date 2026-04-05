@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Kopplung zurücksetzen</string>
-    <string name="diaconn_no_device_available">Keine Geräte verfügbar</string>
     <string name="diaconn_pairing">Diaconn Pumpe verbinden</string>
-    <string name="pumperror">Pumpenfehler</string>
     <string name="diaconn_g8_history_alarm">Alarme</string>
     <string name="diaconn_g8_history_basalhours">Basal-Stunden</string>
     <string name="diaconn_g8_history_bolus">Boli</string>
     <string name="diaconn_g8_history_dailyinsulin">Insulin-Tagesmengen</string>
     <string name="diaconn_g8_history_refill">Befüllen</string>
     <string name="diaconn_g8_history_suspend">Unterbrechen</string>
-    <string name="invalidpairing">Ungültige Kopplungs-Info. Kopple neu.</string>
     <string name="gettingpumpsettings">Pumpen-Einstellungen werden ermittelt</string>
     <string name="gettingpumptime">Zeiteinstellung der Pumpe wird ermittelt</string>
     <string name="largetimediff">Großer Zeitunterschied:\nDie Zeit in der Pumpe weicht um mindestens 1,5 Stunden ab.\nPasse die Zeit auf der Pumpe manuell an und lösche zuvor - falls möglich - die Pumpenhistorie.\nAlternativ kannst Du den Loop für die Stunden der Insulinwirkzeit (DIA) deaktivieren.</string>
@@ -32,12 +29,10 @@
     <string name="speederror">Geschwindigkeits-Fehler</string>
     <string name="insulinlimitviolation">Insulin-Beschränkung verletzt</string>
     <string name="boluserrorcode">Angefragt: %1$.2f IE. Abgegeben: %2$.2f IE. Fehlercode: %3$s</string>
-    <string name="bolusspeed">Bolus-Geschwindigkeit</string>
     <string name="selectedpump">Ausgewählte Pumpe</string>
     <string name="diaconn_g8_bluetooth_status">Bluetooth-Status</string>
     <string name="bolus_step">Bolus-Schritt</string>
     <string name="basal_step">Basal-Schritt</string>
-    <string name="pump_firmware_label">Firmware</string>
     <string name="diaconn_g8_user_options">BENUTZER-OPTIONEN</string>
     <string name="pairfirst">Bitte kopple deine Pumpe mit deinem Telefon!</string>
     <string name="processinghistory">"Ereignis wird verarbeitet "</string>

@@ -24,20 +24,20 @@
     <string name="pref_complication_settings">Complicație</string>
     <string name="pref_show_date">Arată data</string>
     <string name="pref_show_iob">Arată IOB</string>
-    <string name="pref_show_detailed_iob">Arată IOB detaliat</string>
+    <string name="pref_show_detailed_iob">Arată rată IOB detaliat</string>
     <string name="pref_show_cob">Arată COB</string>
     <string name="pref_show_delta">Arată Delta</string>
     <string name="pref_show_detailed_delta">Arată variație detaliată</string>
     <string name="pref_show_avgdelta">Arată AvgDelta</string>
     <string name="pref_show_phone_battery">Arată baterie telefon</string>
-    <string name="pref_show_rig_battery">Arată Baterie Echipament</string>
+    <string name="pref_show_rig_battery">Arată baterie echipament</string>
     <string name="pref_show_basal_rate">Arată rata bazală</string>
-    <string name="pref_show_temp_target">Afișați Ținta Temporară</string>
-    <string name="pref_show_reservoir_level">Afișați Nivelul Rezervorului</string>
+    <string name="pref_show_temp_target">Arată Ținta Temporară</string>
+    <string name="pref_show_reservoir_level">Arată Nivelul Rezervorului</string>
     <string name="pref_show_loop_status">Arată stare buclă închisă</string>
     <string name="pref_show_bg">Arată glicemia</string>
     <string name="pref_show_bgi">Arată BGI</string>
-    <string name="pref_show_direction_arrow">Arată săgeată pentru evoluție</string>
+    <string name="pref_show_direction_arrow">Arată săgeată tendință</string>
     <string name="pref_show_ago">Afișare în urmă</string>
     <string name="pref_show_temp_basal">Arată RBT</string>
     <string name="pref_show_bolus">Arată Bolus &amp; SMB</string>
@@ -45,7 +45,7 @@
     <string name="pref_dark" comment="Enables dark visual theme">Întunecat</string>
     <string name="pref_highlight_basals">Evidențiere rate bazale</string>
     <string name="pref_prediction_lines">Arată predicții</string>
-    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Potrivire divider</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Separator</string>
     <string name="pref_chart_timeframe">Grafic Timp</string>
     <string name="pref_1_hour">1 oră</string>
     <string name="pref_2_hours">2 ore</string>
@@ -56,11 +56,6 @@
     <string name="pref_5_min">5 minute</string>
     <string name="pref_10_min">10 minute</string>
     <string name="pref_15_min">15 minute</string>
-    <string name="pref_input_design">Design de intrare</string>
-    <string name="pref_default">Implicit</string>
-    <string name="pref_quick_righty">Drepta rapid</string>
-    <string name="pref_quick_lefty">Stânga rapid</string>
-    <string name="pref_modern_sparse">Distanță modernă</string>
     <string name="pref_big_numbers">Numere Mari</string>
     <string name="pref_ring_history">Inel istoric</string>
     <string name="pref_light_ring_history">Inel istoric simplu</string>
@@ -90,7 +85,7 @@
     <string name="menu_default">Implicit</string>
     <string name="menu_menu">Meniu</string>
     <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Durată\n[minute]</string>
+    <string name="action_duration_minutes">Durată [min]</string>
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
@@ -100,16 +95,26 @@
     <string name="action_fill_confirmation">Completare solicitată</string>
     <string name="action_ecarb_confirmation">Carbohidrați solicitați</string>
     <string name="action_profile_switch_confirmation">Schimbare profil solicitată</string>
-    <string name="action_target_unit" comment="In temp target menu, single target value">Țintă\n[%s]</string>
-    <string name="action_low_unit" comment="In temp target menu, lower value from range">Scăzut\n[%s]</string>
-    <string name="action_high_unit" comment="In temp target menu, higher value from range">Ridicat\n[%s]</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Țintă [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Scăzut [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Ridicat [%s]</string>
     <string name="action_carbs">Carbohidrați</string>
     <string name="action_carbs_gram">Carbohidrați [g]</string>
-    <string name="action_ecarbs">eCarbs</string>
+    <string name="action_ecarbs">Carbohidrați extinși</string>
     <string name="action_percentage">Procentaj\n[%]</string>
     <string name="action_start_minutes">Start\n[minute]</string>
+    <string name="action_start_minutes_format">%1$d minute</string>
     <string name="action_duration_h">Durată [h]</string>
     <string name="action_duration_hours">Durată\n[ore]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Timp: %1$s</string>
+    <string name="ecarbs_confirm_duration">Durată: %1$d h</string>
+    <string name="action_confirm_reason">Motiv: %1$s</string>
+    <string name="action_confirm_duration">Durată: %1$s</string>
+    <string name="action_confirm_timeshift">Decalaj: %1$s</string>
     <string name="action_insulin">Insulină</string>
     <string name="action_insulin_units">Insulină [U]</string>
     <string name="action_preset_1">Presetare 1</string>
@@ -167,7 +172,7 @@
     <string name="bolus_progress_channel_name">Progres bolus AAPS</string>
     <string name="bolus_progress_silent_channel_name">Progres bolus AAPS silențios</string>
     <string name="bolus_progress_channel_description">Progres bolus și anulare</string>
-    <string name="bolus_progress_silent_channel_description">Progres bolus şi anulare cu mai puţine vibraţii</string>
+    <string name="bolus_progress_silent_channel_description">Progres bolus și anulare cu mai puține vibrații</string>
     <string name="simple_ui_off">Oprit</string>
     <string name="simple_ui_charging">În timpul încărcării</string>
     <string name="simple_ui_always_on">Modul mereu activ</string>
@@ -199,7 +204,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">vechi</string>
     <string name="old_warning">!vechi!</string>
-    <string name="error">!eroare!</string>
+    <string name="error">Eroare</string>
     <string name="pref_heartRateSampling">Ritm cardiac</string>
     <string name="pref_heartRateSmoothing">Uniformizare rată cardio (RC)</string>
     <string name="pref_stepsSampling">Activează numărătoare de pași</string>
@@ -231,14 +236,15 @@
     <string name="complication_iob_icon">Pictogramă IoB</string>
     <string name="complication_iob_detailed">IoB Detaliat</string>
     <string name="complication_uploader_phone_battery">Baterie Încărcător date/Telefon</string>
-    <string name="status_loop_state">Starea buclei</string>
-    <string name="label_loop_state_title">AAPS(Starea buclei)</string>
-    <string name="action_loop_state_selected">Starea buclei solicitată</string>
+    <string name="status_running_mode">Mod de rulare</string>
+    <string name="label_running_mode_title">AAPS(Mod de rulare)</string>
+    <string name="action_running_mode_selected">Mod de rulare solicitat</string>
+    <string name="title_activity_disconnect_pump">Deconectează pompa</string>
+    <string name="title_activity_suspend_loop">Suspendă bucla</string>
     <string name="wizard_total_insulin">Insulină totală</string>
     <string name="wizard_calculation">Calcul</string>
     <string name="wizard_carbs_format">%1$d g carbohidrați</string>
     <string name="wizard_settings_format">IC: %1$s | FSI: %2$s</string>
-    <string name="wizard_swipe_left_confirm">Glisează spre stânga pentru a confirma</string>
     <string name="wizard_result_bg">BG</string>
     <string name="wizard_result_bg_tt">BG (TT: %1$s)</string>
     <string name="wizard_result_trend">Tendință 15\'</string>
@@ -250,7 +256,7 @@
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
-    <string name="wizard_result_correction_percentage">Corecție %1$d%%</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">Atingeți pentru a extinde detaliile calculului</string>
     <string name="wizard_confirmation_sent">Trimis</string>
     <string name="tile_settings">Setări panouri</string>
@@ -268,6 +274,8 @@
     <string name="loop_status_lgs">Suspendare la hipoglicemie</string>
     <string name="loop_status_disabled">Buclă dezactivată</string>
     <string name="loop_status_suspended">Buclă suspendată</string>
+    <string name="loop_status_pump_suspended">Pompă suspendată</string>
+    <string name="loop_status_dst_suspended">Bucla suspendată din cauza orei de vară</string>
     <string name="loop_status_disconnected">Pompă deconectată</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Necunoscut</string>
@@ -284,4 +292,8 @@
     <string name="loop_status_target_range">Interval</string>
     <string name="loop_status_target">Țintă</string>
     <string name="loop_status">Stare buclă</string>
+    <string name="loop_status_refresh">Reîncarcă</string>
+    <string name="confirm">Confirmă</string>
+    <string name="request">Cerință</string>
+    <string name="constraint_applied">Constrângere aplicată!</string>
 </resources>

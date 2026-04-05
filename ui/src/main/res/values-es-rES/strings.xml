@@ -8,26 +8,36 @@
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
     <string name="time_offset">Retardo</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Recordar ejecutar el bolo más tarde</string>
-    <string name="a11y_carb_reminder">establecer recordatorio</string>
+    <string name="a11y_carb_reminder">Establecer recordatorio para la hora de los hidratos</string>
     <!--    Widget-->
     <string name="configure">Configurar la opacidad</string>
     <string name="widget_description">Widget de AAPS</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor de actividad</string>
+    <string name="time_range">Rango de tiempo</string>
+    <string name="dexcom_tir">TIR de Dexcom</string>
+    <string name="cgp_title">Pentágono de Glucosa (CGP) — 14 días</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hiper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Media</string>
+    <string name="cgp_reference">Persona sana</string>
+    <string name="cgp_patient">Paciente</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Riesgo muy bajo</string>
+    <string name="cgp_pgr_low">Riesgo bajo</string>
+    <string name="cgp_pgr_moderate">Riesgo moderado</string>
+    <string name="cgp_pgr_high">Riesgo alto</string>
+    <string name="cgp_pgr_extremely_high">Riesgo extremadamente alto</string>
     <string name="do_you_want_reset_stats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="do_you_want_recalculate_tdd_stats">¿Quieres recalcular las estadísticas de TDD?</string>
-    <string name="statistics">Estadísticas</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
     <string name="invalid_age">Entrada de edad no válida</string>
     <string name="invalid_weight">Entrada de peso no válida</string>
-    <string name="id">ID:</string>
-    <string name="submit">Enviar</string>
     <string name="age">Edad</string>
     <string name="weight_label">Peso</string>
-    <string name="most_common_profile">Perfil más común:</string>
-    <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se subirán de forma anónima. El ID es asignado a la instalación de AAPS. Puedes volver a enviar datos si cambias tu perfil principal, pero deja que se ejecute al menos durante una semana, para que el resultado del tiempo en rango sea visible. Agradecemos tu ayuda.</string>
     <string name="glucose_type">Tipo de glucosa</string>
     <string name="bg_other">Otro</string>
     <string name="bg_meter">Medidor de glucosa</string>
@@ -47,23 +57,43 @@
     <string name="user_profile_description">La descripción del perfil del usuario se utiliza para mostrar los sitios más frecuentes disponibles para un hombre, una mujer o un niño.</string>
     <string name="site_management">Perfil de gestión del sitio</string>
     <string name="site_management_description">Aquí establecerá si desea gestionar la ubicación del sitio de la bomba, la del sensor (MCG) o ambos. Esta configuración se utilizará para enviar automáticamente el diálogo de administración del sitio en cada nueva entrada detectada</string>
-    <string name="select_site">Haga clic abajo para seleccionar la ubicación</string>
     <string name="record_site_change">Registrar ubicación del sitio</string>
+    <string name="update_site_change">Actualizar zona de inserción</string>
     <string name="edit_site">Editar</string>
     <string name="record_site_location">Ubicación del sitio: %1$s</string>
     <string name="record_site_arrow">Flecha del sitio: %1$s</string>
     <string name="record_site_note">Nota: %1$s</string>
     <string name="delete_site_note">Nota borrada</string>
+    <string name="site_filter_info">Seleccione el tipo de evento de terapia que desea ver: Cambio de cánula y/o Cambio de sensor</string>
     <!-- FillDialog -->
     <string name="fill_warning">Por favor, asegúrate de que la cantidad coincide con la especificada en el set de infusión!</string>
     <string name="record_pump_site_change">Anotar el cambio de sitio de la bomba</string>
     <string name="record_insulin_cartridge_change">Anotar cambio del cartucho de insulina</string>
+    <string name="fill_prime_amount">Cantidad de cebado</string>
+    <string name="fill_pump_units_note">La cantidad de cebado se expresa en unidades de la bomba</string>
+    <string name="fill_insulin_change">Cambiar insulina a: %1$s (se aplicará el cambio de perfil)</string>
+    <string name="fill_current_insulin">Inulina actual</string>
+    <string name="fill_change_insulin">Cambiar insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">No administrar bolo, sólo anotarlo</string>
+    <!-- Insulin Management -->
+    <string name="missing_insulin_name">Nombre de insulina no especificado</string>
+    <string name="insulin_name_exists">El nombre de insulina %1$s ya existe, seleccione un nombre nuevo</string>
+    <string name="a11y_add_new_insulin">Añadir nueva insulina</string>
+    <string name="a11y_delete_current_insulin">Eliminar insulina actual</string>
+    <string name="save_or_reset_changes_first">Guarde o restablezca los cambios actuales primero</string>
+    <string name="activate_insulin_no_profile">No se ha encontrado ningún perfil activo</string>
+    <string name="activate_insulin_new_insulin">Nueva insulina: %1$s</string>
+    <string name="activate_insulin_remaining">Restante: %1$d min</string>
+    <string name="activate_insulin_profile_switch">Se creará un cambio de perfil:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Cargar pico desde</string>
+    <string name="cannot_delete_last_insulin">No se puede eliminar la última insulina</string>
+    <string name="cannot_delete_active_insulin">No se puede eliminar la insulina activa</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="timeshift_label">Cambio de hora</string>
     <string name="percentage_label">Porcentaje</string>
+    <string name="permanent_profile_switch">Permanente (0 = sin límite de duración)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspender bucle durante 1 hora</string>
     <string name="suspendloopfor2h">Suspender bucle durante 2 horas</string>
@@ -89,10 +119,14 @@
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Resultado: %1$s %2$s</string>
     <string name="missing_carbs">Faltan %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% carbohidratos inmediatos, sin carbohidratos de absorción lenta</string>
+    <string name="wizard_carbs_type_desc">Carbohidratos reducidos en un %1$d%%, añadidos eCarbs %2$d%% con retraso de %3$d min durante %4$d h</string>
+    <string name="wizard_include_info">Toca para incluir/excluir del cálculo:\n• BG — glucemia capilar/sensor (activado al inicio)\n• TT — objetivo temporal (activado al inicio)\n• Trend — tendencia de la glucemia (recuerda el último estado)\n• IOB — insulina activa (activado al inicio)\n• COB — carbohidratos activos (recuerda el último estado)</string>
+    <string name="wizard_bg_age">Antigüedad de la glucemia: %1$d min</string>
     <string name="a11y_current_bg">glucosa en sangre actual</string>
     <string name="carb_time_label">Tiempo de absorción</string>
     <string name="a11y_set_carb_timer">establecer alarma de carbohidratos</string>
-    <string name="show_calculation">Mostrar cálculo</string>
+    <string name="show_calculation">Ver desglose del cálculo</string>
     <!-- Treatments -->
     <string name="no_records_available">No hay registros disponibles</string>
     <string name="calculation_short">Cálculo</string>
@@ -104,8 +138,6 @@
     <string name="meal_bolus">Comida</string>
     <string name="prime">Cebar</string>
     <string name="carbs_and_bolus">Carbohidratos y bolos</string>
-    <string name="show_invalidated_records">Mostrar registros eliminados o invalidados</string>
-    <string name="hide_invalidated_records">Ocultar registros eliminados o invalidados</string>
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
@@ -113,16 +145,32 @@
     <string name="show_loop">Mostrar bucle</string>
     <string name="user_entry">Registro por parte del usuario</string>
     <string name="clone_label">Duplicar</string>
-    <string name="show_loop_records">Mostrar registros del bucle</string>
-    <string name="show_hide_records">Ocultar registros del bucle</string>
+    <string name="add_new_profile">Añadir nuevo perfil</string>
+    <string name="show_profile">Mostrar perfil</string>
+    <string name="edit_label">Editar</string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="activate_label">Activar</string>
+    <string name="activate_profile">Activar perfil</string>
+    <string name="remove_label">Eliminar</string>
+    <string name="active_profile_indicator">ACTIVO</string>
+    <string name="remaining_time_label">Restante</string>
+    <string name="confirm_remove_profile">¿Eliminar el perfil \"%1$s\"?</string>
+    <string name="confirm_clone_profile">¿Duplicar el perfil \"%1$s\"?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Perfil 1</string>
-    <string name="profile2">Perfil 2</string>
     <string name="profile_type">Tipo de perfil</string>
+    <string name="profile_parameters">Parámetros del perfil</string>
+    <string name="active_profile">Perfil activo</string>
+    <string name="available_profiles">Perfiles disponibles</string>
+    <string name="profile_switches">Cambios de perfil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Seleccionado:</string>
-    <string name="compare_profile">Comparar perfiles</string>
-    <string name="nav_profile_helper">Asistente de perfil</string>
+    <string name="comparation">Comparación</string>
+    <string name="profile_tab_1">Perfil 1</string>
+    <string name="profile_tab_2">Perfil 2</string>
     <string name="motol_default_profile">Perfil predeterminado</string>
     <string name="current_profile">Perfil actual</string>
     <string name="available_profile">Perfil disponible</string>
@@ -133,13 +181,14 @@
     <string name="invalid_pct">Entrada % inválida</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Tasa basal</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">DETENER PRESIONADO</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">sólo en reloj</string>
     <string name="a11y_only_on_phone">sólo en teléfono</string>
     <string name="quickwizard_settings">Configuración del asistente de configuración</string>
     <string name="overview_edit_quickwizard_button_text">Botón texto</string>
+    <string name="quick_wizard_mode_wizard">Asistente</string>
+    <string name="quick_wizard_mode_insulin">Insulina</string>
+    <string name="quick_wizard_mode_carbs">Carbohidratos</string>
     <string name="overview_edit_quickwizard_valid">Válido:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Sólo IOB positiva</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
@@ -147,8 +196,29 @@
     <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
     <string name="additional_ecarbs">Añadir eCarbs</string>
     <string name="overview_edit_quickwizard_useforcalculation">Usado para el cálculo:</string>
+    <string name="calculator_options">Opciones de la calculadora</string>
+    <string name="use_bg">Usar glucemia</string>
+    <string name="use_cob">Usar COB</string>
+    <string name="use_iob">Usar IOB</string>
+    <string name="use_trend">Usar tendencia</string>
+    <string name="trend_all">Todo</string>
+    <string name="trend_positive_only">Solo valores positivos</string>
+    <string name="trend_negative_only">Solo valores negativos</string>
+    <string name="use_temp_target">Usar objetivo temporal</string>
+    <string name="use_alarm">Usar alarma</string>
+    <string name="device_selection">Selección de dispositivo</string>
+    <string name="show_on_phone">Mostrar en el teléfono</string>
+    <string name="show_on_watch">Mostrar en el reloj</string>
+    <string name="ecarbs_additional">Carbohidratos adicionales</string>
+    <string name="valid_from_to">Rango de tiempo válido</string>
+    <string name="carb_time">Hora de la ingesta</string>
+    <string name="no_quickwizard_entries">Sin entradas en QuickWizard. Toca + para añadir una.</string>
+    <string name="save_changes_question">¿Guardar los cambios de esta entrada?</string>
     <string name="constraints_violation">Violación de restricciones</string>
     <string name="change_your_input">Cambiar datos de entrada</string>
+    <string name="wizard_no_insulin_required">No se requiere insulina</string>
+    <string name="carbs_constraint_violation">Carbohidratos limitados por restricciones</string>
+    <string name="insulin_constraint_violation">Insulina limitada por restricciones</string>
     <string name="confirm_treatment">Por favor, confirma el tratamiento</string>
     <string name="recalculate">Recalcular</string>
     <!--    Widget-->
@@ -156,9 +226,29 @@
     <string name="widget_configuration">Configuración del Widget</string>
     <string name="until_changed">Hasta el cambio</string>
     <string name="limitations">Limitaciones</string>
+    <!--    Permissions-->
+    <string name="permission_sheet_title">Permisos necesarios</string>
+    <string name="permission_sheet_subtitle">Se necesitan algunos permisos para que la aplicación funcione correctamente</string>
+    <string name="permission_grant">Conceder</string>
+    <string name="permission_change">Cambiar</string>
+    <string name="permission_denied_go_to_settings">Permiso denegado permanentemente. Por favor, actívalo en los ajustes de la aplicación.</string>
+    <string name="permission_open_settings">Ajustes</string>
+    <string name="permission_directory_picker_error">No se pudo abrir el selector de directorios. Normalmente es un problema de Android o de Family Link.</string>
+    <string name="permission_nav_label">Permisos</string>
+    <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Desfase de ciclo</string>
+    <string name="raw_tdd">TDD Bruta</string>
+    <string name="cleaned_tdd">TDD Limpia</string>
+    <string name="cleaned_tdd_explanation">TDD menos insulina para carbohidratos</string>
+    <string name="cycle_lines_legend">Ciclos individuales</string>
+    <string name="cycles_found">%1$d ciclos (%2$d días)</string>
+    <string name="cycle_day1_date">Día 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Calculando… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">No hay datos suficientes (se necesitan al menos 56 días para 2 ciclos)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambos</item>
         <item>Sólo positivo</item>
         <item>Sólo negativo</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>

@@ -14,6 +14,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgInfoData
+import app.aaps.core.interfaces.overview.graph.GraphConfig
+import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -108,6 +110,7 @@ data class SensitivityUiState(
 @Stable
 class GraphViewModel @Inject constructor(
     cache: OverviewDataCache,
+    private val graphConfigRepository: GraphConfigRepository,
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
@@ -146,6 +149,11 @@ class GraphViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    // Graph configuration (which series on which graph)
+    val graphConfigFlow: StateFlow<GraphConfig> = graphConfigRepository.graphConfigFlow
+
+    fun updateGraphConfig(config: GraphConfig) = graphConfigRepository.update(config)
+
     // Individual series flows - each can trigger independent recomposition
     val bgReadingsFlow: StateFlow<List<BgDataPoint>> = cache.bgReadingsFlow
     val bucketedDataFlow: StateFlow<List<BgDataPoint>> = cache.bucketedDataFlow
@@ -153,8 +161,16 @@ class GraphViewModel @Inject constructor(
 
     // Secondary graph flows
     val iobGraphFlow = cache.iobGraphFlow
+    val absIobGraphFlow = cache.absIobGraphFlow
     val cobGraphFlow = cache.cobGraphFlow
     val activityGraphFlow = cache.activityGraphFlow
+    val bgiGraphFlow = cache.bgiGraphFlow
+    val deviationsGraphFlow = cache.deviationsGraphFlow
+    val ratioGraphFlow = cache.ratioGraphFlow
+    val devSlopeGraphFlow = cache.devSlopeGraphFlow
+    val varSensGraphFlow = cache.varSensGraphFlow
+    val heartRateGraphFlow = cache.heartRateGraphFlow
+    val stepsGraphFlow = cache.stepsGraphFlow
     val treatmentGraphFlow = cache.treatmentGraphFlow
     val epsGraphFlow = cache.epsGraphFlow
     val basalGraphFlow = cache.basalGraphFlow

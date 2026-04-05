@@ -38,9 +38,4 @@
     <string name="ble_config_remove">Ukloniti</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
-    <plurals name="duration_days">
-        <item quantity="one">%1$d dan</item>
-        <item quantity="few">%1$d dana</item>
-        <item quantity="other">%1$d dana</item>
-    </plurals>
 </resources>

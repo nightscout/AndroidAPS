@@ -3,16 +3,9 @@
     <string name="equil_pump_description">Equil 5.3或更新版本貼片幫浦</string>
     <!--  start  -->
     <string name="equil_basal_speed">基礎速率</string>
-    <string name="equil_btn_cancel">取消</string>
-    <string name="equil_btn_need">需要</string>
-    <string name="equil_btn_skip">跳過</string>
-    <string name="equil_date_device">最後連線</string>
     <string name="equil_dressing">更換儲液盒</string>
     <string name="equil_dressing_onkey_msg">自動將活塞移動到儲液盒底部。到達底部後會自動停止。如有需要，點擊“停止”以中斷。</string>
-    <string name="equil_finish">完成</string>
-    <string name="equil_next">下一步</string>
     <string name="equil_hint_dressing">此操作將停止胰島素輸送並使幫浦的活塞回縮到底部！</string>
-    <string name="equil_history">歷史紀錄</string>
     <string name="equil_insulin_reservoir">胰島素儲液盒</string>
     <string name="equil_mode">運行模式</string>
     <string name="equil_mode_running">運行中</string>
@@ -22,17 +15,21 @@
     <string name="equil_stop">停止</string>
     <string name="equil_success">成功</string>
     <string name="equil_title_dressing">更換卡匣</string>
+    <string name="equil_title_assemble">組裝幫浦</string>
+    <string name="equil_title_serial">配對裝置</string>
+    <string name="equil_title_fill">排氣 / 注滿</string>
+    <string name="equil_title_attach">安裝幫浦</string>
+    <string name="equil_title_air">套管預充</string>
+    <string name="equil_title_unpair_detach">移除幫浦</string>
+    <string name="equil_title_unpair_confirm">確認取消配對</string>
     <string name="equil_title_history_events">歷史事件</string>
-    <string name="equil_title_tips">提示</string>
     <string name="equil_tone">警報音</string>
     <string name="equil_tone_mode_mute">靜音</string>
     <string name="equil_tone_mode_shake">僅震動</string>
     <string name="equil_tone_mode_tone">僅聲音</string>
     <string name="equil_tone_mode_tone_and_shake">聲音和震動</string>
     <string name="equil_unit_u">%1$s U</string>
-    <string name="equil_unit_u_hours">%1$s U/H</string>
-    <string name="equil_unbind_content">此操作將停止胰島素輸送並使幫浦的活塞回縮到底部！此外，這將刪除綁定狀態。</string>
-    <string name="equil_error_no_devices">無設備</string>
+    <string name="equil_unbind_content">此操作將停止胰島素輸注，並將幫浦推桿退回至底部！同時也會刪除綁定狀態！</string>
     <string name="equil_ble_config_confirmation_title">配對Equil貼片幫浦</string>
     <string name="equil_error">連線錯誤</string>
     <string name="equil_change">更換幫浦</string>
@@ -49,18 +46,15 @@
     <string name="equil_pump_not_run">幫浦未運行</string>
     <string name="equil_pair">配對</string>
     <string name="equil_pair_error">配對錯誤</string>
-    <string name="equil_retry">重試</string>
     <string name="equil_fill">填充/加注</string>
     <string name="equil_air">排除空氣</string>
     <string name="equil_temp_basal_rate">臨時基礎速率</string>
     <string name="equil_total_delivered">總輸送量</string>
-    <string name="equil_last_bolus">最後一次注射</string>
     <string name="equil_firmware_version">韌體版本</string>
     <string name="equil_shutdown_be">Equil將自動關閉</string>
     <string name="equil_shutdown">Equil自動關閉</string>
     <string name="equil_common_history_tbr_value">速率：%1$.2f U/H，持續時間：%2$d 分鐘</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
-    <string name="equil_history_type">類型：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">設定注射</string>
     <string name="equil_common_cmd_cancel_bolus">取消注射</string>
@@ -73,7 +67,6 @@
     <string name="equil_common_cmd_pair">配對Equil</string>
     <string name="equil_common_cmd_insert_cannula">植入套管</string>
     <string name="equil_common_cmd_unpair">取消配對Equil</string>
-    <string name="equil_common_cmd_alarm">警報</string>
     <string name="equil_common_cmd_set_extended_bolus">設定延長注射</string>
     <string name="equil_common_cmd_cancel_extended_bolus">取消延長注射</string>
     <!--    推杆回退-->
@@ -89,7 +82,7 @@
     <string name="equil_command_connect_error">幫浦連線失敗</string>
     <string name="equil_command_connect_no_response">幫浦未回應</string>
     <string name="equil_command__unknown">命令的未知狀態</string>
-    <string name="equil_install">將幫浦植入體內</string>
+    <string name="equil_install">將幫浦置入體內</string>
     <string name="equil_settings_alarm_battery">低電量警報</string>
     <string name="equil_settings_alarm_insulin">胰島素劑量不足警報</string>
     <string name="equil_init_insulin_error">儲液盒初始化未完成</string>
@@ -127,8 +120,6 @@
     <string name="equil_common_less_than_a_minute_ago">不到一分鐘前</string>
     <string name="equil_common_time_ago">%1$s前</string>
     <string name="equil_common_composite_time">%1$s和%2$s</string>
-    <string name="equil_common_wizard_button_finish">完成</string>
-    <string name="equil_common_wizard_button_next">下一步</string>
     <string name="equil_common_wizard_exit_confirmation_text">您尚未完成所有步驟。您確定要退出嗎？</string>
     <string name="equil_common_wizard_exit_confirmation_title">退出</string>
     <plurals name="equil_common_minutes">
@@ -141,20 +132,18 @@
         <item quantity="other">%1$d 天</item>
     </plurals>
     <string name="equil_support_error">韌體版本過低。不支援</string>
-    <string name="equil_password_tips">請為配對Equil v5.3幫浦設定新密碼，此密碼也將用於將來取消與目前幫浦的配對，請務必記住它。密碼規則：必須為4個字符，從ABCDEF0123456789中選擇。</string>
-    <string name="delete">刪除</string>
+    <string name="equil_password_tips">可選擇為與 Equil v5.3 幫浦配對設定密碼。此密碼未來也將用於取消配對，請務必記住。密碼規則：必須為 4 個字元，且只能從 ABCDEF0123456789 中選擇。</string>
     <string name="equil_set_pair_password">設定配對密碼</string>
     <string name="equil_hint1">安裝幫浦到底座後，選擇是否從駐留針頭中排除空氣。</string>
     <string name="equil_unbind">取消配對設備</string>
     <string name="equil_device_unpaired">裝置已解除配對</string>
     <string name="equil_assemble">請組裝幫浦、已填充的儲液盒和已充電的電池</string>
     <string name="equil_devices_number">輸入新幫浦ID</string>
+    <string name="equil_pair_password_title">輸入 %1$s 的密碼</string>
     <string name="equil_insert">請填充儲液盒，直到針尖有胰島素滴落</string>
     <string name="equil_insert2">幫浦不得在幫浦底座上。</string>
     <string name="equil_attach">請將幫浦附在底座上</string>
     <string name="equil_hint2">填充套管</string>
-    <string name="equil_hint_dressing2">請將幫浦從底座上取下</string>
-    <string name="equil_unpair">停用舊幫浦 %1$s？</string>
     <string name="equil_pump_updated">幫浦已更新</string>
     <string name="equil_replace_reservoir">儲液盒已空。請更換儲液盒</string>
     <string name="error_mustbe6hexadidits">必須為ABCDEF0123456789的6個字符</string>

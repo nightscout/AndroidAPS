@@ -12,21 +12,16 @@
     <string name="patch_not_active">Patch ikke aktiveret</string>
     <string name="pump_setting_failed">Indstilling af brugerindstillinger til pumpe mislykkedes!</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">BLE Status</string>
     <string name="last_connection_label">Sidst forbundet</string>
     <string name="active_bolus_label">Aktiv bolus</string>
     <string name="pump_state_label">Pumpe tilstand</string>
     <string name="active_alarms_label">Aktive alarmer</string>
-    <string name="reservoir_level"> %.2f IE</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Basaltype</string>
     <string name="basal_rate_label">Basalrate</string>
-    <string name="current_basal_rate"> %.2f IE/t</string>
     <string name="pump_type_label">Pumpetype</string>
     <string name="fw_version_label">Firmwareversion</string>
     <string name="patch_no_label">Patch nr.</string>
     <string name="patch_expiry_label">Patch udløber</string>
-    <string name="refresh_label">Genindlæs</string>
     <string name="reset_alarms_label">Nulstil alarmer</string>
     <string name="change_patch_label">Skift Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Anmodet af bruger</string>
@@ -53,8 +48,6 @@
     <string name="pump_time_update_failed">Mislykkedes i at opdatere pumpetidszone, udskyd beskeden og opdatér manuelt.</string>
     <!-- wizard-->
     <string name="retry">Forsøg igen</string>
-    <string name="next">Næste</string>
-    <string name="discard">Kassér</string>
     <string name="step_prepare_patch">Aktivér Patch</string>
     <string name="step_prepare_patch_connect">Forbind og fyld</string>
     <string name="step_prime">Klargør</string>
@@ -69,7 +62,6 @@
     <string name="step_retry_activation">Aktivering i gang</string>
     <string name="unexpected_state">Uventet status: %1$s</string>
     <string name="no_profile_selected">Ingen profil valgt. Vælg venligst en profil og prøv igen.</string>
-    <string name="base_serial">Pumpe Basisserie: %1$X</string>
     <string name="patch_begin_activation">Ingen aktiv patch. Tryk på <b>Næste</b> for at starte aktiveringsprocessen.</string>
     <string name="patch_not_active_note">Pumpebasen må ikke forbindes til Patchen før næste trin!</string>
     <string name="connect_pump_base">Tilslut pumpebasen til en ny Patch, fjern resterende luft og fyld med insulin, tryk derefter på <b>Næste</b>.</string>
@@ -99,7 +91,6 @@
     <string name="reading_activation_status">Vent venligst, læser aktiveringsstatussen fra pumpen.</string>
     <!-- settings-->
     <string name="sn_input_title">Serienummer</string>
-    <string name="sn_input_summary">Indtast serienummeret på din pumpebase.</string>
     <string name="sn_input_invalid">Ugyldigt serienummer!</string>
     <string name="alarm_setting_title">Alarmindstillinger</string>
     <string name="alarm_setting_summary">Vælg dine fortrukne pumpealarmindstillinger.</string>

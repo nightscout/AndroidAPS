@@ -3,16 +3,9 @@
     <string name="equil_pump_description">Equil 5.3 eller nyere patchpumpe </string>
     <!--  start  -->
     <string name="equil_basal_speed">Grunnbasal</string>
-    <string name="equil_btn_cancel">Avbryt</string>
-    <string name="equil_btn_need">Behov</string>
-    <string name="equil_btn_skip">Hopp over</string>
-    <string name="equil_date_device">Siste tilkobling</string>
     <string name="equil_dressing">Bytt reservoar</string>
     <string name="equil_dressing_onkey_msg">Beveger automatisk stempel til bunnen av reservoaret. Den stopper automatisk når bunnen nås. Klikk \"Stopp\" for å avbryte om nødvendig.</string>
-    <string name="equil_finish">Fullfør</string>
-    <string name="equil_next">Neste</string>
     <string name="equil_hint_dressing">Denne operasjonen stopper insulininfusjonen og fører til at pumpestempelet trekker seg tilbake til bunnen!</string>
-    <string name="equil_history">Historikk</string>
     <string name="equil_insulin_reservoir">Insulinreservoar</string>
     <string name="equil_mode">Kjøremodus</string>
     <string name="equil_mode_running">Kjører</string>
@@ -22,17 +15,21 @@
     <string name="equil_stop">Stopp</string>
     <string name="equil_success">Suksess</string>
     <string name="equil_title_dressing">Bytt ampulle</string>
+    <string name="equil_title_assemble">Monter pumpen</string>
+    <string name="equil_title_serial">Koble sammen enheten</string>
+    <string name="equil_title_fill">Prime / fylling</string>
+    <string name="equil_title_attach">Koble til pumpen</string>
+    <string name="equil_title_air">Prime kanylen</string>
+    <string name="equil_title_unpair_detach">Løsne pumpen</string>
+    <string name="equil_title_unpair_confirm">Bekreft oppheving av paring</string>
     <string name="equil_title_history_events">Historiske hendelser</string>
-    <string name="equil_title_tips">Tips</string>
     <string name="equil_tone">Varseltone</string>
     <string name="equil_tone_mode_mute">Demp lyd</string>
     <string name="equil_tone_mode_shake">Kun vibrering</string>
     <string name="equil_tone_mode_tone">Kun lyd</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrering og lyd</string>
     <string name="equil_unit_u">%1$s E</string>
-    <string name="equil_unit_u_hours">%1$s E/t</string>
-    <string name="equil_unbind_content">Denne operasjonen vil stoppe insulininfusjon og trekke tilbake pumpestempelet til bunnen. Den vil også slette bindingsstatusen.！</string>
-    <string name="equil_error_no_devices">Ingen enhet</string>
+    <string name="equil_unbind_content">Denne operasjonen vil stoppe insulininfusjonen og trekke pumpestempelet tilbake til bunnen! Den vil også slette bindingsstatusen!</string>
     <string name="equil_ble_config_confirmation_title">Sammenkoble Equil-patchpumpe</string>
     <string name="equil_error">Tilkoblingsfeil</string>
     <string name="equil_change">Bytt pumpe</string>
@@ -49,18 +46,15 @@
     <string name="equil_pump_not_run">Pumpen kjører ikke</string>
     <string name="equil_pair">Paring</string>
     <string name="equil_pair_error">Paringsfeil</string>
-    <string name="equil_retry">Prøv igjen</string>
     <string name="equil_fill">Prime/fylling</string>
     <string name="equil_air">Tøm luft</string>
     <string name="equil_temp_basal_rate">Midlertidig basal</string>
     <string name="equil_total_delivered">Totalt levert</string>
-    <string name="equil_last_bolus">Siste bolus</string>
     <string name="equil_firmware_version">Fastvareversjon</string>
     <string name="equil_shutdown_be">Equil vil bli skrudd av automatisk</string>
     <string name="equil_shutdown">Equil auto-av</string>
     <string name="equil_common_history_tbr_value">Dose： %1$.2f E/t，varighet： %2$d minutter</string>
     <string name="equil_common_history_bolus_value">%1$.2f E</string>
-    <string name="equil_history_type">Type：</string>
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">Angi bolus</string>
     <string name="equil_common_cmd_cancel_bolus">Avbryt bolus</string>
@@ -73,7 +67,6 @@
     <string name="equil_common_cmd_pair">Koble til Equil</string>
     <string name="equil_common_cmd_insert_cannula">Sett inn kanyle</string>
     <string name="equil_common_cmd_unpair">Koble fra Equil</string>
-    <string name="equil_common_cmd_alarm">Alarm</string>
     <string name="equil_common_cmd_set_extended_bolus">Angi forlenget bolus</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Avbryt forlenget bolus</string>
     <!--    推杆回退-->
@@ -89,7 +82,7 @@
     <string name="equil_command_connect_error">Tilkoblingsfeil til pumpe</string>
     <string name="equil_command_connect_no_response">Ingen respons fra pumpen</string>
     <string name="equil_command__unknown">Ukjent tilstand for kommandoen</string>
-    <string name="equil_install">Implanter pumpen på kroppen\"</string>
+    <string name="equil_install">Implanter pumpen i kroppen</string>
     <string name="equil_settings_alarm_battery">Alarm for lavt batteri</string>
     <string name="equil_settings_alarm_insulin">Alarm for lavt legemiddellager</string>
     <string name="equil_init_insulin_error">Initialisering av reservoaret er ikke ferdig</string>
@@ -127,8 +120,6 @@
     <string name="equil_common_less_than_a_minute_ago">Mindre enn ett minutt siden</string>
     <string name="equil_common_time_ago">%1$s siden</string>
     <string name="equil_common_composite_time">%1$s og %2$s</string>
-    <string name="equil_common_wizard_button_finish">Fullfør</string>
-    <string name="equil_common_wizard_button_next">Neste</string>
     <string name="equil_common_wizard_exit_confirmation_text">Du har ikke fullført alle trinn ennå. Er du sikker på at du vil avslutte?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Avslutt</string>
     <plurals name="equil_common_minutes">
@@ -144,20 +135,18 @@
         <item quantity="other">%1$d dager</item>
     </plurals>
     <string name="equil_support_error">Firmwareversjonen er for lav. Støttes ikke</string>
-    <string name="equil_password_tips">Angi et nytt passord for sammenkobling med Equil v5.3 pumpe, dette passordet vil også bli brukt til å koble opp mot nåværende pumpe i fremtiden, så sørg for å huske det. Passordregel: Det må være 4 tegn langt, valgt fra ABCDEF0123456789.</string>
-    <string name="delete">Slett</string>
+    <string name="equil_password_tips">Angi eventuelt et passord for paring med Equil v5.3-pumpen. Dette passordet vil også bli brukt til å oppheve paringen i fremtiden, så husk det. Passordregel: Den må være på 4 tegn, valgt fra ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Sett sammenkoblingspassord</string>
     <string name="equil_hint1">Etter at du har installert pumpen på baseplaten, velg om du vil fjerne luften fra den innlagte kanylen.</string>
     <string name="equil_unbind">Koble fra enhet</string>
     <string name="equil_device_unpaired">Enhet frakoblet</string>
     <string name="equil_assemble">Du må montere pumpen, det fylte reservoaret og det ladede batteriet</string>
     <string name="equil_devices_number">Angi ny pumpe-ID</string>
+    <string name="equil_pair_password_title">Skriv inn passordet for %1$s</string>
     <string name="equil_insert">Vennligst prime reservoaret helt til det er en dråpe av insulin på tuppen av kanylen</string>
     <string name="equil_insert2">Pumpen må ikke være på pumpebasen.</string>
     <string name="equil_attach">Vennligst fest pumpen til basen</string>
     <string name="equil_hint2">Prime kanylen</string>
-    <string name="equil_hint_dressing2">Vennligst fjern pumpen fra basen</string>
-    <string name="equil_unpair">Deaktiver den gamle pumpen %1$s?</string>
     <string name="equil_pump_updated">Pumpe oppdatert</string>
     <string name="equil_replace_reservoir">Reservoaret er tomt. Vennligst bytt ut reservoaret</string>
     <string name="error_mustbe6hexadidits">Må være 6 tegn av ABCDEF0123456789</string>

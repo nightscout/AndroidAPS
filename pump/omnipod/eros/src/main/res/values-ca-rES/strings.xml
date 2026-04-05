@@ -3,23 +3,14 @@
     <!-- Omnipod Eros - Description -->
     <string name="omnipod_eros_pump_description">Integració de la bomba per Omnipod Eros (el model antic amb agulla amb tap transparent). Requereix un dispositiu RileyLink amb firmware versió 2.0 o superior.</string>
     <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Errors -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Adreça RileyLink no vàlida.</string>
     <!-- Omnipod Eros - Preferences -->
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Mostrar botó \"Registre de pols\" al menú de gestió del pod</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar botó \"Estadístiques RileyLink\" al menú de gestió del pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activar registre de canvi de pila a Accions</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Habilitat so per avisos de TBR dubtoses</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Habilitat so per avisos de SMB dubtosos</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Habilitat so per avisos de bolus dubtosos</string>
-    <!-- Omnipod Eros - History -->
-    <string name="omnipod_eros_history_title">Historial del pod</string>
-    <string name="omnipod_eros_history_item_description">Descripció</string>
-    <string name="omnipod_eros_history_item_source">Font</string>
-    <string name="omnipod_eros_history_item_date">Data</string>
-    <string name="omnipod_eros_history_type">Tipus:</string>
     <string name="omnipod_eros_history_tbr_value">Basal: %1$.2f U, durada: %2$d minuts</string>
-    <!-- Omnipod Eros - Short Status -->
     <!-- Omnipod Eros - Error -->
-    <string name="omnipod_eros_error_riley_link_address_invalid">Adreça RileyLink no vàlida.</string>
     <string name="omnipod_eros_error_crc_mismatch">Error de comunicació: ha fallat la verificació de la integritat del missatge</string>
     <string name="omnipod_eros_error_invalid_packet_type">Error de comunicació: s\'ha rebut del pod un paquet no vàlid</string>
     <string name="omnipod_eros_error_invalid_progress_state">Error de comunicació: estat del pod no correcte</string>
@@ -44,18 +35,13 @@
     <string name="omnipod_eros_error_set_temp_basal_failed_validation">La durada de la TBR ha de ser major que zero i múltiple de %1$s minuts.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Error en configurar la hora. El lliurament d\'insulina podria suspendre\'s! Actualitzeu manualment l\'estat del pod des de la pestanya Ominipod i repreneu el lliurament si cal.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Error en configurar la hora. S\'ha aturat el lliurament d\'insulina! Repreneu-lo manualment des de la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_failed_to_read_pulse_log">Error en llegir el registre de pols</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Error en el canvi d\'hora automàtic al pod. Haurieu de sincronitzar l\'hora a la pestanya Omnipod.</string>
-    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operació no possible.\n\n Heu de configurar la bomba Omnipod abans de fer servir aquesta operació.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">No s\'ha pogut verificar si el bolus ha estat lliurat. Verifiqueu manualment que el pod està lliurant bolus escoltant els clics. <b>Si esteu segurs que el bolus no s\'ha lliurat, haurieu d\'eliminar manualment el registre de bolus a Tractaments, fins i tot si ara feu \'Cancel·lar bolus\'!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">No s\'ha pogut verificar si el bolus SMB (%1$.2f U) ha estat lliurat. <b>Si esteu segurs que el bolus no s\'ha lliurat, haurieu d\'eliminar manualment el registre de SMB a Tractaments</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Hi ha una basal temporal en curs al pod, però AAPS no n\'és conscient. Si us plau cancel·leu la basal temporal manualment.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Estadístiques RileyLink</string>
-    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Esperant la connexió a RileyLink…</string>
-    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Restablir configuració RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Llegir registre de pols</string>
-    <string name="omnipod_eros_pod_management_button_reading_pulse_log">Llegint registre de pols…</string>
     <string name="omnipod_eros_pod_management_pulse_log">Registre de pols</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Registre de pols (copiat al porta-retalls)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

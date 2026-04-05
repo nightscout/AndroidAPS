@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Ustawienia</string>
-    <string name="nav_exit">Wyjście</string>
     <string name="delta">Delta</string>
     <string name="save">ZACHOWAJ</string>
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
-    <string name="nav_about">O programie</string>
     <string name="sensitivity_warning">Przy włączonej funkcji Autosens pamiętaj, żeby wprowadzać wszystkie węglowodany. W innym wypadku odchylenia węglowodanów będą błędnie identyfikowane jako zmiany wrażliwości !!</string>
     <string name="invalid">NIEPRAWIDŁOWY</string>
-    <string name="gradually_increase_notification_volume">Stopniowo zwiększaj głośność ostrzeżeń i powiadomień</string>
-    <string name="localalertsettings_title">Alarmy lokalne</string>
-    <string name="enable_missed_bg_readings_alert">Alarm, jeśli nie są odbierane odczyty BG</string>
-    <string name="enable_pump_unreachable_alert">Alarm, gdy pompa jest nieosiągalna</string>
     <string name="pump_unreachable_threshold">Pompa nieosiągalna próg [min]</string>
-    <string name="enable_carbs_req_alert">Alarm gdy wymagane jest podanie węglowodanów</string>
-    <string name="open_navigation">Otwórz menu</string>
     <string name="close_navigation">Zamknij menu</string>
     <string name="remove_items">Usuń elementy</string>
     <string name="sort_items">Sortuj elementy</string>
@@ -27,7 +19,6 @@
     <string name="count_selected">Wybrany %1$d</string>
     <string name="sort_label">Sortuj</string>
     <string name="search">Szukaj</string>
-    <string name="simple_mode">Tryb uproszczony</string>
     <string name="select">Wybierz</string>
     <string name="set">Ustaw</string>
 </resources>

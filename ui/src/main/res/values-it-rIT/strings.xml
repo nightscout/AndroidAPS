@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">Avvia TT Pasto a breve</string>
     <string name="start_hypo_tt">Avvia TT Ipoglicemia</string>
     <string name="time_offset">Offset</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Ricorda di fare il bolo</string>
-    <string name="a11y_carb_reminder">imposta promemoria</string>
     <!--    Widget-->
     <string name="configure">Configura opacità</string>
     <string name="widget_description">AAPS widget</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">Monitor attività</string>
     <string name="do_you_want_reset_stats">Vuoi resettare le statistiche sull\'attività?</string>
     <string name="do_you_want_recalculate_tdd_stats">Vuoi ricalcolare le statistiche TDD?</string>
-    <string name="statistics">Statistiche</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
     <string name="invalid_age">Inserimento età non valido</string>
     <string name="invalid_weight">Inserimento peso non valido</string>
-    <string name="id">ID:</string>
-    <string name="submit">Invia</string>
     <string name="age">Età</string>
     <string name="weight_label">Peso</string>
-    <string name="most_common_profile">Profilo più comune:</string>
-    <string name="survey_comment">Nota: solo i dati visibili su questa schermata verranno caricati in modo anonimo. A questa installazione di AAPS verrà assegnato un ID. Puoi inviare nuovamente i dati se il tuo profilo principale viene modificato, ma lascialo in esecuzione almeno per una settimana per rendere il risultato visibile nel time in range (TIR). Il tuo aiuto è apprezzato.</string>
     <string name="glucose_type">Tipo glicemia</string>
     <string name="bg_other">Altro</string>
     <string name="bg_meter">Glucometro</string>
@@ -47,7 +40,6 @@
     <string name="user_profile_description">La descrizione del profilo utente viene utilizzata per mostrare i siti più frequenti disponibili per un uomo, una donna o un bambino</string>
     <string name="site_management">Profilo Di Gestione Sito</string>
     <string name="site_management_description">Imposta qui se vuoi gestire il sito del micro, il sito del CGM o entrambi. Questa impostazione verrà utilizzata per inviare automaticamente la finestra di gestione del sito su ogni nuovo inserimento rilevato</string>
-    <string name="select_site">Clicca qui sotto per selezionare il sito</string>
     <string name="record_site_change">Registra Posizione Sito</string>
     <string name="edit_site">Modifica</string>
     <string name="record_site_location">Posizione Del Sito: %1$s</string>
@@ -60,6 +52,7 @@
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Non fare il bolo, solo registrazione</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
@@ -92,7 +85,6 @@
     <string name="a11y_current_bg">glicemia corrente</string>
     <string name="carb_time_label">Offset CHO</string>
     <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
-    <string name="show_calculation">Mostra calcolo</string>
     <!-- Treatments -->
     <string name="no_records_available">Nessun record disponibile</string>
     <string name="calculation_short">Calc</string>
@@ -104,8 +96,6 @@
     <string name="meal_bolus">Pasto</string>
     <string name="prime">Caricamento</string>
     <string name="carbs_and_bolus">CHO e boli</string>
-    <string name="show_invalidated_records">Mostra record non validi/rimossi</string>
-    <string name="hide_invalidated_records">Nascondi record non validi/rimossi</string>
     <string name="show_invalidated">Mostra invalidato</string>
     <string name="hide_invalidated">Nascondi invalidato</string>
     <string name="careportal_remove_started_events">Rimuovi le voci \"AAPS avviato\"</string>
@@ -113,16 +103,10 @@
     <string name="show_loop">Mostra loop</string>
     <string name="user_entry">Inserimento utente</string>
     <string name="clone_label">Clona</string>
-    <string name="show_loop_records">Mostra record di loop</string>
-    <string name="show_hide_records">Nascondi record di loop</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profilo 1</string>
-    <string name="profile2">Profilo 2</string>
     <string name="profile_type">Tipo profilo</string>
     <string name="basal_pct_from_tdd_label">% di basale</string>
     <string name="selected_profile">Selezionato:</string>
-    <string name="compare_profile">Compara profili</string>
-    <string name="nav_profile_helper">Assistente profilo</string>
     <string name="motol_default_profile">Profilo predefinito</string>
     <string name="current_profile">Profilo corrente</string>
     <string name="available_profile">Profilo disponibile</string>
@@ -133,8 +117,6 @@
     <string name="invalid_pct">Inserimento % non valido</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Velocità basale</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOP PREMUTO</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">solo su smartwatch</string>
     <string name="a11y_only_on_phone">solo su telefono</string>
@@ -156,9 +138,12 @@
     <string name="widget_configuration">Configurazione widget</string>
     <string name="until_changed">Fino a Modifica</string>
     <string name="limitations">Limitazioni</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Entrambi</item>
         <item>Solo positivo</item>
         <item>Solo negativo</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>

@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Medronic kodavimas</string>
     <string name="medtronic_custom_action_wake_and_tune">Pažadinti ir nustatyti</string>
     <string name="medtronic_custom_action_clear_bolus_block">Išvalyti Boluso bloką</string>
-    <string name="medtronic_custom_action_reset_rileylink">Išvalyti RileyLink nustatymus</string>
     <string name="medtronic_pump_battery_select">Baterijos tipas (pagal galią)</string>
     <string name="medtronic_pump_battery_no">Nepasirinkta (paprastas vaizdas)</string>
     <string name="medtronic_pump_battery_alkaline">Šarminė (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_lithium">Ličio (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_nizn">Šarminė (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (išplėstinis vaizdas)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink baterija</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Klaidos</string>
-    <string name="medtronic_error_serial_not_set">Serijos Nr. nenustatytas.</string>
     <string name="medtronic_error_serial_invalid">Serijos Nr. neteisingas.</string>
     <string name="medtronic_error_pump_type_not_set">Nenustatytas pompos tipas.</string>
     <string name="medtronic_error_pump_type_invalid">Nepalaikomas pompos tipas.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Nenustatytas pompos dažnis.</string>
     <string name="medtronic_error_pump_frequency_invalid">Nepalaikomas pompos dažnis.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adresas neteisingas.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Aptiktas pompos tipas neatitinka nustatymų.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Atšaukti laikiną bazę</string>
     <string name="medtronic_cmd_desc_set_bolus">Nustatyti bolusą</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Parodyti insulino likutį</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pompa nepasiekiama</string>
-    <string name="medtronic_warning">Perspėjimas</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Dabar</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">prieš</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Dabar</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">prieš</string>
     <string name="medtronic_notification_check_time_date">Būtina atnaujinti pompos laikrodį</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Pompos laikas pakeistas</string>
     <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
     <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
     <string name="mdt_tbr_remaining">%1$.1f vv/h (liko %2$d min)</string>
     <string name="invalid_history_data">Aptikti neteisingi pompos istorijos duomenys. Sukurkite naują problemos įrašą ir pateikite logus.</string>
     <string name="riley_statistics">RL statistika</string>
-    <string name="medtronic_history_type">Tipas:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Paspausta atnaujinti</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Statuso naujinimas</string>
 </resources>

@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
     <string name="start_hypo_tt">Début Traitement Hypo</string>
     <string name="time_offset">Décalage horaire</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Rappel du bolus plus tard</string>
-    <string name="a11y_carb_reminder">définir un rappel</string>
     <!--    Widget-->
     <string name="configure">Configurer l’opacité</string>
     <string name="widget_description">Widget AAPS</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">Moniteur d\'activité</string>
     <string name="do_you_want_reset_stats">Voulez-vous réinitialiser les statistiques d\'activité ?</string>
     <string name="do_you_want_recalculate_tdd_stats">Voulez-vous recalculer les statistiques de DTQ ?</string>
-    <string name="statistics">Statistiques</string>
     <string name="calculation_in_progress">Calcul en cours</string>
     <string name="invalid_age">Âge invalide</string>
     <string name="invalid_weight">Poids invalide</string>
-    <string name="id">ID :</string>
-    <string name="submit">Envoyer</string>
     <string name="age">Âge </string>
     <string name="weight_label">Poids </string>
-    <string name="most_common_profile">Profil le plus courant :</string>
-    <string name="survey_comment">Remarque : seules les données visibles sur cet écran seront téléchargées de manière anonyme. L\'ID est attribué à cette installation d\'AAPS. Vous pouvez soumettre à nouveau des données si votre profil principal est modifié, mais laissez-le fonctionner au moins pendant une semaine pour obtenir le résultat \"temps dans la cible\". Votre aide est appréciée.</string>
     <string name="glucose_type">Source de Glycémie</string>
     <string name="bg_other">Autre</string>
     <string name="bg_meter">Lecteur</string>
@@ -47,7 +40,6 @@
     <string name="user_profile_description">La description du profil utilisateur est utilisée pour montrer les sites les plus fréquents disponibles pour un homme, une femme ou un enfant</string>
     <string name="site_management">Paramètres de gestion du site</string>
     <string name="site_management_description">Sélectionnez si vous souhaitez gérer le site de la pompe, le site MGC ou les deux. Ce paramètre permettra d\'ouvrir automatiquement la boîte de dialogue de gestion du site à chaque nouvelle entrée détectée</string>
-    <string name="select_site">Cliquez ci-dessous pour sélectionner le site</string>
     <string name="record_site_change">Enregistrer la localisation du site</string>
     <string name="edit_site">Éditer</string>
     <string name="record_site_location">Site : %1$s</string>
@@ -60,6 +52,7 @@
     <string name="record_insulin_cartridge_change">Enreg. changement de réservoir</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Ne pas administrer de bolus, enregistrer uniquement</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Réutiliser %1$d%% %2$dh</string>
     <string name="timeshift_label">Décalage horaire</string>
@@ -92,7 +85,6 @@
     <string name="a11y_current_bg">glycémie actuelle</string>
     <string name="carb_time_label">Décalage horaire</string>
     <string name="a11y_set_carb_timer">régler l\'alarme du minuteur de glucides</string>
-    <string name="show_calculation">Afficher le calcul</string>
     <!-- Treatments -->
     <string name="no_records_available">Aucun enregistrement disponible</string>
     <string name="calculation_short">Calc</string>
@@ -104,8 +96,6 @@
     <string name="meal_bolus">Repas</string>
     <string name="prime">Amorcer</string>
     <string name="carbs_and_bolus">Glucides et bolus</string>
-    <string name="show_invalidated_records">Afficher les enregistrements invalidés / supprimés</string>
-    <string name="hide_invalidated_records">Masquer les enregistrements invalidés / supprimés</string>
     <string name="show_invalidated">Montrer les entrées invalides</string>
     <string name="hide_invalidated">Masquer les entrées invalides</string>
     <string name="careportal_remove_started_events">Suppr. entrées \"Démarrage AAPS\"</string>
@@ -113,16 +103,10 @@
     <string name="show_loop">Afficher les entrées boucle</string>
     <string name="user_entry">Entrées utilisateur</string>
     <string name="clone_label">Dupliquer</string>
-    <string name="show_loop_records">Afficher les entrées de la boucle</string>
-    <string name="show_hide_records">Masquer les entrées de la boucle</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profil 1</string>
-    <string name="profile2">Profil 2</string>
     <string name="profile_type">Type de profil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Sélectionné :</string>
-    <string name="compare_profile">Comparer les profils</string>
-    <string name="nav_profile_helper">Assistant Profil</string>
     <string name="motol_default_profile">Profil par défaut</string>
     <string name="current_profile">Profil actuel</string>
     <string name="available_profile">Profils disponibles</string>
@@ -133,8 +117,6 @@
     <string name="invalid_pct">% saisi invalide</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Débit de Basal</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">ARRÊT APPUYÉ</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">uniquement sur la montre</string>
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
@@ -156,9 +138,12 @@
     <string name="widget_configuration">Configuration du widget</string>
     <string name="until_changed">Jusqu\'à nouvel ordre</string>
     <string name="limitations">Limitations</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Les deux</item>
         <item>Positif uniquement</item>
         <item>Négatif uniquement</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>

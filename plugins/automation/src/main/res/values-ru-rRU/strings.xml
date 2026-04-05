@@ -146,4 +146,6 @@
     <string name="newSmbMode">Новый режим SMB:</string>
     <string name="on">ВКЛ</string>
     <string name="off">ВЫКЛ</string>
+    <!--    Map Picker (OpenStreetMap)-->
+    <!-- Permission rationales -->
 </resources>

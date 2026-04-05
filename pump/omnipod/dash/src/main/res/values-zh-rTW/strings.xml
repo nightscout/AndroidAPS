@@ -2,15 +2,7 @@
 <resources>
     <!-- Omnipod Dash - Description -->
     <string name="omnipod_dash_pump_description">Omnipod Dash 幫浦整合（新型號，支援藍牙並且有藍色針頭蓋）。</string>
-    <!-- Omnipod Dash - History -->
-    <string name="omnipod_dash_history_title">幫浦歷史紀錄</string>
-    <string name="omnipod_dash_history_item_description">描述</string>
-    <string name="omnipod_dash_history_item_amount">數量</string>
-    <string name="omnipod_dash_history_item_source">來源</string>
-    <string name="omnipod_dash_history_item_date">日期</string>
-    <string name="omnipod_dash_history_type">類型：</string>
     <!-- Omnipod Dash - Overview -->
-    <string name="omnipod_dash_overview_bluetooth_status">藍牙狀態</string>
     <string name="omnipod_dash_overview_bluetooth_address">藍牙地址</string>
     <string name="omnipod_dash_overview_firmware_version_value">韌體版本 %1$s / 藍牙版本 %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">連線品質</string>
@@ -18,11 +10,7 @@
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">請確認使用足夠的胰島素填充新的幫浦，確保可以使用三天。\n\n在填充過程中聽到幫浦發出的兩聲嗶聲，這表示已注入最少 80U 的胰島素。聽到兩聲嗶聲後，請繼續注射完針筒內的全部胰島素。\n\n填充幫浦後，請按 <b>下一步</b>。\n\n<b>注意：</b> 此時不要取下幫浦的針頭蓋。</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">嘗試與新幫浦配對並進行啟動。\n\n當初始化過程完成後，您可以按 <b>下一步</b>。</string>
-    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">輸送暫停通知時啟用音效</string>
     <!-- Exceptions -->
-    <string name="omnipod_dash_failed_to_connect">無法連線至幫浦</string>
-    <string name="omnipod_dash_found_too_many_pods">找到太多幫浦以進行啟動</string>
-    <string name="omnipod_dash_scan_failed">無法找到可用的幫浦進行啟動</string>
     <string name="omnipod_dash_generic_error">一般錯誤：%1$s</string>
     <string name="omnipod_dash_failed_to_send">無法發送指令</string>
     <string name="omnipod_dash_command_not_sent">指令未發送</string>
@@ -32,7 +20,6 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">胰島素輸送已暫停</string>
     <string name="omnipod_common_history_total_delivered">總輸送量：%1$.2f U</string>
-    <string name="omnipod_dash_connection_lost">與幫浦失去連線</string>
     <string name="omnipod_dash_bolus_already_in_progress">另一個注射正在進行中</string>
     <string name="omnipod_dash_not_enough_insulin">儲液槽中的胰島素不足</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">指令未確認</string>

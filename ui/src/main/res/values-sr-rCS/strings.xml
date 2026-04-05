@@ -13,6 +13,7 @@
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <!-- InsulinDialog -->
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
     <!-- WizardDialog -->
@@ -28,7 +29,9 @@
     <string name="meal_bolus">Obrok</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
-    <!--    BolusProgressDialog-->
     <!--QuickWizard-->
     <!--    Widget-->
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
+    <!-- Toolbar configuration -->
 </resources>

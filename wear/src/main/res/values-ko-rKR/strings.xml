@@ -49,11 +49,6 @@
     <string name="pref_3_hours">3시간</string>
     <string name="pref_4_hours">4시간</string>
     <string name="pref_5_hours">5시간</string>
-    <string name="pref_input_design">입력 형태</string>
-    <string name="pref_default">기본</string>
-    <string name="pref_quick_righty">오른손잡이</string>
-    <string name="pref_quick_lefty">왼손잡이</string>
-    <string name="pref_modern_sparse">모던스타일</string>
     <string name="pref_big_numbers">큰 숫자</string>
     <string name="pref_ring_history">원형 이력</string>
     <string name="pref_light_ring_history">연한 원형 이력</string>
@@ -175,6 +170,5 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">old</string>
     <string name="old_warning">!old!</string>
-    <string name="error">!err!</string>
     <string name="pref_heartRateSampling">심박수</string>
 </resources>

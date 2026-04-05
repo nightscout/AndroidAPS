@@ -14,22 +14,17 @@
     <string name="pump_setting_failed">Kunne ikke sende brukerinnstillinger til pumpen!</string>
     <string name="pump_sync_error">Feil ved synkronisering av historikk fra pumpe, en post har blitt hoppet over. Sjekk behandlingsfanen for å kontrollere om bolusdosen er synkronisert riktig. Slumre og hvis feilen kommer tilbake bytt patch eller pumpebase.</string>
     <!-- overview fragment -->
-    <string name="ble_status_label">Bluetooth Status</string>
     <string name="last_connection_label">Siste tilkobling</string>
     <string name="active_bolus_label">Aktiv bolus</string>
     <string name="pump_state_label">Pumpestatus</string>
     <string name="active_alarms_label">Aktive alarmer</string>
-    <string name="reservoir_level"> %.2f E</string>
-    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Basal type</string>
     <string name="basal_rate_label">Basaldose</string>
-    <string name="current_basal_rate"> %.2f E/t</string>
     <string name="pump_type_label">Pumpetype</string>
     <string name="fw_version_label">FW versjon</string>
     <string name="patch_no_label">Patch nr</string>
     <string name="patch_expiry_label">Patch utløper</string>
     <string name="patch_activation_time_label">Aktivering</string>
-    <string name="refresh_label">Oppdater</string>
     <string name="reset_alarms_label">Nullstill alarmer</string>
     <string name="change_patch_label">Bytte Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Forespurt av bruker</string>
@@ -57,10 +52,9 @@
     <string name="bolus_error">Bolus feilet</string>
     <!-- wizard-->
     <string name="retry">Prøv igjen</string>
-    <string name="next">Neste</string>
-    <string name="discard">Forkast</string>
     <string name="step_prepare_patch">Aktivere patch</string>
     <string name="step_prepare_patch_connect">Koble til og fyll</string>
+    <string name="step_select_insulin">Velg insulin</string>
     <string name="step_prime">Prime</string>
     <string name="step_priming">Primer</string>
     <string name="step_priming_complete">Priming ferdig</string>
@@ -73,8 +67,6 @@
     <string name="step_retry_activation">Aktivering pågår</string>
     <string name="unexpected_state">Uventet status: %1$s</string>
     <string name="no_profile_selected">Ingen profil er valgt. Velg en profil og prøv igjen.</string>
-    <string name="no_sn_in_settings">Ingen serienummer kjent. Angi serienummeret til pumpbasen i innstillingene for å prøve igjen.</string>
-    <string name="base_serial">Pumpebasens serienummer: %1$X</string>
     <string name="patch_begin_activation">Ingen aktiv patch. Trykk <b>Neste</b> for å starte aktiveringsprosessen.</string>
     <string name="patch_not_active_note">Pumpebase skal ikke kobles til patch før neste steg!</string>
     <string name="connect_pump_base">Koble pumpebase til ny patch, fjern overflødig luft og full med insulin. Deretter trykk <b>Neste</b>.</string>
@@ -103,16 +95,24 @@
     <string name="press_next_or_OK">Trykk på <b>OK</b> for å gå tilbake til hovedskjermen. Trykk på <b>Neste</b> for å begynne å aktivere ny patch.</string>
     <string name="activation_in_progress">Oops! Noe gikk galt, det ser ut som at det allerede pågår en aktivering.</string>
     <string name="press_retry_or_discard">Trykk <b>Neste</b> for å gjenoppta aktiveringen eller <b>Forkast</b> for å tilbakestille aktiveringsstatusen.</string>
+    <string name="retry_activation_filled_error">Aktiveringen kan ikke gjenopptas. Pumpens tilstand har gått tapt. IKKE prime på nytt, da patchen kan allerede være satt inn. Kast patchen og start en ny aktivering.</string>
     <string name="reading_activation_status">Vennligst vent, leser aktiveringsstatus fra pumpen.</string>
     <!-- settings-->
     <string name="enable_pump_unreachable_alert_summary">Varsel om pumpe utilgjengelig tvinges aktivert, fordi Medtrum-patching kan mislykkes og bli utilgjengelig.</string>
     <string name="pump_unreachable_threshold_minutes_summary">Anbefales å sette til 30 minutter, fordi Medtrum-patching kan mislykkes og bli utilgjengelig.</string>
     <string name="sn_input_title">Serienummer</string>
-    <string name="sn_input_summary">Skriv inn serienummeret til pumpens base.</string>
     <string name="sn_input_invalid">Ugyldig serienummer!</string>
-    <string name="pump_unsupported">Pumpe er ikke testet: %1$s! Vennligst kontakt oss på discord eller github for støtte</string>
+    <string name="change_sn">Endre</string>
     <string name="alarm_setting_title">Alarminnstillinger</string>
     <string name="alarm_setting_summary">Velg dine foretrukne alarminnstillinger.</string>
+    <string name="alarm_setting_light_vibrate_beep">Lys, vibrering og piping</string>
+    <string name="alarm_setting_light_vibrate">Lys og vibrer</string>
+    <string name="alarm_setting_light_beep">Lys og piping</string>
+    <string name="alarm_setting_light">Lys</string>
+    <string name="alarm_setting_vibrate_beep">Vibrering og piping</string>
+    <string name="alarm_setting_vibrate">Vibrering</string>
+    <string name="alarm_setting_beep">Piping</string>
+    <string name="alarm_setting_silent">Stille</string>
     <string name="pump_warning_notification_title">Varsel om pumpeadvarsel</string>
     <string name="pump_warning_notification_summary">Vis varsel om ikke-kritisk pumpeadvarsel: lavt batteri, lavt reservoar (20 enheter) og utløper snart. Anbefales og la være aktivert når pumpealarmer er satt til stillemodus.</string>
     <string name="pump_warning_expiry_hour_title">Utløpsvarsel om pumpe</string>

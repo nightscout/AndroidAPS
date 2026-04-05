@@ -4,7 +4,6 @@
     <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
     <string name="next_button">İleri</string>
     <string name="previous_button">Önceki</string>
-    <string name="nav_setupwizard">Kurulum Sihirbazı</string>
     <string name="setupwizard_finish">BİTTİ</string>
     <string name="welcome">Hoş geldiniz</string>
     <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
@@ -18,19 +17,13 @@
     <string name="high_mark_comment">Aralıktan daha yüksek değer (Sadece görüntüle)</string>
     <string name="permission">Yetki</string>
     <string name="need_system_window_permission">Uygulama, bildirimler için sistem iznine ihtiyaç duyuyor</string>
-    <string name="need_location_permission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
-    <string name="need_background_location_permission">Uygulamanın otomasyonlar için arka plan konum iznine ihtiyacı var</string>
-    <string name="need_storage_permission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>
     <string name="askforpermission">İzin için sorunuz</string>
-    <string name="need_whitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
     <string name="master_password_summary">Ana parola, yedekleme şifrelemesi ve uygulamanın güvenliği için kullanılır. Bu parolayı unutmayın ve güvenli bir yerde saklayın.</string>
-    <string name="current_master_password">Geçerli ana parola</string>
+    <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
     <string name="syncinfotext">Verileri bulutla senkronize edin. Bu kısmı şimdi atlayabilirsiniz, ancak Nightscout veya Tidepool istemcisini kurmadan görevleri geçemezsiniz.</string>
     <string name="status">Durum:</string>
-    <string name="patient_name">Hasta Adı</string>
-    <string name="patient_name_summary">Lütfen çoklu kurulumlar arasında ayrım yapmak için hasta adı veya takma ad belirleyin</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profil Değişimi Yap</string>
@@ -55,25 +48,15 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigürasyon ayarları</string>
-    <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">AAPS Hangi profili kullanmalı?</string>
-    <string name="configbuilder_aps">APS (YPS)</string>
     <string name="configbuilder_aps_description">Hangi APS algoritması terapi ayarlamalarını yapsın?</string>
-    <string name="configbuilder_general">Genel</string>
     <string name="configbuilder_general_description">Kullanışlı bulabileceğiniz bazı genel eklentiler.</string>
-    <string name="configbuilder_sync">Eşleştirme</string>
-    <string name="configbuilder_sync_description">Veri yükleme ve senkronizasyon eklentileri.</string>
     <string name="configbuilder_constraints_description">Hangi kısıtlamaları uygula?</string>
-    <string name="configbuilder_loop">Döngü</string>
     <string name="configbuilder_loop_description">AAPS\'nin döngü entegrasyonunu etkinleştirmek için bunu kullanın.</string>
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
-    <string name="configbuilder_bgsource">KŞ kaynağı</string>
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
-    <string name="configbuilder_smoothing">Yumuşatma</string>
     <string name="configbuilder_smoothing_description">Yumuşatma algoritmasını seçin</string>
-    <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
@@ -84,21 +67,18 @@
     <string name="collapse_category">Kategoriyi daralt</string>
     <!--ImportExport-->
     <string name="nav_preferences">Tercihler</string>
-    <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
-    <string name="preferences_export_canceled">Aktarım iptal edildi! Tercihler dışa aktarılmadı!</string>
+    <!-- password_preferences_encrypt_prompt moved to core:ui -->
+    <!-- preferences_export_canceled moved to core:ui -->
     <string name="preferences_import_canceled">Aktarım iptal edildi! Tercihler içe aktarılmadı!</string>
     <string name="preferences_import_impossible">Tercihler içe aktarılamıyor!</string>
     <string name="check_preferences_details_btn">İçe aktarım sorunlarını açıkla…</string>
     <string name="check_preferences_details_title">İçe aktarım sorun detayları</string>
     <string name="check_preferences_import_btn">İçe aktarma</string>
     <string name="check_preferences_import_anyway_btn">Yine de içe aktar (TEHLİKELİ!)</string>
-    <string name="import_setting">Ayarları içe aktarın</string>
-    <string name="aaps_directory">AAPS dizini</string>
-    <string name="select_aaps_directory">Dışa aktarımı, yapılandırmaları vb. depolamak için AAPS dizinini seçin.</string>
     <string name="check_preferences_before_import">Lütfen içe aktarmadan önce tercihleri kontrol edin:</string>
     <string name="check_preferences_cannot_import">Tercihler içe aktarılamaz!</string>
     <string name="check_preferences_dangerous_import">Tercihler içe aktarılmamalıdır!</string>
-    <string name="export_to">Ayarları aktar</string>
+    <!-- export_to moved to core:ui -->
     <string name="import_from">Ayarları içe aktar</string>
     <string name="setting_imported">Ayarlar içe aktarıldı</string>
     <string name="old_master_password">Eski Ana Parola</string>
@@ -110,27 +90,12 @@
     <string name="goto_main_try_again">Lütfen ana ekrana dönün ve tekrar deneyin.</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
-    <string name="protection">Güvenlik</string>
-    <string name="master_password_missing">Ana parola belirlenmedi!\n\nLütfen Ana parolanızı Tercihler\'de belirleyin (%1$s)</string>
+    <!-- master_password_missing moved to core:ui -->
     <!--    Maintenance-->
-    <string name="maintenance">Bakım</string>
     <string name="maintenance_shortname">BAKIM</string>
-    <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. günlük gönder, günlük sil).</string>
-    <string name="database_cleanup">Veritabanı temizleme</string>
-    <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
-    <string name="reset_aps_results_confirm">APS sonuçlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="maintenance_settings">Bakım ayarları</string>
     <string name="maintenance_email">E-Posta alıcısı</string>
     <string name="maintenance_amount">Gönderilecek kayıt yok</string>
-    <string name="send_all_logs">Kayıtları E-posta ile Gönder</string>
-    <string name="delete_logs">Kayıtları Sil</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout sürümü:</string>
-    <string name="engineering_mode_enabled">Geliştirici modu etkinleştirildi</string>
-    <string name="log_files">Günlük dosyaları</string>
-    <string name="nav_logsettings">Günlük ayarları</string>
-    <string name="miscellaneous">Diğer Ayarlar</string>
-    <string name="nav_resetdb">Veritabanlarını sıfırla</string>
-    <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s önce dışa aktarıldı</string>
     <string name="exported_at" comment="at placeholder we add export date">%1$s\'de dışa aktarıldı</string>
@@ -153,8 +118,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Şifre çözme hatası, sağlanan şifre geçersiz veya ayar dosyası değiştirildi! İçe aktarılan dosya farklı bir Ana parola ile dışa aktarılmış olabilir.</string>
     <string name="prefdecrypt_issue_wrong_format">Şifreleme yapılandırması eksik, ayar formatı geçersiz!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
-    <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Özel Saat arayüzünü Seçin</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Dosya formatı</string>
     <string name="metadata_label_created_at">Oluşturulma tarihi</string>
@@ -165,8 +128,8 @@
     <string name="metadata_label_encryption">Dosya şifreleme</string>
     <string name="metadata_format_new">Yeni şifrelenmiş format</string>
     <string name="metadata_format_other">Bilinmeyen dışa aktarma formatı</string>
-    <string name="reset_aps_results">APS sonuçlarını sıfırla</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Dosya sistemine erişim hatası. Lütfen AAPS dizinini doğru seçin.</string>
+    <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->

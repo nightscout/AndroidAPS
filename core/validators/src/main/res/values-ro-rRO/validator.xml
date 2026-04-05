@@ -10,7 +10,7 @@
     <string name="error_phone_not_valid">Numărul de telefon nu este valid</string>
     <string name="error_domain_not_valid">Numele domeniului nu este valid</string>
     <string name="error_ip_not_valid">Adresa IP nu este validă</string>
-    <string name="error_url_not_valid">Url-ul web nu este valid</string>
+    <string name="error_url_not_valid">Adresa web nu este validă</string>
     <string name="error_notvalid_personname">Numele sau prenumele nu este valid.</string>
     <string name="error_notvalid_personfullname">Nu este un nume valid.</string>
     <string name="error_date_not_valid">Formatul nu este valid</string>

@@ -91,7 +91,7 @@ class InsulinImpl @Inject constructor(
     )
 
     @Synchronized
-    override fun addNewInsulin(newICfg: ICfg, ue: Boolean): ICfg {
+    override fun addNewInsulin(newICfg: ICfg, ue: Boolean, keepName: Boolean): ICfg {
         val template = InsulinType.fromPeak(newICfg.insulinPeakTime)
         val nickname = newICfg.insulinNickname.ifBlank { rh.gs(template.label) }
         val fullName = buildFullName(
@@ -101,7 +101,7 @@ class InsulinImpl @Inject constructor(
             concentration = newICfg.concentration,
             excludeIndex = -1
         )
-        newICfg.insulinLabel = fullName
+        newICfg.insulinLabel = if (keepName) newICfg.insulinLabel.ifBlank { fullName } else fullName
         newICfg.insulinNickname = nickname
         val newInsulin = deepClone(newICfg)
         insulins.add(newInsulin)
@@ -123,7 +123,7 @@ class InsulinImpl @Inject constructor(
         storeSettings()
     }
 
-    fun buildSuffix(peak: Int, dia: Double, concentration: Double): String {
+    override fun buildSuffix(peak: Int, dia: Double, concentration: Double): String {
         val concLabel = rh.gs(ConcentrationType.fromDouble(concentration).label)
         val diaLabel = if (dia % 1.0 == 0.0) "${dia.toInt()}h" else "${dia}h"
         return "${peak}m $diaLabel $concLabel"
@@ -149,9 +149,9 @@ class InsulinImpl @Inject constructor(
         return fullName.removePrefix(nickname).trim()
     }
 
-    private fun insulinAlreadyExists(iCfg: ICfg, currentIndex: Int = -1): Boolean {
+    override fun insulinAlreadyExists(iCfg: ICfg, excludeIndex: Int): Boolean {
         insulins.forEachIndexed { index, insulin ->
-            if (index != currentIndex) {
+            if (index != excludeIndex) {
                 if (iCfg.isEqual(insulin)) {
                     return true
                 }

@@ -44,11 +44,6 @@
     <string name="pref_3_hours">3 שעות</string>
     <string name="pref_4_hours">4 שעות</string>
     <string name="pref_5_hours">5 שעות</string>
-    <string name="pref_input_design">עיצוב קלט</string>
-    <string name="pref_default">ברירת מחדל</string>
-    <string name="pref_quick_righty">ימני מהיר</string>
-    <string name="pref_quick_lefty">שמאלי מהיר</string>
-    <string name="pref_modern_sparse">מינימלי מודרני</string>
     <string name="pref_big_numbers">מספרים גדולים</string>
     <string name="pref_ring_history">היסטוריית צלצולים</string>
     <string name="pref_light_ring_history">היסטוריה של טבעת אור</string>
@@ -172,7 +167,6 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">ישן</string>
     <string name="old_warning">!ישן!</string>
-    <string name="error">!שגיאה!</string>
     <string name="pref_heartRateSampling">דופק</string>
     <string name="pref_stepsSampling">הפעלת ספירת צעדים</string>
     <string name="tile_tempt_1">ערך מטרה זמני 1</string>

@@ -1,5 +1,6 @@
 package app.aaps.ui.di
 
+import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.ui.activities.ErrorActivity
@@ -7,6 +8,7 @@ import app.aaps.ui.activities.ProfileViewerActivity
 import app.aaps.ui.activities.QuickWizardListActivity
 import app.aaps.ui.activities.TDDStatsActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
+import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
 import app.aaps.ui.dialogs.CalibrationDialog
 import app.aaps.ui.dialogs.CarbsDialog
 import app.aaps.ui.dialogs.CareDialog
@@ -44,6 +46,7 @@ abstract class UiModule {
     interface Bindings {
 
         @Binds fun bindOverviewDataCache(impl: OverviewDataCacheImpl): OverviewDataCache
+        @Binds fun bindGraphConfigRepository(impl: GraphConfigRepositoryImpl): GraphConfigRepository
 
         @Binds @IntoSet fun bindBuiltInSearchables(impl: BuiltInSearchables): SearchableProvider
         @Binds @IntoSet fun bindDialogSearchables(impl: DialogSearchables): SearchableProvider

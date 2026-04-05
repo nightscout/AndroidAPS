@@ -8,26 +8,36 @@
     <string name="start_eating_soon_tt">即將開始用餐 (臨時目標)</string>
     <string name="start_hypo_tt">開始低血糖(臨時目標)</string>
     <string name="time_offset">時間偏移</string>
-    <string name="unit_minute_short">分鐘</string>
     <string name="remind_to_bolus_later">稍後提醒注射</string>
-    <string name="a11y_carb_reminder">設定提醒</string>
+    <string name="a11y_carb_reminder">將提醒設為碳水時間</string>
     <!--    Widget-->
     <string name="configure">配置透明度</string>
     <string name="widget_description">AAPS 小工具</string>
     <!--     Activities-->
     <string name="activity_monitor">活動監視器</string>
+    <string name="time_range">時間範圍</string>
+    <string name="dexcom_tir">Dexcom 目標範圍內</string>
+    <string name="cgp_title">血糖五邊形 (CGP) — 14 天</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">低血糖</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">高血糖</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">平均</string>
+    <string name="cgp_reference">健康者</string>
+    <string name="cgp_patient">患者</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">極低風險</string>
+    <string name="cgp_pgr_low">低風險</string>
+    <string name="cgp_pgr_moderate">中等風險</string>
+    <string name="cgp_pgr_high">高風險</string>
+    <string name="cgp_pgr_extremely_high">極高風險</string>
     <string name="do_you_want_reset_stats">您要重置活動統計嗎？</string>
     <string name="do_you_want_recalculate_tdd_stats">您要重新計算每日總劑量統計嗎？</string>
-    <string name="statistics">統計資料</string>
     <string name="calculation_in_progress">計算中</string>
     <string name="invalid_age">年齡輸入無效</string>
     <string name="invalid_weight">體重輸入無效</string>
-    <string name="id">ID：</string>
-    <string name="submit">送出</string>
     <string name="age">年齡</string>
     <string name="weight_label">體重</string>
-    <string name="most_common_profile">最常用的設定檔：</string>
-    <string name="survey_comment">注意：僅此畫面可見的資料會匿名上傳。ID 是分配給此 AAPS 安裝的。若您的主要設定檔變更，您可以再次提交資料，但請至少運行一週，以確保結果在範圍內可見。我們感謝您的協助。</string>
     <string name="glucose_type">血糖類型</string>
     <string name="bg_other">其他</string>
     <string name="bg_meter">血糖機</string>
@@ -47,23 +57,43 @@
     <string name="user_profile_description">使用者個人檔案說明用於顯示男性、女性或兒童最常見的可用部位</string>
     <string name="site_management">部位管理設定檔</string>
     <string name="site_management_description">在此設定您要管理幫浦部位、CGM 部位，或兩者。此設定會在每次偵測到新的項目時，自動顯示部位管理對話視窗</string>
-    <string name="select_site">請在下方點擊以選擇部位</string>
     <string name="record_site_change">記錄部位位置</string>
+    <string name="update_site_change">更新穿刺部位位置</string>
     <string name="edit_site">編輯</string>
     <string name="record_site_location">部位位置：%1$s</string>
     <string name="record_site_arrow">位置箭頭：%1$s</string>
     <string name="record_site_note">備註：%1$s</string>
     <string name="delete_site_note">備註已刪除</string>
+    <string name="site_filter_info">選擇你想查看的治療事件類型：套管更換 與/或 傳感器更換</string>
     <!-- FillDialog -->
     <string name="fill_warning">請確保數量符合您的輸液套件規範！</string>
     <string name="record_pump_site_change">紀錄幫浦位置更換</string>
     <string name="record_insulin_cartridge_change">紀錄胰島素匣更換</string>
+    <string name="fill_prime_amount">預注量</string>
+    <string name="fill_pump_units_note">預注量以幫浦單位表示</string>
+    <string name="fill_insulin_change">將胰島素切換為：%1$s（將套用設定檔切換）</string>
+    <string name="fill_current_insulin">目前的胰島素</string>
+    <string name="fill_change_insulin">變更胰島素</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">不注射，僅紀錄</string>
+    <!-- Insulin Management -->
+    <string name="missing_insulin_name">缺少胰島素名稱</string>
+    <string name="insulin_name_exists">胰島素名稱 %1$s 已存在，請選擇新的名稱</string>
+    <string name="a11y_add_new_insulin">新增胰島素</string>
+    <string name="a11y_delete_current_insulin">刪除目前的胰島素</string>
+    <string name="save_or_reset_changes_first">請先儲存或重設目前的變更</string>
+    <string name="activate_insulin_no_profile">未找到啟用中的設定檔</string>
+    <string name="activate_insulin_new_insulin">新的胰島素：%1$s</string>
+    <string name="activate_insulin_remaining">剩餘：%1$d 分鐘</string>
+    <string name="activate_insulin_profile_switch">將建立設定檔切換：\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">載入峰值來源</string>
+    <string name="cannot_delete_last_insulin">無法刪除最後一個胰島素</string>
+    <string name="cannot_delete_active_insulin">無法刪除目前使用中的胰島素</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$小時</string>
     <string name="timeshift_label">時間偏移</string>
     <string name="percentage_label">百分比</string>
+    <string name="permanent_profile_switch">永久（0 = 無持續時間限制）</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">暫停循環 1 小時</string>
     <string name="suspendloopfor2h">暫停循環 2 小時</string>
@@ -89,6 +119,10 @@
     <string name="two_hours">2 小時</string>
     <string name="result_insulin_carbs">結果：%1$s %2$s</string>
     <string name="missing_carbs">缺少 %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% 立即碳水，無延長碳水</string>
+    <string name="wizard_carbs_type_desc">碳水減少 %1$d%%，並新增 eCarbs %2$d%%，延遲 %3$d 分鐘，持續 %4$d 小時</string>
+    <string name="wizard_include_info">輕觸以在計算中納入/排除：\n• 血糖 — 血糖（起始為開啟）\n• 臨時目標 — 臨時目標（起始為開啟）\n• 趨勢 — 血糖趨勢（會記住上次狀態）\n• IOB — 活性胰島素（起始為開啟）\n• COB — 活性碳水化合物（會記住上次狀態）</string>
+    <string name="wizard_bg_age">血糖時間：%1$d 分鐘</string>
     <string name="a11y_current_bg">目前血糖</string>
     <string name="carb_time_label">碳水化合物時間</string>
     <string name="a11y_set_carb_timer">設定碳水化合物計時器提醒</string>
@@ -104,8 +138,6 @@
     <string name="meal_bolus">餐前注射</string>
     <string name="prime">預填充</string>
     <string name="carbs_and_bolus">碳水化合物與注射</string>
-    <string name="show_invalidated_records">顯示無效/已移除紀錄</string>
-    <string name="hide_invalidated_records">隱藏無效/已移除紀錄</string>
     <string name="show_invalidated">顯示無效</string>
     <string name="hide_invalidated">隱藏無效</string>
     <string name="careportal_remove_started_events">移除 AAPS 已開始的條目</string>
@@ -113,16 +145,30 @@
     <string name="show_loop">顯示循環</string>
     <string name="user_entry">用戶入口</string>
     <string name="clone_label">複製</string>
-    <string name="show_loop_records">顯示循環紀錄</string>
-    <string name="show_hide_records">隱藏循環紀錄</string>
+    <string name="add_new_profile">新增設定檔</string>
+    <string name="show_profile">顯示設定檔</string>
+    <string name="edit_label">編輯</string>
+    <string name="edit_profile">編輯設定檔</string>
+    <string name="activate_label">啟用</string>
+    <string name="activate_profile">啟用設定檔</string>
+    <string name="remove_label">移除</string>
+    <string name="active_profile_indicator">啟用中</string>
+    <string name="remaining_time_label">剩餘</string>
+    <string name="confirm_remove_profile">要移除設定檔「%1$s」嗎？</string>
+    <string name="confirm_clone_profile">要複製設定檔「%1$s」嗎？</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">設定檔 1</string>
-    <string name="profile2">設定檔 2</string>
     <string name="profile_type">設定檔類型</string>
+    <string name="profile_parameters">設定檔參數</string>
+    <string name="active_profile">啟用中的設定檔</string>
+    <string name="available_profiles">可用的設定檔</string>
+    <string name="profile_switches">設定檔切換</string>
     <string name="basal_pct_from_tdd_label">基礎率百分比</string>
     <string name="selected_profile">已選擇：</string>
-    <string name="compare_profile">比較設定檔</string>
-    <string name="nav_profile_helper">設定檔助手</string>
+    <string name="comparation">比較</string>
     <string name="motol_default_profile">預設設定檔</string>
     <string name="current_profile">目前設定檔</string>
     <string name="available_profile">可用設定檔</string>
@@ -133,13 +179,14 @@
     <string name="invalid_pct">無效的百分比輸入</string>
     <!-- Other dialogs -->
     <string name="basal_rate">基礎率</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">已按下停止</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">僅在手錶上</string>
     <string name="a11y_only_on_phone">僅在手機上</string>
     <string name="quickwizard_settings">快速響導設定</string>
     <string name="overview_edit_quickwizard_button_text">按鈕文字</string>
+    <string name="quick_wizard_mode_wizard">嚮導</string>
+    <string name="quick_wizard_mode_insulin">胰島素</string>
+    <string name="quick_wizard_mode_carbs">碳水化合物</string>
     <string name="overview_edit_quickwizard_valid">有效：</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">僅使用正 IOB</string>
     <string name="overview_edit_quickwizard_superbolus">超級注射</string>
@@ -147,8 +194,29 @@
     <string name="a11y_drag_and_drop_handle">拖放操作把手</string>
     <string name="additional_ecarbs">新增 eCarbs</string>
     <string name="overview_edit_quickwizard_useforcalculation">用於計算：</string>
+    <string name="calculator_options">計算機選項</string>
+    <string name="use_bg">使用 血糖</string>
+    <string name="use_cob">使用 COB</string>
+    <string name="use_iob">使用 IOB</string>
+    <string name="use_trend">使用 趨勢</string>
+    <string name="trend_all">全部</string>
+    <string name="trend_positive_only">僅正值</string>
+    <string name="trend_negative_only">僅負值</string>
+    <string name="use_temp_target">使用 臨時目標</string>
+    <string name="use_alarm">使用 警示</string>
+    <string name="device_selection">裝置選擇</string>
+    <string name="show_on_phone">在手機顯示</string>
+    <string name="show_on_watch">在手錶顯示</string>
+    <string name="ecarbs_additional">額外碳水化合物</string>
+    <string name="valid_from_to">有效時間範圍</string>
+    <string name="carb_time">碳水化合物時間</string>
+    <string name="no_quickwizard_entries">沒有快速嚮導項目。點選 + 以新增一個。</string>
+    <string name="save_changes_question">要儲存此項目的變更嗎？</string>
     <string name="constraints_violation">限制違反</string>
     <string name="change_your_input">更改您的輸入！</string>
+    <string name="wizard_no_insulin_required">不需要胰島素</string>
+    <string name="carbs_constraint_violation">碳水化合物受限制條件限制</string>
+    <string name="insulin_constraint_violation">胰島素受限制條件限制</string>
     <string name="confirm_treatment">請確認治療</string>
     <string name="recalculate">重新計算</string>
     <!--    Widget-->
@@ -156,9 +224,51 @@
     <string name="widget_configuration">小工具設定</string>
     <string name="until_changed">直到更改</string>
     <string name="limitations">限制</string>
+    <!--    Permissions-->
+    <string name="permission_sheet_title">需要權限</string>
+    <string name="permission_sheet_subtitle">此應用程式需要部分權限才能正常運作</string>
+    <string name="permission_grant">允許</string>
+    <string name="permission_change">變更</string>
+    <string name="permission_denied_go_to_settings">權限已被永久拒絕。請在應用程式設定中啟用。</string>
+    <string name="permission_open_settings">設定</string>
+    <string name="permission_directory_picker_error">無法開啟目錄選擇器。通常是 Android 或 Family Link 的問題。</string>
+    <string name="permission_nav_label">權限</string>
+    <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">循環偏移</string>
+    <string name="raw_tdd">原始 TDD</string>
+    <string name="cleaned_tdd">清理後 TDD</string>
+    <string name="cleaned_tdd_explanation">TDD 減去用於碳水化合物的胰島素。</string>
+    <string name="cycle_lines_legend">個別循環</string>
+    <string name="cycles_found">%1$d 個循環（%2$d 天）</string>
+    <string name="cycle_day1_date">第 1 天 = %1$s</string>
+    <string name="calculation_in_progress_percent">正在計算… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">資料不足（至少需要 56 天才能計算 2 個循環）</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>兩者皆是</item>
         <item>僅正值</item>
         <item>僅負值</item>
     </string-array>
+    <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">已選擇的動作</string>
+    <string name="quick_launch_available_actions">可用的動作</string>
+    <string name="quick_launch_no_dynamic_items">無可用項目</string>
+    <string name="quick_launch_category_treatment">治療</string>
+    <string name="quick_launch_category_care">照護入口</string>
+    <string name="quick_launch_category_profile">設定檔</string>
+    <string name="quick_launch_category_temp_target">臨時目標預設</string>
+    <string name="quick_launch_category_quick_wizard">快速嚮導</string>
+    <string name="quick_launch_category_automation">自動化</string>
+    <string name="quick_launch_all_selected">已選取所有項目</string>
+    <string name="quick_launch_no_quick_wizard">新增快速嚮導項目以便在此使用</string>
+    <string name="quick_launch_no_automation">建立使用者自動化動作以便在此使用</string>
+    <string name="quick_launch_no_tt_presets">新增臨時目標預設，以便在此使用</string>
+    <string name="quick_launch_no_profiles">請在本機設定檔中建立設定檔，以便在此使用</string>
+    <string name="quick_launch_edit_profile_preset">編輯設定檔預設</string>
+    <string name="quick_launch_profile_percentage">百分比</string>
+    <string name="quick_launch_profile_duration">持續時間</string>
+    <string name="quick_launch_profile_permanent">永久</string>
+    <string name="quick_launch_profile_confirm">要啟用設定檔 %1$s？</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d 分鐘</string>
+    <string name="select_arrow">選擇箭頭</string>
 </resources>

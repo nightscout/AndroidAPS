@@ -88,6 +88,14 @@ interface OverviewDataCache {
     val varSensGraphFlow: StateFlow<VarSensGraphData>
     fun updateVarSensGraph(data: VarSensGraphData)
 
+    // Heart rate graph: BPM readings from smartwatch
+    val heartRateGraphFlow: StateFlow<HeartRateGraphData>
+    fun updateHeartRateGraph(data: HeartRateGraphData)
+
+    // Steps count graph: 5-minute step counts from smartwatch
+    val stepsGraphFlow: StateFlow<StepsGraphData>
+    fun updateStepsGraph(data: StepsGraphData)
+
     // =========================================================================
     // Treatment graph flows (main graph overlays)
     // Populated reactively by observing database changes — no worker needed.

@@ -34,7 +34,7 @@
     <string name="do_ns_upload_title">Upload BG gegevens naar NS</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="value_unavailable_short">n/a</string>
-    <string name="master_password">Masterwachtwoord</string>
+    <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Exporteer gebruikersinvoer naar Excel (csv)</string>
     <string name="confirm">Bevestig</string>
     <string name="pump">Pomp</string>
@@ -79,8 +79,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="btwatchdog_summary">Zet de bluetooth van de telefoon even kort uit en weer aan. Dit kan op sommige gsm\'s een vastgelopen bluetooth service verhelpen.</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pomp tijd bijgewerkt</string>
     <string name="exit">Afsluiten</string>
@@ -113,7 +111,6 @@
     <string name="calibration">Kalibratie</string>
     <string name="alarminxmin">Start alarm over %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer handmatig de werkelijk toegediende hoeveelheid insuline en koolhydraten</string>
-    <string name="bolus_reminder">Bolus herinnering</string>
     <string name="duration_label">Tijdsduur</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pomp onderbreken</string>
@@ -137,18 +134,15 @@
     <string name="a11y_inrange">binnen bereik</string>
     <string name="a11y_low">laag</string>
     <string name="average">Gemiddelde</string>
-    <string name="tir">TIR</string>
     <string name="none"><![CDATA[<geen>]]></string>
     <string name="remove_label">VERWIJDER</string>
     <string name="activate_profile">Activeer profiel</string>
-    <string name="reset">reset</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="profile">Profiel</string>
     <string name="select_for_removal">Selecteer om te verwijderen</string>
     <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="copytolocalprofile">Nieuw profiel van dit profiel maken?</string>
-    <string name="wear_wizard_settings">Wizard instellingen</string>
     <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -204,6 +198,7 @@
     <string name="duration">Gedurende</string>
     <string name="reason">Reden</string>
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
+    <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Ongeldig profiel: %1$s</string>
     <!--    Temptarget-->
@@ -308,7 +303,6 @@
     <string name="expweight">Exponentieel gewogen TDD</string>
     <string name="basalrate">Basaal</string>
     <string name="bolus">Bolus</string>
-    <string name="tdd">TDD</string>
     <string name="ratio">Ratio</string>
     <string name="amount_days"># Dagen</string>
     <string name="weight">Gewicht</string>
@@ -434,6 +428,7 @@
     <string name="valueoutofrange">»%1$s« is buiten de harde limiet</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is buiten de harde limiet</string>
     <string name="basal_value">Basaal waarde</string>
+    <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
     <string name="carbs_g">KOOLHYDRATEN %1$d gr</string>
@@ -462,7 +457,6 @@
     <string name="sensitivity">Gevoeligheid</string>
     <string name="isf_for_carbs">ISF voor Bolus Calculator en Koolhydraten Absorptie: %1$.1f</string>
     <string name="autosens_long">Autosens Waarde: %.0f%%</string>
-    <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">Autosens in algoritme: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">bestand</string>
@@ -472,7 +466,6 @@
     <string name="autotune_tune_days">Afstemmen dagen :</string>
     <string name="autotune_select_profile">Selecteer profiel om aan te passen</string>
     <!-- Alerts -->
-    <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>
     <string name="urgent_alarm">Dringend alarm</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -480,8 +473,6 @@
     <string name="bolus_advisor_message">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je laten weten wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je er aan herinneren.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
-    <string name="partialboluswizard">Voer dit deel van het bolus wizard resultaat uit [%]</string>
-    <string name="partialboluswizard_reset_time">Oude glycemie tijdsdrempel [min]</string>
     <string name="bolus_constraint_applied_warn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
@@ -558,7 +549,6 @@
     <string name="message">Bericht</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuleren</string>
-    <string name="dismiss">AFWIJZEN</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
     <string name="close">Sluiten</string>
@@ -571,12 +561,17 @@
     <string name="export_disabled">Uitgeschakeld</string>
     <string name="export_failed">Mislukt</string>
     <string name="export_alert">WAARSCHUWING</string>
+    <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Instellingen geëxporteerd</string>
     <string name="export_result_message_failed">Instellingen exporteren MISLUKT!</string>
     <string name="export_result_message_about_to_expire">Instellingen geëxporteerd: wachtwoord verloopt binnenkort. Exporteer handmatig en voer het wachtwoord (opnieuw) in.</string>
     <string name="export_result_message_expired">Export instellingen geannuleerd: wachtwoord is verlopen. Exporteer handmatig en geef (opnieuw) in!</string>
     <string name="export_result_message_disabled">Waarschuwing (automatisering): Instellingen export niet ingeschakeld!</string>
+    <!-- Cloud export -->
+    <!-- Export destination chip labels -->
+    <!-- Maintenance bottom sheet descriptions -->
+    <!-- Cloud directory dialog (Compose) -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">verlaag %1$s met %2$s</string>
     <string name="a11y_plus_button_description">verhoog %1$s met %2$s</string>
@@ -597,8 +592,10 @@
     <string name="location_not_found_message">Om Bluetooth discovery met nieuwere apparaten te laten werken moet locatie worden ingeschakeld. AAPS volgt je locatie niet en locatie kan ook weer worden uitgeschakeld nadat het koppelen is gelukt.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin instellingen</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
+    <!-- Navigation -->
+    <!-- Alerts -->
+    <!-- Actions Screen -->
+    <!-- Site Rotation -->
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
@@ -644,4 +641,10 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Basaal</b>: %1$.2f E/h (%2$.2f%%) <br><b>Duur</b>: %3$d min<br>]]></string>
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS speelt geluid"</string>
+    <!-- ProfileEditor -->
+    <!--    Search-->
+    <!--    Log Settings-->
+    <!--    Maintenance-->
+    <!-- Import settings screen -->
+    <!--    BLE Scan Step (shared pump pairing) -->
 </resources>

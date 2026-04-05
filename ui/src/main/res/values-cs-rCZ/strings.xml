@@ -8,9 +8,7 @@
     <string name="start_eating_soon_tt">Spustit dočasný cíl Před jídlem</string>
     <string name="start_hypo_tt">Spustit dočasný cíl Hypoglykémie</string>
     <string name="time_offset">Časový posun</string>
-    <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Upozornit později na bolus</string>
-    <string name="a11y_carb_reminder">nastavit připomenutí</string>
     <!--    Widget-->
     <string name="configure">Konfigurovat průhlednost</string>
     <string name="widget_description">Widget AAPS</string>
@@ -18,16 +16,11 @@
     <string name="activity_monitor">Monitor aktivity</string>
     <string name="do_you_want_reset_stats">Chcete resetovat statistiky aktivity?</string>
     <string name="do_you_want_recalculate_tdd_stats">Chcete přepočítat statistiky CDD?</string>
-    <string name="statistics">Statistika</string>
     <string name="calculation_in_progress">Probíhá výpočet</string>
     <string name="invalid_age">Neplatná položka věku</string>
     <string name="invalid_weight">Neplatná položka váhy</string>
-    <string name="id">ID:</string>
-    <string name="submit">Odeslat</string>
     <string name="age">Věk</string>
     <string name="weight_label">Váha</string>
-    <string name="most_common_profile">Nejběžnější profil:</string>
-    <string name="survey_comment">Poznámka: Pouze data viditelná na této obrazovce budou odesílána anonymně. ID je přiřazeno k této instalaci produktu AAPS. Data můžete znovu odeslat, pokud se váš hlavní profil změní, ale nechte ho běžet alespoň týden, aby byl výsledek viditelný v čase v rozsahu. Vážíme si Vaši pomoci.</string>
     <string name="glucose_type">Zadání glykémie</string>
     <string name="bg_other">Jiné</string>
     <string name="bg_meter">Glukoměr</string>
@@ -47,7 +40,6 @@
     <string name="user_profile_description">Popis profilu uživatele se používá k zobrazení nejčastějších míst aplikace dostupných pro muže, ženy nebo děti</string>
     <string name="site_management">Profil správy místa aplikace</string>
     <string name="site_management_description">Zde nastavíte, zda chcete spravovat místa aplikace pro pumpu, senzor nebo obojí. Toto nastavení bude použito k automatickému zobrazení dialogového okna správy místa aplikace u každého zjištěného nového záznamu.</string>
-    <string name="select_site">Kliknutím níže vyberte místo aplikace</string>
     <string name="record_site_change">Zaznamenat místo aplikace</string>
     <string name="edit_site">Upravit</string>
     <string name="record_site_location">Místo aplikace: %1$s</string>
@@ -60,6 +52,7 @@
     <string name="record_insulin_cartridge_change">Zaznamenat výměnu inzulínu</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
+    <!-- Insulin Management -->
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Znovu použít %1$d%% %2$dh</string>
     <string name="timeshift_label">Posun času</string>
@@ -92,7 +85,6 @@
     <string name="a11y_current_bg">aktuální hodnota glykémie</string>
     <string name="carb_time_label">Čas jídla</string>
     <string name="a11y_set_carb_timer">nastavit upozornění na sacharidy</string>
-    <string name="show_calculation">Zobrazit kalkulaci</string>
     <!-- Treatments -->
     <string name="no_records_available">Nejsou k dispozici žádné záznamy</string>
     <string name="calculation_short">Kalk</string>
@@ -104,8 +96,6 @@
     <string name="meal_bolus">Jídlo</string>
     <string name="prime">Doplňování</string>
     <string name="carbs_and_bolus">Sacharidy a bolusy</string>
-    <string name="show_invalidated_records">Zobrazit zneplatněné / odstraněné záznamy</string>
-    <string name="hide_invalidated_records">Skrýt zneplatněné / odstraněné záznamy</string>
     <string name="show_invalidated">Zobrazit zneplatněné</string>
     <string name="hide_invalidated">Skrýt zneplatněné</string>
     <string name="careportal_remove_started_events">Odebrat záznamy spuštěné AAPS</string>
@@ -113,16 +103,10 @@
     <string name="show_loop">Zobrazit smyčku</string>
     <string name="user_entry">Uživatelská položka</string>
     <string name="clone_label">Klonovat</string>
-    <string name="show_loop_records">Zobrazit záznamy smyčky</string>
-    <string name="show_hide_records">Skrýt záznamy smyčky</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Profil 1</string>
-    <string name="profile2">Profil 2</string>
     <string name="profile_type">Typ profilu</string>
     <string name="basal_pct_from_tdd_label">% bazálu</string>
     <string name="selected_profile">Vybráno:</string>
-    <string name="compare_profile">Porovnat profily</string>
-    <string name="nav_profile_helper">Pomocník s profilem</string>
     <string name="motol_default_profile">Výchozí profil</string>
     <string name="current_profile">Aktuální profil</string>
     <string name="available_profile">Dostupný profil</string>
@@ -133,8 +117,6 @@
     <string name="invalid_pct">Neplatný vstup %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Bazál</string>
-    <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STISKNUTO STOP</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">pouze na hodinkách</string>
     <string name="a11y_only_on_phone">pouze na telefonu</string>
@@ -156,9 +138,12 @@
     <string name="widget_configuration">Konfigurace widgetu</string>
     <string name="until_changed">Dokud nebude změněno</string>
     <string name="limitations">Omezení</string>
+    <!--    Permissions-->
+    <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Oba</item>
         <item>Pouze kladné</item>
         <item>Pouze záporné</item>
     </string-array>
+    <!-- Toolbar configuration -->
 </resources>

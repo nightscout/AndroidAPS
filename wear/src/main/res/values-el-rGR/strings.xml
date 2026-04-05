@@ -46,11 +46,6 @@
     <string name="pref_3_hours">3 ώρες</string>
     <string name="pref_4_hours">4 ώρες</string>
     <string name="pref_5_hours">5 ώρες</string>
-    <string name="pref_input_design">Σχεδιασμός Εισαγωγής</string>
-    <string name="pref_default">Προεπιλογή</string>
-    <string name="pref_quick_righty">Γρήγορα δεξιά</string>
-    <string name="pref_quick_lefty">Γρήγορα αριστερά</string>
-    <string name="pref_modern_sparse">Σύγχρονο Sparse</string>
     <string name="pref_big_numbers">Μεγάλοι Αριθμοί</string>
     <string name="pref_ring_history">Ιστορικό Ring</string>
     <string name="pref_light_ring_history">Ιστορικό Ελαφρού Ring</string>
@@ -172,6 +167,5 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">παλιός</string>
     <string name="old_warning">!παλαιός!</string>
-    <string name="error">!σφάλμα!</string>
     <string name="pref_heartRateSampling">Καρδιακός ρυθμός</string>
 </resources>

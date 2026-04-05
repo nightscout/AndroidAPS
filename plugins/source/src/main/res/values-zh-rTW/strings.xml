@@ -39,4 +39,12 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">從修改版 Sino App 接收血糖資料。</string>
+    <!-- Notification Reader -->
+    <string name="notification_reader">通知讀取器</string>
+    <string name="description_source_notification_reader">從官方 CGM 應用程式（Dexcom、Medtronic、Eversense 等）發出的通知讀取血糖數值。</string>
+    <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">應用程式需要權限，才能從 Dexcom 應用程式接收 CGM 資料</string>
+    <string name="permission_notification_listener_title">通知存取權</string>
+    <string name="permission_notification_listener_description">為了從 CGM 應用程式的通知讀取血糖數值所必需</string>
 </resources>

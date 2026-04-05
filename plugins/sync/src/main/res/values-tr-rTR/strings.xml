@@ -3,11 +3,11 @@
     <!-- AAPSClient -->
     <string name="ns_cellular">Mobil veri kullan</string>
     <string name="ns_wifi">Wi-Fi bağlantısı kullan</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- ns_wifi_ssids moved to core:keys module -->
     <string name="ns_charging">Şarj olurken</string>
     <string name="ns_battery">Pilde</string>
     <string name="connection_settings_title">Bağlantı Ayarları</string>
-    <string name="ns_wifi_allowed_ssids">İzin verilen SSID (noktalı virgülle ayrılmış)</string>
+    <!-- ns_wifi_ssids_summary moved to core:keys module -->
     <string name="ns_allow_roaming">Roaming bağlantıya izin ver</string>
     <string name="ns_create_announcements_from_errors_title">Hatalardan duyurular oluştur</string>
     <string name="ns_create_announcements_from_carbs_req_title">Karbonhidrat gerekli uyarılarından duyurular oluşturun</string>
@@ -19,20 +19,17 @@
     <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
     <string name="no_connectivity">Bağlantı yok</string>
     <string name="unsupported_ns_version">Nightscout\'un desteklenmeyen sürümü</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- AAPSClient -->
     <string name="no_write_permission">NSCLIENT yazma izni yok. Yanlış API Anahtarı?</string>
     <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
-    <string name="restart">Yeniden başlat</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Nightscout URL\'nizi girin (örn: https://sitenizinadı.platformunuzunadı.com)</string>
-    <string name="ns_client_secret_title">Nightscout API parolası</string>
-    <string name="ns_client_secret_dialog_message">Nightscout API parolanızı girin (Nightscout değişkenlerinizde kayıtlı en az 12 karakterlik parola)</string>
-    <string name="nsclient_token_title">Nightscout erişim anahtarı</string>
-    <string name="nsclient_token_dialog_message">Nightscout yönetici araçlarında oluşturulan yönetici düzeyindeki erişim anahtarınızı girin (minimum 17 karakter, API parolanız değildir!)</string>
+    <!-- ns_client_url_title moved to core:keys module -->
+    <!-- ns_client_url_summary moved to core:keys module -->
+    <!-- ns_client_secret_title moved to core:keys module -->
+    <!-- ns_client_secret_summary moved to core:keys module -->
+    <!-- nsclient_token_title moved to core:keys module -->
+    <!-- nsclient_token_summary moved to core:keys module -->
     <string name="deliver_now">Simdi ilet</string>
     <string name="queue">Sıra:</string>
     <string name="status">Durum:</string>
@@ -60,7 +57,6 @@
     <string name="ns_alarm_stale_data_value_label">Eski veri eşiği [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Acil durum verileri eşiği [min]</string>
     <string name="ns_log_app_started_event">NS\'a uygulama başlangıcını kaydet</string>
-    <string name="copy_existing_values">NS ayarları kopyalansın mı (varsa)?</string>
     <string name="ns_use_ws_title">Websockets\'e bağlanın</string>
     <string name="ns_use_ws_summary">Etkinleştirme şu anlama gelir: daha hızlı güncelleme, alarm ve duyuru alma ve v1 \'deki gibi daha yüksek pil tüketimi. NS\'ye diğer tüm yükleyiciler v3 protokolünü kullanmalıdır.</string>
     <!-- Tidepool -->
@@ -172,17 +168,10 @@
     <string name="wear_action_loop_state_profile_invalid">Profil geçersiz!</string>
     <string name="wear_action_loop_state_unauthorized">Lütfen tekrar deneyin.</string>
     <string name="wear_action_loop_state_invalid">Geçersiz döngü durumu talep edildi</string>
-    <string name="wear_action_loop_state_title">DÖNGÜ DURUMU</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nSüre: %2$d dk</string>
-    <string name="wear_action_loop_state_now_closed">Kapalı</string>
-    <string name="wear_action_loop_state_now_lgs">LGS</string>
-    <string name="wear_action_loop_state_now_open">Açık</string>
-    <string name="wear_action_loop_state_now_suspended">Askıya Alındı</string>
-    <string name="wear_action_loop_state_now_resumed">Devam ediyor</string>
-    <string name="wear_action_loop_state_now_disabled">Devre dışı</string>
     <string name="wear_action_loop_state_now_superbolus">Süperbolus</string>
     <string name="wear_action_loop_state_now_invalid">Geçersiz</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">Pompa bağlantısı kesildi</string>
     <string name="garmin_request_key">Anahtar talebi</string>
     <string name="garmin_request_key_summary">Garmin cihazı ile AAPS arasındaki HTTP iletişimini güvence altına almak için isteğe bağlı anahtar.</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

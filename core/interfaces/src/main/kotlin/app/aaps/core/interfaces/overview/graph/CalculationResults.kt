@@ -190,6 +190,21 @@ data class VarSensGraphData(
 )
 
 /**
+ * Heart rate graph data: BPM readings from smartwatch or similar device.
+ * Each point spans (timestamp - duration) to timestamp.
+ */
+data class HeartRateGraphData(
+    val heartRates: List<GraphDataPoint>
+)
+
+/**
+ * Steps count graph data: 5-minute step counts from smartwatch or similar device.
+ */
+data class StepsGraphData(
+    val steps: List<GraphDataPoint>
+)
+
+/**
  * Basal graph data for BG graph overlay (dual Y-axis).
  * Profile basal: dashed step line (scheduled profile rate).
  * Actual basal: solid step line with area fill (profile rate when no temp, temp absolute when temp active).

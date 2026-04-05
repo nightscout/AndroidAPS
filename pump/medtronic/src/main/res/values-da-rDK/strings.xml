@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Medtronisk kodning</string>
     <string name="medtronic_custom_action_wake_and_tune">Vågn og Tune op</string>
     <string name="medtronic_custom_action_clear_bolus_block">Ryd Bolus-blok</string>
-    <string name="medtronic_custom_action_reset_rileylink">Nulstil RileyLink Konfiguration</string>
     <string name="medtronic_pump_battery_select">Batteritype</string>
     <string name="medtronic_pump_battery_no">Ikke valgt</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline</string>
     <string name="medtronic_pump_battery_lithium">Lithium</string>
     <string name="medtronic_pump_battery_nizn">NiZn</string>
     <string name="medtronic_pump_battery_nimh">NiMH</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink Batteri</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Fejl</string>
-    <string name="medtronic_error_serial_not_set">Serienummer ikke angivet.</string>
     <string name="medtronic_error_serial_invalid">Serienummer ugyldig.</string>
     <string name="medtronic_error_pump_type_not_set">Pumpetype ikke angivet.</string>
     <string name="medtronic_error_pump_type_invalid">Pumpetype understøttes ikke.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Pumpefrekvens er ikke angivet.</string>
     <string name="medtronic_error_pump_frequency_invalid">Pumpetype understøttes ikke.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adresse ugyldig.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Pumpetype registreret er ikke det samme som konfigureret type.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Annuller midlertidig basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Indstil Bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Hent resterende insulin</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pumpe utilgængelig</string>
-    <string name="medtronic_warning">Advarsel</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Nu</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">siden</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Nu</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">siden</string>
     <string name="medtronic_notification_check_time_date">Pumpeur opdatering nødvendig</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Pumpetid opdateret</string>
     <string name="set_neutral_temps_title">Indstil neutrale midlertidige basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktiveret, vil det annullere en midlertidig basal inden udgangen af hver time. Denne metode kan hjælpe med at stoppe nogle pumper i at bippe/vibrere hver time.</string>
     <string name="mdt_tbr_remaining">%1$.1f E/t (%2$d min. tilbage)</string>
     <string name="invalid_history_data">Ugyldig pumpehistorikdata registreret. Åbn nyt problem og upload logfiler.</string>
     <string name="riley_statistics">RL Statistik</string>
-    <string name="medtronic_history_type">Type:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Klikket: opdater</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planlagt Status Opdatering</string>
 </resources>

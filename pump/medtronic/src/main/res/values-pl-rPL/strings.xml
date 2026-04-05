@@ -12,22 +12,20 @@
     <string name="medtronic_pump_encoding">Kodowanie Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Wzbudź i dostrój</string>
     <string name="medtronic_custom_action_clear_bolus_block">Wyczyść blok bolusa</string>
-    <string name="medtronic_custom_action_reset_rileylink">Przywróć konfigurację RileyLink</string>
     <string name="medtronic_pump_battery_select">Typ baterii (podgląd mocy)</string>
     <string name="medtronic_pump_battery_no">Nie wybrany (widok prosty)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaliczne (widok rozszerzony)</string>
     <string name="medtronic_pump_battery_lithium">Litowe (widok rozszerzony)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (widok rozszerzony)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (widok rozszerzony)</string>
+    <!-- Pump type entries -->
+    <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
-    <string name="medtronic_errors">Błędy</string>
-    <string name="medtronic_error_serial_not_set">Numer seryjny # nie ustawiony.</string>
     <string name="medtronic_error_serial_invalid">Numer seryjny # nieprawidłowy.</string>
     <string name="medtronic_error_pump_type_not_set">Tyo pompy nie ustawiony.</string>
     <string name="medtronic_error_pump_type_invalid">Typ pompy nie obsługiwany.</string>
-    <string name="medtronic_error_pump_frequency_not_set">Częstotliwość pompy nie ustawiona.</string>
     <string name="medtronic_error_pump_frequency_invalid">Częstotliwość pompy nie wspierana.</string>
     <string name="medtronic_error_rileylink_address_invalid">Adres RileyLink niewłaściwy.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Wykryty typ pompy jest inny niż ustawiony.</string>
@@ -71,21 +69,14 @@
     <string name="medtronic_cmd_desc_cancel_tbr">Anuluj tymczasową dawkę bazową</string>
     <string name="medtronic_cmd_desc_set_bolus">Ustaw bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Pobierz ile pozostało insuliny</string>
-    <string name="medtronic_pump_status_pump_unreachable">Pompa nieosiągalna</string>
-    <string name="medtronic_warning">Ostrzeżenie</string>
-    <!-- medtronic_warning -->
-    <string name="medtronic_pump_connected_now">Teraz</string>
-    <!-- combo_pump_connected_now -->
-    <string name="ago">temu</string>
+    <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Teraz</string>
+    <string name="ago" comment="Time suffix, e.g. '5 min ago'">temu</string>
     <string name="medtronic_notification_check_time_date">Potrzebna aktualizacja zegara pompy</string>
     <!-- combo_notification_check_time_date -->
-    <string name="pump_time_updated">Czas pompy uaktualniony</string>
     <string name="set_neutral_temps_title">Ustawiaj neutralne bazy tymczasowe</string>
     <string name="set_neutral_temps_summary">Jeśli ta opcja jest włączona, anuluje tymczasową wartość bazową przed końcem każdej godziny. Może to pomóc wyciszyć alarmy/wibracje związane z TBR występujące co godzinę w niektórych pompach.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (pozostało %2$d min)</string>
     <string name="invalid_history_data">Wykryto nieprawidłowe dane historii pompy. Otwórz nowy problem (\"Issue\") na GitHub i dodaj logi.</string>
     <string name="riley_statistics">Statystyki RL</string>
-    <string name="medtronic_history_type">Typ:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Naciśnięto odśwież</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planowe odświeżenie statusu</string>
 </resources>

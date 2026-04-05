@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">Tùy Chọn %1$s</string>
-    <string name="nav_exit">Thoát</string>
     <string name="delta">Độ lệch</string>
     <string name="save">Lưu</string>
     <string name="wear">Wear</string>
-    <string name="nav_about">Giới thiệu</string>
     <string name="sensitivity_warning">Khi dùng Autosense, cần nhập đủ lượng carb đã ăn. Nếu không, hệ thống sẽ hiểu sai lệch carb thành thay đổi độ nhạy insulin</string>
     <string name="invalid">KHÔNG HỢP LỆ</string>
-    <string name="gradually_increase_notification_volume">Tăng dần âm lượng cho cảnh báo và thông báo</string>
-    <string name="localalertsettings_title">Cảnh báo cục bộ</string>
-    <string name="enable_missed_bg_readings_alert">Cảnh báo khi mất dữ liệu ĐH</string>
-    <string name="enable_pump_unreachable_alert">Cảnh báo khi bơm mất kết nối</string>
     <string name="pump_unreachable_threshold">Ngưỡng mất kết nối bơm [phút]</string>
-    <string name="enable_carbs_req_alert">Cảnh báo khi cần bổ sung carb</string>
-    <string name="open_navigation">Mở điều hướng</string>
     <string name="close_navigation">Đóng điều hướng</string>
     <string name="remove_items">Xóa mục</string>
     <string name="sort_items">Sắp xếp các mục</string>
@@ -27,7 +19,15 @@
     <string name="count_selected">Đã chọn %1$d</string>
     <string name="sort_label">Sắp xếp</string>
     <string name="search">Tìm kiếm</string>
-    <string name="simple_mode">Chế độ đơn giản</string>
+    <string name="use_compose_main_screen">Sử dụng giao diện chính Compose (thử nghiệm)</string>
+    <string name="switch_to_compose_ui">Chuyển sang giao diện Compose</string>
+    <string name="switch_to_classic_ui">Chuyển sang giao diện cổ điển</string>
     <string name="select">Chọn</string>
     <string name="set">Thiết lập</string>
+    <string name="migrating_preferences">Đang chuyển đổi cài đặt…</string>
+    <string name="initializing_plugins">Đang khởi tạo plugin…</string>
+    <string name="initializing">Đang khởi chạy…</string>
+    <string name="migrating_profile_switches">Đang chuyển đổi dữ liệu hồ sơ…</string>
+    <string name="migrating_effective_profile_switches">Đang chuyển đổi các lần chuyển hồ sơ có hiệu lực…</string>
+    <string name="migrating_boluses">Đang chuyển đổi dữ liệu bolus…</string>
 </resources>
