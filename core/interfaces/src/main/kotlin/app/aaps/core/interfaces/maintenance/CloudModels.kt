@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.cloud
+package app.aaps.core.interfaces.maintenance
 
 /**
  * Represents a file in cloud storage.
@@ -9,12 +9,12 @@ data class CloudFile(
      * Unique identifier for this file in the cloud storage
      */
     val id: String,
-    
+
     /**
      * File name
      */
     val name: String,
-    
+
     /**
      * MIME type of the file
      */
@@ -30,7 +30,7 @@ data class CloudFolder(
      * Unique identifier for this folder in the cloud storage
      */
     val id: String,
-    
+
     /**
      * Folder name
      */
@@ -45,12 +45,12 @@ data class CloudFileListResult(
      * List of files returned in this page
      */
     val files: List<CloudFile>,
-    
+
     /**
      * Token for fetching the next page, null if this is the last page
      */
     val nextPageToken: String? = null,
-    
+
     /**
      * Total number of files (if known), -1 if unknown
      */

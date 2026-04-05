@@ -1,6 +1,5 @@
 package app.aaps.plugins.configuration.maintenance
 
-// Added for dialog callback explicit types
 import android.Manifest
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -8,8 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.FragmentActivity
@@ -25,7 +22,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -63,17 +59,12 @@ import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
-import app.aaps.plugins.configuration.maintenance.activities.CloudPrefImportListActivity
 import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
 import app.aaps.plugins.configuration.maintenance.cloud.CloudStorageManager
-import app.aaps.plugins.configuration.maintenance.cloud.ExportOptionsDialog
-import app.aaps.plugins.configuration.maintenance.cloud.ImportSourceDialog
 import app.aaps.plugins.configuration.maintenance.data.PrefFileNotFoundError
 import app.aaps.plugins.configuration.maintenance.data.PrefIOError
 import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
-import app.aaps.plugins.configuration.maintenance.dialogs.PrefImportSummaryDialog
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Reusable
@@ -83,11 +74,16 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**
  * Created by mike on 03.07.2016.
  */
+
+private fun filenameTimestamp(): String =
+    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss"))
 
 @Reusable
 class ImportExportPrefsImpl @Inject constructor(
@@ -107,27 +103,13 @@ class ImportExportPrefsImpl @Inject constructor(
     private val context: Context,
     private val dataWorkerStorage: DataWorkerStorage,
     private val activePlugin: ActivePlugin,
-    private val configBuilder: ConfigBuilder,
-    private val prefImportSummaryDialog: PrefImportSummaryDialog,
     @ApplicationScope private val appScope: CoroutineScope,
     private val cloudStorageManager: CloudStorageManager,
-    private val exportOptionsDialog: ExportOptionsDialog,
-    private val importSourceDialog: ImportSourceDialog,
     private val userEntryPresentationHelper: UserEntryPresentationHelper,
     private val storage: Storage
 ) : ImportExportPrefs {
 
-    companion object {
-
-        var cloudPrefsFiles: List<PrefsFile> = emptyList()
-        var cloudNextPageToken: String? = null
-        var cloudTotalFilesCount: Int = 0  // Total count of settings files
-    }
-
-    override var selectedImportFile: PrefsFile? = null
     private var pendingExportFile: DocumentFile? = null
-
-    override fun prefsFileExists(): Boolean = prefFileList.listPreferenceFiles().isNotEmpty()
 
     // Compose export support — discrete steps
 
@@ -142,64 +124,64 @@ class ImportExportPrefsImpl @Inject constructor(
             isCloudActive = isCloudActive,
             isCloudError = hasCloudError,
             hasCloudCredentials = cloudStorageManager.hasAnyCloudCredentials(),
-            settingsLocal = exportOptionsDialog.isSettingsLocalEnabled(),
-            settingsCloud = exportOptionsDialog.isSettingsCloudEnabled(),
-            logEmail = sp.getBoolean(ExportOptionsDialog.PREF_LOG_EMAIL_ENABLED, true),
-            logCloud = exportOptionsDialog.isLogCloudEnabled(),
-            csvLocal = sp.getBoolean(ExportOptionsDialog.PREF_CSV_LOCAL_ENABLED, true),
-            csvCloud = exportOptionsDialog.isCsvCloudEnabled(),
+            settingsLocal = sp.getBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, true),
+            settingsCloud = sp.getBoolean(ExportPrefKeys.PREF_SETTINGS_CLOUD_ENABLED, false),
+            logEmail = sp.getBoolean(ExportPrefKeys.PREF_LOG_EMAIL_ENABLED, true),
+            logCloud = sp.getBoolean(ExportPrefKeys.PREF_LOG_CLOUD_ENABLED, false),
+            csvLocal = sp.getBoolean(ExportPrefKeys.PREF_CSV_LOCAL_ENABLED, true),
+            csvCloud = sp.getBoolean(ExportPrefKeys.PREF_CSV_CLOUD_ENABLED, false),
             cloudDisplayName = provider?.displayName
         )
     }
 
     override fun setSettingsLocalEnabled(enabled: Boolean) {
-        sp.putBoolean(ExportOptionsDialog.PREF_SETTINGS_LOCAL_ENABLED, enabled)
+        sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, enabled)
         // Ensure at least one destination is selected
-        if (!enabled && !sp.getBoolean(ExportOptionsDialog.PREF_SETTINGS_CLOUD_ENABLED, false)) {
-            sp.putBoolean(ExportOptionsDialog.PREF_SETTINGS_CLOUD_ENABLED, true)
+        if (!enabled && !sp.getBoolean(ExportPrefKeys.PREF_SETTINGS_CLOUD_ENABLED, false)) {
+            sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_CLOUD_ENABLED, true)
         }
-        sp.putBoolean(ExportOptionsDialog.PREF_ALL_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_ALL_CLOUD_ENABLED, false)
     }
 
     override fun setSettingsCloudEnabled(enabled: Boolean) {
-        sp.putBoolean(ExportOptionsDialog.PREF_SETTINGS_CLOUD_ENABLED, enabled)
+        sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_CLOUD_ENABLED, enabled)
         // Ensure at least one destination is selected
-        if (!enabled && !sp.getBoolean(ExportOptionsDialog.PREF_SETTINGS_LOCAL_ENABLED, true)) {
-            sp.putBoolean(ExportOptionsDialog.PREF_SETTINGS_LOCAL_ENABLED, true)
+        if (!enabled && !sp.getBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, true)) {
+            sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, true)
         }
-        sp.putBoolean(ExportOptionsDialog.PREF_ALL_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_ALL_CLOUD_ENABLED, false)
     }
 
     override fun setLogEmailEnabled(enabled: Boolean) {
-        sp.putBoolean(ExportOptionsDialog.PREF_LOG_EMAIL_ENABLED, enabled)
-        if (!enabled && !sp.getBoolean(ExportOptionsDialog.PREF_LOG_CLOUD_ENABLED, false)) {
-            sp.putBoolean(ExportOptionsDialog.PREF_LOG_CLOUD_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_LOG_EMAIL_ENABLED, enabled)
+        if (!enabled && !sp.getBoolean(ExportPrefKeys.PREF_LOG_CLOUD_ENABLED, false)) {
+            sp.putBoolean(ExportPrefKeys.PREF_LOG_CLOUD_ENABLED, true)
         }
-        sp.putBoolean(ExportOptionsDialog.PREF_ALL_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_ALL_CLOUD_ENABLED, false)
     }
 
     override fun setLogCloudEnabled(enabled: Boolean) {
-        sp.putBoolean(ExportOptionsDialog.PREF_LOG_CLOUD_ENABLED, enabled)
-        if (!enabled && !sp.getBoolean(ExportOptionsDialog.PREF_LOG_EMAIL_ENABLED, true)) {
-            sp.putBoolean(ExportOptionsDialog.PREF_LOG_EMAIL_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_LOG_CLOUD_ENABLED, enabled)
+        if (!enabled && !sp.getBoolean(ExportPrefKeys.PREF_LOG_EMAIL_ENABLED, true)) {
+            sp.putBoolean(ExportPrefKeys.PREF_LOG_EMAIL_ENABLED, true)
         }
-        sp.putBoolean(ExportOptionsDialog.PREF_ALL_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_ALL_CLOUD_ENABLED, false)
     }
 
     override fun setCsvLocalEnabled(enabled: Boolean) {
-        sp.putBoolean(ExportOptionsDialog.PREF_CSV_LOCAL_ENABLED, enabled)
-        if (!enabled && !sp.getBoolean(ExportOptionsDialog.PREF_CSV_CLOUD_ENABLED, false)) {
-            sp.putBoolean(ExportOptionsDialog.PREF_CSV_CLOUD_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_CSV_LOCAL_ENABLED, enabled)
+        if (!enabled && !sp.getBoolean(ExportPrefKeys.PREF_CSV_CLOUD_ENABLED, false)) {
+            sp.putBoolean(ExportPrefKeys.PREF_CSV_CLOUD_ENABLED, true)
         }
-        sp.putBoolean(ExportOptionsDialog.PREF_ALL_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_ALL_CLOUD_ENABLED, false)
     }
 
     override fun setCsvCloudEnabled(enabled: Boolean) {
-        sp.putBoolean(ExportOptionsDialog.PREF_CSV_CLOUD_ENABLED, enabled)
-        if (!enabled && !sp.getBoolean(ExportOptionsDialog.PREF_CSV_LOCAL_ENABLED, true)) {
-            sp.putBoolean(ExportOptionsDialog.PREF_CSV_LOCAL_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_CSV_CLOUD_ENABLED, enabled)
+        if (!enabled && !sp.getBoolean(ExportPrefKeys.PREF_CSV_LOCAL_ENABLED, true)) {
+            sp.putBoolean(ExportPrefKeys.PREF_CSV_LOCAL_ENABLED, true)
         }
-        sp.putBoolean(ExportOptionsDialog.PREF_ALL_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_ALL_CLOUD_ENABLED, false)
     }
 
     override fun prepareExport(): ExportPreparation? {
@@ -260,7 +242,7 @@ class ImportExportPrefsImpl @Inject constructor(
             if (file != null) {
                 pendingExportFile = null
                 localSuccess = savePreferences(file, password)
-                val resultMessage = if (localSuccess == true) rh.gs(R.string.exported) else rh.gs(R.string.exported_failed)
+                val resultMessage = if (localSuccess) rh.gs(R.string.exported) else rh.gs(R.string.exported_failed)
                 persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                     therapyEvent = TE.asSettingsExport(error = resultMessage),
                     timestamp = dateUtil.now(),
@@ -277,7 +259,7 @@ class ImportExportPrefsImpl @Inject constructor(
         // Cloud export
         if (destination == ExportDestination.CLOUD || destination == ExportDestination.BOTH) {
             cloudSuccess = performCloudExport(password)
-            val resultMessage = if (cloudSuccess == true) rh.gs(R.string.exported_to_cloud) else rh.gs(R.string.export_to_cloud_failed)
+            val resultMessage = if (cloudSuccess) rh.gs(R.string.exported_to_cloud) else rh.gs(R.string.export_to_cloud_failed)
             persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE.asSettingsExport(error = resultMessage),
                 timestamp = dateUtil.now(),
@@ -311,7 +293,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} COMPOSE_EXPORT_NO_TEMP_DIR")
                 return false
             }
-            val timeLocal = org.joda.time.LocalDateTime.now().toString(org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+            val timeLocal = filenameTimestamp()
             val exportFileName = "${timeLocal}_${config.FLAVOR}.json"
             val tempDoc = tempDir.createFile("application/json", exportFileName)
             if (tempDoc == null) {
@@ -403,18 +385,6 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     @Suppress("SameParameterValue")
-    private fun askForEncryptionPass(
-        activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
-        @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)
-    ) {
-        passwordCheck.queryAnyPassword(activity, passwordName, StringKey.ProtectionMasterPassword, passwordExplanation, passwordWarning, { password ->
-            then(password)
-        }, {
-                                           ToastUtils.warnToast(activity, rh.gs(canceledMsg))
-                                       })
-    }
-
-    @Suppress("SameParameterValue")
     private fun askForMasterPassIfNeeded(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
         askForMasterPass(activity, canceledMsg, then)
     }
@@ -467,71 +437,6 @@ class ImportExportPrefsImpl @Inject constructor(
         )
     }
 
-    // Added: Confirmation dialog for non-filename targets (e.g., Google Drive) that can force password prompt
-    private fun askToConfirmExport(activity: FragmentActivity, targetDisplayName: String, forcePrompt: Boolean = false, then: ((password: String) -> Unit)) {
-        if (!assureMasterPasswordSet(activity, app.aaps.core.ui.R.string.nav_export)) return
-
-        if (!forcePrompt) {
-            val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore(context)
-            if (password.isNotEmpty() && !(isExpired || isAboutToExpire)) {
-                then(password)
-                return
-            }
-        }
-        exportPasswordDataStore.clearPasswordDataStore(context)
-
-        uiInteraction.showOkCancelDialog(
-            context = activity,
-            title = rh.gs(app.aaps.core.ui.R.string.nav_export),
-            message = rh.gs(app.aaps.core.ui.R.string.export_to) + " " + targetDisplayName + " ?",
-            secondMessage = rh.gs(app.aaps.core.ui.R.string.password_preferences_encrypt_prompt),
-            ok = {
-                askForMasterPassIfNeeded(activity, app.aaps.core.ui.R.string.preferences_export_canceled) { pwd ->
-                    then(exportPasswordDataStore.putPasswordToDataStore(context, pwd))
-                }
-            },
-            icon = R.drawable.ic_header_export
-        )
-    }
-
-    private fun askToConfirmImport(activity: FragmentActivity, fileToImport: PrefsFile, then: ((password: String) -> Unit)) {
-        if (!assureMasterPasswordSet(activity, app.aaps.core.ui.R.string.import_setting)) return
-        uiInteraction.showOkCancelDialog(
-            context = activity, title = rh.gs(app.aaps.core.ui.R.string.import_setting),
-            message = rh.gs(R.string.import_from) + " " + fileToImport.name + "?",
-            secondMessage = rh.gs(app.aaps.core.ui.R.string.password_preferences_decrypt_prompt), ok = {
-                askForMasterPass(activity, R.string.preferences_import_canceled, then)
-            },
-            icon = R.drawable.ic_header_import
-        )
-    }
-
-    private fun promptForDecryptionPasswordIfNeeded(
-        activity: FragmentActivity, prefs: Prefs, importOk: Boolean,
-        format: PrefsFormat, importFile: PrefsFile, then: ((prefs: Prefs, importOk: Boolean) -> Unit)
-    ) {
-
-        // current master password was not the one used for decryption, so we prompt for old password...
-        if (!importOk && (prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status == PrefsStatusImpl.ERROR)) {
-            askForEncryptionPass(
-                activity, R.string.preferences_import_canceled, R.string.old_master_password,
-                R.string.different_password_used, R.string.master_password_will_be_replaced
-            ) { password ->
-
-                // ...and use it to load & decrypt file again
-                val prefsReloaded = format.loadPreferences(importFile.content, password)
-                prefsReloaded.metadata = prefFileList.checkMetadata(prefsReloaded.metadata)
-
-                // import is OK when we do not have errors (warnings are allowed)
-                val importOkCheckedAgain = checkIfImportIsOk(prefsReloaded)
-
-                then(prefsReloaded, importOkCheckedAgain)
-            }
-        } else {
-            then(prefs, importOk)
-        }
-    }
-
     /**
      * Save preferences to file
      */
@@ -565,8 +470,8 @@ class ImportExportPrefsImpl @Inject constructor(
 
     private fun exportSharedPreferencesLegacy(activity: FragmentActivity) {
         // Check export destination preference for user settings
-        val localEnabled = exportOptionsDialog.isSettingsLocalEnabled()
-        val cloudEnabled = exportOptionsDialog.isSettingsCloudEnabled()
+        val localEnabled = sp.getBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, true)
+        val cloudEnabled = sp.getBoolean(ExportPrefKeys.PREF_SETTINGS_CLOUD_ENABLED, false)
         val isCloudActive = cloudStorageManager.isCloudStorageActive()
 
         // Determine export destinations
@@ -685,7 +590,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 return@launch
             }
 
-            val timeLocal = org.joda.time.LocalDateTime.now().toString(org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+            val timeLocal = filenameTimestamp()
             val exportFileName = "${timeLocal}_${config.FLAVOR}.json"
             val tempDoc = tempDir.createFile("application/json", exportFileName)
             if (tempDoc == null) {
@@ -728,7 +633,7 @@ class ImportExportPrefsImpl @Inject constructor(
                     return@launch
                 }
 
-                val timeLocal = org.joda.time.LocalDateTime.now().toString(org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+                val timeLocal = filenameTimestamp()
                 val exportFileName = "${timeLocal}_${config.FLAVOR}.json"
                 val tempDoc = tempDir.createFile("application/json", exportFileName)
                 if (tempDoc == null) {
@@ -793,18 +698,17 @@ class ImportExportPrefsImpl @Inject constructor(
 
     override fun exportSharedPreferencesNonInteractive(context: Context, password: String): Boolean {
         // Check export destination preferences (same logic as manual export)
-        val localEnabled = exportOptionsDialog.isSettingsLocalEnabled()
-        val cloudEnabled = exportOptionsDialog.isSettingsCloudEnabled()
+        val localEnabled = sp.getBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, true)
+        val cloudEnabled = sp.getBoolean(ExportPrefKeys.PREF_SETTINGS_CLOUD_ENABLED, false)
         val isCloudActive = cloudStorageManager.isCloudStorageActive()
 
-        val exportToLocal = localEnabled
         val exportToCloud = cloudEnabled && isCloudActive
 
-        aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} NONINTERACTIVE_EXPORT exportToLocal=$exportToLocal, exportToCloud=$exportToCloud")
+        aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} NONINTERACTIVE_EXPORT exportToLocal=$localEnabled, exportToCloud=$exportToCloud")
 
         // Export to local if enabled
         var localResult = true
-        if (exportToLocal) {
+        if (localEnabled) {
             prefFileList.ensureExportDirExists()
             val newFile = prefFileList.newPreferenceFile()
             if (newFile != null) {
@@ -818,7 +722,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
         // Export to cloud if enabled
         if (exportToCloud) {
-            kotlinx.coroutines.GlobalScope.launch(Dispatchers.IO) {
+            appScope.launch(Dispatchers.IO) {
                 try {
                     val provider = cloudStorageManager.getActiveProvider()
                     if (provider == null) {
@@ -837,7 +741,7 @@ class ImportExportPrefsImpl @Inject constructor(
                         return@launch
                     }
 
-                    val timeLocal = org.joda.time.LocalDateTime.now().toString(org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+                    val timeLocal = filenameTimestamp()
                     val fileName = "${timeLocal}_${config.FLAVOR}.json"
                     val tempDoc = tempDir.createFile("application/json", fileName)
                     if (tempDoc == null) {
@@ -882,7 +786,7 @@ class ImportExportPrefsImpl @Inject constructor(
         }
 
         // Return true if at least one export method succeeded or was started
-        return if (exportToLocal && exportToCloud) {
+        return if (localEnabled && exportToCloud) {
             localResult // Cloud is async, return local result
         } else if (exportToCloud) {
             true // Cloud export started (async)
@@ -891,220 +795,10 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun importSharedPreferences(activity: FragmentActivity) {
-        // Check if both local and cloud are enabled - show selection dialog
-        if (importSourceDialog.shouldShowSourceSelection()) {
-            importSourceDialog.showImportSourceDialog(activity) { source ->
-                when (source) {
-                    ImportSourceDialog.ImportSource.LOCAL -> importFromLocal(activity)
-                    ImportSourceDialog.ImportSource.CLOUD -> importFromCloud(activity)
-                }
-            }
-            return
-        }
-
-        // Only one source enabled - use it directly
-        val singleSource = importSourceDialog.getSingleEnabledSource()
-        when (singleSource) {
-            ImportSourceDialog.ImportSource.CLOUD -> {
-                importFromCloud(activity)
-                return
-            }
-
-            ImportSourceDialog.ImportSource.LOCAL, null -> {
-                importFromLocal(activity)
-            }
-        }
-    }
-
-    private fun importFromLocal(activity: FragmentActivity) {
-        // Local import requires AAPS base directory
-        val directoryUri = preferences.getIfExists(StringKey.AapsDirectoryUri)
-        if (directoryUri.isNullOrEmpty()) {
-            ToastUtils.errorToast(activity, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
-            return
-        }
-
-        try {
-            if (activity is DaggerAppCompatActivityWithResult)
-                activity.callForPrefFile?.launch(null)
-        } catch (e: IllegalArgumentException) {
-            // this exception happens on some early implementations of ActivityResult contracts
-            // when registered and called for the second time
-            ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
-            aapsLogger.error(LTag.CORE, "Internal android framework exception", e)
-        }
-    }
-
-    private fun importFromCloud(activity: FragmentActivity) {
-        // Show loading indicator
-        val progressDialog = AlertDialog.Builder(activity)
-            .setTitle(rh.gs(R.string.import_from_cloud))
-            .setMessage(rh.gs(R.string.loading_from_cloud))
-            .setCancelable(false)
-            .create()
-        progressDialog.show()
-
-        activity.lifecycleScope.launch {
-            try {
-                val provider = cloudStorageManager.getActiveProvider()
-                if (provider == null) {
-                    progressDialog.dismiss()
-                    ToastUtils.errorToast(activity, rh.gs(R.string.cloud_connection_failed))
-                    return@launch
-                }
-
-                if (!provider.testConnection()) {
-                    progressDialog.dismiss()
-                    ToastUtils.errorToast(activity, rh.gs(R.string.cloud_connection_failed))
-                    return@launch
-                }
-                // Auto-locate to fixed settings folder as list source, fall back to selected/root if failed
-                val settingsFolderId = provider.getOrCreateFolderPath(CloudConstants.CLOUD_PATH_SETTINGS)
-                aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} IMPORT_CLOUD getOrCreateFolderPath(${CloudConstants.CLOUD_PATH_SETTINGS}) returned: $settingsFolderId")
-                if (!settingsFolderId.isNullOrEmpty()) {
-                    provider.setSelectedFolderId(settingsFolderId)
-                    aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} IMPORT_CLOUD setSelectedFolderId: $settingsFolderId")
-                } else {
-                    aapsLogger.warn(LTag.CORE, "${CloudConstants.LOG_PREFIX} IMPORT_CLOUD getOrCreateFolderPath returned null/empty, will use default folder")
-                }
-
-                ToastUtils.infoToast(activity, rh.gs(R.string.cloud_directory_path, CloudConstants.CLOUD_PATH_SETTINGS))
-
-                // Count total files first using the provider interface
-                cloudTotalFilesCount = provider.countSettingsFiles()
-
-                val page = provider.listSettingsFiles(pageSize = CloudConstants.DEFAULT_PAGE_SIZE, pageToken = null)
-                val files = page.files
-                cloudNextPageToken = page.nextPageToken
-                if (files.isEmpty()) {
-                    progressDialog.dismiss()
-                    ToastUtils.warnToast(activity, rh.gs(R.string.no_settings_files_found))
-                    return@launch
-                }
-
-                // Filter files matching yyyy-MM-dd_HHmmss*.json pattern
-                val namePattern = Regex("^\\d{4}-\\d{2}-\\d{2}_\\d{6}.*\\.json$", RegexOption.IGNORE_CASE)
-                val matchingFiles = files.filter { f -> namePattern.containsMatchIn(f.name) }
-
-                // Download all files and parse metadata, just like local files
-                val prefsFiles = mutableListOf<PrefsFile>()
-                var processedFiles = 0
-                for (file in matchingFiles) {
-                    try {
-                        // Update progress
-                        progressDialog.setMessage(rh.gs(R.string.loading_file_progress, file.name, processedFiles + 1, matchingFiles.size))
-
-                        val bytes = provider.downloadFile(file.id)
-                        if (bytes != null) {
-                            val content = String(bytes, Charsets.UTF_8)
-                            // Parse file metadata
-                            val metadata = encryptedPrefsFormat.loadMetadata(content)
-                            val prefsFile = PrefsFile(file.name, content, metadata)
-                            prefsFiles.add(prefsFile)
-                        }
-                    } catch (e: Exception) {
-                        aapsLogger.warn(LTag.CORE, "Failed to load metadata for ${file.name}", e)
-                        // If metadata parsing fails, still add the file but without metadata
-                        try {
-                            val bytes = provider.downloadFile(file.id)
-                            if (bytes != null) {
-                                val content = String(bytes, Charsets.UTF_8)
-                                val prefsFile = PrefsFile(file.name, content, emptyMap())
-                                prefsFiles.add(prefsFile)
-                            }
-                        } catch (e2: Exception) {
-                            aapsLogger.error(LTag.CORE, "Failed to download ${file.name}", e2)
-                        }
-                    }
-                    processedFiles++
-                }
-
-                progressDialog.dismiss()
-
-                if (prefsFiles.isEmpty()) {
-                    ToastUtils.warnToast(activity, rh.gs(R.string.no_settings_files_found))
-                    return@launch
-                }
-
-                // Use CloudPrefImportListActivity to display file details
-                cloudPrefsFiles = prefsFiles // Store file list temporarily
-                val intent = Intent(activity, CloudPrefImportListActivity::class.java)
-                if (activity is DaggerAppCompatActivityWithResult) {
-                    activity.startActivityForResult(intent, CloudConstants.CLOUD_IMPORT_REQUEST_CODE)
-                }
-
-            } catch (e: Exception) {
-                progressDialog.dismiss()
-                aapsLogger.error(LTag.CORE, "Cloud import init failed", e)
-                ToastUtils.errorToast(activity, rh.gs(R.string.cloud_folder_error))
-            }
-        }
-    }
-
     override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) {
         prefFileList.ensureExportDirExists()
         val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?: "", withDate) ?: return
         ZipWatchfaceFormat.saveCustomWatchface(context.contentResolver, newFile, customWatchface)
-    }
-
-    // Do not pass full file through intent. It crash on large file
-    // override fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
-    override fun doImportSharedPreferences(activity: FragmentActivity) {
-
-        // File should be prepared here
-        val importFile = selectedImportFile ?: return
-
-        askToConfirmImport(activity, importFile) { password ->
-
-            val format: PrefsFormat = encryptedPrefsFormat
-
-            try {
-
-                val prefsAttempted = format.loadPreferences(importFile.content, password)
-                prefsAttempted.metadata = prefFileList.checkMetadata(prefsAttempted.metadata)
-
-                // import is OK when we do not have errors (warnings are allowed)
-                val importOkAttempted = checkIfImportIsOk(prefsAttempted)
-
-                promptForDecryptionPasswordIfNeeded(activity, prefsAttempted, importOkAttempted, format, importFile) { prefs, importOk ->
-
-                    // if at end we allow to import preferences
-                    val importPossible = (importOk || config.isEngineeringMode()) && (prefs.values.isNotEmpty())
-
-                    prefImportSummaryDialog.showSummary(activity, importOk, importPossible, prefs, {
-                        if (importPossible) {
-                            activePlugin.beforeImport()
-                            sp.clear()
-                            for ((key, value) in prefs.values) {
-                                if (value == "true" || value == "false") {
-                                    sp.putBoolean(key, value.toBoolean())
-                                } else {
-                                    sp.putString(key, value)
-                                }
-                            }
-
-                            // All settings including Google Drive settings and export destination preferences
-                            // are now imported from backup file. If tokens are invalid, user can re-authorize.
-
-                            activePlugin.afterImport()
-                            restartAppAfterImport(activity)
-                        } else {
-                            // for impossible imports it should not be called
-                            ToastUtils.errorToast(activity, rh.gs(R.string.preferences_import_impossible))
-                        }
-                    })
-
-                }
-
-            } catch (e: PrefFileNotFoundError) {
-                ToastUtils.errorToast(activity, rh.gs(R.string.filenotfound) + " " + importFile)
-                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
-            } catch (e: PrefIOError) {
-                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
-                ToastUtils.errorToast(activity, e.message)
-            }
-        }
     }
 
     private fun checkIfImportIsOk(prefs: Prefs): Boolean {
@@ -1115,21 +809,6 @@ class ImportExportPrefsImpl @Inject constructor(
                 importOk = false
         }
         return importOk
-    }
-
-    private fun restartAppAfterImport(context: Context) {
-        rxBus.send(EventDiaconnG8PumpLogReset())
-        preferences.put(BooleanNonKey.GeneralSetupWizardProcessed, true)
-        uiInteraction.showOkDialog(
-            context = context,
-            title = rh.gs(R.string.setting_imported),
-            message = rh.gs(R.string.restartingapp),
-            onFinish = {
-                if (context is AppCompatActivity) {
-                    context.finish()
-                }
-                configBuilder.exitApp("Import", Sources.Maintenance, false)
-            })
     }
 
     // Compose import support — discrete steps, no UI
@@ -1254,8 +933,8 @@ class ImportExportPrefsImpl @Inject constructor(
         val entries = persistenceLayer.getUserEntryFilteredDataFromTime(MidnightTime.calc() - T.days(90).msecs())
         aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT entries count=${entries.size}")
 
-        val csvLocal = sp.getBoolean(ExportOptionsDialog.PREF_CSV_LOCAL_ENABLED, true)
-        val csvCloud = sp.getBoolean(ExportOptionsDialog.PREF_CSV_CLOUD_ENABLED, false)
+        val csvLocal = sp.getBoolean(ExportPrefKeys.PREF_CSV_LOCAL_ENABLED, true)
+        val csvCloud = sp.getBoolean(ExportPrefKeys.PREF_CSV_CLOUD_ENABLED, false)
         val isCloudActive = cloudStorageManager.isCloudStorageActive()
         val cloudEnabled = csvCloud && isCloudActive
 
@@ -1297,7 +976,7 @@ class ImportExportPrefsImpl @Inject constructor(
         return try {
             val provider = cloudStorageManager.getActiveProvider() ?: return false
             val contents = userEntryPresentationHelper.userEntriesToCsv(userEntries)
-            val fileName = "UserEntries_${org.joda.time.LocalDateTime.now().toString(org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd_HHmmss"))}.csv"
+            val fileName = "UserEntries_${filenameTimestamp()}.csv"
             val folderId = provider.getOrCreateFolderPath(CloudConstants.CLOUD_PATH_USER_ENTRIES)
             folderId?.let { provider.setSelectedFolderId(it) }
             var uploadedFileId = provider.uploadFileToPath(fileName, contents.toByteArray(Charsets.UTF_8), "text/csv", CloudConstants.CLOUD_PATH_USER_ENTRIES)
@@ -1331,8 +1010,8 @@ class ImportExportPrefsImpl @Inject constructor(
 
             aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT entries count=${entries.size}")
 
-            val csvLocal = sp.getBoolean(ExportOptionsDialog.PREF_CSV_LOCAL_ENABLED, true)
-            val csvCloud = sp.getBoolean(ExportOptionsDialog.PREF_CSV_CLOUD_ENABLED, false)
+            val csvLocal = sp.getBoolean(ExportPrefKeys.PREF_CSV_LOCAL_ENABLED, true)
+            val csvCloud = sp.getBoolean(ExportPrefKeys.PREF_CSV_CLOUD_ENABLED, false)
             val isCloudActive = cloudStorageManager.isCloudStorageActive()
             val cloudEnabled = csvCloud && isCloudActive
 
@@ -1388,7 +1067,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 }
 
                 val contents = userEntryPresentationHelper.userEntriesToCsv(userEntries)
-                val fileName = "UserEntries_${org.joda.time.LocalDateTime.now().toString(org.joda.time.format.DateTimeFormat.forPattern("yyyy-MM-dd_HHmmss"))}.csv"
+                val fileName = "UserEntries_${filenameTimestamp()}.csv"
                 aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} CSV_EXPORT_CLOUD fileName=$fileName, contents length=${contents.length}")
 
                 // First locate selected folder to fixed path
@@ -1468,7 +1147,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
         override suspend fun doWorkAndLog(): Result {
             if (!config.isEngineeringMode()) return Result.success(workDataOf("Result" to "Export not enabled"))
-            val apsResultData = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as ApsResultData?
+            val apsResultData = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as? ApsResultData?
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             prefFileList.ensureResultDirExists()

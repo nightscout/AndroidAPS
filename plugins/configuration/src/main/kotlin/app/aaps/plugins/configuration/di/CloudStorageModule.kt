@@ -1,6 +1,6 @@
 package app.aaps.plugins.configuration.di
 
-import app.aaps.plugins.configuration.maintenance.cloud.CloudStorageProvider
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.plugins.configuration.maintenance.cloud.providers.googledrive.GoogleDriveProvider
 import dagger.Binds
 import dagger.Module

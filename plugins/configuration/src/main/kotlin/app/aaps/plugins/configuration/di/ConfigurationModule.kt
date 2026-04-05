@@ -11,11 +11,7 @@ import app.aaps.plugins.configuration.configBuilder.ConfigBuilderPlugin
 import app.aaps.plugins.configuration.configBuilder.RunningConfigurationImpl
 import app.aaps.plugins.configuration.maintenance.FileListProviderImpl
 import app.aaps.plugins.configuration.maintenance.ImportExportPrefsImpl
-import app.aaps.plugins.configuration.maintenance.MaintenanceFragment
-import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
-import app.aaps.plugins.configuration.maintenance.activities.CloudPrefImportListActivity
-import app.aaps.plugins.configuration.maintenance.activities.LogSettingActivity
-import app.aaps.plugins.configuration.maintenance.activities.PrefImportListActivity
+import app.aaps.plugins.configuration.maintenance.MaintenanceImpl
 import app.aaps.plugins.configuration.maintenance.cloud.CloudDirectoryManagerImpl
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import dagger.Binds
@@ -35,13 +31,9 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class ConfigurationModule {
 
-    @ContributesAndroidInjector abstract fun contributesLogSettingActivity(): LogSettingActivity
-    @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
     @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
     @ContributesAndroidInjector abstract fun contributesApsResultExportWorker(): ImportExportPrefsImpl.ApsResultExportWorker
-    @ContributesAndroidInjector abstract fun contributesPrefImportListActivity(): PrefImportListActivity
-    @ContributesAndroidInjector abstract fun contributesCloudPrefImportListActivity(): CloudPrefImportListActivity
     @ContributesAndroidInjector abstract fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
     @ContributesAndroidInjector abstract fun prefImportListProviderInjector(): FileListProvider
 
@@ -53,7 +45,7 @@ abstract class ConfigurationModule {
         @Binds fun bindRunningConfiguration(runningConfigurationImpl: RunningConfigurationImpl): RunningConfiguration
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder
         @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefsImpl): ImportExportPrefs
-        @Binds fun bindMaintenanceInterface(maintenancePlugin: MaintenancePlugin): Maintenance
+        @Binds fun bindMaintenanceInterface(maintenanceImpl: MaintenanceImpl): Maintenance
         @Binds fun bindCloudDirectoryManager(impl: CloudDirectoryManagerImpl): CloudDirectoryManager
     }
 }

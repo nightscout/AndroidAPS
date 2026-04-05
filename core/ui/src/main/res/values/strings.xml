@@ -818,6 +818,9 @@
     <string name="file_management">File management</string>
     <string name="database_management">Database management</string>
 
+    <string name="data_choices">Data Choices</string>
+    <string name="unattended_settings_export">Unattended Settings Export</string>
+
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Configure log verbosity levels</string>
     <string name="maintenance_send_logs_desc">Share log files for troubleshooting</string>

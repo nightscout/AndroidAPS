@@ -7,11 +7,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
-import app.aaps.plugins.configuration.maintenance.cloud.events.EventCloudStorageStatusChanged
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -44,7 +42,6 @@ class GoogleDriveManager @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
-    private val rxBus: RxBus,
     private val notificationManager: NotificationManager
 ) {
 
@@ -58,7 +55,7 @@ class GoogleDriveManager @Inject constructor(
         private const val TOKEN_URL = "https://oauth2.googleapis.com/token"
         private const val DRIVE_API_URL = "https://www.googleapis.com/drive/v3"
         private const val UPLOAD_URL = "https://www.googleapis.com/upload/drive/v3"
-        private val LOG_PREFIX = CloudConstants.LOG_PREFIX
+        private const val LOG_PREFIX = CloudConstants.LOG_PREFIX
 
         // SharedPreferences keys
         private const val PREF_GOOGLE_DRIVE_REFRESH_TOKEN = "google_drive_refresh_token"
@@ -94,31 +91,6 @@ class GoogleDriveManager @Inject constructor(
      */
     fun hasValidRefreshToken(): Boolean {
         return sp.getString(PREF_GOOGLE_DRIVE_REFRESH_TOKEN, "").isNotBlank()
-    }
-
-    /**
-     * Get current storage type with default value
-     */
-    fun getStorageType(): String {
-        val storageType = sp.getString(PREF_GOOGLE_DRIVE_STORAGE_TYPE, STORAGE_TYPE_LOCAL)
-        // If there is a refresh token but storage type is local, settings may have been reset, try to restore
-        if (storageType == STORAGE_TYPE_LOCAL && hasValidRefreshToken()) {
-            // Check if there is a valid folder ID
-            val folderId = sp.getString(PREF_GOOGLE_DRIVE_FOLDER_ID, "")
-            if (folderId.isNotEmpty()) {
-                aapsLogger.info(LTag.CORE, "$LOG_PREFIX Restoring Google Drive storage type from token presence")
-                sp.putString(PREF_GOOGLE_DRIVE_STORAGE_TYPE, STORAGE_TYPE_GOOGLE_DRIVE)
-                return STORAGE_TYPE_GOOGLE_DRIVE
-            }
-        }
-        return storageType
-    }
-
-    /**
-     * Set storage type
-     */
-    fun setStorageType(type: String) {
-        sp.putString(PREF_GOOGLE_DRIVE_STORAGE_TYPE, type)
     }
 
     /**
@@ -278,11 +250,8 @@ class GoogleDriveManager @Inject constructor(
     suspend fun testConnection(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val accessToken = getValidAccessToken()
-                if (accessToken == null) {
-                    // Error already shown in getValidAccessToken
-                    return@withContext false
-                }
+                val accessToken = getValidAccessToken() ?: // Error already shown in getValidAccessToken
+                return@withContext false
                 val request = Request.Builder()
                     .url("$DRIVE_API_URL/about?fields=user")
                     .header("Authorization", "Bearer $accessToken")
@@ -310,11 +279,8 @@ class GoogleDriveManager @Inject constructor(
     suspend fun listFolders(parentId: String = "root"): List<DriveFolder> {
         return withContext(Dispatchers.IO) {
             try {
-                val accessToken = getValidAccessToken()
-                if (accessToken == null) {
-                    // Error already shown in getValidAccessToken
-                    return@withContext emptyList()
-                }
+                val accessToken = getValidAccessToken() ?: // Error already shown in getValidAccessToken
+                return@withContext emptyList()
                 val url = "$DRIVE_API_URL/files?q=mimeType='application/vnd.google-apps.folder' and '$parentId' in parents and trashed=false&fields=files(id,name)&supportsAllDrives=true&includeItemsFromAllDrives=true"
                 val request = Request.Builder()
                     .url(url)
@@ -398,11 +364,8 @@ class GoogleDriveManager @Inject constructor(
     suspend fun uploadFile(fileName: String, fileContent: ByteArray, mimeType: String = "application/octet-stream"): String? {
         return withContext(Dispatchers.IO) {
             try {
-                val accessToken = getValidAccessToken()
-                if (accessToken == null) {
-                    // Error already shown in getValidAccessToken
-                    return@withContext null
-                }
+                val accessToken = getValidAccessToken() ?: // Error already shown in getValidAccessToken
+                return@withContext null
                 debugCurrentUser(accessToken)
                 // Resolve target folder: always prefer CloudConstants by file type; fallback to selected folder, then root
                 val inferredPath = inferCloudPathFor(fileName)
@@ -575,8 +538,6 @@ class GoogleDriveManager @Inject constructor(
         connectionError = true
         errorNotificationId = NOTIFICATION_GOOGLE_DRIVE_ERROR
         notificationManager.post(NotificationId.GOOGLE_DRIVE_ERROR, message, validMinutes = 60)
-        // Notify UI to update cloud storage error state immediately
-        rxBus.send(EventCloudStorageStatusChanged())
     }
 
     /**
@@ -934,51 +895,6 @@ class GoogleDriveManager @Inject constructor(
             notificationManager.dismiss(NotificationId.GOOGLE_DRIVE_ERROR)
         }
         errorNotificationId = null
-        // Notify UI to update cloud storage error state immediately
-        rxBus.send(EventCloudStorageStatusChanged())
-    }
-
-    /**
-     * List settings files (json) in current folder
-     */
-    suspend fun listSettingsFiles(): List<DriveFile> = withContext(Dispatchers.IO) {
-        try {
-            val accessToken = getValidAccessToken() ?: return@withContext emptyList()
-            val folderId = getSelectedFolderId().ifEmpty { "root" }
-            val query = "'$folderId' in parents and trashed=false"
-            val encodedQuery = URLEncoder.encode(query, "UTF-8")
-            val url = "$DRIVE_API_URL/files?q=$encodedQuery&fields=files(id,name,modifiedTime,mimeType)&pageSize=50&supportsAllDrives=true&includeItemsFromAllDrives=true"
-            aapsLogger.info(LTag.CORE, "$LOG_PREFIX LIST_SETTINGS_FILES_START folderId=$folderId query='$query' encodedQuery=$encodedQuery")
-            val request = Request.Builder()
-                .url(url)
-                .header("Authorization", "Bearer $accessToken")
-                .build()
-            val response = client.newCall(request).execute()
-            val body = response.body.string()
-            if (!response.isSuccessful) {
-                aapsLogger.error(LTag.CORE, "$LOG_PREFIX FOLDER_LIST_FAIL folderId=$folderId code=${response.code} body=${body.take(300)}")
-                showConnectionError(rh.gs(R.string.google_drive_list_settings_failed))
-                return@withContext emptyList()
-            }
-            clearConnectionError()
-            aapsLogger.info(LTag.CORE, "$LOG_PREFIX LIST_SETTINGS_FILES_OK count=${body.length} folderId=$folderId")
-            val json = JSONObject(body)
-            val arr = json.optJSONArray("files") ?: JSONArray()
-            val result = mutableListOf<DriveFile>()
-            for (i in 0 until arr.length()) {
-                val f = arr.getJSONObject(i)
-                val mimeType = f.optString("mimeType", "")
-                // Filter out folders
-                if (mimeType != "application/vnd.google-apps.folder") {
-                    result.add(DriveFile(id = f.getString("id"), name = f.getString("name")))
-                }
-            }
-            result
-        } catch (e: Exception) {
-            aapsLogger.error(LTag.CORE, "$LOG_PREFIX Error listing settings files", e)
-            showConnectionError(rh.gs(R.string.google_drive_list_settings_error, e.message ?: ""))
-            emptyList()
-        }
     }
 
     /**
@@ -994,7 +910,7 @@ class GoogleDriveManager @Inject constructor(
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
                 val msg = response.body.string()
-                aapsLogger.error(LTag.CORE, "$LOG_PREFIX Failed to download file: ${msg}")
+                aapsLogger.error(LTag.CORE, "$LOG_PREFIX Failed to download file: $msg")
                 showConnectionError(rh.gs(R.string.google_drive_download_failed))
                 return@withContext null
             }
@@ -1285,7 +1201,7 @@ class GoogleDriveManager @Inject constructor(
             lower.endsWith(".json") -> "application/json; charset=UTF-8"
             lower.endsWith(".csv")  -> "text/csv; charset=UTF-8"
             lower.endsWith(".zip")  -> "application/zip"
-            else                    -> if (prov.isNotEmpty()) prov else "application/octet-stream"
+            else                    -> prov.ifEmpty { "application/octet-stream" }
         }
     }
 

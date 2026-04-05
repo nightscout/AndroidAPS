@@ -182,8 +182,15 @@ class SWDefinition @Inject constructor(
         get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.import_setting)
             .add(swInfoTextProvider.get().label(R.string.storedsettingsfound))
             .add(swBreakProvider.get())
-            .add(swButtonProvider.get().text(app.aaps.core.ui.R.string.import_setting).action { importExportPrefs.importSharedPreferences(requireActivity()) })
-            .visibility { importExportPrefs.prefsFileExists() }
+            .add(swButtonProvider.get().text(app.aaps.core.ui.R.string.import_setting).action {
+                // TODO replace by compose
+                //  importExportPrefs.importSharedPreferences(requireActivity())
+            })
+            .visibility {
+                // TODO replace by compose
+                // importExportPrefs.prefsFileExists()
+                true
+            }
 
     private val screenNsClient
         get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.configbuilder_sync)

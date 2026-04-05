@@ -1,17 +1,13 @@
 package app.aaps.plugins.configuration.maintenance.cloud.providers.googledrive
 
-import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.CloudFile
+import app.aaps.core.interfaces.maintenance.CloudFileListResult
+import app.aaps.core.interfaces.maintenance.CloudFolder
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
-import app.aaps.plugins.configuration.maintenance.cloud.CloudFile
-import app.aaps.plugins.configuration.maintenance.cloud.CloudFileListResult
-import app.aaps.plugins.configuration.maintenance.cloud.CloudFolder
-import app.aaps.plugins.configuration.maintenance.cloud.CloudStorageProvider
 import app.aaps.plugins.configuration.maintenance.cloud.StorageTypes
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,13 +22,11 @@ import javax.inject.Singleton
 class GoogleDriveProvider @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val sp: SP,
-    private val rxBus: RxBus,
-    private val context: Context,
     private val googleDriveManager: GoogleDriveManager
 ) : CloudStorageProvider {
 
     companion object {
+
         private const val LOG_PREFIX = "[GoogleDriveProvider]"
     }
 
@@ -55,7 +49,7 @@ class GoogleDriveProvider @Inject constructor(
 
     // ==================== Authentication ====================
 
-    override suspend fun startAuth(): String? {
+    override suspend fun startAuth(): String {
         gLog("startAuth")
         return googleDriveManager.startPKCEAuth()
     }
@@ -147,7 +141,7 @@ class GoogleDriveProvider @Inject constructor(
     ): CloudFileListResult {
         gLog("listSettingsFiles: pageSize=$pageSize")
         val result = googleDriveManager.listSettingsFilesPaged(pageToken, pageSize)
-        
+
         return CloudFileListResult(
             files = result.files.map { driveFile ->
                 CloudFile(
@@ -195,9 +189,9 @@ class GoogleDriveProvider @Inject constructor(
         val lower = fileName.lowercase()
         return when {
             lower.endsWith(".json") -> "application/json"
-            lower.endsWith(".csv") -> "text/csv"
-            lower.endsWith(".zip") -> "application/zip"
-            else -> "application/octet-stream"
+            lower.endsWith(".csv")  -> "text/csv"
+            lower.endsWith(".zip")  -> "application/zip"
+            else                    -> "application/octet-stream"
         }
     }
 }

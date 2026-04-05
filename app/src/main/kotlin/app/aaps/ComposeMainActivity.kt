@@ -136,8 +136,6 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.configuration.activities.OptimizationPermissionContract
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
-import app.aaps.plugins.configuration.maintenance.PrefsFileContract
-import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
 import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
@@ -234,7 +232,6 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var commandQueue: CommandQueue
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
-    private var callForPrefFile: ActivityResultLauncher<Void?>? = null
     private var callForBatteryOptimization: ActivityResultLauncher<Void?>? = null
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
@@ -290,9 +287,6 @@ class ComposeMainActivity : AppCompatActivity() {
                 contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 preferences.put(StringKey.AapsDirectoryUri, uri.toString())
             }
-        }
-        callForPrefFile = registerForActivityResult(PrefsFileContract()) {
-            importExportPrefs.doImportSharedPreferences(this)
         }
         callForBatteryOptimization = registerForActivityResult(OptimizationPermissionContract()) {
             updateButtons()
@@ -1293,18 +1287,9 @@ class ComposeMainActivity : AppCompatActivity() {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CloudConstants.CLOUD_IMPORT_REQUEST_CODE && resultCode == RESULT_OK) {
-            importExportPrefs.doImportSharedPreferences(this)
-        }
-    }
-
     override fun onDestroy() {
         disposable.clear()
         accessTree = null
-        callForPrefFile = null
         callForBatteryOptimization = null
         requestMultiplePermissions = null
         onPermissionResultDenied = null

@@ -10,12 +10,12 @@ import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.keys.LongNonKey
-import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.util.concurrent.ListenableFuture
@@ -34,7 +34,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     private lateinit var worker: KeepAliveWorker
 
     @Mock private lateinit var loop: Loop
-    @Mock private lateinit var maintenancePlugin: MaintenancePlugin
+    @Mock private lateinit var maintenance: Maintenance
     @Mock private lateinit var dstHelperPlugin: DstHelperPlugin
     @Mock private lateinit var workerParameters: WorkerParameters
     @Mock private lateinit var persistenceLayer: PersistenceLayer
@@ -67,7 +67,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
             it.profileFunction = profileFunction
             it.rxBus = mockedRxBus
             it.commandQueue = commandQueue
-            it.maintenancePlugin = maintenancePlugin
+            it.maintenance = maintenance
             it.preferences = preferences
             it.dstHelperPlugin = dstHelperPlugin
             it.aapsLogger = aapsLogger

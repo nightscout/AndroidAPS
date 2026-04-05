@@ -2,6 +2,7 @@ package app.aaps.plugins.configuration.maintenance.cloud
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -58,11 +59,11 @@ class CloudStorageManager @Inject constructor(
      */
     fun getActiveProvider(): CloudStorageProvider? {
         val activeType = sp.getString(CloudConstants.PREF_CLOUD_STORAGE_TYPE, StorageTypes.LOCAL)
-        
+
         if (activeType == StorageTypes.LOCAL) {
             return null
         }
-        
+
         return providers[activeType]
     }
 

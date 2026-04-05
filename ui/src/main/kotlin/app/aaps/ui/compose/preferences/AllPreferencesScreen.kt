@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
-import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -70,7 +69,6 @@ fun AllPreferencesScreen(
     val smsCommunicatorPlugin = activePlugin.getSpecificPluginsListByInterface(SmsCommunicator::class.java).firstOrNull()
     val automationPlugin = activePlugin.getSpecificPluginsListByInterface(Automation::class.java).firstOrNull()
     val autotunePlugin = activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).firstOrNull()
-    val maintenancePlugin = activePlugin.getSpecificPluginsListByInterface(Maintenance::class.java).firstOrNull()
 
     // Built-in preference screens from BuiltInSearchables (single source of truth)
     val generalPreferences = builtInSearchables.general
@@ -78,6 +76,7 @@ fun AllPreferencesScreen(
     val protectionPreferences = builtInSearchables.protection
     val pumpPreferences = builtInSearchables.pump
     val alertsPreferences = builtInSearchables.alerts
+    val maintenancePreferences = builtInSearchables.maintenance
 
     // Helper function to get preference content if plugin is enabled
     fun getPreferenceContentIfEnabled(plugin: PluginBase?, enabledCondition: Boolean = true): Any? {
@@ -202,10 +201,8 @@ fun AllPreferencesScreen(
                     // Built-in: Alerts settings
                     addPreferenceContent(alertsPreferences, sectionState)
 
-                    // Maintenance plugin (found via interface, always last)
-                    getPreferenceContentIfEnabled(maintenancePlugin)?.let { content ->
-                        addPreferenceContent(content, sectionState)
-                    }
+                    // Built-in: Maintenance settings (always last)
+                    addPreferenceContent(maintenancePreferences, sectionState)
                 }
             }
         }

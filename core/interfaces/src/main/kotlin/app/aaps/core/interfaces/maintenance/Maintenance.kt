@@ -6,7 +6,6 @@ package app.aaps.core.interfaces.maintenance
  */
 interface Maintenance {
 
-    fun sendLogs()
     suspend fun executeSendLogs(): ExportResult
     fun deleteLogs(keep: Int)
 }

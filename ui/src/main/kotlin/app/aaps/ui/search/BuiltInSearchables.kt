@@ -20,6 +20,7 @@ import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.icons.IcBolus
 import app.aaps.core.ui.compose.icons.IcCalculator
 import app.aaps.core.ui.compose.icons.IcCarbs
+import app.aaps.core.ui.compose.icons.IcPluginMaintenance
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
 import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -142,6 +143,34 @@ class BuiltInSearchables @Inject constructor(
             BooleanKey.PumpBtWatchdog
         ),
         icon = Pump
+    )
+
+    /**
+     * Maintenance preferences (email recipient, logs amount, data choices, unattended export)
+     */
+    val maintenance = PreferenceSubScreenDef(
+        key = "maintenance_settings",
+        titleResId = app.aaps.core.ui.R.string.maintenance,
+        items = listOf(
+            StringKey.MaintenanceEmail,
+            IntKey.MaintenanceLogsAmount,
+            PreferenceSubScreenDef(
+                key = "data_choice_setting",
+                titleResId = app.aaps.core.ui.R.string.data_choices,
+                items = listOf(
+                    BooleanKey.MaintenanceEnableFabric,
+                    StringKey.MaintenanceIdentification
+                )
+            ),
+            PreferenceSubScreenDef(
+                key = "unattended_export_setting",
+                titleResId = app.aaps.core.ui.R.string.unattended_settings_export,
+                items = listOf(
+                    BooleanKey.MaintenanceEnableExportSettingsAutomation
+                )
+            )
+        ),
+        icon = IcPluginMaintenance
     )
 
     /**
@@ -270,6 +299,7 @@ class BuiltInSearchables @Inject constructor(
         SearchableItem.Category(protection),
         SearchableItem.Category(pump),
         SearchableItem.Category(alerts),
+        SearchableItem.Category(maintenance),
         // Dialog settings (only for search, not in AllPreferencesScreen)
         SearchableItem.Category(fillButtons),
         SearchableItem.Category(insulinButtons),

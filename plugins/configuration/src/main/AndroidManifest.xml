@@ -10,18 +10,6 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".maintenance.activities.LogSettingActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".maintenance.activities.PrefImportListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".maintenance.activities.CloudPrefImportListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".activities.SingleFragmentActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />

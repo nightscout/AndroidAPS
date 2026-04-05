@@ -5,7 +5,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.configuration.R
+import app.aaps.plugins.configuration.maintenance.ExportPrefKeys
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,8 +15,8 @@ import javax.inject.Singleton
 class CloudDirectoryManagerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val cloudStorageManager: CloudStorageManager,
-    private val exportOptionsDialog: ExportOptionsDialog
+    private val sp: SP,
+    private val cloudStorageManager: CloudStorageManager
 ) : CloudDirectoryManager {
 
     override fun getCloudDirectoryInfo(): CloudDirectoryInfo {
@@ -24,9 +26,9 @@ class CloudDirectoryManagerImpl @Inject constructor(
         val isCloudActive = cloudStorageManager.isCloudStorageActive()
 
         val authorizedStatusText = when {
-            !hasCredentials        -> ""
-            hasConnectionError     -> provider?.let { rh.gs(it.reAuthRequiredTextResId) } ?: ""
-            else                   -> provider?.let { rh.gs(it.authorizedTextResId) } ?: ""
+            !hasCredentials    -> ""
+            hasConnectionError -> provider?.let { rh.gs(it.reAuthRequiredTextResId) } ?: ""
+            else               -> provider?.let { rh.gs(it.authorizedTextResId) } ?: ""
         }
 
         return CloudDirectoryInfo(
@@ -45,19 +47,36 @@ class CloudDirectoryManagerImpl @Inject constructor(
         cloudStorageManager.clearAllCredentials()
         cloudStorageManager.setActiveStorageType(StorageTypes.LOCAL)
         cloudStorageManager.clearConnectionError()
-        exportOptionsDialog.resetToLocalSettings()
+        resetToLocalSettings()
     }
 
-    override fun resetExportToLocal() {
-        exportOptionsDialog.resetToLocalSettings()
-    }
+    override fun resetExportToLocal() = resetToLocalSettings()
 
     override fun enableAllCloudExport() {
-        exportOptionsDialog.enableAllCloud()
+        aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} ExportDestination: Enabling all cloud mode")
+        sp.putBoolean(ExportPrefKeys.PREF_ALL_CLOUD_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_LOG_EMAIL_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_LOG_CLOUD_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_CLOUD_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_CSV_LOCAL_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_CSV_CLOUD_ENABLED, true)
     }
 
     override fun enableLocalStorage() {
-        exportOptionsDialog.enableLocalStorage()
+        aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} ExportDestination: Enabling local storage")
+        sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, true)
+    }
+
+    private fun resetToLocalSettings() {
+        aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} ExportDestination: Resetting all settings to local/email mode")
+        sp.putBoolean(ExportPrefKeys.PREF_ALL_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_LOG_EMAIL_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_LOG_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_LOCAL_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_SETTINGS_CLOUD_ENABLED, false)
+        sp.putBoolean(ExportPrefKeys.PREF_CSV_LOCAL_ENABLED, true)
+        sp.putBoolean(ExportPrefKeys.PREF_CSV_CLOUD_ENABLED, false)
     }
 
     override suspend fun testConnection(): Boolean {
