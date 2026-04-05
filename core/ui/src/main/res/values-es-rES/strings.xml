@@ -230,6 +230,8 @@
     <string name="mode_reverted">Modo revertido</string>
     <string name="insulin_shortname">INS</string>
     <string name="select_insulin">Seleccionar insulina</string>
+    <string name="select_pump_insulin">Seleccionar insulina de la bomba</string>
+    <string name="select_pen_insulin">Seleccionar insulina</string>
     <string name="insulin_template">Plantilla</string>
     <string name="dia">DIA</string>
     <string name="peak">Pico de acción</string>
@@ -254,6 +256,7 @@
     <string name="not_available_full">No disponible</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
     <string name="back">Atrás</string>
+    <string name="show_hide_records">Ocultar registros del Lazo</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
     <string name="wrongpin">Pin erróneo</string>
@@ -276,11 +279,15 @@
     <string name="reason">Motivo</string>
     <string name="nochangerequested">Ningún cambio solicitado</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Insulina %1$s confirmada</string>
+    <string name="current_insulin">Activo actualmente</string>
+    <string name="change_insulin">Cambiar</string>
     <string name="select_insulin_description">Seleccione la insulina con la que está llenando la bomba. Se aplicará un cambio de perfil después de la activación/cebado.</string>
     <string name="bolus_delivered">%1$.2fU / %2$.2fU</string>
     <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
     <string name="pump_insulin_cu">%1$.2f CU</string>
     <string name="pump_insulin_cu1">%1$.1f CU</string>
+    <string name="selected_insulin">Insulina seleccionada: %1$s</string>
     <string name="record_insulin_hint">Si va a introducir insulina administrada con bolígrafo, seleccione el tipo de insulina correcto a continuación. La dosis es siempre en Unidades Internacionales.</string>
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
@@ -309,6 +316,7 @@
     <string name="careportal_dad_alert">D.A.D Alerta</string>
     <string name="careportal_insulin_cartridge_change">Cambio de cartucho de insulina</string>
     <string name="careportal_profileswitch">Cambio de perfil</string>
+    <string name="profile_management">Gestión de perfiles</string>
     <string name="careportal_snackbolus">Bolo de aperitivo</string>
     <string name="careportal_mealbolus">Bolo de comida</string>
     <string name="careportal_correctionbolus">Bolo de corrección</string>
@@ -319,13 +327,39 @@
     <string name="careportal_openapsoffline">OpenAPS sin conexión</string>
     <string name="pump_battery_change">Cambio batería bomba</string>
     <string name="temporary_target">Objetivo temporal</string>
+    <string name="temporary_targets">Objetivos temporales</string>
     <string name="running_mode">Modo en ejecución</string>
     <string name="careportal_temporarytargetvalue">Valor objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
     <string name="boluswizard">Asistente de bolo</string>
+    <string name="treatment_desc">Registrar insulina y carbohidratos juntos</string>
+    <string name="treatment_insulin_desc">Administrar bolo manualmente</string>
+    <string name="treatment_carbs_desc">Registrar carbohidratos sin insulina</string>
+    <string name="treatment_calculator_desc">Calcular bolo</string>
+    <string name="insulin_management">Gestión de la insulina</string>
     <string name="manage_insulin_desc">Gestionar y activar configuraciones de insulina</string>
     <string name="concentration_disable_blocked">No se puede desactivar el soporte de concentración mientras existan insulinas que no sean U100. Elimine primero todas las configuraciones de insulina que no sean U100 y cambie a un perfil U100.</string>
     <string name="simple_mode_blocked_by_concentration">No se puede activar el modo simple mientras se use una insulina que no sea U100. Cambie primero a una insulina U100.</string>
+    <string name="manage_profile_desc">Gestionar y activar perfiles</string>
+    <string name="manage_temp_target_desc">Gestionar y establecer objetivos temporales</string>
+    <string name="manage_temp_basal_desc">Iniciar basal temporal</string>
+    <string name="manage_extended_bolus_desc">Iniciar administración de bolo extendido</string>
+    <string name="manage_site_rotation_desc">Registrar y rotar sitios de infusión</string>
+    <string name="manage_quickwizard_desc">Gestionar ajustes preestablecidos del asistente rápido</string>
+    <string name="treatment_note_desc">Añadir una nota a tus registros</string>
+    <string name="treatment_question_desc">Registrar una pregunta para tu equipo médico</string>
+    <string name="treatment_cgm_desc">Abrir aplicación del MCG</string>
+    <string name="treatment_calibration_desc">Calibrar sensor del MCG</string>
+    <string name="treatment_bg_check_desc">Registrar control de glucosa en sangre</string>
+    <string name="treatment_exercise_desc">Registrar actividad física</string>
+    <string name="treatment_announcement_desc">Publicar anuncio</string>
+    <string name="treatment_sensor_insert_desc">Registrar inserción del sensor MCG</string>
+    <string name="treatment_battery_change_desc">Registrar cambio de pila de la bomba</string>
+    <string name="treatment_cannula_change_desc">Registrar cambio de cánula/set de infusión</string>
+    <string name="treatment_fill_desc">Cargar y purgar cánula</string>
+    <string name="temp_basal">Basal temporal</string>
+    <string name="user_entry">Entrada de usuario</string>
+    <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manualmente</string>
@@ -337,6 +371,8 @@
     <string name="automation">Automatización</string>
     <string name="settingsexport">Exportación de configuraciones</string>
     <string name="custom">Personalizado</string>
+    <string name="preset_settings">Ajustes preestablecidos</string>
+    <string name="activation">Activación</string>
     <string name="loop">Lazo</string>
     <string name="ns">NS</string>
     <string name="record">Registro</string>
@@ -848,4 +884,21 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="ble_scan_select_pump">Seleccione su bomba de la lista a continuación</string>
     <string name="ble_scan_scanning">Buscando dispositivos…</string>
+    <!-- Graph configuration -->
+    <string name="graph_add">Añadir gráfico</string>
+    <string name="graph_new">Nuevo gráfico</string>
+    <string name="graph_edit">Editar gráfico</string>
+    <string name="graph_number">Gráfico %1$d</string>
+    <string name="graph_bg">Gráfica de BG</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
+    <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">RC</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">PASOS</string>
 </resources>
