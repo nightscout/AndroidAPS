@@ -20,6 +20,7 @@
     <string name="medtronic_pump_battery_nizn">NiZn (vista ampliada)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (vista extendida)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Otra (no compatible)</string>
     <string name="medtronic_pump_type_512">512</string>
     <string name="medtronic_pump_type_712">712</string>
     <string name="medtronic_pump_type_515">515</string>
