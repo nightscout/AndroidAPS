@@ -373,6 +373,11 @@
     <string name="custom">Personalizado</string>
     <string name="preset_settings">Ajustes preestablecidos</string>
     <string name="activation">Activación</string>
+    <string name="temp_target_management">Gestión de objetivos temporales</string>
+    <string name="revert_to_defaults">Restablecer valores predeterminados</string>
+    <string name="confirm_remove_preset">¿Eliminar el ajuste preestablecido %1$s?</string>
+    <string name="confirm_cancel_temp_target">¿Cancelar el objetivo temporal activo?</string>
+    <string name="add_new_preset">Añadir nuevo ajuste preestablecido</string>
     <string name="loop">Lazo</string>
     <string name="ns">NS</string>
     <string name="record">Registro</string>
@@ -425,6 +430,8 @@
     <string name="expweight">TDD ampliada exponencialmente</string>
     <string name="basalrate">Dosis Basal</string>
     <string name="bolus">Bolo</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Dosis Diaria Total</string>
     <string name="ratio">Ratio</string>
     <string name="amount_days"># Días</string>
     <string name="weight">Peso</string>
@@ -747,6 +754,24 @@
     <string name="export_result_message_expired">Exportación de ajustes cancelada: contraseña caducada. Exporta manualmente y (re)introduzca!</string>
     <string name="export_result_message_disabled">Advertencia (automatización): Exportación de configuración no activada!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Exportación a la nube realizada con éxito</string>
+    <string name="export_cloud_failed">¡FALLÓ la exportación a la nube!</string>
+    <string name="csv_exported">Entradas de usuario exportadas</string>
+    <string name="csv_export_failed">¡FALLÓ la exportación de entradas de usuario!</string>
+    <string name="logs_sent">Registros enviados por correo electrónico</string>
+    <string name="logs_send_failed">Error al enviar los registros</string>
+    <string name="export_options">Opciones de exportación</string>
+    <string name="cloud_directory">Directorio en la nube</string>
+    <string name="export_settings_local">Opciones de exportación (Local)</string>
+    <string name="export_settings_cloud">Opciones de exportación (Nube)</string>
+    <string name="export_settings_both">Opciones de exportación (Local + Nube)</string>
+    <string name="import_settings_local">Opciones de importación (Local)</string>
+    <string name="import_settings_cloud">Opciones de importación (Nube)</string>
+    <string name="import_settings_both">Opciones de importación (Local / Nube)</string>
+    <string name="send_logs_to_cloud">Exportar registros a la nube</string>
+    <string name="export_csv_to_cloud">Exportar entradas de usuario a la nube (csv)</string>
+    <string name="export_csv_to_local">Exportar entradas de usuario a local (csv)</string>
+    <string name="setup_cloud_directory_first">Configure primero el directorio en la nube para usar las opciones de exportación</string>
     <string name="cloud_token_expired_or_invalid">La autorización del almacenamiento en la nube ha caducado o no es válida. Por favor, vuelva a autorizar.</string>
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
