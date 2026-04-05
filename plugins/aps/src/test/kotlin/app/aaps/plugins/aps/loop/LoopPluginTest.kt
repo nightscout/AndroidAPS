@@ -77,11 +77,9 @@ class LoopPluginTest : TestBaseWithProfile() {
 //        whenever(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         whenever(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        assertThat(loopPlugin.pluginDescription.fragmentClass).isEqualTo(LoopFragment::class.java.name)
         assertThat(loopPlugin.getType()).isEqualTo(PluginType.LOOP)
         assertThat(loopPlugin.name).isEqualTo("Loop")
         assertThat(loopPlugin.nameShort).isEqualTo("LOOP")
-        assertThat(loopPlugin.hasFragment()).isTrue()
         assertThat(loopPlugin.showInList(PluginType.LOOP)).isTrue()
         assertThat(loopPlugin.preferencesId.toLong()).isEqualTo(PluginDescription.PREFERENCE_SCREEN)
 
