@@ -59,9 +59,33 @@ class GraphConfigRepositoryImpl @Inject constructor(
     companion object {
 
         private const val KEY_SECONDARY_GRAPHS = "secondaryGraphs"
+        private const val KEY_BG_OVERLAYS = "bgOverlays"
+        private const val KEY_IOB_OVERLAYS = "iobOverlays"
+
+        private fun overlaysToJson(overlays: List<SeriesType>): JSONArray {
+            val arr = JSONArray()
+            for (type in overlays) arr.put(type.name)
+            return arr
+        }
+
+        private fun overlaysFromJson(arr: JSONArray?, default: List<SeriesType>): List<SeriesType> {
+            if (arr == null) return default
+            val out = mutableListOf<SeriesType>()
+            for (i in 0 until arr.length()) {
+                try {
+                    val type = SeriesType.valueOf(arr.getString(i))
+                    if (type !in out) out.add(type)
+                } catch (_: IllegalArgumentException) {
+                    // Skip unknown types (forward compat)
+                }
+            }
+            return out
+        }
 
         fun toJson(config: GraphConfig): String {
             val obj = JSONObject()
+            obj.put(KEY_BG_OVERLAYS, overlaysToJson(config.bgOverlays))
+            obj.put(KEY_IOB_OVERLAYS, overlaysToJson(config.iobOverlays))
             val graphsArray = JSONArray()
             for (graph in config.secondaryGraphs) {
                 val seriesArray = JSONArray()
@@ -74,6 +98,8 @@ class GraphConfigRepositoryImpl @Inject constructor(
 
         fun fromJson(json: String): GraphConfig {
             val obj = JSONObject(json)
+            val bgOverlays = overlaysFromJson(obj.optJSONArray(KEY_BG_OVERLAYS), listOf(SeriesType.ACTIVITY))
+            val iobOverlays = overlaysFromJson(obj.optJSONArray(KEY_IOB_OVERLAYS), listOf(SeriesType.ACTIVITY))
             val graphs = mutableListOf<List<SeriesType>>()
             val graphsArray = obj.optJSONArray(KEY_SECONDARY_GRAPHS)
             if (graphsArray != null) {
@@ -83,6 +109,8 @@ class GraphConfigRepositoryImpl @Inject constructor(
                     for (j in 0 until seriesArray.length()) {
                         try {
                             val type = SeriesType.valueOf(seriesArray.getString(j))
+                            // IOB is now a fixed graph — strip it from configurable graphs (legacy migration)
+                            if (type == SeriesType.IOB) continue
                             if (type !in series) series.add(type) // preserve order, no duplicates
                         } catch (_: IllegalArgumentException) {
                             // Skip unknown series (forward compat)
@@ -91,7 +119,7 @@ class GraphConfigRepositoryImpl @Inject constructor(
                     if (series.isNotEmpty()) graphs.add(series.take(2)) // max 2 per graph
                 }
             }
-            return GraphConfig(secondaryGraphs = graphs)
+            return GraphConfig(bgOverlays = bgOverlays, iobOverlays = iobOverlays, secondaryGraphs = graphs)
         }
     }
 }

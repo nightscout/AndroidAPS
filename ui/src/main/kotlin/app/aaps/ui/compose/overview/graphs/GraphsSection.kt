@@ -72,13 +72,26 @@ import kotlin.math.abs
  * Scroll/Zoom states are pre-allocated (up to [GraphConfig.MAX_SECONDARY_GRAPHS])
  * to avoid dynamic composable state issues with Vico's remember-based states.
  */
+/** Fixed graph layout used in simple mode: BG (no overlays), IOB+BAS (no overlays), COB */
+private val SIMPLE_MODE_CONFIG = GraphConfig(
+    bgOverlays = emptyList(),
+    iobOverlays = emptyList(),
+    secondaryGraphs = listOf(listOf(SeriesType.COB))
+)
+
+/** Series types available for user-configurable secondary graphs (IOB excluded — has dedicated fixed slot) */
+private val CONFIGURABLE_SERIES = SeriesType.entries.filter { it != SeriesType.IOB }
+
 @OptIn(FlowPreview::class)
 @Composable
 fun GraphsSection(
     graphViewModel: GraphViewModel,
+    isSimpleMode: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val graphConfig by graphViewModel.graphConfigFlow.collectAsStateWithLifecycle()
+    val savedGraphConfig by graphViewModel.graphConfigFlow.collectAsStateWithLifecycle()
+    // In simple mode: fixed layout (BG, IOB+BAS, COB — no overlays, no editing)
+    val graphConfig = if (isSimpleMode) SIMPLE_MODE_CONFIG else savedGraphConfig
 
     // BG graph - primary interactive
     val bgScrollState = rememberVicoScrollState(
@@ -123,6 +136,10 @@ fun GraphsSection(
         initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES)
     )
 
+    // Fixed IOB graph - non-interactive, synced from BG
+    val iobScrollState = rememberVicoScrollState(scrollEnabled = false, initialScroll = Scroll.Absolute.End)
+    val iobZoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES))
+
     // Active graph count — rememberUpdatedState so coroutines always read the latest value
     // without writing to state during composition. Unattached states are no-ops for
     // .zoom()/.scroll(), but we skip them to avoid redundant calls.
@@ -142,6 +159,7 @@ fun GraphsSection(
     // Keys include ALL state objects — identical pattern to the original working sync
     LaunchedEffect(
         bgScrollState, bgZoomState, beltScrollState, beltZoomState,
+        iobScrollState, iobZoomState,
         sec0scroll, sec0zoom, sec1scroll, sec1zoom,
         sec2scroll, sec2zoom, sec3scroll, sec3zoom,
         sec4scroll, sec4zoom
@@ -152,9 +170,11 @@ fun GraphsSection(
                 val count = activeCount
                 // Sync zoom first, then scroll (order matters for proper positioning)
                 beltZoomState.zoom(Zoom.fixed(zoom))
+                iobZoomState.zoom(Zoom.fixed(zoom))
                 for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(zoom))
                 delay(10)
                 beltScrollState.scroll(Scroll.Absolute.pixels(scroll))
+                iobScrollState.scroll(Scroll.Absolute.pixels(scroll))
                 for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(scroll))
             }
     }
@@ -187,10 +207,11 @@ fun GraphsSection(
     // secondary states here cannot trigger primary sync (no feedback loop).
     LaunchedEffect(Unit) {
         snapshotFlow {
-            // Only read states that are attached to a chart (belt + active secondary)
+            // Only read states that are attached to a chart (belt + IOB fixed + active secondary)
             val count = activeCount
             buildList {
                 add(beltScrollState.value to beltZoomState.value)
+                add(iobScrollState.value to iobZoomState.value)
                 for (i in 0 until count) {
                     add(secScrollStates[i].value to secZoomStates[i].value)
                 }
@@ -207,9 +228,11 @@ fun GraphsSection(
                 if (needsSync) {
                     val count = activeCount
                     beltZoomState.zoom(Zoom.fixed(bgZoom))
+                    iobZoomState.zoom(Zoom.fixed(bgZoom))
                     for (i in 0 until count) secZoomStates[i].zoom(Zoom.fixed(bgZoom))
                     delay(10)
                     beltScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
+                    iobScrollState.scroll(Scroll.Absolute.pixels(bgScroll))
                     for (i in 0 until count) secScrollStates[i].scroll(Scroll.Absolute.pixels(bgScroll))
                 }
             }
@@ -231,17 +254,84 @@ fun GraphsSection(
             modifier = Modifier.fillMaxWidth()
         )
         // BG Graph - primary interactive graph
-        BgGraphCompose(
-            viewModel = graphViewModel,
-            scrollState = bgScrollState,
-            zoomState = bgZoomState,
-            derivedTimeRange = derivedTimeRange,
-            nowTimestamp = nowTimestamp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(y = (-16).dp)
-        )
-        // Secondary graphs — config-driven
+        var editingBgOverlays by remember { mutableStateOf(false) }
+        Box(modifier = Modifier.offset(y = (-16).dp)) {
+            BgGraphCompose(
+                viewModel = graphViewModel,
+                bgOverlays = graphConfig.bgOverlays,
+                scrollState = bgScrollState,
+                zoomState = bgZoomState,
+                derivedTimeRange = derivedTimeRange,
+                nowTimestamp = nowTimestamp,
+                modifier = Modifier.fillMaxWidth()
+            )
+            if (!isSimpleMode) {
+                GraphEditButton(
+                    onClick = { editingBgOverlays = true },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 4.dp, top = 2.dp)
+                )
+            }
+        }
+        if (editingBgOverlays) {
+            GraphSeriesBottomSheet(
+                title = stringResource(app.aaps.core.ui.R.string.graph_bg),
+                selectedSeries = graphConfig.bgOverlays,
+                availableSeries = listOf(SeriesType.ACTIVITY),
+                onToggle = { type ->
+                    val current = graphConfig.bgOverlays.toMutableList()
+                    if (type in current) current.remove(type) else current.add(type)
+                    graphViewModel.updateGraphConfig(graphConfig.copy(bgOverlays = current))
+                },
+                onDismiss = { editingBgOverlays = false }
+            )
+        }
+        // Fixed IOB graph (Graph 1) with optional Activity overlay
+        var editingIobOverlays by remember { mutableStateOf(false) }
+        Box(modifier = Modifier.offset(y = (-8).dp)) {
+            SecondaryGraphCompose(
+                viewModel = graphViewModel,
+                seriesTypes = listOf(SeriesType.IOB),
+                scrollState = iobScrollState,
+                zoomState = iobZoomState,
+                derivedTimeRange = derivedTimeRange,
+                nowTimestamp = nowTimestamp,
+                activityOverlay = SeriesType.ACTIVITY in graphConfig.iobOverlays,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Text(
+                text = stringResource(app.aaps.core.ui.R.string.iob) + " / " + stringResource(app.aaps.core.ui.R.string.basal_shortname),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(start = 36.dp, top = 2.dp)
+            )
+            if (!isSimpleMode) {
+                GraphEditButton(
+                    onClick = { editingIobOverlays = true },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 4.dp, top = 2.dp)
+                )
+            }
+        }
+        if (editingIobOverlays) {
+            GraphSeriesBottomSheet(
+                title = stringResource(app.aaps.core.ui.R.string.iob) + " / " + stringResource(app.aaps.core.ui.R.string.basal_shortname),
+                selectedSeries = graphConfig.iobOverlays,
+                availableSeries = listOf(SeriesType.ACTIVITY),
+                onToggle = { type ->
+                    val current = graphConfig.iobOverlays.toMutableList()
+                    if (type in current) current.remove(type) else current.add(type)
+                    graphViewModel.updateGraphConfig(graphConfig.copy(iobOverlays = current))
+                },
+                onDismiss = { editingIobOverlays = false }
+            )
+        }
+
+        // Secondary graphs — config-driven (labels start at "Graph 2")
         var editingGraphIndex by remember { mutableIntStateOf(-1) }
         for (i in 0 until activeCount) {
             val seriesList = graphConfig.secondaryGraphs[i]
@@ -263,19 +353,21 @@ fun GraphsSection(
                         .align(Alignment.TopStart)
                         .padding(start = 36.dp, top = 2.dp)
                 )
-                GraphEditButton(
-                    onClick = { editingGraphIndex = i },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(end = 4.dp, top = 2.dp)
-                )
+                if (!isSimpleMode) {
+                    GraphEditButton(
+                        onClick = { editingGraphIndex = i },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(end = 4.dp, top = 2.dp)
+                    )
+                }
             }
         }
         if (editingGraphIndex >= 0 && editingGraphIndex < activeCount) {
             GraphSeriesBottomSheet(
-                title = stringResource(app.aaps.core.ui.R.string.graph_number, editingGraphIndex + 1),
+                title = stringResource(app.aaps.core.ui.R.string.graph_number, editingGraphIndex + 2),
                 selectedSeries = graphConfig.secondaryGraphs[editingGraphIndex],
-                availableSeries = SeriesType.entries,
+                availableSeries = SeriesType.entries.filter { it != SeriesType.IOB },
                 onToggle = { type ->
                     val graphs = graphConfig.secondaryGraphs.toMutableList()
                     val current = graphs[editingGraphIndex].toMutableList()
@@ -303,8 +395,8 @@ fun GraphsSection(
                 onDismiss = { editingGraphIndex = -1 }
             )
         }
-        // Add graph button
-        if (activeCount < GraphConfig.MAX_SECONDARY_GRAPHS) {
+        // Add graph button (hidden in simple mode)
+        if (!isSimpleMode && activeCount < GraphConfig.MAX_SECONDARY_GRAPHS) {
             var showAddSheet by remember { mutableStateOf(false) }
             TextButton(
                 onClick = { showAddSheet = true },
@@ -319,7 +411,7 @@ fun GraphsSection(
                 GraphSeriesBottomSheet(
                     title = stringResource(app.aaps.core.ui.R.string.graph_new),
                     selectedSeries = newGraphSeries,
-                    availableSeries = SeriesType.entries,
+                    availableSeries = CONFIGURABLE_SERIES,
                     onToggle = { type ->
                         val current = newGraphSeries.toMutableList()
                         if (type in current) {

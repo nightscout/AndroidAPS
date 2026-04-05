@@ -57,6 +57,7 @@ import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.pump.BolusProgressState
+import app.aaps.core.keys.IntKey
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -64,7 +65,6 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcSettingsOff
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
-import app.aaps.core.keys.IntKey
 import app.aaps.core.ui.compose.preference.AdaptivePreferenceList
 import app.aaps.core.ui.compose.preference.PreferenceCategory
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -282,7 +282,7 @@ fun OverviewScreen(
             }
 
             // Graph content - New Compose/Vico graphs
-            GraphsSection(graphViewModel = graphViewModel)
+            GraphsSection(graphViewModel = graphViewModel, isSimpleMode = isSimpleMode)
         }
 
         // Pump activity FAB — visible during pump communication or SMB
