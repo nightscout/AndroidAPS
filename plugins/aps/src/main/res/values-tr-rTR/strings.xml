@@ -22,7 +22,6 @@
     <string name="openaps_no_as_data">Otoduyarlılık verileri mevcut değil</string>
     <string name="dynisf_shortname">DİNİDF</string>
     <string name="autoisf_shortname">OTOİDF</string>
-    <string name="executing">Yürütülüyor</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
     <string name="oaps_shortname">OAPS</string>
@@ -31,7 +30,6 @@
     <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_auto_isf">İleri düzey kullanıcılar için OtoİDF eklentili en son algoritma</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus erteleme ies bölen</string>
-    <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="openapsma_last_run_label">Son Çalıştırma</string>
     <string name="openapsma_input_parameters_label">Girdi Parametreleri</string>
     <string name="openapsma_glucose_status_label">Glikoz durumu</string>
@@ -98,7 +96,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <!--    Autotune   -->
     <string name="insulin_peak">Tepe</string>
     <!--    Loop -->
-    <string name="run_now">Şimdi Çalıştır</string>
     <string name="smb_frequency_exceeded">Son 3 dakika içerisinde bir bolus gönderildi, SMB (Super Micro Bolus) atlandı</string>
     <string name="pump_not_initialized">Pompa başlatılamadı!</string>
     <string name="loop_shortname">DÖNGÜ</string>
