@@ -988,4 +988,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="ble_scan_select_pump">Chọn bơm của bạn từ danh sách bên dưới</string>
     <string name="ble_scan_scanning">Đang quét các thiết bị…</string>
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>
