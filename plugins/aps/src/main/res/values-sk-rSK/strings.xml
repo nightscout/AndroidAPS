@@ -22,7 +22,6 @@
     <string name="openaps_no_as_data">Nedostupná dáta o citlivosti</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="autoisf_shortname">AUTOISF</string>
-    <string name="executing">Vykonávam</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Pole %1$d prvkov.\nAktuálna hodnota:</string>
     <string name="oaps_shortname">OAPS</string>
@@ -31,7 +30,6 @@
     <string name="description_smb_dynamic_isf">Najnovší algoritmus pre pokročilých užívateľov s dynamickým/automatickým ISF</string>
     <string name="description_auto_isf">Najnovší algoritmus pre pokročilých užívateľov s rozšírením AutoISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Deliteľ \"bolus snooze\"</string>
-    <string name="openapsma_run">Spustiť teraz</string>
     <string name="openapsma_last_run_label">Posledné spustenie</string>
     <string name="openapsma_input_parameters_label">Vstupné parametre</string>
     <string name="openapsma_glucose_status_label">Stav glykémie</string>
@@ -97,7 +95,6 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Vrchol</string>
     <!--    Loop -->
-    <string name="run_now">Spustiť teraz</string>
     <string name="smb_frequency_exceeded">Podaný bolus v priebehu posledných 3 minút, SMB preskočené</string>
     <string name="pump_not_initialized">Pumpa nie je inicializovaná!</string>
     <string name="loop_shortname">UZAVRETÝ OKRUH</string>
