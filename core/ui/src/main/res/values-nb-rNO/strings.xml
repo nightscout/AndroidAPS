@@ -991,4 +991,21 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="ble_scan_select_pump">Velg pumpen din fra listen nedenfor</string>
     <string name="ble_scan_scanning">Skanner etter enheter…</string>
+    <!-- Graph configuration -->
+    <string name="graph_add">Legg til graf</string>
+    <string name="graph_new">Ny graf</string>
+    <string name="graph_edit">Rediger graf</string>
+    <string name="graph_number">Graf %1$d</string>
+    <string name="graph_bg">BS-graf</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
+    <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">AVVIK</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">AKT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">PULS</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">DISF</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">SKRITT</string>
 </resources>
