@@ -92,15 +92,7 @@
     <string name="overview_show_variable_sens">Kintamas jautrumas</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">VB</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">VEIKS</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
-    <string name="heartRate_shortname">ŠSD</string>
-    <string name="sensitivity_shortname">JAUTR%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
     <string name="temp_basal_overview_short_name">T:</string>
@@ -116,6 +108,5 @@
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>
     <string name="overview_show_steps">Žingsniai</string>
-    <string name="steps_shortname">ŽINGSNIAI</string>
     <string name="simple_mode_enabled">Paprastas režimas įjungtas</string>
 </resources>
