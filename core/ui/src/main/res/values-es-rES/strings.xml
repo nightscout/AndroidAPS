@@ -774,8 +774,34 @@
     <string name="setup_cloud_directory_first">Configure primero el directorio en la nube para usar las opciones de exportación</string>
     <string name="cloud_token_expired_or_invalid">La autorización del almacenamiento en la nube ha caducado o no es válida. Por favor, vuelva a autorizar.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Local</string>
+    <string name="chip_cloud">Nube</string>
+    <string name="chip_email">Correo</string>
+    <string name="send_logs">Enviar registros</string>
+    <string name="file_management">Gestión de archivos</string>
+    <string name="database_management">Gestión de la base de datos</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Configurar niveles de detalle de los registros</string>
+    <string name="maintenance_send_logs_desc">Compartir archivos de registro para solución de problemas</string>
+    <string name="maintenance_delete_logs_desc">Eliminar archivos de registro antiguos</string>
+    <string name="maintenance_aaps_directory_desc">Seleccionar carpeta de almacenamiento local</string>
+    <string name="maintenance_cloud_directory_desc">Configurar almacenamiento en la nube (Google Drive)</string>
+    <string name="maintenance_export_desc">Guardar copia de seguridad de ajustes cifrada</string>
+    <string name="maintenance_import_desc">Restaurar ajustes desde copia de seguridad</string>
+    <string name="maintenance_export_csv_desc">Exportar historial de tratamientos como hoja de cálculo</string>
+    <string name="maintenance_cleanup_db_desc">Eliminar entradas antiguas de la base de datos</string>
+    <string name="maintenance_reset_aps_results_desc">Borrar resultados de algoritmos almacenados</string>
+    <string name="maintenance_reset_db_desc">Borrar todas las bases de datos y reiniciar</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Seleccionar tipo de almacenamiento</string>
+    <string name="clear_cloud_action">Restablecer ajustes</string>
+    <string name="clear_cloud_settings">Borrar ajustes en la nube</string>
+    <string name="clear_cloud_settings_message">Se cambiará al almacenamiento local y se eliminará la autorización. ¿Continuar?</string>
+    <string name="cloud_connection_failed">Error de conexión con el almacenamiento en la nube</string>
+    <string name="cloud_reauthorize_message">Error de conexión con el almacenamiento en la nube. ¿Te gustaría volver a autenticarte?</string>
+    <string name="reauthorize">Volver a autenticar</string>
+    <string name="cloud_auth_success">Autenticación en la nube completada con éxito</string>
+    <string name="authorization_status">Estado de la autorización</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decremento %1$s por %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
@@ -787,6 +813,8 @@
     <string name="need_connect_permission">La aplicación necesita permisos de bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
+    <string name="pump_pair">Emparejar</string>
+    <string name="pump_unpair">Desemparejar</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baja energía no soportado.</string>
@@ -798,6 +826,10 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferencias del complemento</string>
     <!-- Navigation -->
+    <string name="nav_about">Acerca de</string>
+    <string name="nav_about_desc">Ver versión e información de la aplicación</string>
+    <string name="nav_exit">Salir</string>
+    <string name="open_navigation">Abrir navegación</string>
     <string name="nav_history_browser">Explorador de historial</string>
     <string name="nav_history_browser_desc">Explorar datos históricos y gráficas</string>
     <string name="overview">Resumen</string>
@@ -900,12 +932,62 @@
     <string name="remove_entry">Eliminar entrada</string>
     <string name="target_low_label">Bajo</string>
     <string name="target_high_label">Alto</string>
+    <string name="select_profile">Seleccionar perfil para editar</string>
+    <string name="a11y_add_new_profile">añadir nuevo perfil</string>
+    <string name="a11y_clone_profile">clonar perfil actual</string>
+    <string name="a11y_delete_current_profile">eliminar perfil actual</string>
     <!--    Search-->
+    <string name="search">Buscar</string>
+    <string name="search_preferences">Preferencias de búsqueda</string>
+    <string name="clear">Limpiar</string>
+    <string name="search_category_categories">Categorías de preferencias</string>
+    <string name="search_category_preferences">Preferencias</string>
+    <string name="search_category_dialogs">Diálogos</string>
+    <string name="search_category_plugins">Complementos</string>
+    <string name="search_category_wiki">Documentación</string>
     <string name="wiki_search_offline">La búsqueda en la documentación requiere conexión a internet</string>
+    <string name="no_search_results">No se encontraron resultados</string>
+    <string name="search_plugin_disabled">Complemento %1$s desactivado</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Ajustes de registro</string>
+    <string name="resettodefaults">Restablecer valores predeterminados</string>
     <!--    Maintenance-->
+    <string name="maintenance">Mantenimiento</string>
     <string name="description_maintenance">Proporciona varias funciones de mantenimiento (ej. envío de registros, eliminación de registros).</string>
+    <string name="log_files">Archivos de registro</string>
+    <string name="send_all_logs">Enviar registros por correo</string>
+    <string name="delete_logs">Eliminar registros</string>
+    <string name="logs_deleted">Registros eliminados</string>
+    <string name="aaps_directory">Directorio de AAPS</string>
+    <string name="import_setting">Importar ajustes</string>
+    <string name="miscellaneous">Miscelánea</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Descifrar y revisar</string>
+    <string name="import_decrypt">Descifrar</string>
+    <string name="import_master_password">Contraseña maestra</string>
+    <string name="import_decryption_password">Contraseña de descifrado</string>
+    <string name="import_different_password_hint">El archivo se cifró con una contraseña diferente</string>
+    <string name="import_wrong_password">Contraseña incorrecta</string>
+    <string name="import_btn">Importar</string>
+    <string name="import_anyway_btn">Importar de todos modos</string>
+    <string name="import_restart_title">Ajustes importados</string>
+    <string name="import_restart_message">Se han importado los ajustes. La aplicación debe reiniciarse.</string>
+    <string name="import_file_details">Detalles del archivo</string>
+    <string name="import_source_local">Local</string>
+    <string name="import_source_cloud">Nube</string>
+    <string name="import_load_more">Cargar más</string>
+    <string name="import_no_files">No se encontraron archivos de ajustes</string>
+    <string name="import_review_summary">Resumen de importación</string>
+    <string name="import_decrypt_ok">Descifrado correcto. Listo para importar.</string>
+    <string name="import_decrypt_warn">Descifrado correcto, pero hay advertencias.</string>
+    <string name="import_decrypt_error">Descifrado correcto, pero no es posible importar.</string>
+    <string name="import_check_before">Revise las preferencias antes de importar:</string>
+    <string name="import_check_dangerous">¡No se deben importar las preferencias!</string>
+    <string name="import_check_cannot">¡No se pueden importar las preferencias!</string>
+    <string name="import_explain_issues">Explicar problemas de importación\u2026</string>
+    <string name="reset_aps_results">Restablecer resultados del APS</string>
+    <string name="database_cleanup">Limpieza de la base de datos</string>
+    <string name="nav_resetdb">Restablecer bases de datos</string>
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="ble_scan_select_pump">Seleccione su bomba de la lista a continuación</string>
     <string name="ble_scan_scanning">Buscando dispositivos…</string>
