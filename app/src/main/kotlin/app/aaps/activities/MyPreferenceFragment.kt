@@ -51,6 +51,7 @@ import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
+import app.aaps.plugins.main.general.nfcCommands.NfcCommandsPlugin
 import app.aaps.plugins.main.skins.SkinProvider
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
 import dagger.android.support.AndroidSupportInjection
@@ -71,6 +72,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var autotunePlugin: AutotunePlugin
+    @Inject lateinit var nfcCommandsPlugin: NfcCommandsPlugin
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
     @Inject lateinit var skinProvider: SkinProvider
@@ -148,6 +150,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPumpScreen(rootKey)
             activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { addPreferencesIfEnabled(it, rootKey) }
             addPreferencesIfEnabled(smsCommunicatorPlugin, rootKey)
+            addPreferencesIfEnabled(nfcCommandsPlugin, rootKey)
             addPreferencesIfEnabled(automationPlugin, rootKey)
             addPreferencesIfEnabled(autotunePlugin, rootKey)
             addAlertScreen(rootKey)

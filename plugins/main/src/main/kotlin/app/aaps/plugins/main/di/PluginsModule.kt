@@ -15,6 +15,7 @@ import dagger.hilt.components.SingletonComponent
     includes = [
         PluginsModule.Bindings::class,
         FoodModule::class,
+        NFCCommandsModule::class,
         ProfileModule::class,
         ProfileModule.Bindings::class,
         SkinsModule::class,

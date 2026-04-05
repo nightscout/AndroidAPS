@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="nfccommands_tag_expired">#B71C1C</color>
+    <color name="nfccommands_tag_expiring_soon">#E65100</color>
+    <color name="nfccommands_tag_valid">#1B5E20</color>
+</resources>
