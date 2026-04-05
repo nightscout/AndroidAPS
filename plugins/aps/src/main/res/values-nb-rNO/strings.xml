@@ -22,7 +22,6 @@
     <string name="openaps_no_as_data">Ingen data tilgjengelig for Autosens</string>
     <string name="dynisf_shortname">DISF</string>
     <string name="autoisf_shortname">AUTOISF</string>
-    <string name="executing">Utfører</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
     <string name="oaps_shortname">OAPS</string>
@@ -31,7 +30,6 @@
     <string name="description_smb_dynamic_isf">Nyeste algoritme for avanserte brukere med dynamisk/automatisk ISF</string>
     <string name="description_auto_isf">Nyeste algoritme for avanserte brukere med utvidelsen AutoISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">DIA divisor for slumring av bolus</string>
-    <string name="openapsma_run">Utfør nå</string>
     <string name="openapsma_last_run_label">Siste beregning</string>
     <string name="openapsma_input_parameters_label">Inndata parametre</string>
     <string name="openapsma_glucose_status_label">Glukosestatus</string>
@@ -97,7 +95,6 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Topp</string>
     <!--    Loop -->
-    <string name="run_now">Kjør nå</string>
     <string name="smb_frequency_exceeded">En bolus er gitt i løpet av de siste 3 minuttene, dropper SMB</string>
     <string name="pump_not_initialized">Pumpen er ikke initialisert!</string>
     <string name="loop_shortname">LOOP</string>
