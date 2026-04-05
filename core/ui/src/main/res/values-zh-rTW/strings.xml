@@ -982,4 +982,6 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="ble_scan_select_pump">請從下方清單中選擇你的幫浦</string>
     <string name="ble_scan_scanning">正在掃描裝置…</string>
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>
