@@ -77,13 +77,7 @@
     <string name="overview_show_abs_insulin">Абсолютен инсулин</string>
     <string name="prediction_shortname">Предв</string>
     <string name="basal_shortname">БАЗА</string>
-    <string name="deviation_shortname">Откл</string>
-    <string name="activity_shortname">АКТ</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">АБС</string>
-    <string name="devslope_shortname">ОТК.НАКЛ</string>
     <string name="treatments_shortname">Леч</string>
-    <string name="heartRate_shortname">СР</string>
     <string name="graph_scale">Мащаб на графиката</string>
     <string name="graph_menu_divider_header">Графика</string>
     <!-- Skins -->
