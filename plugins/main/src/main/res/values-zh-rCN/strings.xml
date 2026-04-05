@@ -76,11 +76,6 @@
     <string name="overview_show_abs_insulin">胰岛素绝对值</string>
     <string name="prediction_shortname">预测</string>
     <string name="basal_shortname">基础率</string>
-    <string name="deviation_shortname">偏差</string>
-    <string name="activity_shortname">操作</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">治疗</string>
     <string name="graph_scale">图形缩放</string>
     <string name="graph_menu_divider_header">绘图</string>
