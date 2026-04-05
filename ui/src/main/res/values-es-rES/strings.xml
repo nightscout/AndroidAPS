@@ -251,4 +251,26 @@
         <item>Sólo negativo</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Acciones seleccionadas</string>
+    <string name="quick_launch_available_actions">Acciones disponibles</string>
+    <string name="quick_launch_no_dynamic_items">No hay elementos disponibles</string>
+    <string name="quick_launch_category_treatment">Tratamiento</string>
+    <string name="quick_launch_category_care">Portal de cuidados</string>
+    <string name="quick_launch_category_profile">Perfil</string>
+    <string name="quick_launch_category_temp_target">Ajustes de objetivos temporales</string>
+    <string name="quick_launch_category_quick_wizard">Asistente rápido</string>
+    <string name="quick_launch_category_automation">Automatización</string>
+    <string name="quick_launch_all_selected">Todos los elementos seleccionados</string>
+    <string name="quick_launch_no_quick_wizard">Agregue entradas al Asistente Rápido para usarlas aquí</string>
+    <string name="quick_launch_no_automation">Cree acciones de automatización de usuario para usarlas aquí</string>
+    <string name="quick_launch_no_tt_presets">Agregue ajustes de objetivos temporales para usarlos aquí</string>
+    <string name="quick_launch_no_profiles">Cree perfiles en Perfil Local para usarlos aquí</string>
+    <string name="quick_launch_edit_profile_preset">Editar ajuste de perfil</string>
+    <string name="quick_launch_profile_percentage">Porcentaje</string>
+    <string name="quick_launch_profile_duration">Duración</string>
+    <string name="quick_launch_profile_permanent">Permanente</string>
+    <string name="quick_launch_profile_confirm">¿Activar el perfil %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Seleccionar flecha</string>
 </resources>
