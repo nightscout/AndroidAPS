@@ -77,13 +77,7 @@
     <string name="overview_show_abs_insulin">Absolut insulinmängd</string>
     <string name="prediction_shortname">Prog</string>
     <string name="basal_shortname">Bas</string>
-    <string name="deviation_shortname">Dev</string>
-    <string name="activity_shortname">Akt</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">Abs</string>
-    <string name="devslope_shortname">Devslope</string>
     <string name="treatments_shortname">Beh</string>
-    <string name="heartRate_shortname">HF</string>
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
