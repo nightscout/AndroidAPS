@@ -6,7 +6,6 @@
     <string name="description_ama">Stanje algoritma u 2017</string>
     <string name="description_smb">Najnoviji algoritam za napredne korisnike</string>
     <string name="description_smb_dynamic_isf">Najnoviji algoritam za napredne korisnike sa dinamičkim/automatskim ISF-om</string>
-    <string name="openapsma_run">Pokreni sada</string>
     <string name="openapsma_last_run_label">Poslednje pokretanje</string>
     <string name="openapsma_input_parameters_label">Ulazni parametri</string>
     <string name="openapsma_glucose_status_label">Status glukoze</string>
