@@ -94,15 +94,7 @@
     <string name="overview_show_variable_sens">SI variable</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-IGly</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">PENTEDEV</string>
     <string name="treatments_shortname">TRAIT</string>
-    <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">V_SI</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="temp_basal_overview_short_name">T:</string>
@@ -118,6 +110,5 @@
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
     <string name="overview_show_steps">Pas</string>
-    <string name="steps_shortname">PAS</string>
     <string name="simple_mode_enabled">Mode simple activé</string>
 </resources>
