@@ -16,7 +16,6 @@
     <string name="openapsma_no_glucose_data">没有可用的血糖数据</string>
     <string name="openaps_no_as_data">Autosens 数据不可用</string>
     <string name="dynisf_shortname">动态ISF</string>
-    <string name="executing">正在执行</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
     <string name="oaps_shortname">OpenAPS</string>
@@ -24,7 +23,6 @@
     <string name="description_smb">最新的适合高级用户的算法</string>
     <string name="description_smb_dynamic_isf">面向高级用户的最新算法，可以动态/自动调整ISF胰岛素敏感系数</string>
     <string name="openapsama_bolus_snooze_dia_divisor">大剂量snooze 胰岛素持续作用时间除数</string>
-    <string name="openapsma_run">现在运行</string>
     <string name="openapsma_last_run_label">上一次运行</string>
     <string name="openapsma_input_parameters_label">输入参数</string>
     <string name="openapsma_glucose_status_label">血糖状态</string>
