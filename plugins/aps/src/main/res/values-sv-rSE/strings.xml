@@ -16,7 +16,6 @@
     <string name="openapsma_no_glucose_data">Ingen BG-data tillänglig</string>
     <string name="openaps_no_as_data">Ingen data tillgänglig för autosens</string>
     <string name="dynisf_shortname">DynISF</string>
-    <string name="executing">Utför</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">En serie med %1$d tal.\nVärde:</string>
     <string name="oaps_shortname">OAPS</string>
@@ -24,7 +23,6 @@
     <string name="description_smb">Den senaste algoritmen för avancerade användare</string>
     <string name="description_smb_dynamic_isf">Senaste algoritm för avancerade användare med dynamisk / automatisk ISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze DIA divisor</string>
-    <string name="openapsma_run">Utför nu</string>
     <string name="openapsma_last_run_label">Senaste beräkning</string>
     <string name="openapsma_input_parameters_label">Ange värden</string>
     <string name="openapsma_glucose_status_label">Glukosstatus</string>
@@ -86,7 +84,6 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Topp</string>
     <!--    Loop -->
-    <string name="run_now">Kör nu</string>
     <string name="smb_frequency_exceeded">En bolus gavs för mindre än 3 min sedan. Hoppar över SMB</string>
     <string name="pump_not_initialized">Pump ej initierad!</string>
     <string name="loop_shortname">Loop</string>
