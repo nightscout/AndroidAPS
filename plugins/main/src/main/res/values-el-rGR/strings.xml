@@ -77,13 +77,7 @@
     <string name="overview_show_abs_insulin">Απόλυτη ινσουλίνη</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">ΔΡΑΣΗ</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
-    <string name="heartRate_shortname">HR</string>
     <string name="graph_scale">Κλίμακα γραφήματος</string>
     <string name="graph_menu_divider_header">Γράφημα</string>
     <!-- Skins -->
