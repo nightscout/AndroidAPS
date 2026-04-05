@@ -116,7 +116,7 @@
                 <!-- Receiver from patched Sino app -->
                 <action android:name="cn.diyaps.sharing.SINO_APP" />
                 <!-- Receiver from Instara App -->
-                <!-- NOTE: The action name for Instara App is still called Teljane) -->
+                <!-- NOTE: The action name for Instara App is still called Teljane -->
                 <action android:name="info.nightscout.androidaps.action.Teljane_APP" />
             </intent-filter>
         </receiver>

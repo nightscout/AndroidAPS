@@ -145,6 +145,7 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="iob_label">活性胰岛素(IOB)</string>
+    <!--    Instara-->
     <string name="instara_history_request_settings_title">Instara历史数据请求</string>
     <string name="instara_history_request_enabled_title">在后台定期查询并请求缺失的历史数据</string>
     <!--    Protection-->

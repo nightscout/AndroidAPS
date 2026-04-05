@@ -100,6 +100,7 @@ data class GlucoseValue(
         SIBIONIC,
         SINO,
         SYAI_TAG,
+
         INSTARA,
         IOB_PREDICTION,
         A_COB_PREDICTION,

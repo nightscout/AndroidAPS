@@ -100,7 +100,6 @@ class InstaraPlugin @Inject constructor(
         super.onStop()
     }
 
-    // cannot be inner class because of needed injection
     class InstaraWorker(
         context: Context,
         params: WorkerParameters
@@ -110,10 +109,10 @@ class InstaraPlugin @Inject constructor(
         @Inject lateinit var instaraPlugin: InstaraPlugin
         @Inject lateinit var persistenceLayer: PersistenceLayer
 
-        // Minimal addition: used to request Overview refresh after successful insert/update.
+        // Request Overview refresh after successful insert/update.
         @Inject lateinit var rxBus: RxBus
 
-        // Needed to persist per-device Instara meta into preferences
+        // Persist per-device Instara meta into preferences
         @Inject lateinit var preferences: Preferences
 
         private fun readDouble(json: JSONObject, vararg keys: String): Double {
@@ -219,7 +218,7 @@ class InstaraPlugin @Inject constructor(
                 var latestDeviceStartWithMark: Long? = null
                 var latestDeviceMark: Int? = null
 
-                // --- DEDUPE (Instara only, no schema changes) ---
+                // DEDUPE for Instara plugin type
                 // - pumpId (sgvId) defines identity
                 // - DB column is glucoseValues.pumpId (InterfaceIDs.pumpId)
                 val seenInBatch = HashSet<Long>()
@@ -228,8 +227,9 @@ class InstaraPlugin @Inject constructor(
                 var skippedDbDup = 0
                 var skippedInvalid = 0
 
-                // NOTE: Process records in sgvId ascending order within the same batch
+                // Process records in sgvId ascending order within the same batch.
                 // This helps deterministic insertion/processing when multiple sequential ids arrive together.
+                // NOTE: json received should already be sorted in ascending order, this adds extra safety.
                 val order = (0 until jsonArray.length()).toMutableList()
                 order.sortWith(compareBy { idx ->
                     val json = jsonArray.getJSONObject(idx)
@@ -279,7 +279,7 @@ class InstaraPlugin @Inject constructor(
 
                     val (mgdl, rawMgdl) = normalizeToMgdl(current, raw, unitsField)
 
-                    // NOTE: Currently use "NONE" as fallback value
+                    // TrendArrow: Default use "NONE" as fallback value
                     val direction: String =
                         json.optString("direction")
                             .trim()

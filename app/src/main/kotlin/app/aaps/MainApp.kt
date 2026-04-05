@@ -691,17 +691,17 @@ class MainApp : Application(), HasAndroidInjector {
         // Migrate to database 33 (ICfg)
         // Grab default value first
         var runningICfg = if (profileNameToDia.size == 0) // no migration, get running iCfg from running Profile
-            profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
-        else {  // migration, create running iCfg from previous runningProfile dia and slected InsulinPlugin for peak
-            val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
-                profileNameToDia[profileName]
+                profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
+            else {  // migration, create running iCfg from previous runningProfile dia and slected InsulinPlugin for peak
+                val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
+                    profileNameToDia[profileName]
+                }
+                val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
+                ICfg("", insulinEndTime, insulinPeakTime, 1.0).also {
+                    it.insulinNickname = insulinLabel
+                    it.insulinLabel = "$insulinLabel ${localInsulinManager.buildSuffix(it.peak, it.dia, it.concentration)}"
+                }
             }
-            val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
-            ICfg("", insulinEndTime, insulinPeakTime, 1.0).also {
-                it.insulinNickname = insulinLabel
-                it.insulinLabel = "$insulinLabel ${localInsulinManager.buildSuffix(it.peak, it.dia, it.concentration)}"
-            }
-        }
 
         if (!localInsulinManager.insulinAlreadyExists(runningICfg)) { // Add running insulin in InsulinManager if missing
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)

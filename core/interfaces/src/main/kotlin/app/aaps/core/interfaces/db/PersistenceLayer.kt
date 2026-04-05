@@ -1531,19 +1531,22 @@ interface PersistenceLayer {
      * Instara sgvId is stored in glucoseValues.pumpId (InterfaceIDs.pumpId)
      * These helpers are used by the Instara stale-check/history-request worker.
      */
+    // Returns oldest(smallest by number) pumpId for given devicePrefix.
     suspend fun getOldestInstaraPumpIdForDevice(devicePrefix: Long): Long?
 
+    // Returns latest(largest by number) pumpId for given devicePrefix.
     suspend fun getLatestInstaraPumpIdForDevice(devicePrefix: Long): Long?
 
+    // Returns latest timestamp for given devicePrefix.
     suspend fun getLatestInstaraTimestampForDevice(devicePrefix: Long): Long?
 
-    /** Returns first missing Instara pumpId in [startId ~ endId], null if no gap exists. */
+    // Returns first missing Instara pumpId in [startId ~ endId], null if no gap exists.
     suspend fun getFirstMissingInstaraPumpIdInRange(startId: Long, endId: Long): Long?
 
-    /** Current Instara device prefix = (latest pumpId / 100000). */
+    // Returns current Instara device prefix = (latest pumpId / 100000).
     suspend fun getLatestInstaraDevicePrefix(): Long?
 
-    /** Instara dedupe helper: checks whether a given Instara pumpId (sgvId) already exists in DB. */
+    // Instara dedupe helper: checks whether a given Instara pumpId (sgvId) already exists in DB.
     suspend fun instaraPumpIdExists(pumpId: Long): Boolean
 
     // InstaraTrendArrowResolver support (previous sgvId value lookup)

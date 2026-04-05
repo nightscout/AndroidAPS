@@ -61,7 +61,7 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     @Query("SELECT timestamp FROM glucoseValues WHERE sourceSensor='INSTARA' AND pumpId IS NOT NULL AND (pumpId / 100000)=:devicePrefix ORDER BY timestamp DESC LIMIT 1")
     suspend fun getLatestInstaraTimestampForDevice(devicePrefix: Long): Long?
 
-    // 4) FIRST missing Instara pumpId inside [startId..endId] (single-query gap detection)  ✅ one-line style
+    // 4) FIRST missing Instara pumpId inside [startId ~ endId] (single-query gap detection)
     @Query("WITH ordered AS (SELECT pumpId, LEAD(pumpId) OVER (ORDER BY pumpId) AS nextId FROM glucoseValues WHERE sourceSensor='INSTARA' AND pumpId IS NOT NULL AND pumpId BETWEEN :startId AND :endId) SELECT (pumpId + 1) FROM ordered WHERE nextId IS NOT NULL AND nextId > pumpId + 1 ORDER BY pumpId LIMIT 1")
     suspend fun getFirstMissingInstaraPumpIdInRange(startId: Long, endId: Long): Long?
 

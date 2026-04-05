@@ -28,7 +28,7 @@ object InstaraTrendArrowResolver {
      * @param currentValueMgdl current glucose value in mg/dL (GV.value).
      * @param currentSgvId 13-digit sgvId stored as pumpId.
      */
-    suspend fun resolve( // <-- changed: suspend
+    suspend fun resolve(
         persistenceLayer: PersistenceLayer,
         instaraDirectionRaw: String?,
         currentValueMgdl: Double,

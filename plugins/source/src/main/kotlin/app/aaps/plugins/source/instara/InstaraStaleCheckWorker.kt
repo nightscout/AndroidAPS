@@ -31,7 +31,7 @@ class InstaraStaleCheckWorker(
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var preferences: Preferences
 
-    // ADDED: guard so worker never crashes if injection fails
+    // Guard so worker never crashes if injection fails
     private var injectedOk: Boolean = false
 
     init {
@@ -39,7 +39,7 @@ class InstaraStaleCheckWorker(
             (applicationContext as? HasAndroidInjector)
                 ?.androidInjector()
                 ?.inject(this)
-            // ADDED: mark injection success only if no exception
+            // Mark injection success only if no exception
             injectedOk = true
         } catch (t: Throwable) {
             injectedOk = false
@@ -48,7 +48,7 @@ class InstaraStaleCheckWorker(
     }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        // ADDED: if injection failed, do NOT touch lateinit fields; reschedule and exit safely
+        // If injection failed, do NOT touch lateinit fields; reschedule and exit safely
         if (!injectedOk) {
             Log.e("InstaraStaleCheckWorker", "Skipping run because injection failed; will reschedule.")
             scheduleNext(applicationContext)
@@ -192,7 +192,7 @@ class InstaraStaleCheckWorker(
         if (this == 0L) "0" else String.format("%013d", this)
 
     private fun sendHistoryRequestBroadcast(idStart: Long) {
-        // NOTE: action name is kept as requested (even though it contains Teljane).
+        // NOTE: action name is still called Teljane.
         val action = "info.nightscout.androidaps.action.REQUEST_Teljane_DATA"
         val targetPackage = "com.teljane.instara"
 
