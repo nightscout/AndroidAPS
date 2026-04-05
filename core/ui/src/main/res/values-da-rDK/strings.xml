@@ -553,4 +553,6 @@
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>
