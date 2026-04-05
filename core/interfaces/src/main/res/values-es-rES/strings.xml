@@ -100,6 +100,7 @@
     <string name="unknown">Desconocido</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Pico Libre de OREF</string>
     <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
