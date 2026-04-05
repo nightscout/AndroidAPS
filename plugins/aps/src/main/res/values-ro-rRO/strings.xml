@@ -22,7 +22,6 @@
     <string name="openaps_no_as_data">Nu există date disponibile privind autosens</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="autoisf_shortname">AUTOISF</string>
-    <string name="executing">Se execută</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matrice de %1$d elemente.\nValoarea curentă:</string>
     <string name="oaps_shortname">OAPS</string>
@@ -31,7 +30,6 @@
     <string name="description_smb_dynamic_isf">Cel mai recent algoritm pentru utilizatorii avansați cu ISF dinamic/automat</string>
     <string name="description_auto_isf">Cel mai recent algoritm pentru utilizatori avansați cu extensii AutoISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Amână bolusul prin divizor</string>
-    <string name="openapsma_run">Execută</string>
     <string name="openapsma_last_run_label">Ultima execuție</string>
     <string name="openapsma_input_parameters_label">Parametri de intrare</string>
     <string name="openapsma_glucose_status_label">Stare glicemie</string>
@@ -97,7 +95,6 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Vârf</string>
     <!--    Loop -->
-    <string name="run_now">Rulează acum</string>
     <string name="smb_frequency_exceeded">S-a livrat un bolus în ultimele 3 minute, nu se livrează SMB</string>
     <string name="pump_not_initialized">Pompa nu este inițializată!</string>
     <string name="loop_shortname">BUCL</string>
