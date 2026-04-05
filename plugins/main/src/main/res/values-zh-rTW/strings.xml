@@ -96,15 +96,7 @@
     <string name="overview_show_variable_sens">可變敏感度</string>
     <string name="prediction_shortname">預測</string>
     <string name="basal_shortname">基礎</string>
-    <string name="deviation_shortname">偏差</string>
-    <string name="activity_shortname">活動</string>
-    <string name="bgi_shortname">-血糖變化率</string>
-    <string name="abs_insulin_shortname">絕對</string>
-    <string name="devslope_shortname">偏差斜率</string>
     <string name="treatments_shortname">治療</string>
-    <string name="heartRate_shortname">心率</string>
-    <string name="sensitivity_shortname">敏感度%</string>
-    <string name="variable_sensitivity_shortname">可變敏感度</string>
     <string name="graph_scale">圖表比例</string>
     <string name="graph_menu_divider_header">圖表</string>
     <string name="temp_basal_overview_short_name">T:</string>
@@ -120,6 +112,5 @@
     <string name="description_persistent_notification">顯示持續通知，簡要概述您的循環正在執行的操作</string>
     <string name="old_data">舊資料</string>
     <string name="overview_show_steps">步數</string>
-    <string name="steps_shortname">步數</string>
     <string name="simple_mode_enabled">簡易模式已啟用</string>
 </resources>
