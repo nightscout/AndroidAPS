@@ -77,13 +77,7 @@
     <string name="overview_show_abs_insulin">인슐린 절대값</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="heartRate_shortname">HR</string>
     <string name="graph_scale">그래프 범위</string>
     <string name="graph_menu_divider_header">그래프</string>
     <!-- Skins -->
