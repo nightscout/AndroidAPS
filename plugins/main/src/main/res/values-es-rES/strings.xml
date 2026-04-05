@@ -96,15 +96,7 @@
     <string name="overview_show_variable_sens">Sensibilidad variable</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
-    <string name="heartRate_shortname">RC</string>
-    <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Escala gráfica</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="temp_basal_overview_short_name">T:</string>
@@ -120,6 +112,5 @@
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
     <string name="old_data">DATOS CADUCADOS</string>
     <string name="overview_show_steps">Pasos</string>
-    <string name="steps_shortname">PASOS</string>
     <string name="simple_mode_enabled">Modo simple habilitado</string>
 </resources>
