@@ -256,24 +256,28 @@ class MedtrumViewModel @Inject constructor(
     }
 
     fun deactivatePatch() {
-        commandQueue.deactivate(object : Callback() {
-            override fun run() {
-                if (this.result.success) {
-                    // Do nothing, state change will handle this
-                } else {
-                    if (medtrumPump.pumpState >= MedtrumPumpState.OCCLUSION && medtrumPump.pumpState <= MedtrumPumpState.NO_CALIBRATION) {
-                        // We are in a fault state, we need to force deactivation
-                        aapsLogger.info(LTag.PUMP, "deactivatePatch: force deactivation")
-                        medtrumService?.disconnect("ForceDeactivation")
-                        SystemClock.sleep(1000)
-                        medtrumPump.pumpState = MedtrumPumpState.STOPPED
+        if ((medtrumPump.pumpState >= MedtrumPumpState.OCCLUSION && medtrumPump.pumpState <= MedtrumPumpState.NO_CALIBRATION)
+            || medtrumPump.pumpState <= MedtrumPumpState.FILLED
+        ) {
+            // We are in a fault state, we need to force deactivation 
+            // Connection can be skipped as its useless anyways
+            // (deactivation command will not work in fault state)
+            aapsLogger.info(LTag.PUMP, "deactivatePatch: force deactivation")
+            medtrumService?.disconnect("ForceDeactivation")
+            SystemClock.sleep(1000)
+            medtrumPump.pumpState = MedtrumPumpState.STOPPED
+        } else {
+            commandQueue.deactivate(object : Callback() {
+                override fun run() {
+                    if (this.result.success) {
+                        // Do nothing, state change will handle this
                     } else {
                         aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
                         updateSetupStep(SetupStep.ERROR)
                     }
                 }
-            }
-        })
+            })
+        }
     }
 
     fun retryActivationConnect() {
@@ -322,8 +326,7 @@ class MedtrumViewModel @Inject constructor(
         return newStep
     }
 
-    enum class SetupStep { INITIAL, FILLED, PRIMING, PRIMED, ACTIVATED, ERROR, START_DEACTIVATION, STOPPED
-    }
+    enum class SetupStep { INITIAL, FILLED, PRIMING, PRIMED, ACTIVATED, ERROR, START_DEACTIVATION, STOPPED }
 
     val setupStep = MutableLiveData<SetupStep>()
 
