@@ -15,9 +15,6 @@
     <string name="high_mark">Отметка ВЫСОКИЙ</string>
     <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
-    <string name="permission">Права доступа</string>
-    <string name="need_system_window_permission">Приложению требуется разрешение системного окна для уведомлений</string>
-    <string name="askforpermission">Запросить права доступа</string>
     <string name="storedsettingsfound">Найдены сохраненные параметры</string>
     <string name="master_password_summary">Главный пароль используется для шифрования резервных копий и для переопределения защиты в приложении. Запомните его или храните в безопасном месте.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -36,27 +33,13 @@
     <string name="startobjective">Начните первую Цель</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
     <string name="readstatus">Статус \'чтение\'</string>
-    <string name="data_choices">Отбор данных</string>
-    <string name="fabric_upload">Загрузка отчета для разработчиков</string>
-    <string name="unattended_settings_export">Автоматический экспорт настроек</string>
-    <string name="unattended_settings_export_summary">Включение данного параметра безопасно сохранит ваш пароль на этом телефоне</string>
-    <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="exported_to_cloud">Настройки успешно экспортированы в облачное хранилище</string>
-    <string name="export_to_cloud_failed">Не удалось экспортировать в облачное хранилище</string>
-    <string name="cloud_connection_failed">Не удалось подключиться к облачному хранилищу</string>
-    <string name="loading_from_cloud">Загрузка настроек из облачного хранилища, подождите…</string>
-    <string name="cloud_folder_error">Ошибка загрузки папок из облака</string>
-    <string name="csv_uploaded_to_cloud">Записи пользователя успешно загружены в облачное хранилище в формате CSV</string>
-    <string name="cloud_reauthorize_message">Не удалось подключиться к облачному хранилищу. Хотите повторно авторизоваться?</string>
     <string name="request">Запрос</string>
-    <string name="apsmode_title">Режим APS</string>
     <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Конфигуратор</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AAPS?</string>
-    <string name="configbuilder_profile">профиль</string>
     <string name="configbuilder_aps_description">Какой алгоритм ИПЖ должен выполнять подстройку терапии?</string>
     <string name="configbuilder_general_description">Это некоторые общепринятые плагины которые могут пригодиться.</string>
     <string name="configbuilder_constraints_description">Какие ограничения применяются?</string>
@@ -73,155 +56,19 @@
     <string name="expand_category">Развернуть категорию</string>
     <string name="collapse_category">Свернуть категорию</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Настройки</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Импорт отменен! Настройки не импортированы!</string>
-    <string name="preferences_import_impossible">Не удается импортировать настройки!</string>
-    <string name="check_preferences_details_btn">Объяснить проблемы импорта…</string>
-    <string name="check_preferences_details_title">Сведения о проблемах импорта</string>
-    <string name="check_preferences_import_btn">Импортировать</string>
-    <string name="check_preferences_import_anyway_btn">Импортировать в любом случае (ОПАСНО!)</string>
-    <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
-    <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
-    <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">импортировать настройки из</string>
-    <string name="setting_imported">настройки импортированы</string>
-    <string name="old_master_password">Старый главный пароль</string>
-    <string name="different_password_used">Этот файл был экспортирован и зашифрован с использованием другого главного пароля. Укажите старый главный пароль для расшифровки файла.</string>
-    <string name="master_password_will_be_replaced">В результате успешного импорта текущий главный пароль БУДЕТ ЗАМЕНЁН на старый главный пароль!</string>
-    <string name="exported">настройки экспортированы</string>
-    <string name="exported_failed">Не удалось экспортировать настройки!</string>
-    <string name="filenotfound">файл не найден</string>
-    <string name="goto_main_try_again">Вернитесь на главный экран и повторите попытку.</string>
-    <string name="restartingapp">выход из приложения для применения настроек</string>
-    <string name="ue_exported">Записи пользователя экспортированы</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">ОБСЛУЖ</string>
-    <string name="maintenance_settings">Параметры обслуживания</string>
-    <string name="maintenance_email">Адрес электронной почты</string>
-    <string name="maintenance_amount">Количество логов для отправки</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
-    <string name="exported_at" comment="at placeholder we add export date">экспортировано в %1$s</string>
-    <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>
-    <string name="preferences_import_list_title">Выберите файл для импорта</string>
-    <string name="metadata_warning_different_flavour">Параметры были созданы с другим вариантом AAPS (%1$s) в то время как у вас: %2$s.\n\nНекоторые параметры могут отсутствать или быть недопустимы-после импорта проверьте и обновите параметры.</string>
-    <string name="metadata_warning_different_device">Параметры созданы на другом устройстве. Это нормально, если вы импортируете из старого/другого телефона, но убедитесь, что импортированные параметры - верные!</string>
-    <string name="metadata_warning_old_export">Импортируемым параметрам уже %1$s дней! Может быть у вас есть более актуальные параметры или вы выбрали неправильный файл? Не забудьте регулярно экспортировать параметры!</string>
-    <string name="metadata_warning_date_format">Недопустимый формат даты и времени!</string>
-    <string name="metadata_warning_different_version">Параметры из другой вспомогательной версии приложения. Если импортируете после обновления, это нормально но после импорта проверьте, все ли предпочтения по-прежнему верны!</string>
-    <string name="metadata_urgent_different_version">Параметры из другой основной версии приложения. Основные версии существенно различаются и могут иметь несовместимые настройки! После импорта убедитесь, что параметры все еще верны!</string>
-    <string name="prefdecrypt_settings_tampered">Файл параметров несанкционированно изменен</string>
-    <string name="prefdecrypt_settings_secure">Файл настроек безопасен</string>
-    <string name="prefdecrypt_settings_unencrypted">Применяется незащищенный, незашифрованный формат параметров</string>
-    <string name="prefdecrypt_wrong_json">Ошибка формата JSON, отсутствует обязательное поле (формат, содержимое, метаданные или защита)</string>
-    <string name="prefdecrypt_wrong_password">Ошибка расшифровки, указанный пароль не может расшифровать файл</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Отсутствует контрольная сумма файла (хэш), не удалось проверить подлинность параметров!</string>
-    <string name="prefdecrypt_issue_modified">Файл был изменен после экспорта!</string>
-    <string name="prefdecrypt_issue_parsing">Ошибка расшифровки, не удалось проанализировать настройки!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Ошибка расшифровки, указан недопустимый пароль или файл параметров изменен! Возможно, импортированный файл был экспортирован с использованием другого главного пароля.</string>
-    <string name="prefdecrypt_issue_wrong_format">Отсутствует конфигурация шифрования, формат параметров недопустим!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Неподдерживаемый или не прописанный алгоритм шифрования!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Формат файла</string>
-    <string name="metadata_label_created_at">Дата создания</string>
-    <string name="metadata_label_aaps_version">Версия AAPS</string>
-    <string name="metadata_label_aaps_flavour">Версия сборки</string>
-    <string name="metadata_label_device_name">Имя пациента экспортируемого устройства</string>
-    <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
-    <string name="metadata_label_encryption">Шифрование файла</string>
-    <string name="metadata_format_new">Новый зашифрованный формат</string>
-    <string name="metadata_format_other">Неизвестный формат экспорта</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">Ошибка доступа к файловой системе. Выберите каталог AAPS правильно.</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
-    <string name="storage_local">Локальное Хранилище</string>
-    <string name="storage_google_drive">Диск Google</string>
-    <string name="select_storage_type">Выберите тип хранилища</string>
-    <string name="backup_to_google_drive">Резервное копирование на Google Диск</string>
-    <string name="google_drive_connection_error">Ошибка подключения к Google Диску</string>
-    <string name="reauthorize">Повторить аутентификацию</string>
-    <string name="cloud_auth_success">Аутентификация в облаке прошла успешно</string>
-    <string name="cloud_auth_failed">Ошибка аутентификации в облачном хранилище</string>
-    <string name="cloud_auth_error">Ошибка аутентификации в облачном хранилище: %1$s</string>
-    <string name="enable_cloud_export_title">Включить экспорт из облака</string>
-    <string name="enable_cloud_export_message">Вы хотите включить экспорт в облако? Это включит опцию \"Все в облако\" в настройках экспорта.</string>
-    <string name="can_change_in_export_settings">Вы можете изменить это позже в настройках экспорта</string>
-    <string name="setup_cloud_directory_first">Настройте облачную директорию для экспорта</string>
-    <string name="local_directory">Локальная директория</string>
-    <string name="cloud_directory">Облачная директория</string>
-    <string name="export_options">Опции экспорта</string>
-    <string name="log_export_option">Журнал</string>
-    <string name="user_settings_export_option">Настройки пользователя</string>
-    <string name="user_entries_csv_export_option">Экспорт пользовательских записей в Excel (csv)</string>
-    <string name="email_option">Электронная почта</string>
-    <string name="local_storage_option">Локальное Хранилище</string>
-    <string name="cloud_storage_option">Облачное хранилище</string>
-    <string name="export_all_cloud">Все в Облако</string>
-    <string name="send_logs_to_cloud">Экспортировать журналы в Облако</string>
-    <string name="export_csv_to_cloud">Экспортировать записи пользователя в Облако (csv)</string>
-    <string name="export_csv_to_local">Экспорт пользовательских записей в локальное хранилище (csv)</string>
-    <string name="export_settings_local">Экспорт настроек (локально)</string>
-    <string name="export_settings_cloud">Экспорт настроек (в Облако)</string>
-    <string name="export_settings_both">Экспорт настроек (Локально + Облако)</string>
-    <string name="import_settings_local">Импорт настроек (локальный)</string>
-    <string name="import_settings_cloud">Импорт настроек (из Облака)</string>
-    <string name="import_settings_both">Импорт настроек (Локально + Облако)</string>
     <!-- Import source selection dialog -->
-    <string name="select_import_source">Выберите источник для импорта</string>
-    <string name="import_from_local">Импорт из локального хранилища</string>
-    <string name="import_from_cloud">Импорт из облачного хранилища</string>
-    <string name="import_source_local_description">Импорт настроек из памяти устройства</string>
-    <string name="import_source_cloud_description">Импорт настроек из облачного хранилища</string>
-    <string name="cloud_import_file_count">Показаны %1$d из %2$d файлов</string>
-    <string name="cloud_import_file_count_all">Показаны все %1$d файлы</string>
-    <string name="load_more">Загрузить ещё</string>
-    <string name="load_more_with_count">Загрузить следующий %1$d (загружено %2$d)</string>
     <string name="loading">Загрузка…</string>
-    <string name="loading_progress">Загрузка %1$d из %2$d…</string>
-    <string name="loading_file_progress">Загрузка %1$s (%2$d/%3$d)…</string>
-    <string name="logs_uploaded_to_cloud">Журналы успешно загружены в облачное хранилище</string>
-    <string name="logs_upload_failed">Не удалось загрузить журналы в облачное хранилище</string>
-    <string name="logs_upload_error">Произошла ошибка при загрузке журналов в облачное хранилище</string>
-    <string name="csv_upload_failed">Не удалось загрузить файл CSV пользователя в облачное хранилище</string>
-    <string name="csv_upload_error">Произошла ошибка при загрузке CSV в облако</string>
-    <string name="export_options_updated">Параметры экспорта обновлены</string>
-    <string name="no_settings_files_found">Не найдено файлов настроек в облачном хранилище</string>
-    <string name="clear_action">Очистить настройки</string>
-    <string name="clear_cloud_settings">Очистить настройки облака</string>
-    <string name="clear_cloud_settings_message">Это переключит на локальное хранилище и очистит авторизацию. Продолжить?</string>
-    <string name="uploading_to_cloud">Загрузка в облако...</string>
-    <string name="cloud_directory_path">Облачная директория: %1$s</string>
     <string name="warning_wrong_directory_selected">Выбрана неверная директория</string>
     <string name="warning_wrong_directory_message">Вы выбрали поддиректорию \"%1$s\" вместо корневой директории AAPS. Выберите корневой каталог AAPS. Приложение будет автоматически создавать и управлять подкаталогами.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
-    <string name="google_drive_token_refresh_failed">Не удалось обновить ключ доступа к Google Drive</string>
-    <string name="google_drive_token_refresh_error">Не удалось обновить ключ доступа Google Drive: %1$s</string>
-    <string name="google_drive_connection_test_failed">Проверка соединения с Google Drive не состоялась</string>
-    <string name="google_drive_connect_error">Не удалось подключиться к Google Drive: %1$s</string>
-    <string name="google_drive_list_folders_failed">Не удалось получить список папок Google Drive</string>
-    <string name="google_drive_list_folders_error">Ошибка отображения папок: %1$s</string>
-    <string name="google_drive_upload_no_id">Загрузка завершена, но не вернулся идентификатор</string>
-    <string name="google_drive_upload_verify_failed">Ошибка подтверждения загрузки</string>
-    <string name="google_drive_upload_failed">Загрузка не состоялась: %1$s</string>
-    <string name="google_drive_upload_error">Ошибка загрузки файла: %1$s</string>
-    <string name="google_drive_folder_access_error">Невозможно создать или получить доступ к папке назначения: %1$s</string>
-    <string name="google_drive_list_settings_failed">Не удалось отобразить файлы настроек</string>
-    <string name="google_drive_list_settings_error">Ошибка при отображении файлов настроек: %1$s</string>
-    <string name="google_drive_download_failed">Не удалось скачать файл</string>
-    <string name="google_drive_download_error">Ошибка скачивания файла: %1$s</string>
     <!-- Provider-agnostic cloud storage strings -->
-    <string name="cloud_authorization_title">%1$s Авторизация</string>
-    <string name="cloud_authorization_message">%1$s страница авторизации была открыта в вашем браузере.\n\nЗавершите авторизацию, а затем вернитесь в это приложение.\n\nЭтот диалог будет автоматически закрываться после завершения авторизации.</string>
-    <string name="cloud_auth_start_failed">Не удалось начать авторизацию</string>
-    <string name="cloud_auth_cancelled">Авторизация отменена</string>
-    <string name="cloud_auth_timeout">Истекло время авторизации, повторите попытку</string>
-    <string name="cloud_token_expired_or_invalid">Срок действия авторизации в облачном хранилище истек или неверен. Повторите авторизацию.</string>
     <!-- Authorization status strings -->
-    <string name="authorization_status">Статус авторизации</string>
-    <string name="google_drive_authorized">Google Drive авторизован</string>
-    <string name="google_drive_reauth_required">Очистите настройки и повторно авторизуйте Google Drive</string>
 </resources>
