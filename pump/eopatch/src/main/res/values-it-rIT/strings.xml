@@ -9,6 +9,7 @@
     <string name="eopatch_ble_status">Stato BLE</string>
     <string name="eopatch_serial_number">Numero seriale</string>
     <string name="eopatch_expiration_time">Scadenza</string>
+    <string name="eopatch_not_activated">Non attivato</string>
     <string name="eopatch_base_basal_rate">Velocità basale originale</string>
     <string name="eopatch_temp_basal_rate">Velocità basale temporanea</string>
     <string name="invalid_basal_rate">La basale del profilo è inferiore a 0.05 U/h. EOPatch ha un’unità di iniezione minima di 0.05U. Riprova dopo aver impostato il profilo a più dell\'unità di iniezione minima.</string>
@@ -37,17 +38,21 @@
     <string name="patch_wake_up">Riempimento insulina</string>
     <string name="patch_wake_up_desc_1">Riempi una nuova patch con insulina a temperatura ambiente. Controlla l’angolo della siringa.</string>
     <string name="patch_wake_up_desc_2">Controlla se c\'è 1 BIP.</string>
+    <string name="patch_wake_up_pairing_info">Durante l\'accoppiamento, appariranno due popup di sistema Android. È necessario confermare entrambi per completare l\'accoppiamento Bluetooth.</string>
     <string name="patch_start_pairing">Avvia associazione</string>
     <string name="patch_connect_new">Associazione patch</string>
     <string name="patch_connect_new_desc">La nuova patch è in fase di associazione.\nMantieni la distanza tra la patch e il dispositivo il più vicino possibile</string>
     <string name="patch_remove_needle_cap">Preparazione per il fissaggio della patch</string>
     <string name="patch_remove_needle_cap_desc_1">Rimuovi il nastro adesivo e poi tocca \'Avanti\'.</string>
+    <string name="patch_remove_needle_cap_desc_2">Se un ago si stacca, Toccare \'scarta\'.</string>
+    <string name="patch_remove_needle_cap_desc_3">Se il cerotto è bagnato o sporco, o il suo nastro adesivo è piegato, Toccare \'Scarta\'.</string>
     <string name="patch_remove_protection_tape">Fissaggio della patch</string>
     <string name="patch_remove_protection_tape_desc_1">Pulisci e asciuga il sito di applicazione, quindi attacca la patch alla pelle.</string>
     <string name="patch_remove_protection_tape_desc_2">Controlla il sito di infusione e quindi tocca \'Avvia controllo di sicurezza\'.</string>
     <string name="patch_start_safety_check">Avvia controllo di sicurezza</string>
     <string name="patch_safety_check">Controllo di sicurezza…</string>
     <string name="patch_safety_check_desc_1">Ci vogliono circa 30 secondi.</string>
+    <string name="patch_safety_check_desc_2">Per un uso sicuro, non rimuovere la leva di azione dell\'ago fino al completamento del controllo di sicurezza!</string>
     <string name="patch_rotate_knob">Inserimento dell’ago</string>
     <string name="patch_rotate_knob_desc_1">Ruota la leva di azionamento dell\'ago a più di 100° per inserire l’ago e quindi ruota completamente per rimuoverlo</string>
     <string name="patch_rotate_knob_desc_2">Controlla se c\'è 1 BIP e quindi tocca \'Avanti\'.</string>
@@ -59,6 +64,7 @@
     <string name="patch_activate_reminder_desc">L\'attivazione della patch non è stata completata.\n Continua.</string>
     <string name="patch_communication_check_helper_1">Avvicinare il dispositivo alla patch.</string>
     <string name="patch_communication_check_helper_2">Spostati in un altro posto e riprova.</string>
+    <string name="patch_safety_check_failed_desc">Controllo di sicurezza non riuscito. Riprova.</string>
     <string name="patch_communication_failed">Errore comunicazione</string>
     <string name="patch_communication_succeed">Comunicazione riuscita</string>
     <string name="patch_communication_succeed_message">Connesso con la patch</string>
@@ -77,9 +83,17 @@
     <string name="needle_insertion_error_3">Tocca \'Scarta\' per disattivare la patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Tempo sospensione basale</string>
     <string name="string_resume_insulin_delivery_title">Riprendi erogazione insulina</string>
+    <string name="string_resume_insulin_delivery_message">Fine sospensione insulina.\nTocca \'Conferma\' per riprendere l\'erogazione di insulina.\n\n[L\'erogazione di insulina non riprenderà fino a quando non tocchi \'Conferma\'.\nSe non tocchi \'Conferma\', potresti sviluppare iperglicemia.</string>
     <string name="string_suspended_insulin_delivery_message">L\'erogazione di insulina è sospesa.</string>
     <string name="string_resumed_insulin_delivery_message">L\'erogazione di insulina è ripresa.</string>
     <string name="string_temp_basal_remained_hhmm">tempo rimanente: %1$s:%2$s</string>
+    <string name="string_pause_failed">Sospensione fallita.</string>
     <string name="string_resume_failed">Ripresa fallita.</string>
+    <string name="wizard_exit_activation_warning">Esci dalla procedura guidata di attivazione? La patch può essere lasciata in stato incompleto e richiede una nuova patch.</string>
+    <string name="wizard_exit_deactivation_warning">Esci dalla procedura guidata di disattivazione? Il cerotto può rimanere attivo e continuare a fornire insulina.</string>
+    <string name="patch_force_reset">Forza Reset</string>
+    <string name="patch_force_reset_confirm">Questo cancellerà lo stato della patch localmente senza inviare comandi alla patch. Usare solo se la disattivazione normale fallisce. La patch continuerà a erogare fino a quando la batteria non si esaurirà o viene disattivata manualmente.</string>
     <!-- Permission rationales -->
+    <string name="permission_exact_alarm_title">Allarmi Esatti</string>
+    <string name="permission_exact_alarm_description">L\'applicazione ha bisogno del permesso per pianificare gli avvisi esatti per la gestione delle patch</string>
 </resources>
