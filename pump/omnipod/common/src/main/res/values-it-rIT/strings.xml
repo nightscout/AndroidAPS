@@ -50,6 +50,8 @@
     <string name="omnipod_common_overview_pod_active_alerts">Attiva avvisi pod</string>
     <string name="omnipod_common_overview_firmware_version">Versione firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Ora nel pod</string>
+    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minuti)</string>
+    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Oltre %1$s rimasta</string>
     <string name="omnipod_common_uncertain">incerto</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Disattiva pod</string>
@@ -99,6 +101,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Suono notifiche TBR incerto abilitato</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Suono notifiche TBR incerto abilitato</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Suono notifiche bolo incerto abilitato</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Suono notifica sospensione erogazione abilitato</string>
     <string name="omnipod_dash_use_bonding">Associa dispositivo BT su Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Nessun pod attivo</string>
@@ -122,6 +125,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Imposta piano basale</string>
     <string name="omnipod_common_cmd_set_bolus">Imposta bolo</string>
     <string name="omnipod_common_cmd_cancel_bolus">Cancella bolo</string>
+    <string name="omnipod_common_cmd_set_tbr">Imposta TBR</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Cancella TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Scarta pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Ottieni stato pod</string>
     <string name="omnipod_common_cmd_set_time">Imposta ora</string>
@@ -130,10 +135,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Leggi log impulsi</string>
     <string name="omnipod_common_cmd_suspend_delivery">Sospendi erogazione</string>
     <string name="omnipod_common_cmd_resume_delivery">Riprendi erogazione</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Cancella TBR (da utente)</string>
     <string name="omnipod_common_cmd_get_pod_info">Ottieni info pod</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Imposta TBR Sospeso Fake</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Annulla TBR Sospeso Fake</string>
+    <string name="omnipod_common_cmd_split_tbr">Dividi TBR</string>
     <string name="omnipod_common_cmd_play_test_beep">Esegui BIP di prova</string>
     <string name="omnipod_common_cmd_unknown_entry">Inserimento sconosciuto</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Disabilita Avvisi Di Sospensione</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Fine promemoria associazione</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Fine promemoria configurazione</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Momenti fa</string>
