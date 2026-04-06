@@ -39,4 +39,54 @@
     <string name="pump_base_basal_rate_cu">%1$.2f CE/t</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s CE/t</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Innstillinger ble eksportert til skylagring</string>
+    <string name="export_to_cloud_failed">Kunne ikke eksportere til skylagring</string>
+    <string name="csv_uploaded_to_cloud">CSV med brukeroppføringer ble lastet opp til skylagring</string>
+    <string name="exported">Innstillinger eksportert</string>
+    <string name="exported_failed">Eksport av innstillinger mislyktes!</string>
+    <string name="filenotfound">Filen ble ikke funnet</string>
+    <string name="ue_exported">Brukeroppføringer eksportert</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportert for %1$s siden</string>
+    <string name="exported_at" comment="at placeholder we add export date">eksportert den %1$s</string>
+    <string name="exported_less_than_hour_ago">eksportert for mindre enn en time siden</string>
+    <string name="metadata_warning_different_flavour">Innstillingene ble opprettet med en annen variant av AAPS (%1$s) mens du har: %2$s.\n\nNoen innstillinger kan mangle eller være ugyldige – sjekk og oppdater innstillingene dine etter importering.</string>
+    <string name="metadata_warning_different_device">Innstillingene ble opprettet på en annen enhet. Det er greit om du importerer fra en eldre/annen telefon, men sørg for at de importerte innstillingene er riktige!</string>
+    <string name="metadata_warning_old_export">Importerte innstillinger er allerede %1$s dager gamle! Kanskje du har mer oppdaterte innstillinger, eller kanskje du har valgt feil fil? Husk å eksportere innstillinger regelmessig!</string>
+    <string name="metadata_warning_date_format">Ugyldig dato-tidsformat!</string>
+    <string name="metadata_warning_different_version">Innstillinger fra en annen mindre versjon av appen. Det er greit om du importerer etter oppgradering, men sjekk etter import om innstillingene fortsatt er riktige!</string>
+    <string name="metadata_urgent_different_version">Innstillinger fra forskjellige hovedversjoner av appen. Hovedversjonene er betydelig forskjellige og kan ha inkompatible innstillinger! Sørg for at innstillingene fortsatt er korrekte etter import!</string>
+    <string name="prefdecrypt_settings_tampered">Innstillingsfil manipulert</string>
+    <string name="prefdecrypt_settings_secure">Innstillingsfilen er sikker</string>
+    <string name="prefdecrypt_settings_unencrypted">Bruker ikke sikkert, ukryptert innstillingsformat</string>
+    <string name="prefdecrypt_wrong_json">JSON-formatfeil, manglende obligatorisk felt (format, innhold, metadata eller sikkerhet)</string>
+    <string name="prefdecrypt_wrong_password">Dekrypteringsfeil, det oppgitte passordet kan ikke dekryptere filen</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Filens checksum(hash) mangler, kan ikke bekrefte ektheten av innstillingene!</string>
+    <string name="prefdecrypt_issue_modified">Filen ble endret etter eksport!</string>
+    <string name="prefdecrypt_issue_parsing">Dekrypteringsfeil, kunne ikke tolke innstillinger!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfeil, det oppgitte passordet er ugyldig, eller innstillingsfilen ble endret! Det kan hende at den importerte filen ble eksportert med et annet hovedpassord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Mangler krypteringskonfigurasjon, innstillingsformatet er ugyldig!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Krypteringsalgoritme støttes ikke eller er ikke spesifisert!</string>
+    <string name="metadata_label_format">Filformat</string>
+    <string name="metadata_label_created_at">Opprettet den</string>
+    <string name="metadata_label_aaps_version">AAPS-versjon</string>
+    <string name="metadata_label_aaps_flavour">Byggevariant</string>
+    <string name="metadata_label_device_name">Eksporterer enhetens pasientnavn</string>
+    <string name="metadata_label_device_model">Eksporterer enhetsmodell</string>
+    <string name="metadata_label_encryption">Filkryptering</string>
+    <string name="metadata_format_new">Nytt kryptert format</string>
+    <string name="metadata_format_other">Ukjent eksportformat</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Feil ved tilgang til filsystemet. Velg riktig AAPS-mappe.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Sikkerhetskopier til Google Drive</string>
+    <string name="csv_upload_failed">Kunne ikke laste opp CSV med brukeroppføringer til skylagring</string>
+    <string name="csv_upload_error">Det oppstod en feil ved opplasting av CSV til skyen</string>
+    <string name="uploading_to_cloud">Laster opp til skyen...</string>
+    <string name="cloud_directory_path">Skymappe: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Kunne ikke oppdatere Google Drive-tilgangstoken</string>
+    <string name="google_drive_token_refresh_error">Kunne ikke oppdatere Google Drive-tilgangstoken: %1$s</string>
+    <string name="google_drive_connection_test_failed">Test av Google Drive-tilkobling mislyktes</string>
+    <string name="google_drive_connect_error">Kunne ikke koble til Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Kunne ikke liste mapper i Google Drive</string>
+    <string name="google_drive_list_folders_error">Feil ved henting av mapper: %1$s</string>
+    <string name="google_drive_upload_no_id">Opplasting fullført, men ingen ID returnert</string>
 </resources>
