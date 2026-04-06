@@ -47,6 +47,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
     <string name="result">Result</string>
     <string name="settings">Settings</string>
+    <string name="nav_preferences">Preferences</string>
     <string name="simple_mode">Simple mode</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
@@ -817,6 +818,9 @@
     <string name="send_logs">Send logs</string>
     <string name="file_management">File management</string>
     <string name="database_management">Database management</string>
+
+    <string name="data_choices">Data Choices</string>
+    <string name="unattended_settings_export">Unattended Settings Export</string>
 
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Configure log verbosity levels</string>
