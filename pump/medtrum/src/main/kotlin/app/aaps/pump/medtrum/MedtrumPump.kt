@@ -23,6 +23,7 @@ import app.aaps.pump.medtrum.comm.enums.ModelType
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
 import app.aaps.pump.medtrum.keys.MedtrumBooleanKey
+import app.aaps.pump.medtrum.keys.MedtrumBooleanNonKey
 import app.aaps.pump.medtrum.keys.MedtrumDoubleNonKey
 import app.aaps.pump.medtrum.keys.MedtrumIntKey
 import app.aaps.pump.medtrum.keys.MedtrumIntNonKey
@@ -72,6 +73,11 @@ class MedtrumPump @Inject constructor(
         set(value) {
             _pumpState.value = value
             preferences.put(MedtrumIntNonKey.PumpState, value.state.toInt())
+            // Maintain patchPrimed flag: set once we reach PRIMED, clear only on STOPPED/NONE
+            when {
+                value >= MedtrumPumpState.PRIMED && value < MedtrumPumpState.STOPPED -> patchPrimed = true
+                value == MedtrumPumpState.STOPPED || value == MedtrumPumpState.NONE  -> patchPrimed = false
+            }
         }
 
     // Active alarms
@@ -98,6 +104,17 @@ class MedtrumPump @Inject constructor(
         get() = _primeProgress.value
         set(value) {
             _primeProgress.value = value
+        }
+
+    // Tracks that the patch was primed at least once during the current activation session.
+    // Set when pumpState reaches PRIMED; cleared only by STOPPED or NONE.
+    // Used to detect an unexpected patch reset and block ACTIVATION in that case.
+    private var _patchPrimed = false
+    var patchPrimed: Boolean
+        get() = _patchPrimed
+        set(value) {
+            _patchPrimed = value
+            preferences.put(MedtrumBooleanNonKey.PatchPrimed, value)
         }
 
     private var _lastBasalType: MutableStateFlow<BasalType> = MutableStateFlow(BasalType.NONE)
@@ -336,6 +353,7 @@ class MedtrumPump @Inject constructor(
         _pumpTimeZoneOffset = preferences.get(MedtrumIntNonKey.PumpTimezoneOffset)
         _bolusStartTime = preferences.get(MedtrumLongNonKey.BolusStartTime)
         _bolusAmountToBeDelivered = preferences.get(MedtrumDoubleNonKey.BolusAmountToBeDelivered)
+        _patchPrimed = preferences.get(MedtrumBooleanNonKey.PatchPrimed)
 
         loadActiveAlarms()
 

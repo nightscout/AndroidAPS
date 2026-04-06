@@ -198,33 +198,33 @@ class MedtrumPatchViewModel @Inject constructor(
         scope.launch {
             medtrumPump.pumpStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumPatchViewModel pumpStateFlow: $state")
-                if (_patchStep.value != null) {
-                    when (state) {
-                        MedtrumPumpState.NONE, MedtrumPumpState.IDLE         -> {
+                if (patchStep.value != null) {
+                    when {
+                        (state == MedtrumPumpState.NONE || state == MedtrumPumpState.IDLE) && !medtrumPump.patchPrimed -> {
                             updateSetupStep(SetupStep.INITIAL)
                         }
 
-                        MedtrumPumpState.FILLED                              -> {
+                        state == MedtrumPumpState.FILLED && !medtrumPump.patchPrimed                                   -> {
                             updateSetupStep(SetupStep.FILLED)
                         }
 
-                        MedtrumPumpState.PRIMING                             -> {
+                        state == MedtrumPumpState.PRIMING                                                              -> {
                             updateSetupStep(SetupStep.PRIMING)
                         }
 
-                        MedtrumPumpState.PRIMED, MedtrumPumpState.EJECTED    -> {
+                        state == MedtrumPumpState.PRIMED || state == MedtrumPumpState.EJECTED                          -> {
                             updateSetupStep(SetupStep.PRIMED)
                         }
 
-                        MedtrumPumpState.ACTIVE, MedtrumPumpState.ACTIVE_ALT -> {
+                        state == MedtrumPumpState.ACTIVE || state == MedtrumPumpState.ACTIVE_ALT                       -> {
                             updateSetupStep(SetupStep.ACTIVATED)
                         }
 
-                        MedtrumPumpState.STOPPED                             -> {
+                        state == MedtrumPumpState.STOPPED                                                              -> {
                             updateSetupStep(SetupStep.STOPPED)
                         }
 
-                        else                                                 -> {
+                        else                                                                                           -> {
                             updateSetupStep(SetupStep.ERROR)
                         }
                     }

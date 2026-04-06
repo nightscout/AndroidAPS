@@ -685,7 +685,32 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
 
             MedtrumPumpState.IDLE,
-            MedtrumPumpState.FILLED,
+            MedtrumPumpState.FILLED               -> {
+                notificationManager.dismiss(NotificationId.PUMP_ERROR)
+                notificationManager.dismiss(NotificationId.PUMP_SUSPENDED)
+                medtrumPump.setFakeTBRIfNotSet()
+                medtrumPump.clearAlarmState()
+
+                if (medtrumPump.patchPrimed) {
+                    aapsLogger.error(LTag.PUMP, "handlePumpStateUpdate: Unexpected patch state drop while primed! state: $state")
+                    runBlocking {
+                        pumpSync.insertAnnouncement(
+                            rh.gs(R.string.patch_reset_after_primed_error),
+                            null,
+                            medtrumPump.pumpType(),
+                            medtrumPump.pumpSN.toString(radix = 16)
+                        )
+                    }
+
+                    notificationManager.post(
+                        NotificationId.PUMP_ERROR,
+                        R.string.patch_reset_after_primed_error,
+                        level = NotificationLevel.URGENT,
+                        soundRes = app.aaps.core.ui.R.raw.alarm
+                    )
+                }
+            }
+
             MedtrumPumpState.PRIMING,
             MedtrumPumpState.PRIMED,
             MedtrumPumpState.EJECTING,
