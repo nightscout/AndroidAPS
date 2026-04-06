@@ -40,5 +40,11 @@
     <string name="patched_sino_app">App Sino</string>
     <string name="description_source_patched_sino_app">Ricevi i dati di glucosio dall\'app Sino patchata.</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Lettore Notifiche</string>
+    <string name="description_source_notification_reader">Leggi i valori di glucosio dalle notifiche pubblicate dalle app CGM ufficiali (Dexcom, Medtronic, Eversense, ecc.).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">L\'applicazione ha bisogno dell\'autorizzazione per ricevere i dati CGM dall\'app Dexcom</string>
+    <string name="permission_notification_listener_title">Accesso notifiche</string>
+    <string name="permission_notification_listener_description">Richiesto per leggere i valori di glucosio dalle notifiche delle app CGM</string>
 </resources>
