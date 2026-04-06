@@ -22,4 +22,5 @@
     <string name="short_status_not_initialized">המשאבה לא מאותחלת</string>
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
 </resources>
