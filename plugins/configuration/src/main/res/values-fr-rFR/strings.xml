@@ -16,9 +16,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="high_mark">Ligne HAUTE</string>
     <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
-    <string name="permission">Autorisation</string>
-    <string name="need_system_window_permission">L\'application a besoin de l\'autorisation d\'accès à la fenêtre système pour les notifications</string>
-    <string name="askforpermission">Demande d\'autorisation</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
     <string name="master_password_summary">Le mot de passe principal est utilisé pour crypter les sauvegardes et superviser la sécurité de l\'application. Rappelez-vous en ou stockez le en lieu sûr.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -37,20 +34,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="startobjective">Démarrez votre premier objectif</string>
     <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
     <string name="readstatus">Statut de lecture</string>
-    <string name="data_choices">Choix de données</string>
-    <string name="fabric_upload">Téléchargement Fabric</string>
-    <string name="unattended_settings_export">Export des paramètres sans surveillance</string>
-    <string name="unattended_settings_export_summary">L\'activation permettra de stocker votre mot de passe en toute sécurité sur votre téléphone</string>
-    <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Demande</string>
-    <string name="apsmode_title">Mode APS</string>
     <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Configuration</string>
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
-    <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps_description">Quel algorithme APS doit faire les ajustements de thérapie?</string>
     <string name="configbuilder_general_description">Quelques modules d\'extension que vous pourriez trouver utiles.</string>
     <string name="configbuilder_constraints_description">Quelles restrictions sont appliquées ?</string>
@@ -67,69 +57,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="expand_category">Développer la catégorie</string>
     <string name="collapse_category">Replier la catégorie</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Préférences</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Import annulé ! Les préférences n\'ont PAS été importées !</string>
-    <string name="preferences_import_impossible">Impossible d\'importer les préférences !</string>
-    <string name="check_preferences_details_btn">Explication des problèmes d\'importation…</string>
-    <string name="check_preferences_details_title">Détails des problèmes d\'importation</string>
-    <string name="check_preferences_import_btn">Import</string>
-    <string name="check_preferences_import_anyway_btn">Importer quand même (DANGEREUX !)</string>
-    <string name="check_preferences_before_import">Veuillez vérifier les préférences avant d\'importer:</string>
-    <string name="check_preferences_cannot_import">Les préférences ne peuvent pas être importées !</string>
-    <string name="check_preferences_dangerous_import">Les préférences ne doivent pas être importées !</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">Importer les paramètres depuis</string>
-    <string name="setting_imported">Paramètres importés</string>
-    <string name="old_master_password">Ancien mot de passe principal</string>
-    <string name="different_password_used">Ce fichier a été exporté et chiffré avec un mot de passe principal différent. Veuillez renseigner votre ancien mot de passe principal pour déchiffrer le fichier.</string>
-    <string name="master_password_will_be_replaced">Suite à l\'importation réussie, le mot de place principal actuel SERA REMPLACÉ par cet ancien mot de passe!</string>
-    <string name="exported">Préférences exportées</string>
-    <string name="exported_failed">L\'export des préférences a échoué !</string>
-    <string name="filenotfound">Fichier introuvable</string>
-    <string name="goto_main_try_again">Veuillez retourner à l\'écran principal et réessayer.</string>
-    <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
-    <string name="ue_exported">Entrées utilisateur exportées</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">MAINT</string>
-    <string name="maintenance_settings">Paramètres de maintenance</string>
-    <string name="maintenance_email">Destinataire de l\'email</string>
-    <string name="maintenance_amount">Nombre de journaux à envoyer</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporté il y a %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">exporté à %1$s</string>
-    <string name="exported_less_than_hour_ago">exporté il y a moins d\'une heure</string>
-    <string name="preferences_import_list_title">Sélectionner le fichier à importer</string>
-    <string name="metadata_warning_different_flavour">Des préférences ont été créées avec des variantes différentes d\'AAPS (%1$s) quand vous avez : %2$s.\n\nCertains paramètres peuvent manquer ou ou ne pas être valides après l\'import, vérifiez et mettez à jour vos préférences.</string>
-    <string name="metadata_warning_different_device">Les préférences ont été créées sur un autre périphérique. C\'est OK si vous importez à partir d\'un téléphone ancien/différent, mais vérifiez les préférences importées sont correctes !</string>
-    <string name="metadata_warning_old_export">Les préférences importées ont déjà %1$s jours ! Vous avez peut-être des préférences plus récentes ou vous avez sélectionné un mauvais fichier ? N\'oubliez pas d\'exporter vos préférences régulièrement !</string>
-    <string name="metadata_warning_date_format">Format de date invalide !</string>
-    <string name="metadata_warning_different_version">Préférences d\'une autre version mineure différente de l\'application. C\'est OK si vous importez après la mise à jour, mais vérifiez après l\'importation si les préférences sont toujours correctes !</string>
-    <string name="metadata_urgent_different_version">Préférences d\'une autre version majeure différente de l\'application. Les versions majeures diffèrent significativement et peuvent avoir des préférences incompatibles ! Vérifiez bien après l\'import que les préférences sont toujours correctes !</string>
-    <string name="prefdecrypt_settings_tampered">Fichier paramètres altérés</string>
-    <string name="prefdecrypt_settings_secure">Fichier paramètres sécurisé</string>
-    <string name="prefdecrypt_settings_unencrypted">Utilisation non sécurisée, fichier paramètres non crypté</string>
-    <string name="prefdecrypt_wrong_json">Erreur de format JSON, zone obligatoire manquante (format, contenu, métadonnées ou sécurité)</string>
-    <string name="prefdecrypt_wrong_password">Erreur de décryptage, le mot de passe indiqué ne permet pas le décryptage du fichier</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Checksum du fichier manquant, vérification de l\'authenticité des pararamètres impossible !</string>
-    <string name="prefdecrypt_issue_modified">Le fichier a été modifié après l\'export !</string>
-    <string name="prefdecrypt_issue_parsing">Erreur de décryptage, échec de l\'import des préférences !</string>
-    <string name="prefdecrypt_issue_wrong_pass">Erreur de décryptage, le mot de passe fourni est invalide ou le fichier de paramètres à été modifié ! Cela peut arriver si le fichier a été exporté avec un mot de passe principal différent.</string>
-    <string name="prefdecrypt_issue_wrong_format">Configuration du cryptage manquant, format des paramètres invalide !</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algorithme de cryptage non pris en charge ou non spécifié !</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Format de fichier</string>
-    <string name="metadata_label_created_at">Créé le</string>
-    <string name="metadata_label_aaps_version">Version d\'AAPS</string>
-    <string name="metadata_label_aaps_flavour">Version de construction</string>
-    <string name="metadata_label_device_name">Export du nom du patient de l\'appareil</string>
-    <string name="metadata_label_device_model">Export du modèle de l\'appareil</string>
-    <string name="metadata_label_encryption">Cryptage du fichier</string>
-    <string name="metadata_format_new">Nouveau format chiffré</string>
-    <string name="metadata_format_other">Format d\'export inconnu</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">Erreur lors de l’accès au fichier. Sélectionnez le répertoire AAPS correctement.</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
