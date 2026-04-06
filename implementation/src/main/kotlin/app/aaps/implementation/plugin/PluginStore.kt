@@ -271,11 +271,11 @@ class PluginStore @Inject constructor(
 
     @Suppress("UNCHECKED_CAST")
     override val firstActiveSync: Sync?
-        get() = (getSpecificPluginsList(PluginType.SYNC) as ArrayList<Sync>).firstOrNull { it.connected }
+        get() = (getSpecificPluginsListByInterface(Sync::class.java) as ArrayList<Sync>).firstOrNull { it.connected }
 
     @Suppress("UNCHECKED_CAST")
     override val activeSyncs: ArrayList<Sync>
-        get() = getSpecificPluginsList(PluginType.SYNC) as ArrayList<Sync>
+        get() = getSpecificPluginsListByInterface(Sync::class.java) as ArrayList<Sync>
 
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 
