@@ -49,13 +49,16 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                                 ProtectionCheck.Protection.PREFERENCES,
                                 {
                                     val nextStep = when {
-                                        medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE) ->
+                                        medtrumPump.pumpState == MedtrumPumpState.STOPPED                                                                                   ->
+                                            PatchStep.PREPARE_PATCH
+
+                                        medtrumPump.pumpState == MedtrumPumpState.NONE && !medtrumPump.patchPrimed                                                          ->
                                             PatchStep.PREPARE_PATCH
 
                                         medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMING && medtrumPump.patchPrimed) ->
                                             PatchStep.RETRY_ACTIVATION
 
-                                        else ->
+                                        else                                                                                                                                ->
                                             PatchStep.START_DEACTIVATION
                                     }
                                     startActivity(MedtrumActivity.createIntentFromMenu(this, nextStep))
