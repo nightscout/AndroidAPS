@@ -85,6 +85,7 @@
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
+    <string name="action_duration_minutes">Durata [min]</string>
     <string name="action_tempt_confirmation">Target temporaneo richiesto</string>
     <string name="action_quick_wizard_confirmation">Calcolatore rapido richiesto</string>
     <string name="action_user_action_confirmation">Azione Utente Richiesta</string>
@@ -94,13 +95,26 @@
     <string name="action_fill_confirmation">Riempimento richiesto</string>
     <string name="action_ecarb_confirmation">CHO richiesti</string>
     <string name="action_profile_switch_confirmation">Cambio profilo richiesto</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Target [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Basso[%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Alto[%s]</string>
     <string name="action_carbs">CHO</string>
     <string name="action_carbs_gram">Carboidrati [g]</string>
     <string name="action_ecarbs">CHO estesi</string>
     <string name="action_percentage">Percentuale\n[%]</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
+    <string name="action_start_minutes_format">%1$d min</string>
     <string name="action_duration_h">Durata [h]</string>
     <string name="action_duration_hours">Durata\n[ore]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_time">Tempo: %1$s</string>
+    <string name="ecarbs_confirm_duration">Durata: %1$d h</string>
+    <string name="action_confirm_reason">Motivo: %1$s</string>
+    <string name="action_confirm_duration">Durata: %1$s</string>
+    <string name="action_confirm_timeshift">Timeshift: %1$s</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_insulin_units">Insulina [U]</string>
     <string name="action_preset_1">Preset 1</string>
@@ -190,6 +204,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">vecchio</string>
     <string name="old_warning">!vecchio!</string>
+    <string name="error">Errore</string>
     <string name="pref_heartRateSampling">Frequenza cardiaca</string>
     <string name="pref_heartRateSmoothing">Smussamento HR</string>
     <string name="pref_stepsSampling">Abilita Conteggio Passi</string>
@@ -221,6 +236,11 @@
     <string name="complication_iob_icon">Icona IoB</string>
     <string name="complication_iob_detailed">IoB Dettagliato</string>
     <string name="complication_uploader_phone_battery">Caricamento/Batteria Telefono</string>
+    <string name="status_running_mode">Modalità esecuzione</string>
+    <string name="label_running_mode_title">AAPS (modalità di esecuzione)</string>
+    <string name="action_running_mode_selected">Modalità di esecuzione richiesta</string>
+    <string name="title_activity_disconnect_pump">Disconnetti micro</string>
+    <string name="title_activity_suspend_loop">Sospendi loop</string>
     <string name="wizard_total_insulin">Insulina totale</string>
     <string name="wizard_calculation">Calcolo</string>
     <string name="wizard_carbs_format">%1$d g carboidrati</string>
@@ -236,6 +256,7 @@
     <string name="wizard_result_total">Totale</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">Clicca per espandere i dettagli di calcolo</string>
     <string name="wizard_confirmation_sent">Inviato</string>
     <string name="tile_settings">Impostazioni delle caselle</string>
@@ -253,6 +274,8 @@
     <string name="loop_status_lgs">Sospensione per glucosio basso</string>
     <string name="loop_status_disabled">Loop disabilitato</string>
     <string name="loop_status_suspended">Loop sospeso</string>
+    <string name="loop_status_pump_suspended">Micro sospeso</string>
+    <string name="loop_status_dst_suspended">Loop sospeso da DST</string>
     <string name="loop_status_disconnected">Micro disconnesso</string>
     <string name="loop_status_superbolus">Superbolo</string>
     <string name="loop_status_unknown">Sconosciuto</string>
@@ -269,4 +292,8 @@
     <string name="loop_status_target_range">Intervallo</string>
     <string name="loop_status_target">Target</string>
     <string name="loop_status">Stato loop</string>
+    <string name="loop_status_refresh">Aggiorna</string>
+    <string name="confirm">Conferma</string>
+    <string name="request">Richiesta</string>
+    <string name="constraint_applied">Vincolo applicato!</string>
 </resources>
