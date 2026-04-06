@@ -19,6 +19,15 @@
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
     <string name="search">Cerca</string>
+    <string name="use_compose_main_screen">Usa la schermata principale di composizione (sperimentale)</string>
+    <string name="switch_to_compose_ui">Passa alla composizione UI</string>
+    <string name="switch_to_classic_ui">Passa all\'IU classica</string>
     <string name="select">Seleziona</string>
     <string name="set">Imposta</string>
+    <string name="migrating_preferences">Migrazione preferenze…</string>
+    <string name="initializing_plugins">Inizializzazione plugin…</string>
+    <string name="initializing">Inizializzazione…</string>
+    <string name="migrating_profile_switches">Migrazione switch profilo…</string>
+    <string name="migrating_effective_profile_switches">Migrazione effettiva switch profilo…</string>
+    <string name="migrating_boluses">Migrazione boli…</string>
 </resources>
