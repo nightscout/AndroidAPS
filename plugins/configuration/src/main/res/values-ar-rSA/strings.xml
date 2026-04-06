@@ -8,7 +8,6 @@
     <!-- preferences_export_canceled moved to core:ui -->
     <!-- export_to moved to core:ui -->
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
     <!-- Maintenance -->
     <!-- Maintenance -->
     <!-- maintenance_email moved to core:keys module -->
