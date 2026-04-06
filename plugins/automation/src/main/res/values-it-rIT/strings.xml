@@ -147,5 +147,11 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Scegli dalla mappa</string>
+    <string name="tap_to_select_location">Tocca la mappa per selezionare una posizione</string>
+    <string name="selected_coords">Selezionato: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Posizione</string>
+    <string name="permission_location_description">Necessario per automazione basata sulla posizione e sulla identificazione della rete WiFi</string>
+    <string name="permission_background_location_description">Necessario per attivare l\'automazione per funzionare quando l\'applicazione è in background</string>
 </resources>
