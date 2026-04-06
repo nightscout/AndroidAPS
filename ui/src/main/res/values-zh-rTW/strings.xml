@@ -169,6 +169,8 @@
     <string name="basal_pct_from_tdd_label">基礎率百分比</string>
     <string name="selected_profile">已選擇：</string>
     <string name="comparation">比較</string>
+    <string name="profile_tab_1">設定檔 1</string>
+    <string name="profile_tab_2">設定檔 2</string>
     <string name="motol_default_profile">預設設定檔</string>
     <string name="current_profile">目前設定檔</string>
     <string name="available_profile">可用設定檔</string>
