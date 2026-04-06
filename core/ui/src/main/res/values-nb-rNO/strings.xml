@@ -47,6 +47,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="result">Resultat</string>
     <string name="settings">Innstillinger</string>
+    <string name="nav_preferences">Innstillinger</string>
     <string name="simple_mode">Enkelmodus</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
@@ -780,6 +781,8 @@
     <string name="send_logs">Send logger</string>
     <string name="file_management">Filbehandling</string>
     <string name="database_management">Databasebehandling</string>
+    <string name="data_choices">Datavalg</string>
+    <string name="unattended_settings_export">Uovervåket eksport av innstillinger</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Konfigurer loggnivåer</string>
     <string name="maintenance_send_logs_desc">Del loggfiler for feilsøking</string>
