@@ -15,9 +15,6 @@
     <string name="high_mark">Znacznik WYSOKI</string>
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
-    <string name="permission">Uprawnienia</string>
-    <string name="need_system_window_permission">Aplikacja wymaga uprawnienia systemowego okna dla powiadomień</string>
-    <string name="askforpermission">Zapytaj o uprawnienia</string>
     <string name="storedsettingsfound">Znaleziono zapisane ustawienia</string>
     <string name="master_password_summary">Hasło główne jest używane do szyfrowania kopii zapasowych i przełamania zabezpieczeń w aplikacji. Zapamiętaj je i przechowuj w bezpiecznym miejscu (np.: managerze haseł).</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -36,20 +33,13 @@
     <string name="startobjective">Rozpocznij swoje pierwsze Zadanie</string>
     <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
     <string name="readstatus">Odczyt stanu</string>
-    <string name="data_choices">Wybór Danych</string>
-    <string name="fabric_upload">Przesyłanie danych fabric</string>
-    <string name="unattended_settings_export">Automatyczny Eksport Ustawień</string>
-    <string name="unattended_settings_export_summary">Włączenie tej opcji spowoduje, że twoje hasło zostanie bezpieczne zapisane na telefonie</string>
-    <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Żądanie</string>
-    <string name="apsmode_title">Tryb APS</string>
     <string name="error_asking_for_permissions">Wystąpił błąd podczas żądania uprawnień</string>
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfiguracja</string>
     <string name="configbuilder_pump_description">Którą pompę chcesz użyć do AAPS?</string>
-    <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps_description">Który algorytm APS powinien dokonywać korekcji terapii?</string>
     <string name="configbuilder_general_description">To są główne wtyczki, które mogą okazać się użyteczne.</string>
     <string name="configbuilder_constraints_description">Które ograniczenia są zastosowane?</string>
@@ -66,69 +56,12 @@
     <string name="expand_category">Rozwiń kategorię</string>
     <string name="collapse_category">Zwiń kategorię</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Ustawienia</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Import anulowany! Ustawienia NIE zostały zaimportowane!</string>
-    <string name="preferences_import_impossible">Nie można zaimportować ustawień!</string>
-    <string name="check_preferences_details_btn">Wyjaśnij problemy z importem…</string>
-    <string name="check_preferences_details_title">Szczegóły problemów z importem</string>
-    <string name="check_preferences_import_btn">Importuj</string>
-    <string name="check_preferences_import_anyway_btn">Importuj mimo to (NIEBEZPIECZNE!)</string>
-    <string name="check_preferences_before_import">Proszę sprawdzić ustawienia przed importem:</string>
-    <string name="check_preferences_cannot_import">Ustawienia nie mogą być zaimportowane!</string>
-    <string name="check_preferences_dangerous_import">Ustawienia nie powinny być importowane!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">Importuj ustawienia z</string>
-    <string name="setting_imported">Ustawienia zaimportowane</string>
-    <string name="old_master_password">Stare hasło główne</string>
-    <string name="different_password_used">Ten plik zaszyfrowano innym hasłem głównym. Podaj te stare hasło główne którego używałeś do eksportu, aby odszyfrować plik.</string>
-    <string name="master_password_will_be_replaced">W efekcie udanego importu bieżące hasło główne ZOSTANIE ZASTĄPIONE starym hasłem głównym z importowanych ustawień!</string>
-    <string name="exported">Ustawienia wyeksportowane</string>
-    <string name="exported_failed">Eksport ustawień nie powiódł się!</string>
-    <string name="filenotfound">Nie znaleziono pliku</string>
-    <string name="goto_main_try_again">Wróć do ekranu głównego i spróbuj ponownie.</string>
-    <string name="restartingapp">Zamykanie aplikacji w celu wprowadzenia ustawień.</string>
-    <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">MAINT</string>
-    <string name="maintenance_settings">Ustawienia Konserwacji</string>
-    <string name="maintenance_email">Odbiorca E-maila</string>
-    <string name="maintenance_amount">Liczba logów do wysłania</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">wyeksportowano %1$s temu</string>
-    <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
-    <string name="exported_less_than_hour_ago">wyeksportowano mniej niż godzinę temu</string>
-    <string name="preferences_import_list_title">Wybierz plik do zaimportowania</string>
-    <string name="metadata_warning_different_flavour">Ustawienia zostały utworzone z innym wariantem AAPS (%1$s) gdy masz %2$s.\n\nNiektóre ustawienia mogą być brakujące lub nieprawidłowe - po zaimportowaniu proszę sprawdzić i zaktualizować swoje ustawienia.</string>
-    <string name="metadata_warning_different_device">Preferencje zostały utworzone na innym urządzeniu. Import ze starszego/innego telefonu jest OK, ale upewnij się, że importowane preferencje są poprawne!</string>
-    <string name="metadata_warning_old_export">Zaimportowane ustawienia mają już %1$s dni! Może masz bardziej aktualne ustawienia lub wybierzesz niewłaściwy plik? Pamiętaj o regularnym eksporcie ustawień!</string>
-    <string name="metadata_warning_date_format">Niepoprawny format daty i czasu!</string>
-    <string name="metadata_warning_different_version">Importujesz ustawienia z innej, nieco starszej wersji aplikacji. Prawdopodobnie to jest OK bo np.: importujesz ustawienia po aktualizacji do nowej wersji, ale sprawdź po zaimportowaniu, czy ustawienia są nadal poprawne!</string>
-    <string name="metadata_urgent_different_version">Importujesz ustawienia ze znacząco innej wersji aplikacji. Zmiana głównego numeru wersji aplikacji oznacza znaczące zmiany, i może oznaczać niekompatybilność niektórych ustawień. Upewnij się po imporcie, że ustawienia są nadal poprawne!</string>
-    <string name="prefdecrypt_settings_tampered">Plik ustawień został zmieniony</string>
-    <string name="prefdecrypt_settings_secure">Plik ustawień jest bezpieczny</string>
-    <string name="prefdecrypt_settings_unencrypted">Używanie niebezpieczne, niezaszyfrowany format ustawień</string>
-    <string name="prefdecrypt_wrong_json">Błąd w formacie JSON, brak wymaganego pola (format, zawartość, metadane lub zabezpieczenia)</string>
-    <string name="prefdecrypt_wrong_password">Błąd odszyfrowania, podane hasło nie może odszyfrować pliku</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Brak sumy kontrolnej pliku (hash), nie można zweryfikować autentyczności ustawień!</string>
-    <string name="prefdecrypt_issue_modified">Plik został zmodyfikowany po eksporcie!</string>
-    <string name="prefdecrypt_issue_parsing">Błąd odszyfrowania, nie udało się odczytać ustawień!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Błąd deszyfrowania, podane hasło jest niepoprawne lub plik ustawień został zmodyfikowany! Może się zdarzyć, że zaimportowany plik został wyeksportowany z innym hasłem głównym.</string>
-    <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Format pliku</string>
-    <string name="metadata_label_created_at">Utworzono</string>
-    <string name="metadata_label_aaps_version">Wersja AAPS</string>
-    <string name="metadata_label_aaps_flavour">Wariant kompilacji</string>
-    <string name="metadata_label_device_name">Eksportowanie nazwy pacjenta urządzenia</string>
-    <string name="metadata_label_device_model">Eksportowanie modelu urządzenia</string>
-    <string name="metadata_label_encryption">Szyfrowanie pliku</string>
-    <string name="metadata_format_new">Nowy zaszyfrowany format</string>
-    <string name="metadata_format_other">Nieznany format eksportu</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">Błąd dostępu do systemu plików. Wybierz prawidłowo katalog AAPS.</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
