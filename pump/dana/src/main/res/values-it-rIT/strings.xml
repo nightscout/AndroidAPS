@@ -92,6 +92,9 @@
     <string name="danars_password_title">Password micro (solo v1)</string>
     <string name="danar_password_title">Password micro</string>
     <string name="danar_useextended_title">Usa boli estesi per &gt;200%</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Micro selezionato</string>
     <string name="rs_loginsulinchange_title">Registra cambio serbatorio</string>
     <string name="rs_loginsulinchange_summary">Aggiungi evento \"cambio insulina\" al portale quando rilevato nello storico</string>
@@ -101,4 +104,18 @@
     <string name="num1pin">1: (12 cifre)</string>
     <string name="num2pin">2: (8 cifre)</string>
     <string name="basal_bolus_step">Incremento basale/bolo</string>
+    <string name="connecting_to_pump">Collegamento al micro…</string>
+    <string name="pairing_successful">Associazione riuscita!</string>
+    <string name="pairing_successful_message">Il micro è ora connesso e pronto per l\'uso.</string>
+    <string name="cancel_pairing_title">Annulla associazione?</string>
+    <string name="cancel_pairing_message">Il processo di abbinamento verrà interrotto.</string>
+    <string name="done">Fatto</string>
+    <string name="open_bluetooth_settings">Apri le impostazioni Bluetooth</string>
+    <string name="enter_pump_password">Inserisci la password del micro</string>
+    <string name="select_paired_device">Seleziona dispositivo accoppiato</string>
+    <string name="no_paired_devices">Nessun dispositivo Dana accoppiato trovato. Coppia prima il micro nelle impostazioni Bluetooth Android.</string>
+    <string name="password_hint">Password a 4 cifre (0–9999)</string>
+    <string name="connecting_verifying">Connessione e verifica della password…</string>
+    <string name="password_ok">Password verificata con successo!</string>
+    <string name="password_wrong">Password errata. Torna indietro e correggerla.</string>
 </resources>
