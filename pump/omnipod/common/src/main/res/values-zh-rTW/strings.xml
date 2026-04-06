@@ -125,6 +125,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">設置基礎排程</string>
     <string name="omnipod_common_cmd_set_bolus">設置胰島素劑量</string>
     <string name="omnipod_common_cmd_cancel_bolus">取消胰島素劑量</string>
+    <string name="omnipod_common_cmd_set_tbr">設定臨時基礎率</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">取消臨時基礎率</string>
     <string name="omnipod_common_cmd_discard_pod">丟棄 Pod</string>
     <string name="omnipod_common_cmd_get_pod_status">獲取 Pod 狀態</string>
     <string name="omnipod_common_cmd_set_time">設置時間</string>
@@ -133,10 +135,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">讀取脈衝日誌</string>
     <string name="omnipod_common_cmd_suspend_delivery">暫停輸送</string>
     <string name="omnipod_common_cmd_resume_delivery">恢復輸送</string>
+    <string name="omnipod_common_cmd_cancel_tbr">取消臨時基礎率（使用者操作）</string>
     <string name="omnipod_common_cmd_get_pod_info">獲取 Pod 資訊</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">設定模擬暫停的臨時基礎率</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">取消模擬暫停的臨時基礎率</string>
+    <string name="omnipod_common_cmd_split_tbr">分割臨時基礎率</string>
     <string name="omnipod_common_cmd_play_test_beep">播放測試嗶聲</string>
     <string name="omnipod_common_cmd_unknown_entry">未知項目</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">停用暫停警示</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">完成配對提醒</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">完成設定提醒</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">剛才</string>
