@@ -47,6 +47,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Người dùng</string>
     <string name="result">Kết quả</string>
     <string name="settings">Cài đặt</string>
+    <string name="nav_preferences">Tùy chọn</string>
     <string name="simple_mode">Chế độ đơn giản</string>
     <string name="expand">Mở rộng</string>
     <string name="collapse">Thu gọn</string>
@@ -780,6 +781,8 @@
     <string name="send_logs">Gửi nhật ký</string>
     <string name="file_management">Quản lý tập tin</string>
     <string name="database_management">Quản lý cơ sở dữ liệu</string>
+    <string name="data_choices">Lựa chọn dữ liệu</string>
+    <string name="unattended_settings_export">Xuất cài đặt tự động</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Cấu hình mức độ chi tiết của nhật ký</string>
     <string name="maintenance_send_logs_desc">Chia sẻ nhật ký để khắc phục sự cố</string>
@@ -989,5 +992,20 @@
     <string name="ble_scan_select_pump">Chọn bơm của bạn từ danh sách bên dưới</string>
     <string name="ble_scan_scanning">Đang quét các thiết bị…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Thêm biểu đồ</string>
+    <string name="graph_new">Biểu đồ mới</string>
+    <string name="graph_edit">Sửa biểu đồ</string>
+    <string name="graph_number">Biểu đồ %1$d</string>
+    <string name="graph_bg">Biểu đồ BG</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
 </resources>
