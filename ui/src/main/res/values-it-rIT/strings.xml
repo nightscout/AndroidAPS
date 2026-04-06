@@ -9,11 +9,28 @@
     <string name="start_hypo_tt">Avvia TT Ipoglicemia</string>
     <string name="time_offset">Offset</string>
     <string name="remind_to_bolus_later">Ricorda di fare il bolo</string>
+    <string name="a11y_carb_reminder">Imposta il promemoria all\'ora dei carboidrati</string>
     <!--    Widget-->
     <string name="configure">Configura opacità</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor attività</string>
+    <string name="time_range">Intervallo di tempo</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Glucosio Pentagon (CGP) — 14 giorni</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Ipoglicemia</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Iperglicemia</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Media</string>
+    <string name="cgp_reference">Persona sana</string>
+    <string name="cgp_patient">Paziente</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Rischio molto basso</string>
+    <string name="cgp_pgr_low">Rischio basso</string>
+    <string name="cgp_pgr_moderate">Rischio moderato</string>
+    <string name="cgp_pgr_high">Rischio alto</string>
+    <string name="cgp_pgr_extremely_high">Rischio estremamente elevato</string>
     <string name="do_you_want_reset_stats">Vuoi resettare le statistiche sull\'attività?</string>
     <string name="do_you_want_recalculate_tdd_stats">Vuoi ricalcolare le statistiche TDD?</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
@@ -41,22 +58,42 @@
     <string name="site_management">Profilo Di Gestione Sito</string>
     <string name="site_management_description">Imposta qui se vuoi gestire il sito del micro, il sito del CGM o entrambi. Questa impostazione verrà utilizzata per inviare automaticamente la finestra di gestione del sito su ogni nuovo inserimento rilevato</string>
     <string name="record_site_change">Registra Posizione Sito</string>
+    <string name="update_site_change">Aggiorna Posizione Sito</string>
     <string name="edit_site">Modifica</string>
     <string name="record_site_location">Posizione Del Sito: %1$s</string>
     <string name="record_site_arrow">Freccia Del Sito: %1$s</string>
     <string name="record_site_note">Note: %1$s</string>
     <string name="delete_site_note">Nota eliminata</string>
+    <string name="site_filter_info">Selezionare il tipo di evento Terapia che si desidera visualizzare: Cambio Cannula e/o Cambio Sensore</string>
     <!-- FillDialog -->
     <string name="fill_warning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
+    <string name="fill_prime_amount">Quantità inizializzazione</string>
+    <string name="fill_pump_units_note">La quantità iniziale è nelle unità del micro</string>
+    <string name="fill_insulin_change">Cambia insulina a: %1$s (verrà applicato lo switch del profilo)</string>
+    <string name="fill_current_insulin">Insulina corrente</string>
+    <string name="fill_change_insulin">Cambia insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Non fare il bolo, solo registrazione</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Nome Insulina Mancante</string>
+    <string name="insulin_name_exists">Il nome dell\'insulina %1$s esiste già, seleziona un nuovo nome</string>
+    <string name="a11y_add_new_insulin">Aggiungi nuova insulina</string>
+    <string name="a11y_delete_current_insulin">Elimina insulina corrente</string>
+    <string name="save_or_reset_changes_first">Salva o resetta prima le modifiche correnti</string>
+    <string name="activate_insulin_no_profile">Nessun profilo attivo trovato</string>
+    <string name="activate_insulin_new_insulin">Nuova insulina: %1$s</string>
+    <string name="activate_insulin_remaining">Rimanente: %1$d min</string>
+    <string name="activate_insulin_profile_switch">Lo switch del profilo verrà creato:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Picco di carico da</string>
+    <string name="cannot_delete_last_insulin">Impossibile cancellare l\'ultima insulina</string>
+    <string name="cannot_delete_active_insulin">Impossibile eliminare l\'insulina attiva</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentuale</string>
+    <string name="permanent_profile_switch">Permanente (0 = nessun limite di durata)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Sospendi loop per 1h</string>
     <string name="suspendloopfor2h">Sospendi loop per 2h</string>
@@ -82,9 +119,14 @@
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Risultato: %1$s %2$s</string>
     <string name="missing_carbs">Mancanti %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% carboidrati immediati, senza carboidrati estesi</string>
+    <string name="wizard_carbs_type_desc">Carboidrati ridotti di %1$d%%, aggiunto eCarbs %2$d%% ritardato %3$dmin per %4$dh</string>
+    <string name="wizard_include_info">Tocca per includere/escludere dal calcolo:\n• BG — glucosio nel sangue (ON all\'inizio)\n• TT — obiettivo temporaneo (ON all\'inizio)\n• Tendenza — Tendenza glicemica (ultima condizione ricordata)\n• IOB — insulina a bordo (ON all\'inizio)\n• COB — carboidrati a bordo (ultimo stato ricordato)</string>
+    <string name="wizard_bg_age">Età Glicemia: %1$d min</string>
     <string name="a11y_current_bg">glicemia corrente</string>
     <string name="carb_time_label">Offset CHO</string>
     <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
+    <string name="show_calculation">Mostra calcolo</string>
     <!-- Treatments -->
     <string name="no_records_available">Nessun record disponibile</string>
     <string name="calculation_short">Calc</string>
@@ -103,6 +145,14 @@
     <string name="show_loop">Mostra loop</string>
     <string name="user_entry">Inserimento utente</string>
     <string name="clone_label">Clona</string>
+    <string name="add_new_profile">Aggiungi nuovo profilo</string>
+    <string name="show_profile">Mostra profilo</string>
+    <string name="edit_label">Modifica</string>
+    <string name="edit_profile">Modifica profilo</string>
+    <string name="activate_label">Attiva</string>
+    <string name="activate_profile">Attiva profilo</string>
+    <string name="remove_label">Rimuovi</string>
+    <string name="active_profile_indicator">ATTIVO</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tipo profilo</string>
     <string name="basal_pct_from_tdd_label">% di basale</string>
