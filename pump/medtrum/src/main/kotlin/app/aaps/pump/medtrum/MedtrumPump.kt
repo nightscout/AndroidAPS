@@ -71,13 +71,14 @@ class MedtrumPump @Inject constructor(
     var pumpState: MedtrumPumpState
         get() = _pumpState.value
         set(value) {
-            _pumpState.value = value
-            preferences.put(MedtrumIntNonKey.PumpState, value.state.toInt())
             // Maintain patchPrimed flag: set once we reach PRIMING, clear only on STOPPED
             when {
                 value >= MedtrumPumpState.PRIMING && value < MedtrumPumpState.STOPPED -> patchPrimed = true
                 value == MedtrumPumpState.STOPPED                                     -> patchPrimed = false
             }
+            
+            _pumpState.value = value
+            preferences.put(MedtrumIntNonKey.PumpState, value.state.toInt())
         }
 
     // Active alarms

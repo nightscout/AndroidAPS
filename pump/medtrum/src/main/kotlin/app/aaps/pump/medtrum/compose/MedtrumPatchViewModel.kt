@@ -200,31 +200,35 @@ class MedtrumPatchViewModel @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "MedtrumPatchViewModel pumpStateFlow: $state")
                 if (patchStep.value != null) {
                     when {
-                        (state == MedtrumPumpState.NONE || state == MedtrumPumpState.IDLE) && !medtrumPump.patchPrimed -> {
+                        state == MedtrumPumpState.NONE                                           -> {
                             updateSetupStep(SetupStep.INITIAL)
                         }
 
-                        state == MedtrumPumpState.FILLED && !medtrumPump.patchPrimed                                   -> {
+                        state == MedtrumPumpState.IDLE && !medtrumPump.patchPrimed               -> {
+                            updateSetupStep(SetupStep.INITIAL)
+                        }
+
+                        state == MedtrumPumpState.FILLED && !medtrumPump.patchPrimed             -> {
                             updateSetupStep(SetupStep.FILLED)
                         }
 
-                        state == MedtrumPumpState.PRIMING                                                              -> {
+                        state == MedtrumPumpState.PRIMING                                        -> {
                             updateSetupStep(SetupStep.PRIMING)
                         }
 
-                        state == MedtrumPumpState.PRIMED || state == MedtrumPumpState.EJECTED                          -> {
+                        state == MedtrumPumpState.PRIMED || state == MedtrumPumpState.EJECTED    -> {
                             updateSetupStep(SetupStep.PRIMED)
                         }
 
-                        state == MedtrumPumpState.ACTIVE || state == MedtrumPumpState.ACTIVE_ALT                       -> {
+                        state == MedtrumPumpState.ACTIVE || state == MedtrumPumpState.ACTIVE_ALT -> {
                             updateSetupStep(SetupStep.ACTIVATED)
                         }
 
-                        state == MedtrumPumpState.STOPPED                                                              -> {
+                        state == MedtrumPumpState.STOPPED                                        -> {
                             updateSetupStep(SetupStep.STOPPED)
                         }
 
-                        else                                                                                           -> {
+                        else                                                                     -> {
                             updateSetupStep(SetupStep.ERROR)
                         }
                     }
@@ -314,7 +318,15 @@ class MedtrumPatchViewModel @Inject constructor(
                 while (medtrumService?.isConnecting == true || medtrumService?.isConnected == true) {
                     delay(100)
                 }
-                medtrumPump.pumpState = MedtrumPumpState.FILLED
+                // Set pump state to to a proper state, (at beginning of retry state is reset to NONE)
+                // This is to ensure user can retry activation again
+                if (medtrumPump.pumpState == MedtrumPumpState.NONE) {
+                    if (medtrumPump.patchPrimed) {
+                        medtrumPump.pumpState = MedtrumPumpState.PRIMING
+                    } else {
+                        medtrumPump.pumpState = MedtrumPumpState.FILLED
+                    }
+                }
                 _events.tryEmit(PatchEvent.Finish)
             }
             return
