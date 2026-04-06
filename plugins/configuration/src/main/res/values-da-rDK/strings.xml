@@ -15,9 +15,6 @@
     <string name="high_mark">HØJ værdi</string>
     <string name="low_mark_comment">Nedre værdi for målområde (kun visning)</string>
     <string name="high_mark_comment">Øvre værdi for målområde (kun visning)</string>
-    <string name="permission">Tilladelse</string>
-    <string name="need_system_window_permission">Applikationen mangler system vindues tilladelse til notifikationer</string>
-    <string name="askforpermission">Anmod om tilladelse</string>
     <string name="storedsettingsfound">Gemte indstillinger fundet</string>
     <string name="master_password_summary">Hovedadgangskode bruges til backup kryptering og til at tilsidesætte sikkerhed i applikationen. Husk det eller gem et sikkert sted.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -35,18 +32,13 @@
     <string name="startobjective">Start dit første mål</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
     <string name="readstatus">Læs status</string>
-    <string name="data_choices">Valg Af Data</string>
-    <string name="fabric_upload">Fabric Upload</string>
-    <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Anmod</string>
-    <string name="apsmode_title">APS Tilstand</string>
     <string name="error_asking_for_permissions">Fejl under forespørgsel af tilladelser</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigurations bygger</string>
     <string name="configbuilder_pump_description">Hvilken pumpe vil du gerne bruge med AAPS?</string>
-    <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps_description">Hvilken APS algoritme skal foretage terapi justeringer?</string>
     <string name="configbuilder_general_description">Disse er nogle generelle tilføjelser, som du måske kan finde nyttige.</string>
     <string name="configbuilder_constraints_description">Hvilke begrænsninger er anvendt?</string>
@@ -61,67 +53,12 @@
     <string name="a11y_open_settings">Åbn indstillinger</string>
     <string name="nsclient_version_does_not_match">AAPSClient version matcher ikke AAPS version. Opdater venligst.</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Indstillinger</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Import er annulleret! Præferencer er IKKE importeret!</string>
-    <string name="preferences_import_impossible">Kan ikke importere præferencer!</string>
-    <string name="check_preferences_details_btn">Forklar importproblemer…</string>
-    <string name="check_preferences_details_title">Importeringsfejl detaljer</string>
-    <string name="check_preferences_import_btn">Importer</string>
-    <string name="check_preferences_import_anyway_btn">Importér alligevel (FARLIGT!)</string>
-    <string name="check_preferences_before_import">Tjek venligst præferencer før importering:</string>
-    <string name="check_preferences_cannot_import">Præferencer kan ikke importeres!</string>
-    <string name="check_preferences_dangerous_import">Præferencer bør ikke importeres!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">Importer indstillinger fra</string>
-    <string name="setting_imported">Indstillinger importeret</string>
-    <string name="old_master_password">Gammel Hovedadgangskode</string>
-    <string name="different_password_used">Denne fil er eksporteret og krypteret med et andet masterkodeord. Angiv det gamle masterkodeord for at dekryptere filen.</string>
-    <string name="master_password_will_be_replaced">Som et resultat af en vellykket import vil nuværende hovedadgangskode blive erstattet med den gamle hovedadgangskode!</string>
-    <string name="exported">Præferencer eksporteret</string>
-    <string name="filenotfound">Filen blev ikke fundet</string>
-    <string name="goto_main_try_again">Gå venligst tilbage til hovedskærmen og prøv igen.</string>
-    <string name="restartingapp">Afslutter applikationen for at anvende indstillinger.</string>
-    <string name="ue_exported">Brugerindtastninger exporteret</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">MAINT</string>
-    <string name="maintenance_settings">Vedligeholdelses Indstillinger</string>
-    <string name="maintenance_email">E-mail modtager</string>
-    <string name="maintenance_amount">Antal logs at sende</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksporteret %1$s siden</string>
-    <string name="exported_at" comment="at placeholder we add export date">eksporteret ved %1$s</string>
-    <string name="exported_less_than_hour_ago">eksporteret for mindre end time siden</string>
-    <string name="preferences_import_list_title">Vælg fil, der skal importeres</string>
-    <string name="metadata_warning_different_flavour">Præferencer er oprettet med forskellig variant af AAPS (%1$s) Mens du har: %2$s.\n\nNogle indstillinger mangler eller er ugyldige-efter import, tjek og opdatér dine præferencer.</string>
-    <string name="metadata_warning_different_device">Indstillinger er oprettet på en anden enhed. Det er OK, hvis du importerer fra ældre / anden telefon, men sørg for, at importerede præferencer er korrekte!</string>
-    <string name="metadata_warning_old_export">Importerede præferencer er allerede %1$s dag(e) gammel! Måske har du flere opdaterede præferencer, eller vælger du den forkerte fil? Husk at eksportere præferencer regelmæssigt!</string>
-    <string name="metadata_warning_date_format">Ugyldigt datoformat!</string>
-    <string name="metadata_warning_different_version">Indstillinger fra en anden mindre version af applikationen. Det er OK, hvis du importerer efter opgradering, men tjek efter import, hvis indstillingerne stadig er korrekte!</string>
-    <string name="metadata_urgent_different_version">Indstillinger fra en anden overordnet version af applikationen. Større versioner er forskellige, og de kan have inkompatible præferencer. Sørg for, at indstillingerne stadig er korrekte, når du har importeret!</string>
-    <string name="prefdecrypt_settings_tampered">Opsætnings fil manipuleret</string>
-    <string name="prefdecrypt_settings_secure">Indstillingsfilen er sikker</string>
-    <string name="prefdecrypt_settings_unencrypted">Bruger ikke sikker, ukrypteret indstillingsformat</string>
-    <string name="prefdecrypt_wrong_json">JSON-formatfejl. Der mangler et påkrævet felt (format, indhold, metadata eller sikkerhed)</string>
-    <string name="prefdecrypt_wrong_password">Dekrypteringsfejl. Det angivne kodeord kan ikke dekryptere filen</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Filkontrolsum (hash) mangler, kan ikke verificere valideringsindstillingerne!</string>
-    <string name="prefdecrypt_issue_modified">Filen er ændret efter eksport!</string>
-    <string name="prefdecrypt_issue_parsing">Dekrypteringsfejl, parsing præferencer mislykkedes!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfejl, det angivne kodeord er ugyldigt, eller indstillingsfilen er ændret. Det kan forekomme, at den importerede fil er eksporteret med et andet masterkodeord.</string>
-    <string name="prefdecrypt_issue_wrong_format">Manglende krypteringskonfiguration, indstillingsformat er ugyldigt!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Filformat</string>
-    <string name="metadata_label_created_at">Oprettet den</string>
-    <string name="metadata_label_aaps_version">AAPS Version</string>
-    <string name="metadata_label_aaps_flavour">Build-variant</string>
-    <string name="metadata_label_device_name">Eksporterer enhedens patientnavn</string>
-    <string name="metadata_label_device_model">Eksporterer enhedsmodel</string>
-    <string name="metadata_label_encryption">Filkryptering</string>
-    <string name="metadata_format_new">Nyt krypteret format</string>
-    <string name="metadata_format_other">Ukendt eksportformat</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
