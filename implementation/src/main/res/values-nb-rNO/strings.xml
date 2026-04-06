@@ -89,4 +89,14 @@
     <string name="google_drive_list_folders_failed">Kunne ikke liste mapper i Google Drive</string>
     <string name="google_drive_list_folders_error">Feil ved henting av mapper: %1$s</string>
     <string name="google_drive_upload_no_id">Opplasting fullført, men ingen ID returnert</string>
+    <string name="google_drive_upload_verify_failed">Verifisering av opplasting mislyktes</string>
+    <string name="google_drive_upload_failed">Opplasting mislyktes: %1$s</string>
+    <string name="google_drive_upload_error">Feil ved opplasting av fil: %1$s</string>
+    <string name="google_drive_folder_access_error">Kan ikke opprette eller få tilgang til målmappe: %1$s</string>
+    <string name="google_drive_list_settings_failed">Kunne ikke liste opp innstillingsfilene</string>
+    <string name="google_drive_list_settings_error">Feil ved henting av innstillingsfiler: %1$s</string>
+    <string name="google_drive_download_failed">Kunne ikke laste ned fil</string>
+    <string name="google_drive_download_error">Feil ved nedlasting av fil: %1$s</string>
+    <string name="google_drive_authorized">Google Drive autorisert</string>
+    <string name="google_drive_reauth_required">Tøm innstillinger og autoriser Google Drive på nytt</string>
 </resources>
