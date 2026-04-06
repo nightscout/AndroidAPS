@@ -65,6 +65,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
@@ -208,13 +209,15 @@ class OverviewDataCacheImpl @Inject constructor(
     override val nsClientStatusFlow: StateFlow<AapsClientStatusData> = _nsClientStatusFlow.asStateFlow()
 
     init {
-        // Load initial data from database
+        // Load initial data after app is fully initialized (plugins ready)
         scope.launch {
-            aapsLogger.debug(LTag.UI, "OverviewDataCache: Loading initial data")
-            updateBgInfoFromDatabase()
-            updateProfileFromDatabase()
-            updateTempTargetFromDatabase()
-            updateRunningModeFromDatabase()
+            rxBus.toFlow(EventAppInitialized::class.java).collect {
+                aapsLogger.debug(LTag.UI, "OverviewDataCache: App initialized, loading initial data")
+                updateBgInfoFromDatabase()
+                updateProfileFromDatabase()
+                updateTempTargetFromDatabase()
+                updateRunningModeFromDatabase()
+            }
         }
 
         // Observe GlucoseValue changes
