@@ -264,6 +264,7 @@ class ErosOverviewViewModel @Inject constructor(
     // region Actions
 
     private fun buildPrimaryActions(): List<PumpAction> {
+        if (!podStateManager.hasPodState()) return emptyList()
         val queueEmpty = isQueueEmpty()
         val rlReady = rileyLinkServiceData.rileyLinkServiceState.isReady()
 
