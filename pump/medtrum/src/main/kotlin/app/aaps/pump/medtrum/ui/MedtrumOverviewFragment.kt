@@ -52,7 +52,7 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                                         medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE) ->
                                             PatchStep.PREPARE_PATCH
 
-                                        medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMED && medtrumPump.patchPrimed) ->
+                                        medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMING && medtrumPump.patchPrimed) ->
                                             PatchStep.RETRY_ACTIVATION
 
                                         else ->
