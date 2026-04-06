@@ -27,5 +27,17 @@
     <string name="short_status_not_initialized">Micro non inizializzato</string>
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Impostazioni esportate con successo su cloud storage</string>
+    <string name="export_to_cloud_failed">Esportazione nell\'archivio cloud non riuscita</string>
+    <string name="csv_uploaded_to_cloud">Voci utente CSV caricate con successo su cloud storage</string>
+    <string name="exported">Preferenze esportate</string>
+    <string name="exported_failed">Esportazione delle preferenze fallita!</string>
+    <string name="filenotfound">File non trovato</string>
+    <string name="ue_exported">Voci utente esportate</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">esportato %1$s fa</string>
+    <string name="exported_at" comment="at placeholder we add export date">esportato a %1$s</string>
+    <string name="exported_less_than_hour_ago">esportato meno di un\'ora fa</string>
 </resources>
