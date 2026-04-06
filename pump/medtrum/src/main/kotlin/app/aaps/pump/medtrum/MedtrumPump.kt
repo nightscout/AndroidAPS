@@ -73,10 +73,10 @@ class MedtrumPump @Inject constructor(
         set(value) {
             _pumpState.value = value
             preferences.put(MedtrumIntNonKey.PumpState, value.state.toInt())
-            // Maintain patchPrimed flag: set once we reach PRIMED, clear only on STOPPED/NONE
+            // Maintain patchPrimed flag: set once we reach PRIMING, clear only on STOPPED
             when {
-                value >= MedtrumPumpState.PRIMED && value < MedtrumPumpState.STOPPED -> patchPrimed = true
-                value == MedtrumPumpState.STOPPED || value == MedtrumPumpState.NONE  -> patchPrimed = false
+                value >= MedtrumPumpState.PRIMING && value < MedtrumPumpState.STOPPED -> patchPrimed = true
+                value == MedtrumPumpState.STOPPED                                     -> patchPrimed = false
             }
         }
 
@@ -106,9 +106,9 @@ class MedtrumPump @Inject constructor(
             _primeProgress.value = value
         }
 
-    // Tracks that the patch was primed at least once during the current activation session.
-    // Set when pumpState reaches PRIMED; cleared only by STOPPED or NONE.
-    // Used to detect an unexpected patch reset and block ACTIVATION in that case.
+    // Tracks that the patch has started priming at least once during the current activation session.
+    // Set when pumpState reaches PRIMING; cleared only by STOPPED or NONE.
+    // Used to detect an unexpected patch reset and block activation in that case.
     private var _patchPrimed = false
     var patchPrimed: Boolean
         get() = _patchPrimed

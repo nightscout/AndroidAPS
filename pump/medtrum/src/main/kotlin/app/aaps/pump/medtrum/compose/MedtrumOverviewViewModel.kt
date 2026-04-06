@@ -134,13 +134,13 @@ class MedtrumOverviewViewModel @Inject constructor(
                 )
             } else {
                 val nextStep = when {
-                    medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                                                   ->
+                    medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                                                    ->
                         PatchStep.PREPARE_PATCH
 
-                    medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMED && medtrumPump.patchPrimed) ->
+                    medtrumPump.pumpState <= MedtrumPumpState.EJECTED && !(medtrumPump.pumpState < MedtrumPumpState.PRIMING && medtrumPump.patchPrimed) ->
                         PatchStep.RETRY_ACTIVATION
 
-                    else                                                                                                                               ->
+                    else                                                                                                                                ->
                         PatchStep.START_DEACTIVATION
                 }
                 _events.tryEmit(MedtrumOverviewEvent.StartPatchWorkflow(nextStep))
