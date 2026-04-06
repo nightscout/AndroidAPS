@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.maintenance
 
+import androidx.compose.ui.graphics.vector.ImageVector
+
 /**
  * Information about the current cloud directory configuration.
  * Provider-specific strings are passed as resolved strings to avoid
@@ -11,7 +13,7 @@ data class CloudDirectoryInfo(
     val hasConnectionError: Boolean,
     val providerDisplayName: String,
     val providerDescription: String,
-    val providerIconResId: Int,
+    val providerIcon: ImageVector,
     val authorizedStatusText: String,
     val cloudPath: String
 )

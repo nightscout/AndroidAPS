@@ -47,6 +47,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
     <string name="result">Result</string>
     <string name="settings">Settings</string>
+    <string name="nav_preferences">Preferences</string>
     <string name="simple_mode">Simple mode</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>

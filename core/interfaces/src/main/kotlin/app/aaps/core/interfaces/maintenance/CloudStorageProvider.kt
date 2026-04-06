@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.maintenance
 
+import androidx.compose.ui.graphics.vector.ImageVector
+
 /**
  * Abstract interface for cloud storage providers.
  * 
@@ -24,9 +26,9 @@ interface CloudStorageProvider {
     val displayName: String
 
     /**
-     * Drawable resource ID for the provider's icon
+     * Compose vector icon for the provider
      */
-    val iconResId: Int
+    val icon: ImageVector
 
     /**
      * String resource ID for "authorized" status text (e.g., "Google Drive Authorized")

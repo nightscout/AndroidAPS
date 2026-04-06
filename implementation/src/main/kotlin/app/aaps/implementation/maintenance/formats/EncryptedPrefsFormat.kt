@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.formats
+package app.aaps.implementation.maintenance.formats
 
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
@@ -12,15 +12,15 @@ import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.utils.toHex
-import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.maintenance.PrefsMetadataKeyImpl
-import app.aaps.plugins.configuration.maintenance.data.PrefFileNotFoundError
-import app.aaps.plugins.configuration.maintenance.data.PrefFormatError
-import app.aaps.plugins.configuration.maintenance.data.PrefIOError
+import app.aaps.implementation.R
+import app.aaps.implementation.maintenance.PrefsMetadataKeyImpl
+import app.aaps.implementation.maintenance.data.PrefFileNotFoundError
+import app.aaps.implementation.maintenance.data.PrefFormatError
+import app.aaps.implementation.maintenance.data.PrefIOError
 import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.core.interfaces.maintenance.Prefs
-import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
-import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
+import app.aaps.implementation.maintenance.data.PrefsFormat
+import app.aaps.implementation.maintenance.data.PrefsStatusImpl
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.FileNotFoundException

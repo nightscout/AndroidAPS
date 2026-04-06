@@ -1,11 +1,11 @@
-package app.aaps.plugins.configuration.maintenance
+package app.aaps.implementation.maintenance
 
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
-import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
+import app.aaps.implementation.R
+import app.aaps.implementation.maintenance.data.PrefsFormat
 
 enum class PrefsMetadataKeyImpl(override val key: String, @DrawableRes override val icon: Int, @StringRes override val label: Int) : PrefsMetadataKey {
 

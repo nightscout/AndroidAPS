@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.cloud
+package app.aaps.implementation.maintenance.cloud
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -6,8 +6,9 @@ import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.maintenance.ExportPrefKeys
+import app.aaps.core.ui.compose.icons.IcGoogleDrive
+import app.aaps.implementation.R
+import app.aaps.implementation.maintenance.ExportPrefKeys
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,7 +38,7 @@ class CloudDirectoryManagerImpl @Inject constructor(
             hasConnectionError = hasConnectionError,
             providerDisplayName = provider?.displayName ?: rh.gs(R.string.storage_google_drive),
             providerDescription = rh.gs(R.string.backup_to_google_drive),
-            providerIconResId = provider?.iconResId ?: R.drawable.ic_google_drive,
+            providerIcon = provider?.icon ?: IcGoogleDrive,
             authorizedStatusText = authorizedStatusText,
             cloudPath = CloudConstants.CLOUD_PATH_EXPORT
         )

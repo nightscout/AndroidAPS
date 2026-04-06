@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.ExportConfig
 import app.aaps.core.interfaces.maintenance.ExportDestination
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ExportResult
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
@@ -56,6 +57,7 @@ class MaintenanceViewModel @Inject constructor(
     private val l: L,
     private val maintenance: Maintenance,
     private val importExportPrefs: ImportExportPrefs,
+    private val fileListProvider: FileListProvider,
     private val cloudDirectoryManager: CloudDirectoryManager,
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
@@ -75,6 +77,9 @@ class MaintenanceViewModel @Inject constructor(
     val exportConfig: StateFlow<ExportConfig?>
         field = MutableStateFlow<ExportConfig?>(null)
 
+    val isDirectoryAccessGranted: StateFlow<Boolean>
+        field = MutableStateFlow(false)
+
     init {
         refreshExportConfig()
     }
@@ -82,6 +87,7 @@ class MaintenanceViewModel @Inject constructor(
     fun refreshExportConfig() {
         viewModelScope.launch(Dispatchers.IO) {
             exportConfig.value = importExportPrefs.getExportConfig()
+            isDirectoryAccessGranted.value = fileListProvider.isDirectoryAccessGranted()
         }
     }
 

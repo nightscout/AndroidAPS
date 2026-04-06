@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.cloud.providers.googledrive
+package app.aaps.implementation.maintenance.cloud.providers.googledrive
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -7,8 +7,10 @@ import app.aaps.core.interfaces.maintenance.CloudFileListResult
 import app.aaps.core.interfaces.maintenance.CloudFolder
 import app.aaps.core.interfaces.maintenance.CloudStorageProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.maintenance.cloud.StorageTypes
+import app.aaps.core.ui.compose.icons.IcGoogleDrive
+import androidx.compose.ui.graphics.vector.ImageVector
+import app.aaps.implementation.R
+import app.aaps.implementation.maintenance.cloud.StorageTypes
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +43,7 @@ class GoogleDriveProvider @Inject constructor(
     override val displayName: String
         get() = rh.gs(R.string.storage_google_drive)
 
-    override val iconResId: Int = R.drawable.ic_google_drive
+    override val icon: ImageVector = IcGoogleDrive
 
     override val authorizedTextResId: Int = R.string.google_drive_authorized
 

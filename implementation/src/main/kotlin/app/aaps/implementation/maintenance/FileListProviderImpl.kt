@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance
+package app.aaps.implementation.maintenance
 
 import android.content.Context
 import android.net.Uri
@@ -19,10 +19,10 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.plugins.configuration.R
+import app.aaps.implementation.R
 import app.aaps.core.interfaces.maintenance.PrefMetadataMap
-import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
-import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
+import app.aaps.implementation.maintenance.data.PrefsStatusImpl
+import app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Lazy
 import dagger.Reusable
@@ -266,4 +266,12 @@ class FileListProviderImpl @Inject constructor(
         }
     }
 
+    override fun isDirectoryAccessGranted(): Boolean {
+        val uriString = preferences.get().getIfExists(StringKey.AapsDirectoryUri)
+        if (uriString.isNullOrEmpty()) return false
+        val uri = uriString.toUri()
+        return context.contentResolver.persistedUriPermissions.any {
+            it.uri == uri && it.isReadPermission && it.isWritePermission
+        }
+    }
 }

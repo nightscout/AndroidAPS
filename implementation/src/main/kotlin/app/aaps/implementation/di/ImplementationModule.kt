@@ -103,7 +103,8 @@ import dagger.hilt.components.SingletonComponent
 @Module(
     includes = [
         ImplementationModule.Bindings::class,
-        CommandQueueModule::class
+        CommandQueueModule::class,
+        MaintenanceImplModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)

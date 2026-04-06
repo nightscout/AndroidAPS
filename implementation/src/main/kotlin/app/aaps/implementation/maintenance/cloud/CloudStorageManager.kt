@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.cloud
+package app.aaps.implementation.maintenance.cloud
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -168,12 +168,4 @@ class CloudStorageManager @Inject constructor(
         return providers[storageType]?.displayName ?: storageType
     }
 
-    /**
-     * Get the icon resource ID for a storage type.
-     * @param storageType The storage type
-     * @return Drawable resource ID, or 0 if not found
-     */
-    fun getIconResId(storageType: String): Int {
-        return providers[storageType]?.iconResId ?: 0
-    }
 }

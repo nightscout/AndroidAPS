@@ -1,11 +1,11 @@
-package app.aaps.configuration.maintenance
+package app.aaps.implementation.maintenance
 
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.plugins.configuration.maintenance.MaintenanceImpl
-import app.aaps.plugins.configuration.maintenance.cloud.CloudStorageManager
+import app.aaps.implementation.maintenance.MaintenanceImpl
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

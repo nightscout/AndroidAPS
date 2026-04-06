@@ -1,19 +1,10 @@
 package app.aaps.plugins.configuration.di
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
-import app.aaps.core.interfaces.maintenance.FileListProvider
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
-import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.plugins.configuration.configBuilder.ConfigBuilderFragment
 import app.aaps.plugins.configuration.configBuilder.ConfigBuilderPlugin
 import app.aaps.plugins.configuration.configBuilder.RunningConfigurationImpl
-import app.aaps.plugins.configuration.maintenance.FileListProviderImpl
-import app.aaps.plugins.configuration.maintenance.ImportExportPrefsImpl
-import app.aaps.plugins.configuration.maintenance.MaintenanceImpl
-import app.aaps.plugins.configuration.maintenance.cloud.CloudDirectoryManagerImpl
-import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -24,28 +15,19 @@ import dagger.hilt.components.SingletonComponent
 @Module(
     includes = [
         ConfigurationModule.Bindings::class,
-        SetupWizardModule::class,
-        CloudStorageModule::class
+        SetupWizardModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)
 abstract class ConfigurationModule {
 
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
-    @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
-    @ContributesAndroidInjector abstract fun contributesApsResultExportWorker(): ImportExportPrefsImpl.ApsResultExportWorker
-    @ContributesAndroidInjector abstract fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
-    @ContributesAndroidInjector abstract fun prefImportListProviderInjector(): FileListProvider
 
     @Module
     @InstallIn(SingletonComponent::class)
     interface Bindings {
 
-        @Binds fun bindPrefFileListProvider(prefFileListProviderImpl: FileListProviderImpl): FileListProvider
         @Binds fun bindRunningConfiguration(runningConfigurationImpl: RunningConfigurationImpl): RunningConfiguration
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder
-        @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefsImpl): ImportExportPrefs
-        @Binds fun bindMaintenanceInterface(maintenanceImpl: MaintenanceImpl): Maintenance
-        @Binds fun bindCloudDirectoryManager(impl: CloudDirectoryManagerImpl): CloudDirectoryManager
     }
 }

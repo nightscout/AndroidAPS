@@ -68,7 +68,8 @@ fun MaintenanceBottomSheet(
     onToggleLogEmail: (Boolean) -> Unit = {},
     onToggleLogCloud: (Boolean) -> Unit = {},
     onToggleCsvLocal: (Boolean) -> Unit = {},
-    onToggleCsvCloud: (Boolean) -> Unit = {}
+    onToggleCsvCloud: (Boolean) -> Unit = {},
+    isDirectoryAccessGranted: Boolean = false
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -97,7 +98,8 @@ fun MaintenanceBottomSheet(
             onToggleLogEmail = onToggleLogEmail,
             onToggleLogCloud = onToggleLogCloud,
             onToggleCsvLocal = onToggleCsvLocal,
-            onToggleCsvCloud = onToggleCsvCloud
+            onToggleCsvCloud = onToggleCsvCloud,
+            isDirectoryAccessGranted = isDirectoryAccessGranted
         )
     }
 }
@@ -123,7 +125,8 @@ internal fun MaintenanceBottomSheetContent(
     onToggleLogEmail: (Boolean) -> Unit = {},
     onToggleLogCloud: (Boolean) -> Unit = {},
     onToggleCsvLocal: (Boolean) -> Unit = {},
-    onToggleCsvCloud: (Boolean) -> Unit = {}
+    onToggleCsvCloud: (Boolean) -> Unit = {},
+    isDirectoryAccessGranted: Boolean = false
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     MaterialTheme.colorScheme.error
@@ -189,7 +192,13 @@ internal fun MaintenanceBottomSheetContent(
             icon = Icons.Default.Folder,
             color = primaryColor,
             onDismiss = onDismiss,
-            onClick = onDirectoryClick
+            onClick = onDirectoryClick,
+            leadingContent = {
+                DirectoryStatusIcon(
+                    isAccessGranted = isDirectoryAccessGranted,
+                    color = primaryColor
+                )
+            }
         )
         MaintenanceItem(
             text = stringResource(CoreUiR.string.cloud_directory),
@@ -315,6 +324,27 @@ internal fun MaintenanceBottomSheetContent(
             onDismiss = onDismiss,
             onClick = onResetDbClick,
             danger = true
+        )
+    }
+}
+
+@Composable
+private fun DirectoryStatusIcon(
+    isAccessGranted: Boolean,
+    color: Color
+) {
+    val badgeColor = if (isAccessGranted) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error
+    BadgedBox(
+        badge = {
+            Badge(
+                containerColor = badgeColor,
+                modifier = Modifier.size(8.dp)
+            )
+        }
+    ) {
+        TonalIcon(
+            painter = rememberVectorPainter(Icons.Default.Folder),
+            color = color
         )
     }
 }
@@ -462,7 +492,8 @@ private fun MaintenanceBottomSheetContentPreview() {
                 csvLocal = true,
                 csvCloud = false,
                 cloudDisplayName = "Google Drive"
-            )
+            ),
+            isDirectoryAccessGranted = true
         )
     }
 }

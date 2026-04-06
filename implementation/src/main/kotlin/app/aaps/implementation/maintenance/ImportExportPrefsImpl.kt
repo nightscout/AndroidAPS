@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance
+package app.aaps.implementation.maintenance
 
 import android.Manifest
 import android.bluetooth.BluetoothManager
@@ -58,14 +58,14 @@ import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
-import app.aaps.plugins.configuration.maintenance.cloud.CloudStorageManager
-import app.aaps.plugins.configuration.maintenance.data.PrefFileNotFoundError
-import app.aaps.plugins.configuration.maintenance.data.PrefIOError
-import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
-import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
-import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
+import app.aaps.implementation.R
+import app.aaps.implementation.maintenance.cloud.CloudConstants
+import app.aaps.implementation.maintenance.cloud.CloudStorageManager
+import app.aaps.implementation.maintenance.data.PrefFileNotFoundError
+import app.aaps.implementation.maintenance.data.PrefIOError
+import app.aaps.implementation.maintenance.data.PrefsFormat
+import app.aaps.implementation.maintenance.data.PrefsStatusImpl
+import app.aaps.implementation.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
@@ -395,7 +395,7 @@ class ImportExportPrefsImpl @Inject constructor(
                 context = activity,
                 title = rh.gs(wrongPwdTitle),
                 message = rh.gs(app.aaps.core.ui.R.string.master_password_missing, rh.gs(app.aaps.core.ui.R.string.protection)),
-                positiveButton = R.string.nav_preferences,
+                positiveButton = app.aaps.core.ui.R.string.nav_preferences,
                 ok = { activity.startActivity(Intent(activity, uiInteraction.preferencesActivity).putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)) }
             )
             exportPasswordDataStore.clearPasswordDataStore(context)
@@ -572,13 +572,13 @@ class ImportExportPrefsImpl @Inject constructor(
             val provider = cloudStorageManager.getActiveProvider()
             if (provider == null) {
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_PROVIDER")
-                ToastUtils.errorToast(activity, rh.gs(R.string.cloud_connection_failed))
+                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed))
                 return@launch
             }
 
             if (!provider.testConnection()) {
                 aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CONN_FAIL")
-                ToastUtils.errorToast(activity, rh.gs(R.string.cloud_connection_failed))
+                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed))
                 return@launch
             }
 
@@ -616,13 +616,13 @@ class ImportExportPrefsImpl @Inject constructor(
                 val provider = cloudStorageManager.getActiveProvider()
                 if (provider == null) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_NO_PROVIDER")
-                    ToastUtils.errorToast(activity, rh.gs(R.string.cloud_connection_failed))
+                    ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed))
                     return@launch
                 }
 
                 if (!provider.testConnection()) {
                     aapsLogger.error(LTag.CORE, "${CloudConstants.LOG_PREFIX} EXPORT_CONN_FAIL")
-                    ToastUtils.errorToast(activity, rh.gs(R.string.cloud_connection_failed))
+                    ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.cloud_connection_failed))
                     return@launch
                 }
 

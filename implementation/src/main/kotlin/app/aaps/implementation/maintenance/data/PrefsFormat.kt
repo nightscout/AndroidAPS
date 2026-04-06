@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.data
+package app.aaps.implementation.maintenance.data
 
 import androidx.annotation.DrawableRes
 import androidx.documentfile.provider.DocumentFile
@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.maintenance.PrefMetadataMap
 import app.aaps.core.interfaces.maintenance.Prefs
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.PrefsStatus
-import app.aaps.plugins.configuration.R
+import app.aaps.implementation.R
 import kotlinx.parcelize.Parcelize
 
 interface PrefsFormat {

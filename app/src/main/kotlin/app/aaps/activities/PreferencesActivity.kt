@@ -29,7 +29,7 @@ class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragm
         binding = ActivityPreferencesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(app.aaps.plugins.configuration.R.string.nav_preferences)
+        title = rh.gs(app.aaps.core.ui.R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         myPreferenceFragment = MyPreferenceFragment()

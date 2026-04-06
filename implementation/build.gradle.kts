@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    id("kotlin-parcelize")
     id("android-module-dependencies")
     id("all-open-dependencies")
     id("test-module-dependencies")
@@ -23,6 +24,8 @@ dependencies {
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":shared:impl"))
+    implementation(libs.com.squareup.okhttp3.okhttp)
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":plugins:aps"))

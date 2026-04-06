@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.cloud
+package app.aaps.implementation.maintenance.cloud
 
 /**
  * Centralized management of cloud-related constants.

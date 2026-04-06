@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.cloud.providers.googledrive
+package app.aaps.implementation.maintenance.cloud.providers.googledrive
 
 import android.net.Uri
 import androidx.core.net.toUri
@@ -8,8 +8,8 @@ import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.maintenance.cloud.CloudConstants
+import app.aaps.implementation.R
+import app.aaps.implementation.maintenance.cloud.CloudConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -201,7 +201,7 @@ class GoogleDriveManager @Inject constructor(
             val refreshToken = sp.getString(PREF_GOOGLE_DRIVE_REFRESH_TOKEN, "")
             if (refreshToken.isEmpty()) {
                 aapsLogger.warn(LTag.CORE, "$LOG_PREFIX Missing refresh token when refreshing access token")
-                showConnectionError(rh.gs(R.string.cloud_token_expired_or_invalid))
+                showConnectionError(rh.gs(app.aaps.core.ui.R.string.cloud_token_expired_or_invalid))
                 return@withContext null
             }
 
@@ -557,7 +557,7 @@ class GoogleDriveManager @Inject constructor(
      */
     private fun handleApiError(responseCode: Int, responseBody: String = "", fallbackMessage: String) {
         if (isTokenExpiredOrRevoked(responseCode, responseBody)) {
-            showConnectionError(rh.gs(R.string.cloud_token_expired_or_invalid))
+            showConnectionError(rh.gs(app.aaps.core.ui.R.string.cloud_token_expired_or_invalid))
         } else {
             showConnectionError(fallbackMessage)
         }

@@ -76,7 +76,25 @@ fun ImportSettingsScreen(
     when (val currentStep = step) {
         is ImportStep.Idle,
         is ImportStep.Loading        -> {
-            ImportLoadingContent()
+            Scaffold(
+                topBar = {
+                    AapsTopAppBar(
+                        title = { Text(stringResource(CoreUiR.string.import_setting)) },
+                        navigationIcon = {
+                            IconButton(onClick = { viewModel.cancelImport(); onClose() }) {
+                                Icon(Icons.Default.Close, contentDescription = null)
+                            }
+                        }
+                    )
+                }
+            ) { padding ->
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         }
 
         is ImportStep.FilePicker     -> {
@@ -121,16 +139,6 @@ fun ImportSettingsScreen(
                 }
             )
         }
-    }
-}
-
-@Composable
-private fun ImportLoadingContent() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
     }
 }
 
