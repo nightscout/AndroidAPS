@@ -28,6 +28,8 @@
     <!-- manage moved to core:ui module -->
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
     <string name="actions_shortname">AZN</string>
+    <string name="status">Stato</string>
+    <string name="pump_actions">Azioni micro</string>
     <string name="tempbasal_button">Basale temporanea</string>
     <string name="extended_bolus_button">Bolo esteso</string>
     <string name="extended_bolus_cancel_button">Cancella bolo esteso</string>
