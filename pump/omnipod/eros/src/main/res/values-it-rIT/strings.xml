@@ -44,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Una basale temporanea è in esecuzione sul pod, ma AAPS non ne è a conoscenza. Cancella manualmente la tua basale temporanea.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Statistiche RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Reset RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Leggi log impulsi</string>
     <string name="omnipod_eros_pod_management_pulse_log">Log impulsi</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Log impulsi (copiato negli appunti)</string>
