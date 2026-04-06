@@ -38,4 +38,5 @@
     <string name="concentration_format">%1$s (%2$s)</string>
     <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
+    <!-- Maintenance strings (moved from plugins/configuration) -->
 </resources>
