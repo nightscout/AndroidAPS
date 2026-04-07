@@ -74,6 +74,7 @@
     <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
     <string name="confirm">Bekreft</string>
     <string name="pump">Pumpe</string>
+    <string name="pump_management">Pumpe</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Opplaster</string>
@@ -316,6 +317,7 @@
     <string name="careportal_dad_alert">Logg varsel fra diabetes-hund</string>
     <string name="careportal_insulin_cartridge_change">Bytte insulinreservoar</string>
     <string name="careportal_profileswitch">Profilbytte</string>
+    <string name="profile_management">Profil</string>
     <string name="careportal_snackbolus">Mellommåltidsbolus</string>
     <string name="careportal_mealbolus">Måltidsbolus</string>
     <string name="careportal_correctionbolus">Korreksjonsbolus</string>
@@ -335,6 +337,7 @@
     <string name="treatment_insulin_desc">Lever bolus manuelt</string>
     <string name="treatment_carbs_desc">Registrer karbo uten insulin</string>
     <string name="treatment_calculator_desc">Beregn bolus</string>
+    <string name="insulin_management">Insulin</string>
     <string name="manage_insulin_desc">Administrer og aktiver insulinkonfigurasjoner</string>
     <string name="concentration_disable_blocked">Kan ikke deaktivere konsentrasjonsstøtte mens ikke-U100-insuliner finnes. Fjern alle ikke-U100-insulinkonfigurasjoner og bytt til en U100-profil først.</string>
     <string name="simple_mode_blocked_by_concentration">Kan ikke aktivere Enkelmodus når du bruker insulin som ikke er U100. Bytt til U100-insulin først.</string>
@@ -371,6 +374,7 @@
     <string name="custom">Egendefinert</string>
     <string name="preset_settings">Forhåndsinnstilte innstillinger</string>
     <string name="activation">Aktivering</string>
+    <string name="temp_target_management">Midlertidig mål</string>
     <string name="revert_to_defaults">Tilbakestill til standardinnstillinger</string>
     <string name="confirm_remove_preset">Fjerne forhåndsinnstillingen %1$s?</string>
     <string name="confirm_cancel_temp_target">Avbryt aktivt midlertidig mål?</string>
@@ -660,6 +664,7 @@
     <string name="wizard_explain_tt_to">%1$s til %2$s</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
     <string name="quickwizard">Hurtigknapp</string>
+    <string name="quickwizard_managemnt">Hurtigknapp</string>
     <!--    Preferences-->
     <string name="child">Barn</string>
     <string name="teenage">Tenåring</string>
@@ -944,6 +949,25 @@
     <string name="no_search_results">Ingen resultater funnet</string>
     <string name="search_plugin_disabled">Plugin %1$s deaktivert</string>
     <!--    Food Management -->
+    <string name="food_management">Mat</string>
+    <string name="food_deleted">Mat slettet</string>
+    <string name="edit_food">Rediger mat</string>
+    <string name="add_food">Legg til mat</string>
+    <string name="name">Navn</string>
+    <string name="category">Kategori</string>
+    <string name="subcategory">Underkategori</string>
+    <string name="portion">Porsjon</string>
+    <string name="unit_label">Enhet</string>
+    <string name="fat">Fett</string>
+    <string name="protein">Protein</string>
+    <string name="energy">Energi</string>
+    <string name="undo">Angre</string>
+    <string name="no_data">Ingen data</string>
+    <string name="manage_food_desc">Administrer oppføringer i matdatabasen</string>
+    <string name="label_carbs_g">Karbo (g)</string>
+    <string name="label_fat_g">Fett (g)</string>
+    <string name="label_protein_g">Protein (g)</string>
+    <string name="label_energy_kj">Energi (kJ)</string>
     <!--    Log Settings-->
     <string name="nav_logsettings">Logginnstillinger</string>
     <string name="resettodefaults">Tilbakestill til standardinnstillinger</string>
