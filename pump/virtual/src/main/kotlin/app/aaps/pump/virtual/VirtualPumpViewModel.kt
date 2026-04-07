@@ -94,11 +94,11 @@ class VirtualPumpViewModel(
 
         val tempBasalText = profile?.let {
             runBlocking { persistenceLayer.getTemporaryBasalActiveAt(now) }
-                ?.toStringFull(it, dateUtil, rh)
+                ?.toStringFull(it, dateUtil, ch)
         } ?: ""
 
         val extendedBolusText = runBlocking { persistenceLayer.getExtendedBolusActiveAt(now) }
-            ?.toStringFull(dateUtil, rh) ?: ""
+            ?.toStringFull(dateUtil, ch) ?: ""
 
         // Format values for the shared builder
         val lastConnection = virtualPumpPlugin.lastDataTime.value.takeIf { it != 0L }

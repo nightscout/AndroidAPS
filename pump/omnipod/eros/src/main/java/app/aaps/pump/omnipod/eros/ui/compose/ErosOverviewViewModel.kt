@@ -222,7 +222,10 @@ class ErosOverviewViewModel @Inject constructor(
 
             // Base basal rate
             val basalText = if (podStateManager.isPodActivationCompleted) {
-                rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
+                ch.basalRateString(
+                    rate = PumpRate(omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now())))),
+                    isAbsolute = true
+                )
             } else PLACEHOLDER
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_base_basal_rate), value = basalText))
 
@@ -236,7 +239,7 @@ class ErosOverviewViewModel @Inject constructor(
 
             // Total delivered
             val totalDelivered = if (podStateManager.isPodActivationCompleted && podStateManager.totalInsulinDelivered != null) {
-                rh.gs(CommonR.string.omnipod_common_overview_total_delivered_value, podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS)
+                ch.insulinAmountString(PumpInsulin(podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS))
             } else PLACEHOLDER
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_total_delivered), value = totalDelivered))
 

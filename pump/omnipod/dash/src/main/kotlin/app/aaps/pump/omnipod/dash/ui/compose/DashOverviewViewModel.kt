@@ -252,9 +252,9 @@ class DashOverviewViewModel @Inject constructor(
 
             // Base basal rate
             val basalText = if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
-                rh.gs(
-                    app.aaps.core.ui.R.string.pump_base_basal_rate,
-                    omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
+                ch.basalRateString(
+                    rate = PumpRate(omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))),
+                    isAbsolute = true
                 )
             } else PLACEHOLDER
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_base_basal_rate), value = basalText))
@@ -269,7 +269,7 @@ class DashOverviewViewModel @Inject constructor(
 
             // Total delivered
             val totalDelivered = if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
-                rh.gs(CommonR.string.omnipod_common_overview_total_delivered_value, podStateManager.pulsesDelivered!! * PodConstants.POD_PULSE_BOLUS_UNITS)
+                ch.insulinAmountString(PumpInsulin(podStateManager.pulsesDelivered!! * PodConstants.POD_PULSE_BOLUS_UNITS))
             } else PLACEHOLDER
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_total_delivered), value = totalDelivered))
 

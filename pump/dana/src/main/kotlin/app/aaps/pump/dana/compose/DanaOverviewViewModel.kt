@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -258,20 +259,20 @@ open class DanaOverviewViewModel @Inject constructor(
 
         // Base basal rate
         val baseBasalRate = "( ${pump.activeProfile + 1} )  " +
-            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, activePump.baseBasalRate.cU)
+            ch.basalRateString(activePump.baseBasalRate, true)
 
         // Temp basal
         val tempBasalText = pump.temporaryBasalToString()
 
         // Extended bolus
-        val extendedBolusText = pump.extendedBolusToString()
+        val extendedBolusText = extendedBolusToString()
 
         // Battery
         val batteryText = battery?.let { "${it}%" }
 
         // Reservoir
         val reservoirText = if (reservoir > 0.0)
-            rh.gs(app.aaps.core.ui.R.string.reservoir_value, reservoir, 300)
+            "${ch.insulinAmountString(PumpInsulin(reservoir))} / ${ch.insulinAmountString(PumpInsulin(300.0))}"
         else null
 
         // Last connection warn level
@@ -294,8 +295,8 @@ open class DanaOverviewViewModel @Inject constructor(
 
         // Reservoir warn level
         val reservoirLevel = when {
-            reservoir <= 20.0 -> StatusLevel.CRITICAL
-            reservoir <= 50.0 -> StatusLevel.WARNING
+            ch.fromPump(PumpInsulin(reservoir)) <= 20.0 -> StatusLevel.CRITICAL
+            ch.fromPump(PumpInsulin(reservoir)) <= 50.0 -> StatusLevel.WARNING
             else              -> StatusLevel.NORMAL
         }
 
@@ -328,7 +329,7 @@ open class DanaOverviewViewModel @Inject constructor(
             add(
                 PumpInfoRow(
                     label = rh.gs(app.aaps.core.ui.R.string.daily_units),
-                    value = rh.gs(app.aaps.core.ui.R.string.reservoir_value, pump.dailyTotalUnits, pump.maxDailyTotalUnits),
+                    value = rh.gs(app.aaps.core.ui.R.string.reservoir_value, ch.fromPump(PumpInsulin(pump.dailyTotalUnits)), ch.fromPump(PumpInsulin(pump.maxDailyTotalUnits.toDouble()))),
                     level = when {
                         pump.dailyTotalUnits > pump.maxDailyTotalUnits * 0.9 -> StatusLevel.CRITICAL
                         pump.dailyTotalUnits > pump.maxDailyTotalUnits * 0.75 -> StatusLevel.WARNING
@@ -392,5 +393,14 @@ open class DanaOverviewViewModel @Inject constructor(
             primaryActions = primaryActions,
             managementActions = managementActions
         )
+    }
+
+    fun extendedBolusToString(): String {
+        val pump = danaPump
+        if (!pump.isExtendedInProgress) return ""
+
+        return "E " + ch.basalRateString(PumpRate(pump.extendedBolusAbsoluteRate), true) + " @" +
+            dateUtil.timeString(pump.extendedBolusStart) +
+            " " + pump.extendedBolusPassedMinutes + "/" + pump.extendedBolusDurationInMinutes + "'"
     }
 }
