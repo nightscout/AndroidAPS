@@ -188,9 +188,6 @@ class ActionsFragment : DaggerFragment() {
         binding.announcement.setOnClickListener {
             uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.ANNOUNCEMENT, app.aaps.core.ui.R.string.careportal_announcement)
         }
-        binding.siteRotation.setOnClickListener {
-            uiInteraction.runSiteRotationDialog(childFragmentManager)
-        }
 
         preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
     }

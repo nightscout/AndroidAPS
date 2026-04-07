@@ -237,16 +237,6 @@ class CareDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
                         listValues = valuesWithUnit.filterNotNull()
                     )
                 }
-                if (therapyEvent.type == TE.Type.SENSOR_CHANGE && preferences.get(BooleanKey.SiteRotationManageCgm)) {
-                    SiteRotationDialog().also { srd ->
-                        srd.arguments = Bundle().also { args ->
-                            args.putLong("time", therapyEvent.timestamp)
-                            args.putInt("siteMode", UiInteraction.SiteMode.EDIT.ordinal)
-                            args.putInt("siteType", TE.Type.SENSOR_CHANGE.ordinal)
-                        }
-                        srd.show(fm, "SiteRotationViewDialog")
-                    }
-                }
             },
             cancel = null
         )

@@ -79,14 +79,6 @@ interface UiInteraction {
     fun updateWidget(context: Context, from: String)
 
     /**
-     * Shows the bolus wizard dialog.
-     * @param fragmentManager The fragment manager to use.
-     * @param carbs Optional pre-filled carbs value.
-     * @param name Optional pre-filled name/note.
-     */
-    fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int? = null, name: String? = null)
-
-    /**
      * Shows a dialog related to the loop status.
      * @param fragmentManager The fragment manager to use.
      * @param showOkCancel A flag to determine dialog buttons.
@@ -160,12 +152,6 @@ interface UiInteraction {
         /** Record a new site change. */
         EDIT(2)
     }
-
-    /**
-     * Shows the site rotation dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runSiteRotationDialog(fragmentManager: FragmentManager)
 
     /**
      * Defines modes for the profile viewer dialog.
