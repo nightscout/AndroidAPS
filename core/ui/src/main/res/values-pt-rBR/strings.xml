@@ -237,9 +237,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g de carboidratos necessários em %2$d minutos</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Dose diária acumulada (TDD)</string>
-    <string name="expweight">Dose diária exponencialmente ponderada</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bólus</string>
     <string name="ratio">Média</string>
