@@ -129,7 +129,6 @@
     <string name="show_calculation">顯示計算</string>
     <!-- Treatments -->
     <string name="no_records_available">無可用紀錄</string>
-    <string name="calculation_short">計算</string>
     <string name="treatments_iob_label_string">IOB：</string>
     <string name="treatments_carbs_label_string">碳水化合物：</string>
     <string name="tempbasals_netratio_label_string">比例：</string>
