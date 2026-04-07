@@ -184,18 +184,14 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">chỉ trên đồng hồ</string>
     <string name="a11y_only_on_phone">chỉ trên điện thoại</string>
-    <string name="quickwizard_settings">Cài đặt QuickWizard</string>
     <string name="overview_edit_quickwizard_button_text">Button text</string>
     <string name="quick_wizard_mode_wizard">Wizard</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Carbs</string>
-    <string name="overview_edit_quickwizard_valid">Hợp lệ:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB > 0</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Tỷ lệ phần trăm quá cao!</string>
     <string name="a11y_drag_and_drop_handle">nút kéo–thả</string>
     <string name="additional_ecarbs">Thêm eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Sử dụng để tính toán:</string>
     <string name="calculator_options">Tùy chọn tính toán</string>
     <string name="use_bg">Sử dụng BG</string>
     <string name="use_cob">Sử dụng COB</string>
@@ -212,10 +208,7 @@
     <string name="ecarbs_additional">Lượng carb bổ sung</string>
     <string name="valid_from_to">Khoảng thời gian hợp lệ</string>
     <string name="carb_time">Thời điểm ăn carb</string>
-    <string name="no_quickwizard_entries">Chưa có mục QuickWizard nào. Nhấn + để thêm một mục.</string>
     <string name="save_changes_question">Lưu các thay đổi cho mục này?</string>
-    <string name="constraints_violation">Vượt giới hạn cho phép</string>
-    <string name="change_your_input">Nhập lại dữ liệu!</string>
     <string name="wizard_no_insulin_required">Không cần insulin</string>
     <string name="carbs_constraint_violation">Lượng carb bị giới hạn bởi các giới hạn an toàn</string>
     <string name="insulin_constraint_violation">Lượng insulin bị giới hạn bởi các giới hạn an toàn</string>
