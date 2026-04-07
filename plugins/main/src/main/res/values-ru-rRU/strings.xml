@@ -71,10 +71,7 @@
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="overview_buttons_selection">Кнопки</string>
     <string name="not_available_full">Недоступно</string>
-    <string name="constraints_violation">ограничение нарушено</string>
-    <string name="change_your_input">измените введенные данные</string>
     <string name="data_status">Состояние данных ГК</string>
-    <string name="quickwizard_settings">БыстрыйБолюс настройки</string>
     <string name="default_temptargets">Временные цели по умолчанию</string>
     <string name="fill_bolus_title">Заполнить стандартное количество инсулина</string>
     <string name="run_question">Запустить %s?</string>
