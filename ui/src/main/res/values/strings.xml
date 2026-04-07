@@ -143,7 +143,6 @@
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
