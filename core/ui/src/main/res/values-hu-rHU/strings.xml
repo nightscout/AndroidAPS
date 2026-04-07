@@ -86,7 +86,6 @@
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
-    <!--    TDDStatsActivity-->
     <string name="basalrate">Bázis</string>
     <string name="bolus">Bólus</string>
     <string name="weight">Súly</string>
