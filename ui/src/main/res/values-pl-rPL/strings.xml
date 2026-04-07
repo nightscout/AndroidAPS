@@ -87,7 +87,6 @@
     <string name="a11y_set_carb_timer">ustaw alarm dla węglowodanów</string>
     <!-- Treatments -->
     <string name="no_records_available">Brak wpisów</string>
-    <string name="calculation_short">Kalk</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Węglow.:</string>
     <string name="tempbasals_netratio_label_string">Iloczyn:</string>
