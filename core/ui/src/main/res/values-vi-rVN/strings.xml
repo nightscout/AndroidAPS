@@ -74,7 +74,6 @@
     <string name="ue_export_to_csv">Xuất dữ liệu sang Excel (csv)</string>
     <string name="confirm">Xác nhận</string>
     <string name="pump">Bơm</string>
-    <string name="pump_management">Quản lý bơm insulin</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Tải lên</string>
@@ -317,7 +316,6 @@
     <string name="careportal_dad_alert">Cảnh báo D.A.D</string>
     <string name="careportal_insulin_cartridge_change">Thay ống chứa insulin</string>
     <string name="careportal_profileswitch">Chuyển Hồ sơ</string>
-    <string name="profile_management">Quản lý hồ sơ</string>
     <string name="careportal_snackbolus">Bolus bữa ăn nhẹ</string>
     <string name="careportal_mealbolus">Bolus cho bữa ăn</string>
     <string name="careportal_correctionbolus">Bolus hiệu chỉnh</string>
@@ -337,7 +335,6 @@
     <string name="treatment_insulin_desc">Tiêm liều bolus thủ công</string>
     <string name="treatment_carbs_desc">Ghi nhận carb không kèm insulin</string>
     <string name="treatment_calculator_desc">Tính toán liều bolus</string>
-    <string name="insulin_management">Quản lý insulin</string>
     <string name="manage_insulin_desc">Quản lý và kích hoạt các cấu hình insulin</string>
     <string name="concentration_disable_blocked">Không thể tắt hỗ trợ nồng độ khi vẫn còn insulin không phải U100. Hãy xóa tất cả các cấu hình insulin không phải U100 và chuyển sang hồ sơ U100 trước.</string>
     <string name="simple_mode_blocked_by_concentration">Không thể bật chế độ đơn giản khi đang sử dụng insulin không phải U100. Hãy chuyển sang insulin U100 trước.</string>
@@ -374,7 +371,6 @@
     <string name="custom">Tuỳ chỉnh</string>
     <string name="preset_settings">Thiết lập cài đặt sẵn</string>
     <string name="activation">Kích hoạt</string>
-    <string name="temp_target_management">Quản lý mục tiêu tạm thời</string>
     <string name="revert_to_defaults">Khôi phục về mặc định</string>
     <string name="confirm_remove_preset">Xóa cài đặt sẵn %1$s?</string>
     <string name="confirm_cancel_temp_target">Hủy mục tiêu tạm thời đang hoạt động?</string>
@@ -664,7 +660,6 @@
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">Không có bơm khả dụng!</string>
     <string name="quickwizard">QuickWizard</string>
-    <string name="quickwizard_managemnt">Quản lý Quick Wizar</string>
     <!--    Preferences-->
     <string name="child">Trẻ em</string>
     <string name="teenage">Thanh thiếu niên</string>
@@ -945,6 +940,7 @@
     <string name="wiki_search_offline">Cần có Internet để tìm kiếm tài liệu</string>
     <string name="no_search_results">Không tìm thấy kết quả</string>
     <string name="search_plugin_disabled">Plugin %1$s đã bị tắt</string>
+    <!--    Food Management -->
     <!--    Log Settings-->
     <string name="nav_logsettings">Cài đặt nhật ký</string>
     <string name="resettodefaults">Đặt lại về mặc định</string>
