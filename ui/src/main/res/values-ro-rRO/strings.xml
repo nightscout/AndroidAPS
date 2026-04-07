@@ -184,18 +184,14 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">numai pe ceas</string>
     <string name="a11y_only_on_phone">numai pe telefon</string>
-    <string name="quickwizard_settings">Setări AsistentRapid</string>
     <string name="overview_edit_quickwizard_button_text">Text buton</string>
     <string name="quick_wizard_mode_wizard">Asistent</string>
     <string name="quick_wizard_mode_insulin">Insulină</string>
     <string name="quick_wizard_mode_carbs">Carbohidrați</string>
-    <string name="overview_edit_quickwizard_valid">Valabil:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Doar IOB pozitiv</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Procentaj prea mare!</string>
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
     <string name="additional_ecarbs">Adaugă carbohidrați extinși</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Utilizați pentru calcul:</string>
     <string name="calculator_options">Opţiuni calculator</string>
     <string name="use_bg">Utilizați glicemia</string>
     <string name="use_cob">Utilizați COB</string>
@@ -212,10 +208,7 @@
     <string name="ecarbs_additional">Carbohidrați suplimentari</string>
     <string name="valid_from_to">Interval de timp valid</string>
     <string name="carb_time">Timp carbohidrați</string>
-    <string name="no_quickwizard_entries">Fără intrări de Asistent Rapid. Atingeți + pentru a adăuga unul.</string>
     <string name="save_changes_question">Salvați modificările acestei intrări?</string>
-    <string name="constraints_violation">Încălcarea constrângerilor</string>
-    <string name="change_your_input">Schimbați-vă intrarea!</string>
     <string name="wizard_no_insulin_required">Nu este necesară insulină</string>
     <string name="carbs_constraint_violation">Carbohidrații limitați de constrângeri</string>
     <string name="insulin_constraint_violation">Insulină limitată de constrângeri</string>
