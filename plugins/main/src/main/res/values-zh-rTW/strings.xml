@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">循環已停用</string>
     <string name="smscommunicator_pump_disconnected">幫浦已中斷連線</string>
-    <!-- Food-->
-    <string name="food_short">食物</string>
-    <string name="description_food">顯示在Nightscout中定義的食物預設</string>
-    <string name="filter">篩選</string>
-    <string name="food">食物</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">能量</string>
-    <string name="short_protein">蛋白質</string>
-    <string name="short_fat">脂肪</string>
-    <string name="category">類別</string>
-    <string name="subcategory">子類別</string>
     <string name="calculator_label">計算機</string>
     <!-- Profile -->
     <!-- localprofile moved to core:ui module -->
@@ -34,7 +23,6 @@
     <string name="extended_bolus_button">延長注射</string>
     <string name="extended_bolus_cancel_button">取消延長注射</string>
     <string name="tools">工具</string>
-    <string name="site_rotation">部位輪替</string>
     <string name="nav_history_browser">歷史瀏覽器</string>
     <string name="sensor_label">傳感器</string>
     <string name="age_label">時間：</string>
