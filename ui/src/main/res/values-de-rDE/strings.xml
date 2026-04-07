@@ -104,8 +104,6 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">nur auf Uhr</string>
     <string name="a11y_only_on_phone">nur auf Smartphone</string>
-    <string name="quickwizard_settings">QuickWizard-Einstellungen</string>
-    <string name="overview_edit_quickwizard_valid">Gültigkeit:</string>
     <string name="a11y_drag_and_drop_handle">Drag and Drop Handle</string>
     <!--    Widget-->
     <!--    Permissions-->
