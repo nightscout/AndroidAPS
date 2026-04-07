@@ -237,9 +237,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g επιπλέον υδατάνθρακες απαιτούνται μέσα σε %2$d λεπτά</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Άθροισμα TDD</string>
-    <string name="expweight">Εκθετικά Σταθμισμένο TDD</string>
     <string name="basalrate">Βασικός Ρυθμός</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Αναλογία</string>
