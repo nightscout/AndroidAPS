@@ -87,7 +87,6 @@
     <string name="a11y_set_carb_timer">régler l\'alarme du minuteur de glucides</string>
     <!-- Treatments -->
     <string name="no_records_available">Aucun enregistrement disponible</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IA: </string>
     <string name="treatments_carbs_label_string">Glucides:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
