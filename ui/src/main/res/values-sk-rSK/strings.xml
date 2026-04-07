@@ -87,7 +87,6 @@
     <string name="a11y_set_carb_timer">nastaviť upozornenie na sacharidy</string>
     <!-- Treatments -->
     <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
-    <string name="calculation_short">Kalk</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Sacharidy:</string>
     <string name="tempbasals_netratio_label_string">Pomer:</string>
