@@ -104,8 +104,6 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">kun på ur</string>
     <string name="a11y_only_on_phone">kun på telefon</string>
-    <string name="quickwizard_settings">QuickWizard Indstillinger</string>
-    <string name="overview_edit_quickwizard_valid">Gyldig:</string>
     <string name="a11y_drag_and_drop_handle">træk og slip-håndtag</string>
     <!--    Widget-->
     <!--    Permissions-->
