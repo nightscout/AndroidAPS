@@ -1243,7 +1243,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 okDialogText.add(rh.gs(app.aaps.core.ui.R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, profileFunction.getUnits())))
                 if (config.APS) {
                     val aps = activePlugin.activeAPS
-                    aps.getSensitivityOverviewString()?.let {
+                    aps?.getSensitivityOverviewString()?.let {
                         okDialogText.add(it)
                     }
                 }

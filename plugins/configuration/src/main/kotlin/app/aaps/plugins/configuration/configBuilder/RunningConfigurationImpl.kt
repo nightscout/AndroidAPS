@@ -61,8 +61,10 @@ class RunningConfigurationImpl @Inject constructor(
 
                 json.put("insulin", insulinInterface.id.value)
                 json.put("insulinConfiguration", JSONObject(insulinInterface.configuration().toString()))
-                json.put("aps", apsInterface.algorithm.name)
-                json.put("apsConfiguration", JSONObject(apsInterface.configuration().toString()))
+                apsInterface?.let {
+                    json.put("aps", it.algorithm.name)
+                    json.put("apsConfiguration", JSONObject(it.configuration().toString()))
+                }
                 json.put("sensitivity", sensitivityInterface.id.value)
                 json.put("sensitivityConfiguration", JSONObject(sensitivityInterface.configuration().toString()))
                 json.put("smoothing", smoothingInterface.javaClass.simpleName)

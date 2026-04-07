@@ -31,9 +31,9 @@ interface ActivePlugin {
 
     /**
      *  Currently selected APS plugin
-     *  Default SMB
+     *  Default SMB. Null during early startup before plugin initialization.
      */
-    val activeAPS: APS
+    val activeAPS: APS?
 
     /**
      *  PumpWithConcentration should pass data to real Pump plugin if U100 is used

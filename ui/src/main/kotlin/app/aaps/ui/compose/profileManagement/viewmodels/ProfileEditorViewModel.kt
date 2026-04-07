@@ -105,6 +105,7 @@ class ProfileEditorViewModel @Inject constructor(
     fun loadState() {
         val pumpDescription = activePlugin.activePump.pumpDescription
         val aps = activePlugin.activeAPS
+
         val profiles = localProfileManager.profile?.getProfileList()?.map { it.toString() } ?: emptyList()
         val currentProfile = localProfileManager.currentProfile()
         val isLocked = protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)
@@ -127,8 +128,8 @@ class ProfileEditorViewModel @Inject constructor(
                 isValid = localProfileManager.numOfProfiles > 0 && tabErrors.isEmpty(),
                 isLocked = isLocked,
                 units = currentUnits.asText,
-                supportsDynamicIsf = aps.supportsDynamicIsf(),
-                supportsDynamicIc = aps.supportsDynamicIc(),
+                supportsDynamicIsf = aps?.supportsDynamicIsf() == true,
+                supportsDynamicIc = aps?.supportsDynamicIc() == true,
                 basalMin = pumpDescription.basalMinimumRate,
                 basalMax = pumpDescription.basalMaximumRate.coerceAtMost(10.0),
                 icMin = hardLimits.minIC(),

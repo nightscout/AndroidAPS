@@ -606,7 +606,7 @@ class DataHandlerMobile @Inject constructor(
             timestamp = System.currentTimeMillis(),
             loopMode = loopMode,
             apsName = if (loop.runningMode.isLoopRunning())
-                (usedAPS as PluginBase).name else null,
+                (usedAPS as? PluginBase)?.name else null,
             lastRun = lastRunTimestamp,
             lastEnact = lastEnactTimestamp,
             tempTarget = tempTargetInfo,
@@ -1702,7 +1702,7 @@ class DataHandlerMobile @Inject constructor(
             var ret = rh.gs(app.aaps.core.ui.R.string.loopstatus_OAPS_result) + "\n"
             if (!config.APS)
                 return rh.gs(R.string.aps_only)
-            val usedAPS = activePlugin.activeAPS
+            val usedAPS = activePlugin.activeAPS ?: return rh.gs(R.string.last_aps_result_na)
             val result = usedAPS.lastAPSResult ?: return rh.gs(R.string.last_aps_result_na)
             ret += if (!result.isChangeRequested) {
                 rh.gs(app.aaps.core.ui.R.string.nochangerequested) + "\n"
@@ -1732,7 +1732,7 @@ class DataHandlerMobile @Inject constructor(
             }
             if (loop.runningMode.isLoopRunning()) {
                 val aps = activePlugin.activeAPS
-                ret += rh.gs(R.string.aps) + ": " + (aps as PluginBase).name
+                ret += rh.gs(R.string.aps) + ": " + ((aps as? PluginBase)?.name ?: "")
                 val lastRun = loop.lastRun
                 if (lastRun != null) {
                     ret += "\n" + rh.gs(R.string.last_run) + ": " + dateUtil.timeString(lastRun.lastAPSRun)

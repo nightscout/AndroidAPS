@@ -505,7 +505,7 @@ class LoopPlugin @Inject constructor(
 
             // Check if pump info is loaded
             if (ch.fromPump(pump.baseBasalRate) < 0.01) return
-            val usedAPS = activePlugin.activeAPS
+            val usedAPS = activePlugin.activeAPS ?: return
             if (usedAPS.isEnabled()) {
                 usedAPS.invoke(initiator, tempBasalFallback)
                 apsResult = usedAPS.lastAPSResult

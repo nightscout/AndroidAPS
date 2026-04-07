@@ -74,7 +74,7 @@ class Objective0 @Inject constructor(
         })
         tasks.add(object : Task(this, R.string.apsselected) {
             override fun isCompleted(): Boolean {
-                val usedAPS = activePlugin.activeAPS
+                val usedAPS = activePlugin.activeAPS ?: return false
                 return (usedAPS as PluginBase).isEnabled()
             }
         })

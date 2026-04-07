@@ -113,7 +113,7 @@ fun AllPreferencesScreen(
         }
 
         // 5. APS plugin (enabled only if APS is configured)
-        getPreferenceContentIfEnabled(activePlugin.activeAPS as PluginBase, config.APS)?.let { add(it) }
+        (activePlugin.activeAPS as? PluginBase)?.let { getPreferenceContentIfEnabled(it, config.APS)?.let { pref -> add(pref) } }
 
         // 6. Sensitivity plugin
         getPreferenceContentIfEnabled(activePlugin.activeSensitivity as PluginBase)?.let { add(it) }

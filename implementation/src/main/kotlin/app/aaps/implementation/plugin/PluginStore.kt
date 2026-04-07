@@ -233,9 +233,8 @@ class PluginStore @Inject constructor(
     override val activeProfileSource: ProfileSource
         get() = getSpecificPluginsListByInterface(ProfileSource::class.java).first() as ProfileSource
 
-    // App may not be initialized yet. Wait before second return
-    override val activeAPS: APS
-        get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
+    override val activeAPS: APS?
+        get() = activeAPSStore
 
     override val activePump: PumpWithConcentration
         get() = pumpWithConcentration.get()

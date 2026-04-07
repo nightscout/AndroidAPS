@@ -124,8 +124,8 @@ class ProfileFragment : DaggerFragment() {
         binding.unlock.setOnClickListener { queryProtection() }
 
         val aps = activePlugin.activeAPS
-        binding.isfDynamicLabel.visibility = aps.supportsDynamicIsf().toVisibility()
-        binding.icDynamicLabel.visibility = aps.supportsDynamicIc().toVisibility()
+        binding.isfDynamicLabel.visibility = (aps?.supportsDynamicIsf() == true).toVisibility()
+        binding.icDynamicLabel.visibility = (aps?.supportsDynamicIc() == true).toVisibility()
         viewLifecycleOwner.lifecycleScope.launch {
             val profiles = localProfileManager.profile?.getProfileList() ?: ArrayList()
             val activeProfile = profileFunction.getProfileName()

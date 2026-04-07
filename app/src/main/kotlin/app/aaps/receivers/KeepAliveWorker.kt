@@ -180,7 +180,7 @@ class KeepAliveWorker(
         if (config.AAPSCLIENT) return
         if (config.PUMPCONTROL) shouldUploadStatus = true
         else if (!loop.runningMode.isLoopRunning() || iobCobCalculator.ads.actualBg() == null) shouldUploadStatus = true
-        else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
+        else if (activePlugin.activeAPS?.let { dateUtil.isOlderThan(it.lastAPSRun, 5) } == true) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()
             loop.scheduleBuildAndStoreDeviceStatus("KeepAliveWorker")

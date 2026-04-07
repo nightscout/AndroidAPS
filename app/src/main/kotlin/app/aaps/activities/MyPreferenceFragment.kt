@@ -140,7 +140,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesIfEnabled(activePlugin.activeSafety as PluginBase, rootKey)
             addPreferencesIfEnabled(activePlugin.activeBgSource as PluginBase, rootKey)
             activePlugin.getSpecificPluginsList(PluginType.LOOP).forEach { addPreferencesIfEnabled(it, rootKey, config.APS) }
-            addPreferencesIfEnabled(activePlugin.activeAPS as PluginBase, rootKey, config.APS)
+            (activePlugin.activeAPS as? PluginBase)?.let { addPreferencesIfEnabled(it, rootKey, config.APS) }
             addPreferencesIfEnabled(activePlugin.activeSensitivity as PluginBase, rootKey)
             addPreferencesIfEnabled(activePlugin.activePumpInternal as PluginBase, rootKey)
             addPumpScreen(rootKey)

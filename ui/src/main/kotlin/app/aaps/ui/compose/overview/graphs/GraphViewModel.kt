@@ -313,7 +313,7 @@ class GraphViewModel @Inject constructor(
                 dialogText.add(rh.gs(R.string.algorithm_long, ratioUsed * 100))
             dialogText.add(rh.gs(R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, units)))
             if (config.APS) {
-                activePlugin.activeAPS.getSensitivityOverviewString()?.let { dialogText.add(it) }
+                activePlugin.activeAPS?.getSensitivityOverviewString()?.let { dialogText.add(it) }
             }
         } else {
             // Standard autosens-only branch — skip when ratio is exactly 100%
