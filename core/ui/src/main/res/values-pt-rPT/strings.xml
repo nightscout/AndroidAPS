@@ -237,9 +237,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g Hidratos Adicionais Necessários Dentro de %2$d Minutos</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Total de Insulina Diária</string>
-    <string name="expweight">TID exponencialmente ponderada</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bólus</string>
     <string name="ratio">Rácio</string>
