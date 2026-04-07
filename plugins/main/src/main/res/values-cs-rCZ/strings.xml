@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Smyčka zakázána</string>
     <string name="smscommunicator_pump_disconnected">Pumpa odpojena</string>
-    <!-- Food-->
-    <string name="food_short">Jídlo</string>
-    <string name="description_food">Zobrazení jídel definovaných v NS</string>
-    <string name="filter">Filtr</string>
-    <string name="food">Jídlo</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Tuk</string>
-    <string name="category">Kategorie</string>
-    <string name="subcategory">Podkategorie</string>
     <string name="calculator_label">Kalkulačka</string>
     <!-- Profile -->
     <!-- localprofile moved to core:ui module -->
@@ -32,7 +21,6 @@
     <string name="extended_bolus_button">Prodloužený bolus</string>
     <string name="extended_bolus_cancel_button">Zrušit prodloužený bolus</string>
     <string name="tools">Nástroje</string>
-    <string name="site_rotation">Střídání míst</string>
     <string name="nav_history_browser">Prohlížeč historie</string>
     <string name="sensor_label">Senzor</string>
     <string name="age_label">stáří:</string>
