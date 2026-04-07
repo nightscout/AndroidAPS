@@ -72,7 +72,6 @@ class DetailedBolusInfo {
         n.timestamp = timestamp
         n.lastKnownBolusTime = lastKnownBolusTime
         n.deliverAtTheLatest = deliverAtTheLatest
-        n.context = context
 
         n.bolusCalculatorResult = bolusCalculatorResult
         n.eventType = eventType

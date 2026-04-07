@@ -196,6 +196,7 @@ class InsulinDialogViewModel @Inject constructor(
             )
         }
     }
+
     private var confirmedState: InsulinDialogUiState? = null
 
     fun buildConfirmationSummary(): List<String> {
@@ -320,7 +321,6 @@ class InsulinDialogViewModel @Inject constructor(
             val detailedBolusInfo = DetailedBolusInfo().also {
                 it.eventType = TE.Type.CORRECTION_BOLUS
                 it.insulin = insulinAfterConstraints
-                it.context = null
                 it.notes = notes
                 it.timestamp = time
             }

@@ -369,7 +369,6 @@ class CarbsDialog : DialogFragmentWithDate() {
                         val detailedBolusInfo = DetailedBolusInfo().also {
                             it.eventType = TE.Type.CORRECTION_BOLUS
                             it.carbs = carbsAfterConstraints.toDouble()
-                            it.context = context
                             it.notes = notes
                             it.carbsDuration = T.hours(duration.toLong()).msecs()
                             it.carbsTimestamp = eventTime

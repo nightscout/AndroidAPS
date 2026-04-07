@@ -425,7 +425,6 @@ class BolusWizard @Inject constructor(
                 eventType = TE.Type.CORRECTION_BOLUS
                 insulin = insulinAfterConstraints
                 carbs = 0.0
-                context = ctx
                 mgdlGlucose = profileUtil.convertToMgdl(bg, profile.units)
                 glucoseType = TE.MeterType.MANUAL
                 carbTime = 0
@@ -520,7 +519,6 @@ class BolusWizard @Inject constructor(
                     eventType = TE.Type.BOLUS_WIZARD
                     insulin = insulinAfterConstraints
                     carbs = this@BolusWizard.carbs.toDouble()
-                    context = ctx
                     mgdlGlucose = profileUtil.convertToMgdl(bg, profile.units)
                     glucoseType = TE.MeterType.MANUAL
                     carbsTimestamp = now + T.mins(this@BolusWizard.carbTime.toLong()).msecs()
@@ -554,7 +552,7 @@ class BolusWizard @Inject constructor(
                             }
                         })
                     }
-                    bolusCalculatorResult?.let { kotlinx.coroutines.runBlocking { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
+                    bolusCalculatorResult?.let { runBlocking { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
                 }
             }
             if (quickWizardEntry != null) {
@@ -577,7 +575,6 @@ class BolusWizard @Inject constructor(
                 val detailedBolusInfo = DetailedBolusInfo()
                 detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
                 detailedBolusInfo.carbs = carbs2.toDouble()
-                detailedBolusInfo.context = ctx
                 detailedBolusInfo.notes = quickWizardEntry.storage.get("buttonText").toString()
                 detailedBolusInfo.carbsDuration = T.hours(duration.toLong()).msecs()
                 detailedBolusInfo.carbsTimestamp = eventTime

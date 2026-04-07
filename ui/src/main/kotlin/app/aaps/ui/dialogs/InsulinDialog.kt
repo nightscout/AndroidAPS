@@ -258,7 +258,6 @@ class InsulinDialog : DialogFragmentWithDate() {
                         val detailedBolusInfo = DetailedBolusInfo()
                         detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
                         detailedBolusInfo.insulin = insulinAfterConstraints
-                        detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {

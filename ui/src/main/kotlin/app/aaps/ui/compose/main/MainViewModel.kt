@@ -27,9 +27,9 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -356,7 +356,6 @@ class MainViewModel @Inject constructor(
                 val detailedBolusInfo = DetailedBolusInfo().apply {
                     eventType = app.aaps.core.data.model.TE.Type.CORRECTION_BOLUS
                     this.insulin = insulinAfterConstraints
-                    this.context = context
                 }
                 commandQueue.bolus(detailedBolusInfo, object : Callback() {
                     override fun run() {
@@ -391,7 +390,6 @@ class MainViewModel @Inject constructor(
                 val detailedBolusInfo = DetailedBolusInfo().apply {
                     eventType = app.aaps.core.data.model.TE.Type.CARBS_CORRECTION
                     this.carbs = carbs.toDouble()
-                    this.context = context
                     carbsTimestamp = dateUtil.now()
                 }
                 commandQueue.bolus(detailedBolusInfo, object : Callback() {

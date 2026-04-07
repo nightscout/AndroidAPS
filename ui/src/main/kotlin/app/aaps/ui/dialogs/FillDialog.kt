@@ -228,7 +228,6 @@ class FillDialog(val fm: FragmentManager) : DialogFragmentWithDate() {
     private fun requestPrimeBolus(insulin: Double, notes: String) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = insulin
-        detailedBolusInfo.context = context
         detailedBolusInfo.bolusType = BS.Type.PRIMING
         detailedBolusInfo.notes = notes
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
