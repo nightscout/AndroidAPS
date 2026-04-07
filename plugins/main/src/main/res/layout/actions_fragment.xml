@@ -1,5 +1,4 @@
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,21 +16,21 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
-            android:layout_gravity="center">
+            app:contentPadding="2dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
-                android:layout_marginBottom="10dp"
                 android:text="@string/actions" />
 
             <androidx.gridlayout.widget.GridLayout
@@ -142,14 +141,14 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
-            android:layout_gravity="center">
+            app:contentPadding="2dp">
 
             <include
                 android:id="@+id/status"
@@ -165,14 +164,14 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
-            android:layout_gravity="center">
+            app:contentPadding="2dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -317,15 +316,15 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginBottom="4dp"
             app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
-            android:layout_gravity="center">
+            app:contentPadding="2dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -370,21 +369,6 @@
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="6" />
-
-                <app.aaps.core.ui.elements.SingleClickButton
-                    android:id="@+id/tdd_stats"
-                    style="@style/GrayButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_cp_stats"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="0dp"
-                    android:text="@string/tdd_short"
-                    android:textSize="11sp"
-                    app:layout_column="0"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill"
-                    app:layout_row="7" />
 
             </androidx.gridlayout.widget.GridLayout>
 

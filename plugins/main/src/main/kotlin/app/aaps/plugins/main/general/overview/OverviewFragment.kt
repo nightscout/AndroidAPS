@@ -60,7 +60,6 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -92,12 +91,10 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.objects.extensions.displayText
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.elements.SingleClickButton
 import app.aaps.core.ui.extensions.runOnUiThread
@@ -152,7 +149,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var dexcomBoyda: DexcomBoyda
     @Inject lateinit var xDripSource: XDripSource
     @Inject lateinit var notificationManager: AapsNotificationManager
-    @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var config: Config
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -264,13 +260,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.pumpStatusLayout.setOnClickListener(this)
         binding.buttonsLayout.acceptTempButton.setOnClickListener(this)
         binding.buttonsLayout.treatmentButton.setOnClickListener(this)
-        binding.buttonsLayout.wizardButton.setOnClickListener(this)
         binding.buttonsLayout.calibrationButton.setOnClickListener(this)
         binding.buttonsLayout.cgmButton.setOnClickListener(this)
         binding.buttonsLayout.insulinButton.setOnClickListener(this)
         binding.buttonsLayout.carbsButton.setOnClickListener(this)
-        binding.buttonsLayout.quickWizardButton.setOnClickListener(this)
-        binding.buttonsLayout.quickWizardButton.setOnLongClickListener(this)
         binding.infoLayout.apsMode.setOnClickListener(this)
         binding.infoLayout.apsMode.setOnLongClickListener(this)
     }
@@ -440,26 +433,24 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
             if (childFragmentManager.isStateSaved) return@launch
             when (v.id) {
-                R.id.treatment_button    -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runTreatmentDialog(childFragmentManager) })
-                R.id.wizard_button       -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runWizardDialog(childFragmentManager) })
-                R.id.insulin_button      -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runInsulinDialog(childFragmentManager) })
-                R.id.quick_wizard_button -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) onClickQuickWizard() })
-                R.id.carbs_button        -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runCarbsDialog(childFragmentManager) })
-                R.id.temp_target         -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runTempTargetDialog(childFragmentManager) })
-                R.id.active_profile      -> uiInteraction.runProfileViewerActivity(requireContext(), dateUtil.now(), UiInteraction.Mode.RUNNING_PROFILE)
+                R.id.treatment_button   -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runTreatmentDialog(childFragmentManager) })
+                R.id.insulin_button     -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runInsulinDialog(childFragmentManager) })
+                R.id.carbs_button       -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runCarbsDialog(childFragmentManager) })
+                R.id.temp_target        -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runTempTargetDialog(childFragmentManager) })
+                R.id.active_profile     -> uiInteraction.runProfileViewerActivity(requireContext(), dateUtil.now(), UiInteraction.Mode.RUNNING_PROFILE)
 
-                R.id.cgm_button          -> {
+                R.id.cgm_button         -> {
                     if (xDripSource.isEnabled()) openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomBoyda.isEnabled()) dexcomBoyda.dexcomPackages().forEach { openCgmApp(it) }
                 }
 
-                R.id.calibration_button  -> {
+                R.id.calibration_button -> {
                     if (xDripSource.isEnabled()) {
                         uiInteraction.runCalibrationDialog(childFragmentManager)
                     }
                 }
 
-                R.id.accept_temp_button  -> {
+                R.id.accept_temp_button -> {
                     profileFunction.getProfile() ?: return@launch
                     if ((loop as PluginBase).isEnabled()) {
                         val lastRun = loop.lastRun
@@ -483,13 +474,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }
                 }
 
-                R.id.aps_mode            -> {
+                R.id.aps_mode           -> {
                     protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable {
                         if (isAdded) uiInteraction.runLoopDialog(childFragmentManager, 1)
                     })
                 }
 
-                R.id.pump_status_layout  -> {
+                R.id.pump_status_layout -> {
                     // Pump activity dialog is now handled by Compose UI
                 }
             }
@@ -511,12 +502,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     override fun onLongClick(v: View): Boolean {
         when (v.id) {
-            R.id.quick_wizard_button -> {
-                startActivity(Intent(v.context, uiInteraction.quickWizardListActivity))
-                return true
-            }
-
-            R.id.aps_mode            -> {
+            R.id.aps_mode       -> {
                 activity?.let { activity ->
                     protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                         uiInteraction.runLoopDialog(childFragmentManager, 0)
@@ -524,8 +510,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
             }
 
-            R.id.temp_target         -> v.performClick()
-            R.id.active_profile      ->
+            R.id.temp_target    -> v.performClick()
+            R.id.active_profile ->
                 if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP) uiInteraction.showOkDialog(context = requireActivity(), title = R.string.not_available_full, message = R.string.smscommunicator_pump_disconnected)
                 else
                     protectionCheck.queryProtection(
@@ -538,52 +524,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         return false
     }
 
-    private fun onClickQuickWizard() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val actualBg = iobCobCalculator.ads.actualBg()
-            val profile = profileFunction.getProfile()
-            val profileName = profileFunction.getProfileName()
-            val pump = activePlugin.activePump
-            val quickWizardEntry = quickWizard.getActive()
-            if (quickWizardEntry != null && actualBg != null && profile != null) {
-                binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-                val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
-                if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
-                    val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
-                    activity?.let {
-                        if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
-                            uiInteraction.showOkDialog(context = it, title = rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), message = rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
-                            return@launch
-                        }
-                        wizard.confirmAndExecute(it, quickWizardEntry)
-                    }
-                }
-            }
-        }
-    }
-
     @SuppressLint("SetTextI18n")
     private fun processButtonsVisibility() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val lastBG = iobCobCalculator.ads.lastBg()
+            iobCobCalculator.ads.lastBg()
             val pump = activePlugin.activePump
             val profile = profileFunction.getProfile()
-            val profileName = profileFunction.getProfileName()
+            profileFunction.getProfileName()
             val actualBG = iobCobCalculator.ads.actualBg()
             var list = ""
-
-            // QuickWizard button
-            val quickWizardEntry = quickWizard.getActive()
-            runOnUiThread {
-                _binding ?: return@runOnUiThread
-                if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended()) {
-                    binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-                    val wizard = runBlocking { quickWizardEntry.doCalc(profile, profileName, lastBG) }
-                    binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(app.aaps.core.objects.R.string.format_carbs, quickWizardEntry.carbs()) +
-                        " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
-                    if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
-                } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
-            }
 
             // **** Temp button ****
             val lastRun = loop.lastRun
@@ -606,8 +555,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     (profile != null && preferences.get(BooleanKey.OverviewShowCarbsButton)).toVisibility()
                 binding.buttonsLayout.treatmentButton.visibility = (loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended() && pump.isInitialized() && profile != null
                     && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
-                binding.buttonsLayout.wizardButton.visibility = (loop.runningMode != RM.Mode.DISCONNECTED_PUMP && !pump.isSuspended() && pump.isInitialized() && profile != null
-                    && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
                 binding.buttonsLayout.insulinButton.visibility = (profile != null && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
                 if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP || pump.isSuspended() || !pump.isInitialized()) {
                     setRibbon(

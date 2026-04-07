@@ -167,7 +167,6 @@ class ActionsFragment : DaggerFragment() {
             }
         }
         binding.historyBrowser.setOnClickListener { startActivity(Intent(context, uiInteraction.historyBrowseActivity)) }
-        binding.tddStats.setOnClickListener { startActivity(Intent(context, uiInteraction.tddStatsActivity)) }
         binding.bgCheck.setOnClickListener {
             uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BGCHECK, app.aaps.core.ui.R.string.careportal_bgcheck)
         }
@@ -277,7 +276,6 @@ class ActionsFragment : DaggerFragment() {
             binding.fill.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized()).toVisibility()
             binding.pumpBatteryChange.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
             binding.tempTarget.visibility = (profile != null && loop.runningMode.isLoopRunning()).toVisibility()
-            binding.tddStats.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
             val isPatchPump = pump.pumpDescription.isPatchPump
             binding.status.apply {
                 cannulaOrPatch.text = if (cannulaOrPatch.text.isEmpty()) "" else if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)

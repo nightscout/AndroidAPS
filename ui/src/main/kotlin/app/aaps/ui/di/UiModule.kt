@@ -5,14 +5,11 @@ import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.activities.ProfileViewerActivity
-import app.aaps.ui.activities.QuickWizardListActivity
-import app.aaps.ui.activities.TDDStatsActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
 import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
 import app.aaps.ui.dialogs.CalibrationDialog
 import app.aaps.ui.dialogs.CarbsDialog
 import app.aaps.ui.dialogs.CareDialog
-import app.aaps.ui.dialogs.EditQuickWizardDialog
 import app.aaps.ui.dialogs.ExtendedBolusDialog
 import app.aaps.ui.dialogs.FillDialog
 import app.aaps.ui.dialogs.InsulinDialog
@@ -71,9 +68,6 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesTempBasalDialog(): TempBasalDialog
     @ContributesAndroidInjector abstract fun contributesTempTargetDialog(): TempTargetDialog
     @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
-    @ContributesAndroidInjector abstract fun contributesQuickWizardListActivity(): QuickWizardListActivity
-    @ContributesAndroidInjector abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 
-    @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
     @ContributesAndroidInjector abstract fun contributeErrorActivity(): ErrorActivity
 }

@@ -1,6 +1,5 @@
 package app.aaps.plugins.main.general.overview
 
-import android.app.Activity
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.overview.OverviewData
@@ -11,7 +10,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.kotlin.whenever
 
 class OverviewPluginTest : TestBaseWithProfile() {
 
@@ -29,7 +27,6 @@ class OverviewPluginTest : TestBaseWithProfile() {
             aapsSchedulers, overviewData, overviewMenus, context, constraintsChecker, uiInteraction, nsSettingsStatus, config, activePlugin,
             uel, notificationManager
         )
-        whenever(uiInteraction.quickWizardListActivity).thenReturn(Activity::class.java)
     }
 
     @Test

@@ -2,7 +2,6 @@ package app.aaps.plugins.main.general.overview
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.widget.TextView
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
@@ -41,15 +40,12 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
-import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.validators.preferences.AdaptiveClickPreference
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.overview.keys.OverviewIntentKey
 import app.aaps.plugins.main.general.overview.keys.OverviewStringKey
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -88,7 +84,7 @@ class OverviewPlugin @Inject constructor(
         .shortName(R.string.overview_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_overview),
-    ownPreferences = listOf(OverviewStringKey::class.java, OverviewIntentKey::class.java),
+    ownPreferences = listOf(OverviewStringKey::class.java),
     aapsLogger, rh, preferences
 ), Overview {
 
@@ -266,14 +262,6 @@ class OverviewPlugin @Inject constructor(
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowCgmButton, summary = app.aaps.core.keys.R.string.pref_summary_show_cgm_button, title = app.aaps.core.ui.R.string.cgm))
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowCalibrationButton, summary = app.aaps.core.keys.R.string.pref_summary_show_calibration_button, title = app.aaps.core.ui.R.string.calibration))
             })
-            addPreference(
-                AdaptiveIntentPreference(
-                    ctx = context,
-                    intentKey = OverviewIntentKey.QuickWizardSettings,
-                    title = R.string.quickwizard_settings,
-                    intent = Intent(context, uiInteraction.quickWizardListActivity)
-                )
-            )
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "default_temp_targets_settings"
                 title = rh.gs(R.string.default_temptargets)
