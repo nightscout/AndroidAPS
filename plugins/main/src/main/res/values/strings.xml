@@ -4,17 +4,6 @@
     <string name="disabled_loop">Loop Disabled</string>
     <string name="smscommunicator_pump_disconnected">Pump disconnected</string>
 
-    <!-- Food-->
-    <string name="food_short">Food</string>
-    <string name="description_food">Displays the food presets defined in Nightscout</string>
-    <string name="filter">Filter</string>
-    <string name="food">Food</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Fat</string>
-    <string name="category">Category</string>
-    <string name="subcategory">Subcategory</string>
     <string name="calculator_label">Calculator</string>
 
     <!-- Profile -->
@@ -38,7 +27,6 @@
     <string name="extended_bolus_button">Extended Bolus</string>
     <string name="extended_bolus_cancel_button">Cancel Extended Bolus</string>
     <string name="tools">Tools</string>
-    <string name="site_rotation">Site Rotation</string>
     <string name="nav_history_browser">History browser</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">age:</string>
