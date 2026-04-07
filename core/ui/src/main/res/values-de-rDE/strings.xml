@@ -240,9 +240,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g zusätzliche Kohlenhydrate innerhalb von %2$d Minuten erforderlich</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Kumulative TDD</string>
-    <string name="expweight">Exponentiell gewichtete TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Verhältnis</string>
