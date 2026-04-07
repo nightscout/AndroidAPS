@@ -42,7 +42,6 @@
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
-    <!--    TDDStatsActivity-->
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Odnos</string>
