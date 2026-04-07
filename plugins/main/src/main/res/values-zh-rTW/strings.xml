@@ -73,10 +73,7 @@
     <string name="description_overview">顯示目前循環狀態和最常用操作的按鈕</string>
     <string name="overview_buttons_selection">按鈕</string>
     <string name="not_available_full">不可用</string>
-    <string name="constraints_violation">約束違反</string>
-    <string name="change_your_input">更改您的輸入！</string>
     <string name="data_status">血糖資料狀態</string>
-    <string name="quickwizard_settings">快速嚮導設置</string>
     <string name="default_temptargets">預設臨時目標</string>
     <string name="fill_bolus_title">填充/預填充標準胰島素量</string>
     <string name="run_question">運行 %s？</string>
