@@ -69,10 +69,7 @@
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="overview_buttons_selection">Butonlar</string>
     <string name="not_available_full">Mevcut değil</string>
-    <string name="constraints_violation">Kısıtlamalar ihlali</string>
-    <string name="change_your_input">Girişinizi değiştirin!</string>
     <string name="data_status">KŞ veri durumu</string>
-    <string name="quickwizard_settings">Hızlı asistan ayarları</string>
     <string name="default_temptargets">Varsayılan Geçici hedefler</string>
     <string name="fill_bolus_title">Standart insülin miktarlarını Hazırla/Doldur</string>
     <string name="run_question">Yürüt %s?</string>
