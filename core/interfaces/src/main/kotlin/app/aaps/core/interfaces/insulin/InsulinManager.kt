@@ -57,6 +57,12 @@ interface InsulinManager {
     fun insulinAlreadyExists(iCfg: ICfg, excludeIndex: Int = -1): Boolean
 
     /**
+     * Return index of the insulin within InsulinManager. -1 if iCFg is not found
+     * @param iCfg
+     */
+    fun insulinIndex(iCfg: ICfg?): Int
+
+    /**
      * Calculate the suffix to be shown in UI (include potential index to prevent duplication names).
      */
     fun buildDisplaySuffix(nickname: String, peak: Int, dia: Double, concentration: Double, excludeIndex: Int = -1): String

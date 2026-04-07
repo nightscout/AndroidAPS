@@ -76,19 +76,20 @@ class InsulinManagementViewModel @Inject constructor(
         uiState.update { it.copy(screenMode = mode) }
     }
 
-    fun loadData(targetIndex: Int? = null, reload: Boolean = true, autoName: Boolean = false, saveAfterAutoName: Boolean = false) {
+    fun loadData(reload: Boolean = true, autoName: Boolean = false, saveAfterAutoName: Boolean = false) {
         viewModelScope.launch {
             if (reload) insulinManager.loadSettings()
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeICfg = profileFunction.getProfile()?.iCfg
+            val activeLabel = activeICfg?.insulinLabel
             val activeConcentration = profileFunction.getProfile()?.iCfg?.concentration ?: 1.0  // Only insulin with Current Active concentration can be set from Insulin Management
-            val currentIndex = (targetIndex ?: uiState.value.currentCardIndex).coerceIn(0, (insulins.size - 1).coerceAtLeast(0))
+            val targetIndex = if (reload) insulinManager.insulinIndex(activeICfg) else uiState.value.currentCardIndex
+            val currentIndex = targetIndex.coerceIn(0, (insulins.size - 1).coerceAtLeast(0))
             val currentICfg = insulins.getOrNull(currentIndex)
             val template = currentICfg?.let { cfg -> InsulinType.fromPeak(cfg.insulinPeakTime) }
             val defaultNickname = template?.let { rh.gs(it.label) } ?: ""
             val editorNickname = currentICfg?.insulinNickname?.takeIf { it.isNotBlank() } ?: defaultNickname
             val autoNameEnabled = editorNickname == defaultNickname || autoName
-
 
             uiState.update {
                 it.copy(
@@ -344,7 +345,7 @@ class InsulinManagementViewModel @Inject constructor(
         val newICfg = source?.deepClone() ?: InsulinType.OREF_RAPID_ACTING.iCfg
         newICfg.insulinLabel = ""
         insulinManager.addNewInsulin(newICfg)
-        loadData(targetIndex = insulinManager.currentInsulinIndex, reload = false, autoName = state.autoNameEnabled, saveAfterAutoName = true)
+        loadData(reload = false, autoName = state.autoNameEnabled, saveAfterAutoName = true)
     }
 
     fun deleteCurrentInsulin(): Boolean {

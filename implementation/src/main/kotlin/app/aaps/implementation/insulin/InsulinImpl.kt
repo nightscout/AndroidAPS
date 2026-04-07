@@ -160,6 +160,15 @@ class InsulinImpl @Inject constructor(
         return false
     }
 
+    override fun insulinIndex(iCfg: ICfg?): Int {
+        insulins.forEachIndexed { index, insulin ->
+            if (insulin.isEqual(iCfg)) {
+                return index
+            }
+        }
+        return -1
+    }
+
     @Synchronized
     override fun loadSettings() {
         val jsonString = preferences.get(StringNonKey.InsulinConfiguration)
