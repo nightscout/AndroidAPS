@@ -72,7 +72,6 @@
     <string name="a11y_set_carb_timer">задайте таймер за въглехидратна аларма</string>
     <!-- Treatments -->
     <string name="no_records_available">Няма налични записи</string>
-    <string name="calculation_short">Калк</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Вълехидрати:</string>
     <string name="tempbasals_netratio_label_string">Съотношение:</string>
