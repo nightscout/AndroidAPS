@@ -73,10 +73,7 @@
     <string name="description_overview">Hiển thị trạng thái hiện tại của vòng lặp và các nút cho những thao tác thường dùng nhất</string>
     <string name="overview_buttons_selection">Phím bấm</string>
     <string name="not_available_full">Không khả dụng</string>
-    <string name="constraints_violation">Vượt giới hạn cho phép</string>
-    <string name="change_your_input">Hãy thay đổi dữ liệu bạn nhập!</string>
     <string name="data_status">Trạng thái dữ liệu đường huyết</string>
-    <string name="quickwizard_settings">Cài đặt QuickWizard</string>
     <string name="default_temptargets">Mục tiêu tạm thời mặc định</string>
     <string name="fill_bolus_title">Bơm/đẩy lượng insulin tiêu chuẩn</string>
     <string name="run_question">Chạy %s?</string>
