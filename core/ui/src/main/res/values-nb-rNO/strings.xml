@@ -426,9 +426,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g ekstra karbohydrater kreves innen %2$d minutter</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Akkumulert TDD</string>
-    <string name="expweight">Eksponentielt vektet TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="tdd_short">TDD</string>
