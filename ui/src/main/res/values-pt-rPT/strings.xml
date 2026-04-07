@@ -71,7 +71,6 @@
     <string name="a11y_set_carb_timer">definir alarme do temporizador de hidratos</string>
     <!-- Treatments -->
     <string name="no_records_available">Não há registos disponíveis</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IA:</string>
     <string name="treatments_carbs_label_string">Hidratos:</string>
     <string name="tempbasals_netratio_label_string">Rácio:</string>
