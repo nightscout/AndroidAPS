@@ -70,7 +70,6 @@
     <string name="a11y_set_carb_timer">设置碳水计时器提醒</string>
     <!-- Treatments -->
     <string name="no_records_available">当前暂无记录</string>
-    <string name="calculation_short">计算</string>
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
     <string name="treatments_carbs_label_string">碳水化合物:</string>
     <string name="tempbasals_netratio_label_string">比率：</string>
