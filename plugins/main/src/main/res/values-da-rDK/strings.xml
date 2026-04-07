@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop deaktiveret</string>
     <string name="smscommunicator_pump_disconnected">Pumpe afbrudt</string>
-    <!-- Food-->
-    <string name="food_short">Mad</string>
-    <string name="description_food">Viser forudindstillede madvarer defineret i Nightscout</string>
-    <string name="filter">Filter</string>
-    <string name="food">Mad</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Fedt</string>
-    <string name="category">Kategori</string>
-    <string name="subcategory">Underkategori</string>
     <string name="calculator_label">Beregner</string>
     <!-- Profile -->
     <!-- localprofile moved to core:ui module -->
