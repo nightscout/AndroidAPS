@@ -253,9 +253,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Būtina suvartoti %1$d g papildomų AV per %2$d min</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Kumuliacinė BPD</string>
-    <string name="expweight">Eksponentiškai svertinė BPD</string>
     <string name="basalrate">Valandinė bazė</string>
     <string name="bolus">Bolusas</string>
     <string name="ratio">Vertė</string>
