@@ -71,7 +71,6 @@
     <string name="a11y_set_carb_timer">setze Alarm für KH Timer</string>
     <!-- Treatments -->
     <string name="no_records_available">Keine Datensätze verfügbar</string>
-    <string name="calculation_short">Berech.</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Kohlenhydrate:</string>
     <string name="tempbasals_netratio_label_string">Verhältnis:</string>
