@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop er deaktivert</string>
     <string name="smscommunicator_pump_disconnected">Pumpe frakoblet</string>
-    <!-- Food-->
-    <string name="food_short">Mat</string>
-    <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
-    <string name="filter">Filter</string>
-    <string name="food">Mat</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Fett</string>
-    <string name="category">Kategori</string>
-    <string name="subcategory">Underkategori</string>
     <string name="calculator_label">Kalkulator</string>
     <!-- Profile -->
     <!-- localprofile moved to core:ui module -->
@@ -34,7 +23,6 @@
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="tools">Verktøy</string>
-    <string name="site_rotation">Rotasjon av sted</string>
     <string name="nav_history_browser">Historikk</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">alder:</string>
