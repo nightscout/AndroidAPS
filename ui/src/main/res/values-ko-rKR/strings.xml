@@ -71,7 +71,6 @@
     <string name="a11y_set_carb_timer">탄수화물 타이머 알람 설정</string>
     <!-- Treatments -->
     <string name="no_records_available">사용 가능한 기록 없음</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">탄수화물:</string>
     <string name="tempbasals_netratio_label_string">비율:</string>
