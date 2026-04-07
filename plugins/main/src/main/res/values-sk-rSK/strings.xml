@@ -71,10 +71,7 @@
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="overview_buttons_selection">Tlačidlá</string>
     <string name="not_available_full">Nedostupný</string>
-    <string name="constraints_violation">Mimo povolený rozsah</string>
-    <string name="change_your_input">Zmeňte zadanie!</string>
     <string name="data_status">Stav dát glykémie</string>
-    <string name="quickwizard_settings">Nastavenie rýchleho bolusu</string>
     <string name="default_temptargets">Predvolené nastavenie dočasných cieľov</string>
     <string name="fill_bolus_title">Štandardné množstvo inzulínu pre Plnenie/Doplňovanie</string>
     <string name="run_question">Spustiť %s?</string>
