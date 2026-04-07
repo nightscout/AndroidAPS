@@ -64,7 +64,8 @@ fun ProfileSingleContent(
     getIsfList: (Profile) -> String,
     getBasalList: (Profile) -> String,
     getTargetList: (Profile) -> String,
-    formatBasalSum: (Double) -> String
+    formatBasalSum: (Double) -> String,
+    onInsulinManager: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -92,7 +93,7 @@ fun ProfileSingleContent(
                 ElevatedCard(
                     modifier = Modifier.weight(1f),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
-                    onClick = { /* TODO Open Insulin Management on current running insulin */ }
+                    onClick = onInsulinManager
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         ProfileRow(

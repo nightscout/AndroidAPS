@@ -2,17 +2,22 @@ package app.aaps.ui.compose.insulinManagement
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.insulin.InsulinManager
 import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
@@ -27,6 +32,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,7 +47,9 @@ class InsulinManagementViewModel @Inject constructor(
     private val dateUtil: DateUtil,
     private val hardLimits: HardLimits,
     private val uel: UserEntryLogger,
-    val rh: ResourceHelper
+    val rh: ResourceHelper,
+    private val rxBus: RxBus,
+    private val persistenceLayer: PersistenceLayer
 ) : ViewModel() {
 
     val uiState: StateFlow<InsulinManagementUiState>
@@ -60,26 +69,28 @@ class InsulinManagementViewModel @Inject constructor(
 
     init {
         loadData()
+        observeProfileChanges()
     }
 
     fun setScreenMode(mode: ScreenMode) {
         uiState.update { it.copy(screenMode = mode) }
+        loadData(reload = true)
     }
 
     fun loadData(targetIndex: Int? = null, reload: Boolean = true, autoName: Boolean = false, saveAfterAutoName: Boolean = false) {
         viewModelScope.launch {
             if (reload) insulinManager.loadSettings()
             val insulins = insulinManager.insulins.map { it.deepClone() }
-            val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
+            val activeICfg = profileFunction.getProfile()?.iCfg
+            val activeLabel = activeICfg?.insulinLabel
             val activeConcentration = profileFunction.getProfile()?.iCfg?.concentration ?: 1.0  // Only insulin with Current Active concentration can be set from Insulin Management
-
-            val currentIndex = (targetIndex ?: uiState.value.currentCardIndex).coerceIn(0, (insulins.size - 1).coerceAtLeast(0))
+            val currentIndex = (if (reload) insulinManager.insulinIndex(activeICfg) else targetIndex ?: uiState.value.currentCardIndex)
+                .coerceIn(0, (insulins.size - 1).coerceAtLeast(0))
             val currentICfg = insulins.getOrNull(currentIndex)
             val template = currentICfg?.let { cfg -> InsulinType.fromPeak(cfg.insulinPeakTime) }
             val defaultNickname = template?.let { rh.gs(it.label) } ?: ""
             val editorNickname = currentICfg?.insulinNickname?.takeIf { it.isNotBlank() } ?: defaultNickname
             val autoNameEnabled = editorNickname == defaultNickname || autoName
-
 
             uiState.update {
                 it.copy(
@@ -103,6 +114,22 @@ class InsulinManagementViewModel @Inject constructor(
             }
             targetIndex?.let { sideEffect.emit(SideEffect.ScrollToInsulin(it)) }
         }
+    }
+
+    /**
+     * Subscribe to profile change events
+     */
+    private fun observeProfileChanges() {
+        rxBus.toFlow(EventLocalProfileChanged::class.java)
+            .onEach { updateRunningInsulin() }.launchIn(viewModelScope)
+        persistenceLayer.observeChanges<EPS>()
+            .onEach { updateRunningInsulin() }.launchIn(viewModelScope)
+    }
+
+    private suspend fun updateRunningInsulin() {
+        val now = dateUtil.now()
+        val activeIcfg = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)?.iCfg
+        uiState.update { it.copy(activeInsulinLabel = activeIcfg?.insulinLabel) }
     }
 
     fun refreshData() {
@@ -164,6 +191,7 @@ class InsulinManagementViewModel @Inject constructor(
         if (saveCurrentInsulin()) {
             when (pending) {
                 is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
+
                 is PendingNavigation.Back       -> {
                     uiState.update { it.copy(pendingNavigation = null) }
                     viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
@@ -178,6 +206,7 @@ class InsulinManagementViewModel @Inject constructor(
         val pending = uiState.value.pendingNavigation
         when (pending) {
             is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
+
             is PendingNavigation.Back       -> {
                 uiState.update { it.copy(pendingNavigation = null) }
                 viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
@@ -209,7 +238,8 @@ class InsulinManagementViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 autoNameEnabled = false,
-                editorNickname = nickname)
+                editorNickname = nickname
+            )
         }
     }
 

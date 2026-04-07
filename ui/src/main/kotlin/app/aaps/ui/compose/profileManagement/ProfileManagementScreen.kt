@@ -77,7 +77,8 @@ fun ProfileManagementScreen(
     onNavigateBack: () -> Unit = {},
     onRequestEditMode: () -> Unit = {},
     onEditProfile: (Int) -> Unit = {},
-    onActivateProfile: (Int) -> Unit = {}
+    onActivateProfile: (Int) -> Unit = {},
+    onInsulinManager: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isPlayMode = uiState.screenMode == ScreenMode.PLAY
@@ -295,7 +296,8 @@ fun ProfileManagementScreen(
                                             getIsfList = viewModel::getIsfList,
                                             getBasalList = viewModel::getBasalList,
                                             getTargetList = viewModel::getTargetList,
-                                            formatBasalSum = viewModel::formatBasalSum
+                                            formatBasalSum = viewModel::formatBasalSum,
+                                            onInsulinManager = onInsulinManager
                                         )
                                     }
                                     // Extra space for floating toolbar
