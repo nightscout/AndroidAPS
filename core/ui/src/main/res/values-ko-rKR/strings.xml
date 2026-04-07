@@ -240,9 +240,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d 분 내에 %1$d g의 추가적인 탄수화물이 필요함</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">누적 TDD</string>
-    <string name="expweight">지수가중 일총량</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">비율</string>
