@@ -298,9 +298,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Požadováno dalších %1$d g sacharidů během %2$d minut</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Kumulativní CDD</string>
-    <string name="expweight">Exponenciálně vážená CDD</string>
     <string name="basalrate">Bazál</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Koef</string>
