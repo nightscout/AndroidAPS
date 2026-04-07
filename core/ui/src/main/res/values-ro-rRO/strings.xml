@@ -425,9 +425,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g carbohidrați suplimentari necesari în %2$d minute</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">TDD cumulată</string>
-    <string name="expweight">TDD estimat exponențial</string>
     <string name="basalrate">Bazală</string>
     <string name="bolus">Bolus</string>
     <string name="tdd_short">DZT (Doza zilnică totală)</string>
