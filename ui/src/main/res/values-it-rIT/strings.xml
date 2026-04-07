@@ -129,7 +129,6 @@
     <string name="show_calculation">Mostra calcolo</string>
     <!-- Treatments -->
     <string name="no_records_available">Nessun record disponibile</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">CHO:</string>
     <string name="tempbasals_netratio_label_string">Rapporto:</string>
