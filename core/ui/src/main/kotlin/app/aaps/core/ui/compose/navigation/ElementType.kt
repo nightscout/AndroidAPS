@@ -34,6 +34,7 @@ enum class ElementType(
     TEMP_TARGET_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
     INSULIN_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
     QUICK_WIZARD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true, protection = ProtectionCheck.Protection.BOLUS),
+    FOOD_MANAGEMENT(category = ElementCategory.MANAGEMENT, searchable = true),
 
     // Careportal
     BG_CHECK(category = ElementCategory.CAREPORTAL, searchable = true),

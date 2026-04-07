@@ -73,6 +73,7 @@ import app.aaps.database.transactions.InvalidateBolusTransaction
 import app.aaps.database.transactions.InvalidateCarbsTransaction
 import app.aaps.database.transactions.InvalidateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InvalidateExtendedBolusTransaction
+import app.aaps.database.transactions.InsertOrUpdateFoodTransaction
 import app.aaps.database.transactions.InvalidateFoodTransaction
 import app.aaps.database.transactions.InvalidateGlucoseValueTransaction
 import app.aaps.database.transactions.InvalidateProfileSwitchTransaction
@@ -2173,6 +2174,25 @@ class PersistenceLayerImpl @Inject constructor(
 
     override suspend fun getLastFoodId(): Long? = withContext(Dispatchers.IO) {
         repository.getLastFoodId()
+    }
+
+    override suspend fun insertOrUpdateFood(food: FD): PersistenceLayer.TransactionResult<FD> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateFoodTransaction(food.toDb()))
+            val transactionResult = PersistenceLayer.TransactionResult<FD>()
+            result.inserted.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Inserted Food $it")
+                transactionResult.inserted.add(it.fromDb())
+            }
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated Food $it")
+                transactionResult.updated.add(it.fromDb())
+            }
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while inserting/updating Food", e)
+            throw e
+        }
     }
 
     override suspend fun invalidateFood(id: Long, action: Action, source: Sources): PersistenceLayer.TransactionResult<FD> = withContext(Dispatchers.IO) {

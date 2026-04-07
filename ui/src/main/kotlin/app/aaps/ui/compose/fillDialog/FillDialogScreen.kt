@@ -272,6 +272,7 @@ private fun FillDialogContent(
                         Icon(
                             imageVector = ElementType.FILL.icon(),
                             contentDescription = null,
+                            modifier = Modifier.size(24.dp),
                             tint = ElementType.FILL.color()
                         )
                         Text(stringResource(ElementType.FILL.labelResId()))

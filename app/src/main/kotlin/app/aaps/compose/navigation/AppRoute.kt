@@ -104,6 +104,7 @@ sealed class AppRoute(val route: String) {
         fun createRoute(siteType: app.aaps.core.data.model.TE.Type) = "siteLocationPicker/${siteType.ordinal}"
     }
 
+    data object FoodManagement : AppRoute("food_management")
     data object SiteRotationManagement : AppRoute("siteRotationManagement")
     data object SiteRotationSettings : AppRoute("siteRotationSettings")
 }

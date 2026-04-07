@@ -1347,6 +1347,14 @@ interface PersistenceLayer {
     suspend fun getLastFoodId(): Long?
 
     /**
+     * Insert or update a food record
+     *
+     * @param food record to insert or update
+     * @return List of changed records
+     */
+    suspend fun insertOrUpdateFood(food: FD): TransactionResult<FD>
+
+    /**
      * Invalidate record with id
      *
      * @param id record id

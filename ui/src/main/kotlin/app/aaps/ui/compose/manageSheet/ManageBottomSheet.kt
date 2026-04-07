@@ -3,20 +3,26 @@ package app.aaps.ui.compose.manageSheet
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -37,7 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.actions.CustomAction
-import app.aaps.core.ui.compose.TonalIcon
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcCancelExtendedBolus
 import app.aaps.core.ui.compose.icons.IcTbrCancel
@@ -129,110 +136,144 @@ internal fun ManageBottomSheetContent(
         // Section: Manage
         SectionHeader(stringResource(CoreUiR.string.manage))
 
-        // Profile Management
-        ManageItem(
-            elementType = ElementType.PROFILE_MANAGEMENT,
-            onDismiss = onDismiss,
-            onNavigate = onNavigate
-        )
-
-        // Insulin Management
-        ManageItem(
-            elementType = ElementType.INSULIN_MANAGEMENT,
-            onDismiss = onDismiss,
-            onNavigate = onNavigate
-        )
-
-        // Temp Target
-        if (showTempTarget) {
-            ManageItem(
-                elementType = ElementType.TEMP_TARGET_MANAGEMENT,
-                onDismiss = onDismiss,
-                onNavigate = onNavigate
-            )
-        }
-
-        ManageItem(
-            elementType = ElementType.QUICK_WIZARD_MANAGEMENT,
-            onDismiss = onDismiss,
-            onNavigate = onNavigate
-        )
-
-        ManageItem(
-            elementType = ElementType.SITE_ROTATION,
-            onDismiss = onDismiss,
-            onNavigate = onNavigate
-        )
-
-        if (pumpPlugin != null) {
-            @Suppress("DEPRECATION")
-            ManageItem(
-                text = stringResource(CoreUiR.string.pump_management),
-                iconPainter = pumpPlugin.pluginDescription.icon?.let { rememberVectorPainter(it) }
-                    ?: if (pumpPlugin.menuIcon != -1) painterResource(pumpPlugin.menuIcon)
-                    else rememberVectorPainter(ElementType.PUMP.icon()),
-                color = ElementType.PUMP.color(),
-                onDismiss = onDismiss,
-                onClick = { onNavigate(NavigationRequest.Element(ElementType.PUMP)) },
-                description = pumpPlugin.name
-            )
-        }
-
-        // Section: Basal (only if any basal item is visible)
-        if (showTempBasal || showCancelTempBasal || showExtendedBolus || showCancelExtendedBolus) {
-            HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
-
-            // Sensor Insert & Fill
-            ManageItem(
-                elementType = ElementType.SENSOR_INSERT,
-                onDismiss = onDismiss,
-                onNavigate = onNavigate
-            )
-            if (!isPatchPump) {
-                ManageItem(
-                    elementType = ElementType.FILL,
+        GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
+            add { modifier ->
+                ManageGridItem(
+                    elementType = ElementType.PROFILE_MANAGEMENT,
                     onDismiss = onDismiss,
-                    onNavigate = onNavigate
+                    onNavigate = onNavigate,
+                    modifier = modifier
                 )
             }
-
-            // Temp Basal or Cancel Temp Basal
-            if (!isSimpleMode) {
-                if (showCancelTempBasal) {
-                    val cancelColor = ElementType.TEMP_BASAL.color()
-                    ManageItem(
-                        text = cancelTempBasalText,
-                        iconPainter = rememberVectorPainter(IcTbrCancel),
-                        color = cancelColor,
+            add { modifier ->
+                ManageGridItem(
+                    elementType = ElementType.INSULIN_MANAGEMENT,
+                    onDismiss = onDismiss,
+                    onNavigate = onNavigate,
+                    modifier = modifier
+                )
+            }
+            if (showTempTarget) {
+                add { modifier ->
+                    ManageGridItem(
+                        elementType = ElementType.TEMP_TARGET_MANAGEMENT,
                         onDismiss = onDismiss,
-                        onClick = onCancelTempBasalClick
-                    )
-                } else if (showTempBasal) {
-                    ManageItem(
-                        elementType = ElementType.TEMP_BASAL,
-                        text = stringResource(CoreUiR.string.tempbasal_button),
-                        onDismiss = onDismiss,
-                        onNavigate = onNavigate
+                        onNavigate = onNavigate,
+                        modifier = modifier
                     )
                 }
+            }
+            add { modifier ->
+                ManageGridItem(
+                    elementType = ElementType.QUICK_WIZARD_MANAGEMENT,
+                    onDismiss = onDismiss,
+                    onNavigate = onNavigate,
+                    modifier = modifier
+                )
+            }
+            add { modifier ->
+                ManageGridItem(
+                    elementType = ElementType.FOOD_MANAGEMENT,
+                    onDismiss = onDismiss,
+                    onNavigate = onNavigate,
+                    modifier = modifier
+                )
+            }
+            add { modifier ->
+                ManageGridItem(
+                    elementType = ElementType.SITE_ROTATION,
+                    onDismiss = onDismiss,
+                    onNavigate = onNavigate,
+                    modifier = modifier
+                )
+            }
+            if (pumpPlugin != null) {
+                add { modifier ->
+                    @Suppress("DEPRECATION")
+                    ManageGridItem(
+                        text = stringResource(CoreUiR.string.pump_management),
+                        iconPainter = pumpPlugin.pluginDescription.icon?.let { rememberVectorPainter(it) }
+                            ?: if (pumpPlugin.menuIcon != -1) painterResource(pumpPlugin.menuIcon)
+                            else rememberVectorPainter(ElementType.PUMP.icon()),
+                        color = ElementType.PUMP.color(),
+                        onDismiss = onDismiss,
+                        onClick = { onNavigate(NavigationRequest.Element(ElementType.PUMP)) },
+                        description = pumpPlugin.name,
+                        modifier = modifier
+                    )
+                }
+            }
+        }
 
-                // Extended Bolus or Cancel Extended Bolus
-                if (showCancelExtendedBolus) {
-                    val cancelColor = ElementType.EXTENDED_BOLUS.color()
-                    ManageItem(
-                        text = cancelExtendedBolusText,
-                        iconPainter = rememberVectorPainter(IcCancelExtendedBolus),
-                        color = cancelColor,
+        // Section: Device maintenance & basal
+        if (showTempBasal || showCancelTempBasal || showExtendedBolus || showCancelExtendedBolus) {
+            HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
+                add { modifier ->
+                    ManageGridItem(
+                        elementType = ElementType.SENSOR_INSERT,
                         onDismiss = onDismiss,
-                        onClick = onCancelExtendedBolusClick
+                        onNavigate = onNavigate,
+                        modifier = modifier
                     )
-                } else if (showExtendedBolus) {
-                    ManageItem(
-                        elementType = ElementType.EXTENDED_BOLUS,
-                        text = stringResource(CoreUiR.string.extended_bolus_button),
-                        onDismiss = onDismiss,
-                        onNavigate = onNavigate
-                    )
+                }
+                if (!isPatchPump) {
+                    add { modifier ->
+                        ManageGridItem(
+                            elementType = ElementType.FILL,
+                            onDismiss = onDismiss,
+                            onNavigate = onNavigate,
+                            modifier = modifier
+                        )
+                    }
+                }
+                if (!isSimpleMode) {
+                    if (showCancelTempBasal) {
+                        add { modifier ->
+                            ManageGridItem(
+                                text = cancelTempBasalText,
+                                iconPainter = rememberVectorPainter(IcTbrCancel),
+                                color = ElementType.TEMP_BASAL.color(),
+                                onDismiss = onDismiss,
+                                onClick = onCancelTempBasalClick,
+                                modifier = modifier
+                            )
+                        }
+                    } else if (showTempBasal) {
+                        add { modifier ->
+                            ManageGridItem(
+                                elementType = ElementType.TEMP_BASAL,
+                                text = stringResource(CoreUiR.string.tempbasal_button),
+                                onDismiss = onDismiss,
+                                onNavigate = onNavigate,
+                                modifier = modifier
+                            )
+                        }
+                    }
+                    if (showCancelExtendedBolus) {
+                        add { modifier ->
+                            ManageGridItem(
+                                text = cancelExtendedBolusText,
+                                iconPainter = rememberVectorPainter(IcCancelExtendedBolus),
+                                color = ElementType.EXTENDED_BOLUS.color(),
+                                onDismiss = onDismiss,
+                                onClick = onCancelExtendedBolusClick,
+                                modifier = modifier
+                            )
+                        }
+                    } else if (showExtendedBolus) {
+                        add { modifier ->
+                            ManageGridItem(
+                                elementType = ElementType.EXTENDED_BOLUS,
+                                text = stringResource(CoreUiR.string.extended_bolus_button),
+                                onDismiss = onDismiss,
+                                onNavigate = onNavigate,
+                                modifier = modifier
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -240,7 +281,7 @@ internal fun ManageBottomSheetContent(
         // Section: Careportal (hidden in simple mode, collapsed by default)
         if (!isSimpleMode) {
             var careportalExpanded by remember { mutableStateOf(false) }
-            HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+            HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
             CollapsibleSectionHeader(
                 text = stringResource(CoreUiR.string.careportal),
                 expanded = careportalExpanded,
@@ -248,57 +289,115 @@ internal fun ManageBottomSheetContent(
             )
 
             AnimatedVisibility(visible = careportalExpanded) {
-                Column {
-                    ManageItem(
-                        elementType = ElementType.BG_CHECK,
-                        onDismiss = onDismiss,
-                        onNavigate = onNavigate,
-                        coloredText = false
-                    )
-                    ManageItem(
-                        elementType = ElementType.NOTE,
-                        onDismiss = onDismiss,
-                        onNavigate = onNavigate,
-                        coloredText = false
-                    )
-                    ManageItem(
-                        elementType = ElementType.EXERCISE,
-                        onDismiss = onDismiss,
-                        onNavigate = onNavigate,
-                        coloredText = false
-                    )
-                    ManageItem(
-                        elementType = ElementType.QUESTION,
-                        onDismiss = onDismiss,
-                        onNavigate = onNavigate,
-                        coloredText = false
-                    )
-                    ManageItem(
-                        elementType = ElementType.ANNOUNCEMENT,
-                        onDismiss = onDismiss,
-                        onNavigate = onNavigate,
-                        coloredText = false
-                    )
+                GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    add { modifier ->
+                        ManageGridItem(
+                            elementType = ElementType.BG_CHECK,
+                            onDismiss = onDismiss,
+                            onNavigate = onNavigate,
+                            coloredText = false,
+                            modifier = modifier
+                        )
+                    }
+                    add { modifier ->
+                        ManageGridItem(
+                            elementType = ElementType.NOTE,
+                            onDismiss = onDismiss,
+                            onNavigate = onNavigate,
+                            coloredText = false,
+                            modifier = modifier
+                        )
+                    }
+                    add { modifier ->
+                        ManageGridItem(
+                            elementType = ElementType.EXERCISE,
+                            onDismiss = onDismiss,
+                            onNavigate = onNavigate,
+                            coloredText = false,
+                            modifier = modifier
+                        )
+                    }
+                    add { modifier ->
+                        ManageGridItem(
+                            elementType = ElementType.QUESTION,
+                            onDismiss = onDismiss,
+                            onNavigate = onNavigate,
+                            coloredText = false,
+                            modifier = modifier
+                        )
+                    }
+                    add { modifier ->
+                        ManageGridItem(
+                            elementType = ElementType.ANNOUNCEMENT,
+                            onDismiss = onDismiss,
+                            onNavigate = onNavigate,
+                            coloredText = false,
+                            modifier = modifier
+                        )
+                    }
                 }
             }
         }
 
         // Section: Pump actions (only if non-empty)
         if (customActions.isNotEmpty()) {
-            HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+            HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp))
             SectionHeader(stringResource(CoreUiR.string.pump_actions))
 
             val pumpColor = ElementType.PUMP.color()
-            customActions.forEach { action ->
-                ManageItem(
-                    text = stringResource(action.name),
-                    iconPainter = painterResource(action.iconResourceId),
-                    color = pumpColor,
-                    onDismiss = onDismiss,
-                    onClick = { onCustomActionClick(action) }
-                )
+            GridSection(modifier = Modifier.padding(horizontal = 16.dp)) {
+                customActions.forEach { action ->
+                    add { modifier ->
+                        ManageGridItem(
+                            text = stringResource(action.name),
+                            iconPainter = painterResource(action.iconResourceId),
+                            color = pumpColor,
+                            onDismiss = onDismiss,
+                            onClick = { onCustomActionClick(action) },
+                            modifier = modifier
+                        )
+                    }
+                }
             }
         }
+    }
+}
+
+/**
+ * Lays out composable items in a 2-column grid with equal-height rows.
+ */
+@Composable
+private fun GridSection(
+    modifier: Modifier = Modifier,
+    content: GridSectionScope.() -> Unit
+) {
+    val items = GridSectionScope().apply(content).items
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        items.chunked(2).forEach { rowItems ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Max)
+            ) {
+                rowItems.forEach { item ->
+                    item(Modifier.weight(1f).fillMaxHeight())
+                }
+                if (rowItems.size == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+    }
+}
+
+private class GridSectionScope {
+    val items = mutableListOf<@Composable (Modifier) -> Unit>()
+    fun add(item: @Composable (Modifier) -> Unit) {
+        items.add(item)
     }
 }
 
@@ -336,15 +435,15 @@ private fun CollapsibleSectionHeader(text: String, expanded: Boolean, onToggle: 
 }
 
 /**
- * ManageItem that derives icon, color, label, and description from [ElementType].
- * Fires [onNavigate] with a [NavigationRequest.Element] — caller handles protection + navigation.
+ * Grid card item that derives icon, color, label, and description from [ElementType].
  * Custom [text] overrides the ElementType label when provided.
  */
 @Composable
-private fun ManageItem(
+private fun ManageGridItem(
     elementType: ElementType,
     onDismiss: () -> Unit,
     onNavigate: (NavigationRequest) -> Unit,
+    modifier: Modifier = Modifier,
     text: String? = null,
     coloredText: Boolean = true
 ) {
@@ -352,43 +451,73 @@ private fun ManageItem(
     val label = text ?: stringResource(elementType.labelResId())
     val descResId = elementType.descriptionResId()
     val description = if (descResId != 0) stringResource(descResId) else null
-    ManageItem(
+    ManageGridItem(
         text = label,
         iconPainter = rememberVectorPainter(elementType.icon()),
         color = color,
         onDismiss = onDismiss,
         onClick = { onNavigate(NavigationRequest.Element(elementType)) },
         description = description,
-        coloredText = coloredText
+        coloredText = coloredText,
+        modifier = modifier
     )
 }
 
 @Composable
-private fun ManageItem(
+private fun ManageGridItem(
     text: String,
     iconPainter: Painter,
     color: Color,
     onDismiss: () -> Unit,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     description: String? = null,
     coloredText: Boolean = true
 ) {
-    ListItem(
-        headlineContent = {
-            Text(text = text, color = if (coloredText) color else Color.Unspecified)
-        },
-        supportingContent = description?.let {
-            { Text(text = it, color = MaterialTheme.colorScheme.onSurfaceVariant) }
-        },
-        leadingContent = {
-            TonalIcon(painter = iconPainter, color = color)
-        },
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
-        modifier = Modifier.clickable {
+    ElevatedCard(
+        onClick = {
             onDismiss()
             onClick()
+        },
+        modifier = modifier
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                SmallTonalIcon(painter = iconPainter, color = color)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (coloredText) color else Color.Unspecified
+                )
+            }
+            if (description != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
-    )
+    }
+}
+
+@Composable
+private fun SmallTonalIcon(painter: Painter, color: Color) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(20.dp)
+            .background(color = color.copy(alpha = 0.12f), shape = CircleShape)
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(12.dp)
+        )
+    }
 }
 
 @Preview(showBackground = true)

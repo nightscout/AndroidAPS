@@ -308,6 +308,7 @@ private fun WizardDialogContent(
                         Icon(
                             imageVector = ElementType.BOLUS_WIZARD.icon(),
                             contentDescription = null,
+                            modifier = Modifier.size(24.dp),
                             tint = ElementType.BOLUS_WIZARD.color()
                         )
                         Text(stringResource(ElementType.BOLUS_WIZARD.labelResId()))

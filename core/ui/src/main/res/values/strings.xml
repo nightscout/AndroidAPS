@@ -74,7 +74,7 @@
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
     <string name="confirm">Confirm</string>
     <string name="pump">Pump</string>
-    <string name="pump_management">Pump management</string>
+    <string name="pump_management">Pump</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Uploader</string>
@@ -326,7 +326,7 @@
     <string name="careportal_dad_alert">D.A.D. Alert</string>
     <string name="careportal_insulin_cartridge_change">Insulin Cartridge Change</string>
     <string name="careportal_profileswitch">Profile switch</string>
-    <string name="profile_management">Profile management</string>
+    <string name="profile_management">Profile</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
     <string name="careportal_mealbolus">Meal Bolus</string>
     <string name="careportal_correctionbolus">Correction Bolus</string>
@@ -346,7 +346,7 @@
     <string name="treatment_insulin_desc">Deliver bolus manually</string>
     <string name="treatment_carbs_desc">Record carbs without insulin</string>
     <string name="treatment_calculator_desc">Calculate bolus</string>
-    <string name="insulin_management">Insulin management</string>
+    <string name="insulin_management">Insulin</string>
     <string name="manage_insulin_desc">Manage and activate insulin configurations</string>
     <string name="concentration_disable_blocked">Cannot disable concentration support while non-U100 insulins exist. Remove all non-U100 insulin configurations and switch to a U100 profile first.</string>
     <string name="simple_mode_blocked_by_concentration">Cannot enable simple mode while using non-U100 insulin. Switch to U100 insulin first.</string>
@@ -383,7 +383,7 @@
     <string name="custom">Custom</string>
     <string name="preset_settings">Preset Settings</string>
     <string name="activation">Activation</string>
-    <string name="temp_target_management">Temporary Target management</string>
+    <string name="temp_target_management">Temp Target</string>
     <string name="revert_to_defaults">Revert to defaults</string>
     <string name="confirm_remove_preset">Remove preset %1$s?</string>
     <string name="confirm_cancel_temp_target">Cancel active temporary target?</string>
@@ -689,7 +689,7 @@
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">No pump available!</string>
     <string name="quickwizard">QuickWizard</string>
-    <string name="quickwizard_managemnt">QuickWizard management</string>
+    <string name="quickwizard_managemnt">QuickWizard</string>
 
 
     <!--    Preferences-->
@@ -1007,6 +1007,27 @@
     <string name="wiki_search_offline">Documentation search requires internet connection</string>
     <string name="no_search_results">No results found</string>
     <string name="search_plugin_disabled">Plugin %1$s disabled</string>
+
+    <!--    Food Management -->
+    <string name="food_management">Food</string>
+    <string name="food_deleted">Food deleted</string>
+    <string name="edit_food">Edit Food</string>
+    <string name="add_food">Add Food</string>
+    <string name="name">Name</string>
+    <string name="category">Category</string>
+    <string name="subcategory">Subcategory</string>
+    <string name="portion">Portion</string>
+    <string name="unit_label">Unit</string>
+    <string name="fat">Fat</string>
+    <string name="protein">Protein</string>
+    <string name="energy">Energy</string>
+    <string name="undo">Undo</string>
+    <string name="no_data">No data</string>
+    <string name="manage_food_desc">Manage food database entries</string>
+    <string name="label_carbs_g">Carbs (g)</string>
+    <string name="label_fat_g">Fat (g)</string>
+    <string name="label_protein_g">Protein (g)</string>
+    <string name="label_energy_kj">Energy (kJ)</string>
 
     <!--    Log Settings-->
     <string name="nav_logsettings">Log settings</string>

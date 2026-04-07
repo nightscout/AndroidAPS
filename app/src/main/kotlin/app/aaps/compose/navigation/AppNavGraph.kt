@@ -556,6 +556,19 @@ fun NavGraphBuilder.appNavGraph(
         )
     }
 
+    composable(AppRoute.FoodManagement.route) {
+        val foodManagementViewModel: app.aaps.ui.compose.foodManagement.FoodManagementViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+        app.aaps.ui.compose.foodManagement.FoodManagementScreen(
+            viewModel = foodManagementViewModel,
+            onNavigateBack = { navController.safePopBackStack() },
+            onNavigateToWizard = { carbs, name ->
+                withProtection(ProtectionCheck.Protection.BOLUS) {
+                    navController.navigate(AppRoute.WizardDialog.createRoute(carbs = carbs, notes = name))
+                }
+            }
+        )
+    }
+
     composable(AppRoute.SiteRotationManagement.route) {
         SiteRotationManagementScreen(
             viewModel = siteRotationManagementViewModel,
