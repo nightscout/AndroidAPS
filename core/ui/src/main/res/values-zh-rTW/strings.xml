@@ -426,9 +426,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g 額外碳水化合物需要在 %2$d 分鐘內</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">累積每日總劑量</string>
-    <string name="expweight">指數加權每日總劑量</string>
     <string name="basalrate">基礎率</string>
     <string name="bolus">注射</string>
     <string name="tdd_short">TDD</string>
