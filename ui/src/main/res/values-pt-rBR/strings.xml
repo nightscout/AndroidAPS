@@ -71,7 +71,6 @@
     <string name="a11y_set_carb_timer">definir alarme temporizador de carboidrato</string>
     <!-- Treatments -->
     <string name="no_records_available">Nenhum registro disponível</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carboidratos:</string>
     <string name="tempbasals_netratio_label_string">Rácio:</string>
