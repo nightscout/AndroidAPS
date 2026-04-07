@@ -105,17 +105,11 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">sadece saatte</string>
     <string name="a11y_only_on_phone">sadece telefonda</string>
-    <string name="quickwizard_settings">Hızlı asistan ayarları</string>
     <string name="overview_edit_quickwizard_button_text">Buton Metni</string>
-    <string name="overview_edit_quickwizard_valid">Geçerli:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Yalnızca pozitif AİNS</string>
     <string name="overview_edit_quickwizard_superbolus">Süperbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Yüzde çok yüksek!</string>
     <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
     <string name="additional_ecarbs">yKarb ekle</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Hesaplama için kullanın:</string>
-    <string name="constraints_violation">Kısıtlamalar ihlali</string>
-    <string name="change_your_input">Girişinizi değiştirin!</string>
     <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
     <string name="recalculate">Tekrar Hesapla</string>
     <!--    Widget-->
