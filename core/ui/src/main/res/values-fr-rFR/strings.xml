@@ -298,9 +298,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$dg de glucides requis dans %2$d min.</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">DTQ cumulée</string>
-    <string name="expweight">DTQ avec Pondération Exponentielle</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Ratio</string>
