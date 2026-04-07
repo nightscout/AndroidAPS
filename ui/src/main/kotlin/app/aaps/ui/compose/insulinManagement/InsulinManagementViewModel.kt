@@ -74,6 +74,7 @@ class InsulinManagementViewModel @Inject constructor(
 
     fun setScreenMode(mode: ScreenMode) {
         uiState.update { it.copy(screenMode = mode) }
+        loadData(reload = true)
     }
 
     fun loadData(reload: Boolean = true, autoName: Boolean = false, saveAfterAutoName: Boolean = false) {
@@ -111,7 +112,7 @@ class InsulinManagementViewModel @Inject constructor(
                 autoGenerateName()
                 if (saveAfterAutoName) saveCurrentInsulin()
             }
-            targetIndex?.let { sideEffect.emit(SideEffect.ScrollToInsulin(it)) }
+            targetIndex.let { sideEffect.emit(SideEffect.ScrollToInsulin(it)) }
         }
     }
 
