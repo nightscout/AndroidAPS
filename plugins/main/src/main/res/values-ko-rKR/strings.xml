@@ -56,10 +56,7 @@
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
     <string name="overview_buttons_selection">버튼</string>
     <string name="not_available_full">알수없음</string>
-    <string name="constraints_violation">제한 위반</string>
-    <string name="change_your_input">입력값을 변경하세요!</string>
     <string name="data_status">BG 데이터 상태</string>
-    <string name="quickwizard_settings">빠른마법사 설정</string>
     <string name="default_temptargets">임시목표 기본값</string>
     <string name="fill_bolus_title">교체/채움 기본 인슐린 양</string>
     <string name="run_question">%s 실행?</string>
