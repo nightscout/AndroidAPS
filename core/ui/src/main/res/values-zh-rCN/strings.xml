@@ -219,8 +219,6 @@
     <string name="waitingforpumpresult">正在等待结果</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <!--    TDDStatsActivity-->
-    <string name="expweight">日输注总量指数加权</string>
     <string name="basalrate">基础率</string>
     <string name="bolus">大剂量</string>
     <string name="ratio">比值</string>
