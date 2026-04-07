@@ -77,15 +77,15 @@ class InsulinManagementViewModel @Inject constructor(
         loadData(reload = true)
     }
 
-    fun loadData(reload: Boolean = true, autoName: Boolean = false, saveAfterAutoName: Boolean = false) {
+    fun loadData(targetIndex: Int? = null, reload: Boolean = true, autoName: Boolean = false, saveAfterAutoName: Boolean = false) {
         viewModelScope.launch {
             if (reload) insulinManager.loadSettings()
             val insulins = insulinManager.insulins.map { it.deepClone() }
             val activeICfg = profileFunction.getProfile()?.iCfg
             val activeLabel = activeICfg?.insulinLabel
             val activeConcentration = profileFunction.getProfile()?.iCfg?.concentration ?: 1.0  // Only insulin with Current Active concentration can be set from Insulin Management
-            val targetIndex = if (reload) insulinManager.insulinIndex(activeICfg) else uiState.value.currentCardIndex
-            val currentIndex = targetIndex.coerceIn(0, (insulins.size - 1).coerceAtLeast(0))
+            val currentIndex = (if (reload) insulinManager.insulinIndex(activeICfg) else targetIndex ?: uiState.value.currentCardIndex)
+                .coerceIn(0, (insulins.size - 1).coerceAtLeast(0))
             val currentICfg = insulins.getOrNull(currentIndex)
             val template = currentICfg?.let { cfg -> InsulinType.fromPeak(cfg.insulinPeakTime) }
             val defaultNickname = template?.let { rh.gs(it.label) } ?: ""
@@ -112,7 +112,7 @@ class InsulinManagementViewModel @Inject constructor(
                 autoGenerateName()
                 if (saveAfterAutoName) saveCurrentInsulin()
             }
-            targetIndex.let { sideEffect.emit(SideEffect.ScrollToInsulin(it)) }
+            targetIndex?.let { sideEffect.emit(SideEffect.ScrollToInsulin(it)) }
         }
     }
 
@@ -121,17 +121,15 @@ class InsulinManagementViewModel @Inject constructor(
      */
     private fun observeProfileChanges() {
         rxBus.toFlow(EventLocalProfileChanged::class.java)
-            .onEach {
-                val now = dateUtil.now()
-                val activeIcfg = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)?.iCfg
-                uiState.update { it.copy( activeInsulinLabel = activeIcfg?.insulinLabel ) }
-            }.launchIn(viewModelScope)
+            .onEach { updateRunningInsulin() }.launchIn(viewModelScope)
         persistenceLayer.observeChanges<EPS>()
-            .onEach {
-                val now = dateUtil.now()
-                val activeIcfg = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)?.iCfg
-                uiState.update { it.copy( activeInsulinLabel = activeIcfg?.insulinLabel ) }
-            }.launchIn(viewModelScope)
+            .onEach { updateRunningInsulin() }.launchIn(viewModelScope)
+    }
+
+    private suspend fun updateRunningInsulin() {
+        val now = dateUtil.now()
+        val activeIcfg = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)?.iCfg
+        uiState.update { it.copy(activeInsulinLabel = activeIcfg?.insulinLabel) }
     }
 
     fun refreshData() {
@@ -193,6 +191,7 @@ class InsulinManagementViewModel @Inject constructor(
         if (saveCurrentInsulin()) {
             when (pending) {
                 is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
+
                 is PendingNavigation.Back       -> {
                     uiState.update { it.copy(pendingNavigation = null) }
                     viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
@@ -207,6 +206,7 @@ class InsulinManagementViewModel @Inject constructor(
         val pending = uiState.value.pendingNavigation
         when (pending) {
             is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
+
             is PendingNavigation.Back       -> {
                 uiState.update { it.copy(pendingNavigation = null) }
                 viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
@@ -238,7 +238,8 @@ class InsulinManagementViewModel @Inject constructor(
         uiState.update {
             it.copy(
                 autoNameEnabled = false,
-                editorNickname = nickname)
+                editorNickname = nickname
+            )
         }
     }
 
@@ -346,7 +347,7 @@ class InsulinManagementViewModel @Inject constructor(
         val newICfg = source?.deepClone() ?: InsulinType.OREF_RAPID_ACTING.iCfg
         newICfg.insulinLabel = ""
         insulinManager.addNewInsulin(newICfg)
-        loadData(reload = false, autoName = state.autoNameEnabled, saveAfterAutoName = true)
+        loadData(targetIndex = insulinManager.currentInsulinIndex, reload = false, autoName = state.autoNameEnabled, saveAfterAutoName = true)
     }
 
     fun deleteCurrentInsulin(): Boolean {
