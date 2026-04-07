@@ -521,8 +521,7 @@ fun SecondaryGraphCompose(
     val secondaryAxisLine = remember(secondaryAxisColor) {
         LineCartesianLayer.Line(
             fill = LineCartesianLayer.LineFill.single(Fill(secondaryAxisColor)),
-            areaFill = LineCartesianLayer.AreaFill.single(
-                Fill(Brush.verticalGradient(listOf(secondaryAxisColor.copy(alpha = 0.3f), Color.Transparent)))
+            areaFill = LineCartesianLayer.AreaFill.single(fill = Fill(Color.Transparent)
             )
         )
     }
