@@ -200,8 +200,6 @@
     <string name="waitingforpumpresult">Esperant resultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <!--    TDDStatsActivity-->
-    <string name="expweight">TDD ponderada exponencialment</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Ràtio</string>
