@@ -104,8 +104,6 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">endast på klockan</string>
     <string name="a11y_only_on_phone">endast på telefonen</string>
-    <string name="quickwizard_settings">Inställningar för snabbknappar</string>
-    <string name="overview_edit_quickwizard_valid">Giltig:</string>
     <string name="a11y_drag_and_drop_handle">dra och släpp-handtag</string>
     <!--    Widget-->
     <!--    Permissions-->
