@@ -242,9 +242,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d גר\' פחמימות דרושות ב-%2$d הדקות הקרובות</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">מינון יומי מצטבר (TDD)</string>
-    <string name="expweight">TDD משוקלל אקספוננציאלי</string>
     <string name="basalrate">בזאלי</string>
     <string name="bolus">בולוס</string>
     <string name="ratio">יחס</string>
