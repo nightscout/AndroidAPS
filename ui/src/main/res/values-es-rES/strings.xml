@@ -129,7 +129,6 @@
     <string name="show_calculation">Ver desglose del cálculo</string>
     <!-- Treatments -->
     <string name="no_records_available">No hay registros disponibles</string>
-    <string name="calculation_short">Cálculo</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
     <string name="tempbasals_netratio_label_string">Relación:</string>
