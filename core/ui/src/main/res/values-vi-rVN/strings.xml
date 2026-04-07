@@ -426,9 +426,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Cần thêm %1$d g carb trong vòng %2$d phút</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Tổng liều TDD tích lũy</string>
-    <string name="expweight">Tổng liều hằng ngày theo cấp số nhân</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="tdd_short">TDD</string>
