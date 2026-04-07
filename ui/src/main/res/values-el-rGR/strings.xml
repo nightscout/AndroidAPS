@@ -104,8 +104,6 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">μόνο στο ρολόι</string>
     <string name="a11y_only_on_phone">μόνο στο τηλέφωνο</string>
-    <string name="quickwizard_settings">Ρυθμίσεις QuickWizard</string>
-    <string name="overview_edit_quickwizard_valid">Έγκυρο:</string>
     <string name="a11y_drag_and_drop_handle">διαχείριση μεταφοράς και απόθεσης</string>
     <!--    Widget-->
     <!--    Permissions-->
