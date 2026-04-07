@@ -71,7 +71,6 @@
     <string name="a11y_set_carb_timer">ορισμός ειδοποίησης χρονομέτρου υδατανθράκων</string>
     <!-- Treatments -->
     <string name="no_records_available">Δεν υπάρχουν διαθέσιμες εγγραφές</string>
-    <string name="calculation_short">Υπολογ</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
     <string name="tempbasals_netratio_label_string">Αναλογία:</string>
