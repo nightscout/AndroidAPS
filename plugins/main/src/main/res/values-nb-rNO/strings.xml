@@ -73,10 +73,7 @@
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="overview_buttons_selection">Knapper</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
-    <string name="constraints_violation">Brudd på begrensninger</string>
-    <string name="change_your_input">Endre dine inndata!</string>
     <string name="data_status">Status BS-data</string>
-    <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
     <string name="default_temptargets">Standard midlertidig mål</string>
     <string name="fill_bolus_title">Standardverdier for påfyll/prime</string>
     <string name="run_question">Kjør %s?</string>
