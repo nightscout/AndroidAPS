@@ -253,9 +253,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d dakika içinde %1$d g ek karbonhidrat gerekiyor</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Kümülatif GTD (Günlük Toplam Doz)</string>
-    <string name="expweight">Üstel Ağırlıklı GTD</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Oran</string>
