@@ -71,10 +71,7 @@
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="overview_buttons_selection">Knoppen</string>
     <string name="not_available_full">Niet beschikbaar</string>
-    <string name="constraints_violation">In strijd met beperkingen</string>
-    <string name="change_your_input">Wijzig het ingegevene!</string>
     <string name="data_status">BG data status</string>
-    <string name="quickwizard_settings">Vaste maaltijd instellingen</string>
     <string name="default_temptargets">Standaard tijdelijke streefdoelen</string>
     <string name="fill_bolus_title">Ontlucht/Vul standaard insuline hoeveelheden</string>
     <string name="run_question">%s uitvoeren?</string>
