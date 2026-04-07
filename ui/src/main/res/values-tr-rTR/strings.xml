@@ -72,7 +72,6 @@
     <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
     <!-- Treatments -->
     <string name="no_records_available">Kayıt mevcut değil</string>
-    <string name="calculation_short">Hesap</string>
     <string name="treatments_iob_label_string">AİNS:</string>
     <string name="treatments_carbs_label_string">Karbonhidrat:</string>
     <string name="tempbasals_netratio_label_string">Oran:</string>
