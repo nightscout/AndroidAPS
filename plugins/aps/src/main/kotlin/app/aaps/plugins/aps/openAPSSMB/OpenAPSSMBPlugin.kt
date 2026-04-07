@@ -255,7 +255,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (!dynIsfResult.tddPartsCalculated()) return Pair("TDD miss", null)
         // no cached result found, let's calculate the value
         //aapsLogger.debug("calculateVariableIsf $caller CAL ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
-        dynIsfCache.put(key, dynIsfResult.variableSensitivity)
+        dynIsfResult.variableSensitivity?.let { dynIsfCache.put(key, it) }
         if (dynIsfCache.size() > 1000) dynIsfCache.clear()
         return Pair("CALC", dynIsfResult.variableSensitivity)
     }
