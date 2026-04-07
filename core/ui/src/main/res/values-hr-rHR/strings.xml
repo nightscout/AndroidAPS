@@ -137,8 +137,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g dodatnih ugljikohidrata potrebnih unutar %2$d minuta</string>
-    <!--    TDDStatsActivity-->
-    <string name="expweight">Eksponencijalno ponderirani TDD</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Omjer</string>
