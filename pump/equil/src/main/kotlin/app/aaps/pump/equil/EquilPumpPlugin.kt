@@ -292,6 +292,7 @@ class EquilPumpPlugin @Inject constructor(
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal=====$enforceNew")
+        if (!isInitialized()) return pumpEnactResultProvider.get().success(false).enacted(false)
         val pumpEnactResult = equilManager.setTempBasal(0.0, 0, true)
         if (pumpEnactResult.success) {
             pumpEnactResult.isTempCancel = true
