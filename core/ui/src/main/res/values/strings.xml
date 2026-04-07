@@ -440,9 +440,6 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g additional carbs required within %2$d minutes</string>
 
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Cumulative TDD</string>
-    <string name="expweight">Exponentially Weighted TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="tdd_short">TDD</string>
