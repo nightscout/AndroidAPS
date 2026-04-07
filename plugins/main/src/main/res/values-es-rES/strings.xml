@@ -73,10 +73,7 @@
     <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
     <string name="overview_buttons_selection">Botones</string>
     <string name="not_available_full">No disponible</string>
-    <string name="constraints_violation">Violación de restricciones</string>
-    <string name="change_your_input">¡Cambiar datos!</string>
     <string name="data_status">Estado de datos de glucosa</string>
-    <string name="quickwizard_settings">Asistente de configuración</string>
     <string name="default_temptargets">Objetivo temporal por defecto</string>
     <string name="fill_bolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="run_question">¿Ejecutar %s?</string>
