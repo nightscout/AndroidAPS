@@ -170,17 +170,11 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">solo su smartwatch</string>
     <string name="a11y_only_on_phone">solo su telefono</string>
-    <string name="quickwizard_settings">Impostazioni Calcolatore rapido</string>
     <string name="overview_edit_quickwizard_button_text">Testo del pulsante</string>
-    <string name="overview_edit_quickwizard_valid">Valido:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Solo IOB positivo</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Percentuale troppo alta!</string>
     <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
     <string name="additional_ecarbs">Aggiungi eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Utilizzati per il calcolo:</string>
-    <string name="constraints_violation">Violazione dei vincoli</string>
-    <string name="change_your_input">Cambia il tuo input!</string>
     <string name="confirm_treatment">Si prega di confermare il trattamento</string>
     <string name="recalculate">Ricalcola</string>
     <!--    Widget-->
