@@ -298,9 +298,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Zalecane podanie %1$d g węglowodanów w przeciągu %2$d minut</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Kumulatywna TDD (dawka dzienna)</string>
-    <string name="expweight">Ważona wykładniczo TDD</string>
     <string name="basalrate">Baza</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Stosunek</string>
