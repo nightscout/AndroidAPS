@@ -56,10 +56,7 @@
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="overview_buttons_selection">Бутони</string>
     <string name="not_available_full">Недостъпно</string>
-    <string name="constraints_violation">Нарушено ограничение</string>
-    <string name="change_your_input">Променете данните!</string>
     <string name="data_status">Статус на данни за КЗ</string>
-    <string name="quickwizard_settings">Настройки за бърз болус</string>
     <string name="default_temptargets">Временна цел по подразбиране</string>
     <string name="fill_bolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="run_question">Пусни %s?</string>
