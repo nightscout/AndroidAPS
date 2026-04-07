@@ -33,7 +33,6 @@
     <string name="a11y_set_carb_timer">postavite timer alarma ugljikohidrata</string>
     <!-- Treatments -->
     <string name="no_records_available">Nema dostupnih zapisa</string>
-    <string name="calculation_short">Izračun</string>
     <string name="treatments_iob_label_string">Aktivni inzulin:</string>
     <string name="treatments_carbs_label_string">Ugljikohidrati (UH):</string>
     <string name="tempbasals_netratio_label_string">Omjer:</string>
