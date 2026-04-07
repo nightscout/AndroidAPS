@@ -298,9 +298,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g di CHO aggiuntivi richiesti entro %2$d minuti</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">TDD cumulativo</string>
-    <string name="expweight">TDD esponenzialmente ponderato</string>
     <string name="basalrate">Basale</string>
     <string name="bolus">Bolo</string>
     <string name="ratio">Rapporto</string>
