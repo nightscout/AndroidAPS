@@ -29,7 +29,6 @@ import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalConfig
@@ -66,7 +65,6 @@ fun AllPreferencesScreen(
     val preferences = LocalPreferences.current
     val config = LocalConfig.current
     // Look up plugins by interface
-    val smsCommunicatorPlugin = activePlugin.getSpecificPluginsListByInterface(SmsCommunicator::class.java).firstOrNull()
     val automationPlugin = activePlugin.getSpecificPluginsListByInterface(Automation::class.java).firstOrNull()
     val autotunePlugin = activePlugin.getSpecificPluginsListByInterface(Autotune::class.java).firstOrNull()
 
@@ -125,9 +123,6 @@ fun AllPreferencesScreen(
         activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { plugin ->
             getPreferenceContentIfEnabled(plugin)?.let { add(it) }
         }
-
-        // 10. SMS Communicator plugin (found via interface)
-        getPreferenceContentIfEnabled(smsCommunicatorPlugin)?.let { add(it) }
 
         // 11. Automation plugin (found via interface)
         getPreferenceContentIfEnabled(automationPlugin)?.let { add(it) }
