@@ -120,17 +120,11 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">только на часах</string>
     <string name="a11y_only_on_phone">только на телефоне</string>
-    <string name="quickwizard_settings">Мастер быстрой настройки</string>
     <string name="overview_edit_quickwizard_button_text">Текст на кнопке</string>
-    <string name="overview_edit_quickwizard_valid">Верно:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Только положительный активный инсулин IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Суперболюс</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Процент слишком высокий!</string>
     <string name="a11y_drag_and_drop_handle">перетаскиватель</string>
     <string name="additional_ecarbs">Добавить eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Использовать для вычислений:</string>
-    <string name="constraints_violation">Нарушение ограничений</string>
-    <string name="change_your_input">Измените введенные данные!</string>
     <string name="confirm_treatment">Подтвердите терапию</string>
     <string name="recalculate">Пересчитать</string>
     <!--    Widget-->
