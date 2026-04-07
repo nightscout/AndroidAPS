@@ -237,9 +237,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d гр допълнителни въглехидрати ще са необходими до %2$d минути</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Комулативна TDD</string>
-    <string name="expweight">Експоненциално претеглена TDD</string>
     <string name="basalrate">Базал</string>
     <string name="bolus">Болус</string>
     <string name="ratio">Коефициент</string>
