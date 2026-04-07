@@ -129,7 +129,6 @@
     <string name="show_calculation">Afișați calculul</string>
     <!-- Treatments -->
     <string name="no_records_available">Nicio înregistrare disponibilă</string>
-    <string name="calculation_short">Calcul</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carbohidrați:</string>
     <string name="tempbasals_netratio_label_string">Raport:</string>
