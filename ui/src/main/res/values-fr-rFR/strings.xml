@@ -120,17 +120,11 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">uniquement sur la montre</string>
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
-    <string name="quickwizard_settings">Paramètres de l\'Assistant Rapide</string>
     <string name="overview_edit_quickwizard_button_text">Texte du bouton</string>
-    <string name="overview_edit_quickwizard_valid">Valide:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">IA positive uniquement</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Pourcentage trop élevé !</string>
     <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
     <string name="additional_ecarbs">Ajouter eGlucides</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Utiliser pour le calcul:</string>
-    <string name="constraints_violation">Violation des restrictions</string>
-    <string name="change_your_input">Changez votre entrée !</string>
     <string name="confirm_treatment">Veuillez confirmer le traitement</string>
     <string name="recalculate">Recalculer</string>
     <!--    Widget-->
