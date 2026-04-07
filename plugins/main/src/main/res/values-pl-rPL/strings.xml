@@ -71,10 +71,7 @@
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="not_available_full">Niedostępne</string>
-    <string name="constraints_violation">Naruszenie ograniczeń</string>
-    <string name="change_your_input">Zmień wprowadzone dane!</string>
     <string name="data_status">Stan danych glikemii</string>
-    <string name="quickwizard_settings">Ustaw szybkie bolusy</string>
     <string name="default_temptargets">Domyślne tymczasowe wartości docelowe</string>
     <string name="fill_bolus_title">Rozpocznij/Wypełnij standardowe ilości insuliny</string>
     <string name="run_question">Uruchomić %s?</string>
