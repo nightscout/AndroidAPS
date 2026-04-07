@@ -184,18 +184,14 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">僅在手錶上</string>
     <string name="a11y_only_on_phone">僅在手機上</string>
-    <string name="quickwizard_settings">快速響導設定</string>
     <string name="overview_edit_quickwizard_button_text">按鈕文字</string>
     <string name="quick_wizard_mode_wizard">嚮導</string>
     <string name="quick_wizard_mode_insulin">胰島素</string>
     <string name="quick_wizard_mode_carbs">碳水化合物</string>
-    <string name="overview_edit_quickwizard_valid">有效：</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">僅使用正 IOB</string>
     <string name="overview_edit_quickwizard_superbolus">超級注射</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">百分比過高！</string>
     <string name="a11y_drag_and_drop_handle">拖放操作把手</string>
     <string name="additional_ecarbs">新增 eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">用於計算：</string>
     <string name="calculator_options">計算機選項</string>
     <string name="use_bg">使用 血糖</string>
     <string name="use_cob">使用 COB</string>
@@ -212,10 +208,7 @@
     <string name="ecarbs_additional">額外碳水化合物</string>
     <string name="valid_from_to">有效時間範圍</string>
     <string name="carb_time">碳水化合物時間</string>
-    <string name="no_quickwizard_entries">沒有快速嚮導項目。點選 + 以新增一個。</string>
     <string name="save_changes_question">要儲存此項目的變更嗎？</string>
-    <string name="constraints_violation">限制違反</string>
-    <string name="change_your_input">更改您的輸入！</string>
     <string name="wizard_no_insulin_required">不需要胰島素</string>
     <string name="carbs_constraint_violation">碳水化合物受限制條件限制</string>
     <string name="insulin_constraint_violation">胰島素受限制條件限制</string>
