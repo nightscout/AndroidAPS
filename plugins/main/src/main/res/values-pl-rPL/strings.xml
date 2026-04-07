@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Pętla wyłączona</string>
     <string name="smscommunicator_pump_disconnected">Pompa odłączona</string>
-    <!-- Food-->
-    <string name="food_short">Posiłek</string>
-    <string name="description_food">Wyświetla dane posiłków zdefiniowanych w Nightscout</string>
-    <string name="filter">Filtr</string>
-    <string name="food">Posiłek</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Bi</string>
-    <string name="short_fat">Tł</string>
-    <string name="category">Kategoria</string>
-    <string name="subcategory">Podkategoria</string>
     <string name="calculator_label">Kalkulator</string>
     <!-- Profile -->
     <!-- localprofile moved to core:ui module -->
@@ -32,7 +21,6 @@
     <string name="extended_bolus_button">Bolus Przedłużony</string>
     <string name="extended_bolus_cancel_button">Anuluj bolus przedłużony </string>
     <string name="tools">Narzędzia</string>
-    <string name="site_rotation">Zmiana miejsca</string>
     <string name="nav_history_browser">Przegląd historii</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">czas:</string>
