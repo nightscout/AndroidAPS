@@ -104,8 +104,6 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">somente no smartwatch</string>
     <string name="a11y_only_on_phone">somente no telefone</string>
-    <string name="quickwizard_settings">Configurações Assistente Rápido</string>
-    <string name="overview_edit_quickwizard_valid">Válido:</string>
     <string name="a11y_drag_and_drop_handle">arraste e solte aqui</string>
     <!--    Widget-->
     <!--    Permissions-->
