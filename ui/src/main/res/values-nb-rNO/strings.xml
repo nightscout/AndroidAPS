@@ -184,18 +184,14 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">kun på klokke</string>
     <string name="a11y_only_on_phone">kun på telefon</string>
-    <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
     <string name="overview_edit_quickwizard_button_text">Knappetekst</string>
     <string name="quick_wizard_mode_wizard">Hurtigknapp</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Karbo</string>
-    <string name="overview_edit_quickwizard_valid">Gyldig:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Prosent er for høy!</string>
     <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
     <string name="additional_ecarbs">Legg til eKarbo</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Bruk i beregning:</string>
     <string name="calculator_options">Kalkulatoralternativer</string>
     <string name="use_bg">Bruk BS</string>
     <string name="use_cob">Bruk COB</string>
@@ -212,10 +208,7 @@
     <string name="ecarbs_additional">Ekstra karbo</string>
     <string name="valid_from_to">Gyldig tidsperiode</string>
     <string name="carb_time">Karbotid</string>
-    <string name="no_quickwizard_entries">Ingen Hurtigknapp-oppføringer. Trykk på + for å legge til en.</string>
     <string name="save_changes_question">Lagre endringer i denne oppføringen?</string>
-    <string name="constraints_violation">Brudd på begrensninger</string>
-    <string name="change_your_input">Endre dine inndata!</string>
     <string name="wizard_no_insulin_required">Insulin er ikke nødvendig</string>
     <string name="carbs_constraint_violation">Karbo begrenset av begrensninger</string>
     <string name="insulin_constraint_violation">Insulin begrenset av begrensninger</string>
