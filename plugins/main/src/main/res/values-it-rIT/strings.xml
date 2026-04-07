@@ -73,10 +73,7 @@
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i tasti per le azioni più comuni</string>
     <string name="overview_buttons_selection">Tasti</string>
     <string name="not_available_full">Non disponibile</string>
-    <string name="constraints_violation">Violazione dei vincoli</string>
-    <string name="change_your_input">Cambia il tuo input!</string>
     <string name="data_status">Stato dati BG</string>
-    <string name="quickwizard_settings">Impostazioni Calcolatore rapido</string>
     <string name="default_temptargets">Target temporanei predefiniti</string>
     <string name="fill_bolus_title">Carica/Riempi: quantità standard di insulina</string>
     <string name="run_question">Eseguire %s?</string>
