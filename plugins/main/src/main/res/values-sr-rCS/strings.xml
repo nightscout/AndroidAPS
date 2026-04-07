@@ -2,8 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop Onesposobljen</string>
     <string name="smscommunicator_pump_disconnected">Pumpa nije povezana</string>
-    <!-- Food-->
-    <string name="description_food">Prikazuje unapred podešene postavke hrane definisane u Nightscout-u</string>
     <string name="calculator_label">Kalkulator</string>
     <!-- Profile -->
     <!-- localprofile moved to core:ui module -->
