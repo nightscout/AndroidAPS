@@ -1369,4 +1369,19 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
+
+    override fun getRefreshTime(pumpDataRefreshType: PumpDataRefreshType): Int {
+        return (
+            when(pumpDataRefreshType) {
+                PumpDataRefreshType.PumpHistory      -> 5
+                PumpDataRefreshType.RemainingInsulin -> {
+                    val remaining = medtronicPumpStatus.reservoirRemainingUnits
+                    if (remaining > 50) 4 * 60 else if (remaining > 20) 60 else 15
+                }
+                PumpDataRefreshType.BatteryStatus    -> 55
+                PumpDataRefreshType.PumpTime         -> 300
+                PumpDataRefreshType.Configuration    -> 0
+                else                                 -> -1
+            })
+    }
 }
