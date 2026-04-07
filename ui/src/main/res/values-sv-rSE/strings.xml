@@ -71,7 +71,6 @@
     <string name="a11y_set_carb_timer">ange larm för KH-timer</string>
     <!-- Treatments -->
     <string name="no_records_available">Inga poster tillgängliga</string>
-    <string name="calculation_short">Kalkyl</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">KH:</string>
     <string name="tempbasals_netratio_label_string">Tot:</string>
