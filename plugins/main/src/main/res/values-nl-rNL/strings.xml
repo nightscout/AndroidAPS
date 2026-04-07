@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop is uitgeschakeld</string>
     <string name="smscommunicator_pump_disconnected">Pomp verbinding verbroken</string>
-    <!-- Food-->
-    <string name="food_short">Voeding</string>
-    <string name="description_food">Toon de instellingen voor Voeding in Nightscout</string>
-    <string name="filter">Filter</string>
-    <string name="food">Voeding</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Prot</string>
-    <string name="short_fat">Vet</string>
-    <string name="category">Categorie</string>
-    <string name="subcategory">Subcategorie</string>
     <string name="calculator_label">Bolus wizard</string>
     <!-- Profile -->
     <!-- localprofile moved to core:ui module -->
@@ -32,7 +21,6 @@
     <string name="extended_bolus_button">Vertraagde bolus</string>
     <string name="extended_bolus_cancel_button">Annuleer vertraagde bolus</string>
     <string name="tools">Hulpmiddelen</string>
-    <string name="site_rotation">Site rotatie</string>
     <string name="nav_history_browser">Historiek venster</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">leeftijd:</string>
