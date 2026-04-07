@@ -87,7 +87,6 @@
     <string name="a11y_set_carb_timer">установить будильник приема углеводов</string>
     <!-- Treatments -->
     <string name="no_records_available">Нет доступных записей</string>
-    <string name="calculation_short">Кальк</string>
     <string name="treatments_iob_label_string">IOB акт инс:</string>
     <string name="treatments_carbs_label_string">Углеводы:</string>
     <string name="tempbasals_netratio_label_string">Процент:</string>
