@@ -71,7 +71,6 @@
     <string name="a11y_set_carb_timer">indstil KH alarm</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen poster tilgængelige</string>
-    <string name="calculation_short">Beregn</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Kulhydrater:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
