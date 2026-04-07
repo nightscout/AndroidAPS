@@ -298,9 +298,6 @@
     <string name="smb_shortname">Супер микро болюс SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Необходимо дополнительно %1$d г углеводов в течение %2$d минут</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Накопительная суточная доза TDD</string>
-    <string name="expweight">экспоненциально взвешенные TDD</string>
     <string name="basalrate">базал</string>
     <string name="bolus">Болюс</string>
     <string name="ratio">коэффициент</string>
