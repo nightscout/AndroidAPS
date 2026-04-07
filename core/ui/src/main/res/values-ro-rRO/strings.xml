@@ -73,7 +73,6 @@
     <string name="ue_export_to_csv">Exportă înregistrările utilizatorului în Excel (csv)</string>
     <string name="confirm">Confirmă</string>
     <string name="pump">Pompă</string>
-    <string name="pump_management">Gestionare pompă</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Încărcător</string>
@@ -316,7 +315,6 @@
     <string name="careportal_dad_alert">Alertă D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Schimbare cartuș insulină</string>
     <string name="careportal_profileswitch">Schimbare de profil</string>
-    <string name="profile_management">Gestionarea profilului</string>
     <string name="careportal_snackbolus">Bolus Gustare</string>
     <string name="careportal_mealbolus">Bolus Masă</string>
     <string name="careportal_correctionbolus">Bolus de corecție</string>
@@ -336,7 +334,6 @@
     <string name="treatment_insulin_desc">Administrați bolusul manual</string>
     <string name="treatment_carbs_desc">Înregistrați carbohidrați fără insulină</string>
     <string name="treatment_calculator_desc">Calculați bolusul</string>
-    <string name="insulin_management">Gestionarea insulinei</string>
     <string name="manage_insulin_desc">Gestionați și activați configurațiile insulinei</string>
     <string name="concentration_disable_blocked">Nu se poate dezactiva suportul concentrației cât timp există insuline non-U100. Îndepărtați mai întâi toate configurațiile de insulină non-U100 și treceți la un profil U100.</string>
     <string name="simple_mode_blocked_by_concentration">Nu se poate activa modul simplu în timp ce se folosește insulina non-U100. Mai întâi se trece la insulina U100.</string>
@@ -373,7 +370,6 @@
     <string name="custom">Personalizat</string>
     <string name="preset_settings">Setări presetare</string>
     <string name="activation">Activare</string>
-    <string name="temp_target_management">Gestionare Țintă Temporară</string>
     <string name="revert_to_defaults">Reveniți la valorile implicite</string>
     <string name="confirm_remove_preset">Eliminați presetare %1$s?</string>
     <string name="confirm_cancel_temp_target">Anulați ținta activă temporară?</string>
@@ -663,7 +659,6 @@
     <string name="wizard_explain_tt_to">Între %1$s și %2$s</string>
     <string name="wizard_pump_not_available">Nicio pompă disponibilă!</string>
     <string name="quickwizard">Asistent Rapid</string>
-    <string name="quickwizard_managemnt">Gestionare Asistent Rapid</string>
     <!--    Preferences-->
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
@@ -948,6 +943,7 @@
     <string name="wiki_search_offline">Căutarea în documentație necesită o conexiune la internet</string>
     <string name="no_search_results">Nu s-au găsit rezultate</string>
     <string name="search_plugin_disabled">Modul %1$s dezactivat</string>
+    <!--    Food Management -->
     <!--    Log Settings-->
     <string name="nav_logsettings">Setări jurnal</string>
     <string name="resettodefaults">Reveniți la valorile implicite</string>
