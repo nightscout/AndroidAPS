@@ -71,10 +71,7 @@
     <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
     <string name="overview_buttons_selection">Boutons</string>
     <string name="not_available_full">Non disponible</string>
-    <string name="constraints_violation">Violation des restrictions</string>
-    <string name="change_your_input">Changez vos entrées !</string>
     <string name="data_status">État des données Gly</string>
-    <string name="quickwizard_settings">Paramètres de l\'Assistant Rapide</string>
     <string name="default_temptargets">Cibles Temporaires par défaut</string>
     <string name="fill_bolus_title">Insuline par défaut pour Amorcer/Remplir</string>
     <string name="run_question">Exécuter %s?</string>
