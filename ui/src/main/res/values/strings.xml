@@ -201,18 +201,14 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">only on watch</string>
     <string name="a11y_only_on_phone">only on phone</string>
-    <string name="quickwizard_settings">QuickWizard settings</string>
     <string name="overview_edit_quickwizard_button_text">Button text</string>
     <string name="quick_wizard_mode_wizard">Wizard</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Carbs</string>
-    <string name="overview_edit_quickwizard_valid">Valid:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Positive IOB only</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Percentage too high!</string>
     <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
     <string name="additional_ecarbs">Add eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Use for calculation:</string>
     <string name="calculator_options">Calculator Options</string>
     <string name="use_bg">Use BG</string>
     <string name="use_cob">Use COB</string>
@@ -229,10 +225,7 @@
     <string name="ecarbs_additional">Additional Carbs</string>
     <string name="valid_from_to">Valid Time Range</string>
     <string name="carb_time">Carb Time</string>
-    <string name="no_quickwizard_entries">No QuickWizard entries. Tap + to add one.</string>
     <string name="save_changes_question">Save changes to this entry?</string>
-    <string name="constraints_violation">Constraints violation</string>
-    <string name="change_your_input">Change your input!</string>
     <string name="wizard_no_insulin_required">No insulin required</string>
     <string name="carbs_constraint_violation">Carbs limited by constraints</string>
     <string name="insulin_constraint_violation">Insulin limited by constraints</string>
