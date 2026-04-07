@@ -72,7 +72,6 @@
     <string name="a11y_set_carb_timer">nustatyti AV laiko perspėjimą</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
-    <string name="calculation_short">Skaič.</string>
     <string name="treatments_iob_label_string">AIO:</string>
     <string name="treatments_carbs_label_string">AV:</string>
     <string name="tempbasals_netratio_label_string">Santykis:</string>
