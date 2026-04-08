@@ -39,4 +39,14 @@
     <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Setări exportate cu succes către stocarea în cloud</string>
+    <string name="export_to_cloud_failed">Nu s-a reușit exportarea în stocarea din cloud</string>
+    <string name="csv_uploaded_to_cloud">Intrările CSV ale utilizatorilor au fost încărcate cu succes în stocarea în cloud</string>
+    <string name="exported">Preferințe exportate</string>
+    <string name="exported_failed">Exportarea preferințelor a eșuat!</string>
+    <string name="filenotfound">Fișierul nu a fost găsit</string>
+    <string name="ue_exported">Intrările utilizatorului exportate</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportate %1$s în urmă</string>
+    <string name="exported_at" comment="at placeholder we add export date">exportate la %1$s</string>
+    <string name="exported_less_than_hour_ago">exportate acum mai puțin de o ora</string>
 </resources>
