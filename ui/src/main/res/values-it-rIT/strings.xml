@@ -183,10 +183,37 @@
     <string name="limitations">Limitazioni</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_lines_legend">Cicli individuali</string>
+    <string name="cycles_found">%1$d cicli (%2$d giorni)</string>
+    <string name="cycle_day1_date">Giorno 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Calcolo… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Dati insufficienti (richiedono almeno 56 giorni per 2 cicli)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Entrambi</item>
         <item>Solo positivo</item>
         <item>Solo negativo</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Azioni selezionate</string>
+    <string name="quick_launch_available_actions">Azioni disponibili</string>
+    <string name="quick_launch_no_dynamic_items">Nessun elemento disponibile</string>
+    <string name="quick_launch_category_treatment">Trattamento</string>
+    <string name="quick_launch_category_care">Care Portal</string>
+    <string name="quick_launch_category_profile">Profilo</string>
+    <string name="quick_launch_category_temp_target">Temp Target Presets</string>
+    <string name="quick_launch_category_quick_wizard">Procedura Guidata Veloce</string>
+    <string name="quick_launch_category_automation">Automazione</string>
+    <string name="quick_launch_all_selected">Tutti gli elementi selezionati</string>
+    <string name="quick_launch_no_quick_wizard">Aggiungi le voci della procedura guidata veloce per usarle qui</string>
+    <string name="quick_launch_no_automation">Crea azioni di automazione utente per usarle qui</string>
+    <string name="quick_launch_no_tt_presets">Aggiungi preset Temp Target per usarli qui</string>
+    <string name="quick_launch_no_profiles">Crea profili in Profilo Locale per usarli qui</string>
+    <string name="quick_launch_edit_profile_preset">Modifica preimpostazione profilo</string>
+    <string name="quick_launch_profile_percentage">Percentuale</string>
+    <string name="quick_launch_profile_duration">Durata</string>
+    <string name="quick_launch_profile_permanent">Permanente</string>
+    <string name="quick_launch_profile_confirm">Profilo Autotune %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Seleziona Freccia</string>
 </resources>
