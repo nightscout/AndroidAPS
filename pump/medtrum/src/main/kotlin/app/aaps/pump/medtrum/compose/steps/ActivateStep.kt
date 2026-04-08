@@ -58,7 +58,7 @@ fun ActivateStep(
         reservoirLevel = viewModel.medtrumPump.reservoir,
         onRetry = {
             viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.PRIMED)
-            viewModel.moveStep(PatchStep.ACTIVATE)
+            viewModel.startActivate()
         },
         onComplete = { viewModel.moveToPostActivationStep() },
         onCancel = onCancel

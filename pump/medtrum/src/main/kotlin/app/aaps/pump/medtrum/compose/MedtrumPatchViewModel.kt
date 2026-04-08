@@ -154,6 +154,8 @@ class MedtrumPatchViewModel @Inject constructor(
     private var oldPatchStep: PatchStep? = null
     private var mInitPatchStep: PatchStep? = null
     private var connectRetryCounter = 0
+    private var isPriming = false
+    private var isActivating = false
 
     init {
         scope.launch {
@@ -371,26 +373,66 @@ class MedtrumPatchViewModel @Inject constructor(
 
     fun startPrime() {
         scope.launch {
-            if (medtrumPump.pumpState == MedtrumPumpState.PRIMING) {
-                aapsLogger.info(LTag.PUMP, "startPrime: already priming!")
-            } else {
-                if (medtrumService?.startPrime() == true) {
+            if (isPriming) return@launch
+            isPriming = true
+            try {
+                if (medtrumPump.pumpState == MedtrumPumpState.PRIMING) {
+                    aapsLogger.info(LTag.PUMP, "startPrime: already priming!")
+                    return@launch
+                }
+                var retries = 0
+                var result = false
+                while (retries < 3 && !result) {
+                    if (medtrumService?.isConnected == true) {
+                        result = medtrumService?.startPrime() == true
+                    }
+                    if (!result) {
+                        retries++
+                        if (retries < 3) {
+                            aapsLogger.info(LTag.PUMP, "startPrime: retry $retries after delay")
+                            delay(3000)
+                        }
+                    }
+                }
+                if (result) {
                     aapsLogger.info(LTag.PUMP, "startPrime: success!")
                 } else {
-                    aapsLogger.info(LTag.PUMP, "startPrime: failure!")
+                    aapsLogger.info(LTag.PUMP, "startPrime: failure after $retries retries")
                     updateSetupStep(SetupStep.ERROR)
                 }
+            } finally {
+                isPriming = false
             }
         }
     }
 
     fun startActivate() {
         scope.launch {
-            if (medtrumService?.startActivate() == true) {
-                aapsLogger.info(LTag.PUMP, "startActivate: success!")
-            } else {
-                aapsLogger.info(LTag.PUMP, "startActivate: failure!")
-                updateSetupStep(SetupStep.ERROR)
+            if (isActivating) return@launch
+            isActivating = true
+            try {
+                var retries = 0
+                var result = false
+                while (retries < 3 && !result) {
+                    if (medtrumService?.isConnected == true) {
+                        result = medtrumService?.startActivate() == true
+                    }
+                    if (!result) {
+                        retries++
+                        if (retries < 3) {
+                            aapsLogger.info(LTag.PUMP, "startActivate: retry $retries after delay")
+                            delay(3000)
+                        }
+                    }
+                }
+                if (result) {
+                    aapsLogger.info(LTag.PUMP, "startActivate: success!")
+                } else {
+                    aapsLogger.info(LTag.PUMP, "startActivate: failure after $retries retries")
+                    updateSetupStep(SetupStep.ERROR)
+                }
+            } finally {
+                isActivating = false
             }
         }
     }

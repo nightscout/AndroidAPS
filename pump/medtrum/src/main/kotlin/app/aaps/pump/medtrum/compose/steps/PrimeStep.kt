@@ -64,7 +64,7 @@ fun PrimeStep(
         onStartPrime = { viewModel.moveStep(PatchStep.PRIMING) },
         onRetry = {
             viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.FILLED)
-            viewModel.moveStep(PatchStep.PRIMING)
+            viewModel.startPrime()
         },
         onNext = { viewModel.moveStep(PatchStep.ATTACH_PATCH) },
         onCancel = onCancel
