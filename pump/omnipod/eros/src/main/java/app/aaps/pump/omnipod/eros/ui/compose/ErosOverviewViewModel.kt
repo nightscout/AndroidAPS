@@ -518,7 +518,7 @@ class ErosOverviewViewModel @Inject constructor(
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
         if (podStateManager.reservoirLevel == null) {
-            return rh.gs(CommonR.string.omnipod_common_overview_reservoir_concentration_value_over50, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
+            return rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
         }
         val lowThreshold = (omnipodAlertUtil.lowReservoirAlertUnits ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
         val text = ch.insulinAmountString(PumpInsulin(podStateManager.reservoirLevel))

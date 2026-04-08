@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -14,6 +16,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
@@ -81,6 +84,7 @@ class EopatchOverviewViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val commandQueue: CommandQueue,
     private val rxBus: RxBus,
+    private val ch: ConcentrationHelper,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -282,23 +286,23 @@ class EopatchOverviewViewModel @Inject constructor(
 
                 // Basal rate
                 if (preferenceManager.patchState.isNormalBasalRunning) {
-                    val basalRate = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour)
+                    val basalRate = ch.basalRateString(PumpRate(normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour.toDouble()), true)
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_base_basal_rate), value = basalRate))
                 }
 
                 // Temp basal
                 val tempBasal = tempBasalManager.startedBasal
                 if (preferenceManager.patchState.isTempBasalActive && tempBasal != null) {
-                    val tempRate = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, tempBasal.doseUnitPerHour)
+                    val tempRate = ch.basalRateString(PumpRate(tempBasal.doseUnitPerHour.toDouble()), true)
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_temp_basal_rate), value = tempRate))
                 }
             }
 
             // Remaining insulin
             val insulinText = when {
-                insulin > 50f -> "50+ U"
-                insulin < 1f  -> "0 U"
-                else          -> "${insulin.roundToInt()} U"
+                insulin > 50f -> rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0)))
+                insulin < 1f  -> ch.insulinAmountString(PumpInsulin(0.0))
+                else          -> ch.insulinAmountString(PumpInsulin(insulin.roundToInt().toDouble()))
             }
             if (config.isActivated) {
                 add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.reservoir_label), value = insulinText))

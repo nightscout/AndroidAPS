@@ -500,7 +500,7 @@ class DashOverviewViewModel @Inject constructor(
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
         if (podStateManager.pulsesRemaining == null) {
-            return rh.gs(CommonR.string.omnipod_common_overview_reservoir_concentration_value_over50, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
+            return rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
         }
         val lowThreshold: Short = PodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD
         val text = ch.insulinAmountString(PumpInsulin(podStateManager.pulsesRemaining!! * PodConstants.POD_PULSE_BOLUS_UNITS))
