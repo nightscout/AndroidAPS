@@ -59,7 +59,7 @@
     <string name="site_management_description">Veți seta aici dacă doriți să gestionați locul de inserție al pompei, al CGM-ului sau ambele. Această setare va fi folosită pentru a trimite automat dialogul de administrare al locului de inserție la fiecare intrare detectată nouă</string>
     <string name="record_site_change">Înregistrați locul de inserție</string>
     <string name="update_site_change">Actualizați locul de inserție</string>
-    <string name="edit_site">Editează</string>
+    <string name="edit_site">Editați</string>
     <string name="record_site_location">Locul de inserție: %1$s</string>
     <string name="record_site_arrow">Săgeata locului de inserție: %1$s</string>
     <string name="record_site_note">Notă: %1$s</string>
@@ -73,15 +73,15 @@
     <string name="fill_pump_units_note">Cantitatea de amorsare este în unitățile pompei</string>
     <string name="fill_insulin_change">Comutați insulina la: %1$s (se va aplica schimbarea profilului)</string>
     <string name="fill_current_insulin">Insulina actuală</string>
-    <string name="fill_change_insulin">Schimbă insulina</string>
+    <string name="fill_change_insulin">Schimbați insulina</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
+    <string name="do_not_bolus_record_only">Nu bolusați, doar înregistrați</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Lipsă nume insulină</string>
     <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>
     <string name="a11y_add_new_insulin">Adăugați o nouă insulină</string>
     <string name="a11y_delete_current_insulin">Ștergeți insulina curentă</string>
-    <string name="save_or_reset_changes_first">Salvează sau resetează modificările curente mai întâi</string>
+    <string name="save_or_reset_changes_first">Salvați sau resetați modificările curente mai întâi</string>
     <string name="activate_insulin_no_profile">Niciun profil activ găsit</string>
     <string name="activate_insulin_new_insulin">Noua insulină: %1$s</string>
     <string name="activate_insulin_remaining">Rămase: %1$d min</string>
@@ -137,13 +137,13 @@
     <string name="meal_bolus">Masă</string>
     <string name="prime">Amorsare</string>
     <string name="carbs_and_bolus">Carbohidrați și bolusuri</string>
-    <string name="show_invalidated">Arată invalidat</string>
+    <string name="show_invalidated">Afișați invalidate</string>
     <string name="hide_invalidated">Ascunde invalidat</string>
     <string name="careportal_remove_started_events">Eliminare intrări pornire AAPS</string>
     <string name="hide_loop">Ascunde bucla</string>
     <string name="show_loop">Arată bucla</string>
     <string name="user_entry">Înregistrare utilizator</string>
-    <string name="clone_label">Clonează</string>
+    <string name="clone_label">Clonați</string>
     <string name="add_new_profile">Adăugați un profil nou</string>
     <string name="show_profile">Afișați profilul</string>
     <string name="edit_label">Editați</string>
@@ -222,7 +222,7 @@
     <string name="permission_sheet_title">Permisiuni necesare</string>
     <string name="permission_sheet_subtitle">Unele permisiuni sunt necesare pentru ca aplicația să funcționeze corect</string>
     <string name="permission_grant">Acordați</string>
-    <string name="permission_change">Schimbă</string>
+    <string name="permission_change">Schimbați</string>
     <string name="permission_denied_go_to_settings">Permisiune refuzată definitiv. Vă rugăm să o activați în setările aplicației.</string>
     <string name="permission_open_settings">Setări</string>
     <string name="permission_directory_picker_error">Nu se poate lansa selectorul de dosare. De obicei o problemă legată de Android sau legată de Family Link.</string>
