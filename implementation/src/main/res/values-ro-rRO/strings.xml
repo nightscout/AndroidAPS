@@ -54,4 +54,23 @@
     <string name="metadata_warning_old_export">Preferințele importate sunt vechi de %1$s zile deja! Poate aveți preferințe mai recente sau ați ales un fișier greșit? Amintiți-vă să exportați preferințele în mod regulat!</string>
     <string name="metadata_warning_date_format">Format dată-oră invalid!</string>
     <string name="metadata_warning_different_version">Preferințe dintr-o versiune minoră diferită a aplicației. Este OK dacă importați după actualizare, dar verificați după importare că preferințele sunt corecte!</string>
+    <string name="metadata_urgent_different_version">Preferințe dintr-o versiune diferită majoră a aplicației. Versiunile majore au diferențe semnificative și pot avea preferințe incompatibile! Asigurați-vă după importare ca preferințele sunt corecte!</string>
+    <string name="prefdecrypt_settings_tampered">Fișier de setări modificat</string>
+    <string name="prefdecrypt_settings_secure">Fișierul de setări este sigur</string>
+    <string name="prefdecrypt_settings_unencrypted">Folosirea formatului nesecurizat, necriptat pentru setări</string>
+    <string name="prefdecrypt_wrong_json">Eroare format JSON, lipsește un câmp necesar (format, conținut, metadate sau securitate)</string>
+    <string name="prefdecrypt_wrong_password">Eroare la decriptare, parola furnizată nu poate decripta fișierul</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Suma de control a fișierului lipsește, nu se poate verifica autenticitatea setărilor!</string>
+    <string name="prefdecrypt_issue_modified">Fișierul a fost modificat după exportare!</string>
+    <string name="prefdecrypt_issue_parsing">Eroare de decriptare, analiza preferințelor a eșuat!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Eroare la decriptare, parola furnizată este invalidă sau fișierul de setări a fost modificat! Se poate întâmpla ca fișierul importat să fi fost exportat cu o parolă principală diferită.</string>
+    <string name="prefdecrypt_issue_wrong_format">Lipsește configurația de criptare, formatul setărilor este invalid!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algoritm de criptare nesuportat sau nespecificat!</string>
+    <string name="metadata_label_format">Formatul fișierului</string>
+    <string name="metadata_label_created_at">Creat la</string>
+    <string name="metadata_label_aaps_version">Versiune AAPS</string>
+    <string name="metadata_label_aaps_flavour">Varianta construită</string>
+    <string name="metadata_label_device_name">Exportați numele dispozitivului pacientului</string>
+    <string name="metadata_label_device_model">Exportare model dispozitiv</string>
+    <string name="metadata_label_encryption">Criptare fișier</string>
 </resources>
