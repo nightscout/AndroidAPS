@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.profileManagement
+package app.aaps.core.graph.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -196,8 +196,6 @@ fun ProfileViewerScreen(
                     }
 
                     // Date card - shows when the profile was activated/created
-                    // Displayed in same card style as other sections (Units, DIA, IC, etc.)
-                    // Uses bodySmall typography to match ProfileRow styling
                     if (data.showDate && data.date != null) {
                         ElevatedCard(
                             modifier = Modifier
@@ -232,9 +230,6 @@ fun ProfileViewerScreen(
                     }
 
                     // Profile content - renders either single profile or comparison based on mode
-                    // Single mode: Shows Units, DIA, IC, ISF, Basal, Target cards with graphs
-                    // Compare mode: Shows profile names header, then comparison tables and graphs for each section
-                    // Both modes use individual elevated cards for each section with 8dp spacing
                     if (data.isCompare && data.profile2 != null) {
                         profileCompareContent(data.profile, data.profile2)
                     } else {

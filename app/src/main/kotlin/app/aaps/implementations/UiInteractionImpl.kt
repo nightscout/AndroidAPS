@@ -19,7 +19,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.ui.activities.ErrorActivity
-import app.aaps.ui.activities.ProfileViewerActivity
 import app.aaps.ui.dialogs.AlertDialogs
 import app.aaps.ui.dialogs.CalibrationDialog
 import app.aaps.ui.dialogs.CarbsDialog
@@ -129,17 +128,6 @@ class UiInteractionImpl @Inject constructor(
     override fun runFillDialog(fragmentManager: FragmentManager) {
         FillDialog(fragmentManager)
             .show(fragmentManager, "FillDialog")
-    }
-
-    override fun runProfileViewerActivity(context: Context, time: Long, mode: UiInteraction.Mode, customProfile: String?, customProfileName: String?, customProfile2: String?) {
-        val intent = Intent(context, ProfileViewerActivity::class.java).apply {
-            putExtra("time", time)
-            putExtra("mode", mode.ordinal)
-            putExtra("customProfile", customProfile)
-            putExtra("customProfileName", customProfileName)
-            putExtra("customProfile2", customProfile2)
-        }
-        context.startActivity(intent)
     }
 
     override fun runCareDialog(fragmentManager: FragmentManager, options: UiInteraction.EventType, @StringRes event: Int) {

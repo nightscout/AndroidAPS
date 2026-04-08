@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.profileManagement
+package app.aaps.core.graph.profile
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile
@@ -31,9 +31,9 @@ data class ProfileCompareData(
 
 /**
  * Build a complete [ProfileCompareData] from two profiles.
- * Shared by ProfileHelperScreen, ProfileViewerActivity, and ProfileManagementViewModel.
+ * Shared by ProfileHelperScreen, AutotuneScreen, and ProfileManagementViewModel.
  */
-internal fun buildProfileCompareData(
+fun buildProfileCompareData(
     profile1: Profile,
     profile2: Profile,
     profileName1: String,
@@ -61,7 +61,7 @@ internal fun buildProfileCompareData(
     )
 }
 
-internal fun buildBasalRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil): List<ProfileCompareRow> {
+fun buildBasalRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil): List<ProfileCompareRow> {
     var prev1 = -1.0
     var prev2 = -1.0
     val rows = mutableListOf<ProfileCompareRow>()
@@ -76,7 +76,7 @@ internal fun buildBasalRows(profile1: Profile, profile2: Profile, dateUtil: Date
     return rows
 }
 
-internal fun buildIcRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil): List<ProfileCompareRow> {
+fun buildIcRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil): List<ProfileCompareRow> {
     var prev1 = -1.0
     var prev2 = -1.0
     val rows = mutableListOf<ProfileCompareRow>()
@@ -90,7 +90,7 @@ internal fun buildIcRows(profile1: Profile, profile2: Profile, dateUtil: DateUti
     return rows
 }
 
-internal fun buildIsfRows(profile1: Profile, profile2: Profile, profileUtil: ProfileUtil, dateUtil: DateUtil): List<ProfileCompareRow> {
+fun buildIsfRows(profile1: Profile, profile2: Profile, profileUtil: ProfileUtil, dateUtil: DateUtil): List<ProfileCompareRow> {
     var prev1 = -1.0
     var prev2 = -1.0
     val rows = mutableListOf<ProfileCompareRow>()
@@ -105,7 +105,7 @@ internal fun buildIsfRows(profile1: Profile, profile2: Profile, profileUtil: Pro
     return rows
 }
 
-internal fun buildTargetRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil, profileUtil: ProfileUtil): List<ProfileCompareRow> {
+fun buildTargetRows(profile1: Profile, profile2: Profile, dateUtil: DateUtil, profileUtil: ProfileUtil): List<ProfileCompareRow> {
     var prev1l = -1.0
     var prev1h = -1.0
     var prev2l = -1.0

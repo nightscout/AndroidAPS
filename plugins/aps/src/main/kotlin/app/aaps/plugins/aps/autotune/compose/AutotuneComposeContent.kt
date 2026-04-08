@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.insulin.Insulin
@@ -15,7 +14,6 @@ import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ComposablePluginContent
@@ -36,7 +34,6 @@ class AutotuneComposeContent(
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val uel: UserEntryLogger,
-    private val uiInteraction: UiInteraction,
     private val loop: Loop,
     private val insulin: Insulin,
     private val profileStoreProvider: Provider<ProfileStore>,
@@ -50,7 +47,6 @@ class AutotuneComposeContent(
         onSettings: (() -> Unit)?
     ) {
         val scope = rememberCoroutineScope()
-        val context = LocalContext.current
 
         val viewModel = remember {
             AutotuneViewModel(
@@ -64,7 +60,6 @@ class AutotuneComposeContent(
                 rh = rh,
                 rxBus = rxBus,
                 uel = uel,
-                uiInteraction = uiInteraction,
                 loop = loop,
                 insulin = insulin,
                 profileStoreProvider = profileStoreProvider,
@@ -81,6 +76,10 @@ class AutotuneComposeContent(
 
         AutotuneScreen(
             state = state.value,
+            rh = rh,
+            dateUtil = dateUtil,
+            profileFunction = profileFunction,
+            profileUtil = profileUtil,
             onProfileSelected = viewModel::onProfileSelected,
             onDaysChanged = viewModel::onDaysChanged,
             onDayToggle = viewModel::onDayToggle,
@@ -91,8 +90,8 @@ class AutotuneComposeContent(
             onUpdateProfile = viewModel::onUpdateProfileClick,
             onRevertProfile = viewModel::onRevertProfileClick,
             onProfileSwitch = viewModel::onProfileSwitchClick,
-            onCheckInputProfile = { viewModel.onCheckInputProfile(context) },
-            onCompareProfiles = { viewModel.onCompareProfiles(context) },
+            onCheckInputProfile = viewModel::onCheckInputProfile,
+            onCompareProfiles = viewModel::onCompareProfiles,
             onDialogConfirm = {
                 when (state.value.dialogState) {
                     is DialogState.UpdateProfile -> viewModel.onUpdateProfileConfirm()

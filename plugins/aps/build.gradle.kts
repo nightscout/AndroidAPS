@@ -18,15 +18,17 @@ dependencies {
     implementation(project(":core:nssdk"))
     implementation(project(":core:objects"))
     implementation(project(":core:utils"))
+    implementation(project(":core:graph"))
     implementation(project(":core:ui"))
+
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(project(":core:validators"))
 
     testImplementation(project(":pump:virtual"))
     testImplementation(project(":shared:tests"))
 
     api(libs.androidx.appcompat)
-    api(libs.androidx.swiperefreshlayout)
-    api(libs.androidx.gridlayout)
     api(kotlin("reflect"))
 
     // APS (it should be androidTestImplementation but it doesn't work)

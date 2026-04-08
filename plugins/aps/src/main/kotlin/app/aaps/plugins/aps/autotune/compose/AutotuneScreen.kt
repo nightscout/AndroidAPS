@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CompareArrows
+import androidx.compose.material.icons.automirrored.filled.CompareArrows
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.PersonSearch
 import androidx.compose.material.icons.filled.PlayArrow
@@ -43,13 +43,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import app.aaps.core.graph.profile.ProfileCompareContent
+import app.aaps.core.graph.profile.ProfileSingleContent
+import app.aaps.core.graph.profile.ProfileViewerScreen
+import app.aaps.core.graph.profile.buildBasalRows
+import app.aaps.core.graph.profile.buildIcRows
+import app.aaps.core.graph.profile.buildIsfRows
+import app.aaps.core.graph.profile.buildTargetRows
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.AapsCard
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -62,6 +75,10 @@ import app.aaps.plugins.aps.R
 @Composable
 fun AutotuneScreen(
     state: AutotuneUiState,
+    rh: ResourceHelper,
+    dateUtil: DateUtil,
+    profileFunction: ProfileFunction,
+    profileUtil: ProfileUtil,
     onProfileSelected: (Int) -> Unit,
     onDaysChanged: (Double) -> Unit,
     onDayToggle: (WeekDay.DayOfWeek, Boolean) -> Unit,
@@ -78,8 +95,6 @@ fun AutotuneScreen(
     onDialogDismiss: () -> Unit,
     onCopyLocalConfirm: (String) -> Unit
 ) {
-    LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -204,7 +219,7 @@ fun AutotuneScreen(
                             AutotuneButton(stringResource(app.aaps.core.ui.R.string.activate_profile), Icons.Filled.SwapHoriz, buttonModifier, onClick = onProfileSwitch)
                         }
                         if (state.showCompare) {
-                            AutotuneButton(stringResource(R.string.autotune_compare_profile), Icons.Filled.CompareArrows, buttonModifier, onClick = onCompareProfiles)
+                            AutotuneButton(stringResource(R.string.autotune_compare_profile), Icons.AutoMirrored.Filled.CompareArrows, buttonModifier, onClick = onCompareProfiles)
                         }
                         if (state.showCopyLocal) {
                             AutotuneButton(stringResource(R.string.autotune_copy_localprofile_button), Icons.Filled.ContentCopy, buttonModifier, onClick = onCopyLocal)
@@ -229,7 +244,7 @@ fun AutotuneScreen(
 
     // --- Dialogs ---
     when (val dialog = state.dialogState) {
-        is DialogState.CopyLocal        -> {
+        is DialogState.CopyLocal         -> {
             OkCancelDialog(
                 title = stringResource(R.string.autotune_copy_localprofile_button),
                 message = stringResource(R.string.autotune_copy_local_profile_message) + "\n" + dialog.localName,
@@ -238,7 +253,7 @@ fun AutotuneScreen(
             )
         }
 
-        is DialogState.UpdateProfile    -> {
+        is DialogState.UpdateProfile     -> {
             OkCancelDialog(
                 title = stringResource(R.string.autotune_update_input_profile_button),
                 message = stringResource(R.string.autotune_update_local_profile_message, dialog.profileName),
@@ -247,7 +262,7 @@ fun AutotuneScreen(
             )
         }
 
-        is DialogState.RevertProfile    -> {
+        is DialogState.RevertProfile     -> {
             OkCancelDialog(
                 title = stringResource(R.string.autotune_revert_input_profile_button),
                 message = stringResource(R.string.autotune_revert_local_profile_message, dialog.profileName),
@@ -256,7 +271,7 @@ fun AutotuneScreen(
             )
         }
 
-        is DialogState.ProfileSwitch    -> {
+        is DialogState.ProfileSwitch     -> {
             OkCancelDialog(
                 message = stringResource(app.aaps.core.ui.R.string.activate_profile) + ": " + dialog.profileName + "?",
                 onConfirm = onDialogConfirm,
@@ -264,7 +279,7 @@ fun AutotuneScreen(
             )
         }
 
-        is DialogState.PumpDisconnected -> {
+        is DialogState.PumpDisconnected  -> {
             OkDialog(
                 title = dialog.title,
                 message = stringResource(R.string.pump_disconnected),
@@ -272,7 +287,46 @@ fun AutotuneScreen(
             )
         }
 
-        DialogState.None                -> { /* no dialog */
+        is DialogState.ShowProfileViewer -> {
+            Dialog(
+                onDismissRequest = onDialogDismiss,
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            ) {
+                ProfileViewerScreen(
+                    data = dialog.data,
+                    onClose = onDialogDismiss,
+                    profileSingleContent = { profile ->
+                        ProfileSingleContent(
+                            profile = profile,
+                            getIcList = { it.getIcList(rh, dateUtil) },
+                            getIsfList = { it.getIsfList(rh, dateUtil) },
+                            getBasalList = { it.getBasalList(rh, dateUtil) },
+                            getTargetList = { it.getTargetList(rh, dateUtil) },
+                            formatBasalSum = { rh.gs(app.aaps.core.ui.R.string.format_insulin_units, it) }
+                        )
+                    },
+                    profileCompareContent = { profile1, profile2 ->
+                        ProfileCompareContent(
+                            profile1 = profile1,
+                            profile2 = profile2,
+                            icsRows = buildIcRows(profile1, profile2, dateUtil),
+                            icUnits = rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit),
+                            isfsRows = buildIsfRows(profile1, profile2, profileUtil, dateUtil),
+                            isfUnits = "${profileFunction.getUnits().asText} ${rh.gs(app.aaps.core.ui.R.string.profile_per_unit)}",
+                            basalsRows = buildBasalRows(profile1, profile2, dateUtil),
+                            basalUnits = rh.gs(app.aaps.core.ui.R.string.profile_ins_units_per_hour),
+                            targetsRows = buildTargetRows(profile1, profile2, dateUtil, profileUtil),
+                            targetUnits = profileFunction.getUnits().asText,
+                            profileName1 = dialog.data.profileName ?: "",
+                            profileName2 = dialog.data.profileName2 ?: ""
+                        )
+                    },
+                    profileRow = { _, _ -> }
+                )
+            }
+        }
+
+        DialogState.None                 -> { /* no dialog */
         }
     }
 }
@@ -416,3 +470,41 @@ private fun AutotuneButton(
     }
 }
 
+// --- Previews ---
+
+@Preview(showBackground = true)
+@Composable
+private fun ResultsTablePreview() {
+    MaterialTheme {
+        Column {
+            ResultsTableHeader(isBasal = false)
+            ResultsTableRow(ResultRow("ISF", "5.0", "4.8", "-4%"))
+            ResultsTableRow(ResultRow("IC", "10.0", "9.5", "-5%"))
+            ResultsTableHeader(isBasal = true)
+            ResultsTableRow(ResultRow("00:00", "0.800", "0.900", "13%", "2"))
+            ResultsTableRow(ResultRow("∑", "19.200", "20.100", "5%", " "))
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AutotuneButtonPreview() {
+    MaterialTheme {
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            AutotuneButton("Run Autotune", Icons.Filled.PlayArrow, Modifier.weight(1f)) {}
+            AutotuneButton("Compare profiles", Icons.AutoMirrored.Filled.CompareArrows, Modifier.weight(1f)) {}
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InfoRowPreview() {
+    MaterialTheme {
+        Column {
+            InfoRow(label = "Last run :", value = "2026-04-08 10:00", valueClickable = true, onValueClick = {})
+            InfoRow(label = "Warning :", value = "Check the results carefully!")
+        }
+    }
+}

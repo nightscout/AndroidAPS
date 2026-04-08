@@ -31,7 +31,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
@@ -84,15 +83,12 @@ class AutotunePlugin @Inject constructor(
     private val autotuneCore: AutotuneCore,
     private val config: Config,
     private val uel: UserEntryLogger,
-    private val uiInteraction: UiInteraction,
     private val loop: Loop,
     private val profileStoreProvider: Provider<ProfileStore>,
     private val atProfileProvider: Provider<ATProfile>
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
-        .fragmentClass(AutotuneFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_autotune)
         .icon(IcPluginAutotune)
         .pluginName(app.aaps.core.ui.R.string.autotune)
         .shortName(R.string.autotune_shortname)
@@ -109,7 +105,6 @@ class AutotunePlugin @Inject constructor(
                 rh = rh,
                 rxBus = rxBus,
                 uel = uel,
-                uiInteraction = uiInteraction,
                 loop = loop,
                 insulin = insulin,
                 profileStoreProvider = profileStoreProvider,
@@ -319,7 +314,7 @@ class AutotunePlugin @Inject constructor(
 
     private fun showResults(tunedProfile: ATProfile?, pumpProfile: ATProfile): String {
         if (tunedProfile == null)
-            return "No Result"  // should never occurs
+            return "No Result"  // should never occur
         val line = rh.gs(R.string.autotune_log_separator)
         var strResult = line
         strResult += rh.gs(R.string.autotune_log_title)
@@ -372,7 +367,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("timezone_command", "sudo ln -sf /usr/share/zoneinfo/" + TimeZone.getDefault().id + " /etc/localtime")
             // oref0_command is for running oref0-autotune on a virtual machine in a dedicated ~/aaps subfolder
             jsonSettings.put("oref0_command", "oref0-autotune -d=~/aaps -n=$nsUrl -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
-            // aaps_command is for running modified oref0-autotune with exported data from aaps (ns-entries and ns-treatment json files copied in ~/aaps/autotune folder and pumpprofile.json copied in ~/aaps/settings/
+            // aaps_command is for running modified oref0-autotune with exported data from aaps (ns-entries and ns-treatment JSON files copied in ~/aaps/autotune folder and pumpprofile.json copied in ~/aaps/settings/
             jsonSettings.put("aaps_command", "aaps-autotune -d=~/aaps -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
             jsonSettings.put("categorize_uam_as_basal", preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal))
             jsonSettings.put("tune_insulin_curve", false)

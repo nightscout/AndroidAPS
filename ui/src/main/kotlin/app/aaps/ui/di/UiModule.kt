@@ -4,7 +4,6 @@ import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.ui.activities.ErrorActivity
-import app.aaps.ui.activities.ProfileViewerActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
 import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
 import app.aaps.ui.dialogs.CalibrationDialog
@@ -55,7 +54,6 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
-    @ContributesAndroidInjector abstract fun contributesProfileViewerActivity(): ProfileViewerActivity
     @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
     @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog

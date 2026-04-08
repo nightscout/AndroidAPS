@@ -45,6 +45,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.graph.profile.ProfileCompareContent
+import app.aaps.core.graph.profile.ProfileSingleContent
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -277,7 +279,6 @@ fun ProfileManagementScreen(
                                         ProfileCompareContent(
                                             profile1 = compareData.baseProfile,
                                             profile2 = compareData.effectiveProfile,
-                                            shortHourUnit = compareData.shortHourUnit,
                                             icsRows = compareData.icRows,
                                             icUnits = compareData.icUnits,
                                             isfsRows = compareData.isfRows,
