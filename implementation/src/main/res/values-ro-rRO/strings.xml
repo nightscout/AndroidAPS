@@ -73,4 +73,9 @@
     <string name="metadata_label_device_name">Exportați numele dispozitivului pacientului</string>
     <string name="metadata_label_device_model">Exportare model dispozitiv</string>
     <string name="metadata_label_encryption">Criptare fișier</string>
+    <string name="metadata_format_new">Format nou criptat</string>
+    <string name="metadata_format_other">Format necunoscut pentru exportare</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Eroare la accesarea sistemului de fișiere. Selectați corect dosarul AAPS.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Copie de rezervă pe Google Drive</string>
 </resources>
