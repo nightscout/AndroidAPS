@@ -77,7 +77,7 @@
     <string name="description_pump_dana_r_v2">Integrare cu pompele DANA Diabcare R cu firmware actualizat</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="devicenotfound">Dispozitivul selectat nu a fost găsit</string>
-    <string name="danar_switchtouhmode">Schimbă din modul U/z în U/h în pompă</string>
+    <string name="danar_switchtouhmode">Schimbați din modul U/z în U/h în pompă</string>
     <string name="danarkoreanpump">DanaR din Coreea</string>
     <string name="danarpump">DanaR</string>
     <string name="pumpdrivercorrected">Driver pompă corectat</string>
@@ -96,7 +96,7 @@
     <string name="bolus_speed_30">30 s/U</string>
     <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Pompa selectată</string>
-    <string name="rs_loginsulinchange_title">Înregistrează schimbarea rezervorului</string>
+    <string name="rs_loginsulinchange_title">Înregistrați schimbarea rezervorului</string>
     <string name="rs_loginsulinchange_summary">Adăugare eveniment \"Schimbare insulină\" în NS/Careportal când este detectat în istoric</string>
     <string name="rs_logcanulachange_title">Înregistrează schimbarea canulei</string>
     <string name="rs_logcanulachange_summary">Adăugare eveniment \"Schimbare set\" în portal de îngrijire când este detectat în istoric</string>
