@@ -152,10 +152,24 @@
     <string name="activate_profile">Attiva profilo</string>
     <string name="remove_label">Rimuovi</string>
     <string name="active_profile_indicator">ATTIVO</string>
+    <string name="remaining_time_label">Rimanenza</string>
+    <string name="confirm_remove_profile">Rimuovere profilo \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Clonare profilo \"%1$s\"?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tipo profilo</string>
+    <string name="profile_parameters">Parametri Del Profilo</string>
+    <string name="active_profile">Attiva profilo</string>
+    <string name="available_profiles">Profili disponibili</string>
+    <string name="profile_switches">Cambi profilo</string>
     <string name="basal_pct_from_tdd_label">% di basale</string>
     <string name="selected_profile">Selezionato:</string>
+    <string name="comparation">Confronto</string>
+    <string name="profile_tab_1">Profilo 1</string>
+    <string name="profile_tab_2">Profilo 2</string>
     <string name="motol_default_profile">Profilo predefinito</string>
     <string name="current_profile">Profilo corrente</string>
     <string name="available_profile">Profilo disponibile</string>
@@ -170,10 +184,33 @@
     <string name="a11y_only_on_watch">solo su smartwatch</string>
     <string name="a11y_only_on_phone">solo su telefono</string>
     <string name="overview_edit_quickwizard_button_text">Testo del pulsante</string>
+    <string name="quick_wizard_mode_wizard">Procedura guidata</string>
+    <string name="quick_wizard_mode_insulin">Insulina</string>
+    <string name="quick_wizard_mode_carbs">Carboidrati</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Solo IOB positivo</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
     <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
     <string name="additional_ecarbs">Aggiungi eCarbs</string>
+    <string name="calculator_options">Opzioni Calcolatore</string>
+    <string name="use_bg">Usa Glicemia</string>
+    <string name="use_cob">Usa COB</string>
+    <string name="use_iob">Usa IOB</string>
+    <string name="use_trend">Usa Tendenza</string>
+    <string name="trend_all">Tutto</string>
+    <string name="trend_positive_only">Solo positivo</string>
+    <string name="trend_negative_only">Solo negativo</string>
+    <string name="use_temp_target">Usa Target Temporaneo</string>
+    <string name="use_alarm">Usa Allarme</string>
+    <string name="device_selection">Selezione dispositivo</string>
+    <string name="show_on_phone">Mostra sul telefono</string>
+    <string name="show_on_watch">Mostra sull\'orologio</string>
+    <string name="ecarbs_additional">Carboidrati Aggiuntivi</string>
+    <string name="valid_from_to">Intervallo Di Tempo Valido</string>
+    <string name="carb_time">Tempo Carbo</string>
+    <string name="save_changes_question">Salvare le modifiche a questa voce?</string>
+    <string name="wizard_no_insulin_required">Insulina non necessaria</string>
+    <string name="carbs_constraint_violation">Carboidrati limitati da vincoli</string>
+    <string name="insulin_constraint_violation">Insulina limitata da vincoli</string>
     <string name="confirm_treatment">Si prega di confermare il trattamento</string>
     <string name="recalculate">Ricalcola</string>
     <!--    Widget-->
@@ -182,7 +219,19 @@
     <string name="until_changed">Fino a Modifica</string>
     <string name="limitations">Limitazioni</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Permessi richiesti</string>
+    <string name="permission_sheet_subtitle">Sono necessari alcuni permessi affinché l\'app funzioni correttamente</string>
+    <string name="permission_grant">Concedi</string>
+    <string name="permission_change">Cambiare</string>
+    <string name="permission_denied_go_to_settings">Permesso definitivamente negato. Si prega di attivarlo nelle impostazioni dell\'app.</string>
+    <string name="permission_open_settings">Impostazioni</string>
+    <string name="permission_directory_picker_error">Impossibile avviare il selettore di directory. Solitamente problema di Android o Family Link.</string>
+    <string name="permission_nav_label">Permessi</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Scostamento ciclo</string>
+    <string name="raw_tdd">Tdd Grezzo</string>
+    <string name="cleaned_tdd">Tdd Pulito</string>
+    <string name="cleaned_tdd_explanation">TDD meno insulina per carboidrati.</string>
     <string name="cycle_lines_legend">Cicli individuali</string>
     <string name="cycles_found">%1$d cicli (%2$d giorni)</string>
     <string name="cycle_day1_date">Giorno 1 = %1$s</string>
