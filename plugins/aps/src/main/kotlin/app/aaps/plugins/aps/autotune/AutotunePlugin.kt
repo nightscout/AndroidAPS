@@ -12,6 +12,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -26,9 +27,11 @@ import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
@@ -44,6 +47,7 @@ import app.aaps.core.utils.JsonHelper
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.aps.R
+import app.aaps.plugins.aps.autotune.compose.AutotuneComposeContent
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
@@ -70,6 +74,7 @@ class AutotunePlugin @Inject constructor(
     preferences: Preferences,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,
     private val insulin: Insulin,
     private val localProfileManager: LocalProfileManager,
@@ -79,6 +84,8 @@ class AutotunePlugin @Inject constructor(
     private val autotuneCore: AutotuneCore,
     private val config: Config,
     private val uel: UserEntryLogger,
+    private val uiInteraction: UiInteraction,
+    private val loop: Loop,
     private val profileStoreProvider: Provider<ProfileStore>,
     private val atProfileProvider: Provider<ATProfile>
 ) : PluginBaseWithPreferences(
@@ -90,6 +97,25 @@ class AutotunePlugin @Inject constructor(
         .pluginName(app.aaps.core.ui.R.string.autotune)
         .shortName(R.string.autotune_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
+        .composeContent { plugin ->
+            AutotuneComposeContent(
+                autotunePlugin = plugin as AutotunePlugin,
+                autotuneFS = autotuneFS,
+                profileFunction = profileFunction,
+                profileUtil = profileUtil,
+                localProfileManager = localProfileManager,
+                preferences = preferences,
+                dateUtil = dateUtil,
+                rh = rh,
+                rxBus = rxBus,
+                uel = uel,
+                uiInteraction = uiInteraction,
+                loop = loop,
+                insulin = insulin,
+                profileStoreProvider = profileStoreProvider,
+                atProfileProvider = atProfileProvider
+            )
+        }
         .showInList { config.isEngineeringMode() && config.isDev() || config.isEnabled(ExternalOptions.ENABLE_AUTOTUNE) }
         .description(R.string.autotune_description),
     ownPreferences = listOf(AutotuneStringKey::class.java),
