@@ -47,6 +47,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
     <string name="result">Rezultat</string>
     <string name="settings">Setări</string>
+    <string name="nav_preferences">Preferințe</string>
     <string name="simple_mode">Mod simplu</string>
     <string name="expand">Extindeți</string>
     <string name="collapse">Restrângeți</string>
@@ -73,6 +74,7 @@
     <string name="ue_export_to_csv">Exportă înregistrările utilizatorului în Excel (csv)</string>
     <string name="confirm">Confirmă</string>
     <string name="pump">Pompă</string>
+    <string name="pump_management">Pompă</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Încărcător</string>
@@ -315,6 +317,7 @@
     <string name="careportal_dad_alert">Alertă D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Schimbare cartuș insulină</string>
     <string name="careportal_profileswitch">Schimbare de profil</string>
+    <string name="profile_management">Profil</string>
     <string name="careportal_snackbolus">Bolus Gustare</string>
     <string name="careportal_mealbolus">Bolus Masă</string>
     <string name="careportal_correctionbolus">Bolus de corecție</string>
@@ -334,6 +337,7 @@
     <string name="treatment_insulin_desc">Administrați bolusul manual</string>
     <string name="treatment_carbs_desc">Înregistrați carbohidrați fără insulină</string>
     <string name="treatment_calculator_desc">Calculați bolusul</string>
+    <string name="insulin_management">Insulină</string>
     <string name="manage_insulin_desc">Gestionați și activați configurațiile insulinei</string>
     <string name="concentration_disable_blocked">Nu se poate dezactiva suportul concentrației cât timp există insuline non-U100. Îndepărtați mai întâi toate configurațiile de insulină non-U100 și treceți la un profil U100.</string>
     <string name="simple_mode_blocked_by_concentration">Nu se poate activa modul simplu în timp ce se folosește insulina non-U100. Mai întâi se trece la insulina U100.</string>
@@ -370,6 +374,7 @@
     <string name="custom">Personalizat</string>
     <string name="preset_settings">Setări presetare</string>
     <string name="activation">Activare</string>
+    <string name="temp_target_management">Țintă temporară</string>
     <string name="revert_to_defaults">Reveniți la valorile implicite</string>
     <string name="confirm_remove_preset">Eliminați presetare %1$s?</string>
     <string name="confirm_cancel_temp_target">Anulați ținta activă temporară?</string>
@@ -659,6 +664,7 @@
     <string name="wizard_explain_tt_to">Între %1$s și %2$s</string>
     <string name="wizard_pump_not_available">Nicio pompă disponibilă!</string>
     <string name="quickwizard">Asistent Rapid</string>
+    <string name="quickwizard_managemnt">Asistent Rapid</string>
     <!--    Preferences-->
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
@@ -772,6 +778,8 @@
     <string name="send_logs">Trimiteți jurnale</string>
     <string name="file_management">Gestionarea fișierelor</string>
     <string name="database_management">Gestionarea bazei de date</string>
+    <string name="data_choices">Alegeri date</string>
+    <string name="unattended_settings_export">Exportare nesupravegheată a setărilor</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Configurare niveluri de detaliere ale jurnalului</string>
     <string name="maintenance_send_logs_desc">Distribuiți fișierele de jurnal pentru depanare</string>
@@ -944,6 +952,25 @@
     <string name="no_search_results">Nu s-au găsit rezultate</string>
     <string name="search_plugin_disabled">Modul %1$s dezactivat</string>
     <!--    Food Management -->
+    <string name="food_management">Mâncare</string>
+    <string name="food_deleted">Mâncare ștearsă</string>
+    <string name="edit_food">Editați mâncarea</string>
+    <string name="add_food">Adăugați mâncare</string>
+    <string name="name">Nume</string>
+    <string name="category">Categorie</string>
+    <string name="subcategory">Subcategorie</string>
+    <string name="portion">Porție</string>
+    <string name="unit_label">Unitate</string>
+    <string name="fat">Grăsime</string>
+    <string name="protein">Proteină</string>
+    <string name="energy">Energie</string>
+    <string name="undo">Anulați</string>
+    <string name="no_data">Lipsă date</string>
+    <string name="manage_food_desc">Gestionează baza de date cu alimente</string>
+    <string name="label_carbs_g">Carbohidrați (g)</string>
+    <string name="label_fat_g">Grăsimi (g)</string>
+    <string name="label_protein_g">Proteine (g)</string>
+    <string name="label_energy_kj">Energie (kJ)</string>
     <!--    Log Settings-->
     <string name="nav_logsettings">Setări jurnal</string>
     <string name="resettodefaults">Reveniți la valorile implicite</string>
@@ -988,5 +1015,20 @@
     <string name="ble_scan_select_pump">Selectați pompa din lista de mai jos</string>
     <string name="ble_scan_scanning">Se scanează pentru dispozitive…</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Adăugați grafic</string>
+    <string name="graph_new">Grafic nou</string>
+    <string name="graph_edit">Editați grafic</string>
+    <string name="graph_number">Graficul %1$d</string>
+    <string name="graph_bg">Grafic glicemie</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAZ</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">PAȘI</string>
 </resources>
