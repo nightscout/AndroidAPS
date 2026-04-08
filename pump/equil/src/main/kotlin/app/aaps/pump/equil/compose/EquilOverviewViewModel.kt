@@ -31,6 +31,7 @@ import app.aaps.pump.equil.events.EventEquilModeChanged
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdModelSet
 import android.content.Context
+import app.aaps.core.interfaces.pump.PumpRate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -161,7 +162,7 @@ class EquilOverviewViewModel @Inject constructor(
         )
         add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
         add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.battery_label), value = "${state.battery}%"))
-        add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = state.currentInsulin.toString()))
+        add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = ch.insulinAmountString(PumpInsulin(state.currentInsulin.toDouble()))))
         add(
             PumpInfoRow(
                 label = rh.gs(R.string.equil_basal_speed),
@@ -175,13 +176,13 @@ class EquilOverviewViewModel @Inject constructor(
             val startTime = tempBasal.startTime
             val duration = tempBasal.duration / 60 / 1000
             val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - startTime).toMinutes()
-            rh.gs(R.string.equil_common_overview_temp_basal_value, tempBasal.rate, dateUtil.timeString(startTime), minutesRunning, duration)
+            rh.gs(R.string.equil_common_overview_temp_basal_value, ch.basalRateString(PumpRate(tempBasal.rate), true), dateUtil.timeString(startTime), minutesRunning, duration)
         } else "-"
         add(PumpInfoRow(label = rh.gs(R.string.equil_temp_basal_rate), value = tempBasalText))
 
         // Total delivered
         val totalDelivered = if (state.startInsulin == -1) "-"
-        else rh.gs(R.string.equil_unit_u, (state.startInsulin - state.currentInsulin).toString())
+        else ch.insulinAmountString(PumpInsulin((state.startInsulin - state.currentInsulin).toDouble()))
         add(PumpInfoRow(label = rh.gs(R.string.equil_total_delivered), value = totalDelivered))
 
         // Last bolus (bolusRecord.amount is in cU from PumpWithConcentration)
