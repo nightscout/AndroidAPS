@@ -48,5 +48,10 @@
     <string name="ue_exported">Intrările utilizatorului exportate</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportate %1$s în urmă</string>
     <string name="exported_at" comment="at placeholder we add export date">exportate la %1$s</string>
-    <string name="exported_less_than_hour_ago">exportate acum mai puțin de o ora</string>
+    <string name="exported_less_than_hour_ago">exportate acum mai puțin de o oră</string>
+    <string name="metadata_warning_different_flavour">Preferințele au fost create folosind o alta versiune de AAPS (%1$s) în timp ce versiunea curentă este: %2$s.\n\nCâteva setări pot lipsi sau pot fi invalide - după importare verificați și actualizați preferințele.</string>
+    <string name="metadata_warning_different_device">Preferințele au fost create pe un dispozitiv diferit. Este în regulă să le importați de pe un alt telefon, dar asigurați-vă că preferințele importate sunt corecte!</string>
+    <string name="metadata_warning_old_export">Preferințele importate sunt vechi de %1$s zile deja! Poate aveți preferințe mai recente sau ați ales un fișier greșit? Amintiți-vă să exportați preferințele în mod regulat!</string>
+    <string name="metadata_warning_date_format">Format dată-oră invalid!</string>
+    <string name="metadata_warning_different_version">Preferințe dintr-o versiune minoră diferită a aplicației. Este OK dacă importați după actualizare, dar verificați după importare că preferințele sunt corecte!</string>
 </resources>
