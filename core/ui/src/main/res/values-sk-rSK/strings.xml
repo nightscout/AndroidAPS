@@ -566,6 +566,7 @@
     <string name="export_result_message_expired">Export nastavení zrušený: heslo vypršalo. Exportujte ručne a (znovu) zadajte heslo!</string>
     <string name="export_result_message_disabled">Varovanie (automatika): Nie je povolený export nastavení!</string>
     <!-- Cloud export -->
+    <string name="send_logs_to_cloud">Exportovať logy do cloudu</string>
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
