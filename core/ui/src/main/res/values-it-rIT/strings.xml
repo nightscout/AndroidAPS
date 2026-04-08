@@ -161,8 +161,10 @@
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibrazione</string>
+    <string name="cgm">CGM</string>
     <string name="alarminxmin">Esegui allarme in %1$d min</string>
     <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
+    <string name="bolus_reminder">Ricorda il bolo quando la glicemia recupera</string>
     <string name="duration_label">Durata</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Micro sospeso</string>
@@ -186,15 +188,20 @@
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">basso</string>
     <string name="average">Media</string>
+    <string name="tir_short">TIR</string>
+    <string name="tir">Tempo nell’intervallo</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">RIMUOVI</string>
     <string name="activate_profile">Attiva profilo</string>
+    <string name="activate_insulin">Attiva insulina</string>
+    <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
     <string name="select_for_removal">Seleziona per la rimozione</string>
     <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
+    <string name="wear_wizard_settings">Impostazioni Rapide Orologio</string>
     <string name="bg_trend_label">Trend di 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">IOB da bolo</string>
@@ -204,6 +211,14 @@
     <string name="logout">Esci</string>
     <string name="prime_fill">Carica/Riempi</string>
     <string name="site_rotation">Rotazione del Sito</string>
+    <string name="edit_site">Modifica</string>
+    <string name="select_arrow">Seleziona Freccia</string>
+    <string name="site_filter_info">Selezionare il tipo di evento Terapia che si desidera visualizzare: Cambio Cannula e/o Cambio Sensore</string>
+    <string name="selected_location">Selezionati: %1$s</string>
+    <string name="last_site_location">Ultimo sito: %1$s</string>
+    <string name="pick_site">Scegli sito</string>
+    <string name="select_site_location">Seleziona la posizione del sito</string>
+    <string name="site_location">Posizione Del Sito</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Stoppa target temporaneo</string>
     <string name="closedloop">Loop chiuso</string>
@@ -211,8 +226,17 @@
     <string name="lowglucosesuspend">Sospensione a glicemia bassa (LGS)</string>
     <string name="pump_disconnected">Micro disconnesso</string>
     <string name="pump_suspended">Micro sospeso</string>
+    <string name="pump_suspend">Sospendi micro</string>
+    <string name="pump_resume">Riprendi micro</string>
     <string name="mode_reverted">Modalità ripristinata</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="select_insulin">Seleziona Insulina</string>
+    <string name="select_pump_insulin">Seleziona Insulina</string>
+    <string name="select_pen_insulin">Seleziona Insulina</string>
+    <string name="insulin_template">Modello</string>
     <string name="dia">DIA</string>
+    <string name="peak">Picco</string>
+    <string name="concentration">Concentrazione</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Basale temporanea: cancellazione fallita</string>
@@ -229,6 +253,11 @@
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Esporta impostazioni</string>
     <string name="location_permission_not_granted">Permessi posizione non concessi. Consenti nelle impostazioni Android.</string>
+    <string name="configbuilder_nightscoutversion_label">Versione Nightscout:</string>
+    <string name="not_available_full">Non disponibile</string>
+    <string name="engineering_mode_enabled">Engineering mode abilitata</string>
+    <string name="back">Indietro</string>
+    <string name="show_hide_records">Nascondi record di loop</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
     <string name="wrongpin">PIN errato</string>
@@ -251,6 +280,16 @@
     <string name="reason">Motivo</string>
     <string name="nochangerequested">Nessun cambiamento richiesto</string>
     <!--    Insulin / Concentration-->
+    <string name="ins_concentration_confirmed">Insulina %1$s confermata</string>
+    <string name="current_insulin">Attualmente attivo</string>
+    <string name="change_insulin">Cambiare</string>
+    <string name="select_insulin_description">Selezionare l\'insulina con cui si sta riempiendo la pompa. Dopo l\'attivazione/prime, verrà applicato un interruttore del profilo.</string>
+    <string name="bolus_delivered">%1$.2fU / %2$.2fU</string>
+    <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
+    <string name="pump_insulin_cu">%1$.2f CU</string>
+    <string name="pump_insulin_cu1">%1$.1f CU</string>
+    <string name="selected_insulin">Insulina Selezionata: %1$s</string>
+    <string name="record_insulin_hint">Se si entra in insulina applicata dalla penna, selezionare di seguito il tipo di insulina corretto. La dose è sempre nelle Unità Internazionali.</string>
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Profilo non valido: %1$s</string>
     <!--    Temptarget-->
@@ -289,11 +328,22 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Cambio batteria micro</string>
     <string name="temporary_target">Target temporaneo</string>
+    <string name="temporary_targets">Target temporanei</string>
     <string name="running_mode">Modalità esecuzione</string>
     <string name="careportal_temporarytargetvalue">Valore target temporaneo</string>
     <string name="careportal_temporarytargetcancel">Cancellazione target temporaneo</string>
     <string name="boluswizard">Calcolatore</string>
+    <string name="treatment_desc">Registrare insieme insulina e carboidrati</string>
+    <string name="treatment_insulin_desc">Eroga manualmente il bolo</string>
+    <string name="treatment_carbs_desc">Registrare carboidrati senza insulina</string>
+    <string name="treatment_calculator_desc">Calcola bolo</string>
     <string name="insulin_management">Insulina</string>
+    <string name="manage_insulin_desc">Gestire e attivare le configurazioni di insulina</string>
+    <string name="concentration_disable_blocked">Non è possibile disabilitare il supporto alla concentrazione mentre esistono insuline non-U100. Rimuovere prima tutte le configurazioni non-U100 e passare a un profilo U100.</string>
+    <string name="simple_mode_blocked_by_concentration">Non è possibile abilitare la modalità semplice mentre si utilizza insulina non-U100. Passare prima all\'insulina U100.</string>
+    <string name="manage_profile_desc">Gestisci e attiva i profili</string>
+    <string name="manage_temp_target_desc">Gestisci e imposta obiettivi temporanei</string>
+    <string name="manage_temp_basal_desc">Imposta basale temporanea</string>
     <string name="manage_extended_bolus_desc">Avvio erogazione bolo esteso</string>
     <string name="manage_site_rotation_desc">Traccia e ruota i siti di infusione</string>
     <string name="manage_quickwizard_desc">Gestisci le preimpostazioni della procedura guidata rapida</string>
@@ -323,7 +373,12 @@
     <string name="settingsexport">Esportazione Impostazioni</string>
     <string name="custom">Personalizzato</string>
     <string name="preset_settings">Impostazioni Preset</string>
+    <string name="activation">Attivazione</string>
     <string name="temp_target_management">Target Temporaneo</string>
+    <string name="revert_to_defaults">Ripristino delle impostazioni predefinite</string>
+    <string name="confirm_remove_preset">Rimuovere preset %1$s?</string>
+    <string name="confirm_cancel_temp_target">Annullare il target temporaneo attivo?</string>
+    <string name="add_new_preset">Aggiungi nuovo preset</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -373,6 +428,8 @@
     <string name="carbsreq">%1$d g di CHO aggiuntivi richiesti entro %2$d minuti</string>
     <string name="basalrate">Basale</string>
     <string name="bolus">Bolo</string>
+    <string name="tdd_short">TDD</string>
+    <string name="tdd">Dose totale giornaliera</string>
     <string name="ratio">Rapporto</string>
     <string name="amount_days"># Giorni</string>
     <string name="weight">Peso</string>
@@ -479,6 +536,11 @@
     <string name="ue_none">Nessuna unità</string>
     <string name="uel_loop_change">LOOP CAMBIATO</string>
     <string name="uel_loop_removed">LOOP RIMOSSO</string>
+    <string name="uel_new_insulin">NUOVA INSULINA</string>
+    <string name="uel_change_pump_insulin">MODIFICA MICRO INSULINA</string>
+    <string name="uel_store_insulin">CONSERVAZIONE INSULINA</string>
+    <string name="uel_change_insulin_concentration">MODIFICA CONCENTRAZIONE INSULINA</string>
+    <string name="uel_insulin_removed">INSULINA RIMOSSA</string>
     <string name="uel_other">ALTRO</string>
     <string name="uel_running_mode">MODALITÀ RUNNING</string>
     <string name="uel_running_mode_removed">MODALITÀ RUNNING RIMOSSA</string>
@@ -490,6 +552,8 @@
     <string name="temp_target_high_target">Valore superiore target temporaneo</string>
     <string name="temp_target_value">Valore target temporaneo</string>
     <string name="profile_dia">Valore DIA (profilo)</string>
+    <string name="insulin_dia">Valore del DIA dell’insulina</string>
+    <string name="insulin_peak">Valore di picco dell\'insulina</string>
     <string name="profile_sensitivity_value">Valore sensibilità (profilo)</string>
     <string name="profile_max_daily_basal_value">Valore max basale (profilo)</string>
     <string name="current_basal_value">Valore basale corrente</string>
@@ -499,6 +563,16 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
     <!-- Profile validation -->
+    <string name="no_profile_selected">Nessun profilo selezionato</string>
+    <string name="missing_profile_name">Nome profilo mancante</string>
+    <string name="error_in_ic_values">Errore nei valori IC</string>
+    <string name="error_in_isf_values">Errore nei valori ISF</string>
+    <string name="error_in_basal_values">Errore nei valori della basale</string>
+    <string name="error_in_target_values">Errore nei valori del target</string>
+    <string name="profile_name_contains_dot">Alcuni nomi profilo contengono punti.\nQuesto non è supportato da NS.\nI profili non verranno caricati su NS.</string>
+    <string name="invalid_profile_not_accepted">Profilo %1$s non valido - non accettato da NS</string>
+    <string name="errors">Errori</string>
+    <string name="view">Vista</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CHO %1$d g</string>
@@ -527,6 +601,7 @@
     <string name="sensitivity">Sensibilità</string>
     <string name="isf_for_carbs">ISF per Calcolatrice e Assorbimento di Carbo: %1$.1f</string>
     <string name="autosens_long">Valore Autosens: %.0f%%</string>
+    <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens nell\'algoritmo: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">file</string>
@@ -543,9 +618,29 @@
     <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed ricevere un promemoria quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. I COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected_plain">!!!!! Rilevato assorbimento lento dei carboidrati: %1$d%% del tempo. Ricontrolla il tuo calcolo. I COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</string>
     <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
+    <string name="wizard_bg_label">BG</string>
+    <string name="wizard_correction">Correzione</string>
+    <string name="wizard_subtotal">Subtotale</string>
+    <string name="carbs_type_bread">Pane, pasticcini salati, yogurt, frutta (mela, banana, pera), patate, riso, grano saraceno, farina d\'avena, alimenti lenti e a basso contenuto di carboidrati, verdure</string>
+    <string name="carbs_type_cake">Ravioli, pasta, cucina asiatica ricca di carboidrati e grassi, dolci dolci e lieviti, cereali, porridge di grano, miele, marmellata</string>
+    <string name="carbs_type_pizza">Lasagna, pizza, hamburger, patatine fritte, patate, chips e snack simili</string>
+    <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
+    <string name="wizard_total">Totale</string>
+    <string name="wizard_carb_time">Tempo Carbo</string>
+    <string name="carb_time_now">Adesso</string>
+    <string name="change">Cambiare</string>
+    <string name="wizard_set_alarm">Imposta allarme</string>
+    <string name="wizard_use_percentage">Uso percentuale</string>
+    <string name="wizard_include_bg">Includi Glicemia</string>
+    <string name="wizard_include_tt">Includi TempTarget</string>
+    <string name="wizard_include_trend">Includi la tendenza</string>
+    <string name="wizard_include_iob">Includi IOB</string>
+    <string name="wizard_include_cob">Includi IOB</string>
+    <string name="wizard_advanced">Avanzate</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="carb_equal_zero_no_action">CHO = 0. Nessuna azione intrapresa!</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria!</string>
