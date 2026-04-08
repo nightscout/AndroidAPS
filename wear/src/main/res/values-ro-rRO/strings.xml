@@ -79,7 +79,7 @@
     <string name="menu_ecarb">Carbohidrați extinși</string>
     <string name="menu_settings">Setări</string>
     <string name="menu_status">Stare</string>
-    <string name="menu_resync">Re-Sincronizare</string>
+    <string name="menu_resync">Resincronizare</string>
     <string name="menu_prime_fill">Amorsare/Umplere</string>
     <string name="menu_none">Nimic</string>
     <string name="menu_default">Implicit</string>
@@ -129,7 +129,7 @@
     <string name="status_pump">Pompă</string>
     <string name="status_loop">Buclă</string>
     <string name="status_profile_switch">Schimbare de profil</string>
-    <string name="status_tdd">TDD</string>
+    <string name="status_tdd">DZT (Doza zilnică totală)</string>
     <string name="activity_carb">Carbohidrați</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">niciun status</string>
