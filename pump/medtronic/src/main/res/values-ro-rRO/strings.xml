@@ -10,8 +10,8 @@
     <string name="medtronic_pump_max_bolus">Bolusul maxim în pompă (U)</string>
     <string name="medtronic_pump_max_basal">Bazală maximă în pompă (U/h)</string>
     <string name="medtronic_pump_encoding">Criptare Medtronic</string>
-    <string name="medtronic_custom_action_wake_and_tune">Pornește și sincronizează</string>
-    <string name="medtronic_custom_action_clear_bolus_block">Șterge blocajul de bolus</string>
+    <string name="medtronic_custom_action_wake_and_tune">Porniți și reglați</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Ștergeți blocajul de bolus</string>
     <string name="medtronic_custom_action_reset_rileylink">Resetați dispozitivull RileyLink</string>
     <string name="medtronic_pump_battery_select">Tipul bateriei (Afișare avansată)</string>
     <string name="medtronic_pump_battery_no">Fără selecție (Afișare simplificată)</string>
@@ -72,20 +72,20 @@
     <string name="medtronic_cmd_cant_cancel_tbr">Nu a putut fi anulată RBT curentă.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Profilul bazal nu a putut fi stabilit.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Profilul bazal existent deja este existent, nu va fi reintrodus.</string>
-    <string name="medtronic_cmd_desc_get_history">Preia istoricul - Pagina %1$d (%2$d/16)</string>
-    <string name="medtronic_cmd_desc_get_history_request">Preia istoricul - Pagina %1$d</string>
-    <string name="medtronic_cmd_desc_get_time">Preia timpul din pompă</string>
+    <string name="medtronic_cmd_desc_get_history">Preluați istoricul - Pagina %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Preluați istoricul - Pagina %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Preluați timpul din pompă</string>
     <string name="medtronic_cmd_desc_set_time">Setează timpul pe pompa</string>
     <string name="medtronic_cmd_desc_get_battery_status">Obține starea bateriei</string>
-    <string name="medtronic_cmd_desc_get_settings">Preia setările</string>
-    <string name="medtronic_cmd_desc_get_model">Preia modelul de pompă</string>
-    <string name="medtronic_cmd_desc_get_basal_profile">Preia profilul bazalelor</string>
-    <string name="medtronic_cmd_desc_set_basal_profile">Setează profilul bazalelor</string>
-    <string name="medtronic_cmd_desc_get_tbr">Preia bazala temporară</string>
-    <string name="medtronic_cmd_desc_set_tbr">Setează bazala temporară</string>
-    <string name="medtronic_cmd_desc_cancel_tbr">Anulează Bazala Temporară</string>
-    <string name="medtronic_cmd_desc_set_bolus">Setează bolusul</string>
-    <string name="medtronic_cmd_desc_get_remaining_insulin">Obține insulina rămasă</string>
+    <string name="medtronic_cmd_desc_get_settings">Preluați setările</string>
+    <string name="medtronic_cmd_desc_get_model">Preluați modelul de pompă</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Preluați profilul bazalelor</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Setați profilul bazalelor</string>
+    <string name="medtronic_cmd_desc_get_tbr">Preluați bazala temporară</string>
+    <string name="medtronic_cmd_desc_set_tbr">Setați bazala temporară</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Anulați Bazala Temporară</string>
+    <string name="medtronic_cmd_desc_set_bolus">Setați bolusul</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obțineți insulina rămasă</string>
     <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Acum</string>
     <string name="ago" comment="Time suffix, e.g. '5 min ago'">în trecut</string>
     <string name="medtronic_notification_check_time_date">Ceasul pompei trebuie ajustat</string>
