@@ -270,7 +270,7 @@ class MedtronicOverviewViewModel @Inject constructor(
     private fun buildTempBasal(): String {
         val tbrRemainingTime = medtronicPumpStatus.tbrRemainingTime ?: return ""
         val tempBasalAmount = medtronicPumpStatus.tempBasalAmount?.let { PumpRate(it) } ?: return ""
-        return rh.gs(R.string.mdt_tbr_remaining, ch.basalRateString(tempBasalAmount, true), tbrRemainingTime)
+        return rh.gs(R.string.medtronic_tbr_remaining, ch.basalRateString(tempBasalAmount, true), tbrRemainingTime)
     }
 
     private fun buildBattery(): Pair<String, StatusLevel> {

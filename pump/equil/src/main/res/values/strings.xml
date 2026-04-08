@@ -134,7 +134,7 @@
 
     <string name="equil_common_overview_button_suspend_delivery">Suspend</string>
     <string name="equil_common_overview_button_resume_delivery">Resume delivery</string>
-    <string name="equil_common_overview_temp_basal_value">%1$s @%2$s (%3$d/%4$d min)</string>
+    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Moments ago</string>
     <string name="equil_common_less_than_a_minute_ago">Less than a minute ago</string>
     <string name="equil_common_time_ago">%1$s ago</string>

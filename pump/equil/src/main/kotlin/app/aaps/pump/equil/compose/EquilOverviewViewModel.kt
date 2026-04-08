@@ -176,7 +176,7 @@ class EquilOverviewViewModel @Inject constructor(
             val startTime = tempBasal.startTime
             val duration = tempBasal.duration / 60 / 1000
             val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - startTime).toMinutes()
-            rh.gs(R.string.equil_common_overview_temp_basal_value, ch.basalRateString(PumpRate(tempBasal.rate), true), dateUtil.timeString(startTime), minutesRunning, duration)
+            rh.gs(R.string.equil_common_overview_tbr_value, ch.basalRateString(PumpRate(tempBasal.rate), true), dateUtil.timeString(startTime), minutesRunning, duration)
         } else "-"
         add(PumpInfoRow(label = rh.gs(R.string.equil_temp_basal_rate), value = tempBasalText))
 
