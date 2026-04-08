@@ -46,7 +46,7 @@
     <string name="openapsma_max_basal_title">Max U/h a Temp Basal can be set to</string>
     <string name="openapsma_max_basal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_max_iob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
-    <string name="openapsma_max_iob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
+    <string name="openapsma_max_iob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.\nSee the documentation for limits by profile type: https://androidaps.readthedocs.io/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-overview-of-hard-coded-limits</string>
     <string name="openapsama_autosens_adjust_targets_summary">Default value: true\nThis is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
     <string name="openapsama_autosens_adjust_targets">Autosens adjust targets, too</string>
     <string name="openapsama_min_5m_carb_impact" translatable="false">min_5m_carbimpact</string>
@@ -61,7 +61,7 @@
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="openapssmb_max_iob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
-    <string name="openapssmb_max_iob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
+    <string name="openapssmb_max_iob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value\nSee the documentation for limits by profile type: https://androidaps.readthedocs.io/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#open-aps-features-overview-of-hard-coded-limits</string>
     <string name="enable_uam">Enable UAM</string>
     <string name="enable_smb">Enable SMB</string>
     <string name="enable_smb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
