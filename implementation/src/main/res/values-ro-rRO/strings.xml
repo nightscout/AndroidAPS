@@ -92,4 +92,10 @@
     <string name="google_drive_upload_verify_failed">Verificarea încărcării a eșuat</string>
     <string name="google_drive_upload_failed">Încărcare nereușită: %1$s</string>
     <string name="google_drive_upload_error">Eroare încărcare fișier: %1$s</string>
+    <string name="google_drive_folder_access_error">Nu se poate crea sau accesa dosarul destinație: %1$s</string>
+    <string name="google_drive_list_settings_failed">Eșuare în afișarea fișierelor de setări</string>
+    <string name="google_drive_list_settings_error">Eroare în afișarea fișierelor de setări: %1$s</string>
+    <string name="google_drive_download_failed">Descărcarea fișierului a eșuat</string>
+    <string name="google_drive_download_error">Eroare la descărcarea fișierului: %1$s</string>
+    <string name="google_drive_authorized">Google Drive autorizat</string>
 </resources>
