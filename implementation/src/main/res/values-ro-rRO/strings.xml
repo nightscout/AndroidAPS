@@ -78,4 +78,18 @@
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Eroare la accesarea sistemului de fișiere. Selectați corect dosarul AAPS.</string>
     <string name="storage_google_drive">Google Drive</string>
     <string name="backup_to_google_drive">Copie de rezervă pe Google Drive</string>
+    <string name="csv_upload_failed">Nu s-au putut încărca datele de utilizator CSV în mediul de stocare Cloud</string>
+    <string name="csv_upload_error">Eroare la încărcarea fișierului CSV în Cloud</string>
+    <string name="uploading_to_cloud">Se încarcă în Cloud...</string>
+    <string name="cloud_directory_path">Dosar Cloud: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Nu s-a putut reîmprospăta jetonul de acces pentru Google Drive</string>
+    <string name="google_drive_token_refresh_error">Nu s-a putut reîmprospăta jetonul de acces pentru Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">Testul de conectare Google Drive a eșuat</string>
+    <string name="google_drive_connect_error">Nu s-a putut conecta la Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Eșuare afișare dosare Google Drive</string>
+    <string name="google_drive_list_folders_error">Eroare la afișarea dosarelor: %1$s</string>
+    <string name="google_drive_upload_no_id">Încărcarea a reușit dar niciun ID returnat</string>
+    <string name="google_drive_upload_verify_failed">Verificarea încărcării a eșuat</string>
+    <string name="google_drive_upload_failed">Încărcare nereușită: %1$s</string>
+    <string name="google_drive_upload_error">Eroare încărcare fișier: %1$s</string>
 </resources>
