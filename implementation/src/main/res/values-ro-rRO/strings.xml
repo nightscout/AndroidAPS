@@ -98,4 +98,5 @@
     <string name="google_drive_download_failed">Descărcarea fișierului a eșuat</string>
     <string name="google_drive_download_error">Eroare la descărcarea fișierului: %1$s</string>
     <string name="google_drive_authorized">Google Drive autorizat</string>
+    <string name="google_drive_reauth_required">Vă rugăm să ștergeți setările și să reautorizați Google Drive</string>
 </resources>
