@@ -95,7 +95,7 @@
     <string name="diacon_g8_blockreplacesyringe">ÎNLOCUIEȘTE REZERVORUL</string>
     <string name="diaconn_g8_logalarmblock">Blocare injectare (%s)</string>
     <string name="diaconn_g8_lgorelease">administrare bazală (%s)</string>
-    <string name="diaconn_g8_lgosuspend">bazala suspendata (%s)</string>
+    <string name="diaconn_g8_lgosuspend">bazală suspendată (%s)</string>
     <string name="diaconn_g8_logdualnormalsuccess">Succes Dual Normal</string>
     <string name="diaconn_g8_logdualsquarestart">Start Dual Extins</string>
     <string name="diaconn_g8_logdualsquaresuccess">Succes Dual Extins</string>
@@ -118,7 +118,7 @@
     <string name="diaconn_g8_errorcode_13">Nu se poate injecta deoarece depășește limita.</string>
     <string name="diaconn_g8_errorcode_14">Injecția nu poate fi injectată deoarece depășește volumul injectării în prezent.</string>
     <string name="diaconn_g8_errorcode_15">După finalizarea configurării ratei bazale, se poate injecta bazala.</string>
-    <string name="diaconn_g8_logtubechange_title">Înregistrează schimbarea canulei</string>
+    <string name="diaconn_g8_logtubechange_title">Înregistrați schimbarea canulei</string>
     <string name="diaconn_g8_logtubechange_summary">Adăugare eveniment \"Schimbare canulă\" în Notă atunci când este detectat în istoric</string>
     <string name="diaconn_g8_logtempstart">Start bazală temporară</string>
     <string name="diaconn_g8_errorcode_32">În timpul rulării LGS, injectarea este restricționată.</string>
