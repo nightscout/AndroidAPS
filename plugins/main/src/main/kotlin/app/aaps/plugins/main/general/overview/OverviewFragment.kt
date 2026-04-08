@@ -253,8 +253,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         binding.graphsLayout.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
-        binding.activeProfile.setOnClickListener(this)
-        binding.activeProfile.setOnLongClickListener(this)
         binding.tempTarget.setOnClickListener(this)
         binding.tempTarget.setOnLongClickListener(this)
         binding.pumpStatusLayout.setOnClickListener(this)
@@ -437,7 +435,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 R.id.insulin_button     -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runInsulinDialog(childFragmentManager) })
                 R.id.carbs_button       -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runCarbsDialog(childFragmentManager) })
                 R.id.temp_target        -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runTempTargetDialog(childFragmentManager) })
-                R.id.active_profile     -> uiInteraction.runProfileViewerActivity(requireContext(), dateUtil.now(), UiInteraction.Mode.RUNNING_PROFILE)
 
                 R.id.cgm_button         -> {
                     if (xDripSource.isEnabled()) openCgmApp("com.eveningoutpost.dexdrip")
@@ -511,15 +508,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
 
             R.id.temp_target    -> v.performClick()
-            R.id.active_profile ->
-                if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP) uiInteraction.showOkDialog(context = requireActivity(), title = R.string.not_available_full, message = R.string.smscommunicator_pump_disconnected)
-                else
-                    protectionCheck.queryProtection(
-                        requireActivity(),
-                        ProtectionCheck.Protection.BOLUS,
-                        UIRunnable { uiInteraction.runProfileSwitchDialog(childFragmentManager) }
-                    )
-
         }
         return false
     }

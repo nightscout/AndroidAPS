@@ -154,34 +154,6 @@ interface UiInteraction {
     }
 
     /**
-     * Defines modes for the profile viewer dialog.
-     */
-    enum class Mode(val i: Int) {
-
-        /** View the currently running profile. */
-        RUNNING_PROFILE(1),
-
-        /** View a custom profile from a string. */
-        CUSTOM_PROFILE(2),
-
-        /** View a profile from the database. */
-        DB_PROFILE(3),
-
-        /** Compare two custom profiles. */
-        PROFILE_COMPARE(4)
-    }
-
-    /**
-     * Shows the profile viewer dialog.
-     * @param time The time for which to view the profile.
-     * @param mode The viewing mode.
-     * @param customProfile The first custom profile JSON string (for applicable modes).
-     * @param customProfileName The name of the first custom profile.
-     * @param customProfile2 The second custom profile JSON string (for comparison mode).
-     */
-    fun runProfileViewerActivity(context: Context, time: Long, mode: Mode, customProfile: String? = null, customProfileName: String? = null, customProfile2: String? = null)
-
-    /**
      * Defines types of care portal events.
      */
     enum class EventType {

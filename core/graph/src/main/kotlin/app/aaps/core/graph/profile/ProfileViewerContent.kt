@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.profileManagement
+package app.aaps.core.graph.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +22,7 @@ import app.aaps.core.graph.BasalProfileGraphCompose
 import app.aaps.core.graph.IcProfileGraphCompose
 import app.aaps.core.graph.IsfProfileGraphCompose
 import app.aaps.core.graph.TargetBgProfileGraphCompose
+import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.interfaces.insulin.ConcentrationType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.ui.R
@@ -42,20 +43,6 @@ data class ProfileCompareRow(
 
 /**
  * Composable that displays a single profile's data in individual elevated cards.
- * Each profile parameter (Units, DIA, IC, ISF, Basal, Target) is shown in its own card with:
- * - Label and value using ProfileRow styling (bodySmall typography)
- * - Graph visualization for IC, ISF, Basal, and Target
- * - 16dp horizontal padding per card
- * - 8dp spacing between cards
- *
- * This is used in both ProfileViewerScreen (single mode) and ProfileHelperActivity tabs.
- *
- * @param profile The profile to display (ProfileSealed can be EPS, PS, or Pure)
- * @param getIcList Lambda that formats IC values as a comma-separated string
- * @param getIsfList Lambda that formats ISF values as a comma-separated string
- * @param getBasalList Lambda that formats basal values as a comma-separated string
- * @param getTargetList Lambda that formats target values as a range string
- * @param formatBasalSum Lambda that formats total basal sum with units (e.g., "24.5 U")
  */
 @Composable
 fun ProfileSingleContent(
@@ -211,34 +198,11 @@ fun ProfileSingleContent(
 
 /**
  * Composable that displays a comparison between two profiles in individual elevated cards.
- * Each section (Profile names, Units, DIA, IC, ISF, Basal, Target) is shown in its own card with:
- * - Optional profile names header card (if names are provided)
- * - Comparison tables showing time-based values for both profiles side-by-side
- * - Dual-line graphs with colored legends distinguishing profile1 (first color) and profile2 (second color)
- * - 16dp horizontal padding per card
- * - 8dp spacing between cards
- *
- * This is used in ProfileViewerScreen (compare mode) and ProfileHelperActivity comparison tab.
- *
- * @param profile1 First profile to compare
- * @param profile2 Second profile to compare
- * @param shortHourUnit Short form of hour unit (e.g., "h")
- * @param icsRows List of IC comparison rows with time and values for both profiles
- * @param icUnits IC units text (e.g., "g/U")
- * @param isfsRows List of ISF comparison rows with time and values for both profiles
- * @param isfUnits ISF units text (e.g., "mmol/L/U" or "mg/dL/U")
- * @param basalsRows List of basal comparison rows with time and values for both profiles (includes summary row)
- * @param basalUnits Basal units text (e.g., "U/h")
- * @param targetsRows List of target comparison rows with time and range values for both profiles
- * @param targetUnits Target units text (e.g., "mmol/L" or "mg/dL")
- * @param profileName1 Display name for first profile (shown in colored text)
- * @param profileName2 Display name for second profile (shown in colored text)
  */
 @Composable
 fun ProfileCompareContent(
     profile1: Profile,
     profile2: Profile,
-    shortHourUnit: String,
     icsRows: List<ProfileCompareRow>,
     icUnits: String,
     isfsRows: List<ProfileCompareRow>,
@@ -458,19 +422,6 @@ fun ProfileCompareContent(
     }
 }
 
-/**
- * Composable that displays a single row of profile data with label and value.
- * Uses bodySmall typography to maintain consistent text sizing across profile cards.
- *
- * Layout:
- * - Label (1/3 width): Bold text on the left
- * - Colon separator (optional): ": " between label and value
- * - Value (2/3 width): Regular text on the right
- *
- * @param label The label text (e.g., "Units", "DIA")
- * @param value The value text (e.g., "mg/dL", "5.0 h")
- * @param showColon Whether to show the colon separator (default true, set false for Units in comparison mode)
- */
 @Composable
 fun ProfileInlineRow(label: String, value: String) {
     Row(
@@ -564,22 +515,18 @@ fun ProfileRow(label: String, value: String, showColon: Boolean = true) {
     }
 }
 
-/**
- * Composable that displays a comparison table showing values from two profiles side-by-side.
- * Used in ProfileCompareContent for IC, ISF, Basal, and Target comparisons.
- *
- * Each row shows:
- * - Time column (left): HH:MM format or "∑" for summary
- * - Value1 column (center): First profile's value in profile1 color
- * - Value2 column (right): Second profile's value in profile2 color
- * - Units label: Displayed below the table, centered
- *
- * Values are right-aligned with minimum widths for consistent column alignment.
- * Colors from AapsTheme.profileHelperColors distinguish between profiles.
- *
- * @param rows List of ProfileCompareRow containing time and both profile values
- * @param units Units text to display below the table (e.g., "g/U", "U/h")
- */
+@Preview(showBackground = true)
+@Composable
+private fun ProfileRowPreview() {
+    MaterialTheme {
+        Column {
+            ProfileRow(label = "Units", value = "mg/dL")
+            ProfileRow(label = "IC", value = "08:00 10.0\n12:00 8.5\n18:00 9.0")
+            ProfileInlineRow(label = "Insulin", value = "Humalog")
+        }
+    }
+}
+
 @Composable
 fun ProfileCompareTable(rows: List<ProfileCompareRow>, units: String) {
     val colors = AapsTheme.profileHelperColors

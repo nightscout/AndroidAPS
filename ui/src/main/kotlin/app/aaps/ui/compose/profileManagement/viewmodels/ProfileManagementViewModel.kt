@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.graph.profile.ProfileCompareData
+import app.aaps.core.graph.profile.buildProfileCompareData
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
@@ -41,8 +42,6 @@ import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.ScreenMode
-import app.aaps.ui.compose.profileManagement.ProfileCompareData
-import app.aaps.ui.compose.profileManagement.buildProfileCompareData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -350,7 +349,6 @@ class ProfileManagementViewModel @Inject constructor(
     fun getIsfList(profile: Profile): String = profile.getIsfList(rh, dateUtil)
     fun getBasalList(profile: Profile): String = profile.getBasalList(rh, dateUtil)
     fun getTargetList(profile: Profile): String = profile.getTargetList(rh, dateUtil)
-    fun formatIcfg(iCfg: ICfg): String = iCfg.insulinLabel
     fun formatBasalSum(basalSum: Double): String = rh.gs(R.string.format_insulin_units, basalSum)
 
     /**

@@ -34,12 +34,8 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.compose.cartesian.data.ColumnCartesianLayerModel
-import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.Fill
@@ -47,9 +43,7 @@ import com.patrykandpatrick.vico.compose.common.Position
 import com.patrykandpatrick.vico.compose.common.component.LineComponent
 import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.TextComponent
-import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 
 /**
  * General-purpose secondary graph composable.
@@ -59,7 +53,7 @@ import com.patrykandpatrick.vico.compose.common.data.ExtraStore
  * - IOB: Blue line with area fill + bolus markers (SMBs, normal boluses, extended boluses)
  * - COB: Orange adaptive-step line with area fill + carbs markers + failover dots
  * - Simple line series (AbsIOB, BGI, Sensitivity, VarSens, DevSlope, HR, Steps): Colored line with gradient fill
- * - Deviations: Colored line (TODO: bar rendering in future)
+ * - Deviations: Per-type colored step lines with gradient fill (POSITIVE/NEGATIVE/EQUAL/UAM/CSF)
  */
 @Composable
 fun SecondaryGraphCompose(
@@ -74,10 +68,9 @@ fun SecondaryGraphCompose(
 ) {
     if (seriesTypes.isEmpty()) return
 
-    // Ensure DEVIATIONS/DEV_SLOPE is always primary — DEVIATIONS requires the column layer,
-    // DEV_SLOPE needs primary to render both dsMax and dsMin lines
+    // Ensure DEV_SLOPE is always primary — it needs primary to render both dsMax and dsMin lines
     val orderedTypes = remember(seriesTypes) {
-        val mustBePrimary = setOf(SeriesType.DEVIATIONS, SeriesType.DEV_SLOPE)
+        val mustBePrimary = setOf(SeriesType.DEV_SLOPE, SeriesType.DEVIATIONS)
         if (seriesTypes.size >= 2 && seriesTypes[0] !in mustBePrimary && seriesTypes[1] in mustBePrimary)
             listOf(seriesTypes[1], seriesTypes[0])
         else
@@ -176,7 +169,6 @@ fun SecondaryGraphCompose(
                 // TODO: differentiate prediction line style (e.g., dashed) from historical
                 if (it.bgiPrediction.isNotEmpty()) add(SeriesType.BGI to processPoints(it.bgiPrediction, minTimestamp, minX, maxX))
             }
-            // Deviations rendered as column layer only (not as line series)
             ratioData?.ratio?.takeIf { it.isNotEmpty() }?.let { pts ->
                 // Stored as 100*(ratio-1), display shifted by +100 to show as percentage (90%, 110%)
                 val shifted = pts.map { GraphDataPoint(it.timestamp, it.value + 100.0) }
@@ -210,8 +202,10 @@ fun SecondaryGraphCompose(
         processPoints(devSlopeData.dsMin, minTimestamp, minX, maxX)
     }
 
-    // Deviation column data — processed separately for the column layer
-    val deviationColumns = remember(deviationsData, stableTimeRange) {
+    // Deviation line data — split by DeviationType for per-type colored lines with gradient fill.
+    // Each type series has ALL x-coordinates; y=0 where the point's type doesn't match.
+    // With Square connector this creates filled step-rectangles at each deviation point.
+    val processedDeviationLines = remember(deviationsData, stableTimeRange) {
         if (!hasRealTimeRange || deviationsData == null || deviationsData.deviations.isEmpty())
             return@remember null
         val filtered = deviationsData.deviations
@@ -220,9 +214,17 @@ fun SecondaryGraphCompose(
             .sortedBy { it.first }
         if (filtered.isEmpty()) return@remember null
         val allX = filtered.map { it.first }
-        val allY = filtered.map { it.second }
-        val typeLookup = filtered.associate { it.first to it.third }
-        Triple(allX, allY, typeLookup)
+        val typeValueMap = filtered.associate { it.first to (it.second to it.third) }
+        // Build per-type y arrays: real value where type matches, 0.0 otherwise
+        val perType = DeviationType.entries.associateWith { type ->
+            allX.map { x ->
+                val (value, pointType) = typeValueMap[x]!!
+                if (pointType == type) value else 0.0
+            }
+        }
+        // Only include types that have at least one non-zero value
+        val activeTypes = perType.filter { (_, ys) -> ys.any { it != 0.0 } }
+        ProcessedDeviationLines(allX, activeTypes)
     }
 
     // IOB line processing
@@ -275,7 +277,6 @@ fun SecondaryGraphCompose(
 
     // Use a sealed approach: track series slot identifiers
     val activeSlotState = remember { mutableStateOf(emptyList<SeriesSlot>()) }
-    val deviationTypeLookup = remember { DeviationTypeLookup() }
 
     val hasBasalLayer = hasIob && basalData != null && !isDualAxis
 
@@ -301,23 +302,21 @@ fun SecondaryGraphCompose(
         processPoints(secondaryLineData, minTimestamp, minX, maxX)
     }
 
-    LaunchedEffect(processedSimpleSeries, processedDevSlopeMin, deviationColumns, processedIob, processedIobTreatments, processedCob, processedCarbs, processedBasalProfile, processedBasalActual, processedSecondary, processedActivityOverlay, maxX) {
+    LaunchedEffect(processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, processedIob, processedIobTreatments, processedCob, processedCarbs, processedBasalProfile, processedBasalActual, processedSecondary, processedActivityOverlay, maxX) {
         if (!hasRealTimeRange) return@LaunchedEffect
 
         val slots = mutableListOf<SeriesSlot>()
         modelProducer.runTransaction {
-            // Column layer data (deviations) — must come first to match layer order
-            if (deviationColumns != null) {
-                val (allX, allY, typeLookup) = deviationColumns
-                deviationTypeLookup.map = typeLookup
-                columnSeries { series(x = allX, y = allY) }
-            } else {
-                deviationTypeLookup.map = emptyMap()
-                columnSeries { series(x = listOf(0.0, 1.0), y = listOf(0.0, 0.0)) }
-            }
-
             // Primary line layer data
             lineSeries {
+                // Deviation lines (per-type step lines with gradient) — rendered first so other series draw on top
+                if (processedDeviationLines != null) {
+                    for ((type, yValues) in processedDeviationLines.series) {
+                        series(x = processedDeviationLines.allX, y = yValues)
+                        slots.add(SeriesSlot.DeviationLine(type))
+                    }
+                }
+
                 // IOB line
                 if (processedIob.isNotEmpty()) {
                     series(x = processedIob.map { it.first }, y = processedIob.map { it.second })
@@ -435,18 +434,19 @@ fun SecondaryGraphCompose(
             for (slot in activeSlots) {
                 add(
                     when (slot) {
-                        SeriesSlot.IobLine         -> iobLineStyle.iobLine
-                        SeriesSlot.SmallSmb        -> iobLineStyle.smallSmbLine
-                        SeriesSlot.MediumSmb       -> iobLineStyle.mediumSmbLine
-                        SeriesSlot.LargeSmb        -> iobLineStyle.largeSmbLine
-                        SeriesSlot.NormalBolus     -> iobLineStyle.bolusLine
-                        SeriesSlot.ExtBolus        -> iobLineStyle.extBolusLine
-                        SeriesSlot.CobLine         -> cobLineStyle.cobLine
-                        SeriesSlot.FailoverDots    -> cobLineStyle.failoverDotsLine
-                        SeriesSlot.CarbsMarker     -> cobLineStyle.carbsLine
-                        SeriesSlot.DevSlopeMin     -> createDevSlopeMinLine()
-                        SeriesSlot.ActivityOverlay -> createSeriesLine(SeriesType.ACTIVITY, seriesColors)
-                        is SeriesSlot.SimpleLine   -> createSeriesLine(slot.type, seriesColors)
+                        is SeriesSlot.DeviationLine -> createDeviationLine(slot.type)
+                        SeriesSlot.IobLine          -> iobLineStyle.iobLine
+                        SeriesSlot.SmallSmb         -> iobLineStyle.smallSmbLine
+                        SeriesSlot.MediumSmb        -> iobLineStyle.mediumSmbLine
+                        SeriesSlot.LargeSmb         -> iobLineStyle.largeSmbLine
+                        SeriesSlot.NormalBolus      -> iobLineStyle.bolusLine
+                        SeriesSlot.ExtBolus         -> iobLineStyle.extBolusLine
+                        SeriesSlot.CobLine          -> cobLineStyle.cobLine
+                        SeriesSlot.FailoverDots     -> cobLineStyle.failoverDotsLine
+                        SeriesSlot.CarbsMarker      -> cobLineStyle.carbsLine
+                        SeriesSlot.DevSlopeMin      -> createDevSlopeMinLine()
+                        SeriesSlot.ActivityOverlay  -> createSeriesLine(SeriesType.ACTIVITY, seriesColors)
+                        is SeriesSlot.SimpleLine    -> createSeriesLine(slot.type, seriesColors)
                     }
                 )
             }
@@ -535,39 +535,6 @@ fun SecondaryGraphCompose(
         verticalAxisPosition = Axis.Position.Vertical.Start
     )
 
-    // Deviation column layer — temperature anomalies pattern, per-entry color.
-    // Max thickness ~32dp — larger values inflate Vico's maxPointSize beyond the normalizer,
-    // breaking pixel-based scroll/zoom sync with the BG graph.
-    val positiveColumn = rememberLineComponent(fill = Fill(DEVIATION_COLOR_POSITIVE), thickness = 32.dp)
-    val negativeColumn = rememberLineComponent(fill = Fill(DEVIATION_COLOR_NEGATIVE), thickness = 32.dp)
-    val equalColumn = rememberLineComponent(fill = Fill(DEVIATION_COLOR_EQUAL), thickness = 32.dp)
-    val uamColumn = rememberLineComponent(fill = Fill(DEVIATION_COLOR_UAM), thickness = 32.dp)
-    val csfColumn = rememberLineComponent(fill = Fill(DEVIATION_COLOR_CSF), thickness = 32.dp)
-    val deviationColumnProvider = remember(positiveColumn, negativeColumn, equalColumn, uamColumn, csfColumn, deviationTypeLookup) {
-        object : ColumnCartesianLayer.ColumnProvider {
-            override fun getColumn(
-                entry: ColumnCartesianLayerModel.Entry,
-                seriesIndex: Int,
-                extraStore: ExtraStore
-            ) = when (deviationTypeLookup.map[entry.x]) {
-                DeviationType.POSITIVE -> positiveColumn
-                DeviationType.NEGATIVE -> negativeColumn
-                DeviationType.EQUAL    -> equalColumn
-                DeviationType.UAM      -> uamColumn
-                DeviationType.CSF      -> csfColumn
-                null                   -> equalColumn
-            }
-
-            override fun getWidestSeriesColumn(seriesIndex: Int, extraStore: ExtraStore) = positiveColumn
-        }
-    }
-    val deviationColumnLayer = rememberColumnCartesianLayer(
-        columnProvider = deviationColumnProvider,
-        columnCollectionSpacing = 0.dp,
-        rangeProvider = primaryRangeProvider,
-        verticalAxisPosition = Axis.Position.Vertical.Start
-    )
-
     // Common axis components
     val startAxis = VerticalAxis.rememberStart(
         label = rememberTextComponent(
@@ -593,7 +560,7 @@ fun SecondaryGraphCompose(
         )
         CartesianChartHost(
             chart = rememberCartesianChart(
-                deviationColumnLayer, primaryLayer, basalLayer,
+                primaryLayer, basalLayer,
                 startAxis = startAxis,
                 bottomAxis = bottomAxis, decorations = decorations, getXStep = { 1.0 }
             ),
@@ -611,7 +578,7 @@ fun SecondaryGraphCompose(
         )
         CartesianChartHost(
             chart = rememberCartesianChart(
-                deviationColumnLayer, primaryLayer, secondaryLayer,
+                primaryLayer, secondaryLayer,
                 startAxis = startAxis,
                 bottomAxis = bottomAxis, decorations = decorations, getXStep = { 1.0 }
             ),
@@ -624,7 +591,7 @@ fun SecondaryGraphCompose(
     } else {
         CartesianChartHost(
             chart = rememberCartesianChart(
-                deviationColumnLayer, primaryLayer,
+                primaryLayer,
                 startAxis = startAxis,
                 bottomAxis = bottomAxis, decorations = decorations, getXStep = { 1.0 }
             ),
@@ -642,6 +609,7 @@ fun SecondaryGraphCompose(
 // =========================================================================
 
 private sealed class SeriesSlot {
+    data class DeviationLine(val type: DeviationType) : SeriesSlot()
     data object IobLine : SeriesSlot()
     data object SmallSmb : SeriesSlot()
     data object MediumSmb : SeriesSlot()
@@ -995,7 +963,7 @@ private fun formatCarbsLabel(value: Double): String {
 }
 
 // =========================================================================
-// Deviation column colors (match legacy @color/deviation* values)
+// Deviation line styles (per-type step lines with gradient fill)
 // =========================================================================
 
 private val DEVIATION_COLOR_POSITIVE = Color(0xC000FF00) // green (matches @color/deviationGreen)
@@ -1004,12 +972,28 @@ private val DEVIATION_COLOR_EQUAL = Color(0x72000000)    // black (matches @colo
 private val DEVIATION_COLOR_UAM = Color(0xFFC9BD60)      // yellow (matches @color/uam)
 private val DEVIATION_COLOR_CSF = Color(0xC8666666)      // grey (matches @color/deviationGrey)
 
-/**
- * Thread-safe holder for deviation type lookup map.
- * Populated in LaunchedEffect (composition thread), read by ColumnProvider.getColumn() (render thread).
- */
-private class DeviationTypeLookup {
-
-    @Volatile var map: Map<Double, DeviationType> = emptyMap()
+private fun deviationColor(type: DeviationType): Color = when (type) {
+    DeviationType.POSITIVE -> DEVIATION_COLOR_POSITIVE
+    DeviationType.NEGATIVE -> DEVIATION_COLOR_NEGATIVE
+    DeviationType.EQUAL    -> DEVIATION_COLOR_EQUAL
+    DeviationType.UAM      -> DEVIATION_COLOR_UAM
+    DeviationType.CSF      -> DEVIATION_COLOR_CSF
 }
+
+/** Step line with solid area fill and thin stroke, per-deviation-type color */
+private fun createDeviationLine(type: DeviationType): LineCartesianLayer.Line {
+    val color = deviationColor(type)
+    return LineCartesianLayer.Line(
+        fill = LineCartesianLayer.LineFill.single(Fill(color)),
+        stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 0.dp),
+        areaFill = LineCartesianLayer.AreaFill.single(Fill(color.copy(alpha = 0.5f))),
+        pointConnector = Square
+    )
+}
+
+/** Processed deviation data split by type for multi-series line rendering */
+private data class ProcessedDeviationLines(
+    val allX: List<Double>,
+    val series: Map<DeviationType, List<Double>>
+)
 
