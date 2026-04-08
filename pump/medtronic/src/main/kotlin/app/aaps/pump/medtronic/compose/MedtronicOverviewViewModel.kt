@@ -12,8 +12,11 @@ import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -69,6 +72,7 @@ sealed class MedtronicOverviewEvent {
 @HiltViewModel
 class MedtronicOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
+    private val ch: ConcentrationHelper,
     private val medtronicPumpPlugin: MedtronicPumpPlugin,
     private val medtronicPumpStatus: MedtronicPumpStatus,
     private val medtronicUtil: MedtronicUtil,
@@ -165,7 +169,7 @@ class MedtronicOverviewViewModel @Inject constructor(
 
         // Base basal rate
         val basalText = "(" + medtronicPumpStatus.activeProfileName + ")  " +
-            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, medtronicPumpPlugin.baseBasalRate.cU)
+            ch.basalRateString(medtronicPumpPlugin.baseBasalRate, true)
         add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label), value = basalText))
 
         // Temp basal
@@ -249,24 +253,24 @@ class MedtronicOverviewViewModel @Inject constructor(
     }
 
     private fun buildLastBolus(): String {
-        val bolus = medtronicPumpStatus.lastBolusAmount
+        val bolus = medtronicPumpStatus.lastBolusAmount?.let { PumpInsulin(it) }
         val bolusTime = medtronicPumpStatus.lastBolusTime
         if (bolus == null || bolusTime == null) return ""
 
         val agoMsc = System.currentTimeMillis() - bolusTime.time
         val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
-        val unit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
         val ago = when {
             agoMsc < 60 * 1000 -> rh.gs(R.string.medtronic_pump_connected_now)
             bolusMinAgo < 60   -> dateUtil.minAgo(rh, bolusTime.time)
             else               -> dateUtil.hourAgo(bolusTime.time, rh)
         }
-        return rh.gs(R.string.mdt_last_bolus, bolus, unit, ago)
+        return ch.insulinAmountAgoString(bolus, ago)
     }
 
     private fun buildTempBasal(): String {
         val tbrRemainingTime = medtronicPumpStatus.tbrRemainingTime ?: return ""
-        return rh.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime)
+        val tempBasalAmount = medtronicPumpStatus.tempBasalAmount?.let { PumpRate(it) } ?: return ""
+        return rh.gs(R.string.mdt_tbr_remaining, ch.basalRateString(tempBasalAmount, true), tbrRemainingTime)
     }
 
     private fun buildBattery(): Pair<String, StatusLevel> {
@@ -287,8 +291,8 @@ class MedtronicOverviewViewModel @Inject constructor(
     }
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
-        val remaining = medtronicPumpStatus.reservoirRemainingUnits
-        val full = medtronicPumpStatus.reservoirFullUnits
+        val remaining = ch.fromPump(PumpInsulin(medtronicPumpStatus.reservoirRemainingUnits))
+        val full = ch.fromPump(PumpInsulin(medtronicPumpStatus.reservoirFullUnits.toDouble())).toInt()
         val text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, remaining, full)
         val level = when {
             remaining <= 20.0 -> StatusLevel.CRITICAL
