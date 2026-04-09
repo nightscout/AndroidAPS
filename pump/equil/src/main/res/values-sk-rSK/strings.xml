@@ -15,6 +15,13 @@
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Hotovo</string>
     <string name="equil_title_dressing">Vymeňte zásobník</string>
+    <string name="equil_title_assemble">Zložiť pumpu</string>
+    <string name="equil_title_serial">Spárovať zariadenie</string>
+    <string name="equil_title_fill">Plnenie / Doplňovanie</string>
+    <string name="equil_title_attach">Pripojiť pumpu</string>
+    <string name="equil_title_air">Naplniť kanylu</string>
+    <string name="equil_title_unpair_detach">Odpojiť pumpu</string>
+    <string name="equil_title_unpair_confirm">Potvrdiť odpárovanie</string>
     <string name="equil_title_history_events">História udalostí</string>
     <string name="equil_tone">Tón výstrahy</string>
     <string name="equil_tone_mode_mute">Stíšiť</string>
@@ -22,6 +29,7 @@
     <string name="equil_tone_mode_tone">Iba zvuky</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrácie a zvuky</string>
     <string name="equil_unit_u">%1$s U</string>
+    <string name="equil_unbind_content">Táto operácia zastaví vydávanie inzulínu, a zasunie piest pumpy do východzej polohy! Taktiež zruší spárovanie!</string>
     <string name="equil_ble_config_confirmation_title">Spárovať Equil Patch pumpu</string>
     <string name="equil_error">Chyba pripojenia</string>
     <string name="equil_change">Vymeniť pumpu</string>
@@ -74,6 +82,7 @@
     <string name="equil_command_connect_error">Chyba pripájania pumpy</string>
     <string name="equil_command_connect_no_response">Žiadna odpoveď od pumpy</string>
     <string name="equil_command__unknown">Neznámy stav príkazu</string>
+    <string name="equil_install">Zaveďte kanylu a pripojte pumpu na telo</string>
     <string name="equil_settings_alarm_battery">Upozornenie na nízky stav batérie</string>
     <string name="equil_settings_alarm_insulin">Výstraha nízkej hladiny inzulínu</string>
     <string name="equil_init_insulin_error">Inicializácia zásobníka nie je dokončená</string>
@@ -132,12 +141,15 @@
         <item quantity="other">%1$d dní</item>
     </plurals>
     <string name="equil_support_error">Verzia firmvéru je príliš stará. Nie je podporovaná.</string>
+    <string name="equil_password_tips">Ak chcete spárovať pumpu Equil v5.3, nastavte heslo. Toto heslo bude v budúcnosti použité aj pre zrušenie párovania, preto si ho zapamätajte.
+Pravidlo pre tvorbu hesla: musí mať 4 znaky a musí obsahovať znaky z tejto skupiny ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Nastaviť heslo pre spárovanie</string>
     <string name="equil_hint1">Po pripojení pumpy k základni zvoľte, či chcete vyprázdniť vzduch z vnútornej ihly.</string>
     <string name="equil_unbind">Zrušiť párovanie zariadenia</string>
     <string name="equil_device_unpaired">Zariadenie odpárované</string>
     <string name="equil_assemble">Prosím, zostavte pumpu, naplnený zásobník a nabitú batériu</string>
     <string name="equil_devices_number">Zadajte ID novej pumpy</string>
+    <string name="equil_pair_password_title">Zadajte heslo pre %1$s</string>
     <string name="equil_insert">Prosím naplňte zásobník, pokiaľ sa na ihle neobjaví kvapka inzulínu</string>
     <string name="equil_insert2">Pumpa nesmie byť pripojená k základni.</string>
     <string name="equil_attach">Pripojte pumpu k základni</string>
