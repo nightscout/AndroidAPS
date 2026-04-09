@@ -62,7 +62,6 @@
     <string name="overview_buttons_selection">Tlačidlá</string>
     <string name="not_available_full">Nedostupný</string>
     <string name="data_status">Stav dát glykémie</string>
-    <string name="default_temptargets">Predvolené nastavenie dočasných cieľov</string>
     <string name="fill_bolus_title">Štandardné množstvo inzulínu pre Plnenie/Doplňovanie</string>
     <string name="run_question">Spustiť %s?</string>
     <!--    OverviewMenu-->
