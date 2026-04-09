@@ -95,17 +95,17 @@
     <string name="percentage_label">Procentaj</string>
     <string name="permanent_profile_switch">Permanent (0 = nicio limită de durată)</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
-    <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
-    <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
-    <string name="suspendloopfor10h">Suspendă bucla pentru 10h</string>
-    <string name="disconnectpump">Deconectează pompa</string>
-    <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 minute</string>
-    <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 minute</string>
-    <string name="disconnectpumpfor1h">Deconectează pompa pentru 1h</string>
-    <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
-    <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
-    <string name="resume">Restabilește</string>
+    <string name="suspendloopfor1h">Suspendați bucla pentru 1h</string>
+    <string name="suspendloopfor2h">Suspendați bucla pentru 2h</string>
+    <string name="suspendloopfor3h">Suspendați bucla pentru 3h</string>
+    <string name="suspendloopfor10h">Suspendați bucla pentru 10h</string>
+    <string name="disconnectpump">Deconectați pompa</string>
+    <string name="disconnectpumpfor15m">Deconectați pompa pentru 15 minute</string>
+    <string name="disconnectpumpfor30m">Deconectați pompa pentru 30 minute</string>
+    <string name="disconnectpumpfor1h">Deconectați pompa pentru 1h</string>
+    <string name="disconnectpumpfor2h">Deconectați pompa pentru 2h</string>
+    <string name="disconnectpumpfor3h">Deconectați pompa pentru 3h</string>
+    <string name="resume">Restabiliți</string>
     <string name="reconnect">Reconectați pompa</string>
     <string name="duration15m">15 minute</string>
     <string name="duration30m">30 minute</string>
@@ -114,8 +114,8 @@
     <string name="duration3h">3 ore</string>
     <string name="duration10h">10 ore</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">corectează rezultatul cu %</string>
-    <string name="a11_correction_units">corectează rezultatul cu unități</string>
+    <string name="a11_correction_percentage">corectați rezultatul cu %</string>
+    <string name="a11_correction_units">corectați rezultatul cu unități</string>
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="missing_carbs">Lipsă %1$d g</string>
@@ -124,7 +124,7 @@
     <string name="wizard_include_info">Atingeți pentru a include/exclude din calcul:\n• BG - glicemie (inclusă la început)\n• TT - țintă temporară (inclusă la început)\n• Tendința Glicemiei (ultima stare amintită)\n• IOB - insulină la bord (inclusă la început)\n• COB - carbohidrați de la bord (ultima stare amintită)</string>
     <string name="wizard_bg_age">Vârsta glicemiei: %1$d min</string>
     <string name="a11y_current_bg">valoarea actuală a glicemiei</string>
-    <string name="carb_time_label">Ora carbohidrați</string>
+    <string name="carb_time_label">Oră carbohidrați</string>
     <string name="a11y_set_carb_timer">stabilește alarma pentru timpul carbohidraților</string>
     <string name="show_calculation">Afișați calculul</string>
     <!-- Treatments -->
@@ -140,8 +140,8 @@
     <string name="show_invalidated">Afișați invalidate</string>
     <string name="hide_invalidated">Ascunde invalidat</string>
     <string name="careportal_remove_started_events">Eliminare intrări pornire AAPS</string>
-    <string name="hide_loop">Ascunde bucla</string>
-    <string name="show_loop">Arată bucla</string>
+    <string name="hide_loop">Ascundeți bucla</string>
+    <string name="show_loop">Afișați bucla</string>
     <string name="user_entry">Înregistrare utilizator</string>
     <string name="clone_label">Clonați</string>
     <string name="add_new_profile">Adăugați un profil nou</string>
@@ -253,11 +253,11 @@
     <string name="quick_launch_category_quick_wizard">Asistent Rapid</string>
     <string name="quick_launch_category_automation">Automatizare</string>
     <string name="quick_launch_all_selected">Toate articolele selectate</string>
-    <string name="quick_launch_no_quick_wizard">Adaugă intrările de Asistent rapid pentru a le folosi aici</string>
+    <string name="quick_launch_no_quick_wizard">Adăugați intrările de Asistent Rapid pentru a le folosi aici</string>
     <string name="quick_launch_no_automation">Creați acțiuni automatizate ale utilizatorilor pentru a le folosi aici</string>
-    <string name="quick_launch_no_tt_presets">Adaugă Țintele Temporare presetate pentru a le folosi aici</string>
-    <string name="quick_launch_no_profiles">Creează profiluri în Profilul Local pentru a le folosi aici</string>
-    <string name="quick_launch_edit_profile_preset">Editează presetarea profilului</string>
+    <string name="quick_launch_no_tt_presets">Adăugați Țintele Temporare presetate pentru a le folosi aici</string>
+    <string name="quick_launch_no_profiles">Creați profiluri în Profilul Local pentru a le folosi aici</string>
+    <string name="quick_launch_edit_profile_preset">Editați presetarea profilului</string>
     <string name="quick_launch_profile_percentage">Procentaj</string>
     <string name="quick_launch_profile_duration">Durată</string>
     <string name="quick_launch_profile_permanent">Permanent</string>
