@@ -62,7 +62,6 @@
     <string name="overview_buttons_selection">按鈕</string>
     <string name="not_available_full">不可用</string>
     <string name="data_status">血糖資料狀態</string>
-    <string name="default_temptargets">預設臨時目標</string>
     <string name="fill_bolus_title">填充/預填充標準胰島素量</string>
     <string name="run_question">運行 %s？</string>
     <!--    OverviewMenu-->
