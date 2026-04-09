@@ -60,7 +60,6 @@
     <string name="overview_buttons_selection">Knoppen</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="data_status">BG data status</string>
-    <string name="default_temptargets">Standaard tijdelijke streefdoelen</string>
     <string name="fill_bolus_title">Ontlucht/Vul standaard insuline hoeveelheden</string>
     <string name="run_question">%s uitvoeren?</string>
     <!--    OverviewMenu-->
