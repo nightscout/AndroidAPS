@@ -46,7 +46,6 @@
     <string name="overview_buttons_selection">Botões</string>
     <string name="not_available_full">Indisponível</string>
     <string name="data_status">Estado dos dados de glicemia</string>
-    <string name="default_temptargets">Alvo-Temp padrão</string>
     <string name="fill_bolus_title">Purgar/Preencher os valores padrões</string>
     <string name="run_question">Executar %s?</string>
     <!--    OverviewMenu-->
