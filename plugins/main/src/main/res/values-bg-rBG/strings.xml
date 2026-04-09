@@ -46,7 +46,6 @@
     <string name="overview_buttons_selection">Бутони</string>
     <string name="not_available_full">Недостъпно</string>
     <string name="data_status">Статус на данни за КЗ</string>
-    <string name="default_temptargets">Временна цел по подразбиране</string>
     <string name="fill_bolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="run_question">Пусни %s?</string>
     <!--    OverviewMenu-->
