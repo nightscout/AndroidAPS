@@ -62,7 +62,6 @@
     <string name="overview_buttons_selection">Butoane</string>
     <string name="not_available_full">Nu este disponibil</string>
     <string name="data_status">Stare date glicemie</string>
-    <string name="default_temptargets">Ținte-Temporare implicite</string>
     <string name="fill_bolus_title">Umplere/Amorsare - cantități standard de insulină</string>
     <string name="run_question">Executați %s?</string>
     <!--    OverviewMenu-->
