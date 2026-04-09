@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">闭环禁用</string>
-    <string name="smscommunicator_pump_disconnected">泵已断开</string>
     <string name="calculator_label">计算器</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">本地配置文件</string>
-    <string name="a11y_add_new_to_list">新增条目到列表</string>
-    <string name="do_you_want_switch_profile">是否要切换配置文件并放弃对当前配置文件所作的更改?</string>
-    <string name="save_or_reset_changes_first">首先保存或重置当前更改</string>
-    <string name="delete_current_profile">删除当前配置文件</string>
-    <string name="units_colon">单位:</string>
     <!-- Actions -->
     <string name="actions">手动操作</string>
     <!-- manage moved to core:ui module -->
@@ -43,7 +34,6 @@
     <string name="overview_shortname">主页</string>
     <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
     <string name="overview_buttons_selection">按钮</string>
-    <string name="not_available_full">不可用</string>
     <string name="data_status">血糖数据状态</string>
     <string name="fill_bolus_title">输注/充盈标准胰岛素剂量</string>
     <string name="run_question">运行 %s？</string>
