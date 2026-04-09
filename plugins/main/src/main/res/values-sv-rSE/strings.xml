@@ -46,7 +46,6 @@
     <string name="overview_buttons_selection">Knappar</string>
     <string name="not_available_full">Ej tillgängligt</string>
     <string name="data_status">BG datastatus</string>
-    <string name="default_temptargets">Standardmålvärden</string>
     <string name="fill_bolus_title">Standardvärden för påfyllning/förfyllning </string>
     <string name="run_question">Kör %s?</string>
     <!--    OverviewMenu-->
