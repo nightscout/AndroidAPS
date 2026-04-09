@@ -46,7 +46,6 @@
     <string name="overview_buttons_selection">Knapper</string>
     <string name="not_available_full">Ikke tilgængelig</string>
     <string name="data_status">BG data status</string>
-    <string name="default_temptargets">Standard Midlertidige mål</string>
     <string name="fill_bolus_title">Fyld / Klargør standard insulinmængder</string>
     <string name="run_question">Kør %s?</string>
     <!--    OverviewMenu-->
