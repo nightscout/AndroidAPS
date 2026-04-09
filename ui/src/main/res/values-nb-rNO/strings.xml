@@ -217,7 +217,6 @@
     <string name="use_black_color">Bruk svart farge</string>
     <string name="widget_configuration">Widget konfigurasjon</string>
     <string name="until_changed">Inntil endret</string>
-    <string name="limitations">Begrensninger</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Tillatelser kreves</string>
     <string name="permission_sheet_subtitle">Noen tillatelser er nødvendige for at appen skal fungere ordentlig</string>
