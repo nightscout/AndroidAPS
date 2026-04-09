@@ -217,7 +217,6 @@
     <string name="use_black_color">使用黑色</string>
     <string name="widget_configuration">小工具設定</string>
     <string name="until_changed">直到更改</string>
-    <string name="limitations">限制</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">需要權限</string>
     <string name="permission_sheet_subtitle">此應用程式需要部分權限才能正常運作</string>
