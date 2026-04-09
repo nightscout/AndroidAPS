@@ -641,8 +641,10 @@
     <string name="wizard_include_iob">Includi IOB</string>
     <string name="wizard_include_cob">Includi IOB</string>
     <string name="wizard_advanced">Avanzate</string>
+    <string name="wizard_calculation">Calcolo</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="carb_equal_zero_no_action">CHO = 0. Nessuna azione intrapresa!</string>
+    <string name="bolus_equal_zero_no_action">Bolo = 0. Nessuna azione intrapresa!</string>
     <string name="wizard_no_insulin_required">Insulina non necessaria!</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
@@ -655,6 +657,7 @@
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
     <string name="wizard_explain_trend">Trend di 15\': %1$.2fU</string>
+    <string name="wizard_trend_detail">Tendenza 15min (%1$s %2$s)</string>
     <string name="wizard_explain_percent">Percentuale: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Violazione vincolo insulina!\nImpossibile erogare %1$.2fU</string>
     <string name="wizard_explain_tt">TempT: %1$s</string>
@@ -683,6 +686,7 @@
     <string name="tempbasal_label">Basale temporanea</string>
     <string name="extended_bolus_label">Bolo Esteso</string>
     <string name="serial_number">Numero seriale</string>
+    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">Disconnesso</string>
     <string name="connecting">Connessione</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Connetti al micro: cliccato</string>
@@ -696,6 +700,7 @@
     <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiato</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
     <string name="temp_basal_delivery_error">Errore erogazione basale temporanea</string>
+    <string name="ebstopsloop">L\'uso della funzione bolo esteso interromperà la modalità loop chiuso per il tempo di esecuzione del bolo esteso. Lo vuoi davvero?</string>
     <string name="not_set_short">Non impostato</string>
     <string name="pump_busy">Il micro è occupato</string>
     <string name="connection_error">Errore connessione micro</string>
@@ -704,6 +709,12 @@
     <string name="pairing">Associazione</string>
     <string name="initializing">Inizializzazione...</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Avviso</string>
+    <string name="retry" comment="Button label to retry a failed operation">Riprova</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Termina</string>
+    <string name="firmware" comment="Pump firmware version label">Firmware</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Velocità bolo</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Storico</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
@@ -714,7 +725,9 @@
     <string name="confirmation">Conferma</string>
     <string name="message">Messaggio</string>
     <string name="ok">OK</string>
+    <string name="next">Prossimo</string>
     <string name="cancel">Annulla</string>
+    <string name="dismiss">Cancella</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
     <string name="close">Chiudi</string>
@@ -728,6 +741,10 @@
     <string name="export_failed">Fallito</string>
     <string name="export_alert">SEGNALAZIONE</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze (%1$s)</string>
+    <string name="export_to">Esporta impostazioni</string>
+    <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà usata per crittografare le preferenze esportate.</string>
+    <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Impostazioni esportate</string>
     <string name="export_result_message_failed">Esportazione Impostazioni FALLITA!</string>
@@ -735,9 +752,56 @@
     <string name="export_result_message_expired">Esportazione impostazioni annullata: password scaduta. Esporta manualmente e (re)inserisci!</string>
     <string name="export_result_message_disabled">Attenzione (automazione): Esportazione impostazioni non abilitata!</string>
     <!-- Cloud export -->
+    <string name="export_cloud_success">Esportazione cloud riuscita</string>
+    <string name="export_cloud_failed">Esportazione cloud FALLITA!</string>
+    <string name="csv_exported">Voci utente esportate</string>
+    <string name="csv_export_failed">Voci utente NON esportate!</string>
+    <string name="logs_sent">Log inviati via email</string>
+    <string name="logs_send_failed">Impossibile inviare i log</string>
+    <string name="export_options">Opzioni di esportazione</string>
+    <string name="cloud_directory">Directory Cloud</string>
+    <string name="export_settings_local">Esporta impostazioni (locale)</string>
+    <string name="export_settings_cloud">Esporta impostazioni (Cloud)</string>
+    <string name="export_settings_both">Esporta impostazioni (Local+Cloud)</string>
+    <string name="import_settings_local">Importa impostazioni (locale)</string>
+    <string name="import_settings_cloud">Importa impostazioni (Cloud)</string>
+    <string name="import_settings_both">Importa impostazioni (Local/Cloud)</string>
+    <string name="send_logs_to_cloud">Esporta log su Cloud</string>
+    <string name="export_csv_to_cloud">Esporta in cloud le voci utente (csv)</string>
+    <string name="export_csv_to_local">Esporta in locale le voci utente (csv)</string>
+    <string name="setup_cloud_directory_first">Si prega di impostare la directory Cloud prima di utilizzare le impostazioni di esportazione</string>
+    <string name="cloud_token_expired_or_invalid">Autorizzazione all\'archiviazione cloud scaduta o non valida. Per favore ri-autorizza.</string>
     <!-- Export destination chip labels -->
+    <string name="chip_local">Locale</string>
+    <string name="chip_cloud">Cloud</string>
+    <string name="chip_email">Email</string>
+    <string name="send_logs">Invia log</string>
+    <string name="file_management">Gestione dei file</string>
+    <string name="database_management">Gestione del database</string>
+    <string name="data_choices">Scelta dei dati</string>
+    <string name="unattended_settings_export">Esportazione Impostazioni Non presidiata</string>
     <!-- Maintenance bottom sheet descriptions -->
+    <string name="maintenance_log_settings_desc">Configura i livelli di verbosità log</string>
+    <string name="maintenance_send_logs_desc">Condividi i file di log per la risoluzione dei problemi</string>
+    <string name="maintenance_delete_logs_desc">Rimuovi i vecchi file di log</string>
+    <string name="maintenance_aaps_directory_desc">Seleziona cartella di archiviazione locale</string>
+    <string name="maintenance_cloud_directory_desc">Configura l\'archiviazione cloud (Google Drive)</string>
+    <string name="maintenance_export_desc">Salva backup delle impostazioni crittografate</string>
+    <string name="maintenance_import_desc">Ripristina le impostazioni dal salvataggio</string>
+    <string name="maintenance_export_csv_desc">Esporta la cronologia del trattamento come foglio di calcolo</string>
+    <string name="maintenance_cleanup_db_desc">Rimuovi le vecchie voci dal database</string>
+    <string name="maintenance_reset_aps_results_desc">Cancella i risultati dell\'algoritmo memorizzati</string>
+    <string name="maintenance_reset_db_desc">Cancella tutti i database e riavvia</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Seleziona il Tipo di Storage</string>
+    <string name="clear_cloud_action">Cancella impostazioni</string>
+    <string name="clear_cloud_settings">Cancella Impostazioni Cloud</string>
+    <string name="clear_cloud_settings_message">Questo passerà alla memoria locale e cancellerà l\'autenticazione. Continuare?</string>
+    <string name="cloud_connection_failed">Connessione all\'archiviazione cloud fallita</string>
+    <string name="cloud_reauthorize_message">Connessione all\'archiviazione cloud non riuscita. Vuoi ri-autenticarti?</string>
+    <string name="reauthorize">Ri-autenticazione</string>
+    <string name="cloud_auth_success">Autenticazione archiviazione cloud riuscita</string>
+    <string name="authorization_status">Stato Autorizzazione</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decremento %1$s di %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>
@@ -749,19 +813,61 @@
     <string name="need_connect_permission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
+    <string name="pump_pair">Accoppiamento</string>
+    <string name="pump_unpair">Disaccoppia</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
+    <string name="ble_permissions_missing">Le autorizzazioni Bluetooth non sono concesse. Si prega di concederle nelle impostazioni dell\'app.</string>
     <string name="location_not_found_title">La localizzazione non è abilitata</string>
     <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferenze plugin</string>
     <!-- Navigation -->
+    <string name="nav_about">Informazioni su</string>
+    <string name="nav_about_desc">Visualizza la versione e le informazioni dell\'app</string>
+    <string name="nav_exit">Esci</string>
+    <string name="open_navigation">Apri navigazione</string>
+    <string name="nav_history_browser">Navigatore della cronologia</string>
+    <string name="nav_history_browser_desc">Sfoglia i dati storici e i grafici</string>
+    <string name="overview">Panoramica</string>
+    <string name="appearance">Aspetto</string>
+    <string name="manage">Gestisci</string>
+    <string name="localprofile">Profilo</string>
+    <string name="nav_setupwizard">Configurazione guidata</string>
+    <string name="nav_setupwizard_desc">Configura AAPS passo dopo passo</string>
+    <string name="statistics">Statistiche</string>
+    <string name="statistics_desc">Visualizza statistiche e rapporti</string>
+    <string name="tdd_cycle_pattern">Pattern ciclo TDD </string>
+    <string name="tdd_cycle_pattern_desc">Sovrapponi i totali giornalieri di insulina in cicli di 28 giorni per individuare i modelli ricorrenti</string>
+    <string name="nav_profile_helper">Assistente profilo</string>
+    <string name="nav_profile_helper_desc">Costruisci il tuo profilo in base al peso o al TDD</string>
+    <string name="quick_launch_configure">Configura Avvio Rapido</string>
+    <string name="quick_launch_configure_desc">Personalizza i pulsanti di azione rapida nella panoramica</string>
     <!-- Alerts -->
+    <string name="localalertsettings_title">Avvisi locali</string>
     <!-- Actions Screen -->
+    <string name="add">Aggiungi</string>
+    <string name="remove">Rimuovi</string>
+    <string name="reorder">Riordina</string>
+    <string name="actions">Azioni</string>
+    <string name="status">Stato</string>
+    <string name="pump_actions">Azioni micro</string>
+    <string name="tempbasal_button">Basale temporanea</string>
+    <string name="extended_bolus_button">Bolo esteso</string>
+    <string name="tools">Strumenti</string>
+    <string name="device_maintenance">Manutenzione del dispositivo</string>
+    <string name="from_label">Da</string>
+    <string name="to_label">A</string>
+    <string name="sensor_label">Sensore</string>
+    <string name="insulin_label">Insulina</string>
+    <string name="pb_label">Batteria micro</string>
+    <string name="cannula">Cannula</string>
+    <string name="patch_pump">Micro a patch</string>
     <!-- Site Rotation -->
+    <string name="select_location">Clicca qui sotto per selezionare il sito</string>
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
@@ -782,6 +888,8 @@
     <string name="cleanup_db_confirm">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.</string>
     <string name="cleanup_db_confirm_sync">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.\nFarlo velocizzerà considerevolmente la sincronizzazione completa.</string>
     <string name="cleared_entries">Elementi cancellati</string>
+    <string name="reset_db_confirm">Sei sicuro di voler resettare i risultati di APS?</string>
+    <string name="reset_aps_results_confirm">Sei sicuro di voler resettare i risultati di APS?</string>
     <!--    Weekday-->
     <string name="weekday_sunday_short">Dom</string>
     <string name="weekday_saturday_short">Sab</string>
@@ -801,6 +909,7 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="format_insulin_units_signed">%1$+.2f U</string>
     <string name="percent_rate_duration">Velocità: %1$.2f%% (%2$.2f U/h) Durata: %3$d min</string>
     <string name="rate_percent_duration">Velocità: %1$.2f U/h (%2$.2f%%) Durata: %3$d min</string>
     <string name="percent_rate_duration_formatted"><![CDATA[<b>Velocità</b>: %1$.2f%% (%2$.2f U/h)<br><b>Durata</b>: %3$d min<br>]]></string>
@@ -808,7 +917,37 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS riproduce audio"</string>
     <!-- ProfileEditor -->
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
+    <string name="target_short">TARG</string>
+    <string name="profile_name">Nome profilo:</string>
+    <string name="edit_profile_name">Modifica nome profilo</string>
+    <string name="units_colon">Unità:</string>
+    <string name="unsaved_changes">Modifiche non salvate</string>
+    <string name="unsaved_changes_message">Hai delle modifiche non salvate. Cosa vuoi fare?</string>
+    <string name="discard">Scarta</string>
+    <string name="ic_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'IC. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
+    <string name="isf_dynamic_label_warning">Il tuo algoritmo può fornire il calcolo dinamico dell\'ISF. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
+    <string name="add_time_block">Aggiungi blocco orario</string>
+    <string name="remove_entry">Rimuovi elemento</string>
+    <string name="target_low_label">Basso</string>
+    <string name="target_high_label">Alto</string>
+    <string name="select_profile">Seleziona profilo da modificare</string>
+    <string name="a11y_add_new_profile">aggiungi nuovo profilo</string>
+    <string name="a11y_clone_profile">clona profilo corrente</string>
+    <string name="a11y_delete_current_profile">elimina profilo corrente</string>
     <!--    Search-->
+    <string name="search">Cerca</string>
+    <string name="search_preferences">Cerca preferenze</string>
+    <string name="clear">Pulisci</string>
+    <string name="search_category_categories">Categorie di preferenze</string>
+    <string name="search_category_preferences">Preferenze</string>
+    <string name="search_category_dialogs">Finestre di dialogo</string>
+    <string name="search_category_plugins">Plugins</string>
+    <string name="search_category_wiki">Documentazione</string>
+    <string name="wiki_search_offline">La ricerca della documentazione richiede connessione internet</string>
+    <string name="no_search_results">Nessun risultato trovato</string>
+    <string name="search_plugin_disabled">Plugin %1$s disabilitato</string>
     <!--    Food Management -->
     <string name="food_management">Cibo</string>
     <string name="food_deleted">Cibo eliminato</string>
@@ -830,9 +969,63 @@
     <string name="label_protein_g">Proteine (g)</string>
     <string name="label_energy_kj">Energia (kJ)</string>
     <!--    Log Settings-->
+    <string name="nav_logsettings">Impostazioni Log</string>
+    <string name="resettodefaults">Ripristina valori predefiniti</string>
     <!--    Maintenance-->
+    <string name="maintenance">Manutenzione</string>
+    <string name="description_maintenance">Fornisce numerose funzioni per la manutenzione (es. invio log, eliminazione log).</string>
+    <string name="log_files">File di log</string>
+    <string name="send_all_logs">Invia log via email</string>
+    <string name="delete_logs">Elimina log</string>
+    <string name="logs_deleted">Log cancellati</string>
+    <string name="aaps_directory">Directory AAPS</string>
+    <string name="import_setting">Importa impostazioni</string>
+    <string name="miscellaneous">Varie</string>
     <!-- Import settings screen -->
+    <string name="import_decrypt_review">Decifra &amp; Review</string>
+    <string name="import_decrypt">Decripta</string>
+    <string name="import_master_password">Password Master</string>
+    <string name="import_decryption_password">Password di decifratura</string>
+    <string name="import_different_password_hint">Il file è stato crittografato con una password diversa</string>
+    <string name="import_wrong_password">Password errata</string>
+    <string name="import_btn">Importa</string>
+    <string name="import_anyway_btn">Importa Comunque</string>
+    <string name="import_restart_title">Impostazioni importate</string>
+    <string name="import_restart_message">Le impostazioni sono state importate. L\'applicazione deve riavviarsi.</string>
+    <string name="import_file_details">Dettagli file</string>
+    <string name="import_source_local">Locale</string>
+    <string name="import_source_cloud">Cloud</string>
+    <string name="import_load_more">Carica altro</string>
+    <string name="import_no_files">Nessun file di impostazioni trovato</string>
+    <string name="import_review_summary">Riepilogo importazione</string>
+    <string name="import_decrypt_ok">Decifratura riuscita. Pronto per l\'importazione.</string>
+    <string name="import_decrypt_warn">Decrittografia riuscita, ma ci sono avvertimenti.</string>
+    <string name="import_decrypt_error">Decifratura riuscita, ma l\'importazione non è possibile.</string>
+    <string name="import_check_before">Controlla le preferenze prima dell\'importazione:</string>
+    <string name="import_check_dangerous">Le preferenze non dovrebbero essere importate!</string>
+    <string name="import_check_cannot">Le preferenze non possono essere importate!</string>
+    <string name="import_explain_issues">Descrivi i problemi di importazione\u2026</string>
+    <string name="reset_aps_results">Resetta i risultati di APS</string>
+    <string name="database_cleanup">Pulizia database</string>
+    <string name="nav_resetdb">Reset database</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="ble_scan_select_pump">Seleziona il tuo micro dall\'elenco qui sotto</string>
+    <string name="ble_scan_scanning">Ricerca dispositivi in corso...</string>
     <!-- Graph configuration -->
+    <string name="graph_add">Aggiungi grafico</string>
+    <string name="graph_new">Nuovo grafico</string>
+    <string name="graph_edit">Modifica grafico</string>
+    <string name="graph_number">%1$d Grafico</string>
+    <string name="graph_bg">Grafico glicemia</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
 </resources>
