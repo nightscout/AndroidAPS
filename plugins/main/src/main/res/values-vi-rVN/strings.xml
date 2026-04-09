@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Vòng lặp đã tắt</string>
-    <string name="smscommunicator_pump_disconnected">Bơm đã ngắt kết nối</string>
     <string name="calculator_label">Calculator</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Tạo một Hồ sơ phản ánh nhu cầu insulin của bạn.</string>
-    <string name="a11y_add_new_to_list">thêm mới vào danh sách</string>
-    <string name="do_you_want_switch_profile">Bạn có muốn chuyển sang Hồ sơ khác và hủy các thay đổi đã thực hiện trên Hồ sơ hiện tại không?</string>
-    <string name="save_or_reset_changes_first">Lưu hoặc đặt lại các thay đổi hiện tại trước</string>
-    <string name="delete_current_profile">Xóa Hồ sơ hiện tại không?</string>
-    <string name="units_colon">Đơn vị:</string>
     <!-- Actions -->
     <string name="actions">Các thao tác</string>
     <!-- manage moved to core:ui module -->
@@ -59,7 +49,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Hiển thị trạng thái hiện tại của vòng lặp và các nút cho những thao tác thường dùng nhất</string>
     <string name="overview_buttons_selection">Phím bấm</string>
-    <string name="not_available_full">Không khả dụng</string>
     <string name="data_status">Trạng thái dữ liệu đường huyết</string>
     <string name="fill_bolus_title">Bơm/đẩy lượng insulin tiêu chuẩn</string>
     <string name="run_question">Chạy %s?</string>
