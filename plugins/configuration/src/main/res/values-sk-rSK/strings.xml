@@ -42,6 +42,7 @@
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
     <string name="configbuilder_aps_description">Aký APS algoritmus má byť použitý pre prispôsobenie liečby?</string>
     <string name="configbuilder_general_description">Toto sú všeobecné moduly, ktoré môžu byť užitočné.</string>
+    <string name="configbuilder_sync_description">Nahrávanie dát, synchronizácia a komunikácia pluginov.</string>
     <string name="configbuilder_constraints_description">Aké obmedzenia sú použité?</string>
     <string name="configbuilder_loop_description">Použi toto, pre aktiváciu integrácie AndroidAPS uzavretého okruhu.</string>
     <string name="configbuilder_insulin_description">Aký druh inzulínu používate?</string>
