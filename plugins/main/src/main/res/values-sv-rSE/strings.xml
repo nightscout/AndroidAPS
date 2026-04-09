@@ -39,7 +39,6 @@
     <string name="a11y_blood_glucose">blodglukos</string>
     <string name="a11y_bg_outdated">föråldrad</string>
     <string name="set_basal_question">Acceptera ny temp basal:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">Hem</string>
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
