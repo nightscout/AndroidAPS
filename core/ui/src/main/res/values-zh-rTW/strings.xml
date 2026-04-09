@@ -74,6 +74,7 @@
     <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
     <string name="confirm">確認</string>
     <string name="pump">幫浦</string>
+    <string name="pump_management">幫浦</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">上傳器</string>
@@ -316,6 +317,7 @@
     <string name="careportal_dad_alert">D.A.D. 警報</string>
     <string name="careportal_insulin_cartridge_change">胰島素匣更換</string>
     <string name="careportal_profileswitch">設定檔切換</string>
+    <string name="profile_management">設定檔</string>
     <string name="careportal_snackbolus">零食注射</string>
     <string name="careportal_mealbolus">餐食注射</string>
     <string name="careportal_correctionbolus">修正注射</string>
@@ -335,6 +337,7 @@
     <string name="treatment_insulin_desc">手動注射</string>
     <string name="treatment_carbs_desc">僅記錄碳水化合物</string>
     <string name="treatment_calculator_desc">計算注射量</string>
+    <string name="insulin_management">胰島素</string>
     <string name="manage_insulin_desc">管理並啟用胰島素組態</string>
     <string name="concentration_disable_blocked">在存在非 U100 胰島素時無法停用濃度支援。請先移除所有非 U100 的胰島素組態，並切換至 U100 設定檔。</string>
     <string name="simple_mode_blocked_by_concentration">使用非 U100 胰島素時無法啟用簡易模式。請先切換為 U100 胰島素。</string>
@@ -371,6 +374,7 @@
     <string name="custom">自訂</string>
     <string name="preset_settings">預設設定</string>
     <string name="activation">註冊</string>
+    <string name="temp_target_management">臨時目標</string>
     <string name="revert_to_defaults">還原為預設值</string>
     <string name="confirm_remove_preset">要移除預設 %1$s？</string>
     <string name="confirm_cancel_temp_target">要取消目前啟用中的臨時目標？</string>
@@ -660,6 +664,7 @@
     <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
     <string name="wizard_pump_not_available">無可用幫浦！</string>
     <string name="quickwizard">快速嚮導</string>
+    <string name="quickwizard_managemnt">快速嚮導</string>
     <!--    Preferences-->
     <string name="child">兒童</string>
     <string name="teenage">青少年</string>
@@ -941,6 +946,25 @@
     <string name="no_search_results">找不到結果</string>
     <string name="search_plugin_disabled">外掛 %1$s 已停用</string>
     <!--    Food Management -->
+    <string name="food_management">食物</string>
+    <string name="food_deleted">食物已刪除</string>
+    <string name="edit_food">編輯食物</string>
+    <string name="add_food">新增食物</string>
+    <string name="name">名稱</string>
+    <string name="category">類別</string>
+    <string name="subcategory">子類別</string>
+    <string name="portion">份量</string>
+    <string name="unit_label">單位</string>
+    <string name="fat">脂肪</string>
+    <string name="protein">蛋白質</string>
+    <string name="energy">能量</string>
+    <string name="undo">復原</string>
+    <string name="no_data">無資料</string>
+    <string name="manage_food_desc">管理食物資料庫項目</string>
+    <string name="label_carbs_g">碳水化合物 (g)</string>
+    <string name="label_fat_g">脂肪 (g)</string>
+    <string name="label_protein_g">蛋白質 (g)</string>
+    <string name="label_energy_kj">能量 (kJ)</string>
     <!--    Log Settings-->
     <string name="nav_logsettings">記錄設定</string>
     <string name="resettodefaults">重設為預設值</string>
