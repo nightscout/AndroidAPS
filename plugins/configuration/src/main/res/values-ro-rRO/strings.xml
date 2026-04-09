@@ -23,7 +23,7 @@
     <string name="status">Stare:</string>
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="profile">Profil</string>
-    <string name="doprofileswitch">Schimbă profilul</string>
+    <string name="doprofileswitch">Schimbați profilul</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
     <string name="setupwizard_sensitivity_description">Modulul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
