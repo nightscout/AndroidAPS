@@ -130,7 +130,6 @@
     <string name="use_black_color">Użyj czarnego koloru</string>
     <string name="widget_configuration">Konfiguracja widżetu</string>
     <string name="until_changed">Do zmiany</string>
-    <string name="limitations">Ograniczenia</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
