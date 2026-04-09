@@ -53,7 +53,6 @@
     <string name="a11y_blood_glucose">stężenie glukozy we krwi</string>
     <string name="a11y_bg_outdated">nieaktualna</string>
     <string name="set_basal_question">Akceptuj nową bazę tymczasową:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
