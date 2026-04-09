@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Petlja onemogućena</string>
-    <string name="smscommunicator_pump_disconnected">Pumpa nije povezana</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="a11y_add_new_to_list">dodaj novi na popis</string>
-    <string name="do_you_want_switch_profile">Želite li promijeniti profil i odbaciti promjene napravljene na trenutnom profilu?</string>
-    <string name="save_or_reset_changes_first">Prvo spremite ili poništite trenutne promjene</string>
-    <string name="delete_current_profile">Izbrisati trenutni profil?</string>
-    <string name="units_colon">Jedinice:</string>
     <!-- Actions -->
     <!-- manage moved to core:ui module -->
     <string name="description_actions">Nekoliko izbora za brzi pristup uobičajenim funkcijama</string>
