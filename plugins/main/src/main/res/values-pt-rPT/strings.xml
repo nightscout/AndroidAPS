@@ -45,7 +45,6 @@
     <string name="overview_buttons_selection">Botões</string>
     <string name="not_available_full">Indisponível</string>
     <string name="data_status">Estado dos dados da GLIC</string>
-    <string name="default_temptargets">Alvo-Temp padrão</string>
     <string name="fill_bolus_title">Valores Padrão de insulina para Purgar/Preencher</string>
     <string name="run_question">Executar %s?</string>
     <!--    OverviewMenu-->
