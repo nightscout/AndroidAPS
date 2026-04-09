@@ -53,7 +53,6 @@
     <string name="a11y_blood_glucose">glycémie</string>
     <string name="a11y_bg_outdated">obsolète</string>
     <string name="set_basal_question">Accepter nouveau basal temp. :</string>
-    <string name="overview_cgm">MGC</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ACCUEIL</string>
     <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
