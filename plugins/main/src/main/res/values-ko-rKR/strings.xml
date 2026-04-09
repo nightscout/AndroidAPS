@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop 중지됨</string>
-    <string name="smscommunicator_pump_disconnected">펌프가 연결되지 않았습니다.</string>
     <string name="calculator_label">계산기</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="a11y_add_new_to_list">목록에 새로운 것 추가하기</string>
-    <string name="do_you_want_switch_profile">프로파일을 변경하고 현재 프로파일에 대한 변경 사항을 버리시겠습니까?</string>
-    <string name="save_or_reset_changes_first">우선 현재 변경사항을을 저장하거나 재설정하세요</string>
-    <string name="delete_current_profile">현재 프로파일을 삭제 하시겠습니까?</string>
-    <string name="units_colon">단위:</string>
     <!-- Actions -->
     <string name="actions">실행</string>
     <!-- manage moved to core:ui module -->
@@ -43,7 +34,6 @@
     <string name="overview_shortname">홈</string>
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
     <string name="overview_buttons_selection">버튼</string>
-    <string name="not_available_full">알수없음</string>
     <string name="data_status">BG 데이터 상태</string>
     <string name="fill_bolus_title">교체/채움 기본 인슐린 양</string>
     <string name="run_question">%s 실행?</string>
