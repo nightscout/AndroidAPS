@@ -217,7 +217,6 @@
     <string name="use_black_color">Utilizați culoarea neagră</string>
     <string name="widget_configuration">Configurare widget</string>
     <string name="until_changed">Până la schimbare</string>
-    <string name="limitations">Limitări</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Permisiuni necesare</string>
     <string name="permission_sheet_subtitle">Unele permisiuni sunt necesare pentru ca aplicația să funcționeze corect</string>
