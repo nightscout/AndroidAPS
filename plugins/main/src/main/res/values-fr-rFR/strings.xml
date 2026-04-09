@@ -60,7 +60,6 @@
     <string name="overview_buttons_selection">Boutons</string>
     <string name="not_available_full">Non disponible</string>
     <string name="data_status">État des données Gly</string>
-    <string name="default_temptargets">Cibles Temporaires par défaut</string>
     <string name="fill_bolus_title">Insuline par défaut pour Amorcer/Remplir</string>
     <string name="run_question">Exécuter %s?</string>
     <!--    OverviewMenu-->
