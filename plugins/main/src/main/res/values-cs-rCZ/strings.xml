@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Smyčka zakázána</string>
-    <string name="smscommunicator_pump_disconnected">Pumpa odpojena</string>
     <string name="calculator_label">Kalkulačka</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">MPRF</string>
-    <string name="description_profile_local">Definujte profil popisující vaše potřeby inzulínu.</string>
-    <string name="a11y_add_new_to_list">přidat nový do seznamu</string>
-    <string name="do_you_want_switch_profile">Chcete přepnout profil a zahodit změny provedené v aktuálním profilu?</string>
-    <string name="save_or_reset_changes_first">Nejprve uložte nebo resetujte aktuální změny</string>
-    <string name="delete_current_profile">Odstranit aktuální profil?</string>
-    <string name="units_colon">Jednotky:</string>
     <!-- Actions -->
     <string name="actions">Akce</string>
     <!-- manage moved to core:ui module -->
@@ -57,7 +47,6 @@
     <string name="overview_shortname">PŘEH</string>
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
     <string name="overview_buttons_selection">Tlačítka</string>
-    <string name="not_available_full">Nedostupný</string>
     <string name="data_status">Stav glykémie</string>
     <string name="fill_bolus_title">Standardní množství inzulinu pro Plnění/Doplňování</string>
     <string name="run_question">Spustit %s?</string>
