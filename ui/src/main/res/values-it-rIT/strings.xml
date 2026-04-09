@@ -217,7 +217,6 @@
     <string name="use_black_color">Usa colore nero</string>
     <string name="widget_configuration">Configurazione widget</string>
     <string name="until_changed">Fino a Modifica</string>
-    <string name="limitations">Limitazioni</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Permessi richiesti</string>
     <string name="permission_sheet_subtitle">Sono necessari alcuni permessi affinché l\'app funzioni correttamente</string>
