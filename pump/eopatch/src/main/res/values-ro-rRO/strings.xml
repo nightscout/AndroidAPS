@@ -40,7 +40,7 @@ prin apăsarea manuală a portului de oprire a alarmei de pe plasture așa cum s
     <string name="patch_wake_up_desc_1">Umpleți un nou plasture cu insulină la temperatura camerei. Verificați unghiul seringii.</string>
     <string name="patch_wake_up_desc_2">Așteptați un semnal sonor.</string>
     <string name="patch_wake_up_pairing_info">Pe parcursul asocierii, vor fi afișate două mesaje de sistem Android. Este necesară confirmarea ambelor pentru a finaliza interconectarea Bluetooth.</string>
-    <string name="patch_start_pairing">Începe asocierea</string>
+    <string name="patch_start_pairing">Începeți asocierea</string>
     <string name="patch_connect_new">Plasturele se asociază</string>
     <string name="patch_connect_new_desc">Noul plasture se asociază.\nMențineți distanța dintre plasture și dispozitivul inteligent cât mai aproape posibil</string>
     <string name="patch_remove_needle_cap">Pregătiți-vă pentru atașarea plasturelui</string>
@@ -77,13 +77,13 @@ prin apăsarea manuală a portului de oprire a alarmei de pe plasture așa cum s
     <string name="insulin_suspend_msg4">Administrarea insulinei va fi suspendată.</string>
     <string name="string_activate_patch">Activați plasturele</string>
     <string name="string_discard_patch">Renunțați la plasture</string>
-    <string name="string_running">Rulează</string>
-    <string name="retry">Încearcă din nou</string>
+    <string name="string_running">Funcționare</string>
+    <string name="retry">Încercați din nou</string>
     <string name="string_are_you_sure_to_discard_current_patch">Sunteți sigur că renunțați la plasturele curent?</string>
     <string name="needle_insertion_error_1">Eroare la inserarea acului.</string>
     <string name="needle_insertion_error_3">Atingeți \'Dezactivează\' pentru a dezactiva plasturele.</string>
     <string name="string_suspend_time_insulin_delivery_title">Timp de suspendare bazală</string>
-    <string name="string_resume_insulin_delivery_title">Reluați livrarea insulinei</string>
+    <string name="string_resume_insulin_delivery_title">Reluați administrarea insulinei</string>
     <string name="string_resume_insulin_delivery_message">Suspendarea administrării de insulină s-a încheiat.\nAtingeți „Confirmă” pentru a relua administrarea de insulină.\n\nAdministrarea de insulină nu se va relua până când nu atingeți „Confirmă”.\nDacă nu atingeți „Confirmă”, puteți dezvolta hiperglicemie.</string>
     <string name="string_suspended_insulin_delivery_message">Administrarea insulinei este suspendată.</string>
     <string name="string_resumed_insulin_delivery_message">Administrarea insulinei este reluată.</string>
