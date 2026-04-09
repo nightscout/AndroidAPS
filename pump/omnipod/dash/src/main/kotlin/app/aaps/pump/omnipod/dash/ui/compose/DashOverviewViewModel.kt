@@ -66,6 +66,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Duration
+import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
@@ -184,6 +185,7 @@ class DashOverviewViewModel @Inject constructor(
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_firmware_version), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_time_on_pod), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = PLACEHOLDER))
+            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_connection), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = PLACEHOLDER))
@@ -236,6 +238,16 @@ class DashOverviewViewModel @Inject constructor(
                 else                                                                      -> StatusLevel.NORMAL
             }
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = expiryValue, level = expiryLevel))
+
+            // Hard end date (+8 hours after expiry)
+            val hardEndAt = expiresAt?.toInstant()?.plus(Duration.ofHours(8))
+            val hardEndValue = hardEndAt?.let { dateUtil.dateAndTimeString(it.toEpochMilli()) } ?: PLACEHOLDER
+            val hardEndLevel = when {
+                hardEndAt != null && Instant.now().isAfter(hardEndAt)                          -> StatusLevel.CRITICAL
+                hardEndAt != null && Instant.now().isAfter(hardEndAt.minus(Duration.ofHours(4))) -> StatusLevel.WARNING
+                else                                                                            -> StatusLevel.NORMAL
+            }
+            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = hardEndValue, level = hardEndLevel))
 
             // Pod status
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))

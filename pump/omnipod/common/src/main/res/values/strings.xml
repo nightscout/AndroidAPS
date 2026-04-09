@@ -46,6 +46,7 @@
     <string name="omnipod_common_overview_lot_number">LOT Number</string>
     <string name="omnipod_common_overview_pod_sequence_number">Sequence Number</string>
     <string name="omnipod_common_overview_pod_expiry_date">Pod Expires</string>
+    <string name="omnipod_common_overview_pod_hard_end_date">Pod Hard End</string>
     <string name="omnipod_common_overview_last_connection">Last Connection</string>
     <string name="omnipod_common_overview_last_bolus">Last Bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Temp Basal Rate</string>
