@@ -46,7 +46,6 @@
     <string name="overview_buttons_selection">버튼</string>
     <string name="not_available_full">알수없음</string>
     <string name="data_status">BG 데이터 상태</string>
-    <string name="default_temptargets">임시목표 기본값</string>
     <string name="fill_bolus_title">교체/채움 기본 인슐린 양</string>
     <string name="run_question">%s 실행?</string>
     <!--    OverviewMenu-->
