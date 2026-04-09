@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Pętla wyłączona</string>
-    <string name="smscommunicator_pump_disconnected">Pompa odłączona</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Zdefiniuj profil opisujący zapotrzebowanie na insulinę.</string>
-    <string name="a11y_add_new_to_list">dodaj nowy do listy</string>
-    <string name="do_you_want_switch_profile">Czy chcesz przełączyć profil i porzucić zmiany wprowadzone w bieżącym profilu?</string>
-    <string name="save_or_reset_changes_first">Najpierw zapisz lub wycofaj bieżące zmiany</string>
-    <string name="delete_current_profile">Skasować bieżący profil?</string>
-    <string name="units_colon">Jednostki:</string>
     <!-- Actions -->
     <string name="actions">Akcje</string>
     <!-- manage moved to core:ui module -->
@@ -57,7 +47,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="overview_buttons_selection">Przyciski</string>
-    <string name="not_available_full">Niedostępne</string>
     <string name="data_status">Stan danych glikemii</string>
     <string name="fill_bolus_title">Rozpocznij/Wypełnij standardowe ilości insuliny</string>
     <string name="run_question">Uruchomić %s?</string>
