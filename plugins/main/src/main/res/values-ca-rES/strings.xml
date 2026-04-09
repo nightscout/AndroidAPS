@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Llaç desactivat</string>
-    <string name="smscommunicator_pump_disconnected">Bomba desconnectada</string>
     <string name="calculator_label">Calculadora</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">PL</string>
-    <string name="do_you_want_switch_profile">Voleu canviar de perfil i descartar els canvis fets a l\'actual?</string>
-    <string name="save_or_reset_changes_first">Gravar o restablir primer els canvis</string>
-    <string name="delete_current_profile">Eliminar perfil actual?</string>
-    <string name="units_colon">Unitats:</string>
     <!-- Actions -->
     <string name="actions">Accions</string>
     <!-- manage moved to core:ui module -->
@@ -36,7 +28,6 @@
     <string name="overview_shortname">INICI</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="overview_buttons_selection">Botons</string>
-    <string name="not_available_full">No disponible</string>
     <string name="data_status">Estat de dades de glucèmia</string>
     <string name="fill_bolus_title">Encebar quantitats d\'insulina estàndard</string>
     <string name="run_question">Executa %s?</string>
