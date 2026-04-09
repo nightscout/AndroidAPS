@@ -55,7 +55,6 @@
     <string name="a11y_blood_glucose">đường máu</string>
     <string name="a11y_bg_outdated">quá hạn</string>
     <string name="set_basal_question">Chấp nhận liều nền tạm thời mới:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Hiển thị trạng thái hiện tại của vòng lặp và các nút cho những thao tác thường dùng nhất</string>
