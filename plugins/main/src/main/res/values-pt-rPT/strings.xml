@@ -38,7 +38,6 @@
     <string name="a11y_blood_glucose">Glicose no Sangue</string>
     <string name="a11y_bg_outdated">desatualizado</string>
     <string name="set_basal_question">Aceitar nova basal temporária:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">Início</string>
     <string name="description_overview">Exibe o estado actual do loop e botões para acções mais comuns</string>
