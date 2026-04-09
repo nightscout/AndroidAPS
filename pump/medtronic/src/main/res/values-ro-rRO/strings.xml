@@ -75,7 +75,7 @@
     <string name="medtronic_cmd_desc_get_history">Preluați istoricul - Pagina %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Preluați istoricul - Pagina %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Preluați timpul din pompă</string>
-    <string name="medtronic_cmd_desc_set_time">Setează timpul pe pompa</string>
+    <string name="medtronic_cmd_desc_set_time">Setați timpul pe pompă</string>
     <string name="medtronic_cmd_desc_get_battery_status">Obțineți starea bateriei</string>
     <string name="medtronic_cmd_desc_get_settings">Preluați setările</string>
     <string name="medtronic_cmd_desc_get_model">Preluați modelul de pompă</string>
