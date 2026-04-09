@@ -46,7 +46,6 @@
     <string name="overview_buttons_selection">Schaltflächen</string>
     <string name="not_available_full">Nicht verfügbar</string>
     <string name="data_status">Status BZ-Daten</string>
-    <string name="default_temptargets">Vordefinierte temporäre Ziele</string>
     <string name="fill_bolus_title">Füll-/Vorfüll-Standardmengen</string>
     <string name="run_question">%s ausführen?</string>
     <!--    OverviewMenu-->
