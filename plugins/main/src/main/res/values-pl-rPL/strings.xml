@@ -60,7 +60,6 @@
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="not_available_full">Niedostępne</string>
     <string name="data_status">Stan danych glikemii</string>
-    <string name="default_temptargets">Domyślne tymczasowe wartości docelowe</string>
     <string name="fill_bolus_title">Rozpocznij/Wypełnij standardowe ilości insuliny</string>
     <string name="run_question">Uruchomić %s?</string>
     <!--    OverviewMenu-->
