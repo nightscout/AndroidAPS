@@ -217,7 +217,6 @@
     <string name="use_black_color">Usar modo oscuro</string>
     <string name="widget_configuration">Configuración del Widget</string>
     <string name="until_changed">Hasta el cambio</string>
-    <string name="limitations">Limitaciones</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Permisos necesarios</string>
     <string name="permission_sheet_subtitle">Se necesitan algunos permisos para que la aplicación funcione correctamente</string>
