@@ -13,7 +13,6 @@
     <!-- Overview -->
     <string name="a11y_graph">grafikon</string>
     <string name="a11y_insulin_label">inzulin</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">KEZD</string>
     <string name="overview_buttons_selection">Gombok</string>
