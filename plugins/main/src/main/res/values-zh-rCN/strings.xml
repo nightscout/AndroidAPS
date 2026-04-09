@@ -46,7 +46,6 @@
     <string name="overview_buttons_selection">按钮</string>
     <string name="not_available_full">不可用</string>
     <string name="data_status">血糖数据状态</string>
-    <string name="default_temptargets">默认的临时目标</string>
     <string name="fill_bolus_title">输注/充盈标准胰岛素剂量</string>
     <string name="run_question">运行 %s？</string>
     <!--    OverviewMenu-->
