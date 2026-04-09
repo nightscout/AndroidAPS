@@ -79,42 +79,12 @@ interface UiInteraction {
     fun updateWidget(context: Context, from: String)
 
     /**
-     * Shows a dialog related to the loop status.
-     * @param fragmentManager The fragment manager to use.
-     * @param showOkCancel A flag to determine dialog buttons.
-     */
-    fun runLoopDialog(fragmentManager: FragmentManager, showOkCancel: Int)
-
-    /**
      * Shows the profile switch dialog.
      * @param fragmentManager The fragment manager to use.
      * @param profileName Optional pre-selected profile name.
      * @param iCfg Optional iCfg to be used within EPS
      */
     fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null, iCfg: ICfg? = null)
-
-
-    /**
-     * Shows the treatment dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runTreatmentDialog(fragmentManager: FragmentManager)
-
-    /**
-     * Shows the insulin dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runInsulinDialog(fragmentManager: FragmentManager)
-
-
-    /**
-     * Shows the carbs dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runCarbsDialog(fragmentManager: FragmentManager)
-
-
-
 
     /**
      * Defines modes for the site rotation dialog.
@@ -154,7 +124,6 @@ interface UiInteraction {
         /** An announcement. */
         ANNOUNCEMENT
     }
-
 
     /**
      * Opens the preferences screen for a specific plugin.

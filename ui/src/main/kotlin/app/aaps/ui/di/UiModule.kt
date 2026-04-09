@@ -7,16 +7,7 @@ import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
 import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
 
-import app.aaps.ui.dialogs.CarbsDialog
-
-
-
-import app.aaps.ui.dialogs.InsulinDialog
-import app.aaps.ui.dialogs.LoopDialog
 import app.aaps.ui.dialogs.ProfileSwitchDialog
-
-
-import app.aaps.ui.dialogs.TreatmentDialog
 
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.DialogSearchables
@@ -51,17 +42,7 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesWidget(): Widget
     @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
 
-
-    @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
-
-
-
-    @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
-    @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
-
-
-    @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
 
     @ContributesAndroidInjector abstract fun contributeErrorActivity(): ErrorActivity
 }

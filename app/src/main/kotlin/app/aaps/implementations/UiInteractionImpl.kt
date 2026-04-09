@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.RawRes
-import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import app.aaps.MainActivity
@@ -21,16 +20,7 @@ import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.dialogs.AlertDialogs
 
-import app.aaps.ui.dialogs.CarbsDialog
-
-
-
-import app.aaps.ui.dialogs.InsulinDialog
-import app.aaps.ui.dialogs.LoopDialog
 import app.aaps.ui.dialogs.ProfileSwitchDialog
-
-
-import app.aaps.ui.dialogs.TreatmentDialog
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
 import app.aaps.ui.widget.Widget
@@ -73,12 +63,6 @@ class UiInteractionImpl @Inject constructor(
         Widget.updateWidget(context, from)
     }
 
-    override fun runLoopDialog(fragmentManager: FragmentManager, showOkCancel: Int) {
-        LoopDialog()
-            .also { it.arguments = Bundle().also { bundle -> bundle.putInt("showOkCancel", showOkCancel) } }
-            .show(fragmentManager, "LoopDialog")
-    }
-
     override fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?, iCfg: ICfg?) {
         ProfileSwitchDialog()
             .also {
@@ -89,27 +73,6 @@ class UiInteractionImpl @Inject constructor(
             }
             .show(fragmentManager, "ProfileSwitchDialog")
     }
-
-
-    override fun runTreatmentDialog(fragmentManager: FragmentManager) {
-        TreatmentDialog()
-            .show(fragmentManager, "TreatmentDialog")
-    }
-
-    override fun runInsulinDialog(fragmentManager: FragmentManager) {
-        InsulinDialog()
-            .show(fragmentManager, "InsulinDialog")
-    }
-
-
-    override fun runCarbsDialog(fragmentManager: FragmentManager) {
-        CarbsDialog()
-            .show(fragmentManager, "CarbsDialog")
-    }
-
-
-
-
 
     override fun runPreferencesForPlugin(activity: FragmentActivity, pluginSimpleName: String?) {
         pluginSimpleName ?: return
