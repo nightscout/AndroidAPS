@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Autotune-->
-    <string name="dynisf_adjust_sensitivity">Activează raportul de sensibilitate bazat pe TDD pentru modificarea bazalei și a țintei glicemice</string>
+    <string name="dynisf_adjust_sensitivity">Activați raportul de sensibilitate bazat pe TDD pentru modificarea bazalei și a țintei glicemice</string>
     <string name="dynisf_adjust_sensitivity_summary">Folosește ultimele 24 de ore TDD/7D TDD pentru a calcula raportul de sensibilitate utilizat pentru creșterea sau scăderea ratei bazale, şi de asemenea ajustează ţinta glicemic[ dacă aceste opţiuni sunt activate, în acelaşi mod în care procedează Autosens. Este recomandat ca opțiunea să fie oprită la început</string>
     <string name="dyn_isf_adjust_title" formatted="false">Factor de ajustare DynamicISF %</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Factor de ajustare pentru DynamicISF. Setează peste 100% pentru doze de corecție mai agresive, și sub 100% pentru corecții mai puțin agresive.</string>
@@ -41,7 +41,7 @@
     <string name="constraints">Constrângeri</string>
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_script_debug_data_label">Depanare script</string>
-    <string name="openapsama_use_autosens">Folosește opțiunea de autosensibilitate</string>
+    <string name="openapsama_use_autosens">Folosiți opțiunea de autosensibilitate</string>
     <string name="openapsma_max_basal_title">Valoarea maximă în U/ora (unități insulină/ora) a unei rate bazale temporare poate fi setată la</string>
     <string name="openapsma_max_basal_summary">Această valoare este denumită bazală maximă în contextul OpenAPS</string>
     <string name="openapsma_max_iob_title">Maximul de bazală IOB pe care o poate livra OpenAPS[U]</string>
@@ -87,7 +87,7 @@
     <string name="uam_disabled_in_preferences">UAM dezactivat din setări</string>
     <string name="autosens_disabled_in_preferences">Autosens dezactivat în preferințe</string>
     <string name="use_dynamic_sensitivity_title">Activați sensibilitate dinamică</string>
-    <string name="use_dynamic_sensitivity_summary">Setează algoritmul pentru a utiliza sensibilitatea dinamică în loc de valoarea din profil</string>
+    <string name="use_dynamic_sensitivity_summary">Setați algoritmul pentru a utiliza sensibilitatea dinamică în loc de valoarea din profil</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
@@ -169,7 +169,7 @@
     <string name="autoISF_settings_summary">AutoFSI permite adaptarea factorului de sensibilitate la insulină (ISF) în diferite scenarii de comportament glicemic\n\nDe asemenea, poate adapta setările de livrare SMB</string>
     <string name="smb_delivery_settings_title">Setări livrare SMB</string>
     <string name="smb_delivery_settings_summary">Set de opțiuni pentru creșterea volumului real al SMB care poate fi livrat în situațiile în care a fost întărit ISF-ul, adică o valoare ISF destul de scăzută.\n\nUTILIZAŢI CU PRECAUȚIE</string>
-    <string name="openapsama_enable_autoISF">Permite adaptarea ISF în baza comportamentului glicemiei</string>
+    <string name="openapsama_enable_autoISF">Permiteți adaptarea ISF în baza comportamentului glicemiei</string>
     <string name="openapsama_autoISF_max_summary">Similar cu autosens_max, aceasta definește cât de puternic poate deveni ISF-ul.\n\nValoarea implicită de 1,0 dezactivează acest efect.\n\nAVERTISMENT: Atenție mare la folosirea unei valori peste 2,5.</string>
     <string name="openapsama_autoISF_min_summary">Similar cu autosens_min, acesta definește cât de slab poate deveni ISF-ul.\n\nValoarea implicită 1,0 dezactivează acest efect.</string>
     <string name="openapsama_dura_ISF_weight_summary">Aceasta este ponderea aplicată în timpul perioadelor persistente de hiperglicemie și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\n\nValoarea implicită de 0,0 oprește acest efect.</string>
