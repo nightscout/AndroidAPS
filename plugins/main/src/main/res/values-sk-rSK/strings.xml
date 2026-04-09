@@ -17,6 +17,8 @@
     <!-- manage moved to core:ui module -->
     <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
     <string name="actions_shortname">AKCIA</string>
+    <string name="status">Stav</string>
+    <string name="pump_actions">Akcie pumpy</string>
     <string name="tempbasal_button">Dočasný bazál</string>
     <string name="extended_bolus_button">Predĺžený bolus</string>
     <string name="extended_bolus_cancel_button">Zrušiť predĺžený bolus</string>
