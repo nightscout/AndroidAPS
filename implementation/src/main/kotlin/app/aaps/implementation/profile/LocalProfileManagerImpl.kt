@@ -24,7 +24,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.ProfileComposedBooleanKey
-import app.aaps.core.keys.ProfileComposedDoubleKey
+
 import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.ProfileIntKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -70,6 +70,10 @@ class LocalProfileManagerImpl @Inject constructor(
     override var currentProfileIndex: Int = 0
 
     override var isEdited: Boolean = false
+
+    init {
+        loadSettings()
+    }
 
     override val profile: ProfileStore?
         get() = rawProfile

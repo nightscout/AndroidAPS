@@ -6,8 +6,7 @@ import org.json.JSONArray
  * Interface for managing local profiles.
  * Provides methods for profile CRUD operations, persistence, and state management.
  *
- * This interface is used by the new Compose UI for profile management.
- * Legacy UI uses ProfilePlugin directly which implements ProfileSource.
+ * This interface is used by the Compose UI for profile management.
  */
 interface LocalProfileManager {
 

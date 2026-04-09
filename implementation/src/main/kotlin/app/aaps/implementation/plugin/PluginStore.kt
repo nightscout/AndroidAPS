@@ -24,7 +24,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
-import app.aaps.core.interfaces.profile.ProfileSource
+
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
@@ -229,9 +229,6 @@ class PluginStore @Inject constructor(
 
     override val activeBgSource: BgSource
         get() = activeBgSourceStore ?: checkNotNull(activeBgSourceStore) { "No bg source selected" }
-
-    override val activeProfileSource: ProfileSource
-        get() = getSpecificPluginsListByInterface(ProfileSource::class.java).first() as ProfileSource
 
     override val activeAPS: APS?
         get() = activeAPSStore
