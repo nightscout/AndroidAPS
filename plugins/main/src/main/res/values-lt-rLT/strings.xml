@@ -52,7 +52,6 @@
     <string name="a11y_blood_glucose">kraujo glikemija</string>
     <string name="a11y_bg_outdated">nebegalioja</string>
     <string name="set_basal_question">Patvirtinti naują laikiną bazę:</string>
-    <string name="overview_cgm">NGJ</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
