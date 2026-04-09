@@ -59,7 +59,6 @@
     <string name="overview_buttons_selection">Mygtukai</string>
     <string name="not_available_full">Nėra duomenų</string>
     <string name="data_status">Glikemijos statusas</string>
-    <string name="default_temptargets">Numatyti Laikini Tikslai</string>
     <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="run_question">Vykdyti %s?</string>
     <!--    OverviewMenu-->
