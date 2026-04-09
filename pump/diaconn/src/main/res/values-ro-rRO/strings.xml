@@ -121,7 +121,7 @@
     <string name="diaconn_g8_logtubechange_title">Înregistrați schimbarea canulei</string>
     <string name="diaconn_g8_logtubechange_summary">Adăugare eveniment \"Schimbare canulă\" în Notă atunci când este detectat în istoric</string>
     <string name="diaconn_g8_logtempstart">Start bazală temporară</string>
-    <string name="diaconn_g8_errorcode_32">În timpul rulării LGS, injectarea este restricționată.</string>
+    <string name="diaconn_g8_errorcode_32">În timpul rulării Suspendării la Hipoglicemie, injectarea este restricționată.</string>
     <string name="diaconn_g8_errorcode_33">Starea LGS este activă, comanda de activare este refuzată.</string>
     <string name="diaconn_g8_errorcode_34">Starea LGS este inactiv, comanda de inactivare este refuzată.</string>
     <string name="diaconn_g8_errorcode_35">Pornirea bazalei temporare este respinsă atunci când se execută bazala temporară</string>
