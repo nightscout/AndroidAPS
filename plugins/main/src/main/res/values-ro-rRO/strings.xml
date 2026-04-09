@@ -9,7 +9,7 @@
     <string name="description_profile_local">Definiți un profil care descrie nevoile dumneavoastră de insulină.</string>
     <string name="a11y_add_new_to_list">adăugare nouă la listă</string>
     <string name="do_you_want_switch_profile">Doriți să schimbați profilul și să renunțați la modificările făcute profilului curent?</string>
-    <string name="save_or_reset_changes_first">Salvează sau resetează modificările curente mai întâi</string>
+    <string name="save_or_reset_changes_first">Salvați sau resetați modificările curente mai întâi</string>
     <string name="delete_current_profile">Ștergeți profilul curent?</string>
     <string name="units_colon">Unități:</string>
     <!-- Actions -->
@@ -21,7 +21,7 @@
     <string name="pump_actions">Acțiuni pompă</string>
     <string name="tempbasal_button">Bazală temporară</string>
     <string name="extended_bolus_button">Bolus extins</string>
-    <string name="extended_bolus_cancel_button">Renunță la bolusul extins</string>
+    <string name="extended_bolus_cancel_button">Renunțați la bolusul extins</string>
     <string name="tools">Instrumente</string>
     <string name="nav_history_browser">Vizualizare istoric</string>
     <string name="sensor_label">Senzor</string>
@@ -44,7 +44,7 @@
     <string name="graph_long_scale_18h">18 ore</string>
     <string name="graph_long_scale_24h">24 de ore</string>
     <string name="a11y_graph">grafic</string>
-    <string name="a11y_graph_scale">alege scara graficului</string>
+    <string name="a11y_graph_scale">alegeți scara graficului</string>
     <string name="a11y_graph_scale_6h">scară grafică 6 ore</string>
     <string name="a11y_graph_scale_12h">scară grafică 12 ore</string>
     <string name="a11y_graph_scale_18h">scară grafică 18 ore</string>
@@ -54,11 +54,11 @@
     <string name="a11y_bg_quality">calitatea valorii glicemiei</string>
     <string name="a11y_blood_glucose">glicemie din sânge</string>
     <string name="a11y_bg_outdated">învechită</string>
-    <string name="set_basal_question">Acceptă noua bazală temporară:</string>
+    <string name="set_basal_question">Acceptați noua bazală temporară:</string>
     <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ACASĂ</string>
-    <string name="description_overview">Afișează starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
+    <string name="description_overview">Afișați starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
     <string name="overview_buttons_selection">Butoane</string>
     <string name="not_available_full">Nu este disponibil</string>
     <string name="data_status">Stare date glicemie</string>
@@ -80,14 +80,14 @@
     <string name="overview_show_abs_insulin">Insulină totală</string>
     <string name="overview_show_variable_sens">Sensibilitate variabilă</string>
     <string name="prediction_shortname">PRED</string>
-    <string name="basal_shortname">R_BAZ</string>
+    <string name="basal_shortname">BAZ</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="graph_scale">Scară grafică</string>
     <string name="graph_menu_divider_header">Grafic</string>
     <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Tema originală</string>
-    <string name="lowres_description">Skin de rezoluție redusă</string>
+    <string name="lowres_description">Temă de rezoluție redusă</string>
     <string name="buttonson_description">Butoanele sunt afișate întotdeauna în partea de jos a ecranului</string>
     <string name="largedisplay_description">Display mare</string>
     <string name="skin">Tema</string>
