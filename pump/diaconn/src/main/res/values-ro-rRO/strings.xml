@@ -56,10 +56,10 @@
     <string name="diaconn_g8_pumpscreentimeout_30">30</string>
     <string name="injectionblocked">Blocare injectare</string>
     <string name="batterywarning">Avertizare baterie</string>
-    <string name="insulinlackwarning">Avertisment lipsa insulina</string>
+    <string name="insulinlackwarning">Avertisment lipsa insulină</string>
     <string name="needbatteryreplace">Înlocuirea bateriei este necesară</string>
     <string name="needinsullinreplace">Schimbarea insulinei este necesară</string>
-    <string name="diaconn_g8_loginsulinchange_title">Înregistrează schimbarea rezervorului</string>
+    <string name="diaconn_g8_loginsulinchange_title">Înregistrați schimbarea rezervorului</string>
     <string name="diaconn_g8_loginsulinchange_summary">Adăugare eveniment \"Schimbare insulină\" în Ns/Careportal când este detectat în istoric</string>
     <string name="diaconn_g8_logcanulachange_title">Înregistrează schimbarea canulei</string>
     <string name="diaconn_g8_logcanulachange_summary">Adăugare eveniment \"Schimbare canula\" în Careportal când este detectat în istoric</string>
