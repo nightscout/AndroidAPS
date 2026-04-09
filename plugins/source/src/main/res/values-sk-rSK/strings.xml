@@ -40,5 +40,11 @@
     <string name="patched_sino_app">Aplikácia Sino</string>
     <string name="description_source_patched_sino_app">Prijímať glykémie z upravenej aplikácie Sino.</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Čítačka notifikácií</string>
+    <string name="description_source_notification_reader">Prečítaj hodnoty glykémií z notifikácií poslaných oficiálnymi CGM aplikáciami (Dexcom, Medtronic, Eversense, atď.).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Aplikácia potrebuje povolenie, pre príjimanie CGM dát z Dexcom aplikácie</string>
+    <string name="permission_notification_listener_title">Prístup k notifikáciam</string>
+    <string name="permission_notification_listener_description">Potrebné pre čítanie hodnôt glykémie z notifikácií CGM aplikácie</string>
 </resources>
