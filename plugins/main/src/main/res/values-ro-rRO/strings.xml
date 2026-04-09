@@ -55,7 +55,6 @@
     <string name="a11y_blood_glucose">glicemie din sânge</string>
     <string name="a11y_bg_outdated">învechită</string>
     <string name="set_basal_question">Acceptați noua bazală temporară:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ACASĂ</string>
     <string name="description_overview">Afișați starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
