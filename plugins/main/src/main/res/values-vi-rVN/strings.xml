@@ -62,7 +62,6 @@
     <string name="overview_buttons_selection">Phím bấm</string>
     <string name="not_available_full">Không khả dụng</string>
     <string name="data_status">Trạng thái dữ liệu đường huyết</string>
-    <string name="default_temptargets">Mục tiêu tạm thời mặc định</string>
     <string name="fill_bolus_title">Bơm/đẩy lượng insulin tiêu chuẩn</string>
     <string name="run_question">Chạy %s?</string>
     <!--    OverviewMenu-->
