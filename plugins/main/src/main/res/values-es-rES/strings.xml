@@ -55,7 +55,6 @@
     <string name="a11y_blood_glucose">glucosa en sangre</string>
     <string name="a11y_bg_outdated">obsoleto</string>
     <string name="set_basal_question">Aceptar nueva basal temporal:</string>
-    <string name="overview_cgm">MCG</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">INICIO</string>
     <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
