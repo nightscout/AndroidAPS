@@ -130,7 +130,6 @@
     <string name="use_black_color">Использовать черный цвет</string>
     <string name="widget_configuration">Настройки виджета</string>
     <string name="until_changed">До изменения</string>
-    <string name="limitations">Ограничения</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
