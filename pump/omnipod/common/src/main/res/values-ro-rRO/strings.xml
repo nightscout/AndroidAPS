@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_button_activate_pod">Activează pompă</string>
-    <string name="omnipod_common_pod_management_button_deactivate_pod">Dezactivează pompă</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Activați pompa</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Dezactivați pompa</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Renunțați la pompă</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Dacă renunțați la pompă, nu veți mai putea să comunicați cu ea. Ar trebui să faceți acest lucru doar atunci când toate comunicațiile cu pompa eșuează în mod persistent. Daca mai puteți comunica cu pompa, va rugăm să folosiți opțiunea <b>Dezactivare pompă</b>.\n\nDacă doriți să continuați, vă rugăm să vă asigurați că îndepărtați pompa de pe corpul dumneavoastră!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Redați semnale sonore de test</string>
@@ -19,10 +19,10 @@
     <string name="omnipod_common_error_failed_to_silence_alerts">A eșuat oprirea alertelor</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Suspendarea livrării a eșuat</string>
     <string name="omnipod_common_error_failed_to_set_time">Setarea timpului a eșuat</string>
-    <string name="omnipod_common_error_failed_to_resume_delivery">Nu s-a reușit reluarea livrării</string>
-    <string name="omnipod_common_error_failed_to_initialize_pod">Eșec la inițializarea Pod-ului</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Nu s-a reușit reluarea administrării</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Eșec la inițializarea pompei</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Nu s-a putut insera canula</string>
-    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Timpul de activare al Pod-ul a fost depășit. Acest Pod nu mai poate fi activat.</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Timpul de activare a pompei a fost depășit. Această pompă nu mai poate fi activată.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">A eșuat verificarea progresului activării. Va rugam sa reîncercați.</string>
     <string name="omnipod_common_error_pod_suspended">Pompă suspendată</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Nu s-a reușit redarea semnalului sonor de test</string>
@@ -34,9 +34,9 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Setați ora</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Suspendare</string>
-    <string name="omnipod_common_overview_button_resume_delivery">Reia Livrarea</string>
-    <string name="omnipod_common_overview_button_silence_alerts">Oprește Alarmele</string>
-    <string name="omnipod_common_overview_pod_status">Status pompă</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Reluați administrarea</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Opriți Alarmele</string>
+    <string name="omnipod_common_overview_pod_status">Stare pompă</string>
     <string name="omnipod_common_overview_total_delivered">Total livrat</string>
     <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">ID unic</string>
