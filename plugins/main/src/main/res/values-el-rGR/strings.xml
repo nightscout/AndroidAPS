@@ -46,7 +46,6 @@
     <string name="overview_buttons_selection">Πλήκτρα</string>
     <string name="not_available_full">Μη διαθέσιμο</string>
     <string name="data_status">Κατάσταση δεδομένων BG</string>
-    <string name="default_temptargets">Προκαθορισμένος Στόχος-Προσ Ρυθμού</string>
     <string name="fill_bolus_title">Πλήρωση/Γέμισμα στανταρ ποσότητες ινσουλίνης</string>
     <string name="run_question">Εκτέλεση %s;</string>
     <!--    OverviewMenu-->
