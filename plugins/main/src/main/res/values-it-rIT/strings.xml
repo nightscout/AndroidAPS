@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop disabilitato</string>
-    <string name="smscommunicator_pump_disconnected">Micro disconnesso</string>
     <string name="calculator_label">Calcolatore</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">PL</string>
-    <string name="description_profile_local">Definire un profilo che descriva il tuo fabbisogno di insulina.</string>
-    <string name="a11y_add_new_to_list">aggiungi nuovo alla lista</string>
-    <string name="do_you_want_switch_profile">Vuoi cambiare profilo e scartare le modifiche apportate al profilo corrente?</string>
-    <string name="save_or_reset_changes_first">Salva o resetta prima le modifiche correnti</string>
-    <string name="delete_current_profile">Rimuovere il profilo corrente?</string>
-    <string name="units_colon">Unità:</string>
     <!-- Actions -->
     <string name="actions">Azioni</string>
     <!-- manage moved to core:ui module -->
@@ -59,7 +49,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i tasti per le azioni più comuni</string>
     <string name="overview_buttons_selection">Tasti</string>
-    <string name="not_available_full">Non disponibile</string>
     <string name="data_status">Stato dati BG</string>
     <string name="fill_bolus_title">Carica/Riempi: quantità standard di insulina</string>
     <string name="run_question">Eseguire %s?</string>
