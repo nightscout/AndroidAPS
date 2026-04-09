@@ -4,13 +4,13 @@
     <string name="treatments">Tratamente</string>
     <string name="treatments_desc">Vezi și gestionează istoricul tratamentului</string>
     <string name="nav_configuration">Configurație</string>
-    <string name="nav_configuration_desc">Creeați-vă configurația (senzor, pompă, șamd) și activați funcțiile</string>
+    <string name="nav_configuration_desc">Creați-vă configurația (senzor, pompă, șamd) și activați funcțiile</string>
     <string name="count_selected">%1$d selectat</string>
     <string name="delete">Ștergeți</string>
     <string name="show_invalidated">Afișați invalidate</string>
     <string name="hide_invalidated">Ascundeți invalidate</string>
     <string name="more_options">Mai multe opțiuni</string>
-    <string name="refresh">Actualizează</string>
+    <string name="refresh">Actualizați</string>
     <string name="no_history_records">Nu s-au găsit înregistrări</string>
     <string name="error">Eroare</string>
     <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
@@ -32,10 +32,10 @@
     <string name="reload">Reîncărcare</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="save">Salvează</string>
+    <string name="save">Salvați</string>
     <string name="skip">Omiteți</string>
     <string name="switch_to_edit">Editați</string>
-    <string name="snooze">Amână</string>
+    <string name="snooze">Amânați</string>
     <string name="snooze_15m">Amânare 15 minute</string>
     <string name="snooze_30m">Amânare 30 minute</string>
     <string name="snooze_60m">Amânare 60 minute</string>
@@ -58,7 +58,7 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Lumini de stare</string>
     <string name="copy_existing_values">Copiați setările NS (dacă există)?</string>
-    <string name="do_ns_upload_title">Încarcă date glicemie în NS</string>
+    <string name="do_ns_upload_title">Încarcați date glicemie în NS</string>
     <string name="configbuilder_insulin">Insulină</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="configbuilder_smoothing">Uniformizare</string>
@@ -71,8 +71,8 @@
     <string name="protection">Protecție</string>
     <string name="value_unavailable_short">indisponibil</string>
     <!-- master_password moved to core/keys/strings.xml -->
-    <string name="ue_export_to_csv">Exportă înregistrările utilizatorului în Excel (csv)</string>
-    <string name="confirm">Confirmă</string>
+    <string name="ue_export_to_csv">Exportați înregistrările utilizatorului în Excel (csv)</string>
+    <string name="confirm">Confirmați</string>
     <string name="pump">Pompă</string>
     <string name="pump_management">Pompă</string>
     <string name="openaps">OpenAPS</string>
@@ -81,7 +81,7 @@
     <string name="uploader_short">UPLD</string>
     <string name="missed_bg_readings">Lipsesc date glicemie</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="mute5min">Dezactivează pentru 5 minute</string>
+    <string name="mute5min">Dezactivați pentru 5 minute</string>
     <string name="mute">Silențios</string>
     <string name="success">Succes</string>
     <string name="advanced_settings_title">Setări avansate</string>
@@ -136,10 +136,10 @@
     <string name="loopisdisabled">Bucla este dezactivată</string>
     <string name="alarm">Alarmă</string>
     <string name="exportsettings">Exportați setările</string>
-    <string name="disableloop">Dezactivează bucla</string>
+    <string name="disableloop">Dezactivați bucla</string>
     <string name="disabled_loop">Buclă dezactivată</string>
-    <string name="resumeloop">Repornește bucla</string>
-    <string name="suspendloop">Suspendă bucla</string>
+    <string name="resumeloop">Reporniți bucla</string>
+    <string name="suspendloop">Suspendați bucla</string>
     <string name="duration_min_label">Durată [min]</string>
     <string name="notification">Notificare</string>
     <string name="noprofile">Nu s-a încărcat încă un profil din NS</string>
@@ -158,11 +158,11 @@
     <string name="remove_button">Șterge</string>
     <string name="add_new">Adăugare nouă</string>
     <string name="addnew_above">Adăugare nouă deasupra</string>
-    <string name="wrong_pump_data">Datele vin de la o pompa diferita. Schimba driver-ul de pompa pentru a reseta starea pompei.</string>
-    <string name="bg_label">BG</string>
+    <string name="wrong_pump_data">Datele vin de la o pompă diferită. Schimbați driver-ul de pompă pentru a reseta starea pompei.</string>
+    <string name="bg_label">Glicemie</string>
     <string name="calibration">Calibrare</string>
     <string name="cgm">CGM</string>
-    <string name="alarminxmin">Rulează alarma în %1$d minute</string>
+    <string name="alarminxmin">Rulați alarma în %1$d minute</string>
     <string name="treatmentdeliveryerror">Bolusarea a raportat o eroare. Verificați manual insulina administrată și cantitatea de carbohidrați</string>
     <string name="bolus_reminder">Reamintire pentru bolus atunci când glicemia revine</string>
     <string name="duration_label">Durată</string>
@@ -191,14 +191,14 @@
     <string name="tir_short">TIR</string>
     <string name="tir">Timp în interval</string>
     <string name="none"><![CDATA[<nimic>]]></string>
-    <string name="remove_label">ȘTERGE</string>
-    <string name="activate_profile">Activează profil</string>
+    <string name="remove_label">ȘTERGEȚI</string>
+    <string name="activate_profile">Activați profil</string>
     <string name="activate_insulin">Activați insulina</string>
     <string name="reset">Resetare</string>
     <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
     <string name="profile">Profil</string>
-    <string name="select_for_removal">Selectează pentru ștergere</string>
-    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
+    <string name="select_for_removal">Selectați pentru ștergere</string>
+    <string name="confirm_remove_multiple_items">Sigur vreți să eliminați %1$d elemente</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="copytolocalprofile">Creați un profil nou din acest profil?</string>
     <string name="wear_wizard_settings">Setări Asistent Wear</string>
@@ -220,7 +220,7 @@
     <string name="select_site_location">Selectați locul de inserție</string>
     <string name="site_location">Locul de inserție</string>
     <string name="overview_insulin_label">Insulină</string>
-    <string name="stoptemptarget">Oprește o țintă temporară</string>
+    <string name="stoptemptarget">Opriți ținta temporară</string>
     <string name="closedloop">Buclă închisă</string>
     <string name="openloop">Buclă deschisă</string>
     <string name="lowglucosesuspend">Suspendare la hipoglicemie</string>
@@ -251,7 +251,7 @@
     <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s minute</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
-    <string name="nav_export">Exportă setările</string>
+    <string name="nav_export">Exportați setările</string>
     <string name="location_permission_not_granted">Permisiunea de locație nu a fost acordată. Permite în setările Android.</string>
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
     <string name="not_available_full">Indisponibil</string>
@@ -271,7 +271,7 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="startprofile">Utilizează profilul %1$d%% pentru %2$d min</string>
+    <string name="startprofile">Utilizați profilul %1$d%% pentru %2$d min</string>
     <!--    APSResult-->
     <string name="cancel_temp">Anulare rată bazală temporară</string>
     <string name="let_temp_basal_run">Lasă să funcționeze bazala temporară</string>
@@ -349,8 +349,8 @@
     <string name="manage_quickwizard_desc">Gestionați presetările asistentului rapid</string>
     <string name="treatment_note_desc">Adăugați o notă la înregistrările dumneavoastră</string>
     <string name="treatment_question_desc">Înregistrați o întrebare pentru echipa dumneavoastră de îngrijire</string>
-    <string name="treatment_cgm_desc">Deschide aplicația senzorului de glicemie</string>
-    <string name="treatment_calibration_desc">Calibrează senzorul de glicemie</string>
+    <string name="treatment_cgm_desc">Deschideți aplicația senzorului de glicemie</string>
+    <string name="treatment_calibration_desc">Calibrați senzorul de glicemie</string>
     <string name="treatment_bg_check_desc">Înregistrați verificarea glicemiei</string>
     <string name="treatment_exercise_desc">Înregistrați activitatea fizică</string>
     <string name="treatment_announcement_desc">Publicați anunț</string>
@@ -450,8 +450,8 @@
     <string name="uel_temp_basal">BAZALĂ TEMPORARĂ</string>
     <string name="uel_tt">ȚINTĂ TEMPORARĂ</string>
     <string name="uel_new_profile">PROFIL NOU</string>
-    <string name="uel_clone_profile">CLONEAZĂ PROFILUL</string>
-    <string name="uel_store_profile">PĂSTREAZĂ PROFILUL</string>
+    <string name="uel_clone_profile">CLONAȚI PROFILUL</string>
+    <string name="uel_store_profile">PĂSTRAȚI PROFILUL</string>
     <string name="uel_profile_switch">SCHIMBARE PROFIL</string>
     <string name="uel_profile_switch_cloned">SCHIMBARE PROFIL CLONATĂ</string>
     <string name="uel_closed_loop_mode">MOD BUCLA ÎNCHISĂ</string>
@@ -465,12 +465,12 @@
     <string name="uel_resume">REPORNIRE</string>
     <string name="uel_suspend">SUSPENDARE</string>
     <string name="uel_hw_pump_allowed">HW POMPA PERMIS</string>
-    <string name="uel_clear_pairing_keys">ȘTERGE CHEILE DE ASOCIERE</string>
-    <string name="uel_accepts_temp_basal">ACCEPTĂ BAZALA TEMPORARĂ</string>
-    <string name="uel_cancel_temp_basal">ANULEAZĂ BAZALA TEMPORARĂ</string>
+    <string name="uel_clear_pairing_keys">ȘTERGEȚI CHEILE DE ASOCIERE</string>
+    <string name="uel_accepts_temp_basal">ACCEPTAȚI BAZALA TEMPORARĂ</string>
+    <string name="uel_cancel_temp_basal">ANULAȚI BAZALA TEMPORARĂ</string>
     <string name="uel_cancel_bolus">ANULARE BOLUS</string>
-    <string name="uel_cancel_extended_bolus">ANULEAZĂ BOLUS EXTINS</string>
-    <string name="uel_cancel_tt">ANULEAZĂ ȚINTĂ TEMPORARĂ</string>
+    <string name="uel_cancel_extended_bolus">ANULAȚI BOLUS EXTINS</string>
+    <string name="uel_cancel_tt">ANULAȚI ȚINTĂ TEMPORARĂ</string>
     <string name="uel_careportal">CAREPORTAL</string>
     <string name="uel_sensor_location">LOC SENZOR</string>
     <string name="uel_site_change">SCHIMBARE CANULA</string>
@@ -488,7 +488,7 @@
     <string name="uel_careportal_removed">CAREPORTAL ELIMINAT</string>
     <string name="uel_bolus_removed">BOLUS ELIMINAT</string>
     <string name="uel_carbs_removed">CARBOHIDRAȚI ELIMINAȚI</string>
-    <string name="uel_temp_basal_removed">BAZALA TEMPORARA ELIMINATA</string>
+    <string name="uel_temp_basal_removed">BAZALĂ TEMPORARĂ ELIMINATĂ</string>
     <string name="uel_extended_bolus_removed">BOLUS EXTINS ELIMINAT</string>
     <string name="uel_food">MÂNCARE</string>
     <string name="uel_food_removed">MÂNCARE ELIMINATĂ</string>
@@ -511,22 +511,22 @@
     <string name="uel_delete_logs">ȘTERGERE JURNAL</string>
     <string name="uel_delete_future_treatments">ȘTERGERE TRATAMENTE VIITOARE</string>
     <string name="delete_future_treatments">Șterge tratamentele viitoare</string>
-    <string name="uel_export_settings">EXPORT SETĂRI</string>
-    <string name="uel_import_settings">IMPORT SETĂRI</string>
+    <string name="uel_export_settings">EXPORTARE SETĂRI</string>
+    <string name="uel_import_settings">IMPORTARE SETĂRI</string>
     <string name="uel_select_directory">ALEGE DIRECTOR</string>
     <string name="uel_reset_databases">RESETARE BAZE DE DATE</string>
     <string name="uel_reset_aps_results">RESETARE REZULTATE APS</string>
-    <string name="uel_cleanup_databases">CURĂȚĂ BAZELE DE DATE</string>
-    <string name="uel_export_databases">EXPORT BAZE DE DATE</string>
-    <string name="uel_import_databases">IMPORT BAZE DE DATE</string>
-    <string name="uel_otp_export">EXPORT OTP</string>
+    <string name="uel_cleanup_databases">CURĂȚAȚI BAZELE DE DATE</string>
+    <string name="uel_export_databases">EXPORTARE BAZE DE DATE</string>
+    <string name="uel_import_databases">IMPORTARE BAZE DE DATE</string>
+    <string name="uel_otp_export">EXPORTARE OTP</string>
     <string name="uel_otp_reset">RESETARE OTP</string>
     <string name="uel_stop_sms">STOP SMS</string>
-    <string name="uel_export_csv">EXPORT ÎNREGISTRĂRI UTILIZATOR</string>
+    <string name="uel_export_csv">EXPORTARE ÎNREGISTRĂRI UTILIZATOR</string>
     <string name="uel_start_aaps">START AAPS</string>
     <string name="uel_exit_aaps">IEȘIRE AAPS</string>
-    <string name="uel_plugin_enabled">ACTIVARE PLUGIN</string>
-    <string name="uel_plugin_disabled">DEZACTIVARE PLUGIN</string>
+    <string name="uel_plugin_enabled">MODUL ACTIVAT</string>
+    <string name="uel_plugin_disabled">MODUL DEZACTIVAT</string>
     <string name="uel_unknown">NECUNOSCUT</string>
     <string name="ue_string">Șir de caractere</string>
     <string name="ue_source">Sursă</string>
@@ -577,20 +577,20 @@
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">CARB %1$d g</string>
     <string name="extended_bolus_u_min">BOLUS EXTINS %1$.2f U %2$d min</string>
-    <string name="load_events">ÎNCARCĂ EVENIMENTE</string>
-    <string name="clear_alarms">ȘTERGE ALARMELE</string>
-    <string name="deactivate">DEZACTIVEAZĂ</string>
-    <string name="update_time">ACTUALIZEAZĂ ORA</string>
-    <string name="load_history">ÎNCARCA ISTORICUL %1$d</string>
-    <string name="load_tdds">ÎNCARCĂ DZT</string>
+    <string name="load_events">ÎNCARCAȚI EVENIMENTE</string>
+    <string name="clear_alarms">ȘTERGEȚI ALARMELE</string>
+    <string name="deactivate">DEZACTIVAȚI</string>
+    <string name="update_time">ACTUALIZAȚI ORA</string>
+    <string name="load_history">ÎNCĂRCAȚI ISTORICUL %1$d</string>
+    <string name="load_tdds">ÎNCĂRCAȚI DZT</string>
     <string name="set_profile">SETARE PROFIL</string>
     <string name="set_user_settings">CONFIGURARE SETĂRI UTILIZATOR</string>
     <string name="smb_bolus_u">BOLUS SMB %1$.2f U</string>
     <string name="start_pump">START POMPĂ</string>
     <string name="stop_pump">STOP POMPĂ</string>
-    <string name="temp_basal_absolute">BAZALA TEMP %1$.2f U/h %2$d min</string>
-    <string name="temp_basal_percent">BAZALA TEMP %1$d%% %2$d min</string>
-    <string name="insight_set_tbr_over_notification">SETARE RBT INSIGHT CONFORM NOTIFICARII</string>
+    <string name="temp_basal_absolute">BAZALĂ TEMPORARĂ %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">BAZALĂ TEMPORARĂ %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">SETARE RBT INSIGHT CONFORM NOTIFICĂRII</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">CITIRE STARE %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Stare depășită.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Bazală depășită.</string>
