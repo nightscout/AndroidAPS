@@ -39,7 +39,6 @@
     <string name="a11y_blood_glucose">γλυκόζη αίματος</string>
     <string name="a11y_bg_outdated">μη ενημερωμένα</string>
     <string name="set_basal_question">Αποδοχή νέου Προσ Ρυθμού:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ΑΡΧΙΚΗ</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
