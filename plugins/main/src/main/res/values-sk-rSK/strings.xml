@@ -55,7 +55,6 @@
     <string name="a11y_blood_glucose">glykémia</string>
     <string name="a11y_bg_outdated">zastaralé</string>
     <string name="set_basal_question">Povoliť nový dočasný bazál:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">PREH</string>
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
