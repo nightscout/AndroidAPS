@@ -217,7 +217,6 @@
     <string name="use_black_color">Sử dụng màu đen</string>
     <string name="widget_configuration">Cấu hình tiện ích</string>
     <string name="until_changed">Cho đến khi thay đổi</string>
-    <string name="limitations">Các hạn chế</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Yêu cầu quyền truy cập</string>
     <string name="permission_sheet_subtitle">Một số quyền truy cập là cần thiết để ứng dụng hoạt động đúng cách</string>
