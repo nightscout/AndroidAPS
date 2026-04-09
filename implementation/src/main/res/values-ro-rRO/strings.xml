@@ -20,7 +20,7 @@
     <string name="short_status_last_connection">UltimaConexiune: acum %1$d min</string>
     <string name="short_status_alert">Alertă: %1$s</string>
     <string name="short_status_last_bolus">UltimulBolus: %1$s @ %2$s</string>
-    <string name="short_status_temp_basal">BazalaTemporara: %1$s</string>
+    <string name="short_status_temp_basal">BazalăTemporară: %1$s</string>
     <string name="short_status_extended">Ext: %1$s</string>
     <string name="short_status_reservoir">Rezervor: %1$dU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
