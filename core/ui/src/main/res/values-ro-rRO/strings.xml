@@ -671,12 +671,12 @@
     <string name="adult">Adult</string>
     <string name="resistant_adult">Adult cu rezistență la insulină</string>
     <string name="pregnant">Sarcină</string>
-    <string name="patient_age_summary">Te rog confirmă tipul de pacient pentru a stabili limitele de siguranță</string>
+    <string name="patient_age_summary">Vă rog confirmați tipul de pacient pentru a stabili limitele de siguranță</string>
     <string name="max_bolus_title">Bolus maxim admis [U]</string>
     <string name="max_carbs_title">Carbohidrați admiși maxim [g]</string>
     <string name="patient_type">Tip de pacient</string>
     <!--    Protection-->
-    <string name="unlock_settings">Deblochează setările</string>
+    <string name="unlock_settings">Deblocați setările</string>
     <!--    Pumps -->
     <string name="battery_label">Baterie</string>
     <string name="reservoir_label">Rezervor</string>
@@ -693,7 +693,7 @@
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Unități zilnic</string>
     <string name="pump_icon">Pictogramă pompă</string>
-    <string name="view_profile">Afișează profilul</string>
+    <string name="view_profile">Afișați profilul</string>
     <string name="pump_history">Istoric pompă</string>
     <string name="stats">Statistici</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Schimbare driver pompa.</string>
@@ -706,7 +706,7 @@
     <string name="connection_error">Eroare de conexiune cu pompa</string>
     <string name="reading_pump_history">Se citește istoricul din pompă</string>
     <string name="password_cleared">Parolă ștearsă!</string>
-    <string name="pairing">Împerechere</string>
+    <string name="pairing">Asociere</string>
     <string name="initializing">Inițializare...</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Avertisment</string>
@@ -726,11 +726,11 @@
     <string name="message">Mesaj</string>
     <string name="ok">OK</string>
     <string name="next">Înainte</string>
-    <string name="cancel">Renunță</string>
+    <string name="cancel">Renunțați</string>
     <string name="dismiss">Renunțați</string>
     <string name="yes">Da</string>
     <string name="no">Nu</string>
-    <string name="close">Închide</string>
+    <string name="close">Închideți</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Vi se va solicita parola principală, care este necesară pentru a decripta setările importate.</string>
     <!-- <unattended_export> -->
@@ -763,8 +763,8 @@
     <string name="export_settings_local">Exportați setările (local)</string>
     <string name="export_settings_cloud">Exportați setările (cloud)</string>
     <string name="export_settings_both">Exportați setările (local+cloud)</string>
-    <string name="import_settings_local">Importă setări (Local)</string>
-    <string name="import_settings_cloud">Importă setări (Cloud)</string>
+    <string name="import_settings_local">Importați setări (Local)</string>
+    <string name="import_settings_cloud">Importați setări (Cloud)</string>
     <string name="import_settings_both">Importă setări (local/Cloud)</string>
     <string name="send_logs_to_cloud">Exportați jurnalele în cloud</string>
     <string name="export_csv_to_cloud">Exportați intrările utilizatorului în Cloud (csv)</string>
@@ -815,7 +815,7 @@
     <string name="user_request" comment="26 characters max for translation">Cerere utilizator</string>
     <string name="pump_pair">Asociați</string>
     <string name="pump_unpair">Dezasociați</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pompă împerecheată</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompă asociată</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE nu este suportat.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nu este acceptat sau dispozitivul nu este asociat.</string>
@@ -869,7 +869,7 @@
     <!-- Site Rotation -->
     <string name="select_location">Apăsați mai jos pentru a selecta locul de inserție</string>
     <!-- About -->
-    <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
+    <string name="cta_dont_kill_my_app_info">Nu-mi opriți aplicația?</string>
     <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivata!</string>
     <string name="about_link_urls">\n\nDocumentation:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
@@ -982,7 +982,7 @@
     <string name="delete_logs">Ștergeți jurnalele</string>
     <string name="logs_deleted">Jurnale șterse</string>
     <string name="aaps_directory">Dosar AAPS</string>
-    <string name="import_setting">Importă setări</string>
+    <string name="import_setting">Importați setări</string>
     <string name="miscellaneous">Diverse</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Decriptare &amp; Revizuire</string>
