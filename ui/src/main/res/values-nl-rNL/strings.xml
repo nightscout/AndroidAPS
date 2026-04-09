@@ -130,7 +130,6 @@
     <string name="use_black_color">Gebruik zwarte kleur</string>
     <string name="widget_configuration">Widget configuratie</string>
     <string name="until_changed">Totdat gewijzigd</string>
-    <string name="limitations">Beperkingen</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
