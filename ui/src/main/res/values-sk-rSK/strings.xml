@@ -217,7 +217,6 @@
     <string name="use_black_color">Použiť čiernu farbu</string>
     <string name="widget_configuration">Konfiguráciu widgetu</string>
     <string name="until_changed">Dokiaľ sa nezmení</string>
-    <string name="limitations">Obmedzenia</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Požadované povolenie</string>
     <string name="permission_sheet_subtitle">Sú potrebné určité povolenia na korektný chod aplikácie</string>
