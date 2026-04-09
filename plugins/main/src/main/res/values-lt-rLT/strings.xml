@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Ciklas išjungtas</string>
-    <string name="smscommunicator_pump_disconnected">Pompa atjungta</string>
     <string name="calculator_label">Skaičiuotuvas</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">VP</string>
-    <string name="a11y_add_new_to_list">pridėti naują į sąrašą</string>
-    <string name="do_you_want_switch_profile">Ar norite pakeisti profilį ir atsisakyti pakeitimų, atliktų dabartiniame profilyje?</string>
-    <string name="save_or_reset_changes_first">Pirmiausia išsaugoti arba anuliuoti dabartinius pokyčius</string>
-    <string name="delete_current_profile">Ištrinti esamą profilį?</string>
-    <string name="units_colon">Vienetai:</string>
     <!-- Actions -->
     <string name="actions">Veiksmai</string>
     <!-- manage moved to core:ui module -->
@@ -56,7 +47,6 @@
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="overview_buttons_selection">Mygtukai</string>
-    <string name="not_available_full">Nėra duomenų</string>
     <string name="data_status">Glikemijos statusas</string>
     <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="run_question">Vykdyti %s?</string>
