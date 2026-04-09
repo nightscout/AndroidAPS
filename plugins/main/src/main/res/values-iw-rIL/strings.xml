@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">לולאה כבויה</string>
-    <string name="smscommunicator_pump_disconnected">המשאבה מנותקת</string>
     <string name="calculator_label">מחשבון</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="a11y_add_new_to_list">הוסף לרשימה</string>
-    <string name="do_you_want_switch_profile">האם ברצונכם להחליף את הפרופיל ולזנוח את השינויים שבוצעו בפרופיל הנוכחי?</string>
-    <string name="save_or_reset_changes_first">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>
-    <string name="delete_current_profile">למחוק את הפרופיל הנוכחי?</string>
-    <string name="units_colon">יחידות:</string>
     <!-- Actions -->
     <string name="actions">פעולות</string>
     <!-- manage moved to core:ui module -->
@@ -56,7 +47,6 @@
     <string name="overview_shortname">בית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="overview_buttons_selection">מקשים</string>
-    <string name="not_available_full">לא זמין</string>
     <string name="data_status">מצב נתוני הסוכר</string>
     <string name="fill_bolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="run_question">להפעיל %s?</string>
