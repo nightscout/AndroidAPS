@@ -14,7 +14,7 @@ kotlinx-serialization = "1.10.0"
 kotlinx-coroutines = "1.10.2"
 work = "2.11.2"
 datastorePreferences = "1.2.1"
-annotation = "1.9.1"
+annotation = "1.10.0"
 
 # Compose
 activityCompose = "1.13.0"
