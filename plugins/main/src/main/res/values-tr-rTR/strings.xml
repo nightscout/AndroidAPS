@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Döngü devre dışı</string>
-    <string name="smscommunicator_pump_disconnected">Pompa bağlantısı kesildi</string>
     <string name="calculator_label">Hesap makinesi</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">YP</string>
-    <string name="a11y_add_new_to_list">listeye yeni ekle</string>
-    <string name="do_you_want_switch_profile">Profili değiştirmek ve mevcut profilde yapılan değişiklikleri gözardı etmek istiyor musunuz?</string>
-    <string name="save_or_reset_changes_first">Önce mevcut değişiklikleri kaydedin veya sıfırlayın</string>
-    <string name="delete_current_profile">Mevcut profil silinsin mi?</string>
-    <string name="units_colon">Birim:</string>
     <!-- Actions -->
     <string name="actions">Eylemler</string>
     <!-- manage moved to core:ui module -->
@@ -56,7 +47,6 @@
     <string name="overview_shortname">GİRİŞ</string>
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="overview_buttons_selection">Butonlar</string>
-    <string name="not_available_full">Mevcut değil</string>
     <string name="data_status">KŞ veri durumu</string>
     <string name="fill_bolus_title">Standart insülin miktarlarını Hazırla/Doldur</string>
     <string name="run_question">Yürüt %s?</string>
