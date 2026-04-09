@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
     <!-- Actions -->
     <string name="actions">Műveletek</string>
     <!-- manage moved to core:ui module -->
