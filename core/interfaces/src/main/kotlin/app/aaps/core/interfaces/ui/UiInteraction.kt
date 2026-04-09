@@ -93,11 +93,6 @@ interface UiInteraction {
      */
     fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null, iCfg: ICfg? = null)
 
-    /**
-     * Shows the temporary basal dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runTempBasalDialog(fragmentManager: FragmentManager)
 
     /**
      * Shows the treatment dialog.
@@ -111,11 +106,6 @@ interface UiInteraction {
      */
     fun runInsulinDialog(fragmentManager: FragmentManager)
 
-    /**
-     * Shows the calibration dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runCalibrationDialog(fragmentManager: FragmentManager)
 
     /**
      * Shows the carbs dialog.
@@ -123,23 +113,8 @@ interface UiInteraction {
      */
     fun runCarbsDialog(fragmentManager: FragmentManager)
 
-    /**
-     * Shows the temporary target dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runTempTargetDialog(fragmentManager: FragmentManager)
 
-    /**
-     * Shows the extended bolus dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runExtendedBolusDialog(fragmentManager: FragmentManager)
 
-    /**
-     * Shows the pump fill/prime dialog.
-     * @param fragmentManager The fragment manager to use.
-     */
-    fun runFillDialog(fragmentManager: FragmentManager)
 
     /**
      * Defines modes for the site rotation dialog.
@@ -180,13 +155,6 @@ interface UiInteraction {
         ANNOUNCEMENT
     }
 
-    /**
-     * Shows the care portal dialog for a specific event type.
-     * @param fragmentManager The fragment manager to use.
-     * @param options The type of event.
-     * @param event A string resource for the event title.
-     */
-    fun runCareDialog(fragmentManager: FragmentManager, options: EventType, @StringRes event: Int)
 
     /**
      * Opens the preferences screen for a specific plugin.

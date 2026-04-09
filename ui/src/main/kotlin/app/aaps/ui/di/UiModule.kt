@@ -6,16 +6,16 @@ import app.aaps.core.ui.search.SearchableProvider
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
 import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
-import app.aaps.ui.dialogs.CalibrationDialog
+
 import app.aaps.ui.dialogs.CarbsDialog
-import app.aaps.ui.dialogs.CareDialog
-import app.aaps.ui.dialogs.ExtendedBolusDialog
-import app.aaps.ui.dialogs.FillDialog
+
+
+
 import app.aaps.ui.dialogs.InsulinDialog
 import app.aaps.ui.dialogs.LoopDialog
 import app.aaps.ui.dialogs.ProfileSwitchDialog
-import app.aaps.ui.dialogs.TempBasalDialog
-import app.aaps.ui.dialogs.TempTargetDialog
+
+
 import app.aaps.ui.dialogs.TreatmentDialog
 
 import app.aaps.ui.search.BuiltInSearchables
@@ -51,16 +51,16 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesWidget(): Widget
     @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
 
-    @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
+
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
-    @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
-    @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
-    @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
+
+
+
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
     @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
-    @ContributesAndroidInjector abstract fun contributesTempBasalDialog(): TempBasalDialog
-    @ContributesAndroidInjector abstract fun contributesTempTargetDialog(): TempTargetDialog
+
+
     @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
 
     @ContributesAndroidInjector abstract fun contributeErrorActivity(): ErrorActivity

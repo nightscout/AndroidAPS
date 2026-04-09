@@ -20,16 +20,16 @@ import app.aaps.core.objects.extensions.toJson
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.dialogs.AlertDialogs
-import app.aaps.ui.dialogs.CalibrationDialog
+
 import app.aaps.ui.dialogs.CarbsDialog
-import app.aaps.ui.dialogs.CareDialog
-import app.aaps.ui.dialogs.ExtendedBolusDialog
-import app.aaps.ui.dialogs.FillDialog
+
+
+
 import app.aaps.ui.dialogs.InsulinDialog
 import app.aaps.ui.dialogs.LoopDialog
 import app.aaps.ui.dialogs.ProfileSwitchDialog
-import app.aaps.ui.dialogs.TempBasalDialog
-import app.aaps.ui.dialogs.TempTargetDialog
+
+
 import app.aaps.ui.dialogs.TreatmentDialog
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
@@ -90,10 +90,6 @@ class UiInteractionImpl @Inject constructor(
             .show(fragmentManager, "ProfileSwitchDialog")
     }
 
-    override fun runTempBasalDialog(fragmentManager: FragmentManager) {
-        TempBasalDialog()
-            .show(fragmentManager, "TempBasalDialog")
-    }
 
     override fun runTreatmentDialog(fragmentManager: FragmentManager) {
         TreatmentDialog()
@@ -105,41 +101,15 @@ class UiInteractionImpl @Inject constructor(
             .show(fragmentManager, "InsulinDialog")
     }
 
-    override fun runCalibrationDialog(fragmentManager: FragmentManager) {
-        CalibrationDialog()
-            .show(fragmentManager, "CalibrationDialog")
-    }
 
     override fun runCarbsDialog(fragmentManager: FragmentManager) {
         CarbsDialog()
             .show(fragmentManager, "CarbsDialog")
     }
 
-    override fun runTempTargetDialog(fragmentManager: FragmentManager) {
-        TempTargetDialog()
-            .show(fragmentManager, "TempTargetDialog")
-    }
 
-    override fun runExtendedBolusDialog(fragmentManager: FragmentManager) {
-        ExtendedBolusDialog()
-            .show(fragmentManager, "ExtendedBolusDialog")
-    }
 
-    override fun runFillDialog(fragmentManager: FragmentManager) {
-        FillDialog(fragmentManager)
-            .show(fragmentManager, "FillDialog")
-    }
 
-    override fun runCareDialog(fragmentManager: FragmentManager, options: UiInteraction.EventType, @StringRes event: Int) {
-        CareDialog(fragmentManager)
-            .also {
-                it.arguments = Bundle().also { bundle ->
-                    bundle.putInt("event", event)
-                    bundle.putInt("options", options.ordinal)
-                }
-            }
-            .show(fragmentManager, "CareDialog")
-    }
 
     override fun runPreferencesForPlugin(activity: FragmentActivity, pluginSimpleName: String?) {
         pluginSimpleName ?: return

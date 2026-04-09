@@ -614,7 +614,7 @@ class MainApp : Application(), HasAndroidInjector {
      * Migrates temp target presets from old individual preference keys to unified JSON storage.
      * Creates 3 default presets (Eating Soon, Activity, Hypo) for new installations.
      * For existing installations, migrates values from old keys.
-     * Old keys remain functional for legacy TempTargetDialog.
+     * Old keys are kept for backward compatibility during migration period.
      */
     private fun migrateTempTargetPresets() {
         // Check if migration already completed
@@ -682,9 +682,8 @@ class MainApp : Application(), HasAndroidInjector {
 
         aapsLogger.debug(LTag.CORE, "Migrated temp target presets to JSON storage")
 
-        // NOTE: Old preferences are NOT removed to keep legacy TempTargetDialog functional
+        // NOTE: Old preferences are kept for backward compatibility during migration period
         // They are marked as @Deprecated in preference key definitions
-        // Removal will be done when legacy UI is completely removed in the future
     }
 
     private suspend fun dataMigrations() {

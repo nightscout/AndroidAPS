@@ -75,7 +75,6 @@ class TidepoolPlugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .pluginName(R.string.tidepool)
         .shortName(R.string.tidepool_shortname)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_tidepool)
         .icon(IcPluginTidepool)
         .composeContent {
             TidepoolComposeContent(

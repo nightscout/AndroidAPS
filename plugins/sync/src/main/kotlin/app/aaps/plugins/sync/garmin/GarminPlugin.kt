@@ -68,7 +68,6 @@ class GarminPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_garmin_triangle)
         .icon(IcPluginGarmin)
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)

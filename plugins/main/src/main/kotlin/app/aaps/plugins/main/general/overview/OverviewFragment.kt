@@ -258,7 +258,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.pumpStatusLayout.setOnClickListener(this)
         binding.buttonsLayout.acceptTempButton.setOnClickListener(this)
         binding.buttonsLayout.treatmentButton.setOnClickListener(this)
-        binding.buttonsLayout.calibrationButton.setOnClickListener(this)
+
         binding.buttonsLayout.cgmButton.setOnClickListener(this)
         binding.buttonsLayout.insulinButton.setOnClickListener(this)
         binding.buttonsLayout.carbsButton.setOnClickListener(this)
@@ -434,18 +434,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 R.id.treatment_button   -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runTreatmentDialog(childFragmentManager) })
                 R.id.insulin_button     -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runInsulinDialog(childFragmentManager) })
                 R.id.carbs_button       -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runCarbsDialog(childFragmentManager) })
-                R.id.temp_target        -> protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) uiInteraction.runTempTargetDialog(childFragmentManager) })
 
                 R.id.cgm_button         -> {
                     if (xDripSource.isEnabled()) openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomBoyda.isEnabled()) dexcomBoyda.dexcomPackages().forEach { openCgmApp(it) }
                 }
 
-                R.id.calibration_button -> {
-                    if (xDripSource.isEnabled()) {
-                        uiInteraction.runCalibrationDialog(childFragmentManager)
-                    }
-                }
 
                 R.id.accept_temp_button -> {
                     profileFunction.getProfile() ?: return@launch
@@ -507,7 +501,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
             }
 
-            R.id.temp_target    -> v.performClick()
+
         }
         return false
     }
@@ -563,7 +557,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 // **** Calibration & CGM buttons ****
                 val xDripIsBgSource = xDripSource.isEnabled()
                 val dexcomIsSource = dexcomBoyda.isEnabled()
-                binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && preferences.get(BooleanKey.OverviewShowCalibrationButton)).toVisibility()
+
                 if (dexcomIsSource) {
                     binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
                     for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {

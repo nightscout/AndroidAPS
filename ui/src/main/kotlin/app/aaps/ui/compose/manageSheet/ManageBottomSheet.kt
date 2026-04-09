@@ -67,6 +67,8 @@ fun ManageBottomSheet(
     showCancelTempBasal: Boolean,
     showExtendedBolus: Boolean,
     showCancelExtendedBolus: Boolean,
+    showBatteryChange: Boolean,
+    showFill: Boolean,
     // Cancel text strings
     cancelTempBasalText: String,
     cancelExtendedBolusText: String,
@@ -94,6 +96,8 @@ fun ManageBottomSheet(
             showCancelTempBasal = showCancelTempBasal,
             showExtendedBolus = showExtendedBolus,
             showCancelExtendedBolus = showCancelExtendedBolus,
+            showBatteryChange = showBatteryChange,
+            showFill = showFill,
             cancelTempBasalText = cancelTempBasalText,
             cancelExtendedBolusText = cancelExtendedBolusText,
             isPatchPump = isPatchPump,
@@ -116,6 +120,8 @@ internal fun ManageBottomSheetContent(
     showCancelTempBasal: Boolean,
     showExtendedBolus: Boolean,
     showCancelExtendedBolus: Boolean,
+    showBatteryChange: Boolean = false,
+    showFill: Boolean = false,
     cancelTempBasalText: String,
     cancelExtendedBolusText: String,
     isPatchPump: Boolean = false,
@@ -219,10 +225,20 @@ internal fun ManageBottomSheetContent(
                         modifier = modifier
                     )
                 }
-                if (!isPatchPump) {
+                if (showFill) {
                     add { modifier ->
                         ManageGridItem(
                             elementType = ElementType.FILL,
+                            onDismiss = onDismiss,
+                            onNavigate = onNavigate,
+                            modifier = modifier
+                        )
+                    }
+                }
+                if (showBatteryChange) {
+                    add { modifier ->
+                        ManageGridItem(
+                            elementType = ElementType.BATTERY_CHANGE,
                             onDismiss = onDismiss,
                             onNavigate = onNavigate,
                             modifier = modifier
