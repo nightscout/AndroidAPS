@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop er deaktivert</string>
-    <string name="smscommunicator_pump_disconnected">Pumpe frakoblet</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Definer en profil som beskriver ditt insulinbehov.</string>
-    <string name="a11y_add_new_to_list">legg til ny i liste</string>
-    <string name="do_you_want_switch_profile">Ønsker du å bytte profil og forkaste endringer i gjeldende profil?</string>
-    <string name="save_or_reset_changes_first">Lagre eller nullstill gjeldende endringer først</string>
-    <string name="delete_current_profile">Slette gjeldende profil?</string>
-    <string name="units_colon">Enheter:</string>
     <!-- Actions -->
     <string name="actions">Handlinger</string>
     <!-- manage moved to core:ui module -->
@@ -59,7 +49,6 @@
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="overview_buttons_selection">Knapper</string>
-    <string name="not_available_full">Ikke tilgjengelig</string>
     <string name="data_status">Status BS-data</string>
     <string name="fill_bolus_title">Standardverdier for påfyll/prime</string>
     <string name="run_question">Kjør %s?</string>
