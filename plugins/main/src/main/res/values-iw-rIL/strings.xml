@@ -59,7 +59,6 @@
     <string name="overview_buttons_selection">מקשים</string>
     <string name="not_available_full">לא זמין</string>
     <string name="data_status">מצב נתוני הסוכר</string>
-    <string name="default_temptargets">ברירות מחדל ערכי מטרה</string>
     <string name="fill_bolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="run_question">להפעיל %s?</string>
     <!--    OverviewMenu-->
