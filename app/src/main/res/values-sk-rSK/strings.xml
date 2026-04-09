@@ -19,6 +19,15 @@
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="sort_label">Zoradiť</string>
     <string name="search">Hľadať</string>
+    <string name="use_compose_main_screen">Prepni na hlavnú obrazovku Compose (experimentálne)</string>
+    <string name="switch_to_compose_ui">Prepni na Compose UI</string>
+    <string name="switch_to_classic_ui">Prepni na Classic UI</string>
     <string name="select">Vybrať</string>
     <string name="set">Nastaviť</string>
+    <string name="migrating_preferences">Migrujem nastavenia...</string>
+    <string name="initializing_plugins">Inicializujem pluginy...</string>
+    <string name="initializing">Inicializujem…</string>
+    <string name="migrating_profile_switches">Migrujem prepnutia profilov...</string>
+    <string name="migrating_effective_profile_switches">Migrujem efektívne prepnutia profilov...</string>
+    <string name="migrating_boluses">Migrujem bolusy...</string>
 </resources>
