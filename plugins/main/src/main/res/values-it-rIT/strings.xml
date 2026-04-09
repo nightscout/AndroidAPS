@@ -62,7 +62,6 @@
     <string name="overview_buttons_selection">Tasti</string>
     <string name="not_available_full">Non disponibile</string>
     <string name="data_status">Stato dati BG</string>
-    <string name="default_temptargets">Target temporanei predefiniti</string>
     <string name="fill_bolus_title">Carica/Riempi: quantità standard di insulina</string>
     <string name="run_question">Eseguire %s?</string>
     <!--    OverviewMenu-->
