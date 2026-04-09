@@ -32,7 +32,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.objects.extensions.fromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.extensions.toVisibility
@@ -199,8 +199,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         val isTT = binding.duration.value > 0 && binding.percentage.value < 100 && binding.tt.isChecked
-        val target = preferences.get(UnitDoubleKey.OverviewActivityTarget)
-        val units = profileFunction.getUnits()
+        val targetMgdl = preferences.ttTargetMgdl(TT.Reason.ACTIVITY)
         if (isTT)
             actions.add(rh.gs(app.aaps.core.ui.R.string.temporary_target) + ": " + rh.gs(app.aaps.core.ui.R.string.activity))
 
@@ -242,8 +241,8 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                         timestamp = eventTime + 10000, // Add ten secs for proper NSCv1 sync
                                         duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                                         reason = TT.Reason.ACTIVITY,
-                                        lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
-                                        highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
+                                        lowTarget = targetMgdl,
+                                        highTarget = targetMgdl
                                     ),
                                     action = Action.TT,
                                     source = Sources.TTDialog,
@@ -251,7 +250,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                     listValues = listOfNotNull(
                                         ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                         ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
-                                        ValueWithUnit.fromGlucoseUnit(target, units),
+                                        ValueWithUnit.Mgdl(targetMgdl),
                                         ValueWithUnit.Minute(duration)
                                     )
                                 )

@@ -46,7 +46,7 @@ import app.aaps.ui.compose.alertDialogs.AboutDialogData
 import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
 import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
 import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
-import app.aaps.ui.compose.tempTarget.toTTPresets
+import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -506,7 +506,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun requestTempTargetPresetConfirmation(presetId: String) {
-        val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresets()
+        val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
         val preset = presets.find { it.id == presetId } ?: return
         val name = preset.name ?: preset.nameRes?.let { rh.gs(it) } ?: "?"
         val durationMin = (preset.duration / 60000L).toInt()
@@ -549,7 +549,7 @@ class MainViewModel @Inject constructor(
             }
 
             is ConfirmableAction.ActivateTempTargetPreset -> {
-                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresets()
+                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
                 val preset = presets.find { it.id == action.presetId } ?: return@launch
                 viewModelScope.launch {
                     val tempTarget = TT(

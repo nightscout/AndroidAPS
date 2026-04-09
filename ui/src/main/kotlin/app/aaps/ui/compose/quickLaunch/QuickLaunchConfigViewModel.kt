@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
-import app.aaps.ui.compose.tempTarget.toTTPresets
+import app.aaps.core.interfaces.tempTargets.toTTPresets
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -13,6 +13,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -96,7 +97,7 @@ class TempTargetManagementViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // Load presets from JSON (or create defaults if empty)
-                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresets()
+                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
 
                 // Load active TT
                 val now = dateUtil.now()
@@ -163,7 +164,7 @@ class TempTargetManagementViewModel @Inject constructor(
     fun refreshData() {
         viewModelScope.launch {
             try {
-                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresets()
+                val presets = preferences.get(StringNonKey.TempTargetPresets).toTTPresetsWithNameRes()
                 val now = dateUtil.now()
                 val activeTT = persistenceLayer.getTemporaryTargetActiveAt(now)
 

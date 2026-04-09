@@ -33,9 +33,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.toast.ToastUtils
@@ -186,7 +187,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             if (bgReading.recalculated < 72) {
 
                 val activeTT = runBlocking { persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) }
-                val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
+                val hypoTTDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA)
 
                 var shouldAutoCheckHypo = true
 
@@ -242,12 +243,12 @@ class CarbsDialog : DialogFragmentWithDate() {
         var carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
         val units = profileUtil.units
         val cob = iobCobCalculator.ads.getLastAutosensData("carbsDialog", aapsLogger, dateUtil)?.cob ?: 0.0
-        val activityTTDuration = preferences.get(IntKey.OverviewActivityDuration)
-        val activityTT = preferences.get(UnitDoubleKey.OverviewActivityTarget)
-        val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-        val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
-        val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
-        val hypoTT = preferences.get(UnitDoubleKey.OverviewHypoTarget)
+        val activityTTDuration = preferences.ttDurationMinutes(TT.Reason.ACTIVITY)
+        val activityTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.ACTIVITY), units)
+        val eatingSoonTTDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
+        val eatingSoonTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), units)
+        val hypoTTDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA)
+        val hypoTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.HYPOGLYCEMIA), units)
         val actions: LinkedList<String?> = LinkedList()
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val useAlarm = binding.alarmCheckBox.isChecked

@@ -18,7 +18,7 @@ import app.aaps.core.ui.compose.navigation.descriptionResId
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.compose.navigation.ElementAvailability
-import app.aaps.ui.compose.tempTarget.toTTPresets
+import app.aaps.core.interfaces.tempTargets.toTTPresets
 import javax.inject.Inject
 import javax.inject.Singleton
 

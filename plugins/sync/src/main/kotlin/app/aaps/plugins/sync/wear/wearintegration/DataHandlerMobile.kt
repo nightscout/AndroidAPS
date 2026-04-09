@@ -72,6 +72,8 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
@@ -1042,8 +1044,8 @@ class DataHandlerMobile @Inject constructor(
         val presetIsMGDL = profileFunction.getUnits() == GlucoseUnit.MGDL
         when (action.command) {
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_ACTIVITY -> {
-                val activityTTDuration = preferences.get(IntKey.OverviewActivityDuration)
-                val activityTT = preferences.get(UnitDoubleKey.OverviewActivityTarget)
+                val activityTTDuration = preferences.ttDurationMinutes(TT.Reason.ACTIVITY)
+                val activityTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.ACTIVITY), profileFunction.getUnits())
                 val formattedGlucoseValue = formatGlucose(activityTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.activity)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, activityTTDuration)
@@ -1061,8 +1063,8 @@ class DataHandlerMobile @Inject constructor(
             }
 
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO     -> {
-                val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
-                val hypoTT = preferences.get(UnitDoubleKey.OverviewHypoTarget)
+                val hypoTTDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA)
+                val hypoTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.HYPOGLYCEMIA), profileFunction.getUnits())
                 val formattedGlucoseValue = formatGlucose(hypoTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.hypo)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, hypoTTDuration)
@@ -1080,8 +1082,8 @@ class DataHandlerMobile @Inject constructor(
             }
 
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_EATING   -> {
-                val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-                val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+                val eatingSoonTTDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
+                val eatingSoonTT = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), profileFunction.getUnits())
                 val formattedGlucoseValue = formatGlucose(eatingSoonTT, presetIsMGDL)
                 val reason = rh.gs(app.aaps.core.ui.R.string.eatingsoon)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, formattedGlucoseValue, eatingSoonTTDuration)

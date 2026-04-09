@@ -27,7 +27,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.plugins.aps.loop.LoopPlugin
@@ -666,6 +666,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //TARGET MEAL
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(
+            """[{"id":"eatingsoon","reason":"Eating Soon","targetValue":90.0,"duration":2700000,"isDeletable":false},{"id":"activity","reason":"Activity","targetValue":140.0,"duration":5400000,"isDeletable":false},{"id":"hypo","reason":"Hypo","targetValue":160.0,"duration":3600000,"isDeletable":false}]"""
+        )
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "TARGET MEAL")
         smsCommunicatorPlugin.processSms(sms)
@@ -1020,8 +1023,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
-        whenever(preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)).thenReturn(5.0)
-        whenever(preferences.get(IntKey.OverviewEatingSoonDuration)).thenReturn(45)
+        whenever(preferences.get(StringNonKey.TempTargetPresets)).thenReturn(
+            """[{"id":"eatingsoon","reason":"Eating Soon","targetValue":90.0,"duration":2700000,"isDeletable":false}]"""
+        )
         //BOLUS 1 MEAL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1 MEAL")

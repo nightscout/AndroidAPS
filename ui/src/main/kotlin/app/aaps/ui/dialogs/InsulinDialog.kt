@@ -34,9 +34,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.extensions.toVisibility
@@ -208,8 +208,9 @@ class InsulinDialog : DialogFragmentWithDate() {
                     rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                 )
         }
-        val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-        val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+        val eatingSoonTTDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON)
+        val eatingSoonTTMgdl = preferences.ttTargetMgdl(TT.Reason.EATING_SOON)
+        val eatingSoonTT = profileUtil.fromMgdlToUnits(eatingSoonTTMgdl, profileFunction.getUnits())
         if (eatingSoonChecked)
             actions.add(
                 rh.gs(R.string.temp_target_short) + ": " + (decimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(
@@ -241,14 +242,14 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     timestamp = System.currentTimeMillis(),
                                     duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                     reason = TT.Reason.EATING_SOON,
-                                    lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits()),
-                                    highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits())
+                                    lowTarget = eatingSoonTTMgdl,
+                                    highTarget = eatingSoonTTMgdl
                                 ),
                                 action = Action.TT, source = Sources.InsulinDialog,
                                 note = notes,
                                 listValues = listOf(
                                     ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
-                                    ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
+                                    ValueWithUnit.Mgdl(eatingSoonTTMgdl),
                                     ValueWithUnit.Minute(eatingSoonTTDuration)
                                 )
                             )

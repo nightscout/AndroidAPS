@@ -36,7 +36,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
@@ -449,16 +449,15 @@ class ProfileManagementViewModel @Inject constructor(
 
             if (withTT && durationMinutes > 0 && percentage < 100) {
                 // Create Activity TT
-                val target = preferences.get(UnitDoubleKey.OverviewActivityTarget)
-                val units = profileFunction.getUnits()
+                val targetMgdl = preferences.ttTargetMgdl(TT.Reason.ACTIVITY)
                 viewModelScope.launch {
                     persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         TT(
                             timestamp = timestamp + 10000, // Add ten secs for proper NSCv1 sync
                             duration = TimeUnit.MINUTES.toMillis(durationMinutes.toLong()),
                             reason = TT.Reason.ACTIVITY,
-                            lowTarget = profileUtil.convertToMgdl(target, units),
-                            highTarget = profileUtil.convertToMgdl(target, units)
+                            lowTarget = targetMgdl,
+                            highTarget = targetMgdl
                         ),
                         action = Action.TT,
                         source = Sources.TTDialog,
@@ -466,7 +465,7 @@ class ProfileManagementViewModel @Inject constructor(
                         listValues = listOfNotNull(
                             ValueWithUnit.Timestamp(timestamp).takeIf { timeChanged },
                             ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
-                            ValueWithUnit.fromGlucoseUnit(target, units),
+                            ValueWithUnit.Mgdl(targetMgdl),
                             ValueWithUnit.Minute(durationMinutes)
                         )
                     )
