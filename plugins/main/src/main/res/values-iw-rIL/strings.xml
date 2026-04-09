@@ -52,7 +52,6 @@
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
     <string name="set_basal_question">אשר בזאלי זמני חדש:</string>
-    <string name="overview_cgm">סנסור</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">בית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
