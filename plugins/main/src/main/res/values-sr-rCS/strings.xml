@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop Onesposobljen</string>
-    <string name="smscommunicator_pump_disconnected">Pumpa nije povezana</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
     <!-- Actions -->
     <!-- manage moved to core:ui module -->
     <string name="description_actions">Neke tipke za brzi pristup uobičajenim funkcijama</string>
