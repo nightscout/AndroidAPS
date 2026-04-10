@@ -1,12 +1,13 @@
 package app.aaps
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.InputType
 import android.text.SpannableString
@@ -24,7 +25,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -114,33 +114,37 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private var mainMenuProvider: MenuProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // ========== 先调用super，满足IDE检查，这行必须在最开头 ==========
+        // ========== 先执行所有系统初始化，满足Activity生命周期 ==========
         super.onCreate(savedInstanceState)
 
-        // ========== 密码验证：紧接着执行，完全无法绕过 ==========
-        val passwordInput = EditText(this)
-        passwordInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-        passwordInput.hint = "请输入启动密码"
+        // ========== 等Activity完全初始化完，再弹密码框，避免闪退 ==========
+        Handler(Looper.getMainLooper()).post {
+            // ========== 用你APP原来的Material Dialog，完全兼容主题，不会崩溃 ==========
+            val passwordInput = EditText(this@MainActivity)
+            passwordInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            passwordInput.hint = "请输入启动密码"
 
-        AlertDialog.Builder(this)
-            .setTitle("APP访问密码")
-            .setView(passwordInput)
-            .setPositiveButton("确定") { _, _ ->
-                val inputPwd = passwordInput.text.toString()
-                // ========== 这里改成你自己的密码！！！ ==========
-                if (inputPwd == "danamo999") {
-                    // 密码正确，执行剩下的所有初始化逻辑
-                    initRestOfOnCreate(savedInstanceState)
-                } else {
-                    Toast.makeText(this, "密码错误，无法启动APP", Toast.LENGTH_LONG).show()
+            MaterialAlertDialogBuilder(this@MainActivity)
+                .setTitle("APP访问密码")
+                .setView(passwordInput)
+                .setPositiveButton("确定") { _, _ ->
+                    val inputPwd = passwordInput.text.toString()
+                    // ========== 你的密码：danamo999 ==========
+                    if (inputPwd == "danamo999") {
+                        // 密码正确，执行剩下的所有初始化逻辑
+                        initRestOfOnCreate(savedInstanceState)
+                    } else {
+                        // 用你APP原来的Toast，完全兼容
+                        ToastUtils.errorToast(this@MainActivity, "密码错误，无法启动APP", isShort = false)
+                        finish()
+                    }
+                }
+                .setNegativeButton("取消") { _, _ ->
                     finish()
                 }
-            }
-            .setNegativeButton("取消") { _, _ ->
-                finish()
-            }
-            .setCancelable(false) // 禁止返回键/点击空白处绕过
-            .show()
+                .setCancelable(false) // 禁止返回键/点击空白处绕过
+                .show()
+        }
     }
 
     // ========== 原MainActivity剩下的所有初始化逻辑，完全不动 ==========
@@ -238,7 +242,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
                         val messageSpanned = SpannableString(message)
                         Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                        MaterialAlertDialogBuilder(this@MainActivity, app.aaps.core.ui.R.style.DialogTheme)
+                        MaterialAlertDialogBuilder(this@MainActivity)
                             .setTitle(rh.gs(R.string.app_name) + " " + config.VERSION)
                             .setIcon(iconsProvider.getIcon())
                             .setMessage(messageSpanned)
