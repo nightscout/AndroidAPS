@@ -53,6 +53,7 @@ import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import info.nightscout.pump.combov2.compose.ComboV2ComposeContent
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
@@ -142,7 +143,11 @@ class ComboV2Plugin @Inject constructor(
     PumpPluginBase(
         pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
-            .fragmentClass(ComboV2Fragment::class.java.name)
+            .composeContent { _ ->
+                ComboV2ComposeContent(
+                    pluginName = rh.gs(R.string.combov2_plugin_name)
+                )
+            }
             .icon(IcPluginCombo)
             .pluginName(R.string.combov2_plugin_name)
             .shortName(R.string.combov2_plugin_shortname)

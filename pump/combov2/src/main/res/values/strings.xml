@@ -24,7 +24,6 @@
     <string name="combov2_pair_with_pump_title">Pair with pump</string>
     <string name="combov2_unpair_pump_title">Unpair pump</string>
     <string name="combov2_driver_state_label">Driver state</string>
-    <string name="combov2_current_activity_label">Current activity</string>
     <string name="bluetooth_address">Bluetooth address</string>
     <string name="combov2_start_pairing">Start pairing</string>
     <string name="combov2_pairing_in_progress">Combo pairing in progress</string>
@@ -94,10 +93,9 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (less than 1 min remaining)</string>
     <string name="combov2_load_tdds_cancelled">Loading TDDs cancelled</string>
     <string name="combov2_retrieving_tdds_failed">Retrieving TDDs failed</string>
-    <string name="combov2_no_activity" translatable="false">{fa-bed}</string>
-    <string name="combov2_battery_empty_indicator" translatable="false">{fa-battery-empty}</string>
-    <string name="combov2_battery_low_indicator" translatable="false">{fa-battery-quarter}</string>
-    <string name="combov2_battery_full_indicator" translatable="false">{fa-battery-full}</string>
+    <string name="combov2_battery_empty">Empty</string>
+    <string name="combov2_battery_low">Low</string>
+    <string name="combov2_battery_full">Full</string>
     <string name="combov2_battery_low_warning">Pump battery is low</string>
     <string name="combov2_reservoir_low_warning">Pump reservoir level is low</string>
     <string name="combov2_setting_tbr_succeeded">Setting TBR succeeded</string>

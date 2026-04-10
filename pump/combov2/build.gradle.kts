@@ -24,6 +24,7 @@ dependencies {
 
     api(libs.androidx.lifecycle.viewmodel)
     api(libs.kotlinx.datetime)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)
