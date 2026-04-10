@@ -24,6 +24,7 @@ import app.aaps.pump.insight.events.EventLocalInsightUpdateGUI
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
 
 @SuppressLint("SetTextI18n")
 class InsightFragment : DaggerFragment(), View.OnClickListener {
@@ -164,7 +165,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
         insightPlugin.connectionService?.let {
             val string = when (it.state) {
                 InsightState.NOT_PAIRED                 -> R.string.not_paired
-                InsightState.DISCONNECTED               -> app.aaps.core.ui.R.string.disconnected
+                InsightState.DISCONNECTED               -> CoreUiR.string.disconnected
                 InsightState.CONNECTING,
                 InsightState.SATL_CONNECTION_REQUEST,
                 InsightState.SATL_KEY_REQUEST,
@@ -177,7 +178,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
                 InsightState.APP_CONNECT_MESSAGE,
                 InsightState.APP_FIRMWARE_VERSIONS,
                 InsightState.APP_SYSTEM_IDENTIFICATION,
-                InsightState.AWAITING_CODE_CONFIRMATION -> app.aaps.core.ui.R.string.connecting
+                InsightState.AWAITING_CODE_CONFIRMATION -> CoreUiR.string.connecting
 
                 InsightState.CONNECTED                  -> app.aaps.core.interfaces.R.string.connected
                 InsightState.RECOVERING                 -> R.string.recovering
@@ -186,7 +187,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
             binding.status.text = rh.gs(string)
             binding.recoveryDurationLine.visibility = (it.state == InsightState.RECOVERING).toVisibility()
             if (it.state == InsightState.RECOVERING) {
-                binding.recoveryDuration.text = rh.gs(app.aaps.core.ui.R.string.secs, it.recoveryDuration / 1000)
+                binding.recoveryDuration.text = rh.gs(CoreUiR.string.secs, it.recoveryDuration / 1000)
             }
         }
     }
@@ -239,7 +240,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
 
             OperatingMode.PAUSED  -> {
                 binding.operatingModeButton.setText(R.string.start_pump)
-                string = app.aaps.core.ui.R.string.paused
+                string = CoreUiR.string.paused
             }
 
             else                  -> Unit
@@ -251,7 +252,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     private fun getBatteryStatusItem() {
         insightPlugin.batteryStatus?.let { batteryStatus ->
             binding.batteryLevelLine.visibility = View.VISIBLE
-            binding.batteryLevel.text = rh.gs(app.aaps.core.ui.R.string.format_percent, batteryStatus.batteryAmount)
+            binding.batteryLevel.text = rh.gs(CoreUiR.string.format_percent, batteryStatus.batteryAmount)
         } ?: apply {
             binding.batteryLevelLine.visibility = View.GONE
         }
@@ -260,7 +261,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     private fun getCartridgeStatusItem() {
         insightPlugin.cartridgeStatus?.let { cartridgeStatus ->
             binding.reservoirLevelLine.visibility = View.VISIBLE
-            val status: String = if (cartridgeStatus.isInserted) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, cartridgeStatus.remainingAmount) else rh.gs(R.string.not_inserted)
+            val status: String = if (cartridgeStatus.isInserted) rh.gs(CoreUiR.string.format_insulin_units, cartridgeStatus.remainingAmount) else rh.gs(R.string.not_inserted)
             binding.reservoirLevel.text = status
         } ?: apply {
             binding.reservoirLevelLine.visibility = View.GONE
@@ -270,11 +271,11 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     private fun getTDDItems() {
         insightPlugin.totalDailyDose?.let { tdd ->
             binding.tddBolusLine.visibility = View.VISIBLE
-            binding.tddBolus.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.bolus)
+            binding.tddBolus.text = rh.gs(CoreUiR.string.format_insulin_units, tdd.bolus)
             binding.tddBasalLine.visibility = View.VISIBLE
-            binding.tddBasal.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.basal)
+            binding.tddBasal.text = rh.gs(CoreUiR.string.format_insulin_units, tdd.basal)
             binding.tddTotalLine.visibility = View.VISIBLE
-            binding.tddTotal.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.bolusAndBasal)
+            binding.tddTotal.text = rh.gs(CoreUiR.string.format_insulin_units, tdd.bolusAndBasal)
         } ?: apply {
             binding.tddBolusLine.visibility = View.GONE
             binding.tddBasalLine.visibility = View.GONE
@@ -285,7 +286,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     private fun getBaseBasalRateItem() {
         insightPlugin.activeBasalRate?.let { activeBasalRate ->
             binding.activeBasalRateLine.visibility = View.VISIBLE
-            binding.activeBasalRate.text = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, activeBasalRate.activeBasalRate) + " (${activeBasalRate.activeBasalProfileName})"
+            binding.activeBasalRate.text = rh.gs(CoreUiR.string.pump_base_basal_rate, activeBasalRate.activeBasalRate) + " (${activeBasalRate.activeBasalProfileName})"
         } ?: apply {
             binding.activeBasalRateLine.visibility = View.GONE
         }
@@ -308,7 +309,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
         binding.lastBolusLine.visibility = View.VISIBLE
         val agoMsc = System.currentTimeMillis() - insightPlugin.lastBolusTimestamp
         val bolusMinAgo = agoMsc / 60.0 / 1000.0
-        val unit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
+        val unit = rh.gs(CoreUiR.string.insulin_unit_shortname)
         val ago: String = if (bolusMinAgo < 60) {
             dateUtil.minAgo(rh, insightPlugin.lastBolusTimestamp)
         } else {
@@ -334,7 +335,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     private fun updateBolusItemView(view: TextView, labelView: TextView, activeBolus: ActiveBolus) {
         when (activeBolus.bolusType) {
             BolusType.MULTIWAVE -> rh.gs(R.string.multiwave_bolus)
-            BolusType.EXTENDED  -> rh.gs(app.aaps.core.ui.R.string.extended_bolus)
+            BolusType.EXTENDED  -> rh.gs(CoreUiR.string.extended_bolus)
             else                -> null
         }?.let { label ->
             labelView.text = label

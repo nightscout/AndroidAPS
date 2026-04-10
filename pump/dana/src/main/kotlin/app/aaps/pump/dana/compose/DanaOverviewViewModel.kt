@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class DanaOverviewEvent {
     data object StartPairWizard : DanaOverviewEvent()
@@ -149,7 +150,7 @@ open class DanaOverviewViewModel @Inject constructor(
     fun onRefreshClick() {
         aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
         danaPump.reset()
-        commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.clicked_connect_to_pump), null)
+        commandQueue.readStatus(rh.gs(CoreUiR.string.clicked_connect_to_pump), null)
     }
 
     fun onHistoryClick() {
@@ -200,7 +201,7 @@ open class DanaOverviewViewModel @Inject constructor(
         if (isConfigured) {
             add(
                 PumpAction(
-                    label = rh.gs(app.aaps.core.ui.R.string.pump_unpair),
+                    label = rh.gs(CoreUiR.string.pump_unpair),
                     icon = Icons.Filled.Bluetooth,
                     category = ActionCategory.MANAGEMENT,
                     onClick = { onUnpairClick() }
@@ -209,7 +210,7 @@ open class DanaOverviewViewModel @Inject constructor(
         } else {
             add(
                 PumpAction(
-                    label = rh.gs(app.aaps.core.ui.R.string.pairing),
+                    label = rh.gs(CoreUiR.string.pairing),
                     icon = Icons.Filled.Bluetooth,
                     category = ActionCategory.MANAGEMENT,
                     onClick = { onPairClick() }
@@ -307,29 +308,29 @@ open class DanaOverviewViewModel @Inject constructor(
         val infoRows = if (!isConfigured) emptyList() else buildList {
             // 1. Serial number
             pump.serialNumber.takeIf { it.isNotEmpty() }?.let {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.serial_number), value = it))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.serial_number), value = it))
             }
 
             // 2. Battery
             batteryText?.let {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.battery_label), value = it, level = batteryLevel))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = it, level = batteryLevel))
             }
 
             // 3. Last connection
             if (lastConnection.isNotEmpty()) {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = lastConnection, level = lastConnectionLevel))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = lastConnection, level = lastConnectionLevel))
             }
 
             // 4. Last bolus
             lastBolus?.let {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_bolus_label), value = it))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it))
             }
 
             // 5. Daily units
             add(
                 PumpInfoRow(
-                    label = rh.gs(app.aaps.core.ui.R.string.daily_units),
-                    value = rh.gs(app.aaps.core.ui.R.string.reservoir_value, ch.fromPump(PumpInsulin(pump.dailyTotalUnits)), ch.fromPump(PumpInsulin(pump.maxDailyTotalUnits.toDouble()))),
+                    label = rh.gs(CoreUiR.string.daily_units),
+                    value = rh.gs(CoreUiR.string.reservoir_value, ch.fromPump(PumpInsulin(pump.dailyTotalUnits)), ch.fromPump(PumpInsulin(pump.maxDailyTotalUnits.toDouble()))),
                     level = when {
                         pump.dailyTotalUnits > pump.maxDailyTotalUnits * 0.9 -> StatusLevel.CRITICAL
                         pump.dailyTotalUnits > pump.maxDailyTotalUnits * 0.75 -> StatusLevel.WARNING
@@ -339,17 +340,17 @@ open class DanaOverviewViewModel @Inject constructor(
             )
 
             // 6. Base basal rate
-            add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label), value = baseBasalRate))
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = baseBasalRate))
 
             // 7. Temp basal (hidden when empty)
-            add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.tempbasal_label), value = tempBasalText, visible = tempBasalText.isNotEmpty()))
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.tempbasal_label), value = tempBasalText, visible = tempBasalText.isNotEmpty()))
 
             // 8. Extended bolus (hidden when empty)
-            add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.extended_bolus_label), value = extendedBolusText, visible = extendedBolusText.isNotEmpty()))
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.extended_bolus_label), value = extendedBolusText, visible = extendedBolusText.isNotEmpty()))
 
             // 9. Reservoir
             reservoirText?.let {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.reservoir_label), value = it, level = reservoirLevel))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.reservoir_label), value = it, level = reservoirLevel))
             }
 
             // 10. Basal/bolus step
@@ -359,7 +360,7 @@ open class DanaOverviewViewModel @Inject constructor(
             if (pump.hwModel != 0) {
                 add(
                     PumpInfoRow(
-                        label = rh.gs(app.aaps.core.ui.R.string.firmware),
+                        label = rh.gs(CoreUiR.string.firmware),
                         value = rh.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
                     )
                 )
@@ -369,14 +370,14 @@ open class DanaOverviewViewModel @Inject constructor(
         // Actions
         val primaryActions = listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
-                iconRes = app.aaps.core.ui.R.drawable.ic_refresh,
+                label = rh.gs(CoreUiR.string.refresh),
+                iconRes = CoreUiR.drawable.ic_refresh,
                 category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { onRefreshClick() }
             ),
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.pump_history),
+                label = rh.gs(CoreUiR.string.pump_history),
                 icon = Icons.AutoMirrored.Filled.List,
                 category = ActionCategory.PRIMARY,
                 visible = isInitialized,

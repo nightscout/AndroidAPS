@@ -24,6 +24,7 @@ import kotlin.math.max
 import kotlin.time.ExperimentalTime
 import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.main.Pump as ComboCtlPump
+import app.aaps.core.ui.R as CoreUiR
 
 class ComboV2Fragment : DaggerFragment() {
 
@@ -41,7 +42,7 @@ class ComboV2Fragment : DaggerFragment() {
         binding.combov2RefreshButton.setOnClickListener {
             binding.combov2RefreshButton.isEnabled = false
             combov2Plugin.clearPumpErrorObservedFlag()
-            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.user_request), null)
+            commandQueue.readStatus(rh.gs(CoreUiR.string.user_request), null)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -62,12 +63,12 @@ class ComboV2Fragment : DaggerFragment() {
                     .onEach { connectionState ->
                         val text = when (connectionState) {
                             ComboV2Plugin.DriverState.NotInitialized      -> rh.gs(R.string.combov2_not_initialized)
-                            ComboV2Plugin.DriverState.Disconnected        -> rh.gs(app.aaps.core.ui.R.string.disconnected)
-                            ComboV2Plugin.DriverState.Connecting          -> rh.gs(app.aaps.core.ui.R.string.connecting)
+                            ComboV2Plugin.DriverState.Disconnected        -> rh.gs(CoreUiR.string.disconnected)
+                            ComboV2Plugin.DriverState.Connecting          -> rh.gs(CoreUiR.string.connecting)
                             ComboV2Plugin.DriverState.CheckingPump        -> rh.gs(R.string.combov2_checking_pump)
                             ComboV2Plugin.DriverState.Ready               -> rh.gs(R.string.combov2_ready)
                             ComboV2Plugin.DriverState.Suspended           -> rh.gs(R.string.combov2_suspended)
-                            ComboV2Plugin.DriverState.Error               -> rh.gs(app.aaps.core.ui.R.string.error)
+                            ComboV2Plugin.DriverState.Error               -> rh.gs(CoreUiR.string.error)
                             is ComboV2Plugin.DriverState.ExecutingCommand ->
                                 when (val desc = connectionState.description) {
                                     is ComboCtlPump.GettingBasalProfileCommandDesc  ->
@@ -113,9 +114,9 @@ class ComboV2Fragment : DaggerFragment() {
 
                         binding.combov2DriverState.setTextColor(
                             when (connectionState) {
-                                ComboV2Plugin.DriverState.Error     -> rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
-                                ComboV2Plugin.DriverState.Suspended -> rh.gac(context, app.aaps.core.ui.R.attr.urgentColor)
-                                else                                -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
+                                ComboV2Plugin.DriverState.Error     -> rh.gac(context, CoreUiR.attr.warningColor)
+                                ComboV2Plugin.DriverState.Suspended -> rh.gac(context, CoreUiR.attr.urgentColor)
+                                else                                -> rh.gac(context, CoreUiR.attr.defaultTextColor)
                             }
                         )
                     }
@@ -147,17 +148,17 @@ class ComboV2Fragment : DaggerFragment() {
 
                             BatteryState.NO_BATTERY   -> {
                                 binding.combov2Battery.text = rh.gs(R.string.combov2_battery_empty_indicator)
-                                binding.combov2Battery.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.warningColor))
+                                binding.combov2Battery.setTextColor(rh.gac(context, CoreUiR.attr.warningColor))
                             }
 
                             BatteryState.LOW_BATTERY  -> {
                                 binding.combov2Battery.text = rh.gs(R.string.combov2_battery_low_indicator)
-                                binding.combov2Battery.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.urgentColor))
+                                binding.combov2Battery.setTextColor(rh.gac(context, CoreUiR.attr.urgentColor))
                             }
 
                             BatteryState.FULL_BATTERY -> {
                                 binding.combov2Battery.text = rh.gs(R.string.combov2_battery_full_indicator)
-                                binding.combov2Battery.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
+                                binding.combov2Battery.setTextColor(rh.gac(context, CoreUiR.attr.defaultTextColor))
                             }
                         }
                     }
@@ -166,16 +167,16 @@ class ComboV2Fragment : DaggerFragment() {
                 combov2Plugin.reservoirLevelUIFlow
                     .onEach { reservoirLevel ->
                         binding.combov2Reservoir.text = if (reservoirLevel != null)
-                            "${reservoirLevel.availableUnits} ${rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)}"
+                            "${reservoirLevel.availableUnits} ${rh.gs(CoreUiR.string.insulin_unit_shortname)}"
                         else
                             ""
 
                         binding.combov2Reservoir.setTextColor(
                             when (reservoirLevel?.state) {
-                                null                 -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
-                                ReservoirState.EMPTY -> rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
-                                ReservoirState.LOW   -> rh.gac(context, app.aaps.core.ui.R.attr.urgentColor)
-                                ReservoirState.FULL  -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
+                                null                 -> rh.gac(context, CoreUiR.attr.defaultTextColor)
+                                ReservoirState.EMPTY -> rh.gac(context, CoreUiR.attr.warningColor)
+                                ReservoirState.LOW   -> rh.gac(context, CoreUiR.attr.urgentColor)
+                                ReservoirState.FULL  -> rh.gac(context, CoreUiR.attr.defaultTextColor)
                             }
                         )
                     }
@@ -196,7 +197,7 @@ class ComboV2Fragment : DaggerFragment() {
                 combov2Plugin.baseBasalRateUIFlow
                     .onEach { baseBasalRate ->
                         binding.combov2BaseBasalRate.text = if (baseBasalRate != null)
-                            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, baseBasalRate)
+                            rh.gs(CoreUiR.string.pump_base_basal_rate, baseBasalRate)
                         else
                             ""
                     }
@@ -246,17 +247,17 @@ class ComboV2Fragment : DaggerFragment() {
 
             in 0..60         -> {
                 binding.combov2LastConnection.text = rh.gs(R.string.combov2_less_than_one_minute_ago)
-                binding.combov2LastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
+                binding.combov2LastConnection.setTextColor(rh.gac(context, CoreUiR.attr.defaultTextColor))
             }
 
             in 60..(30 * 60) -> {
                 binding.combov2LastConnection.text = rh.gs(app.aaps.core.interfaces.R.string.minago, secondsPassed / 60)
-                binding.combov2LastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
+                binding.combov2LastConnection.setTextColor(rh.gac(context, CoreUiR.attr.defaultTextColor))
             }
 
             else             -> {
                 binding.combov2LastConnection.text = rh.gs(R.string.combov2_no_connection_for_n_mins, secondsPassed / 60)
-                binding.combov2LastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.warningColor))
+                binding.combov2LastConnection.setTextColor(rh.gac(context, CoreUiR.attr.warningColor))
             }
         }
     }
@@ -285,7 +286,7 @@ class ComboV2Fragment : DaggerFragment() {
             rh.gs(
                 R.string.combov2_last_bolus,
                 lastBolus.bolusAmount.cctlBolusToIU(),
-                rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
+                rh.gs(CoreUiR.string.insulin_unit_shortname),
                 bolusAgoText
             )
     }

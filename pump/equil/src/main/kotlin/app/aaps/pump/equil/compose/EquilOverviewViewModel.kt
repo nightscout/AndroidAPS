@@ -45,6 +45,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import java.time.Duration
 import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class EquilOverviewEvent {
     data class StartWizard(val workflow: EquilWorkflow) : EquilOverviewEvent()
@@ -160,8 +161,8 @@ class EquilOverviewViewModel @Inject constructor(
                 }
             )
         )
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.battery_label), value = "${state.battery}%"))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = dateUtil.dateAndTimeAndSecondsString(state.lastDataTime)))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = "${state.battery}%"))
         add(PumpInfoRow(label = rh.gs(R.string.equil_insulin_reservoir), value = ch.insulinAmountString(PumpInsulin(state.currentInsulin.toDouble()))))
         add(
             PumpInfoRow(
@@ -192,7 +193,7 @@ class EquilOverviewViewModel @Inject constructor(
                 dateUtil.sinceString(it.startTime, rh)
             )
         } ?: "-"
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_bolus_label), value = lastBolusText))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = lastBolusText))
     }
 
     private fun buildPrimaryActions(isPaired: Boolean): List<PumpAction> = buildList {
@@ -223,7 +224,7 @@ class EquilOverviewViewModel @Inject constructor(
             add(
                 PumpAction(
                 label = rh.gs(R.string.equil_pair),
-                iconRes = app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp,
+                iconRes = CoreUiR.drawable.ic_bluetooth_white_48dp,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.PAIR)) }
             ))
@@ -231,21 +232,21 @@ class EquilOverviewViewModel @Inject constructor(
             add(
                 PumpAction(
                 label = rh.gs(R.string.equil_dressing),
-                iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                iconRes = CoreUiR.drawable.ic_swap_horiz,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.CHANGE_INSULIN)) }
             ))
             add(
                 PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.history),
-                iconRes = app.aaps.core.ui.R.drawable.ic_pump_history,
+                label = rh.gs(CoreUiR.string.history),
+                iconRes = CoreUiR.drawable.ic_pump_history,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartHistory) }
             ))
             add(
                 PumpAction(
                 label = rh.gs(R.string.equil_unbind),
-                iconRes = app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp,
+                iconRes = CoreUiR.drawable.ic_bluetooth_white_48dp,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(EquilOverviewEvent.StartWizard(EquilWorkflow.UNPAIR)) }
             ))

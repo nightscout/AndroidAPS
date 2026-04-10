@@ -273,7 +273,7 @@ class ErosOverviewViewModel @Inject constructor(
 
         return listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
+                label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
                 enabled = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED) && rlReady && queueEmpty,
                 onClick = { commandQueue.customCommand(CommandGetPodStatus(), DisplayResultDialogCallback(rh.gs(CommonR.string.omnipod_common_error_failed_to_refresh_status), false)) }
