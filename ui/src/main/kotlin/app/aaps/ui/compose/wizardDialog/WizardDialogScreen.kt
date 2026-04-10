@@ -83,6 +83,7 @@ import java.text.DecimalFormat
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.IcBread
@@ -248,6 +249,7 @@ fun WizardDialogScreen(
         unitsLabel = uiState.units.asText,
         onBgChange = { viewModel.updateBg(it) },
         onCarbsChange = { viewModel.updateCarbs(it.toInt()) },
+        onAddCarbs = viewModel::addCarbs,
         onCarbsTypeChange = viewModel::updateCarbsType,
         onPercentageChange = { viewModel.updatePercentage(it.toInt()) },
         onDirectCorrectionChange = { viewModel.updateDirectCorrection(it) },
@@ -277,6 +279,7 @@ private fun WizardDialogContent(
     unitsLabel: String,
     onBgChange: (Double) -> Unit,
     onCarbsChange: (Double) -> Unit,
+    onAddCarbs: (Int) -> Unit,
     onCarbsTypeChange: (CarbsType) -> Unit,
     onPercentageChange: (Double) -> Unit,
     onDirectCorrectionChange: (Double) -> Unit,
@@ -674,6 +677,12 @@ private fun WizardDialogContent(
                         valueRange = 0.0..uiState.maxCarbs.toDouble(),
                         step = 1.0,
                         unitLabel = "g"
+                    )
+                    QuickAddButtons(
+                        increment1 = uiState.carbsButtonIncrement1,
+                        increment2 = uiState.carbsButtonIncrement2,
+                        increment3 = uiState.carbsButtonIncrement3,
+                        onAddCarbs = onAddCarbs
                     )
 
                     // Carbs type selector

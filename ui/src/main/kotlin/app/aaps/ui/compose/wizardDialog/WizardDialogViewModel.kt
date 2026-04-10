@@ -150,6 +150,9 @@ class WizardDialogViewModel @Inject constructor(
                     useBolusAdvisor = useBolusAdvisor,
                     defaultPercentage = percentage,
                     simpleMode = preferences.simpleMode,
+                    carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
+                    carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2),
+                    carbsButtonIncrement3 = preferences.get(IntKey.OverviewCarbsButtonIncrement3),
                     // BG card
                     hasBgData = hasBgData,
                     bgAgeMinutes = bgAgeMinutes,
@@ -176,6 +179,13 @@ class WizardDialogViewModel @Inject constructor(
         val state = uiState.value
         val clamped = value.coerceIn(0, state.maxCarbs)
         uiState.update { it.copy(carbs = clamped) }
+        recalculate()
+    }
+
+    fun addCarbs(increment: Int) {
+        val state = uiState.value
+        val newValue = (state.carbs + increment).coerceIn(0, state.maxCarbs)
+        uiState.update { it.copy(carbs = newValue) }
         recalculate()
     }
 

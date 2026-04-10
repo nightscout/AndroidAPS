@@ -324,7 +324,9 @@ private fun DirectNumberInputRow(
                 singleLine = true,
                 enabled = enabled,
                 isError = isError,
-                suffix = if (resolvedUnitLabel.isNotEmpty()) {
+                // Use trailingIcon (not suffix) so the unit remains visible even when the field is
+                // empty and unfocused — suffix is hidden by M3 while the label is in its large state.
+                trailingIcon = if (resolvedUnitLabel.isNotEmpty()) {
                     { Text(resolvedUnitLabel) }
                 } else null,
                 keyboardOptions = KeyboardOptions(
