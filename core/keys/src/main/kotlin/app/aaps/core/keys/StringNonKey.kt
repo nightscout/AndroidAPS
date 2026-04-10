@@ -31,4 +31,5 @@ enum class StringNonKey(
     GoogleDriveFolderId(key = "google_drive_folder_id", defaultValue = ""),
     GoogleDriveRefreshToken(key = "google_drive_refresh_token", defaultValue = ""),
 
+    LocalProfileData(key = "local_profile_data", defaultValue = "[]"),
 }
