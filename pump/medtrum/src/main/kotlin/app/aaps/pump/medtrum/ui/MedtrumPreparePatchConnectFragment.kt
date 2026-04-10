@@ -34,15 +34,22 @@ class MedtrumPreparePatchConnectFragment : MedtrumBaseFragment<FragmentMedtrumPr
             viewModel?.apply {
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {
-                        MedtrumViewModel.SetupStep.INITIAL -> btnPositive.visibility = View.GONE
+                        MedtrumViewModel.SetupStep.INITIAL,
+                        MedtrumViewModel.SetupStep.STOPPED -> btnPositive.visibility = View.GONE
+
                         MedtrumViewModel.SetupStep.FILLED  -> btnPositive.visibility = View.VISIBLE
 
-                        MedtrumViewModel.SetupStep.ERROR   -> {
-                            ToastUtils.errorToast(requireContext(), rh.gs(R.string.unexpected_state, it.toString()))
-                            moveStep(PatchStep.CANCEL)
+                        else                               -> {
+                            aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
+                            OKDialog.show(
+                                requireActivity(),
+                                rh.gs(app.aaps.core.ui.R.string.error),
+                                rh.gs(R.string.unexpected_state, it.toString()),
+                                runOnDismiss = true
+                            ) {
+                                viewModel?.moveStep(PatchStep.CANCEL)
+                            }
                         }
-
-                        else                               -> Unit
                     }
                 }
                 preparePatchConnect()
