@@ -1,5 +1,5 @@
-    <?xml version="1.0" encoding="utf-8"?>
-    <resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
         <!-- Source -->
         <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
         <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
