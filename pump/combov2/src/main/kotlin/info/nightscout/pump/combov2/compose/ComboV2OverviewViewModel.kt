@@ -1,6 +1,9 @@
 package info.nightscout.pump.combov2.compose
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.BluetoothDisabled
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -26,6 +29,8 @@ import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.combov2.R
 import info.nightscout.pump.combov2.cctlBolusToIU
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -37,6 +42,11 @@ import kotlin.math.max
 import kotlin.time.ExperimentalTime
 import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.main.Pump as ComboCtlPump
+
+sealed class ComboV2OverviewEvent {
+    data object StartPairWizard : ComboV2OverviewEvent()
+    data object ConfirmUnpair : ComboV2OverviewEvent()
+}
 
 data class ComboV2OverviewUiState(
     val overview: PumpOverviewUiState = PumpOverviewUiState(),
@@ -118,11 +128,45 @@ class ComboV2OverviewViewModel @Inject constructor(
         .map { it ?: NullDisplayFrame }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NullDisplayFrame)
 
+    private val _events = MutableSharedFlow<ComboV2OverviewEvent>(extraBufferCapacity = 5)
+    val events: SharedFlow<ComboV2OverviewEvent> = _events
+
     fun onRefreshClick() {
         aapsLogger.debug(LTag.PUMP, "Refresh button clicked")
         combov2Plugin.clearPumpErrorObservedFlag()
         commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.user_request), null)
     }
+
+    fun onPairClick() {
+        _events.tryEmit(ComboV2OverviewEvent.StartPairWizard)
+    }
+
+    fun onUnpairClick() {
+        _events.tryEmit(ComboV2OverviewEvent.ConfirmUnpair)
+    }
+
+    fun performUnpair() {
+        aapsLogger.debug(LTag.PUMP, "Performing unpair")
+        combov2Plugin.unpair()
+    }
+
+    private fun managementActions(isPaired: Boolean): List<PumpAction> = listOf(
+        if (isPaired) {
+            PumpAction(
+                label = rh.gs(app.aaps.core.ui.R.string.pump_unpair),
+                icon = Icons.Filled.BluetoothDisabled,
+                category = ActionCategory.MANAGEMENT,
+                onClick = { onUnpairClick() }
+            )
+        } else {
+            PumpAction(
+                label = rh.gs(app.aaps.core.ui.R.string.pairing),
+                icon = Icons.Filled.Bluetooth,
+                category = ActionCategory.MANAGEMENT,
+                onClick = { onPairClick() }
+            )
+        }
+    )
 
     private fun buildState(snapshot: PumpSnapshot): ComboV2OverviewUiState {
         if (!snapshot.isPaired) {
@@ -132,7 +176,8 @@ class ComboV2OverviewViewModel @Inject constructor(
                         text = rh.gs(R.string.combov2_not_paired),
                         level = StatusLevel.UNSPECIFIED
                     ),
-                    queueStatus = communicationStatus.queueStatus()
+                    queueStatus = communicationStatus.queueStatus(),
+                    managementActions = managementActions(isPaired = false)
                 ),
                 isPaired = false
             )
@@ -208,7 +253,8 @@ class ComboV2OverviewViewModel @Inject constructor(
                 statusBanner = communicationStatus.statusBanner(),
                 queueStatus = communicationStatus.queueStatus(),
                 infoRows = infoRows,
-                primaryActions = primaryActions
+                primaryActions = primaryActions,
+                managementActions = managementActions(isPaired = true)
             ),
             isPaired = true,
             currentActivityText = snapshot.currentActivity.description,

@@ -143,9 +143,10 @@ class ComboV2Plugin @Inject constructor(
     PumpPluginBase(
         pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
-            .composeContent { _ ->
+            .composeContent { plugin ->
                 ComboV2ComposeContent(
-                    pluginName = rh.gs(R.string.combov2_plugin_name)
+                    pluginName = rh.gs(R.string.combov2_plugin_name),
+                    combov2Plugin = plugin as ComboV2Plugin
                 )
             }
             .icon(IcPluginCombo)
@@ -1558,7 +1559,7 @@ class ComboV2Plugin @Inject constructor(
         }
     }
 
-    private fun unpair() {
+    internal fun unpair() {
         if (unpairing)
             return
 

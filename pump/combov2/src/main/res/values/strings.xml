@@ -42,6 +42,8 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_pin_entry_hint" translatable="false">0123456789</string>
     <string name="combov2_enter_pin">Enter PIN</string>
     <string name="combov2_cancel_pairing">Cancel pairing</string>
+    <string name="combov2_confirm_cancel_pairing_message">Do you really want to cancel pairing?</string>
+    <string name="combov2_confirm_unpair_message">Do you really want to unpair the pump?</string>
     <string name="combov2_pin_hint">10-digit PIN</string>
     <string name="combov2_pairing_finished_successfully">Successfully paired with Combo</string>
     <string name="combov2_pairing_cancelled">Pairing with Combo cancelled by user</string>
