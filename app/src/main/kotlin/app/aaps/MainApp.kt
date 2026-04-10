@@ -47,7 +47,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
@@ -58,6 +57,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongComposedKey
+import app.aaps.core.keys.ProfileComposedBooleanKey
+import app.aaps.core.keys.ProfileComposedStringKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
@@ -78,6 +79,7 @@ import app.aaps.receivers.ChargingStateReceiver
 import app.aaps.receivers.KeepAliveWorker
 import app.aaps.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.ui.activityMonitor.ActivityMonitor
+import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.ui.widget.Widget
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
@@ -147,6 +149,7 @@ class MainApp : Application(), HasAndroidInjector {
 
     private lateinit var insulinLabel: String
     private var insulinPeakTime: Long = 0L
+    private var profileNameToDia: Map<String, Double> = emptyMap()
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshWidget: Runnable
@@ -462,8 +465,69 @@ class MainApp : Application(), HasAndroidInjector {
                 sp.remove(key)
             }
         }
-        // Profile migration (raw SP → single JSON) is handled by LocalProfileManagerImpl.
-        // We only need the legacy name → dia map here for the ICfg database backfill below.
+        // Migrate Profile
+        val indexToName = mutableMapOf<Int, String>()
+        val indexToDia = mutableMapOf<Int, Double>()
+        for ((key, value) in keys) {
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_mgdl")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, SafeParse.stringToInt(number), value = value as Boolean)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_isf")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_ic")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_basal")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targetlow")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_targethigh")) {
+                val number = key.split("_")[1]
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, SafeParse.stringToInt(number), value = value as String)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_name")) {
+                val number = key.split("_")[1]
+                indexToName[SafeParse.stringToInt(number)] = value as String
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, SafeParse.stringToInt(number), value = value)
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_name_")) {
+                val number = key.split("_")[2]
+                indexToName[SafeParse.stringToInt(number)] = value as String
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_") && key.endsWith("_dia")) {
+                val number = SafeParse.stringToInt(key.split("_")[1])
+                indexToDia[number] = SafeParse.stringToDouble(value.toString())
+                sp.remove(key)
+            }
+            if (key.startsWith(Constants.LOCAL_PROFILE + "_dia_")) {
+                val number = SafeParse.stringToInt(key.split("_")[2])
+                indexToDia[number] = SafeParse.stringToDouble(value.toString())
+                sp.remove(key)
+            }
+        }
+        profileNameToDia = indexToDia.mapNotNull { (index, dia) ->
+            indexToName[index]?.let { name -> name to dia }
+        }.toMap()
 
         // Migrate Tidepool from username/password to OAuth2
         if (sp.contains("tidepool_username") || sp.contains("tidepool_password")) {
@@ -623,21 +687,19 @@ class MainApp : Application(), HasAndroidInjector {
 
     private suspend fun dataMigrations() {
         // Migrate to database 33 (ICfg)
-        // Grab default value first — if LocalProfileManager did an ancient raw-SP migration,
-        // it populated legacyProfileNameToDia for backfilling historical records.
-        val legacyProfileNameToDia = localProfileManager.legacyProfileNameToDia
-        var runningICfg = if (legacyProfileNameToDia.isEmpty()) // no migration, get running iCfg from running Profile
-            profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
-        else {  // migration, create running iCfg from previous runningProfile dia and selected InsulinPlugin for peak
-            val dia = (profileFunction.getProfile() as? ProfileSealed.EPS)?.profileName?.let { profileName ->
-                legacyProfileNameToDia[profileName]
+        // Grab default value first
+        var runningICfg = if (profileNameToDia.size == 0) // no migration, get running iCfg from running Profile
+                profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
+            else {  // migration, create running iCfg from previous runningProfile dia and slected InsulinPlugin for peak
+                val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
+                    profileNameToDia[profileName]
+                }
+                val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
+                ICfg("", insulinEndTime, insulinPeakTime, 1.0).also {
+                    it.insulinNickname = insulinLabel
+                    it.insulinLabel = "$insulinLabel ${localInsulinManager.buildSuffix(it.peak, it.dia, it.concentration)}"
+                }
             }
-            val insulinEndTime = ((dia ?: hardLimits.maxDia()) * 3600 * 1000).toLong()
-            ICfg("", insulinEndTime, insulinPeakTime, 1.0).also {
-                it.insulinNickname = insulinLabel
-                it.insulinLabel = "$insulinLabel ${localInsulinManager.buildSuffix(it.peak, it.dia, it.concentration)}"
-            }
-        }
 
         if (!localInsulinManager.insulinAlreadyExists(runningICfg)) { // Add running insulin in InsulinManager if missing
             localInsulinManager.addNewInsulin(runningICfg, keepName = true)

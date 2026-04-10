@@ -61,17 +61,6 @@ interface LocalProfileManager {
     val profile: ProfileStore?
 
     /**
-     * Legacy profile name → DIA map extracted from ancient raw SharedPreferences format.
-     * Only populated during first-launch migration from pre-ICfg versions. Empty on all
-     * subsequent launches. Used by MainApp.dataMigrations() to backfill ICfg data on
-     * historical ProfileSwitch / Bolus records.
-     *
-     * TODO: Remove once all users have migrated from pre-ICfg format.
-     */
-    val legacyProfileNameToDia: Map<String, Double>
-        get() = emptyMap()
-
-    /**
      * Get the currently selected profile.
      *
      * @return The current SingleProfile or null if no profiles exist

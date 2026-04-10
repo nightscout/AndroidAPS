@@ -20,11 +20,13 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.LongNonKey
-import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.ProfileComposedBooleanKey
+
+import app.aaps.core.keys.ProfileComposedStringKey
+import app.aaps.core.keys.ProfileIntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.pureProfileFromJson
@@ -46,7 +48,6 @@ class LocalProfileManagerImpl @Inject constructor(
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val preferences: Preferences,
-    private val sp: SP,
     private val profileFunction: Lazy<ProfileFunction>,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
@@ -59,10 +60,6 @@ class LocalProfileManagerImpl @Inject constructor(
 
     private var rawProfile: ProfileStore? = null
     private var _profiles: ArrayList<LocalProfileManager.SingleProfile> = ArrayList()
-    private val _legacyProfileNameToDia: MutableMap<String, Double> = mutableMapOf()
-
-    override val legacyProfileNameToDia: Map<String, Double>
-        get() = _legacyProfileNameToDia.toMap()
 
     override val profiles: List<LocalProfileManager.SingleProfile>
         get() = _profiles.toList()
@@ -169,270 +166,51 @@ class LocalProfileManagerImpl @Inject constructor(
 
     @Synchronized
     override fun loadSettings() {
+        val numOfProfiles = preferences.get(ProfileIntKey.AmountOfProfiles)
         _profiles.clear()
 
-        // Try new single-JSON format first
-        loadFromJson(preferences.get(StringNonKey.LocalProfileData))
-        // Fall back to old composed keys if new format produced nothing
-        if (_profiles.isEmpty() && sp.getInt(LEGACY_AMOUNT_OF_PROFILES_KEY, 0) > 0) {
-            migrateFromComposedKeys()
-        }
-        // Fall back to ancient raw SP keys if still nothing
-        if (_profiles.isEmpty() && hasLegacyRawSpProfileKeys()) {
-            migrateFromRawSp()
+        for (i in 0 until numOfProfiles) {
+            val name = preferences.get(ProfileComposedStringKey.LocalProfileNumberedName, i)
+            if (isExistingName(name)) continue
+            try {
+                _profiles.add(
+                    LocalProfileManager.SingleProfile(
+                        name = name,
+                        mgdl = preferences.get(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i),
+                        ic = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIc, i)),
+                        isf = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedIsf, i)),
+                        basal = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedBasal, i)),
+                        targetLow = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i)),
+                        targetHigh = JSONArray(preferences.get(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i))
+                    )
+                )
+            } catch (e: JSONException) {
+                aapsLogger.error("Exception", e)
+            }
         }
         isEdited = false
         createAndStoreConvertedProfile()
     }
 
-    private fun loadFromJson(json: String) {
-        try {
-            val array = JSONArray(json)
-            for (i in 0 until array.length()) {
-                try {
-                    val obj = array.getJSONObject(i)
-                    val name = obj.getString("name")
-                    if (isExistingName(name)) {
-                        aapsLogger.warn(LTag.PROFILE, "Skipping duplicate profile name: $name")
-                        continue
-                    }
-                    _profiles.add(
-                        LocalProfileManager.SingleProfile(
-                            name = name,
-                            mgdl = obj.getBoolean("mgdl"),
-                            ic = obj.getJSONArray("ic"),
-                            isf = obj.getJSONArray("isf"),
-                            basal = obj.getJSONArray("basal"),
-                            targetLow = obj.getJSONArray("targetLow"),
-                            targetHigh = obj.getJSONArray("targetHigh")
-                        )
-                    )
-                } catch (e: JSONException) {
-                    aapsLogger.error("Error loading profile $i, skipping", e)
-                }
-            }
-        } catch (e: JSONException) {
-            aapsLogger.error("Error parsing profiles JSON", e)
-        }
-    }
-
-    // region Legacy migration — TODO: Remove once all users migrated from pre-JSON profile formats
-
-    /**
-     * Migrate from composed keys format (LocalProfile_isf_0, LocalProfile_ic_0, ...) to single JSON.
-     * Uses raw SP access — these keys were never registered in the typed preference system after
-     * the move to single-JSON storage.
-     * TODO: Remove in future versions.
-     */
-    private fun migrateFromComposedKeys() {
-        aapsLogger.info(LTag.PROFILE, "Migrating profiles from composed keys to single JSON")
-        val numOfProfiles = sp.getInt(LEGACY_AMOUNT_OF_PROFILES_KEY, 0)
-        for (i in 0 until numOfProfiles) {
-            val name = sp.getString(LEGACY_COMPOSED_NAME_PREFIX + i, "")
-            if (name.isEmpty() || isExistingName(name)) {
-                aapsLogger.warn(LTag.PROFILE, "Skipping empty or duplicate profile name during migration: $name")
-                continue
-            }
-            try {
-                _profiles.add(
-                    LocalProfileManager.SingleProfile(
-                        name = name,
-                        mgdl = sp.getBoolean(LEGACY_COMPOSED_MGDL_PREFIX + i, false),
-                        ic = JSONArray(sp.getString(LEGACY_COMPOSED_IC_PREFIX + i, DEFAULT_PROFILE_ARRAY)),
-                        isf = JSONArray(sp.getString(LEGACY_COMPOSED_ISF_PREFIX + i, DEFAULT_PROFILE_ARRAY)),
-                        basal = JSONArray(sp.getString(LEGACY_COMPOSED_BASAL_PREFIX + i, DEFAULT_PROFILE_ARRAY)),
-                        targetLow = JSONArray(sp.getString(LEGACY_COMPOSED_TARGET_LOW_PREFIX + i, DEFAULT_PROFILE_ARRAY)),
-                        targetHigh = JSONArray(sp.getString(LEGACY_COMPOSED_TARGET_HIGH_PREFIX + i, DEFAULT_PROFILE_ARRAY))
-                    )
-                )
-            } catch (e: JSONException) {
-                aapsLogger.error("Exception migrating profile $i, skipping", e)
-            }
-        }
-        // Write new format (even if empty, to prevent re-running migration) and clean up old keys
-        preferences.put(StringNonKey.LocalProfileData, profilesToJson().toString())
-        removeComposedKeys(numOfProfiles)
-    }
-
-    /**
-     * TODO: Remove in future versions.
-     */
-    private fun removeComposedKeys(numOfProfiles: Int) {
-        for (i in 0 until numOfProfiles) {
-            sp.remove(LEGACY_COMPOSED_NAME_PREFIX + i)
-            sp.remove(LEGACY_COMPOSED_MGDL_PREFIX + i)
-            sp.remove(LEGACY_COMPOSED_IC_PREFIX + i)
-            sp.remove(LEGACY_COMPOSED_ISF_PREFIX + i)
-            sp.remove(LEGACY_COMPOSED_BASAL_PREFIX + i)
-            sp.remove(LEGACY_COMPOSED_TARGET_LOW_PREFIX + i)
-            sp.remove(LEGACY_COMPOSED_TARGET_HIGH_PREFIX + i)
-        }
-        sp.remove(LEGACY_AMOUNT_OF_PROFILES_KEY)
-    }
-
-    /**
-     * Check whether the ancient raw SP format has any profile keys (e.g. LocalProfile_0_isf).
-     * TODO: Remove in future versions.
-     */
-    private fun hasLegacyRawSpProfileKeys(): Boolean {
-        val prefix = Constants.LOCAL_PROFILE + "_"
-        return sp.getAll().keys.any { key ->
-            key.startsWith(prefix) && (
-                key.endsWith("_name") || key.endsWith("_mgdl") ||
-                    key.endsWith("_isf") || key.endsWith("_ic") ||
-                    key.endsWith("_basal") || key.endsWith("_targetlow") ||
-                    key.endsWith("_targethigh") || key.endsWith("_dia")
-                )
-        }
-    }
-
-    /**
-     * Migrate from ancient raw SharedPreferences format (LocalProfile_0_isf, LocalProfile_0_dia, ...)
-     * directly to single JSON. Also extracts legacy DIA values into [legacyProfileNameToDia]
-     * for the one-time ICfg database backfill in MainApp.
-     * TODO: Remove in future versions.
-     */
-    private fun migrateFromRawSp() {
-        aapsLogger.info(LTag.PROFILE, "Migrating profiles from ancient raw SP keys to single JSON")
-        val prefix = Constants.LOCAL_PROFILE + "_"
-        val indexToProfile = mutableMapOf<Int, JSONObject>()
-        val indexToName = mutableMapOf<Int, String>()
-        val indexToDia = mutableMapOf<Int, Double>()
-        val keysToRemove = mutableListOf<String>()
-
-        for ((key, value) in sp.getAll()) {
-            if (!key.startsWith(prefix)) continue
-            try {
-                when {
-                    key.endsWith("_name")       -> {
-                        val idx = key.split("_")[1].toInt()
-                        indexToName[idx] = value as String
-                        indexToProfile.getOrPut(idx) { JSONObject() }.put("name", value)
-                        keysToRemove.add(key)
-                    }
-
-                    key.endsWith("_mgdl")       -> {
-                        val idx = key.split("_")[1].toInt()
-                        indexToProfile.getOrPut(idx) { JSONObject() }.put("mgdl", value as Boolean)
-                        keysToRemove.add(key)
-                    }
-
-                    key.endsWith("_isf")        -> {
-                        val idx = key.split("_")[1].toInt()
-                        indexToProfile.getOrPut(idx) { JSONObject() }.put("isf", JSONArray(value as String))
-                        keysToRemove.add(key)
-                    }
-
-                    key.endsWith("_ic")         -> {
-                        val idx = key.split("_")[1].toInt()
-                        indexToProfile.getOrPut(idx) { JSONObject() }.put("ic", JSONArray(value as String))
-                        keysToRemove.add(key)
-                    }
-
-                    key.endsWith("_basal")      -> {
-                        val idx = key.split("_")[1].toInt()
-                        indexToProfile.getOrPut(idx) { JSONObject() }.put("basal", JSONArray(value as String))
-                        keysToRemove.add(key)
-                    }
-
-                    key.endsWith("_targetlow")  -> {
-                        val idx = key.split("_")[1].toInt()
-                        indexToProfile.getOrPut(idx) { JSONObject() }.put("targetLow", JSONArray(value as String))
-                        keysToRemove.add(key)
-                    }
-
-                    key.endsWith("_targethigh") -> {
-                        val idx = key.split("_")[1].toInt()
-                        indexToProfile.getOrPut(idx) { JSONObject() }.put("targetHigh", JSONArray(value as String))
-                        keysToRemove.add(key)
-                    }
-
-                    key.endsWith("_dia")        -> {
-                        val idx = key.split("_")[1].toInt()
-                        indexToDia[idx] = value.toString().toDouble()
-                        keysToRemove.add(key)
-                    }
-                }
-            } catch (e: Exception) {
-                aapsLogger.error("Error migrating raw SP key $key", e)
-            }
-        }
-
-        // Build profile list from reconstructed JSON objects
-        indexToProfile.keys.sorted().forEach { idx ->
-            val obj = indexToProfile[idx] ?: return@forEach
-            try {
-                val name = obj.getString("name")
-                if (isExistingName(name)) return@forEach
-                _profiles.add(
-                    LocalProfileManager.SingleProfile(
-                        name = name,
-                        mgdl = obj.optBoolean("mgdl", true),
-                        ic = obj.optJSONArray("ic") ?: JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
-                        isf = obj.optJSONArray("isf") ?: JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
-                        basal = obj.optJSONArray("basal") ?: JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
-                        targetLow = obj.optJSONArray("targetLow") ?: JSONArray(Constants.DEFAULT_PROFILE_ARRAY),
-                        targetHigh = obj.optJSONArray("targetHigh") ?: JSONArray(Constants.DEFAULT_PROFILE_ARRAY)
-                    )
-                )
-            } catch (e: JSONException) {
-                aapsLogger.error("Error finalizing raw SP profile $idx, skipping", e)
-            }
-        }
-
-        // Populate legacy dia map for MainApp ICfg backfill
-        _legacyProfileNameToDia.clear()
-        indexToDia.forEach { (idx, dia) ->
-            indexToName[idx]?.let { name -> _legacyProfileNameToDia[name] = dia }
-        }
-
-        // Write new JSON format and delete all raw SP keys
-        preferences.put(StringNonKey.LocalProfileData, profilesToJson().toString())
-        keysToRemove.forEach { sp.remove(it) }
-        // Remove legacy AmountOfProfiles key if present
-        sp.remove(LEGACY_AMOUNT_OF_PROFILES_KEY)
-    }
-
-    private companion object {
-        // Raw SP key constants for legacy profile storage formats.
-        // TODO: Remove in future versions along with the migration methods above.
-        private const val LEGACY_AMOUNT_OF_PROFILES_KEY = "LocalProfile_profiles"
-        private const val LEGACY_COMPOSED_NAME_PREFIX = "LocalProfile_name_"
-        private const val LEGACY_COMPOSED_MGDL_PREFIX = "LocalProfile_mgdl_"
-        private const val LEGACY_COMPOSED_IC_PREFIX = "LocalProfile_ic_"
-        private const val LEGACY_COMPOSED_ISF_PREFIX = "LocalProfile_isf_"
-        private const val LEGACY_COMPOSED_BASAL_PREFIX = "LocalProfile_basal_"
-        private const val LEGACY_COMPOSED_TARGET_LOW_PREFIX = "LocalProfile_targetlow_"
-        private const val LEGACY_COMPOSED_TARGET_HIGH_PREFIX = "LocalProfile_targethigh_"
-        private const val DEFAULT_PROFILE_ARRAY = "[]"
-    }
-
-    // endregion
-
     @Synchronized
     override fun storeSettings(timestamp: Long) {
-        preferences.put(StringNonKey.LocalProfileData, profilesToJson().toString())
+        for (i in 0 until numOfProfiles) {
+            _profiles[i].run {
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedName, i, value = name)
+                preferences.put(ProfileComposedBooleanKey.LocalProfileNumberedMgdl, i, value = mgdl)
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIc, i, value = ic.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedIsf, i, value = isf.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedBasal, i, value = basal.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetLow, i, value = targetLow.toString())
+                preferences.put(ProfileComposedStringKey.LocalProfileNumberedTargetHigh, i, value = targetHigh.toString())
+            }
+        }
+        preferences.put(ProfileIntKey.AmountOfProfiles, numOfProfiles)
         preferences.put(LongNonKey.LocalProfileLastChange, timestamp)
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.getData().toString())
         rxBus.send(EventProfileStoreChanged())
-    }
-
-    private fun profilesToJson(): JSONArray {
-        val array = JSONArray()
-        for (profile in _profiles) {
-            val obj = JSONObject()
-            obj.put("name", profile.name)
-            obj.put("mgdl", profile.mgdl)
-            obj.put("ic", profile.ic)
-            obj.put("isf", profile.isf)
-            obj.put("basal", profile.basal)
-            obj.put("targetLow", profile.targetLow)
-            obj.put("targetHigh", profile.targetHigh)
-            array.put(obj)
-        }
-        return array
     }
 
     @Synchronized
