@@ -3,7 +3,6 @@
 package app.aaps.plugins.automation.services
 
 import android.Manifest
-import android.app.Notification
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -82,23 +81,13 @@ class LocationService : DaggerService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        try {
-            aapsLogger.debug("Starting LocationService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
-            startForeground(notificationHolder.notificationID, notificationHolder.notification)
-        } catch (_: Exception) {
-            startForeground(4711, Notification())
-        }
+        aapsLogger.debug("Starting LocationService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
+        startForeground(notificationHolder.notificationID, notificationHolder.notification)
         return START_STICKY
     }
 
     override fun onCreate() {
         super.onCreate()
-        try {
-            aapsLogger.debug("Starting LocationService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
-            startForeground(notificationHolder.notificationID, notificationHolder.notification)
-        } catch (_: Exception) {
-            startForeground(4711, Notification())
-        }
 
         // Get last location once until we get regular update
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
