@@ -1,5 +1,6 @@
 package app.aaps
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -7,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.text.InputType
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
@@ -22,6 +24,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -102,7 +105,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var configBuilder: ConfigBuilder
 
-    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
     private var pluginPreferencesMenuItem: MenuItem? = null
     private var menu: Menu? = null
     private var menuOpen = false
@@ -111,7 +114,37 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private var mainMenuProvider: MenuProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // ========== 先调用super，满足Lint检查，这行必须在最开头 ==========
         super.onCreate(savedInstanceState)
+
+        // ========== 密码验证：紧接着执行，完全无法绕过 ==========
+        val passwordInput = EditText(this)
+        passwordInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        passwordInput.hint = "请输入启动密码"
+
+        AlertDialog.Builder(this)
+            .setTitle("APP访问密码")
+            .setView(passwordInput)
+            .setPositiveButton("确定") { _, _ ->
+                val inputPwd = passwordInput.text.toString()
+                // ========== 这里改成你自己的密码！！！ ==========
+                if (inputPwd == "danamo999") {
+                    // 密码正确，执行剩下的所有初始化逻辑
+                    initRestOfOnCreate(savedInstanceState)
+                } else {
+                    Toast.makeText(this, "密码错误，无法启动APP", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+            }
+            .setNegativeButton("取消") { _, _ ->
+                finish()
+            }
+            .setCancelable(false) // 禁止返回键/点击空白处绕过
+            .show()
+    }
+
+    // ========== 原MainActivity剩下的所有初始化逻辑，完全不动 ==========
+    private fun initRestOfOnCreate(savedInstanceState: Bundle?) {
         Iconify.with(FontAwesomeModule())
         LocaleHelper.update(applicationContext)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -259,7 +292,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     else                        ->
-                        actionBarDrawerToggle.onOptionsItemSelected(menuItem)
+                        actionBarDrawerToggle?.onOptionsItemSelected(menuItem)!!
                 }
         }
         mainMenuProvider?.let { addMenuProvider(it) }
@@ -333,13 +366,13 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
-        actionBarDrawerToggle.syncState()
+        actionBarDrawerToggle?.syncState()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         binding.mainPager.adapter = null
-        binding.mainDrawerLayout.removeDrawerListener(actionBarDrawerToggle)
+        binding.mainDrawerLayout.removeDrawerListener(actionBarDrawerToggle!!)
         mainMenuProvider?.let { removeMenuProvider(it) }
         disposable.clear()
     }
