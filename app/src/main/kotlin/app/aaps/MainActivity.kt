@@ -114,7 +114,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private var mainMenuProvider: MenuProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // ========== 先调用super，满足Lint检查，这行必须在最开头 ==========
+        // ========== 先调用super，满足IDE检查，这行必须在最开头 ==========
         super.onCreate(savedInstanceState)
 
         // ========== 密码验证：紧接着执行，完全无法绕过 ==========
