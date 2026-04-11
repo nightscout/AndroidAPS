@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Koppelen met de pomp</string>
     <string name="combov2_unpair_pump_title">Ontkoppel pomp</string>
     <string name="combov2_driver_state_label">Besturingsprogramma status</string>
-    <string name="combov2_current_activity_label">Huidige activiteit</string>
     <string name="bluetooth_address">Bluetooth-adres</string>
     <string name="combov2_start_pairing">Begin met koppelen</string>
     <string name="combov2_pairing_in_progress">Combo-koppeling wordt uitgevoerd</string>
@@ -100,7 +99,6 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_ignoring_redundant_100_tbr">Overbodig 100% TBR verzoek wordt genegeerd</string>
     <string name="combov2_hit_unexpected_tbr_limit">Onverwachte limiet waargenomen bij het aanpassen van TBR: doelpercentage was %1$d%%, een limiet bereikt op %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan absolute TBR niet instellen als basaalstand nul is</string>
-    <string name="combov2_pair_with_pump_summary">Koppel AndroidAPS en Android met een Accu-Chek Combo pomp die momenteel niet is gekoppeld</string>
     <string name="combov2_unpair_pump_summary">Ontkoppel AndroidAPS en Android van de huidige Accu-Chek Combo pomp</string>
     <string name="combov2_unknown_tbr_detected">Onbekende TBR werd gedetecteerd en gestopt; percentage: %1$d%%; resterende duur: %2$s</string>
     <string name="combov2_connection_error">Verbindingsfout:</string>
