@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Сдвояване с помпата</string>
     <string name="combov2_unpair_pump_title">Раздвояване с помпата</string>
     <string name="combov2_driver_state_label">Състояние на драйвера</string>
-    <string name="combov2_current_activity_label">Текуща дейност</string>
     <string name="bluetooth_address">Bluetooth адрес</string>
     <string name="combov2_start_pairing">Започване на сдвояване</string>
     <string name="combov2_pairing_in_progress">Combo в процес на сдвояване</string>
@@ -99,7 +98,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Игнориране на излишна заявка за 100% Временен базал</string>
     <string name="combov2_hit_unexpected_tbr_limit">Възникна неочакван лимит при коригиране на Временния базал: целевият процент беше %1$d%%, достигна лимит от %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Не може да се зададе абсолютен Временен базал, ако той е нула</string>
-    <string name="combov2_pair_with_pump_summary">Сдвоете AndroidAPS и Android с несвързана в момента помпа Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Раздвоете AndroidAPS и Android със свързаната в момента помпа Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Неизвестен Временен базал беше открит и спрян; процент: %1$d%%; оставаща продължителност: %2$s</string>
     <string name="combov2_connection_error">Грешка при свързване: %1$s</string>
