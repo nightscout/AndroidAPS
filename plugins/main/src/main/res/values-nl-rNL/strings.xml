@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">patchpomp leeftijd</string>
     <string name="patch_pump">Patchpomp</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Kopieer instellingen van NS</string>
     <string name="graph_scale_6h">6u</string>
     <string name="graph_scale_12h">12u</string>
     <string name="graph_scale_18h">18u</string>
@@ -46,9 +45,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">OVZ</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
-    <string name="overview_buttons_selection">Knoppen</string>
     <string name="data_status">BG data status</string>
-    <string name="fill_bolus_title">Ontlucht/Vul standaard insuline hoeveelheden</string>
     <string name="run_question">%s uitvoeren?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Voorspellingen</string>
@@ -75,7 +72,6 @@
     <string name="lowres_description">Lage resolutie skin</string>
     <string name="buttonson_description">Knoppen worden altijd weergegeven aan de onderkant van het scherm</string>
     <string name="largedisplay_description">Groot scherm</string>
-    <string name="skin">Skin</string>
     <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
