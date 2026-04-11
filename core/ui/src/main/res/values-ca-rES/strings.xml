@@ -31,7 +31,6 @@
     <string name="result">Resultat</string>
     <string name="settings">Configuració</string>
     <string name="statuslights">Llums d\'estat</string>
-    <string name="do_ns_upload_title">Enviar dades de glucèmia a NS</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="value_unavailable_short">n/d</string>
     <!-- master_password moved to core/keys/strings.xml -->
