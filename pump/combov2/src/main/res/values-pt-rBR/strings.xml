@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Emparelhar com a bomba</string>
     <string name="combov2_unpair_pump_title">Desemparelhar a bomba</string>
     <string name="combov2_driver_state_label">Estado do driver</string>
-    <string name="combov2_current_activity_label">Atividade atual</string>
     <string name="bluetooth_address">Endereço Bluetooth</string>
     <string name="combov2_start_pairing">Iniciar pareamento</string>
     <string name="combov2_pairing_in_progress">Pareamento da Accu-Chek Combo em andamento</string>
@@ -98,7 +97,6 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_letting_emulated_100_tbr_finish">Deixando a taxa basal temporária emulada de 100% continuar até o final</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorando uma solicitação redundante de taxa basal temporária emulada de 100%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Não é possível definir TBT absoluto se a taxa basal de base é zero</string>
-    <string name="combov2_pair_with_pump_summary">Desemparelhar o AndroidAPS e o Android da bomba Accu-Chek Combo pareada</string>
     <string name="combov2_unpair_pump_summary">Desemparelhar o AndroidAPS e o Android da bomba Accu-Chek Combo atualmente pareada</string>
     <string name="combov2_unknown_tbr_detected">TBT desconhecido foi detectada e parada; porcentagem: %1$d%%; duração restante: %2$s</string>
     <string name="combov2_connection_error">Erro de conexão: %1$s</string>
