@@ -31,7 +31,6 @@
     <string name="result">Sonuç</string>
     <string name="settings">Ayarlar</string>
     <string name="statuslights">Durum ışıkları</string>
-    <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
     <string name="configbuilder_insulin">İnsülin</string>
     <string name="value_unavailable_short">yok</string>
     <!-- master_password moved to core/keys/strings.xml -->
