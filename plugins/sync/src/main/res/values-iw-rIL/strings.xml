@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_cellular">השתמש באינטרנט סלולרי</string>
-    <string name="ns_wifi">השתמש בחיבור WiFi</string>
     <!-- ns_wifi_ssids moved to core:keys module -->
-    <string name="ns_charging">בזמן טעינה</string>
-    <string name="ns_battery">משתמש בסוללה</string>
     <string name="connection_settings_title">הגדרות חיבור</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="ns_allow_roaming">אפשר חיבור בנדידה</string>
-    <string name="ns_create_announcements_from_errors_title">צור הודעות משגיאות</string>
-    <string name="ns_create_announcements_from_carbs_req_title">צור התראות על פחמימות דרושות</string>
-    <string name="ns_create_announcements_from_errors_summary">יצירת הכרזת Nightscout עבור הודעות על שגיאות והתראות מקומיות (ניתנות להצגה בפורטל הטיפולים תחת \"טיפולים\")</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">צור הכרזות נייטסקאוט עבור התראות מסוג פחמימות דרושות</string>
     <string name="description_ns_client">סינכרון הנתונים שלכם עם נייטסקאוט באמצעות API v1</string>
     <string name="description_ns_client_v3">מסנכרן את הנתונים עם נייטסקאוט באמצעות v3 API</string>
     <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
@@ -37,28 +28,7 @@
     <string name="full_sync">סינכרון מלא</string>
     <string name="full_sync_comment">סנכרון מלא? זה ייקח שעות מרובות ולא תוכלו לראות נתונים חדשים בנייטסקאוט.</string>
     <string name="ns_sync_options">סינכרון</string>
-    <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
-    <string name="ns_upload">שלח נתוני טיפולים לנייטסקאוט</string>
-    <string name="ns_receive_profile_store">אחזר פרופילים שמורים</string>
-    <string name="ns_receive_profile_store_summary">סינכרון פרופילים מעורך הפרופיל של נייטסקאוט לפרופיל מקומי</string>
-    <string name="ns_receive_temp_target">קבל ערכי מטרה זמניים</string>
-    <string name="ns_receive_profile_switch">קבל החלפות פרופיל</string>
-    <string name="ns_receive_tbr_eb">קבל מינון בזאלי זמני ובולוס מושהה</string>
-    <string name="ns_receive_tbr_eb_summary">קבל מינוני בזאלי זמני ובולוסים מושהים שהופעלו ממכשיר עוקב</string>
-    <string name="ns_receive_insulin">קבל אינסולין</string>
-    <string name="ns_receive_carbs">קבל פחמימות</string>
-    <string name="ns_receive_therapy_events">קבל אירועי טיפול</string>
-    <string name="ns_receive_cgm">קבל\\טען נתוני סנסור מנייטסקאוט</string>
-    <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
-    <string name="ns_sync_slow">האט העלאות</string>
     <string name="ns_alarm_options">אפשרויות התראה</string>
-    <string name="ns_alarms">ייצר התראות מאזעקות של Nightscout</string>
-    <string name="ns_announcements">ייצר התראות מהכרזות של Nightscout</string>
-    <string name="ns_alarm_stale_data_value_label">סף התיישנות נתונים [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">סף התיישנות נתונים דחוף [min]</string>
-    <string name="ns_log_app_started_event">רשום הפעלת AAPS ב-Nightscout</string>
-    <string name="ns_use_ws_title">התחבר ל-websockets</string>
-    <string name="ns_use_ws_summary">משמעות ההפעלה: עדכונים, קבלת התראות והודעות במהירות גבוהה יותר תוך צריכת סוללה גבוהה יותר, בדומה ל-v1. כל שאר המעלים ל-NS חייבים להשתמש בפרוטוקול v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">אם האפשרות מופעלת, נתונים יישלחו לשרתי ניסוי במקום לשרתים הרגילים</string>
     <string name="title_tidepool_dev_servers">שימוש בשרתי אינטגרציה (בדיקה)</string>
@@ -73,13 +43,8 @@
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">שליחת נתוני סוכר אל xDrip</string>
-    <string name="xdrip_status_detailed_iob_title">הצגת IOB מפורט</string>
-    <string name="xdrip_status_detailed_iob_summary">חלוקת ה-IOB לבולוס ובזאלי במסך השעון</string>
-    <string name="xdrip_status_show_bgi_title">הצג השפעת רמת הסוכר</string>
-    <string name="xdrip_status_show_bgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
     <string name="xdrip_status_settings">שורת מצב xDrip מתקדמת</string>
     <string name="disabled_loop">לולאה מושבתת</string>
-    <string name="xdrip_send_status_title">שליחת שורת הסטטוס ל-xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ אינו מותקן</string>
     <string name="calibration_sent">נשלח כיול ל-xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" וקבלת נתונים חייבת להיות מופעלת בהגדרות &gt; הגדרות לשיתוף פעולה בין אפליקציות &gt; קבל גלוקוז\\טיפולים</string>
@@ -107,17 +72,9 @@
     <string name="wear_action_tempt_min_bg_error">ערך הסוכר המינימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>
     <string name="no_success">נכשל - נא לבדוק את הטלפון</string>
-    <string name="wear_settings">הגדרות Wear</string>
-    <string name="wearcontrol_title">שליטה מהשעון</string>
-    <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
-    <string name="wear_broadcast_data">שדר נתונים</string>
-    <string name="wear_broadcast_data_summary">שדר נתונים ל-AAPS או ל-AAPSClient</string>
     <string name="wear_wizard_settings_summary">חישובים הכלולים בתוצאת האשף:</string>
     <string name="wear_general_settings">הגדרות כלליות</string>
-    <string name="wear_notifysmb_title">דיווח על SMB</string>
-    <string name="wear_notifysmb_summary">הצג SMB על השעון כמו בולוס סטנדרטי.</string>
     <string name="wear_custom_watchface_settings">הגדרות פני שעון מותאמים אישית</string>
-    <string name="wear_custom_watchface_authorization_title">אישור פני שעון מותאמים אישית</string>
     <string name="wear_custom_watchface">פני שעון מותאמים אישית: %1$s</string>
     <string name="wear_load_watchface">טעינת פני שעון</string>
     <string name="wear_infos_watchface">פני שעון מידע</string>
@@ -158,6 +115,5 @@
     <string name="full_xdrip_sync_comment">בטוחים שברצונכם לבצע סנכרון מלא? סנכרון מלא ייקח שעות מרובות ובינתיים לא תוכלו לראות נתונים חדשים ב-xDrip+.</string>
     <string name="wear_action_loop_state_pump_suspended">המשאבה מושהית!</string>
     <string name="garmin_request_key">בקש מפתח</string>
-    <string name="garmin_request_key_summary">מפתח אופציונלי לצורך אבטחת תקשורת HTTP בין מכשירי Garmin ו-Androidaps.</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
