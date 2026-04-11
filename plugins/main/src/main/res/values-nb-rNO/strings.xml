@@ -24,7 +24,6 @@
     <string name="statuslights_patch_pump_age">pumpealder</string>
     <string name="patch_pump">Pumpe</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Kopier innstillingene fra NS</string>
     <string name="graph_scale_6h">6t</string>
     <string name="graph_scale_12h">12t</string>
     <string name="graph_scale_18h">18t</string>
@@ -48,9 +47,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
-    <string name="overview_buttons_selection">Knapper</string>
     <string name="data_status">Status BS-data</string>
-    <string name="fill_bolus_title">Standardverdier for påfyll/prime</string>
     <string name="run_question">Kjør %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prediksjoner</string>
@@ -77,7 +74,6 @@
     <string name="lowres_description">Tema for lav oppløsning</string>
     <string name="buttonson_description">Knapper vises alltid på bunnen av skjermen</string>
     <string name="largedisplay_description">Stor skjerm</string>
-    <string name="skin">Tema</string>
     <string name="cannula_usage">bruk:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
