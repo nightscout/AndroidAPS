@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_cellular">Usa connessione cellulare</string>
-    <string name="ns_wifi">Usa connessione WiFi</string>
     <!-- ns_wifi_ssids moved to core:keys module -->
-    <string name="ns_charging">Durante la ricarica</string>
-    <string name="ns_battery">Utilizzo batteria</string>
     <string name="connection_settings_title">Impostazioni connessione</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="ns_allow_roaming">Consenti connessione in roaming</string>
-    <string name="ns_create_announcements_from_errors_title">Crea avvisi da errori</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Crea avvisi da CHO richiesti</string>
-    <string name="ns_create_announcements_from_errors_summary">Crea avviso su Nightscout per finestre di errore e allarmi locali (visualizzabile anche nella sezione Portale sotto la voce Trattamenti)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Crea avvisi su Nightscout dagli avvisi per CHO richiesti</string>
     <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout usando API v1</string>
     <string name="description_ns_client_v3">Sincronizza i tuoi dati con Nightscout usando API v3</string>
     <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
@@ -41,35 +32,7 @@
     <string name="full_sync">Sincronizzazione completa</string>
     <string name="full_sync_comment">Sincronizzazione completa? Potrebbe richiedere molte ore e fino alla fine del processo non vedrai nuovi dati in NS.</string>
     <string name="ns_sync_options">Sincronizzazione</string>
-    <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
-    <string name="ns_upload">Carica dati su NS</string>
-    <string name="ns_receive_profile_store">Ricevi profilo</string>
-    <string name="ns_receive_profile_store_summary">Sincronizza i profili dall\'editor profilo di NS</string>
-    <string name="ns_receive_temp_target">Ricevi target temporanei</string>
-    <string name="ns_receive_temp_target_summary">Accetta target temporanei inseriti tramite NS o AAPSClient</string>
-    <string name="ns_receive_profile_switch">Ricevi cambi profilo</string>
-    <string name="ns_receive_profile_switch_summary">Accetta cambi profilo inseriti tramite NS o AAPSClient</string>
-    <string name="ns_receive_running_mode">Ricevi eventi in modalità esecuzione</string>
-    <string name="ns_receive_running_mode_summary">Accetta eventi in modalità di esecuzione inseriti tramite NS o AAPSClient</string>
-    <string name="ns_receive_tbr_eb">Ricevi TBR e EB</string>
-    <string name="ns_receive_tbr_eb_summary">Accetta TBR e EB inseriti attraverso altra istanza</string>
-    <string name="ns_receive_insulin">Ricevi insulina</string>
-    <string name="ns_receive_insulin_summary">Accetta insulina inserita tramite NS o AAPSClient (non viene erogata, solo calcolata per IOB)</string>
-    <string name="ns_receive_carbs">Ricevi CHO</string>
-    <string name="ns_receive_carbs_summary">Accetta CHO inseriti tramite NS o AAPSClient</string>
-    <string name="ns_receive_therapy_events">Ricevi eventi terapia</string>
-    <string name="ns_receive_therapy_events_summary">Accetta eventi terapia (cambio cannula, insulina, batteria, ecc.) inseriti tramite NS o AAPSClient</string>
-    <string name="ns_receive_cgm">Ricevi/riempi dati CGM</string>
-    <string name="ns_receive_cgm_summary">Accetta dati CGM da NS</string>
-    <string name="ns_sync_slow">Rallenta caricamenti</string>
     <string name="ns_alarm_options">Opzioni allarme</string>
-    <string name="ns_alarms">Crea notifiche da allarmi NS</string>
-    <string name="ns_announcements">Crea notifiche da avvisi NS</string>
-    <string name="ns_alarm_stale_data_value_label">Soglia dati non aggiornati [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Soglia dati non aggiornati da molto tempo [min]</string>
-    <string name="ns_log_app_started_event">Registra l\'avvio dell\'app in NS</string>
-    <string name="ns_use_ws_title">Connetti a websocket</string>
-    <string name="ns_use_ws_summary">Abilitare significa: aggiornamenti più veloci, ricevere allarmi e annunci e un maggiore consumo di batteria simile a v1. Tutti gli altri caricatori di NS devono utilizzare il protocollo v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Se abilitato, i caricamenti andranno sui server di test invece che su quelli regolari</string>
     <string name="title_tidepool_dev_servers">Usa server integrativi (test)</string>
@@ -84,13 +47,8 @@
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Invia dati a xDrip+</string>
-    <string name="xdrip_status_detailed_iob_title">Mostra IOB dettagliato</string>
-    <string name="xdrip_status_detailed_iob_summary">Dividi IOB in bolo e basale sulla watchface</string>
-    <string name="xdrip_status_show_bgi_title">Mostra BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Aggiungi BGI alla statusline</string>
     <string name="xdrip_status_settings">xDrip+ statusline (advanced)</string>
     <string name="disabled_loop">Loop disabilitato</string>
-    <string name="xdrip_send_status_title">Invia statusline a xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ non installato</string>
     <string name="calibration_sent">Calibrazione inviata a xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Invia dati glicemia e trattamenti a xDrip+. La sorgente dati \"xDrip+ Sync Follower\" deve essere selezionata e l\'accettazione dei dati deve essere abilitata in: Settings - Inter-app settings - Accept Glucose/Treatments</string>
@@ -124,18 +82,9 @@
     <string name="wear_action_tempt_manual_message">Temptarget\n\nTarget: %1$s\nDurata: %2$d min</string>
     <string name="wear_action_tempt_preset_message">Temptarget\n\nMotivo: %1$s\nTarget: %2$s\nDurata: %3$d min</string>
     <string name="no_success">non riuscito - controlla il telefono</string>
-    <string name="wear_settings">Impostazioni smartwatch</string>
-    <string name="wearcontrol_title">Controlli da smartwatch</string>
-    <string name="wearcontrol_summary">Imposta Target temporanei e inserisci trattamenti dallo smartwatch.</string>
-    <string name="wear_broadcast_data">Dati trasmissione</string>
-    <string name="wear_broadcast_data_summary">Trasmetti i dati ad AAPS o AAPSClient</string>
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
     <string name="wear_general_settings">Impostazioni generali</string>
-    <string name="wear_notifysmb_title">Notifica SMB</string>
-    <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
     <string name="wear_custom_watchface_settings">Impostazioni watchface personalizzata</string>
-    <string name="wear_custom_watchface_authorization_title">Autorizzazione watchface personalizzata</string>
-    <string name="wear_custom_watchface_authorization_summary">Autorizza la watchface personalizzata caricata a cambiare e bloccare alcune delle impostazioni di visualizzazione dell\'orologio per adattarsi al design della watchface</string>
     <string name="wear_custom_watchface">Watchface personalizzata: %1$s</string>
     <string name="wear_load_watchface">Carica watchface</string>
     <string name="wear_infos_watchface">Informazioni watchface</string>
@@ -198,7 +147,6 @@
     <string name="wear_action_loop_state_now_pump_disconnected">Disconnetti micro</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Riconnetti micro</string>
     <string name="garmin_request_key">Chiave Richiesta</string>
-    <string name="garmin_request_key_summary">Chiave opzionale per proteggere la comunicazione HTTP tra il dispositivo Garmin e AAPS.</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
@@ -235,14 +183,11 @@
     <string name="smscommunicator_stopped_sms">Servizio di controllo remoto tramite SMS stoppato. Per riattivarlo, usa lo smartphone master in cui è installato AAPS.</string>
     <string name="smscommunicator_calibration_reply_with_code">Per inviare la calibrazione %1$.2f rispondi col codice %2$s</string>
     <string name="smscommunicator_bolus_failed">Bolo non riuscito. Verificare lo stato reale prima di inviare un altro comando!</string>
-    <string name="smscommunicator_remote_bolus_min_distance_summary">Numero minimo di minuti che devono trascorrere tra un bolo remoto e il successivo</string>
-    <string name="smscommunicator_remote_bolus_min_distance">Quanti minuti devono trascorrere almeno tra un bolo e il prossimo. Per la tua sicurezza, per modificare questa preferenza devi aggiungere almeno 2 numeri di telefono. Altrimenti vengono utilizzati 15 minuti.</string>
     <string name="smscommunicator_bolus_delivered">Bolo di %1$.2f U erogato con successo</string>
     <string name="smscommunicator_meal_bolus_delivered">Bolo pasto di %1$.2f U erogato con successo</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Target %1$s per %2$d minuti</string>
     <string name="smscommunicator_tt_set">Target %1$s per %2$d minuti impostato con successo</string>
     <string name="smscommunicator_tt_canceled">Temp-Target cancellato con successo</string>
-    <string name="smscommunicator_remote_commands_allowed">Consenti comandi remoti tramite SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Il loop è stato disabilitato</string>
     <string name="smscommunicator_loop_is_enabled">Il loop è abilitato</string>
     <string name="smscommunicator_pump_connect_with_code">Per connettere il micro rispondi col codice %1$s</string>
@@ -285,8 +230,6 @@
     <string name="smscommunicator_calibration_sent">Calibrazione inviata. La ricezione deve essere abilitata in xDrip+.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ non sta ricevendo calibrazioni</string>
     <string name="smscommunicator_message_body">Corpo del messaggio non valido</string>
-    <string name="smscommunicator_report_pump_unreachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
-    <string name="smscommunicator_pump_unreachable">Segnala micro irraggiungibile</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Per cambiare la modalità loop a LGS (Sospensione a glicemia bassa) rispondi con il codice %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Per cambiare la modalità loop a Loop Chiuso rispondi con il codice %1$s</string>
     <string name="smscommunicator_current_loop_mode">Modalità loop corrente %1$s</string>
