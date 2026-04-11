@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">rezervuaro laikas</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Kopijuoti nustatymus iš NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -46,9 +45,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
-    <string name="overview_buttons_selection">Mygtukai</string>
     <string name="data_status">Glikemijos statusas</string>
-    <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="run_question">Vykdyti %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozė</string>
@@ -75,7 +72,6 @@
     <string name="lowres_description">Žemos rezoliucijos išvaizda</string>
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
-    <string name="skin">Išvaizda</string>
     <string name="cannula_usage">naud:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
