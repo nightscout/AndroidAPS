@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">패치 펌프 사용기간</string>
     <string name="patch_pump">패치 펌프</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">NS에서 설정을 복사해오기</string>
     <string name="a11y_graph">그래프</string>
     <string name="a11y_insulin_label">인슐린</string>
     <string name="chart_menu">차트 메뉴</string>
@@ -33,9 +32,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">홈</string>
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
-    <string name="overview_buttons_selection">버튼</string>
     <string name="data_status">BG 데이터 상태</string>
-    <string name="fill_bolus_title">교체/채움 기본 인슐린 양</string>
     <string name="run_question">%s 실행?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">예측</string>
@@ -59,7 +56,6 @@
     <string name="lowres_description">저해상도 스킨</string>
     <string name="buttonson_description">버튼을 화면 아래 고정하여 보여주기</string>
     <string name="largedisplay_description">큰 화면</string>
-    <string name="skin">스킨</string>
     <string name="cannula_usage">사용:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
