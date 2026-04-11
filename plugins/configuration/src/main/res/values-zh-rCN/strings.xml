@@ -42,7 +42,6 @@
     <string name="configbuilder_sensitivity_description">应使用哪一种灵敏度算法？</string>
     <string name="config_builder_shortname">配置</string>
     <string name="description_config_builder">用于配置活动插件</string>
-    <string name="a11y_open_settings">打开设置</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
