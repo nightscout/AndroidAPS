@@ -24,7 +24,6 @@
     <string name="statuslights_patch_pump_age">età micro a patch</string>
     <string name="patch_pump">Micro a patch</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -48,9 +47,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i tasti per le azioni più comuni</string>
-    <string name="overview_buttons_selection">Tasti</string>
     <string name="data_status">Stato dati BG</string>
-    <string name="fill_bolus_title">Carica/Riempi: quantità standard di insulina</string>
     <string name="run_question">Eseguire %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predizioni</string>
@@ -77,7 +74,6 @@
     <string name="lowres_description">Tema a bassa risoluzione</string>
     <string name="buttonson_description">I tasti vengono sempre visualizzati nella parte inferiore dello schermo</string>
     <string name="largedisplay_description">Visualizzazione ampia</string>
-    <string name="skin">Tema</string>
     <string name="cannula_usage">uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
