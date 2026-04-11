@@ -51,7 +51,6 @@
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite realią pompą, AAPS nukopijuos bazės nustatymus iš profilio į pompą, todėl nustatymai pompoje gali pasikeisti. Įsitikinkite, kad bazės nustatymai AAPS yra teisingi. Jei nesate tikri arba nenorite keisti bazės nustatymų jūsų pompoje, paspauskite Atšaukti ir atlikite prijungimą prie pompos vėliau.</string>
-    <string name="a11y_open_settings">atidaryti nustatymus</string>
     <string name="nsclient_version_does_not_match">AAPSClient ir AAPS versijos nesutampa. Atnaujinkite.</string>
     <string name="expand_category">Išplėsti kategoriją</string>
     <string name="collapse_category">Sutraukti kategoriją</string>
