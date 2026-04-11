@@ -51,7 +51,6 @@
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Nastavení konfigurace (povolování součástí systému)</string>
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
-    <string name="a11y_open_settings">otevřít nastavení</string>
     <string name="nsclient_version_does_not_match">Verze AAPSClienta se neshoduje s verzí AAPS. Aktualizujte prosím.</string>
     <string name="expand_category">Rozbalit kategorii</string>
     <string name="collapse_category">Sbalit kategorii</string>
