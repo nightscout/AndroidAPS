@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">възраст на помпата</string>
     <string name="patch_pump">Пач помпа</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Копиране на настройки от NS</string>
     <string name="a11y_graph">графика</string>
     <string name="a11y_insulin_label">инсулин</string>
     <string name="chart_menu">Меню на графиката</string>
@@ -33,9 +32,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ОСН</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
-    <string name="overview_buttons_selection">Бутони</string>
     <string name="data_status">Статус на данни за КЗ</string>
-    <string name="fill_bolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="run_question">Пусни %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Прогнозни КЗ</string>
@@ -59,7 +56,6 @@
     <string name="lowres_description">Скин за ниска резолюция</string>
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
-    <string name="skin">Тема</string>
     <string name="cannula_usage">употреба:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
