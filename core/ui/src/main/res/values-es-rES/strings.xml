@@ -47,7 +47,6 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="result">Resultado</string>
     <string name="settings">Ajustes</string>
-    <string name="nav_preferences">Preferencias</string>
     <string name="simple_mode">Modo simple</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
@@ -58,7 +57,6 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Luces de estado</string>
     <string name="copy_existing_values">¿Copiar configuración de Nightscout (si existe)?</string>
-    <string name="do_ns_upload_title">Subir datos de glucosa a Nightscout</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_bgsource">Fuente de glucosa</string>
     <string name="configbuilder_smoothing">Suavizado</string>
@@ -741,7 +739,6 @@
     <string name="export_failed">Fallido</string>
     <string name="export_alert">ALERTA</string>
     <!-- Export dialog strings -->
-    <string name="master_password_missing">¡La contraseña maestra no está establecida!\n\nPor favor, establece tu contraseña maestra en Preferencias (%1$s)</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="password_preferences_encrypt_prompt">Se te pedirá la contraseña maestra, que se utilizará para cifrar las preferencias exportadas.</string>
     <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
