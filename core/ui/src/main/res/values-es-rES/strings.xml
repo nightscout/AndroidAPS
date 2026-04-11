@@ -73,6 +73,7 @@
     <string name="ue_export_to_csv">Exportar entradas de usuario a Excel (csv)</string>
     <string name="confirm">Confirmar</string>
     <string name="pump">Bomba</string>
+    <string name="pump_management">Bomba</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Cargador de datos</string>
@@ -315,6 +316,7 @@
     <string name="careportal_dad_alert">D.A.D Alerta</string>
     <string name="careportal_insulin_cartridge_change">Cambio de cartucho de insulina</string>
     <string name="careportal_profileswitch">Cambio de perfil</string>
+    <string name="profile_management">Perfil</string>
     <string name="careportal_snackbolus">Bolo de aperitivo</string>
     <string name="careportal_mealbolus">Bolo de comida</string>
     <string name="careportal_correctionbolus">Bolo de corrección</string>
@@ -334,6 +336,7 @@
     <string name="treatment_insulin_desc">Administrar bolo manualmente</string>
     <string name="treatment_carbs_desc">Registrar carbohidratos sin insulina</string>
     <string name="treatment_calculator_desc">Calcular bolo</string>
+    <string name="insulin_management">Insulina</string>
     <string name="manage_insulin_desc">Gestionar y activar configuraciones de insulina</string>
     <string name="concentration_disable_blocked">No se puede desactivar el soporte de concentración mientras existan insulinas que no sean U100. Elimine primero todas las configuraciones de insulina que no sean U100 y cambie a un perfil U100.</string>
     <string name="simple_mode_blocked_by_concentration">No se puede activar el modo simple mientras se use una insulina que no sea U100. Cambie primero a una insulina U100.</string>
@@ -370,6 +373,7 @@
     <string name="custom">Personalizado</string>
     <string name="preset_settings">Ajustes preestablecidos</string>
     <string name="activation">Activación</string>
+    <string name="temp_target_management">Objetivo temporal</string>
     <string name="revert_to_defaults">Restablecer valores predeterminados</string>
     <string name="confirm_remove_preset">¿Eliminar el ajuste preestablecido %1$s?</string>
     <string name="confirm_cancel_temp_target">¿Cancelar el objetivo temporal activo?</string>
@@ -659,6 +663,7 @@
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">¡No hay bomba disponible!</string>
     <string name="quickwizard">Asistente rápido</string>
+    <string name="quickwizard_managemnt">Asistente rápido</string>
     <!--    Preferences-->
     <string name="child">Menor de edad</string>
     <string name="teenage">Adolescente</string>
@@ -941,6 +946,25 @@
     <string name="no_search_results">No se encontraron resultados</string>
     <string name="search_plugin_disabled">Complemento %1$s desactivado</string>
     <!--    Food Management -->
+    <string name="food_management">Comida</string>
+    <string name="food_deleted">Comida eliminada</string>
+    <string name="edit_food">Editar comida</string>
+    <string name="add_food">Añadir comida</string>
+    <string name="name">Nombre</string>
+    <string name="category">Categoría</string>
+    <string name="subcategory">Subcategoría</string>
+    <string name="portion">Porción</string>
+    <string name="unit_label">Unidad</string>
+    <string name="fat">Grasas</string>
+    <string name="protein">Proteínas</string>
+    <string name="energy">Energía</string>
+    <string name="undo">Deshacer</string>
+    <string name="no_data">Sin datos</string>
+    <string name="manage_food_desc">Gestionar entradas de la base de datos de alimentos</string>
+    <string name="label_carbs_g">Carbohidratos (g)</string>
+    <string name="label_fat_g">Grasas (g)</string>
+    <string name="label_protein_g">Proteínas (g)</string>
+    <string name="label_energy_kj">Energía (kJ)</string>
     <!--    Log Settings-->
     <string name="nav_logsettings">Ajustes de registro</string>
     <string name="resettodefaults">Restablecer valores predeterminados</string>
