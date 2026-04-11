@@ -47,7 +47,6 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
     <string name="result">Výsledok</string>
     <string name="settings">Nastavenia</string>
-    <string name="nav_preferences">Nastavenia</string>
     <string name="simple_mode">Jednoduchý mód</string>
     <string name="expand">Rozbaliť</string>
     <string name="collapse">Zbaliť</string>
@@ -58,7 +57,6 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Indikátory stavu</string>
     <string name="copy_existing_values">Skopírovať nastavenia NS (ak existujú)?</string>
-    <string name="do_ns_upload_title">Nahrávať glykémie do NS</string>
     <string name="configbuilder_insulin">Inzulín</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_smoothing">Vyhladzovanie</string>
@@ -741,7 +739,6 @@
     <string name="export_failed">Chyba</string>
     <string name="export_alert">VÝSTRAHA</string>
     <!-- Export dialog strings -->
-    <string name="master_password_missing">Hlavné heslo nie je nastavené!\n\nProsím nastavte svoje hlavné heslo v nastaveniach (%1$s)</string>
     <string name="export_to">Exportovať nastavenia do</string>
     <string name="password_preferences_encrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie exportovaných nastavení.</string>
     <string name="preferences_export_canceled">Export zrušený! Nastavenia neboli exportované!</string>
