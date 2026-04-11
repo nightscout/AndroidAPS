@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">启动大剂量之前的延迟。</string>
     <string name="medtronic_pump_max_bolus">泵上的最大大剂量（U）</string>
     <string name="medtronic_pump_max_basal">泵上的最大基础率(U/h)</string>
-    <string name="medtronic_pump_encoding">Medtronic公司的编码</string>
     <string name="medtronic_custom_action_wake_and_tune">唤醒和调整</string>
     <string name="medtronic_custom_action_clear_bolus_block">清除大剂量锁定</string>
     <string name="medtronic_pump_battery_select">电池类型 (电源视图)</string>
