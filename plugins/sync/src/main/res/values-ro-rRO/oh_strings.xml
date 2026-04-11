@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans a fost configurat. În cazul în care doriți să încetați încărcarea, apăsați „Deconectare”.</string>
     <string name="not_setup_info">Open Humans este deocamdată inactiv. Pentru a începe încărcarea datelor, apasă \"Configurare\".</string>
     <string name="project_member_id">ID Membru proiect: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Încărcați numai pe conexiune WiFi</string>
-    <string name="only_upload_if_charging">Încărcați numai dacă telefonul este la încărcat</string>
     <string name="open_humans_uploading">Se încarcă în Open Humans…</string>
     <string name="open_humans_notifications">Notificări Open Humans</string>
     <string name="uploading_to_open_humans">AAPS încarcă datele în Open Humans. Poate dura ceva timp.</string>
