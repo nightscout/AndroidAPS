@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Preferințe</string>
     <string name="delta">Diferență</string>
     <string name="save">Salvați</string>
     <string name="wear">Ceas</string>
-    <string name="sensitivity_warning">Trebuie introduși toți carbohidrații după pornirea Autosens. În caz contrar, deviațiile cauzate de carbohidrați vor fi percepute ca schimbări ale sensibilității!</string>
     <string name="invalid">INVALID</string>
-    <string name="pump_unreachable_threshold">Prag pompă indisponibilă [min]</string>
     <string name="close_navigation">Închidere navigație</string>
     <string name="remove_items">Eliminați elemente</string>
     <string name="sort_items">Sortați elemente</string>
-    <string name="unitsnosemicolon">Unități</string>
     <string name="authorizationfailed">Autorizarea a eșuat</string>
     <string name="cannula">Canula</string>
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
