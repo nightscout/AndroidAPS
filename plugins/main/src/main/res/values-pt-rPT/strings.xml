@@ -21,7 +21,6 @@
     <string name="statuslights_cannula_age">idade do cateter</string>
     <string name="statuslights_patch_pump_age">idade do adesivo da bomba</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="a11y_graph">gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menu do Gráfico</string>
@@ -32,9 +31,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">Início</string>
     <string name="description_overview">Exibe o estado actual do loop e botões para acções mais comuns</string>
-    <string name="overview_buttons_selection">Botões</string>
     <string name="data_status">Estado dos dados da GLIC</string>
-    <string name="fill_bolus_title">Valores Padrão de insulina para Purgar/Preencher</string>
     <string name="run_question">Executar %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
@@ -58,7 +55,6 @@
     <string name="lowres_description">Design de Baixa Resolução</string>
     <string name="buttonson_description">Os botões são sempre exibidos na parte inferior do ecrã</string>
     <string name="largedisplay_description">Mostrador Grande</string>
-    <string name="skin">Tema gráfico</string>
     <string name="cannula_usage">utilização:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
