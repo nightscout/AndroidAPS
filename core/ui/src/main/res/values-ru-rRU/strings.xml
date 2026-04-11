@@ -31,7 +31,6 @@
     <string name="result">Результат</string>
     <string name="settings">Настройки</string>
     <string name="statuslights">Индикаторы состояния</string>
-    <string name="do_ns_upload_title">Выгружать (передавать данные) ГК в Nightscout</string>
     <string name="configbuilder_insulin">Инсулин</string>
     <string name="value_unavailable_short">н/д</string>
     <!-- master_password moved to core/keys/strings.xml -->
