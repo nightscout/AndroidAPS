@@ -31,7 +31,6 @@
     <string name="result">Αποτέλεσμα</string>
     <string name="settings">Ρυθμίσεις</string>
     <string name="statuslights">Ενδείξεις κατάστασης</string>
-    <string name="do_ns_upload_title">Ανέβασμα δεδομένων BG στο NS</string>
     <string name="configbuilder_insulin">Ινσουλίνη</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
