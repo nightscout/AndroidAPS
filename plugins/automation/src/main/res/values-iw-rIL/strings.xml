@@ -45,10 +45,6 @@
     <string name="or">או</string>
     <string name="xor">או בררני (XOR)</string>
     <string name="atspecifiedtime">ב-%1$s</string>
-    <string name="use_network_location">שימוש במיקום רשת</string>
-    <string name="use_gps_location">שימוש במיקום GPS</string>
-    <string name="use_passive_location">השתמש במיקום פסיבי</string>
-    <string name="locationservice">שירות מיקום</string>
     <string name="onconnect">בחיבור</string>
     <string name="ondisconnect">בניתוק</string>
     <string name="short_avgdelta">דלתא ממוצעת קצרה</string>
