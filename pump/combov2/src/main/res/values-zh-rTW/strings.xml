@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">與幫浦配對</string>
     <string name="combov2_unpair_pump_title">取消幫浦配對</string>
     <string name="combov2_driver_state_label">驅動狀態</string>
-    <string name="combov2_current_activity_label">目前活動</string>
     <string name="bluetooth_address">藍牙地址</string>
     <string name="combov2_start_pairing">開始配對</string>
     <string name="combov2_pairing_in_progress">Combo 配對進行中</string>
@@ -99,7 +98,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">忽略多餘的 100% 臨時基礎率請求</string>
     <string name="combov2_hit_unexpected_tbr_limit">調整臨時基礎率時遇到意外限制：目標百分比為 %1$d%%，達到 %2$d%% 的限制</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">如果基礎速率為零，則無法設定絕對臨時基礎率</string>
-    <string name="combov2_pair_with_pump_summary">將 AndroidAPS 和 Android 與目前未配對的 Accu-Chek Combo 幫浦配對</string>
     <string name="combov2_unpair_pump_summary">將 AndroidAPS 和 Android 與目前配對的 Accu-Chek Combo 幫浦取消配對</string>
     <string name="combov2_unknown_tbr_detected">偵測到未知的臨時基礎率並已停止；百分比：%1$d%%；剩餘持續時間：%2$s</string>
     <string name="combov2_connection_error">連線錯誤：%1$s</string>
