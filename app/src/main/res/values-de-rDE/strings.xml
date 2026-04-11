@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s-Einstellungen</string>
     <string name="delta">Delta</string>
     <string name="save">Speichern</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">Stelle bei aktivierter Autosens-Funktion sicher, dass du alle eingenommenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrat-Abweichungen zu falschen Sensitivitätswerten führen!</string>
     <string name="invalid">Ungültig</string>
-    <string name="pump_unreachable_threshold">Grenzwert Pumpe ist nicht erreichbar [min]</string>
     <string name="close_navigation">Menü schließen</string>
     <string name="remove_items">Objekte entfernen</string>
     <string name="sort_items">Einträge sortieren</string>
-    <string name="unitsnosemicolon">Einheiten</string>
     <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
     <string name="cannula">Kanüle</string>
     <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
