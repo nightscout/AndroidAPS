@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Thời gian trễ trước khi bắt đầu tiêm bolus (giây)</string>
     <string name="medtronic_pump_max_bolus">Bolus tối đa trên bơm (U)</string>
     <string name="medtronic_pump_max_basal">Liều nền tối đa trên bơm (U)</string>
-    <string name="medtronic_pump_encoding">Mã hóa Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Đánh thức và tinh chỉnh</string>
     <string name="medtronic_custom_action_clear_bolus_block">Xóa chặn bolus</string>
     <string name="medtronic_custom_action_reset_rileylink">Đặt lại RileyLink</string>
