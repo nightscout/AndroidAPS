@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Emparejar con la bomba</string>
     <string name="combov2_unpair_pump_title">Desemparejar la bomba</string>
     <string name="combov2_driver_state_label">Estado del controlador</string>
-    <string name="combov2_current_activity_label">Actividad actual</string>
     <string name="bluetooth_address">Dirección Bluetooth</string>
     <string name="combov2_start_pairing">Iniciar el emparejamiento</string>
     <string name="combov2_pairing_in_progress">Emparejamiento en progreso</string>
@@ -99,7 +98,6 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorar la solicitud del 100% del TBR redundate</string>
     <string name="combov2_hit_unexpected_tbr_limit">Se ha encontrado un límite inesperado al ajustar el TBR: El porcentaje objetivo era %1$d%%, se ha encontrado un límite en %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">No se puede establecer el TBR absoluto si la tasa basal base es cero</string>
-    <string name="combov2_pair_with_pump_summary">Emparejar AndroidAPS y Android con una bomba Accu-Chek Combo actualmente no emparejada</string>
     <string name="combov2_unpair_pump_summary">Desemparejar AndroidAPS y Android desde la bomba Accu-Chek Combo actualmente emparejada</string>
     <string name="combov2_unknown_tbr_detected">Una TBR desconocida fue detectada y detenida; porcentaje: %1$d%%; duración restante: %2$s</string>
     <string name="combov2_connection_error">Error de conexión: %1$s</string>
