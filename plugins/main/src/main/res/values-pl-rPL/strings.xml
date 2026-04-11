@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">wiek pompy bezdrenowej</string>
     <string name="patch_pump">Pompa bezdrenowa</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Kopiowanie ustawień z NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -46,9 +45,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
-    <string name="overview_buttons_selection">Przyciski</string>
     <string name="data_status">Stan danych glikemii</string>
-    <string name="fill_bolus_title">Rozpocznij/Wypełnij standardowe ilości insuliny</string>
     <string name="run_question">Uruchomić %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozy poziomu</string>
@@ -75,7 +72,6 @@
     <string name="lowres_description">Mały ekran</string>
     <string name="buttonson_description">Przyciski są zawsze wyświetlane na dole ekranu</string>
     <string name="largedisplay_description">Duży ekran</string>
-    <string name="skin">Motyw</string>
     <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
