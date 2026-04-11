@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
     <application android:supportsRtl="true">
 
         <activity
@@ -31,7 +33,12 @@
         <service
             android:name=".services.AlarmSoundService"
             android:enabled="true"
-            android:exported="false" />
+            android:foregroundServiceType="specialUse"
+            android:exported="false">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Plays audible alarms for hypoglycemia, hyperglycemia, and pump/loop error conditions." />
+        </service>
 
     </application>
 
