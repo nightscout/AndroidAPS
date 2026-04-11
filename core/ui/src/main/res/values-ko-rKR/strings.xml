@@ -31,7 +31,6 @@
     <string name="result">결과</string>
     <string name="settings">설정</string>
     <string name="statuslights">상태 등</string>
-    <string name="do_ns_upload_title">NS에 혈당데이터 업로드하기</string>
     <string name="configbuilder_insulin">인슐린</string>
     <string name="value_unavailable_short">사용불가</string>
     <!-- master_password moved to core/keys/strings.xml -->
