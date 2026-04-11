@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">время отработанное разовой помпой</string>
     <string name="patch_pump">Разовая помпа</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Копировать параметры из NS</string>
     <string name="graph_scale_6h">6ч</string>
     <string name="graph_scale_12h">12 ч</string>
     <string name="graph_scale_18h">18 ч</string>
@@ -46,9 +45,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">НАЧАЛО</string>
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
-    <string name="overview_buttons_selection">Кнопки</string>
     <string name="data_status">Состояние данных ГК</string>
-    <string name="fill_bolus_title">Заполнить стандартное количество инсулина</string>
     <string name="run_question">Запустить %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Прогнозирование</string>
@@ -75,7 +72,6 @@
     <string name="lowres_description">Тема для низкого разрешения</string>
     <string name="buttonson_description">Кнопки всегда отображаются в нижней части экрана</string>
     <string name="largedisplay_description">Большой экран</string>
-    <string name="skin">Тема оформления</string>
     <string name="cannula_usage">применение:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
