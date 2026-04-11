@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">ηλικία αυτοκόλλητης αντλίας</string>
     <string name="patch_pump">Αυτοκόλλητη αντλία</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Αντιγραφή ρυθμίσεων από το NS</string>
     <string name="a11y_graph">γράφημα</string>
     <string name="a11y_insulin_label">ινσουλίνη</string>
     <string name="chart_menu">Μενού διαγράμματος</string>
@@ -33,9 +32,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ΑΡΧΙΚΗ</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
-    <string name="overview_buttons_selection">Πλήκτρα</string>
     <string name="data_status">Κατάσταση δεδομένων BG</string>
-    <string name="fill_bolus_title">Πλήρωση/Γέμισμα στανταρ ποσότητες ινσουλίνης</string>
     <string name="run_question">Εκτέλεση %s;</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Προβλέψεις</string>
@@ -59,7 +56,6 @@
     <string name="lowres_description">Θέμα χαμηλής ανάλυσης</string>
     <string name="buttonson_description">Τα κουμπιά εμφανίζονται πάντα στο κάτω μέρος της οθόνης</string>
     <string name="largedisplay_description">Μεγάλη προβολή</string>
-    <string name="skin">Θέμα</string>
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
