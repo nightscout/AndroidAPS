@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s 설정</string>
     <string name="delta">증분</string>
     <string name="save">저장</string>
     <string name="wear">워치</string>
-    <string name="sensitivity_warning">Autosense 기능을 켜면 모든 섭취된 탄수화물양을 입력하십시오. 그렇지 않으면 탄수화물 편차(deviations)가 민감도 변화로 잘못 인식될것입니다!!</string>
     <string name="invalid">유효하지 않음</string>
-    <string name="pump_unreachable_threshold">펌프 연결불가 기준시간 [min]</string>
     <string name="close_navigation">메뉴 닫기</string>
     <string name="remove_items">항목 제거하기</string>
     <string name="sort_items">항목 분류하기</string>
-    <string name="unitsnosemicolon">단위</string>
     <string name="authorizationfailed">인증 실패</string>
     <string name="cannula">캐뉼라</string>
     <string name="identification_not_set">개발 모드에서 신원 확인이 설정되지 않았습니다.</string>
