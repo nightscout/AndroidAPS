@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Ghép đôi với bơm</string>
     <string name="combov2_unpair_pump_title">Hủy ghép đôi bơm</string>
     <string name="combov2_driver_state_label">Trạng thái trình điều khiển</string>
-    <string name="combov2_current_activity_label">Hoạt động hiện tại</string>
     <string name="bluetooth_address">Địa chỉ Bluetooth</string>
     <string name="combov2_start_pairing">Bắt đầu ghép nối</string>
     <string name="combov2_pairing_in_progress">Đang ghép nối Combo</string>
@@ -99,7 +98,6 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Bỏ qua yêu cầu TBR 100% dư thừa</string>
     <string name="combov2_hit_unexpected_tbr_limit">Gặp giới hạn bất ngờ khi điều chỉnh TBR: phần trăm mục tiêu là %1$d%%, nhưng đạt giới hạn ở %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Không thể đặt TBR tuyệt đối khi basal nền bằng 0</string>
-    <string name="combov2_pair_with_pump_summary">Ghép nối AndroidAPS/Android với bơm Combo chưa ghép</string>
     <string name="combov2_unpair_pump_summary">Hủy ghép nối AndroidAPS và Android khỏi bơm Accu-Chek Combo đã ghép nối</string>
     <string name="combov2_unknown_tbr_detected">Phát hiện TBR không xác định và đã dừng; phần trăm: %1$d%%; thời gian còn lại: %2$s</string>
     <string name="combov2_connection_error">Lỗi kết nối: %1$s</string>
