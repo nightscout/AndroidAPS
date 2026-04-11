@@ -40,6 +40,8 @@ knappene samtidig for å avbryte parringen)\n
 3. Prøv å sammenkoble igjen</string>
     <string name="combov2_enter_pin">Skriv inn PIN</string>
     <string name="combov2_cancel_pairing">Avbryt sammenkobling</string>
+    <string name="combov2_confirm_cancel_pairing_message">Vil du virkelig avbryte paringen?</string>
+    <string name="combov2_confirm_unpair_message">Vil du virkelig oppheve paringen av pumpen?</string>
     <string name="combov2_pin_hint">10-sifret PIN</string>
     <string name="combov2_pairing_finished_successfully">Vellykket sammenkobling med Combo</string>
     <string name="combov2_pairing_cancelled">Sammenkobling med Combo avbrutt av brukeren</string>
@@ -90,6 +92,9 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (gjenstår mindre enn 1 minutt)</string>
     <string name="combov2_load_tdds_cancelled">Laster inn avbrutte TDD-er</string>
     <string name="combov2_retrieving_tdds_failed">Henter TDD-er som feilet</string>
+    <string name="combov2_battery_empty">Tomt</string>
+    <string name="combov2_battery_low">Lavt</string>
+    <string name="combov2_battery_full">Fullt</string>
     <string name="combov2_battery_low_warning">Pumpebatteriet er lavt</string>
     <string name="combov2_reservoir_low_warning">Pumpens reservoarnivå er lavt</string>
     <string name="combov2_setting_tbr_succeeded">Innstilling av TBR var vellykket</string>
