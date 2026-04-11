@@ -47,7 +47,6 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
     <string name="result">Risultato</string>
     <string name="settings">Impostazioni</string>
-    <string name="nav_preferences">Preferenze</string>
     <string name="simple_mode">Modalità semplice</string>
     <string name="expand">Espandi</string>
     <string name="collapse">Contrai</string>
@@ -58,7 +57,6 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Indicatori di stato</string>
     <string name="copy_existing_values">Copiare impostazioni NS (se esiste)?</string>
-    <string name="do_ns_upload_title">Carica dati BG su NS</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_bgsource">Sorgente Glicemia</string>
     <string name="configbuilder_smoothing">Smoothing</string>
@@ -741,7 +739,6 @@
     <string name="export_failed">Fallito</string>
     <string name="export_alert">SEGNALAZIONE</string>
     <!-- Export dialog strings -->
-    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze (%1$s)</string>
     <string name="export_to">Esporta impostazioni</string>
     <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà usata per crittografare le preferenze esportate.</string>
     <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
