@@ -47,10 +47,6 @@
     <string name="or">Или</string>
     <string name="xor">Исключая или</string>
     <string name="atspecifiedtime">В %1$s</string>
-    <string name="use_network_location">Использовать сетевую геолокацию</string>
-    <string name="use_gps_location">Использовать геолокацию GPS</string>
-    <string name="use_passive_location">Использовать пассивную геолокацию</string>
-    <string name="locationservice">Службы геолокации</string>
     <string name="onconnect">При подключении</string>
     <string name="ondisconnect">При отключении</string>
     <string name="short_avgdelta">краткосрочная средняя дельта</string>
