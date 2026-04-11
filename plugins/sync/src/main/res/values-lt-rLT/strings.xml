@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_cellular">Naudoti mobiliuosius duomenis</string>
-    <string name="ns_wifi">Naudoti WiFi</string>
     <!-- ns_wifi_ssids moved to core:keys module -->
-    <string name="ns_charging">Įkrovimo metu</string>
-    <string name="ns_battery">Naudojant akumuliatorių</string>
     <string name="connection_settings_title">Ryšio nustatymai</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="ns_allow_roaming">Leisti sujungimą tarptinkliniu ryšiu</string>
-    <string name="ns_create_announcements_from_errors_title">Kurti klaidų pranešimus</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Kurti pranešimus apie būtinų angliavandenių įspėjimus</string>
-    <string name="ns_create_announcements_from_errors_summary">Kurti Nightscout pranešimus apie klaidas ir vietinius perspėjimus (matomus Terapijoje)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Kurti NS pranešimus apie būtinų angliavandenių įspėjimus</string>
     <string name="description_ns_client">Sinchronizuoti duomenis su Nightscout naudojant v1 API</string>
     <string name="description_ns_client_v3">Sinchronizuoti duomenis su Nightscout naudojant V3 API</string>
     <string name="blocked_by_charging">Užblokuota dėl įkrovimo parinkčių</string>
@@ -37,28 +28,7 @@
     <string name="full_sync">Pilna sinchronizacija</string>
     <string name="full_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai valandų ir kol ji nebus užbaigta, nematysite atnaujintų NS duomenų.</string>
     <string name="ns_sync_options">Sinchronizacija</string>
-    <string name="ns_upload_summary">Profiliai, bolusai, angliavandeniai, laikinos bazės bus įkeliami į NS</string>
-    <string name="ns_upload">Įkelti duomenis į NS</string>
-    <string name="ns_receive_profile_store">Priimti profilių saugyklą</string>
-    <string name="ns_receive_profile_store_summary">Sinchronizuoti profilius iš NS</string>
-    <string name="ns_receive_temp_target">Gauti laikinus tikslus</string>
-    <string name="ns_receive_profile_switch">Gauti profilio keitimus</string>
-    <string name="ns_receive_tbr_eb">Gauti LB ir IB</string>
-    <string name="ns_receive_tbr_eb_summary">Priimti laikinas bazes ir ištęstus bolusus, įvestus kitur</string>
-    <string name="ns_receive_insulin">Gauti insulino duomenis</string>
-    <string name="ns_receive_carbs">Gauti angliavandenių duomenis</string>
-    <string name="ns_receive_therapy_events">Gauti terapijos įvykius</string>
-    <string name="ns_receive_cgm">Gauti istorinius glikemijos duomenis</string>
-    <string name="ns_receive_cgm_summary">Priimti NGJ duomenis iš NS</string>
-    <string name="ns_sync_slow">Sulėtinti įkėlimus</string>
     <string name="ns_alarm_options">Aliarmų nustatymai</string>
-    <string name="ns_alarms">Kurti pranešimus iš NS aliarmų</string>
-    <string name="ns_announcements">Kurti pranešimus iš NS perspėjimų</string>
-    <string name="ns_alarm_stale_data_value_label">Seni duomenys, riba [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Kritiškai seni duomenys, riba [min]</string>
-    <string name="ns_log_app_started_event">Siųsti programos paleidimo žymę į NS</string>
-    <string name="ns_use_ws_title">Prisijungti per WebSocket</string>
-    <string name="ns_use_ws_summary">Įgalinimas reiškia: greitesni atnaujinimai, įspėjimų ir pranešimų gavimas ir didesnis baterijos eikvojimas, panašus į v1. Visi kiti įkėlėjai į NS turi naudoti v3 protokolą.</string>
     <!-- Tidepool -->
     <string name="title_tidepool_dev_servers">Naudoti integracijos (test) serverius</string>
     <string name="tidepool">Tidepool</string>
@@ -72,13 +42,8 @@
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Siųsti duomenis į xDrip+</string>
-    <string name="xdrip_status_detailed_iob_title">Rodyti detalų AIO</string>
-    <string name="xdrip_status_detailed_iob_summary">Laikrodyje rodyti bolusų ir bazės AIO</string>
-    <string name="xdrip_status_show_bgi_title">Rodyti BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Prie statuso linijos pridėti glikemijos įtaką</string>
     <string name="xdrip_status_settings">Išplėstinė xDrip+ statuso linija</string>
     <string name="disabled_loop">Ciklas išjungtas</string>
-    <string name="xdrip_send_status_title">Siųsti statuso liniją į xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ neinstaliuota</string>
     <string name="calibration_sent">Kalibracija nusiųsta į xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Siųsti glikemijos ir terapijos duomenis į xDrip+. Turi būti pasirinktas duomenų šaltinis „xDrip+ Sync Follower“, o duomenų priėmimas turi būti įjungtas skiltyje Nustatymai – Programų sąveikos nustatymai – Priimti glikemiją/terapiją</string>
@@ -106,18 +71,9 @@
     <string name="wear_action_tempt_min_bg_error">Min. cukraus kiekis nepatenka į diapozoną!</string>
     <string name="wear_action_tempt_max_bg_error">Max. cukraus kiekis nepatenka į diapozoną!</string>
     <string name="no_success">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
-    <string name="wear_settings">Išmaniojo laikrodžio nustatymai</string>
-    <string name="wearcontrol_title">Laikrodžio valdikliai</string>
-    <string name="wearcontrol_summary">Nustatyti laikinus tikslus ir įvesti bolusus bei AV iš laikrodžio.</string>
-    <string name="wear_broadcast_data">Duomenų siuntimas</string>
-    <string name="wear_broadcast_data_summary">Duomenų siuntimas į AAPS ar AAPSClient</string>
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukiami į rezultatą:</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
-    <string name="wear_notifysmb_title">Pranešti apie SMB</string>
-    <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
     <string name="wear_custom_watchface_settings">Pasirinktiniai laikrodžio ekrano nustatymai</string>
-    <string name="wear_custom_watchface_authorization_title">Pasirinktinė laikrodžio ekrano autorizacija</string>
-    <string name="wear_custom_watchface_authorization_summary">Leisti įkeltam pasirinktiniam ekranui keisti ir užrakinti kai kuriuos laikrodžio nustatymus, kad jie atitiktų ekrano dizainą</string>
     <string name="wear_custom_watchface">Pasirinktinis ekranas: %1$s</string>
     <string name="wear_load_watchface">Įkelti laikrodžio ekraną</string>
     <string name="wear_infos_watchface">Ekrano info</string>
