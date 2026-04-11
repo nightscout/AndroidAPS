@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">Préférences de %1$s</string>
     <string name="delta">Delta</string>
     <string name="save">Enregistrer</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">En activant la fonction Autosens, n’oubliez pas de rentrer tous les glucides consommés. Sinon les déviations de glucides seront incorrectement identifiées pour les changements de sensibilité !!</string>
     <string name="invalid">INVALIDE</string>
-    <string name="pump_unreachable_threshold">Seuil d\'alerte pompe hors de portée [min]</string>
     <string name="close_navigation">Fermer navigation</string>
     <string name="remove_items">Supprimer des entrées</string>
     <string name="sort_items">Trier les objets</string>
-    <string name="unitsnosemicolon">Unités</string>
     <string name="authorizationfailed">Echec de l\'authentification</string>
     <string name="cannula">Canule</string>
     <string name="identification_not_set">Identification non définie en mode dev</string>
