@@ -39,7 +39,6 @@ class GlimpPlugin @Inject constructor(
             )
         }
         .icon(IcPluginGlimp)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.glimp)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_glimp),

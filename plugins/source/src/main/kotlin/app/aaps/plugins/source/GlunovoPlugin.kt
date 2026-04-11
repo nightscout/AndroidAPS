@@ -52,7 +52,6 @@ class GlunovoPlugin @Inject constructor(
             )
         }
         .icon(IcPluginGlunovo)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.glunovo)
         .shortName(R.string.glunovo)
         .preferencesVisibleInSimpleMode(false)

@@ -41,7 +41,6 @@ class PatchedSiAppPlugin @Inject constructor(
             )
         }
         .icon(IcGenericCgm)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.patched_si_app)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_patched_si_app),

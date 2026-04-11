@@ -1,9 +1,5 @@
 package app.aaps.plugins.sync.tidepool
 
-import android.content.Context
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -25,9 +21,6 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginTidepool
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.DefaultEditTextValidator
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
@@ -89,7 +82,6 @@ class TidepoolPlugin @Inject constructor(
                 onClearLog = { tidepoolRepository.clearLog() }
             )
         }
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_tidepool),
     ownPreferences = listOf(
         TidepoolBooleanKey::class.java, TidepoolLongNonKey::class.java,
@@ -247,37 +239,4 @@ class TidepoolPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "tidepool_connection_options") return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "tidepool_settings"
-            title = rh.gs(R.string.tidepool)
-            initialExpandedChildrenCount = 0
-            // Add direct preference to make category expandable (like NSClient pattern)
-            // Without this, category with only nested PreferenceScreens is not clickable
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = TidepoolBooleanKey.UseTestServers, summary = R.string.summary_tidepool_dev_servers, title = R.string.title_tidepool_dev_servers))
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "tidepool_connection_options"
-                title = rh.gs(R.string.connection_settings_title)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseCellular, title = R.string.ns_cellular))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseRoaming, title = R.string.ns_allow_roaming))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseWifi, title = R.string.ns_wifi))
-                addPreference(
-                    AdaptiveStringPreference(
-                        ctx = context,
-                        stringKey = StringKey.NsClientWifiSsids,
-                        dialogMessage = app.aaps.core.keys.R.string.ns_wifi_ssids_summary,
-                        title = app.aaps.core.ui.R.string.ns_wifi_ssids,
-                        validatorParams = DefaultEditTextValidator.Parameters(emptyAllowed = true)
-                    )
-                )
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseOnBattery, title = R.string.ns_battery))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseOnCharging, title = R.string.ns_charging))
-            })
-            // Advanced screen removed - UseTestServers moved to top level
-        }
-    }
 }

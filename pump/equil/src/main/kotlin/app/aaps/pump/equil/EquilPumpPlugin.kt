@@ -2,9 +2,6 @@ package app.aaps.pump.equil
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -40,8 +37,6 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.equil.compose.EquilComposeContent
 import app.aaps.pump.equil.data.BolusProfile
 import app.aaps.pump.equil.data.RunMode
@@ -102,7 +97,6 @@ class EquilPumpPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_equil_128)
         .pluginName(R.string.equil_name)
         .shortName(R.string.equil_name_short)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.equil_pump_description),
     ownPreferences = listOf(
         EquilBooleanKey::class.java, EquilBooleanPreferenceKey::class.java, EquilIntPreferenceKey::class.java,
@@ -457,52 +451,4 @@ class EquilPumpPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(
-        preferenceManager: PreferenceManager,
-        parent: PreferenceScreen,
-        context: Context,
-        requiredKey: String?
-    ) {
-        if (requiredKey != null) return
-
-        val toneEntries = arrayOf<CharSequence>(
-            rh.gs(R.string.equil_tone_mode_mute),
-            rh.gs(R.string.equil_tone_mode_tone),
-            rh.gs(R.string.equil_tone_mode_shake),
-            rh.gs(R.string.equil_tone_mode_tone_and_shake)
-        )
-        val toneValues = arrayOf<CharSequence>("0", "1", "2", "3")
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "equil_settings"
-            title = rh.gs(R.string.equil_name)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = EquilBooleanPreferenceKey.EquilAlarmBattery,
-                    title = R.string.equil_settings_alarm_battery
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = EquilBooleanPreferenceKey.EquilAlarmInsulin,
-                    title = R.string.equil_settings_alarm_insulin
-                )
-            )
-            addPreference(
-                AdaptiveListIntPreference(
-                    ctx = context,
-                    intKey = EquilIntPreferenceKey.EquilTone,
-                    title = R.string.equil_tone,
-                    entries = toneEntries,
-                    entryValues = toneValues
-                )
-            )
-        }
-    }
 }

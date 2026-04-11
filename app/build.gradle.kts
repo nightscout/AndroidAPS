@@ -179,7 +179,6 @@ dependencies {
     implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
     implementation(project(":ui"))
     implementation(project(":plugins:aps"))
     implementation(project(":plugins:automation"))

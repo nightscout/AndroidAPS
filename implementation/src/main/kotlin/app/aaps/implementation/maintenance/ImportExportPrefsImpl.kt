@@ -3,7 +3,6 @@ package app.aaps.implementation.maintenance
 import android.Manifest
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
 import androidx.annotation.StringRes
@@ -394,9 +393,9 @@ class ImportExportPrefsImpl @Inject constructor(
             uiInteraction.showError(
                 context = activity,
                 title = rh.gs(wrongPwdTitle),
-                message = rh.gs(app.aaps.core.ui.R.string.master_password_missing, rh.gs(app.aaps.core.ui.R.string.protection)),
-                positiveButton = app.aaps.core.ui.R.string.nav_preferences,
-                ok = { activity.startActivity(Intent(activity, uiInteraction.preferencesActivity).putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)) }
+                message = rh.gs(app.aaps.core.ui.R.string.master_password_missing),
+                positiveButton = app.aaps.core.keys.R.string.master_password,
+                ok = { passwordCheck.setPassword(activity, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword) }
             )
             exportPasswordDataStore.clearPasswordDataStore(context)
             return false

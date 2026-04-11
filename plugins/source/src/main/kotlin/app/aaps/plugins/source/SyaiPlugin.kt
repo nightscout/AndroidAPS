@@ -41,7 +41,6 @@ class SyaiPlugin @Inject constructor(
             )
         }
         .icon(IcPluginSyai)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.syai_tag_app)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_patched_syai_tag_app),

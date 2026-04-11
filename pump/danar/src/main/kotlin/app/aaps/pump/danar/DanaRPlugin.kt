@@ -1,18 +1,10 @@
 package app.aaps.pump.danar
 
-import android.Manifest
-import android.bluetooth.BluetoothManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.pm.PackageManager
 import android.os.IBinder
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -41,9 +33,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
@@ -58,7 +47,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
-import java.util.Vector
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -377,56 +365,4 @@ class DanaRPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    private fun getBondedBluetoothDevices(context: Context): List<String> {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            return emptyList()
-        }
-
-        return try {
-            val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
-            bluetoothManager?.adapter?.bondedDevices
-                ?.mapNotNull { it.name }
-                ?.sorted()
-                ?: emptyList()
-        } catch (_: SecurityException) {
-            emptyList()
-        }
-    }
-
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        var entries = emptyArray<CharSequence>()
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-            val devices = Vector<CharSequence>()
-            (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bta ->
-                for (dev in bta.bondedDevices)
-                    dev.name?.let { name -> devices.add(name) }
-            }
-            entries = devices.toTypedArray()
-        } else ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
-
-        val speedEntries = arrayOf<CharSequence>("12 s/U", "30 s/U", "60 s/U")
-        val speedValues = arrayOf<CharSequence>("0", "1", "2")
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "danar_settings"
-            title = rh.gs(app.aaps.pump.dana.R.string.danar_pump_settings)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveListIntPreference(
-                    ctx = context,
-                    intKey = DanaIntKey.BolusSpeed,
-                    title = app.aaps.core.ui.R.string.bolusspeed,
-                    dialogTitle = app.aaps.core.ui.R.string.bolusspeed,
-                    entries = speedEntries,
-                    entryValues = speedValues
-                )
-            )
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.UseExtended, title = app.aaps.pump.dana.R.string.danar_useextended_title))
-        }
-    }
 }

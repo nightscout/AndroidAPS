@@ -7,9 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -52,8 +49,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginInsight
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.insight.app_layer.Service
 import app.aaps.pump.insight.app_layer.history.StartReadingHistoryMessage
 import app.aaps.pump.insight.app_layer.history.StopReadingHistoryMessage
@@ -177,8 +172,7 @@ class InsightPlugin @Inject constructor(
                 pumpSync = pumpSync,
                 blePreCheck = blePreCheck
             )
-        }
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN),
+        },
     ownPreferences = listOf(
         InsightBooleanKey::class.java, InsightIntKey::class.java,
         InsightLongNonKey::class.java, InsightDoubleNonKey::class.java,
@@ -1619,34 +1613,6 @@ class InsightPlugin @Inject constructor(
         ),
         icon = pluginDescription.icon
     )
-
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        // val speedEntries = arrayOf<CharSequence>("12 s/U", "30 s/U", "60 s/U")
-        // val speedValues = arrayOf<CharSequence>("0", "1", "2")
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "insight_settings"
-            title = rh.gs(R.string.insight_local)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogReservoirChanges, title = R.string.log_reservoir_changes))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogTubeChanges, title = R.string.log_tube_changes))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogSiteChanges, title = R.string.log_site_changes))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogBatteryChanges, title = R.string.log_battery_changes))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogOperatingModeChanges, title = R.string.log_operating_mode_changes))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.LogAlerts, title = R.string.log_alerts))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.EnableTbrEmulation, title = R.string.enable_tbr_emulation, summary = R.string.enable_tbr_emulation_summary))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.DisableVibration, title = R.string.disable_vibration, summary = R.string.disable_vibration_summary))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = InsightBooleanKey.DisableVibrationAuto, title = R.string.disable_vibration_auto, summary = R.string.disable_vibration_auto_summary))
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = InsightIntKey.MinRecoveryDuration, title = R.string.min_recovery_duration))
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = InsightIntKey.MaxRecoveryDuration, title = R.string.max_recovery_duration))
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = InsightIntKey.DisconnectDelay, title = R.string.disconnect_delay))
-        }
-    }
 
     companion object {
 

@@ -52,7 +52,6 @@ class IntelligoPlugin @Inject constructor(
             )
         }
         .icon(IcPluginIntelligo)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.intelligo)
         .shortName(R.string.intelligo)
         .preferencesVisibleInSimpleMode(false)

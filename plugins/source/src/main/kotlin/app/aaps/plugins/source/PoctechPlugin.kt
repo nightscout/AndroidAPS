@@ -44,7 +44,6 @@ class PoctechPlugin @Inject constructor(
             )
         }
         .icon(IcPluginPocTec)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.poctech)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_poctech),

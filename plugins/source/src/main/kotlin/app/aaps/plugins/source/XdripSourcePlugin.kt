@@ -49,7 +49,6 @@ class XdripSourcePlugin @Inject constructor(
             )
         }
         .icon(IcXDrip)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.source_xdrip)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_xdrip),

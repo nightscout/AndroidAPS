@@ -26,7 +26,6 @@ dependencies {
     implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
     implementation(project(":shared:impl"))
 
     testImplementation(project(":shared:tests"))

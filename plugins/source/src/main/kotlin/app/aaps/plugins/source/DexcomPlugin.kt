@@ -52,7 +52,6 @@ class DexcomPlugin @Inject constructor(
             )
         }
         .icon(IcPluginByoda)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
         .preferencesVisibleInSimpleMode(false)

@@ -12,7 +12,6 @@
     <string name="medtronic_pump_bolus_delay">Delay before Bolus is started (s)</string>
     <string name="medtronic_pump_max_bolus">Max Bolus on Pump (U)</string>
     <string name="medtronic_pump_max_basal">Max Basal on Pump (U/h)</string>
-    <string name="medtronic_pump_encoding">Medtronic Encoding</string>
     <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
     <string name="medtronic_custom_action_clear_bolus_block">Clear Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink</string>
@@ -106,7 +105,6 @@
     <string name="set_neutral_temps_title">Set neutral temp basals</string>
     <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min remaining)</string>
-    <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
     <string name="invalid_history_data">Invalid pump history data detected. Open new issue and provide logs.</string>
     <string name="riley_statistics">RL Stats</string>
 

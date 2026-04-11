@@ -2,9 +2,6 @@ package app.aaps.plugins.sync.garmin
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
@@ -17,10 +14,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginGarmin
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.DefaultEditTextValidator
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
 import app.aaps.plugins.sync.garmin.keys.GarminIntKey
@@ -71,8 +64,7 @@ class GarminPlugin @Inject constructor(
         .icon(IcPluginGarmin)
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
-        .description(R.string.garmin_description)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN),
+        .description(R.string.garmin_description),
     ownPreferences = listOf(GarminStringKey::class.java, GarminBooleanKey::class.java, GarminIntKey::class.java),
     aapsLogger, resourceHelper, preferences
 ) {
@@ -488,26 +480,4 @@ class GarminPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "garmin_settings"
-            title = rh.gs(R.string.garmin)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = GarminBooleanKey.LocalHttpServer, title = R.string.garmin_local_http_server))
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = GarminIntKey.LocalHttpPort, title = R.string.garmin_local_http_server_port))
-            addPreference(
-                AdaptiveStringPreference(
-                    ctx = context,
-                    stringKey = GarminStringKey.RequestKey,
-                    title = R.string.garmin_request_key,
-                    summary = R.string.garmin_request_key_summary,
-                    validatorParams = DefaultEditTextValidator.Parameters(emptyAllowed = true)
-                )
-            )
-        }
-    }
 }

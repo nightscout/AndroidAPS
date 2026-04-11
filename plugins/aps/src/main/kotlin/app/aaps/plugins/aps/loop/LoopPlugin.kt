@@ -12,9 +12,6 @@ import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.DS
@@ -85,7 +82,6 @@ import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.ui.compose.icons.IcLoopClosed
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
@@ -149,7 +145,6 @@ class LoopPlugin @Inject constructor(
         .icon(IcLoopClosed)
         .pluginName(app.aaps.core.ui.R.string.loop)
         .shortName(R.string.loop_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .alwaysEnabled(config.APS)
         .description(R.string.description_loop),
     aapsLogger, rh
@@ -1080,19 +1075,6 @@ class LoopPlugin @Inject constructor(
         ),
         icon = pluginDescription.icon
     )
-
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "loop_settings"
-            title = rh.gs(app.aaps.core.ui.R.string.loop)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.LoopOpenModeMinChange, dialogMessage = R.string.loop_open_mode_min_change_summary, title = R.string.loop_open_mode_min_change))
-        }
-    }
 
     companion object {
 

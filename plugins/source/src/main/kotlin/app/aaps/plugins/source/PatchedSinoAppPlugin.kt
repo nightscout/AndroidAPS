@@ -41,7 +41,6 @@ class PatchedSinoAppPlugin @Inject constructor(
             )
         }
         .icon(IcGenericCgm)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.patched_sino_app)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_patched_sino_app),

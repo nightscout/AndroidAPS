@@ -2,10 +2,6 @@ package info.nightscout.pump.combov2
 
 import android.content.Context
 import android.content.Intent
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
@@ -48,8 +44,6 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -143,8 +137,7 @@ class ComboV2Plugin @Inject constructor(
             .icon(IcPluginCombo)
             .pluginName(R.string.combov2_plugin_name)
             .shortName(R.string.combov2_plugin_shortname)
-            .description(R.string.combov2_plugin_description)
-            .preferencesId(PluginDescription.PREFERENCE_SCREEN),
+            .description(R.string.combov2_plugin_description),
         ownPreferences = listOf(
             ComboIntKey::class.java, ComboBooleanKey::class.java,
             ComboStringNonKey::class.java, ComboIntNonKey::class.java, ComboLongNonKey::class.java
@@ -2233,27 +2226,4 @@ class ComboV2Plugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "combov2_settings"
-            title = rh.gs(R.string.combov2_title)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = ComboIntKey.DiscoveryDuration, title = R.string.combov2_discovery_duration))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticReservoirEntry, title = R.string.combov2_automatic_reservoir_entry))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticBatteryEntry, title = R.string.combov2_automatic_battery_entry))
-            addPreference(
-                AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.VerboseLogging, title = R.string.combov2_verbose_logging).apply {
-                    onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-                        updateComboCtlLogLevel(newValue as Boolean)
-                        true
-                    }
-                }
-            )
-        }
-    }
 }

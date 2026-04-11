@@ -20,7 +20,6 @@ dependencies {
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
-    implementation(project(":core:validators"))
     implementation(project(":pump:common"))
 
     implementation(libs.androidx.compose.ui.tooling.preview)

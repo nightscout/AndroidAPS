@@ -38,7 +38,6 @@ class TomatoPlugin @Inject constructor(
             )
         }
         .icon(IcPluginTomato)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.tomato)
         .shortName(R.string.tomato_short)
         .preferencesVisibleInSimpleMode(false)
