@@ -27,7 +27,6 @@
     <string name="smbnotallowedinopenloopmode">To SMB δεν επιτρέπεται σε λειτουργία ανοιχτού κυκλώματος</string>
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
-    <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <!-- Objectives -->
     <string name="completed_well_done">Ολοκληρώθηκε, συγχαρητήρια!</string>
     <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
