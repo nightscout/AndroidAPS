@@ -15,11 +15,8 @@
     <string name="openapsma_meal_data_label">Podaci o obroku</string>
     <string name="openapsma_request_label">Zahtev</string>
     <string name="constraints">Ograničenja</string>
-    <string name="openapsma_max_basal_title">Max U/h privremeni Basal se može postaviti na</string>
     <string name="openapsma_max_basal_summary">Ova vrednost se naziva maksimalni bazal u OpenAPS kontekstu</string>
-    <string name="openapsma_max_iob_title">Maksimalni bazalni IOB OpenAPS može da isporuči [U]</string>
     <string name="openapsma_max_iob_summary">Ova vrednost se naziva Max IOB u OpenAPS kontekstu\nOvo je maksimalni insulin u [U] APS-u koji se može isporuči odjednom.</string>
-    <string name="lgs_threshold_title">Nivo GUK ispod kojeg dolazi do suspenzije niske glukoze</string>
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
     <!--    Loop -->
