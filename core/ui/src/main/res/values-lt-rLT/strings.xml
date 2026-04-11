@@ -31,7 +31,6 @@
     <string name="result">Rezultatas</string>
     <string name="settings">Parametrai</string>
     <string name="statuslights">Būklės indikatoriai</string>
-    <string name="do_ns_upload_title">Siųsti glikemijos duomenis į NS</string>
     <string name="configbuilder_insulin">Insulinas</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
