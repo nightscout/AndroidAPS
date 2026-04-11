@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Oneskorenie pred podaním bolusu (s)</string>
     <string name="medtronic_pump_max_bolus">Max. bolus v pumpe (U)</string>
     <string name="medtronic_pump_max_basal">Max. bazál v pumpe (U/h)</string>
-    <string name="medtronic_pump_encoding">Medtronic kódovanie</string>
     <string name="medtronic_custom_action_wake_and_tune">Prebudenie a prispôsobenie</string>
     <string name="medtronic_custom_action_clear_bolus_block">Odstránenie blokovania bolusu</string>
     <string name="medtronic_custom_action_reset_rileylink">Resetovať RileyLink</string>
