@@ -31,7 +31,6 @@
     <string name="result">Resultat</string>
     <string name="settings">Indstillinger</string>
     <string name="statuslights">Status lys</string>
-    <string name="do_ns_upload_title">Upload BG data til NS</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="value_unavailable_short">ikke tilgængelig</string>
     <!-- master_password moved to core/keys/strings.xml -->
