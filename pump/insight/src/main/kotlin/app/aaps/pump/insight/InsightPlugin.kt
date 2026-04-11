@@ -175,7 +175,8 @@ class InsightPlugin @Inject constructor(
                 context = context,
                 aapsSchedulers = aapsSchedulers,
                 pumpSync = pumpSync,
-                blePreCheck = blePreCheck
+                blePreCheck = blePreCheck,
+                ch = ch
             )
         }
         .preferencesId(PluginDescription.PREFERENCE_SCREEN),
