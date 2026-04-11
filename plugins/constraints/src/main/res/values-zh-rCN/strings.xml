@@ -15,7 +15,6 @@
     <string name="smbnotallowedinopenloopmode">在开环模式下不允许使用SMB－微型大剂量</string>
     <string name="maxvalueinpreferences">在参数选项里的最大值</string>
     <string name="hardlimit">硬限制</string>
-    <string name="treatmentssafety_title">治疗安全</string>
     <!-- Objectives -->
     <string name="not_completed_yet">尚未完成</string>
     <string name="time_elapsed">已用时间</string>
