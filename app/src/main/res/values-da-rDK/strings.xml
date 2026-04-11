@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s indstillinger</string>
     <string name="delta">Delta</string>
     <string name="save">Gem</string>
     <string name="wear">Ur</string>
-    <string name="sensitivity_warning">Ved at slå funktionen Autosense til husk at indtaste alle spiste kulhydrater. Ellers vil kulhydrat afvigelser blive identificeret forkert som følsomheds ændring !!</string>
     <string name="invalid">UGYLDIG</string>
-    <string name="pump_unreachable_threshold">Pumpe utilgængelig tærskelværdi [min]</string>
     <string name="close_navigation">Luk navigation</string>
     <string name="remove_items">Fjern elementer</string>
     <string name="sort_items">Sortér elementer</string>
-    <string name="unitsnosemicolon">Enheder</string>
     <string name="authorizationfailed">Godkendelse mislykkedes</string>
     <string name="cannula">Kanyle</string>
     <string name="identification_not_set">Identifikation ikke indstillet i udvikler-tilstand</string>
