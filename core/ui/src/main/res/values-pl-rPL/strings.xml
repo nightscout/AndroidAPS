@@ -31,7 +31,6 @@
     <string name="result">Rezultat</string>
     <string name="settings">Ustawienia</string>
     <string name="statuslights">Wskaźniki stanu</string>
-    <string name="do_ns_upload_title">Przekaż dane BG do NS</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
