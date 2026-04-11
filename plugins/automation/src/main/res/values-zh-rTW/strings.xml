@@ -47,10 +47,6 @@
     <string name="or">或</string>
     <string name="xor">互斥或</string>
     <string name="atspecifiedtime">在 %1$s</string>
-    <string name="use_network_location">使用網路位置</string>
-    <string name="use_gps_location">使用GPS位置</string>
-    <string name="use_passive_location">使用被動位置</string>
-    <string name="locationservice">位置服務</string>
     <string name="onconnect">連線時</string>
     <string name="ondisconnect">斷線時</string>
     <string name="short_avgdelta">短期平均變化量</string>
