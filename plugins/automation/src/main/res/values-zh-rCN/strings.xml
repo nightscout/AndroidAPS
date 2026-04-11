@@ -45,10 +45,6 @@
     <string name="or">或</string>
     <string name="xor">唯一的</string>
     <string name="atspecifiedtime">在 %1$s</string>
-    <string name="use_network_location">打开网络位置</string>
-    <string name="use_gps_location">使用 GPS 定位</string>
-    <string name="use_passive_location">使用设备位置</string>
-    <string name="locationservice">定位服务</string>
     <string name="onconnect">连接时</string>
     <string name="ondisconnect">断开时</string>
     <string name="short_avgdelta">短平均增量</string>
