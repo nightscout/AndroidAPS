@@ -13,7 +13,6 @@
     <string name="a11y_insulin_label">inzulin</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">KEZD</string>
-    <string name="overview_buttons_selection">Gombok</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Előrejelzések</string>
     <string name="overview_show_basals">Bázis</string>
@@ -23,7 +22,6 @@
     <!-- Skins -->
     <string name="classic_description">Eredeti megjelenés</string>
     <string name="lowres_description">Alacsony felbontás</string>
-    <string name="skin">Megjelenés</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="old_data">RÉGI ADAT</string>
