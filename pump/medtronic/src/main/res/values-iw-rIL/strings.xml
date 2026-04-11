@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">המתנה לפני מתן בולוס (שניות)</string>
     <string name="medtronic_pump_max_bolus">מקסימום בולוס במשאבה (יח\')</string>
     <string name="medtronic_pump_max_basal">מקסימום בזאלי במשאבה (יח\' לשעה)</string>
-    <string name="medtronic_pump_encoding">קידוד מדטרוניק</string>
     <string name="medtronic_custom_action_wake_and_tune">התעוררות וכוונון</string>
     <string name="medtronic_custom_action_clear_bolus_block">ביטול חסימת בולוס</string>
     <string name="medtronic_pump_battery_select">סוג סוללה (תצוגת חשמל)</string>
