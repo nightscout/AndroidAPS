@@ -43,7 +43,7 @@ data class PumpInfoRow(
 ): PumpInfoInterface
 
 /**
- * Group for PumpInfo
+ * Group for PumpInfoRow. Group items are displayed together, with divider only at end of group (instead of each item)
  */
 data class PumpInfoGroup(
     var list: MutableList<PumpInfoRow> = mutableListOf()
