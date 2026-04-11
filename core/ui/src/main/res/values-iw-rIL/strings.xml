@@ -31,7 +31,6 @@
     <string name="result">תוצאה</string>
     <string name="settings">הגדרות</string>
     <string name="statuslights">אורות חיווי</string>
-    <string name="do_ns_upload_title">שלח נתוני סוכר לנייטסקאוט</string>
     <string name="configbuilder_insulin">אינסולין</string>
     <string name="value_unavailable_short">לא זמין</string>
     <!-- master_password moved to core/keys/strings.xml -->
