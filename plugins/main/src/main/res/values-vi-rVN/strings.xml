@@ -24,7 +24,6 @@
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Sao chép cài đặt từ NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -48,9 +47,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Hiển thị trạng thái hiện tại của vòng lặp và các nút cho những thao tác thường dùng nhất</string>
-    <string name="overview_buttons_selection">Phím bấm</string>
     <string name="data_status">Trạng thái dữ liệu đường huyết</string>
-    <string name="fill_bolus_title">Bơm/đẩy lượng insulin tiêu chuẩn</string>
     <string name="run_question">Chạy %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Dự đoán</string>
@@ -77,7 +74,6 @@
     <string name="lowres_description">Giao diện phân giải thấp</string>
     <string name="buttonson_description">Các nút luôn được hiển thị ở phía dưới màn hình</string>
     <string name="largedisplay_description">Màn hình lớn</string>
-    <string name="skin">Giao diện</string>
     <string name="cannula_usage">đã sử dụng:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
