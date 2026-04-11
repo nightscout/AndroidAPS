@@ -40,6 +40,8 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
 3. Încearcă să asociezi din nou</string>
     <string name="combov2_enter_pin">Introduceți PIN</string>
     <string name="combov2_cancel_pairing">Anulați asocierea</string>
+    <string name="combov2_confirm_cancel_pairing_message">Sigur doriți să anulați asocierea?</string>
+    <string name="combov2_confirm_unpair_message">Sigur doriți să dezasociați pompa?</string>
     <string name="combov2_pin_hint">PIN de 10 cifre</string>
     <string name="combov2_pairing_finished_successfully">Asociat cu succes cu Combo</string>
     <string name="combov2_pairing_cancelled">Asocierea cu Combo a fost anulată de utilizator</string>
