@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Appairer la pompe</string>
     <string name="combov2_unpair_pump_title">Désappairer la pompe</string>
     <string name="combov2_driver_state_label">État du pilote</string>
-    <string name="combov2_current_activity_label">Activité en cours</string>
     <string name="bluetooth_address">Adresse Bluetooth</string>
     <string name="combov2_start_pairing">Démarrer l\'appairage</string>
     <string name="combov2_pairing_in_progress">Appairage du Combo en cours</string>
@@ -90,7 +89,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Requête 100% DBT redondante ignorée</string>
     <string name="combov2_hit_unexpected_tbr_limit">Limite inattendue lors de l’ajustement du DBT: le pourcentage cible de %1$d%%, a dépassé la limite de %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Impossible de définir le DBT absolu si le débit de basal est zéro</string>
-    <string name="combov2_pair_with_pump_summary">Appairer AndroidAPS et Android avec une pompe Accu-Chek Combo non appariée</string>
     <string name="combov2_unpair_pump_summary">Dissocier AndroidAPS et Android de la pompe Accu-Chek Combo actuelle</string>
     <string name="combov2_unknown_tbr_detected">Un DBT inconnu a été détecté et arrêté, pourcentage: %1$d%%, durée restante: %2$s</string>
     <string name="combov2_connection_error">Erreur de connexion: %1$s</string>
