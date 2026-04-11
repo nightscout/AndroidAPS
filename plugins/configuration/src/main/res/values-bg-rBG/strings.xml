@@ -50,7 +50,6 @@
     <string name="config_builder_shortname">КОНФ</string>
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
     <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише базали, съхранявани в помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
-    <string name="a11y_open_settings">отваряне на настройки</string>
     <string name="nsclient_version_does_not_match">Версията на AAPSClient не съвпада с версията на AAPS. Моля обновете.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
