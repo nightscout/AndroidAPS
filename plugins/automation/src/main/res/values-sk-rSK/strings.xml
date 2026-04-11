@@ -47,10 +47,6 @@
     <string name="or">Alebo</string>
     <string name="xor">Exkluzívny alebo</string>
     <string name="atspecifiedtime">Za %1$s</string>
-    <string name="use_network_location">Použi polohu zo siete</string>
-    <string name="use_gps_location">Použi polohu z GPS</string>
-    <string name="use_passive_location">Použiť pasívnu polohu</string>
-    <string name="locationservice">Služba zisťovania polohy</string>
     <string name="onconnect">Pri pripojení</string>
     <string name="ondisconnect">Pri odpojení</string>
     <string name="short_avgdelta">Krátkodobý priemer</string>
