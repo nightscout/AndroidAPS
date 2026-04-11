@@ -24,7 +24,6 @@
     <string name="statuslights_patch_pump_age">vârstă pompă</string>
     <string name="patch_pump">Pompă</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copiați setările din NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -48,9 +47,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ACASĂ</string>
     <string name="description_overview">Afișați starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
-    <string name="overview_buttons_selection">Butoane</string>
     <string name="data_status">Stare date glicemie</string>
-    <string name="fill_bolus_title">Umplere/Amorsare - cantități standard de insulină</string>
     <string name="run_question">Executați %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicții</string>
@@ -77,7 +74,6 @@
     <string name="lowres_description">Temă de rezoluție redusă</string>
     <string name="buttonson_description">Butoanele sunt afișate întotdeauna în partea de jos a ecranului</string>
     <string name="largedisplay_description">Display mare</string>
-    <string name="skin">Tema</string>
     <string name="cannula_usage">folosire:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
