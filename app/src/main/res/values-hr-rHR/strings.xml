@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Postavke</string>
     <string name="delta">Delta</string>
     <string name="save">Spremi</string>
     <string name="invalid">GREŠKA</string>
-    <string name="unitsnosemicolon">Jedinice</string>
     <!-- WEAR OS-->
     <string name="search">Pretraga</string>
 </resources>
