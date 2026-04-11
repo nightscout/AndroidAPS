@@ -50,7 +50,6 @@
     <string name="config_builder_shortname">Konf</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
     <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump kommer AAPS skriva över pumpens basalprofil med den aktiva profilen i AAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
-    <string name="a11y_open_settings">öppna inställningar</string>
     <string name="nsclient_version_does_not_match">Följarversionen matchar inte AAPS-versionen. Vänligen uppdatera.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
