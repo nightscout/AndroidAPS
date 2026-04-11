@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">patch 泵年龄</string>
     <string name="patch_pump">Patch 泵</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">从NS复制设置</string>
     <string name="a11y_graph">绘图</string>
     <string name="a11y_insulin_label">胰岛素</string>
     <string name="chart_menu">图表菜单</string>
@@ -33,9 +32,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">主页</string>
     <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
-    <string name="overview_buttons_selection">按钮</string>
     <string name="data_status">血糖数据状态</string>
-    <string name="fill_bolus_title">输注/充盈标准胰岛素剂量</string>
     <string name="run_question">运行 %s？</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">预测</string>
@@ -58,7 +55,6 @@
     <string name="lowres_description">低分辨率皮肤</string>
     <string name="buttonson_description">按钮总是显示在屏幕底部</string>
     <string name="largedisplay_description">大显示屏</string>
-    <string name="skin">皮肤</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
