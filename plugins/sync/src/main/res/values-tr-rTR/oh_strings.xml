@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans kuruldu. Yüklemeyi durdurmak isterseniz, \'Çıkış\'ı tıklayın.</string>
     <string name="not_setup_info">Open Humans şu anda etkin değil. Veri yüklemeye başlamak için \'Kurulum\'u tıklayın.</string>
     <string name="project_member_id">Proje Üye Kimliği: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Yalnızca WiFi\'ye bağlandığında yükle</string>
-    <string name="only_upload_if_charging">Yalnızca şarj olurken yükleyin</string>
     <string name="open_humans_uploading">Open Humans Yükleniyor…</string>
     <string name="open_humans_notifications">Open Humans Bildirimleri</string>
     <string name="uploading_to_open_humans">AAPS, Open Humans\'a yükleniyor. Bu biraz zaman alabilir.</string>
