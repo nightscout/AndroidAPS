@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Asociere pompă</string>
     <string name="combov2_unpair_pump_title">Dezasociere pompă</string>
     <string name="combov2_driver_state_label">Stare soft conexiune</string>
-    <string name="combov2_current_activity_label">Activitate curentă</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
     <string name="combov2_start_pairing">Începeți asocierea</string>
     <string name="combov2_pairing_in_progress">Asocierea Combo în curs</string>
@@ -100,7 +99,6 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Se ignoră cererea redundantă pentru 100% RBT</string>
     <string name="combov2_hit_unexpected_tbr_limit">Limită neprevăzută întâlnită în timpul ajustării RBT: procentul țintă a fost %1$d%%, dar s-a atins o limită la %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nu se poate seta RBT absolută dacă rata bazală este zero</string>
-    <string name="combov2_pair_with_pump_summary">Asociază AndroidAPS și Android cu o pompă Accu-Chek Combo neasociată</string>
     <string name="combov2_unpair_pump_summary">Dezasociați AndroidAPS și Android de pompa Accu-Chek Combo asociată în prezent</string>
     <string name="combov2_unknown_tbr_detected">RBT necunoscută a fost detectată și oprită; procentaj: %1$d%%; durată rămasă: %2$s</string>
     <string name="combov2_connection_error">Eroare conexiune: %1$s</string>
