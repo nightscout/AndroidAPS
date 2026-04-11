@@ -52,7 +52,6 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Được dùng để thiết lập các Tiện ích đang chạy</string>
     <string name="allow_hardware_pump_text">Chú ý: Nếu bạn kích hoạt và kết nối với phần cứng bơm insulin, AAPS sẽ sao chép các thiết lập liều nền từ Hồ sơ sang bơm, ghi đè lên tốc độ liều nền hiện có được lưu trên bơm. Hãy đảm bảo rằng bạn đã có thiết lập liều nền chính xác trong AAPS. Nếu bạn không chắc chắn hoặc không muốn ghi đè các thiết lập liều nền trên bơm, hãy nhấn Hủy và thực hiện lại việc chuyển sang bơm sau.</string>
-    <string name="a11y_open_settings">mở cài đặt</string>
     <string name="nsclient_version_does_not_match">Phiên bản AAPSClient không khớp với phiên bản AAPS. Vui lòng cập nhật.</string>
     <string name="expand_category">Mở rộng danh mục</string>
     <string name="collapse_category">Thu gọn danh mục</string>
