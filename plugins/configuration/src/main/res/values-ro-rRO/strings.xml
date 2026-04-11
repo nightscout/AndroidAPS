@@ -52,7 +52,6 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Folosit pentru configurarea facilităților active</string>
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AAPS va copia setările ratei bazale din profilul din aplicație în pompă. Profilul existent în pompă va fi suprascris cu cel din AAPS. Asigurați-vă că sunt corecte setările ratei bazale în profilul din AAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
-    <string name="a11y_open_settings">Deschideți setările</string>
     <string name="nsclient_version_does_not_match">Versiunea AAPSClient nu se potrivește cu versiunea AAPS. Vă rugăm să actualizați.</string>
     <string name="expand_category">Extindere categorie</string>
     <string name="collapse_category">Restrângere categorie</string>
