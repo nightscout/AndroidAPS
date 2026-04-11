@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">Nastavení pluginu %1$s</string>
     <string name="delta">Rozdíl</string>
     <string name="save">Uložit</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">Při zapnuté detekci sensitivity nezapomeňte vkládat všechny sacharidy. Jinak budou odchylky mylně vyhodnocovány jako změna sensitivity !!</string>
     <string name="invalid">NEPLATNÝ</string>
-    <string name="pump_unreachable_threshold">Limit pro nedostupnost pumpy [min]</string>
     <string name="close_navigation">Zavřít menu</string>
     <string name="remove_items">Odstranit položky</string>
     <string name="sort_items">Seřadit položky</string>
-    <string name="unitsnosemicolon">Jednotky</string>
     <string name="authorizationfailed">Autorizace selhala</string>
     <string name="cannula">Kanyla</string>
     <string name="identification_not_set">Identifikace není nastavena ve vývojářském režimu</string>
