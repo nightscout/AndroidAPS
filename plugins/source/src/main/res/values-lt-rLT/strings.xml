@@ -25,7 +25,6 @@
     <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
     <string name="random_bg_short">AG</string>
     <string name="direction">kryptis</string>
-    <string name="bg_generation_interval_minutes">KG generavimo intervalas minutėmis</string>
     <!-- Patched Syai Tag App -->
     <!-- Patched SI App -->
     <!-- Patched Sino App -->
