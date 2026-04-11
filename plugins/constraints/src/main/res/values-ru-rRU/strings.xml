@@ -29,7 +29,6 @@
     <string name="smbnotallowedinopenloopmode">Микроболюсы SMB не работают в режиме открытого цикла</string>
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
-    <string name="treatmentssafety_title">Безопасность терапии</string>
     <!-- Objectives -->
     <string name="completed_well_done">Завершено, отлично!</string>
     <string name="not_completed_yet">Не завершено</string>
