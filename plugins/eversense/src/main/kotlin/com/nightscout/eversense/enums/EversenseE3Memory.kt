@@ -36,7 +36,8 @@ enum class EversenseE3Memory(private val address: Long) {
     HighGlucoseAlarmRepeatIntervalDay(0x0000_1033),
     LowGlucoseAlarmRepeatIntervalDay(0x0000_1032),
     HighGlucoseAlarmRepeatIntervalNight(0x0000_110F),
-    LowGlucoseAlarmRepeatIntervalNight(0x0000_110E);
+    LowGlucoseAlarmRepeatIntervalNight(0x0000_110E),
+    CalibrationsMadeInThisPhase(0x0000_08A1);
 
     fun getRequestData(): ByteArray {
         return byteArrayOf(

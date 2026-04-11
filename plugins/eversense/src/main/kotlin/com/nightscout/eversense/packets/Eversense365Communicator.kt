@@ -79,10 +79,14 @@ class Eversense365Communicator {
             state.sensorSignalStrength = glucoseData.signalStrength
             EversenseLogger.info(TAG, "Sensor signal strength from glucose packet: ${glucoseData.signalStrength}")
 
+            state.sensorId = glucoseData.sensorId
+
             result += EversenseCGMResult(
                 glucoseInMgDl = currentGlucose,
                 datetime = glucoseData.datetime,
-                trend = glucoseData.trend
+                trend = glucoseData.trend,
+                sensorId = glucoseData.sensorId,
+                rawResponseHex = glucoseData.rawResponseHex
             )
 
             // Read glucose history for backfill
@@ -136,6 +140,7 @@ class Eversense365Communicator {
                 state.batteryPercentage = sensorInformation.batteryLevel
                 state.firmwareVersion = sensorInformation.version
                 state.extFirmwareVersion = sensorInformation.extVersion
+                state.transmitterSerialNumber = sensorInformation.serialNumber
                 EversenseLogger.info(TAG, "Firmware version: ${sensorInformation.version} / ${sensorInformation.extVersion}")
 
                 val calibrationInfo = gatt.writePacket<GetCalibrationInfoPacket.Response>(GetCalibrationInfoPacket())

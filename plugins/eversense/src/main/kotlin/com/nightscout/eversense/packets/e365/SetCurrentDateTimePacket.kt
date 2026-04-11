@@ -1,6 +1,5 @@
 package com.nightscout.eversense.packets.e365
 
-import android.util.Log
 import com.nightscout.eversense.enums.EversenseSecurityType
 import com.nightscout.eversense.packets.EversenseBasePacket
 import com.nightscout.eversense.packets.EversensePacket

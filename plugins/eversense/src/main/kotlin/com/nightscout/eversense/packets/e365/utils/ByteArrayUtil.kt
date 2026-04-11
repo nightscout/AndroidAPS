@@ -36,11 +36,11 @@ fun Int.toTimeZone(): ByteArray {
 }
 
 fun UByteArray.toShort(): Short {
-    return this[0].toShort() or (this[1].toInt() shr 8).toShort()
+    return ((this[0].toInt() and 0xFF) or ((this[1].toInt() and 0xFF) shl 8)).toShort()
 }
 
 fun UByteArray.toInt(): Int {
-    return this[0].toInt() or (this[1].toInt() shr 8)
+    return (this[0].toInt() and 0xFF) or ((this[1].toInt() and 0xFF) shl 8)
 }
 
 fun UByteArray.toLong(): Long {

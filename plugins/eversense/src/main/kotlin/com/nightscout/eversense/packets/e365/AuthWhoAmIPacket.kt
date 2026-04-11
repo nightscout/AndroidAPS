@@ -24,7 +24,7 @@ class AuthWhoAmIPacket(private val clientId: ByteArray) : EversenseBasePacket() 
         return Response(
             receivedData.copyOfRange(2, 34).toByteArray(),
             receivedData.copyOfRange(34, 42).toByteArray(),
-            ((receivedData[42].toInt() shl 8) and receivedData[43].toInt()) == 0,
+            ((receivedData[42].toInt() shl 8) or receivedData[43].toInt()) == 0,
         )
     }
 

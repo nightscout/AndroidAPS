@@ -9,11 +9,14 @@ enum class CalibrationPhase(private val value: Int) {
     @SerialName("WARMING_UP")
     WARMING_UP(0x01),
 
-    @SerialName("DAILY_CALIBRATION")
-    DAILY_CALIBRATION(0x02),
-
     @SerialName("INITIALIZATION")
-    INITIALIZATION(0x03),
+    INITIALIZATION(0x02),
+
+    @SerialName("DAILY_CALIBRATION")
+    DAILY_CALIBRATION(0x03),
+
+    @SerialName("WEEKLY_CALIBRATION")
+    WEEKLY_CALIBRATION(0x08),
 
     @SerialName("SUSPICIOUS")
     SUSPICIOUS(0x04),
@@ -41,11 +44,14 @@ enum class CalibrationPhase(private val value: Int) {
             }
         }
 
-        fun from365(value: Int): CalibrationPhase {
-            return when(value) {
+        // phase = raw CalibrationPhase byte (ordinal from official app CAL_PHASE enum)
+        // calPerDay = raw NumberOfCalPerDay byte: 0 = daily, 1 = weekly
+        fun from365(phase: Int, calPerDay: Int = 0): CalibrationPhase {
+            return when(phase) {
                 0 -> UNKNOWN
                 1 -> WARMING_UP
-                2, 3 -> DAILY_CALIBRATION
+                2 -> INITIALIZATION
+                3 -> if (calPerDay == 1) WEEKLY_CALIBRATION else DAILY_CALIBRATION
                 4 -> SUSPICIOUS
                 5 -> DROPOUT
                 6 -> DEBUG

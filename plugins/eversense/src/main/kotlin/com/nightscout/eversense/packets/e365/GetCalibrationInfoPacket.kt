@@ -40,10 +40,11 @@ class GetCalibrationInfoPacket : EversenseBasePacket() {
             return null
         }
 
+        val calPerDay = receivedData[12].toInt()
         return Response(
-            currentPhase = CalibrationPhase.from365(receivedData[2].toInt()),
+            currentPhase = CalibrationPhase.from365(receivedData[2].toInt(), calPerDay),
             calibrationReadiness = CalibrationReadiness.from(receivedData[3].toInt()),
-            calibrationMode = CalibrationMode.from365(receivedData[12].toInt()),
+            calibrationMode = CalibrationMode.from365(calPerDay),
             nextCalibration = receivedData.copyOfRange(4, 12).toUnix(),
             lastCalibration = receivedData.copyOfRange(34, 42).toUnix(),
         )

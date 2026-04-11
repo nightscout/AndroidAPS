@@ -46,13 +46,7 @@ class EversenseCGMPlugin {
         gattCallback = EversenseGattCallback(this, preference)
     }
 
-    // FIX 3: setSmoothing now returns Boolean and logs on failure.
-    fun setCoexistenceMode(enabled: Boolean) {
-        gattCallback?.coexistenceMode = enabled
-        EversenseLogger.info(TAG, "Coexistence mode: $enabled")
-    }
-
-        fun setSmoothing(value: Boolean): Boolean {
+    fun setSmoothing(value: Boolean): Boolean {
         val state = getCurrentState() ?: run {
             EversenseLogger.error(TAG, "Cannot set smoothing: current state is null. Has setContext been called?")
             return false
@@ -73,6 +67,7 @@ class EversenseCGMPlugin {
     }
 
     fun isConnected(): Boolean = gattCallback?.isConnected() ?: false
+    fun is365(): Boolean = gattCallback?.is365() ?: false
 
     fun getCurrentState(): EversenseState? {
         val preferences = preferences ?: run {

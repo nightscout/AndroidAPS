@@ -44,7 +44,7 @@ import com.nightscout.eversense.packets.e3.GetSettingRateFallingThresholdPacket
 import com.nightscout.eversense.packets.e3.GetSettingRateRisingEnabledPacket
 import com.nightscout.eversense.packets.e3.GetSettingRateRisingThresholdPacket
 import com.nightscout.eversense.packets.e3.GetSettingVibratePacket
-import com.nightscout.eversense.packets.e3.SendCalibrationPacket
+import com.nightscout.eversense.packets.e3.SetBloodGlucosePointPacket
 import com.nightscout.eversense.packets.e3.SetCurrentDatetimePacket
 import com.nightscout.eversense.packets.e3.SetSettingGlucoseHighEnablePacket
 import com.nightscout.eversense.packets.e3.SetSettingGlucoseHighThresholdPacket
@@ -292,7 +292,8 @@ class EversenseE3Communicator {
         // Throws EversenseWriteException if the packet fails.
         fun sendCalibration(gatt: EversenseGattCallback, glucoseMgDl: Int) {
             EversenseLogger.info(TAG, "Sending calibration value: $glucoseMgDl mg/dL")
-            gatt.writePacket<SendCalibrationPacket.Response>(SendCalibrationPacket(glucoseMgDl))
+            val now = System.currentTimeMillis()
+            gatt.writePacket<SetBloodGlucosePointPacket.Response>(SetBloodGlucosePointPacket(glucoseMgDl, now), 15000L)
             EversenseLogger.info(TAG, "Calibration sent successfully")
         }
     }

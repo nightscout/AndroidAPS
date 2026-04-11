@@ -4,16 +4,15 @@ import com.nightscout.eversense.enums.EversenseSecurityType
 import com.nightscout.eversense.packets.EversenseBasePacket
 import com.nightscout.eversense.packets.EversensePacket
 import com.nightscout.eversense.packets.e3.util.EversenseE3Writer
+import com.nightscout.eversense.packets.e365.utils.toUnixArray
 
 /**
- * Sends a blood glucose calibration value to the Eversense E3 transmitter.
+ * Sends a blood glucose calibration point using Unix2000 timestamps.
+ * Accepts a specific sample timestamp plus the current time, matching the
+ * iOS SendBloodGlucoseDataWithTwoTimestamps protocol format.
  *
- * Uses the SendBloodGlucoseData command (ID 21) which accepts:
- * - BG value as Int16 in mg/dL (little-endian)
- * - Current date (2 bytes) and time (2 bytes) as packed timestamps
- * CRC16 is appended by EversenseBasePacket.buildRequest() — do not add it here.
- *
- * @param glucoseMgDl Blood glucose value in mg/dL
+ * @param glucoseInMgDl Blood glucose value in mg/dL
+ * @param sampleTimestamp Epoch milliseconds of the blood glucose sample
  */
 @EversensePacket(
     requestId = EversenseE3Packets.SendBloodGlucoseDataCommandId,
@@ -21,14 +20,18 @@ import com.nightscout.eversense.packets.e3.util.EversenseE3Writer
     typeId = 0,
     securityType = EversenseSecurityType.None
 )
-class SendCalibrationPacket(private val glucoseMgDl: Int) : EversenseBasePacket() {
+class SetBloodGlucosePointPacket(
+    private val glucoseInMgDl: Int,
+    private val sampleTimestamp: Long = System.currentTimeMillis()
+) : EversenseBasePacket() {
+    override val skipResponseIdValidation: Boolean = true
 
     override fun getRequestData(): ByteArray {
         val now = System.currentTimeMillis()
-        val bgEncoded = EversenseE3Writer.writeInt16(glucoseMgDl)
-        val date = EversenseE3Writer.writeDate(now)
-        val time = EversenseE3Writer.writeTime(now)
-        return bgEncoded + date + time
+        return sampleTimestamp.toUnixArray() +
+            now.toUnixArray() +
+            EversenseE3Writer.writeInt16(glucoseInMgDl) +
+            byteArrayOf(0x55)
     }
 
     override fun parseResponse(): Response? {

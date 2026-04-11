@@ -11,4 +11,5 @@ interface EversenseWatcher {
     fun onConnectionChanged(connected: Boolean)
     fun onAlarmReceived(alarm: ActiveAlarm) {}
     fun onTransmitterNotPlaced() {}
+    fun onTransmitterReady() {}
 }

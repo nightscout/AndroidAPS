@@ -18,7 +18,7 @@ class GetPatientSettingsPacket : EversenseBasePacket() {
     }
 
     override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) {
+        if (receivedData.size < 65) {
             return null
         }
 

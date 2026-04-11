@@ -2,7 +2,6 @@ package com.nightscout.eversense.util
 
 import android.content.SharedPreferences
 import android.security.keystore.KeyProperties
-import android.util.Log
 import androidx.core.content.edit
 import com.nightscout.eversense.models.EversenseSecureState
 import com.nightscout.eversense.packets.e365.utils.toByteArray

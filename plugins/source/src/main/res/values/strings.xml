@@ -111,4 +111,5 @@
     <string name="eversense_coexistence_summary">Automatically disconnect after each sync to give the official Eversense app time to connect and upload data</string>
     <string name="eversense_transmitter_not_placed">Eversense transmitter not detecting — check placement</string>
     <string name="eversense_transmitter_not_placed_summary">Make sure the transmitter is placed directly over the sensor site and secured with the adhesive patch.</string>
+    <string name="eversense_reconnecting">Reconnecting…</string>
 </resources>

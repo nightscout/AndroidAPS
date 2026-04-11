@@ -51,6 +51,13 @@ class Eversense365Packets {
         const val WriteLowGlucoseAlarmRepeat = 0x20.toByte()
 
         const val NotificationKeepAlive = 0x02.toByte()
+        const val NotificationAlarmWithData = 0x03.toByte()
+
+        const val ReadLogsId = 0x62.toByte()
+
+        const val LogTypeAlerts: Byte = 0
+        const val LogTypeCalibrations: Byte = 6
+        const val LogTypeGlucose: Byte = 13
 
 
         fun isNotificationPacket(value: Byte): Boolean {

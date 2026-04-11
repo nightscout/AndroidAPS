@@ -1,20 +1,20 @@
 package com.nightscout.eversense.packets.e3.util
 
-import android.util.Log
 import java.util.Calendar
 import java.util.TimeZone
 
 class EversenseE3Parser {
     companion object {
         fun readDate(data: UByteArray, start: Int): Long {
-            val lowBit = data[start].toInt()
-            val highBit = data[start+1].toInt()
+            require(data.size >= start + 2) { "readDate: data too short (size=${data.size}, start=$start)" }
+            val lowByte = data[start].toInt()
+            val highByte = data[start + 1].toInt()
 
-            val day = lowBit and 31
-            var month = lowBit shr 5
-            val year = (highBit shr 1) + 2000
+            val day = lowByte and 31
+            var month = lowByte shr 5
+            val year = (highByte shr 1) + 2000
 
-            if (highBit and 1 == 1) {
+            if (highByte and 1 == 1) {
                 month += 8
             }
 
@@ -31,13 +31,13 @@ class EversenseE3Parser {
         }
 
         fun readTime(data: UByteArray, start: Int): Long {
-            val lowBit = data[start].toInt()
-            val highBit = data[start+1].toInt()
+            require(data.size >= start + 2) { "readTime: data too short (size=${data.size}, start=$start)" }
+            val lowByte = data[start].toInt()
+            val highByte = data[start + 1].toInt()
 
-            val hour = highBit shr 3
-            val minute = ((highBit and 7) shl 3) or (lowBit shr 5)
-            val second = (lowBit and 31) * 2
-
+            val hour = highByte shr 3
+            val minute = ((highByte and 7) shl 3) or (lowByte shr 5)
+            val second = (lowByte and 31) * 2
 
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
             calendar.set(Calendar.YEAR, 1970)
@@ -51,19 +51,27 @@ class EversenseE3Parser {
             return calendar.timeInMillis
         }
 
+        /**
+         * Reads a timezone offset from 3 bytes: 2 bytes of time (HH:MM encoded) + 1 sign byte.
+         * Returns the offset in milliseconds (positive = east of UTC, negative = west).
+         */
         fun readTimezone(data: UByteArray, start: Int): Long {
-            var timezoneOffset = readTime(data, start)
-            if (data[start + 2] != 0.toUByte()) {
-                timezoneOffset *= -1
-            }
+            require(data.size >= start + 3) { "readTimezone: data too short (size=${data.size}, start=$start)" }
+            val lowByte = data[start].toInt()
+            val highByte = data[start + 1].toInt()
 
-            return timezoneOffset
+            val hour = highByte shr 3
+            val minute = ((highByte and 7) shl 3) or (lowByte shr 5)
+            val offsetMs = (hour * 60L + minute) * 60L * 1000L
+
+            return if (data[start + 2] != 0.toUByte()) -offsetMs else offsetMs
         }
 
         fun readGlucose(data: UByteArray, start: Int): Int {
-            val lowBit =  data[start].toInt()
-            val highBit = data[start+1].toInt() shl 8
-            return lowBit or highBit
+            require(data.size >= start + 2) { "readGlucose: data too short (size=${data.size}, start=$start)" }
+            val lowByte = data[start].toInt() and 0xFF
+            val highByte = (data[start + 1].toInt() and 0xFF) shl 8
+            return lowByte or highByte
         }
     }
 }

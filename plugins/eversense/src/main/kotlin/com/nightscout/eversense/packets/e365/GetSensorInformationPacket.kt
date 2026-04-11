@@ -52,12 +52,15 @@ class GetSensorInformationPacket : EversenseBasePacket() {
     // 00 00 00 00 00 00 00 00 -> Operation start datetime
     // 30 31 2E 30 30 2E 30 31 2E 30 32 00 00 00 00 00 -> Other firmware version
     override fun parseResponse(): Response? {
-        if (receivedData.isEmpty()) {
+        if (receivedData.size < 104) {
             return null
         }
 
         val sensorIdLength = receivedData[103].toInt()
         val sensorIdDoubleLength = 2 * sensorIdLength
+        if (receivedData.size < 139 + sensorIdDoubleLength) {
+            return null
+        }
         return Response(
             serialNumber = receivedData.copyOfRange(2, 18).toUtfString(),
             transmitterName = receivedData.copyOfRange(18, 43).toUtfString(),
