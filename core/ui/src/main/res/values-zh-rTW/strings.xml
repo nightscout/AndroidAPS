@@ -47,7 +47,6 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">使用者</string>
     <string name="result">結果</string>
     <string name="settings">設定</string>
-    <string name="nav_preferences">偏好設定</string>
     <string name="simple_mode">簡易模式</string>
     <string name="expand">展開</string>
     <string name="collapse">收合</string>
@@ -58,7 +57,6 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">狀態燈</string>
     <string name="copy_existing_values">複製 NS 設定（若存在）？</string>
-    <string name="do_ns_upload_title">將血糖資料上傳至 NS 伺服器</string>
     <string name="configbuilder_insulin">胰島素</string>
     <string name="configbuilder_bgsource">血糖來源</string>
     <string name="configbuilder_smoothing">平滑處理</string>
@@ -741,7 +739,6 @@
     <string name="export_failed">失敗</string>
     <string name="export_alert">警報</string>
     <!-- Export dialog strings -->
-    <string name="master_password_missing">主密碼尚未設定！\n\n請在偏好設定 (%1$s) 中設定主密碼</string>
     <string name="export_to">匯出設定到</string>
     <string name="password_preferences_encrypt_prompt">系統會要求輸入主密碼，該密碼將用於加密匯出的偏好設定。</string>
     <string name="preferences_export_canceled">已取消匯出！未匯出任何偏好設定！</string>
