@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Odgoda prije početka bolusa (s)</string>
     <string name="medtronic_pump_max_bolus">Max Bolus na Pumpi (U)</string>
     <string name="medtronic_pump_max_basal">Max Basal na Pumpi (U/h)</string>
-    <string name="medtronic_pump_encoding">Medtronic kodiranje</string>
     <string name="medtronic_custom_action_wake_and_tune">Buđenje i podešavanje</string>
     <string name="medtronic_custom_action_clear_bolus_block">Izbriši bolusni blok</string>
     <string name="medtronic_pump_battery_select">Vrsta baterije (Power View)</string>
