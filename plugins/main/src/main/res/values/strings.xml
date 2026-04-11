@@ -2,19 +2,7 @@
 <resources>
 
     <string name="disabled_loop">Loop Disabled</string>
-    <string name="smscommunicator_pump_disconnected">Pump disconnected</string>
-
     <string name="calculator_label">Calculator</string>
-
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Define a profile describing your insulin needs.</string>
-    <string name="a11y_add_new_to_list">add new to list</string>
-    <string name="do_you_want_switch_profile">Do you want to switch profile and discard changes made to current profile?</string>
-    <string name="save_or_reset_changes_first">Save or reset current changes first</string>
-    <string name="delete_current_profile">Delete current profile?</string>
-    <string name="units_colon">Units:</string>
 
     <!-- Actions -->
     <string name="actions">Actions</string>
@@ -60,14 +48,13 @@
     <string name="a11y_blood_glucose">blood glucose</string>
     <string name="a11y_bg_outdated">outdated</string>
     <string name="set_basal_question">Accept new temp basal:</string>
-    <string name="overview_cgm">CGM</string>
+
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="overview_buttons_selection">Buttons</string>
-    <string name="not_available_full">Not available</string>
+
     <string name="data_status">BG data status</string>
-    <string name="default_temptargets">Default Temp-Targets</string>
     <string name="fill_bolus_title">Fill/Prime standard insulin amounts</string>
     <string name="run_question">Run %s?</string>
 

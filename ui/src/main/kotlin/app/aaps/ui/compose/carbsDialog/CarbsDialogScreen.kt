@@ -58,6 +58,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.CarbTimeRow
 import app.aaps.core.ui.compose.NumberInputRow
+import app.aaps.core.ui.compose.QuickAddButtons
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -514,29 +515,6 @@ private fun TempTargetCheckboxes(
                 modifier = Modifier.weight(1f)
             )
             Switch(checked = activityChecked, onCheckedChange = { onActivityChange(it) })
-        }
-    }
-}
-
-@Composable
-private fun QuickAddButtons(
-    increment1: Int,
-    increment2: Int,
-    increment3: Int,
-    onAddCarbs: (Int) -> Unit
-) {
-    val increments = listOf(increment1, increment2, increment3).filter { it > 0 }
-    if (increments.isEmpty()) return
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        increments.forEach { amount ->
-            FilledTonalButton(onClick = { onAddCarbs(amount) }) {
-                Text("+$amount")
-            }
         }
     }
 }

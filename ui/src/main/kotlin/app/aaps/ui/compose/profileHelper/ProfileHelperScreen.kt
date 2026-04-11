@@ -61,11 +61,11 @@ import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
-import app.aaps.ui.compose.profileManagement.ProfileCompareContent
-import app.aaps.ui.compose.profileManagement.buildBasalRows
-import app.aaps.ui.compose.profileManagement.buildIcRows
-import app.aaps.ui.compose.profileManagement.buildIsfRows
-import app.aaps.ui.compose.profileManagement.buildTargetRows
+import app.aaps.core.graph.profile.ProfileCompareContent
+import app.aaps.core.graph.profile.buildBasalRows
+import app.aaps.core.graph.profile.buildIcRows
+import app.aaps.core.graph.profile.buildIsfRows
+import app.aaps.core.graph.profile.buildTargetRows
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.stats.TddStatsCompose
 
@@ -170,7 +170,6 @@ fun ProfileHelperScreen(
                 ProfileCompareContent(
                     profile1 = sealed1,
                     profile2 = sealed2,
-                    shortHourUnit = viewModel.rh.gs(app.aaps.core.interfaces.R.string.shorthour),
                     icsRows = buildIcRows(sealed1, sealed2, viewModel.dateUtil),
                     icUnits = viewModel.rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit),
                     isfsRows = buildIsfRows(sealed1, sealed2, viewModel.profileUtil, viewModel.dateUtil),

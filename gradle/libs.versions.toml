@@ -10,16 +10,16 @@ mockito = "5.23.0"
 junit = "6.0.3"
 okhttp = "5.3.2"
 retrofit = "3.0.0"
-kotlinx-serialization = "1.10.0"
+kotlinx-serialization = "1.11.0"
 kotlinx-coroutines = "1.10.2"
 work = "2.11.2"
 datastorePreferences = "1.2.1"
-annotation = "1.9.1"
+annotation = "1.10.0"
 
 # Compose
 activityCompose = "1.13.0"
 composeBom = "2026.03.01"
-wearCompose = "1.6.0"
+wearCompose = "1.6.1"
 hiltNavigationCompose = "1.3.0"
 navigationCompose = "2.9.7"
 lifecycleRuntimeKtx = "2.10.0"
@@ -47,7 +47,7 @@ com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-and
 com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.6" }
-com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.11.0" }
+com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.12.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 com-google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }

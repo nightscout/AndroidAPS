@@ -111,83 +111,9 @@ class ActionsFragment : DaggerFragment() {
                     UIRunnable { uiInteraction.runProfileSwitchDialog(childFragmentManager) })
             }
         }
-        binding.tempTarget.setOnClickListener {
-            activity?.let { activity ->
-                protectionCheck.queryProtection(
-                    activity,
-                    ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { uiInteraction.runTempTargetDialog(childFragmentManager) })
-            }
-        }
-        binding.extendedBolus.setOnClickListener {
-            protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable {
-                uiInteraction.showOkCancelDialog(
-                    context = requireActivity(),
-                    title = app.aaps.core.ui.R.string.extended_bolus,
-                    message = app.aaps.core.ui.R.string.ebstopsloop,
-                    ok = { uiInteraction.runExtendedBolusDialog(childFragmentManager) }
-                )
-            })
-        }
-        binding.extendedBolusCancel.setOnClickListener {
-            if (runBlocking { persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) } != null) {
-                uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.Actions)
-                commandQueue.cancelExtended(object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.extendedbolusdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                        }
-                    }
-                })
-            }
-        }
-        binding.setTempBasal.setOnClickListener {
-            activity?.let { activity ->
-                protectionCheck.queryProtection(
-                    activity,
-                    ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { uiInteraction.runTempBasalDialog(childFragmentManager) })
-            }
-        }
-        binding.cancelTempBasal.setOnClickListener {
-            if (processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis()) != null) {
-                uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
-                commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
-                        }
-                    }
-                })
-            }
-        }
-        binding.fill.setOnClickListener {
-            activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { uiInteraction.runFillDialog(childFragmentManager) })
-            }
-        }
+
+
         binding.historyBrowser.setOnClickListener { startActivity(Intent(context, uiInteraction.historyBrowseActivity)) }
-        binding.bgCheck.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BGCHECK, app.aaps.core.ui.R.string.careportal_bgcheck)
-        }
-        binding.cgmSensorInsert.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.SENSOR_INSERT, app.aaps.core.ui.R.string.cgm_sensor_insert)
-        }
-        binding.pumpBatteryChange.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BATTERY_CHANGE, app.aaps.core.ui.R.string.pump_battery_change)
-        }
-        binding.note.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.NOTE, app.aaps.core.ui.R.string.careportal_note)
-        }
-        binding.exercise.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.EXERCISE, app.aaps.core.ui.R.string.careportal_exercise)
-        }
-        binding.question.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.QUESTION, app.aaps.core.ui.R.string.careportal_question)
-        }
-        binding.announcement.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.ANNOUNCEMENT, app.aaps.core.ui.R.string.careportal_announcement)
-        }
 
         preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
     }
@@ -237,42 +163,12 @@ class ActionsFragment : DaggerFragment() {
                     loop.runningMode != RM.Mode.DISCONNECTED_PUMP &&
                     !pump.isSuspended()).toVisibility()
 
-            if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || loop.runningMode == RM.Mode.DISCONNECTED_PUMP || pump.isFakingTempsByExtendedBoluses || config.AAPSCLIENT) {
-                binding.extendedBolus.visibility = View.GONE
-                binding.extendedBolusCancel.visibility = View.GONE
-            } else {
-                val activeExtendedBolus = persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())
-                if (activeExtendedBolus != null) {
-                    binding.extendedBolus.visibility = View.GONE
-                    binding.extendedBolusCancel.visibility = View.VISIBLE
-                    @Suppress("SetTextI18n")
-                    binding.extendedBolusCancel.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeExtendedBolus.toStringMedium(dateUtil, rh)
-                } else {
-                    binding.extendedBolus.visibility = View.VISIBLE
-                    binding.extendedBolusCancel.visibility = View.GONE
-                }
-            }
 
-            if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended() || loop.runningMode == RM.Mode.DISCONNECTED_PUMP || config.AAPSCLIENT) {
-                binding.setTempBasal.visibility = View.GONE
-                binding.cancelTempBasal.visibility = View.GONE
-            } else {
-                val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
-                if (activeTemp != null) {
-                    binding.setTempBasal.visibility = View.GONE
-                    binding.cancelTempBasal.visibility = View.VISIBLE
-                    @Suppress("SetTextI18n")
-                    binding.cancelTempBasal.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(rh)
-                } else {
-                    binding.setTempBasal.visibility = View.VISIBLE
-                    binding.cancelTempBasal.visibility = View.GONE
-                }
-            }
             val activeBgSource = activePlugin.activeBgSource
             binding.historyBrowser.visibility = (profile != null).toVisibility()
-            binding.fill.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized()).toVisibility()
-            binding.pumpBatteryChange.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
-            binding.tempTarget.visibility = (profile != null && loop.runningMode.isLoopRunning()).toVisibility()
+
+
+
             val isPatchPump = pump.pumpDescription.isPatchPump
             binding.status.apply {
                 cannulaOrPatch.text = if (cannulaOrPatch.text.isEmpty()) "" else if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)

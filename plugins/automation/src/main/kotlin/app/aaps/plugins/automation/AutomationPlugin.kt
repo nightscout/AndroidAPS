@@ -2,7 +2,13 @@ package app.aaps.plugins.automation
 
 import android.Manifest
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -141,6 +147,8 @@ class AutomationPlugin @Inject constructor(
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private var deferredStartObserver: DefaultLifecycleObserver? = null
 
     private val automationEvents = ArrayList<AutomationEventObject>()
     var executionLog: MutableList<String> = ArrayList()
@@ -168,7 +176,7 @@ class AutomationPlugin @Inject constructor(
     )
 
     override fun onStart() {
-        locationServiceHelper.startService(context)
+        startLocationServiceWhenForeground()
 
         super.onStart()
         loadFromSP()
@@ -222,8 +230,34 @@ class AutomationPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         disposable.clear()
-        locationServiceHelper.stopService(context)
+        mainHandler.post {
+            deferredStartObserver?.let {
+                ProcessLifecycleOwner.get().lifecycle.removeObserver(it)
+                deferredStartObserver = null
+            }
+            locationServiceHelper.stopService(context)
+        }
         super.onStop()
+    }
+
+    // Android 12+ forbids startForegroundService from background; defer until app is foreground.
+    private fun startLocationServiceWhenForeground() {
+        mainHandler.post {
+            val processLifecycle = ProcessLifecycleOwner.get().lifecycle
+            if (processLifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                locationServiceHelper.startService(context)
+                return@post
+            }
+            val observer = object : DefaultLifecycleObserver {
+                override fun onStart(owner: LifecycleOwner) {
+                    processLifecycle.removeObserver(this)
+                    deferredStartObserver = null
+                    locationServiceHelper.startService(context)
+                }
+            }
+            deferredStartObserver = observer
+            processLifecycle.addObserver(observer)
+        }
     }
 
     private fun storeToSP() {

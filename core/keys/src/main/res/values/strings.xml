@@ -172,9 +172,6 @@
     <string name="pref_title_carbs_button_increment_2">Carbs button increment 2</string>
     <string name="pref_title_carbs_button_increment_3">Carbs button increment 3</string>
     <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
-    <string name="pref_title_eating_soon_duration">Eating soon duration</string>
-    <string name="pref_title_activity_duration">Activity duration</string>
-    <string name="pref_title_hypo_duration">Hypo duration</string>
     <string name="pref_title_cage_warning">Threshold warning cannula age</string>
     <string name="pref_title_cage_critical">Threshold critical cannula age</string>
     <string name="pref_title_iage_warning">Threshold warning insulin age</string>
@@ -456,9 +453,6 @@
     <string name="openapsama_smb_max_range_extension_summary">Default value: 1 This is another key OpenAPS safety cap, and specifies by what factor you can exceed the regular 120 maxSMB/maxUAM minutes. Increase this experimental value slowly and with caution.</string>
 
     <!-- UnitDoubleKey: Overview preferences -->
-    <string name="pref_title_eating_soon_target">Eating soon target</string>
-    <string name="pref_title_activity_target">Activity target</string>
-    <string name="pref_title_hypo_target">Hypo target</string>
     <string name="pref_title_low_mark">Low BG mark</string>
     <string name="pref_title_high_mark">High BG mark</string>
 

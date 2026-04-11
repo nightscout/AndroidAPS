@@ -70,7 +70,7 @@ fun SecondaryGraphCompose(
 
     // Ensure DEV_SLOPE is always primary — it needs primary to render both dsMax and dsMin lines
     val orderedTypes = remember(seriesTypes) {
-        val mustBePrimary = setOf(SeriesType.DEV_SLOPE)
+        val mustBePrimary = setOf(SeriesType.DEV_SLOPE, SeriesType.DEVIATIONS)
         if (seriesTypes.size >= 2 && seriesTypes[0] !in mustBePrimary && seriesTypes[1] in mustBePrimary)
             listOf(seriesTypes[1], seriesTypes[0])
         else

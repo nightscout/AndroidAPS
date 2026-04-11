@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.autotune
 
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
@@ -18,6 +19,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
     @Mock lateinit var autotunePrep: AutotunePrep
     @Mock lateinit var autotuneCore: AutotuneCore
     @Mock lateinit var uel: UserEntryLogger
+    @Mock lateinit var loop: Loop
     private lateinit var autotunePlugin: AutotunePlugin
 
     init {
@@ -39,8 +41,8 @@ class AutotunePluginTest : TestBaseWithProfile() {
             ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger)
         }
         autotunePlugin = AutotunePlugin(
-            aapsLogger, rh, preferences, rxBus, profileFunction, dateUtil, insulin, localProfileManager,
-            autotuneFS, autotuneIob, autotunePrep, autotuneCore, config, uel, profileStoreProvider, atProfileProvider
+            aapsLogger, rh, preferences, rxBus, profileFunction, profileUtil, dateUtil, insulin, localProfileManager,
+            autotuneFS, autotuneIob, autotunePrep, autotuneCore, config, uel, loop, profileStoreProvider, atProfileProvider
         )
     }
 

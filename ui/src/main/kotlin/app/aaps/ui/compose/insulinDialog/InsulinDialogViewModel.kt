@@ -33,8 +33,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.ui.R
@@ -115,8 +115,8 @@ class InsulinDialogViewModel @Inject constructor(
                 insulinButtonIncrement1 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
                 insulinButtonIncrement2 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
                 insulinButtonIncrement3 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement3),
-                eatingSoonTtTarget = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget),
-                eatingSoonTtDuration = preferences.get(IntKey.OverviewEatingSoonDuration),
+                eatingSoonTtTarget = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), units),
+                eatingSoonTtDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON),
                 units = units,
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode),

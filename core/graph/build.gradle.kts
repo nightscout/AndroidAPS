@@ -23,6 +23,9 @@ dependencies {
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
 
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
     api(platform(libs.androidx.compose.bom))
     api(libs.androidx.compose.runtime)
     api(libs.androidx.ui)

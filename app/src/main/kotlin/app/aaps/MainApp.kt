@@ -79,7 +79,7 @@ import app.aaps.receivers.ChargingStateReceiver
 import app.aaps.receivers.KeepAliveWorker
 import app.aaps.receivers.TimeDateOrTZChangeReceiver
 import app.aaps.ui.activityMonitor.ActivityMonitor
-import app.aaps.ui.compose.tempTarget.toJson
+import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.ui.widget.Widget
 import app.aaps.utils.configureLeakCanary
 import com.google.firebase.Firebase
@@ -384,12 +384,6 @@ class MainApp : Application(), HasAndroidInjector {
     private suspend fun doMigrations() {
         // set values for different builds
         // 3.3
-        if (preferences.get(IntKey.OverviewEatingSoonDuration) == 0) preferences.remove(IntKey.OverviewEatingSoonDuration)
-        if (preferences.get(UnitDoubleKey.OverviewEatingSoonTarget) == 0.0) preferences.remove(UnitDoubleKey.OverviewEatingSoonTarget)
-        if (preferences.get(IntKey.OverviewActivityDuration) == 0) preferences.remove(IntKey.OverviewActivityDuration)
-        if (preferences.get(UnitDoubleKey.OverviewActivityTarget) == 0.0) preferences.remove(UnitDoubleKey.OverviewActivityTarget)
-        if (preferences.get(IntKey.OverviewHypoDuration) == 0) preferences.remove(IntKey.OverviewHypoDuration)
-        if (preferences.get(UnitDoubleKey.OverviewHypoTarget) == 0.0) preferences.remove(UnitDoubleKey.OverviewHypoTarget)
         if (preferences.get(UnitDoubleKey.OverviewLowMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewLowMark)
         if (preferences.get(UnitDoubleKey.OverviewHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewHighMark)
         if (preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
@@ -614,9 +608,17 @@ class MainApp : Application(), HasAndroidInjector {
      * Migrates temp target presets from old individual preference keys to unified JSON storage.
      * Creates 3 default presets (Eating Soon, Activity, Hypo) for new installations.
      * For existing installations, migrates values from old keys.
-     * Old keys remain functional for legacy TempTargetDialog.
+     * Old keys are kept for backward compatibility during migration period.
      */
     private fun migrateTempTargetPresets() {
+        // Clean up zero-value old preferences (3.3 migration)
+        if (sp.getInt("eatingsoon_duration", 45) == 0) sp.remove("eatingsoon_duration")
+        if (sp.getDouble("eatingsoon_target", 90.0) == 0.0) sp.remove("eatingsoon_target")
+        if (sp.getInt("activity_duration", 90) == 0) sp.remove("activity_duration")
+        if (sp.getDouble("activity_target", 140.0) == 0.0) sp.remove("activity_target")
+        if (sp.getInt("hypo_duration", 60) == 0) sp.remove("hypo_duration")
+        if (sp.getDouble("hypo_target", 160.0) == 0.0) sp.remove("hypo_target")
+
         // Check if migration already completed
         val existing = preferences.get(StringNonKey.TempTargetPresets)
         if (existing != "[]" && existing.isNotEmpty()) {
@@ -624,7 +626,7 @@ class MainApp : Application(), HasAndroidInjector {
         }
 
         // Check if old preferences exist (existing installation vs new installation)
-        val hasOldPreferences = preferences.getIfExists(UnitDoubleKey.OverviewEatingSoonTarget) != null
+        val hasOldPreferences = sp.contains("eatingsoon_target")
 
         val units = profileFunction.getUnits()
 
@@ -634,12 +636,12 @@ class MainApp : Application(), HasAndroidInjector {
                 id = "eatingsoon",
                 reason = TT.Reason.EATING_SOON,
                 targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewEatingSoonTarget), units)
+                    profileUtil.convertToMgdl(sp.getDouble("eatingsoon_target", 90.0), units)
                 } else {
                     Constants.DEFAULT_TT_EATING_SOON_TARGET
                 },
                 duration = if (hasOldPreferences) {
-                    preferences.get(IntKey.OverviewEatingSoonDuration) * 60L * 1000L
+                    sp.getInt("eatingsoon_duration", 45) * 60L * 1000L
                 } else {
                     Constants.DEFAULT_TT_EATING_SOON_DURATION * 60L * 1000L
                 },
@@ -649,12 +651,12 @@ class MainApp : Application(), HasAndroidInjector {
                 id = "activity",
                 reason = TT.Reason.ACTIVITY,
                 targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewActivityTarget), units)
+                    profileUtil.convertToMgdl(sp.getDouble("activity_target", 140.0), units)
                 } else {
                     Constants.DEFAULT_TT_ACTIVITY_TARGET
                 },
                 duration = if (hasOldPreferences) {
-                    preferences.get(IntKey.OverviewActivityDuration) * 60L * 1000L
+                    sp.getInt("activity_duration", 90) * 60L * 1000L
                 } else {
                     Constants.DEFAULT_TT_ACTIVITY_DURATION * 60L * 1000L
                 },
@@ -664,12 +666,12 @@ class MainApp : Application(), HasAndroidInjector {
                 id = "hypo",
                 reason = TT.Reason.HYPOGLYCEMIA,
                 targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHypoTarget), units)
+                    profileUtil.convertToMgdl(sp.getDouble("hypo_target", 160.0), units)
                 } else {
                     Constants.DEFAULT_TT_HYPO_TARGET
                 },
                 duration = if (hasOldPreferences) {
-                    preferences.get(IntKey.OverviewHypoDuration) * 60L * 1000L
+                    sp.getInt("hypo_duration", 60) * 60L * 1000L
                 } else {
                     Constants.DEFAULT_TT_HYPO_DURATION * 60L * 1000L
                 },
@@ -681,10 +683,6 @@ class MainApp : Application(), HasAndroidInjector {
         preferences.put(StringNonKey.TempTargetPresets, presets.toJson())
 
         aapsLogger.debug(LTag.CORE, "Migrated temp target presets to JSON storage")
-
-        // NOTE: Old preferences are NOT removed to keep legacy TempTargetDialog functional
-        // They are marked as @Deprecated in preference key definitions
-        // Removal will be done when legacy UI is completely removed in the future
     }
 
     private suspend fun dataMigrations() {

@@ -67,6 +67,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
+import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
+import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
 import app.aaps.core.interfaces.rx.events.EventNsClientStatusUpdated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -91,6 +93,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -332,6 +335,14 @@ class OverviewDataCacheImpl @Inject constructor(
                     updateTempTargetFromDatabase()
                     rebuildTargetLine()
                 }
+        }
+        // Refresh TT chip after APS loop runs so the APS-adjusted target (read from
+        // loop.lastRun.constraintsProcessed.targetBG) is reflected in the ADJUSTED state.
+        scope.launch {
+            merge(
+                rxBus.toFlow(EventLoopUpdateGui::class.java),
+                rxBus.toFlow(EventNewOpenLoopNotification::class.java)
+            ).collect { updateTempTargetFromDatabase() }
         }
         // EPS changes affect EPS graph, profile chip, TT chip, target line, and basal
         scope.launch {

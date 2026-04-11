@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/buttons_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,88 +26,5 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/gray_material_button_margin_horizontal"
-        android:paddingEnd="@dimen/gray_material_button_margin_horizontal">
-
-        <app.aaps.core.ui.elements.SingleClickButton
-            android:id="@+id/treatment_button"
-            style="@style/ButtonSmallFontStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
-            android:layout_weight="0.5"
-            android:drawableTop="@drawable/icon_insulin_carbs"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/overview_treatment_label"
-            android:textColor="?attr/icTreatmentColor"
-            android:visibility="gone"
-            app:iconPadding="-4dp" />
-
-        <app.aaps.core.ui.elements.SingleClickButton
-            android:id="@+id/insulin_button"
-            style="@style/ButtonSmallFontStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
-            android:layout_weight="0.5"
-            android:drawableTop="@drawable/ic_bolus"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/overview_insulin_label"
-            android:textColor="?attr/icBolusColor"
-            app:iconPadding="-4dp" />
-
-        <app.aaps.core.ui.elements.SingleClickButton
-            android:id="@+id/carbs_button"
-            style="@style/ButtonSmallFontStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
-            android:layout_weight="0.5"
-            android:drawableTop="@drawable/ic_cp_bolus_carbs"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/carbs"
-            android:textColor="?attr/icBolusCarbsColor"
-            app:iconPadding="-4dp" />
-
-        <app.aaps.core.ui.elements.SingleClickButton
-            android:id="@+id/calibration_button"
-            style="@style/ButtonSmallFontStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginStart="@dimen/gray_material_button_margin_horizontal"
-            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
-            android:layout_weight="0.5"
-            android:drawableTop="@drawable/ic_calibration"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/calibration"
-            android:textColor="?attr/icCalibrationColor"
-            android:visibility="gone"
-            app:iconPadding="-4dp" />
-
-        <app.aaps.core.ui.elements.SingleClickButton
-            android:id="@+id/cgm_button"
-            style="@style/ButtonSmallFontStyle"
-            android:layout_width="0px"
-            android:layout_height="fill_parent"
-            android:layout_marginStart="@dimen/gray_material_button_margin_horizontal"
-            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
-            android:layout_weight="0.5"
-            android:drawableTop="@drawable/ic_xdrip"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/overview_cgm"
-            android:textColor="?attr/icCalibrationColor"
-            android:visibility="gone"
-            app:iconPadding="-4dp" />
-
-    </LinearLayout>
 
 </LinearLayout>

@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.graph.profile.ProfileCompareData
+import app.aaps.core.graph.profile.buildProfileCompareData
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
@@ -35,14 +36,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.ScreenMode
-import app.aaps.ui.compose.profileManagement.ProfileCompareData
-import app.aaps.ui.compose.profileManagement.buildProfileCompareData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -350,7 +349,6 @@ class ProfileManagementViewModel @Inject constructor(
     fun getIsfList(profile: Profile): String = profile.getIsfList(rh, dateUtil)
     fun getBasalList(profile: Profile): String = profile.getBasalList(rh, dateUtil)
     fun getTargetList(profile: Profile): String = profile.getTargetList(rh, dateUtil)
-    fun formatIcfg(iCfg: ICfg): String = iCfg.insulinLabel
     fun formatBasalSum(basalSum: Double): String = rh.gs(R.string.format_insulin_units, basalSum)
 
     /**
@@ -451,16 +449,15 @@ class ProfileManagementViewModel @Inject constructor(
 
             if (withTT && durationMinutes > 0 && percentage < 100) {
                 // Create Activity TT
-                val target = preferences.get(UnitDoubleKey.OverviewActivityTarget)
-                val units = profileFunction.getUnits()
+                val targetMgdl = preferences.ttTargetMgdl(TT.Reason.ACTIVITY)
                 viewModelScope.launch {
                     persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         TT(
                             timestamp = timestamp + 10000, // Add ten secs for proper NSCv1 sync
                             duration = TimeUnit.MINUTES.toMillis(durationMinutes.toLong()),
                             reason = TT.Reason.ACTIVITY,
-                            lowTarget = profileUtil.convertToMgdl(target, units),
-                            highTarget = profileUtil.convertToMgdl(target, units)
+                            lowTarget = targetMgdl,
+                            highTarget = targetMgdl
                         ),
                         action = Action.TT,
                         source = Sources.TTDialog,
@@ -468,7 +465,7 @@ class ProfileManagementViewModel @Inject constructor(
                         listValues = listOfNotNull(
                             ValueWithUnit.Timestamp(timestamp).takeIf { timeChanged },
                             ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
-                            ValueWithUnit.fromGlucoseUnit(target, units),
+                            ValueWithUnit.Mgdl(targetMgdl),
                             ValueWithUnit.Minute(durationMinutes)
                         )
                     )

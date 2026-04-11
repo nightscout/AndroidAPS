@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.Overview
-import app.aaps.core.interfaces.profile.ProfileSource
+
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
@@ -23,11 +23,6 @@ interface ActivePlugin {
      *  Default to Dexcom
      */
     val activeBgSource: BgSource
-
-    /**
-     *  Currently selected Profile plugin
-     */
-    val activeProfileSource: ProfileSource
 
     /**
      *  Currently selected APS plugin

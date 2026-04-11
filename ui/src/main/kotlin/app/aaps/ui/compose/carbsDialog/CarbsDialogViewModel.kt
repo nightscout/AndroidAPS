@@ -28,9 +28,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.ui.R
@@ -116,12 +117,12 @@ class CarbsDialogViewModel @Inject constructor(
                 units = units,
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 showBolusReminder = showBolusReminder,
-                hypoTtTarget = preferences.get(UnitDoubleKey.OverviewHypoTarget),
-                hypoTtDuration = preferences.get(IntKey.OverviewHypoDuration),
-                eatingSoonTtTarget = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget),
-                eatingSoonTtDuration = preferences.get(IntKey.OverviewEatingSoonDuration),
-                activityTtTarget = preferences.get(UnitDoubleKey.OverviewActivityTarget),
-                activityTtDuration = preferences.get(IntKey.OverviewActivityDuration),
+                hypoTtTarget = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.HYPOGLYCEMIA), units),
+                hypoTtDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA),
+                eatingSoonTtTarget = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.EATING_SOON), units),
+                eatingSoonTtDuration = preferences.ttDurationMinutes(TT.Reason.EATING_SOON),
+                activityTtTarget = profileUtil.fromMgdlToUnits(preferences.ttTargetMgdl(TT.Reason.ACTIVITY), units),
+                activityTtDuration = preferences.ttDurationMinutes(TT.Reason.ACTIVITY),
                 maxCarbsDurationHours = HardLimits.MAX_CARBS_DURATION_HOURS,
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode)
             )
@@ -132,7 +133,7 @@ class CarbsDialogViewModel @Inject constructor(
         val bgReading = iobCobCalculator.ads.actualBg() ?: return false
         if (bgReading.recalculated >= 72) return false
 
-        val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
+        val hypoTTDuration = preferences.ttDurationMinutes(TT.Reason.HYPOGLYCEMIA)
 
         val activeTT = try {
             runBlocking { persistenceLayer.getTemporaryTargetActiveAt(now) }

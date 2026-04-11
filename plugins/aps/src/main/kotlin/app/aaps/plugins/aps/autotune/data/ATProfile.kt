@@ -1,9 +1,9 @@
 package app.aaps.plugins.aps.autotune.data
 
-import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.InsulinType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
@@ -91,7 +91,7 @@ class ATProfile @Inject constructor(
 
     fun getBasal(timestamp: Long): Double = basal[MidnightUtils.secondsFromMidnight(timestamp) / 3600]
 
-    // for localProfilePlugin Synchronisation
+    // for local profile synchronisation
     fun basal() = jsonArray(basal)
     fun ic(circadian: Boolean = false): JSONArray {
         if (circadian)
@@ -128,9 +128,9 @@ class ATProfile @Inject constructor(
             json.put("min_5m_carbimpact", preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact))
             json.put("dia", dia)
             if (insulinType == InsulinType.OREF_ULTRA_RAPID_ACTING)
-                json.put("curve","ultra-rapid")
+                json.put("curve", "ultra-rapid")
             else if (insulinType == InsulinType.OREF_RAPID_ACTING)
-                json.put("curve","rapid-acting")
+                json.put("curve", "rapid-acting")
             else {
                 val peakTime: Int = localInsulin.peak
                 json.put("curve", if (peakTime > 50) "rapid-acting" else "ultra-rapid")

@@ -61,5 +61,10 @@
     <string name="pump_alert">Pump alert</string>
     <string name="pairing_information">Pairing information</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Unpair</string>
+    <string name="reset_pairing">Reset pairing information?</string>
+    <string name="active_basal_rate">Active basal rate</string>
+    <string name="active_tbr">Active TBR</string>
+    <string name="reservoir_level">Reservoir level</string>
 
 </resources>
