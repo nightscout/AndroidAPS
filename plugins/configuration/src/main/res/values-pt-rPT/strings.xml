@@ -50,7 +50,6 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <string name="allow_hardware_pump_text">Atenção: Se conectar e ativar a ligação à sua bomba física, a AndroidAPS irá copiar as definições do perfil para as definições da bomba, apagando o perfil memorizado na bomba. Por favor verifique se o que preencheu no perfil da AAPS tem os mesmos valores que estão na bomba. Caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
-    <string name="a11y_open_settings">abrir definições</string>
     <string name="nsclient_version_does_not_match">A versão AAPSClient não coincide com a versão AAPS. Por favor, atualize.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
