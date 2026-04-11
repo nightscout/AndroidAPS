@@ -52,7 +52,6 @@
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje nastavenie bazálu z aktívneho profilu do pumpy. Overte si, že máte v AAPS korektný bazálny profil. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
-    <string name="a11y_open_settings">otvoriť nastavenia</string>
     <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
     <string name="expand_category">Rozbaliť kategóriu</string>
     <string name="collapse_category">Zbaliť kategóriu</string>
