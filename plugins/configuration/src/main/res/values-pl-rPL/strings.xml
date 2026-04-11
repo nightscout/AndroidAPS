@@ -51,7 +51,6 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>
-    <string name="a11y_open_settings">otwórz ustawienia</string>
     <string name="nsclient_version_does_not_match">Wersja AAPSClient nie jest zgodna z wersją AAPS. Proszę zaktualizować.</string>
     <string name="expand_category">Rozwiń kategorię</string>
     <string name="collapse_category">Zwiń kategorię</string>
