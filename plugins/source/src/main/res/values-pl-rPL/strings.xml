@@ -25,11 +25,7 @@
     <string name="random_bg">Losowa glikemia</string>
     <string name="description_source_random_bg">Generuj losowe odczyty glukozy (wyłącznie do celów demonstracyjnych)</string>
     <string name="random_bg_short">BG</string>
-    <string name="bgsource_settings">Ustawienia źródła glikemii</string>
-    <string name="bgsource_log_sensor_change_title">Akceptuj start sensora</string>
-    <string name="bgsource_log_sensor_change_summary">Utwórz zdarzenie \"CGM Sensor Insert\" w Careportal automatycznie po odebraniu informacji o starcie sensora z lokalnego źródła glikemii</string>
     <string name="direction">kierunek</string>
-    <string name="bg_generation_interval_minutes">Interwał generowania glikemii w minutach</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Otrzymuj glikemię z aplikacji Syai/Ottai.</string>
