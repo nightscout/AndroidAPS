@@ -50,7 +50,6 @@
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
     <string name="allow_hardware_pump_text">Bemærk: Hvis du aktiverer og opretter forbindelse til en hardwarepumpe, vil AndroidAPS kopiere de basale indstillinger fra profilen til pumpen og overskrive den eksisterende basal rate lagret på pumpen. Sørg for, at du har den korrekte basal indstilling i AndroidAPS. Hvis du ikke er sikker på eller ikke ønsker at overskrive de basale indstillinger på din pumpe, tryk på annuller og gentag skift til pumpen på et senere tidspunkt.</string>
-    <string name="a11y_open_settings">Åbn indstillinger</string>
     <string name="nsclient_version_does_not_match">AAPSClient version matcher ikke AAPS version. Opdater venligst.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
