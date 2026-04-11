@@ -31,7 +31,6 @@
     <string name="result">Ergebnis</string>
     <string name="settings">Einstellungen</string>
     <string name="statuslights">Statusanzeige</string>
-    <string name="do_ns_upload_title">Speichere BZ-Werte in Nightscout</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="value_unavailable_short">N/A</string>
     <!-- master_password moved to core/keys/strings.xml -->
