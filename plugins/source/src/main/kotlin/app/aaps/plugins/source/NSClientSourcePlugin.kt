@@ -26,7 +26,6 @@ class NSClientSourcePlugin @Inject constructor(
                 title = rh.gs(R.string.ns_client_bg)
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_nsclient_bg)
         .icon(IcPluginNsClientBg)
         .pluginName(R.string.ns_client_bg)
         .shortName(R.string.ns_client_bg_short)

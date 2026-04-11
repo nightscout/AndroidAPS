@@ -146,7 +146,6 @@ class LoopPlugin @Inject constructor(
                 preferences = preferences
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_loop_closed_white)
         .icon(IcLoopClosed)
         .pluginName(app.aaps.core.ui.R.string.loop)
         .shortName(R.string.loop_shortname)

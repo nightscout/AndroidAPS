@@ -122,7 +122,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
                 dateUtil = dateUtil
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_calculator)
         .icon(IcPluginOpenAPS)
         .pluginName(R.string.openaps_auto_isf)
         .shortName(R.string.autoisf_shortname)

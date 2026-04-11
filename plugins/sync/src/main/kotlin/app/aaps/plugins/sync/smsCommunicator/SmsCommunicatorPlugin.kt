@@ -141,7 +141,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .composeContent { SmsCommunicatorComposeContent() }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_sms)
         .icon(IcPluginSms)
         .pluginName(R.string.smscommunicator)
         .shortName(R.string.smscommunicator_shortname)

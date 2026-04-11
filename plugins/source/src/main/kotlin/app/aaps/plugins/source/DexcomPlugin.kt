@@ -51,7 +51,6 @@ class DexcomPlugin @Inject constructor(
                 title = rh.gs(R.string.dexcom_app_patched)
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_dexcom_g6)
         .icon(IcPluginByoda)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.dexcom_app_patched)

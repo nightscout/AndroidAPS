@@ -78,7 +78,6 @@ class WearPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .icon(Icons.Default.Watch)
         .pluginName(app.aaps.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)

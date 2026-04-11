@@ -96,7 +96,6 @@ class OpenAPSAMAPlugin @Inject constructor(
                 dateUtil = dateUtil
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_calculator)
         .icon(IcPluginOpenAPS)
         .pluginName(R.string.openapsama)
         .shortName(R.string.oaps_shortname)

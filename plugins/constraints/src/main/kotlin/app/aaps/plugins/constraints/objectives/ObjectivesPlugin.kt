@@ -37,7 +37,6 @@ class ObjectivesPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_graduation)
         .icon(IcPluginObjectives)
         .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)

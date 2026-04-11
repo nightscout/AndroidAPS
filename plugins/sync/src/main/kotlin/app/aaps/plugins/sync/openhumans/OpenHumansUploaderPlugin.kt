@@ -85,7 +85,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 ) : Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(R.drawable.open_humans_white)
         .icon(IcPluginOpenHumans)
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)

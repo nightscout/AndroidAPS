@@ -67,7 +67,6 @@ class SafetyPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.safety)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_header_warning)
         .icon(Icons.Default.Shield)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN),
     aapsLogger, rh

@@ -63,7 +63,6 @@ class RandomBgPlugin @Inject constructor(
                 title = rh.gs(R.string.random_bg)
             )
         }
-        .pluginIcon(R.drawable.ic_dice)
         .icon(IcPluginRandomBg)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.random_bg)

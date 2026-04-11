@@ -43,7 +43,6 @@ class PoctechPlugin @Inject constructor(
                 title = rh.gs(R.string.poctech)
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_poctech)
         .icon(IcPluginPocTec)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.poctech)

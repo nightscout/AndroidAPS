@@ -39,6 +39,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
+import app.aaps.core.ui.compose.icons.IcPluginOpenAPS
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -76,7 +77,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
+        .icon(IcPluginOpenAPS)
         .pluginName(R.string.openapssmb)
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
         .preferencesVisibleInSimpleMode(false)

@@ -124,7 +124,6 @@ class NSClientV3Plugin @Inject constructor(
 ) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
         .icon(IcPluginNsClient)
         .pluginName(R.string.ns_client_v3_title)
         .shortName(R.string.ns_client_v3_short_name)

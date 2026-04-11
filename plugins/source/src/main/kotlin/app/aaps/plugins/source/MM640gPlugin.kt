@@ -43,7 +43,6 @@ class MM640gPlugin @Inject constructor(
             )
         }
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_generic_cgm)
         .icon(IcPluginMM640G)
         .pluginName(R.string.mm640g)
         .preferencesVisibleInSimpleMode(false)

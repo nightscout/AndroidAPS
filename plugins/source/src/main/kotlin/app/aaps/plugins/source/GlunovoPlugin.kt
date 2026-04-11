@@ -51,7 +51,6 @@ class GlunovoPlugin @Inject constructor(
                 title = resourceHelper.gs(R.string.glunovo)
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_glunovo)
         .icon(IcPluginGlunovo)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.glunovo)

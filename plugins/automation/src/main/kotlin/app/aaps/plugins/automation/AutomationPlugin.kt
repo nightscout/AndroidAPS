@@ -133,7 +133,6 @@ class AutomationPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutomationFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_automation)
         .icon(IcPluginAutomation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)

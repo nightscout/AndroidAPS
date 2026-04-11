@@ -38,7 +38,6 @@ class GlimpPlugin @Inject constructor(
                 title = rh.gs(R.string.glimp)
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_glimp)
         .icon(IcPluginGlimp)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.glimp)

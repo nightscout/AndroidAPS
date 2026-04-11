@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
 import app.aaps.core.ui.extensions.scanForActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
@@ -74,7 +75,7 @@ class ConfigBuilderPlugin @Inject constructor(
         .mainType(PluginType.GENERAL)
         .fragmentClass(ConfigBuilderFragment::class.java.name)
         .alwaysEnabled(true)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_cogs)
+        .icon(IcPluginConfigBuilder)
         .pluginName(R.string.config_builder)
         .shortName(R.string.config_builder_shortname)
         .description(R.string.description_config_builder),

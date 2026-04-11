@@ -109,7 +109,6 @@ class XdripPlugin @Inject constructor(
                 onFullSync = { dataSyncSelector.resetToNextFullSync() }
             )
         }
-        .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
         .icon(IcXDrip)
         .pluginName(R.string.xdrip)
         .shortName(R.string.xdrip_shortname)

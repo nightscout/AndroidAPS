@@ -125,7 +125,6 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 dateUtil = dateUtil
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_calculator)
         .icon(IcPluginOpenAPS)
         .pluginName(R.string.openapssmb)
         .shortName(app.aaps.core.ui.R.string.smb_shortname)

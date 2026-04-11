@@ -45,7 +45,6 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
         .icon(IcAs)
         .pluginName(R.string.sensitivity_weighted_average)
         .shortName(R.string.sensitivity_shortname)
