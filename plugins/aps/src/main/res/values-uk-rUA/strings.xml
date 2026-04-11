@@ -7,14 +7,7 @@
     <!--    Loop -->
     <!-- Autotune -->
     <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Налаштування Автотюню</string>
-    <string name="autotune_auto_title">Автоматично змінити профіль</string>
-    <string name="autotune_auto_summary">Якщо увімкнено, режим Автотюню буде автоматично оновлюватися і перемикатися на вхідний профіль після обчислення з правила автоматизації.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Визначити UAM як базу</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Увімкніть, тільки якщо ви надійно ввели всі спожиті вуглеводи, в цій опції раптово зростає, помічений Автотуном буде використовуватися для рекомендації змін до базової швидкості.</string>
-    <string name="autotune_tune_insulin_curve_title">Крива настройки інсуліну</string>
     <string name="autotune_default_tune_days_title">Кількість днів даних</string>
-    <string name="autotune_circadian_ic_isf_title">Застосувати середній результат в схемі IC/ISF</string>
     <string name="autotune_tunedprofile_name">Налаштувано</string>
     <string name="autotune_profile">Профіль :</string>
     <string name="autotune_last_run">Останній запуск:</string>
