@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">âge pompe patch</string>
     <string name="patch_pump">Pompe patch</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -46,9 +45,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ACCUEIL</string>
     <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
-    <string name="overview_buttons_selection">Boutons</string>
     <string name="data_status">État des données Gly</string>
-    <string name="fill_bolus_title">Insuline par défaut pour Amorcer/Remplir</string>
     <string name="run_question">Exécuter %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prédictions</string>
@@ -75,7 +72,6 @@
     <string name="lowres_description">Basse résolution</string>
     <string name="buttonson_description">Boutons toujours en bas</string>
     <string name="largedisplay_description">Grand écran</string>
-    <string name="skin">Thème</string>
     <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
