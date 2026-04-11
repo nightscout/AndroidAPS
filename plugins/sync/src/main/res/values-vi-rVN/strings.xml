@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_cellular">Sử dụng dữ liệu di động</string>
-    <string name="ns_wifi">Sử dụng kết nối WiFi</string>
     <!-- ns_wifi_ssids moved to core:keys module -->
-    <string name="ns_charging">Khi đang sạc pin</string>
-    <string name="ns_battery">Khi đang dùng pin</string>
     <string name="connection_settings_title">Cài đặt kết nối</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="ns_allow_roaming">Cho phép kết nối khi chuyển vùng</string>
-    <string name="ns_create_announcements_from_errors_title">Tạo thông báo từ lỗi</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Tạo thông báo từ cảnh báo cần nạp carb</string>
-    <string name="ns_create_announcements_from_errors_summary">Tạo thông báo Nightscout cho hộp thoại lỗi và cảnh báo cục bộ (cũng có thể xem trong Careportal, Treatments)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Tạo thông báo Nightscout cho cảnh báo cần bổ sung carb</string>
     <string name="description_ns_client">Đồng bộ dữ liệu của bạn với Nightscout bằng API v1</string>
     <string name="description_ns_client_v3">Đồng bộ dữ liệu của bạn với Nightscout bằng API v3</string>
     <string name="blocked_by_charging">Bị chặn bởi tùy chọn sạc pin</string>
@@ -41,35 +32,7 @@
     <string name="full_sync">Đồng bộ toàn bộ</string>
     <string name="full_sync_comment">Đồng bộ toàn bộ? Quá trình này có thể mất nhiều giờ và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong NS.</string>
     <string name="ns_sync_options">Đồng bộ hóa</string>
-    <string name="ns_upload_summary">Hồ sơ, bolus, carb và liều nền tạm thời được tải lên NS</string>
-    <string name="ns_upload">Tải dữ liệu lên NS</string>
-    <string name="ns_receive_profile_store">Nhận dữ liệu Hồ sơ đã lưu</string>
-    <string name="ns_receive_profile_store_summary">Đồng bộ Hồ sơ từ trình chỉnh sửa Hồ sơ của NS</string>
-    <string name="ns_receive_temp_target">Nhận mục tiêu tạm thời</string>
-    <string name="ns_receive_temp_target_summary">Chấp nhận mục tiêu tạm thời từ NS hoặc AAPSClient</string>
-    <string name="ns_receive_profile_switch">Nhận chuyển đổi Hồ sơ</string>
-    <string name="ns_receive_profile_switch_summary">Chấp nhận chuyển đổi Hồ sơ được nhập qua NS hoặc AAPSClient</string>
-    <string name="ns_receive_running_mode">Nhận sự kiện Running mode</string>
-    <string name="ns_receive_running_mode_summary">Chấp nhận sự kiện Running mode từ NS hoặc AAPSClient</string>
-    <string name="ns_receive_tbr_eb">Nhận TBR và EB</string>
-    <string name="ns_receive_tbr_eb_summary">Chấp nhận liều nền tạm thời (TBR) và bolus mở rộng (EB) được nhập từ một phiên bản khác</string>
-    <string name="ns_receive_insulin">Nhận insulin</string>
-    <string name="ns_receive_insulin_summary">Chấp nhận insulin được nhập qua NS hoặc AAPSClient (không được bơm, chỉ tính vào IOB)</string>
-    <string name="ns_receive_carbs">Nhận carb</string>
-    <string name="ns_receive_carbs_summary">Chấp nhận carb được nhập qua NS hoặc AAPSClient</string>
-    <string name="ns_receive_therapy_events">Nhận các sự kiện điều trị</string>
-    <string name="ns_receive_therapy_events_summary">Chấp nhận các sự kiện điều trị (thay cannula, insulin, pin, v.v.) được nhập qua NS hoặc AAPSClient</string>
-    <string name="ns_receive_cgm">Nhận/điền bù dữ liệu CGM</string>
-    <string name="ns_receive_cgm_summary">Chấp nhận dữ liệu CGM từ NS</string>
-    <string name="ns_sync_slow">Giảm tốc độ tải lên</string>
     <string name="ns_alarm_options">Tùy chọn cảnh báo</string>
-    <string name="ns_alarms">Tạo thông báo dựa trên cảnh báo từ NS</string>
-    <string name="ns_announcements">Tạo thông báo từ các thông báo NS</string>
-    <string name="ns_alarm_stale_data_value_label">Ngưỡng dữ liệu cũ [phút]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Ngưỡng dữ liệu cũ khẩn cấp [phút]</string>
-    <string name="ns_log_app_started_event">Ghi nhật ký khởi động ứng dụng lên NS</string>
-    <string name="ns_use_ws_title">Kết nối WebSocket</string>
-    <string name="ns_use_ws_summary">Bật tùy chọn này có nghĩa là: cập nhật nhanh hơn, nhận cảnh báo và thông báo, đồng thời tiêu thụ pin nhiều hơn tương tự như v1. Tất cả các bộ tải khác lên NS phải sử dụng giao thức v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Bật tính năng này để tải dữ liệu lên máy chủ thử nghiệm thay vì máy chủ chính</string>
     <string name="title_tidepool_dev_servers">Dùng máy chủ thử nghiệm (Integration)</string>
@@ -84,13 +47,8 @@
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Gửi dữ liệu tới xDrip+</string>
-    <string name="xdrip_status_detailed_iob_title">Hiển thị chi tiết IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Hiển thị IOB bolus và IOB basal trên mặt đồng hồ</string>
-    <string name="xdrip_status_show_bgi_title">Hiển thị BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Thêm BGI vào dòng trạng thái</string>
     <string name="xdrip_status_settings">Dòng trạng thái xDrip+ (nâng cao)</string>
     <string name="disabled_loop">Vòng lặp đã tắt</string>
-    <string name="xdrip_send_status_title">Gửi dòng trạng thái tới xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ chưa được cài đặt</string>
     <string name="calibration_sent">Gửi hiệu chuẩn đến xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Gửi dữ liệu đường huyết và điều trị tới xDrip+. Nguồn dữ liệu ‘xDrip+ Sync Follower’ phải được chọn và chức năng chấp nhận dữ liệu phải được bật trong Settings - Inter-app settings - Accept Glucose/Treatments</string>
@@ -124,18 +82,9 @@
     <string name="wear_action_tempt_manual_message">Mục tiêu tạm thời\n\nMục tiêu: %1$s\nThời gian: %2$d phút</string>
     <string name="wear_action_tempt_preset_message">Mục tiêu tạm thời\n\nLý do: %1$s\nMục tiêu: %2$s\nThời lượng: %3$d phút</string>
     <string name="no_success">không thành công – vui lòng kiểm tra điện thoại</string>
-    <string name="wear_settings">Cài đặt Wear</string>
-    <string name="wearcontrol_title">Điều khiển từ Đồng hồ</string>
-    <string name="wearcontrol_summary">Đặt mục tiêu tạm thời và nhập điều trị từ đồng hồ.</string>
-    <string name="wear_broadcast_data">Truyền dữ liệu</string>
-    <string name="wear_broadcast_data_summary">Truyền dữ liệu đến AAPS hoặc AAPSClient</string>
     <string name="wear_wizard_settings_summary">Các phép tính được bao gồm trong kết quả của Trình hỗ trợ:</string>
     <string name="wear_general_settings">Cài đặt chung</string>
-    <string name="wear_notifysmb_title">Thông báo khi có SMB</string>
-    <string name="wear_notifysmb_summary">Hiển thị SMB trên đồng hồ giống như bolus tiêu chuẩn.</string>
     <string name="wear_custom_watchface_settings">Cài đặt mặt đồng hồ tùy chỉnh</string>
-    <string name="wear_custom_watchface_authorization_title">Ủy quyền mặt đồng hồ tùy chỉnh</string>
-    <string name="wear_custom_watchface_authorization_summary">Cho phép mặt đồng hồ tùy chỉnh đã tải thay đổi và khóa một số cài đặt hiển thị của đồng hồ để phù hợp với thiết kế mặt đồng hồ</string>
     <string name="wear_custom_watchface">Mặt đồng hồ tùy chỉnh: %1$s</string>
     <string name="wear_load_watchface">Tải mặt đồng hồ</string>
     <string name="wear_infos_watchface">Mặt đồng hồ thông tin</string>
@@ -198,7 +147,6 @@
     <string name="wear_action_loop_state_now_pump_disconnected">Ngắt kết nối bơm</string>
     <string name="wear_action_loop_state_now_pump_reconnected">Kết nối lại bơm</string>
     <string name="garmin_request_key">Request Key</string>
-    <string name="garmin_request_key_summary">Khóa tùy chọn giúp bảo mật kết nối HTTP giữa Garmin và AAPS.</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Giao tiếp SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
@@ -235,14 +183,11 @@
     <string name="smscommunicator_stopped_sms">Dịch vụ điều khiển từ xa qua SMS đã dừng. Để kích hoạt lại, hãy sử dụng AAPS trên điện thoại chính.</string>
     <string name="smscommunicator_calibration_reply_with_code">Để gửi hiệu chuẩn %1$.2f, hãy trả lời với mã %2$s</string>
     <string name="smscommunicator_bolus_failed">Tiêm liều bolus thất bại. Xác minh trạng thái thực tế trước khi gửi lệnh khác!</string>
-    <string name="smscommunicator_remote_bolus_min_distance_summary">Số phút tối thiểu phải trôi qua giữa một lần tiêm liều bolus từ xa và lần tiếp theo</string>
-    <string name="smscommunicator_remote_bolus_min_distance">Ít nhất bao nhiêu phút phải trôi qua giữa một lần tiêm liều bolus và lần tiếp theo. Vì lý do an toàn, để chỉnh tùy chọn này bạn cần thêm ít nhất 2 số điện thoại. Nếu không, sẽ sử dụng mặc định 15 phút.</string>
     <string name="smscommunicator_bolus_delivered">Tiêm liều bolus %1$.2f U thành công</string>
     <string name="smscommunicator_meal_bolus_delivered">Tiêm liều bolus cho bữa ăn %1$.2f U thành công</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Mục tiêu %1$s trong %2$d phút</string>
     <string name="smscommunicator_tt_set">Mục tiêu %1$s trong %2$d phút đã được đặt thành công</string>
     <string name="smscommunicator_tt_canceled">Mục tiêu tạm thời đã được hủy thành công</string>
-    <string name="smscommunicator_remote_commands_allowed">Cho phép lệnh điều khiển từ xa qua SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Vòng lặp đã bị vô hiệu hóa</string>
     <string name="smscommunicator_loop_is_enabled">Vòng lặp đã được kích hoạt</string>
     <string name="smscommunicator_pump_connect_with_code">Để kết nối bơm, hãy trả lời với mã %1$s</string>
@@ -285,8 +230,6 @@
     <string name="smscommunicator_calibration_sent">Hiệu chuẩn đã được gửi. Cần bật chế độ nhận trong xDrip+.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ không nhận hiệu chuẩn</string>
     <string name="smscommunicator_message_body">Nội dung tin nhắn không hợp lệ</string>
-    <string name="smscommunicator_report_pump_unreachable_summary">Gửi SMS nếu sự kiện không thể kết nối với bơm được kích hoạt</string>
-    <string name="smscommunicator_pump_unreachable">Báo cáo bơm không thể kết nối</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Để chuyển chế độ Loop sang LGS (Tạm dừng khi đường huyết thấp), hãy trả lời với mã %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Chuyển chế độ Loop sang Vòng lặp kín: trả lời mã %1$s</string>
     <string name="smscommunicator_current_loop_mode">Chế độ Vòng lặp hiện tại: %1$s</string>
