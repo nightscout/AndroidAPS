@@ -24,7 +24,6 @@
     <string name="statuslights_patch_pump_age">vek náplasťovej pumpy</string>
     <string name="patch_pump">Náplasťová pumpa</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Kopírovať nastavenia z NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -48,9 +47,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">PREH</string>
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
-    <string name="overview_buttons_selection">Tlačidlá</string>
     <string name="data_status">Stav dát glykémie</string>
-    <string name="fill_bolus_title">Štandardné množstvo inzulínu pre Plnenie/Doplňovanie</string>
     <string name="run_question">Spustiť %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predikcie</string>
@@ -77,7 +74,6 @@
     <string name="lowres_description">Vzhľad pre nízke rozlišenie</string>
     <string name="buttonson_description">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
     <string name="largedisplay_description">Veľký displej</string>
-    <string name="skin">Vzhľad</string>
     <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
