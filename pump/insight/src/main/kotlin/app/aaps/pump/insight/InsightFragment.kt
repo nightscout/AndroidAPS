@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -36,6 +38,8 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var ch: ConcentrationHelper
+
 
     private var _binding: LocalInsightFragmentBinding? = null
 
@@ -306,16 +310,10 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
             binding.lastBolusLine.visibility = View.GONE
             return
         }
-        binding.lastBolusLine.visibility = View.VISIBLE
-        val agoMsc = System.currentTimeMillis() - insightPlugin.lastBolusTimestamp
-        val bolusMinAgo = agoMsc / 60.0 / 1000.0
-        val unit = rh.gs(CoreUiR.string.insulin_unit_shortname)
-        val ago: String = if (bolusMinAgo < 60) {
-            dateUtil.minAgo(rh, insightPlugin.lastBolusTimestamp)
-        } else {
-            dateUtil.hourAgo(insightPlugin.lastBolusTimestamp, rh)
+        insightPlugin.lastBolusAmount.value?.let {
+            binding.lastBolusLine.visibility = View.VISIBLE
+            binding.lastBolus.text = ch.insulinAmountAgoString(it, insightPlugin.lastBolusTimestamp)
         }
-        binding.lastBolus.text = rh.gs(R.string.insight_last_bolus_formater, insightPlugin.lastBolusAmount.value?.cU ?: 0.0, unit, ago) // Todo: ConcentratedUnits to be formated with IU + CU in Fragment
     }
 
     private fun getBolusItems() {

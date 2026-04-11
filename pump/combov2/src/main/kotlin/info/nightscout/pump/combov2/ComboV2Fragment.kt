@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import dagger.android.support.DaggerFragment
@@ -30,6 +32,7 @@ class ComboV2Fragment : DaggerFragment() {
 
     @Inject lateinit var combov2Plugin: ComboV2Plugin
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var ch: ConcentrationHelper
     @Inject lateinit var commandQueue: CommandQueue
 
     override fun onCreateView(
@@ -264,31 +267,14 @@ class ComboV2Fragment : DaggerFragment() {
 
     @OptIn(ExperimentalTime::class)
     private fun updateLastBolusField(lastBolus: ComboCtlPump.LastBolus?, binding: Combov2FragmentBinding) {
-        val currentTimestamp = System.currentTimeMillis()
-
         if (lastBolus == null) {
             binding.combov2LastBolus.text = ""
             return
         }
-
-        // If the last bolus is >= 30 minutes ago,
-        // we display a different message, one that
-        // warns the user that a long time passed
-        val bolusAgoText = when (val secondsPassed = (currentTimestamp - lastBolus.timestamp.toEpochMilliseconds()) / 1000) {
-            in 0..59 ->
-                rh.gs(R.string.combov2_less_than_one_minute_ago)
-
-            else     ->
-                rh.gs(app.aaps.core.interfaces.R.string.minago, secondsPassed / 60)
-        }
-
-        binding.combov2LastBolus.text =
-            rh.gs(
-                R.string.combov2_last_bolus,
-                lastBolus.bolusAmount.cctlBolusToIU(),
-                rh.gs(CoreUiR.string.insulin_unit_shortname),
-                bolusAgoText
-            )
+        binding.combov2LastBolus.text = ch.insulinAmountAgoString(
+            PumpInsulin(lastBolus.bolusAmount.cctlBolusToIU()),
+            lastBolus.timestamp.toEpochMilliseconds()
+        )
     }
 
     @OptIn(ExperimentalTime::class)

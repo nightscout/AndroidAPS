@@ -190,10 +190,12 @@ class EquilOverviewViewModel @Inject constructor(
         val lastBolusText = state.bolusRecord?.let {
             ch.insulinAmountAgoString(
                 PumpInsulin(it.amount),
-                dateUtil.sinceString(it.startTime, rh)
+                it.startTime
             )
-        } ?: "-"
-        add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = lastBolusText))
+        }
+        lastBolusText?.let {
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it))
+        }
     }
 
     private fun buildPrimaryActions(isPaired: Boolean): List<PumpAction> = buildList {

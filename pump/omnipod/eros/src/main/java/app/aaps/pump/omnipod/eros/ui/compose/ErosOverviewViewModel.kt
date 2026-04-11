@@ -218,7 +218,9 @@ class ErosOverviewViewModel @Inject constructor(
 
             // Last bolus
             val (lastBolusText, lastBolusLevel) = buildLastBolus()
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = lastBolusText, level = lastBolusLevel))
+            lastBolusText?.let {
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it, level = lastBolusLevel))
+            }
 
             // Base basal rate
             val basalText = if (podStateManager.isPodActivationCompleted) {
@@ -473,19 +475,21 @@ class ErosOverviewViewModel @Inject constructor(
         return PLACEHOLDER to StatusLevel.NORMAL
     }
 
-    private fun buildLastBolus(): Pair<String, StatusLevel> {
+    private fun buildLastBolus(): Pair<String?, StatusLevel> {
         if (podStateManager.isPodActivationCompleted && podStateManager.hasLastBolus()) {
             var text = ch.insulinAmountAgoString(
                 PumpInsulin(omnipodErosPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount)),
-                readableDuration(podStateManager.lastBolusStartTime)
+                podStateManager.lastBolusStartTime.millis
             )
-            if (!podStateManager.isLastBolusCertain) {
-                text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
-                return text to StatusLevel.CRITICAL
+            text?.let {
+                if (!podStateManager.isLastBolusCertain) {
+                    text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
+                    return text to StatusLevel.CRITICAL
+                }
+                return text to StatusLevel.NORMAL
             }
-            return text to StatusLevel.NORMAL
         }
-        return PLACEHOLDER to StatusLevel.NORMAL
+        return null to StatusLevel.NORMAL
     }
 
     private fun buildTempBasal(): Pair<String, StatusLevel> {

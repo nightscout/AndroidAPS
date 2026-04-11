@@ -166,7 +166,9 @@ class MedtronicOverviewViewModel @Inject constructor(
         add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = lastConnText, level = lastConnLevel))
 
         // Last bolus
-        add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = buildLastBolus()))
+        buildLastBolus()?.let {
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it))
+        }
 
         // Base basal rate
         val basalText = "(" + medtronicPumpStatus.activeProfileName + ")  " +
@@ -253,19 +255,12 @@ class MedtronicOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun buildLastBolus(): String {
+    private fun buildLastBolus(): String? {
         val bolus = medtronicPumpStatus.lastBolusAmount?.let { PumpInsulin(it) }
         val bolusTime = medtronicPumpStatus.lastBolusTime
-        if (bolus == null || bolusTime == null) return ""
-
-        val agoMsc = System.currentTimeMillis() - bolusTime.time
-        val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
-        val ago = when {
-            agoMsc < 60 * 1000 -> rh.gs(R.string.medtronic_pump_connected_now)
-            bolusMinAgo < 60   -> dateUtil.minAgo(rh, bolusTime.time)
-            else               -> dateUtil.hourAgo(bolusTime.time, rh)
-        }
-        return ch.insulinAmountAgoString(bolus, ago)
+        if (bolus == null || bolusTime == null)
+            return null
+        return ch.insulinAmountAgoString(bolus, bolusTime.time)
     }
 
     private fun buildTempBasal(): String {

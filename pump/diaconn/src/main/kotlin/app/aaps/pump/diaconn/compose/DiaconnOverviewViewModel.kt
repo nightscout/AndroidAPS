@@ -217,10 +217,7 @@ class DiaconnOverviewViewModel @Inject constructor(
 
         // Last bolus
         val lastBolus = if (lastBolusTime != null && lastBolusAmount != null) {
-            val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 3_600_000.0
-            if (agoHours < 6.0) {
-                ch.insulinAmountAgoString(PumpInsulin(lastBolusAmount), dateUtil.sinceString(lastBolusTime, rh))
-            } else null
+            ch.insulinAmountAgoString(PumpInsulin(lastBolusAmount), lastBolusTime)
         } else null
 
         // Daily units

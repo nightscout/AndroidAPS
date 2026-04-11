@@ -248,7 +248,9 @@ class DashOverviewViewModel @Inject constructor(
 
             // Last bolus
             val (lastBolusText, lastBolusLevel) = buildLastBolus()
-            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = lastBolusText, level = lastBolusLevel))
+            lastBolusText?.let {
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it, level = lastBolusLevel))
+            }
 
             // Base basal rate
             val basalText = if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
@@ -457,30 +459,28 @@ class DashOverviewViewModel @Inject constructor(
         else                                                                                                -> StatusLevel.NORMAL
     }
 
-    private fun buildLastBolus(): Pair<String, StatusLevel> {
+    private fun buildLastBolus(): Pair<String?, StatusLevel> {
         podStateManager.activeCommand?.let {
             val requestedBolus = it.requestedBolus
             if (requestedBolus != null) {
                 var text = ch.insulinAmountAgoString(
                     PumpInsulin(omnipodDashPumpPlugin.model().determineCorrectBolusSize(requestedBolus)),
-                    readableDuration(Duration.ofMillis(SystemClock.elapsedRealtime() - it.createdRealtime))
+                    it.createdRealtime
                 )
                 text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"
                 return text to StatusLevel.CRITICAL
             }
         }
-
         podStateManager.lastBolus?.let {
             val bolusSize = it.deliveredUnits() ?: it.requestedUnits
             val text = ch.insulinAmountAgoString(
                 PumpInsulin(omnipodDashPumpPlugin.model().determineCorrectBolusSize(bolusSize)),
-                readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
+                it.startTime
             )
             val level = if (!it.deliveryComplete) StatusLevel.WARNING else StatusLevel.NORMAL
             return text to level
         }
-
-        return PLACEHOLDER to StatusLevel.NORMAL
+        return null to StatusLevel.NORMAL
     }
 
     private fun buildTempBasalText(): String {

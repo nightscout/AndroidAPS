@@ -107,7 +107,7 @@ class VirtualPumpViewModel(
 
         val lastBolus = virtualPumpPlugin.lastBolusAmount.value?.let { amount ->
             virtualPumpPlugin.lastBolusTime.value?.takeIf { it != 0L }?.let { time ->
-                ch.insulinAmountAgoString(amount, dateUtil.sinceString(time, rh))
+                ch.insulinAmountAgoString(amount, time)
             }
         }
 
