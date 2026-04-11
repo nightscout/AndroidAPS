@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Associa micro</string>
     <string name="combov2_unpair_pump_title">Disassocia micro</string>
     <string name="combov2_driver_state_label">Stato driver</string>
-    <string name="combov2_current_activity_label">Attività corrente</string>
     <string name="bluetooth_address">Indirizzo bluetooth</string>
     <string name="combov2_start_pairing">Avvia associazione</string>
     <string name="combov2_pairing_in_progress">Associazione Combo in corso</string>
@@ -99,7 +98,6 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">TBR 100%: ignorando la richiesta ridondante</string>
     <string name="combov2_hit_unexpected_tbr_limit">Limite inatteso riscontrato durante la regolazione di TBR: la percentuale target era %1$d%%, raggiunto un limite a %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Impossibile impostare un TBR assoluto se la velocità basale di base è zero</string>
-    <string name="combov2_pair_with_pump_summary">Associa AndroidAPS e Android con un micro Accu-Chek Combo attualmente non associato</string>
     <string name="combov2_unpair_pump_summary">Disassocia AndroidAPS e Android dal micro Accu-Chek Combo attualmente associato</string>
     <string name="combov2_unknown_tbr_detected">Un TBR sconosciuto è stato rilevato e fermato; percentuale: %1$d%%; durata rimanente: %2$s</string>
     <string name="combov2_connection_error">Errore connessione: %1$s</string>
