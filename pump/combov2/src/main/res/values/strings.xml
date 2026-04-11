@@ -24,7 +24,6 @@
     <string name="combov2_pair_with_pump_title">Pair with pump</string>
     <string name="combov2_unpair_pump_title">Unpair pump</string>
     <string name="combov2_driver_state_label">Driver state</string>
-    <string name="combov2_current_activity_label">Current activity</string>
     <string name="bluetooth_address">Bluetooth address</string>
     <string name="combov2_start_pairing">Start pairing</string>
     <string name="combov2_pairing_in_progress">Combo pairing in progress</string>
@@ -43,6 +42,8 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_pin_entry_hint" translatable="false">0123456789</string>
     <string name="combov2_enter_pin">Enter PIN</string>
     <string name="combov2_cancel_pairing">Cancel pairing</string>
+    <string name="combov2_confirm_cancel_pairing_message">Do you really want to cancel pairing?</string>
+    <string name="combov2_confirm_unpair_message">Do you really want to unpair the pump?</string>
     <string name="combov2_pin_hint">10-digit PIN</string>
     <string name="combov2_pairing_finished_successfully">Successfully paired with Combo</string>
     <string name="combov2_pairing_cancelled">Pairing with Combo cancelled by user</string>
@@ -94,10 +95,9 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (less than 1 min remaining)</string>
     <string name="combov2_load_tdds_cancelled">Loading TDDs cancelled</string>
     <string name="combov2_retrieving_tdds_failed">Retrieving TDDs failed</string>
-    <string name="combov2_no_activity" translatable="false">{fa-bed}</string>
-    <string name="combov2_battery_empty_indicator" translatable="false">{fa-battery-empty}</string>
-    <string name="combov2_battery_low_indicator" translatable="false">{fa-battery-quarter}</string>
-    <string name="combov2_battery_full_indicator" translatable="false">{fa-battery-full}</string>
+    <string name="combov2_battery_empty">Empty</string>
+    <string name="combov2_battery_low">Low</string>
+    <string name="combov2_battery_full">Full</string>
     <string name="combov2_battery_low_warning">Pump battery is low</string>
     <string name="combov2_reservoir_low_warning">Pump reservoir level is low</string>
     <string name="combov2_setting_tbr_succeeded">Setting TBR succeeded</string>
@@ -107,7 +107,6 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignoring redundant 100% TBR request</string>
     <string name="combov2_hit_unexpected_tbr_limit">Unexpected limit encountered while adjusting TBR: target percentage was %1$d%%, hit a limit at %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Cannot set absolute TBR if base basal rate is zero</string>
-    <string name="combov2_pair_with_pump_summary">Pair AndroidAPS and Android with a currently unpaired Accu-Chek Combo pump</string>
     <string name="combov2_unpair_pump_summary">Unpair AndroidAPS and Android from the currently paired Accu-Chek Combo pump</string>
     <string name="combov2_unknown_tbr_detected">Unknown TBR was detected and stopped; percentage: %1$d%%; remaining duration: %2$s</string>
     <string name="combov2_connection_error">Connection error: %1$s</string>
