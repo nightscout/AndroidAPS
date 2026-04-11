@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Párovat s pumpou</string>
     <string name="combov2_unpair_pump_title">Zrušit párování pumpy</string>
     <string name="combov2_driver_state_label">Stav ovladače</string>
-    <string name="combov2_current_activity_label">Současná aktivita</string>
     <string name="bluetooth_address">Bluetooth MAC adresa</string>
     <string name="combov2_start_pairing">Začít párovat</string>
     <string name="combov2_pairing_in_progress">Probíhá Combo párování</string>
@@ -99,7 +98,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorování požadavku 100% dočasného bazálu</string>
     <string name="combov2_hit_unexpected_tbr_limit">Při úpravě dočasného bazálu došlo k neočekávanému limitu: vyžadováno %1$d%%, dosažen limit %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nelze nastavit absolutní dočasný bazál, pokud je bazální dávka nulová</string>
-    <string name="combov2_pair_with_pump_summary">Párovat AndroidAPS a Android s momentálně nespárovanou pumpou Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Zrušit párování AndroidAPS a Androidu v současné době spárované Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Neznámý dočasný bazál byl zjištěn a zastaven. Procentuální hodnota: %1$d%%; zbývající doba trvání: %2$s</string>
     <string name="combov2_connection_error">Chyba připojení: %1$s</string>
