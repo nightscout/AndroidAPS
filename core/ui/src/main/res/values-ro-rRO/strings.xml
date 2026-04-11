@@ -47,7 +47,6 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
     <string name="result">Rezultat</string>
     <string name="settings">Setări</string>
-    <string name="nav_preferences">Preferințe</string>
     <string name="simple_mode">Mod simplu</string>
     <string name="expand">Extindeți</string>
     <string name="collapse">Restrângeți</string>
@@ -58,7 +57,6 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Lumini de stare</string>
     <string name="copy_existing_values">Copiați setările NS (dacă există)?</string>
-    <string name="do_ns_upload_title">Încarcați date glicemie în NS</string>
     <string name="configbuilder_insulin">Insulină</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="configbuilder_smoothing">Uniformizare</string>
@@ -741,7 +739,6 @@
     <string name="export_failed">Eșuat</string>
     <string name="export_alert">ALERTĂ</string>
     <!-- Export dialog strings -->
-    <string name="master_password_missing">Parola principală nu este setată!\n\nVă rugăm să setați parola principală în Preferințe (%1$s)</string>
     <string name="export_to">Exportați setările către</string>
     <string name="password_preferences_encrypt_prompt">Vi se va solicita parola principală, care va fi utilizată pentru criptare la exportarea setărilor.</string>
     <string name="preferences_export_canceled">Exportare anulată! Preferințele nu au fost exportate!</string>
