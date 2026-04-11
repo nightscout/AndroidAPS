@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">Idade da bomba patch</string>
     <string name="patch_pump">Bomba patch</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="a11y_graph">gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menu do Gráfico</string>
@@ -33,9 +32,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">Início</string>
     <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
-    <string name="overview_buttons_selection">Botões</string>
     <string name="data_status">Estado dos dados de glicemia</string>
-    <string name="fill_bolus_title">Purgar/Preencher os valores padrões</string>
     <string name="run_question">Executar %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
@@ -59,7 +56,6 @@
     <string name="lowres_description">Design de baixa resolução</string>
     <string name="buttonson_description">Botões são sempre exibidos na parte inferior da tela</string>
     <string name="largedisplay_description">Mostrador Grande</string>
-    <string name="skin">Tema</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
