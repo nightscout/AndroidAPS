@@ -31,7 +31,6 @@
     <string name="result">结果</string>
     <string name="settings">设置</string>
     <string name="statuslights">状态指示灯</string>
-    <string name="do_ns_upload_title">将 数据血糖数据上传到 NS服务器</string>
     <string name="configbuilder_insulin">胰岛素</string>
     <string name="value_unavailable_short">无可用</string>
     <!-- master_password moved to core/keys/strings.xml -->
