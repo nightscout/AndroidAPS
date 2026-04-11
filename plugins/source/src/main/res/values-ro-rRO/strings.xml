@@ -25,11 +25,7 @@
     <string name="random_bg">Glicemie generată aleatoriu</string>
     <string name="description_source_random_bg">Generează glicemie aleatoare (doar mod demonstrativ)</string>
     <string name="random_bg_short">Glicemie</string>
-    <string name="bgsource_settings">Setări sursă glicemie</string>
-    <string name="bgsource_log_sensor_change_title">Acceptați pornirea senzorului</string>
-    <string name="bgsource_log_sensor_change_summary">Creați evenimentul \"CGM Sensor Insert\" în Careportal automat la pornirea senzorului primită de la o sursă de transmisie locală a glicemiei</string>
     <string name="direction">direcție</string>
-    <string name="bg_generation_interval_minutes">Minute interval de generare al glicemiei</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Primiți date de glicemie din aplicația Syai/Ottai.</string>
