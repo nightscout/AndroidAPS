@@ -24,7 +24,6 @@
     <string name="statuslights_patch_pump_age">Edad de la bomba parche</string>
     <string name="patch_pump">Bomba parche</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copiar ajustes desde Nightscout</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -48,9 +47,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">INICIO</string>
     <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
-    <string name="overview_buttons_selection">Botones</string>
     <string name="data_status">Estado de datos de glucosa</string>
-    <string name="fill_bolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="run_question">¿Ejecutar %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicciones</string>
@@ -77,7 +74,6 @@
     <string name="lowres_description">Tema baja resolución</string>
     <string name="buttonson_description">Los botones siempre se muestran en la parte inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grande</string>
-    <string name="skin">Tema</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
