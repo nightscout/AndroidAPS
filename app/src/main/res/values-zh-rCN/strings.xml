@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s 首选项</string>
     <string name="delta">增量</string>
     <string name="save">保存</string>
     <string name="wear">手表</string>
-    <string name="sensitivity_warning">如果要打开 Autosense功能, 记住输入所有吃的碳水化合物。否则碳水化合物的偏差将被识别为错误的灵敏度变化!!</string>
     <string name="invalid">无效</string>
-    <string name="pump_unreachable_threshold">泵无法连接的时间阈值[min]</string>
     <string name="close_navigation">关闭导航栏</string>
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
-    <string name="unitsnosemicolon">单位</string>
     <string name="authorizationfailed">授权失败</string>
     <string name="cannula">输注导管</string>
     <string name="identification_not_set">开发模式下未设置身份识别联系方式</string>
