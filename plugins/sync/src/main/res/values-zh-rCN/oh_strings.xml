@@ -8,8 +8,6 @@
     <string name="setup_completed_info">开源人类项目已经设置。如果要停止上传，请单击“注销”。</string>
     <string name="not_setup_info">开源人类项目目前处于非活动状态。要开始上传数据，请单击“设置”。</string>
     <string name="project_member_id">项目成员ID: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">仅在连接到WiFi时上传</string>
-    <string name="only_upload_if_charging">仅在充电时上传</string>
     <string name="open_humans_uploading">上传到开源人类项目</string>
     <string name="open_humans_notifications">开源人类项目通知</string>
     <string name="you_have_been_signed_out_of_open_humans">你已经从开源人类项目中退出</string>
