@@ -270,7 +270,7 @@ open class DanaOverviewViewModel @Inject constructor(
 
         // Reservoir
         val reservoirText = if (reservoir > 0.0)
-            "${ch.insulinAmountString(PumpInsulin(reservoir))} / ${ch.insulinAmountString(PumpInsulin(300.0))}"
+            "${ch.insulinAmountString(PumpInsulin(reservoir))}" // "/ 300 U" removed
         else null
 
         // Last connection warn level
@@ -327,12 +327,18 @@ open class DanaOverviewViewModel @Inject constructor(
             add(
                 PumpInfoRow(
                     label = rh.gs(CoreUiR.string.daily_units),
-                    value = rh.gs(CoreUiR.string.reservoir_value, ch.fromPump(PumpInsulin(pump.dailyTotalUnits)), ch.fromPump(PumpInsulin(pump.maxDailyTotalUnits.toDouble()))),
+                    value = ch.insulinAmountString(PumpInsulin(pump.dailyTotalUnits)), // "/ ${pump.maxDailyTotalUnits} U" removed
                     level = when {
                         pump.dailyTotalUnits > pump.maxDailyTotalUnits * 0.9 -> StatusLevel.CRITICAL
                         pump.dailyTotalUnits > pump.maxDailyTotalUnits * 0.75 -> StatusLevel.WARNING
                         else -> StatusLevel.NORMAL
                     }
+                )
+            )
+            add(
+                PumpInfoRow(
+                    label = rh.gs(CoreUiR.string.max_daily_units),
+                    value = ch.insulinAmountString(PumpInsulin(pump.maxDailyTotalUnits.toDouble())) // max TDD added in an additional row
                 )
             )
 

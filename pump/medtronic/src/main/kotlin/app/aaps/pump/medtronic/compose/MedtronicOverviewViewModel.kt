@@ -287,12 +287,12 @@ class MedtronicOverviewViewModel @Inject constructor(
     }
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
-        val remaining = ch.fromPump(PumpInsulin(medtronicPumpStatus.reservoirRemainingUnits))
-        val full = ch.fromPump(PumpInsulin(medtronicPumpStatus.reservoirFullUnits.toDouble())).toInt()
-        val text = rh.gs(CoreUiR.string.reservoir_value, remaining, full)
+        val remaining = PumpInsulin(medtronicPumpStatus.reservoirRemainingUnits)
+        //val full = ch.fromPump(PumpInsulin(medtronicPumpStatus.reservoirFullUnits.toDouble())).toInt()
+        val text = ch.insulinAmountString(remaining) // "/ $full U" removed
         val level = when {
-            remaining <= 20.0 -> StatusLevel.CRITICAL
-            remaining <= 50.0 -> StatusLevel.WARNING
+            ch.fromPump(remaining) <= 20.0 -> StatusLevel.CRITICAL
+            ch.fromPump(remaining) <= 50.0 -> StatusLevel.WARNING
             else              -> StatusLevel.NORMAL
         }
         return text to level

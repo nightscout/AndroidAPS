@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -341,16 +342,16 @@ internal class InsightOverviewState(
 
             insightPlugin.cartridgeStatus?.let { cartridge ->
                 val status = if (cartridge.isInserted)
-                    rh.gs(CoreUiR.string.format_insulin_units, cartridge.remainingAmount)
+                    ch.insulinAmountString(PumpInsulin(cartridge.remainingAmount))
                 else
                     rh.gs(R.string.not_inserted)
                 add(PumpInfoRow(label = rh.gs(R.string.reservoir_level), value = status))
             }
 
             insightPlugin.totalDailyDose?.let { tdd ->
-                add(PumpInfoRow(label = rh.gs(R.string.tdd_bolus), value = rh.gs(CoreUiR.string.format_insulin_units, tdd.bolus)))
-                add(PumpInfoRow(label = rh.gs(R.string.tdd_basal), value = rh.gs(CoreUiR.string.format_insulin_units, tdd.basal)))
-                add(PumpInfoRow(label = rh.gs(CoreUiR.string.tdd_total), value = rh.gs(CoreUiR.string.format_insulin_units, tdd.bolusAndBasal)))
+                add(PumpInfoRow(label = rh.gs(R.string.tdd_bolus), value = ch.insulinAmountString(PumpInsulin(tdd.bolus))))
+                add(PumpInfoRow(label = rh.gs(R.string.tdd_basal), value = ch.insulinAmountString(PumpInsulin(tdd.basal))))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.tdd_total), value = ch.insulinAmountString(PumpInsulin(tdd.bolusAndBasal))))
             }
 
             insightPlugin.activeBasalRate?.let { basal ->

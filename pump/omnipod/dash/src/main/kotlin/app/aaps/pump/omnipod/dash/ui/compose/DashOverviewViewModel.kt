@@ -499,13 +499,13 @@ class DashOverviewViewModel @Inject constructor(
     }
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
-        if (podStateManager.pulsesRemaining == null) {
-            return rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
-        }
-        val lowThreshold: Short = PodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD
-        val text = ch.insulinAmountString(PumpInsulin(podStateManager.pulsesRemaining!! * PodConstants.POD_PULSE_BOLUS_UNITS))
-        val level = if (ch.fromPump(PumpInsulin(podStateManager.pulsesRemaining!! * PodConstants.POD_PULSE_BOLUS_UNITS)) < lowThreshold.toDouble()) StatusLevel.CRITICAL else StatusLevel.NORMAL
-        return text to level
+        val reservoirLevel = podStateManager.pulsesRemaining?.let { PumpInsulin(it * PodConstants.POD_PULSE_BOLUS_UNITS) }
+        return reservoirLevel?.let {
+            val lowThreshold = PodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD.toDouble()
+            val text = ch.insulinAmountString(it)
+            val level = if (ch.fromPump(it) < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
+            text to level
+        } ?: rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
     }
 
     private fun translatedActiveAlert(alert: AlertType): String {

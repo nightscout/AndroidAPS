@@ -282,12 +282,18 @@ class DiaconnOverviewViewModel @Inject constructor(
             add(
                 PumpInfoRow(
                     label = rh.gs(CoreUiR.string.daily_units),
-                    value = rh.gs(CoreUiR.string.reservoir_value, todayInsulinAmount, todayInsulinLimitAmount),
+                    value = ch.insulinAmountString(PumpInsulin(todayInsulinAmount)), // "/ $todayInsulinLimitAmount U" removed
                     level = when {
                         todayInsulinAmount > todayInsulinLimitAmount * 0.9  -> StatusLevel.CRITICAL
                         todayInsulinAmount > todayInsulinLimitAmount * 0.75 -> StatusLevel.WARNING
                         else                                                -> StatusLevel.NORMAL
                     }
+                )
+            )
+            add(
+                PumpInfoRow(
+                    label = rh.gs(CoreUiR.string.max_daily_units),
+                    value = ch.insulinAmountString(PumpInsulin(todayInsulinLimitAmount.toDouble()))
                 )
             )
 

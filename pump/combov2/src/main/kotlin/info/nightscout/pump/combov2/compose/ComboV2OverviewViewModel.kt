@@ -342,7 +342,7 @@ class ComboV2OverviewViewModel @Inject constructor(
         }
         return PumpInfoRow(
             label = rh.gs(CoreUiR.string.reservoir_label),
-            value = "${reservoirLevel.availableUnits} ${rh.gs(CoreUiR.string.insulin_unit_shortname)}",
+            value = ch.insulinAmountString(PumpInsulin(reservoirLevel.availableUnits.toDouble())),
             level = level
         )
     }

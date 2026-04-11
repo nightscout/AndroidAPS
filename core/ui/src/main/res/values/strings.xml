@@ -721,6 +721,7 @@
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicked connect to pump</string>
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Daily units</string>
+    <string name="max_daily_units">Max daily units</string>
     <string name="pump_icon">Pump icon</string>
     <string name="view_profile">View profile</string>
     <string name="pump_history">Pump history</string>

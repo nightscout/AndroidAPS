@@ -45,6 +45,7 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
+import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
@@ -524,9 +525,10 @@ class ErosOverviewViewModel @Inject constructor(
         if (podStateManager.reservoirLevel == null) {
             return rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
         }
+        val reservoirLevel = PumpInsulin(podStateManager.reservoirLevel)
         val lowThreshold = (omnipodAlertUtil.lowReservoirAlertUnits ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
-        val text = ch.insulinAmountString(PumpInsulin(podStateManager.reservoirLevel))
-        val level = if (ch.fromPump(PumpInsulin(podStateManager.reservoirLevel)) < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
+        val text = ch.insulinAmountString(reservoirLevel)
+        val level = if (ch.fromPump(reservoirLevel) < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
         return text to level
     }
 
