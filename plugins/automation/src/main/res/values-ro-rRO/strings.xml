@@ -47,10 +47,6 @@
     <string name="or">Sau</string>
     <string name="xor">Sau exclusiv</string>
     <string name="atspecifiedtime">La %1$s</string>
-    <string name="use_network_location">Folosiți localizarea bazată pe rețea</string>
-    <string name="use_gps_location">Folosiți localizarea GPS</string>
-    <string name="use_passive_location">Folosiți localizarea pasivă</string>
-    <string name="locationservice">Servicii de localizare</string>
     <string name="onconnect">La conectare</string>
     <string name="ondisconnect">La deconectare</string>
     <string name="short_avgdelta">Media scurtă a deviației</string>
