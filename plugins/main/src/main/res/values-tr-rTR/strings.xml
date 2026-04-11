@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">yama pompa yaşı</string>
     <string name="patch_pump">Yama pompa</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Ayarları NS\'den kopyala</string>
     <string name="graph_scale_6h">6s</string>
     <string name="graph_scale_12h">12s</string>
     <string name="graph_scale_18h">18s</string>
@@ -46,9 +45,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">GİRİŞ</string>
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
-    <string name="overview_buttons_selection">Butonlar</string>
     <string name="data_status">KŞ veri durumu</string>
-    <string name="fill_bolus_title">Standart insülin miktarlarını Hazırla/Doldur</string>
     <string name="run_question">Yürüt %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Tahminler</string>
@@ -75,7 +72,6 @@
     <string name="lowres_description">Düşük çözünürlüklü görünüm</string>
     <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
     <string name="largedisplay_description">Büyük ekran</string>
-    <string name="skin">Görünüm</string>
     <string name="cannula_usage">kullanım:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
