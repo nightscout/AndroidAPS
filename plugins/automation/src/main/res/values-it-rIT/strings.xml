@@ -47,10 +47,6 @@
     <string name="or">O (OR)</string>
     <string name="xor">O (esclusivo - XOR)</string>
     <string name="atspecifiedtime">A %1$s</string>
-    <string name="use_network_location">Usa localizzazione di rete</string>
-    <string name="use_gps_location">Usa localizzazione GPS</string>
-    <string name="use_passive_location">Usa localizzazione passiva</string>
-    <string name="locationservice">Servizio di localizzazione</string>
     <string name="onconnect">Alla connessione</string>
     <string name="ondisconnect">Alla disconnessione</string>
     <string name="short_avgdelta">Delta medio ridotto</string>
