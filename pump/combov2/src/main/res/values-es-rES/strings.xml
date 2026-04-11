@@ -39,6 +39,8 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
 3. Intenta emparejar de nuevo</string>
     <string name="combov2_enter_pin">Introducir PIN</string>
     <string name="combov2_cancel_pairing">Emparejamiento cancelado</string>
+    <string name="combov2_confirm_cancel_pairing_message">¿Seguro que quieres cancelar el emparejamiento?</string>
+    <string name="combov2_confirm_unpair_message">¿Seguro que quieres desvincular la bomba?</string>
     <string name="combov2_pin_hint">PIN de 10 dígitos</string>
     <string name="combov2_pairing_finished_successfully">Vinculado correctamente con Combo</string>
     <string name="combov2_pairing_cancelled">Emparejamiento con Combo cancelado por el usuario</string>
@@ -89,6 +91,9 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (menos de 1 min restante)</string>
     <string name="combov2_load_tdds_cancelled">Cargando TDDs cancelados</string>
     <string name="combov2_retrieving_tdds_failed">Error al recibir TDDs</string>
+    <string name="combov2_battery_empty">Vacío</string>
+    <string name="combov2_battery_low">Bajo</string>
+    <string name="combov2_battery_full">Lleno</string>
     <string name="combov2_battery_low_warning">Batería de bomba baja</string>
     <string name="combov2_reservoir_low_warning">El nivel del reservorio de bomba es bajo</string>
     <string name="combov2_setting_tbr_succeeded">Configuración de TBR exitosa</string>
