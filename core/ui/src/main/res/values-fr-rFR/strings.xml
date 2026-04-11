@@ -31,7 +31,6 @@
     <string name="result">Résultat</string>
     <string name="settings">Paramètres</string>
     <string name="statuslights">Voyants d\'état</string>
-    <string name="do_ns_upload_title">Remonter les Gly vers NS</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="value_unavailable_short">n/d</string>
     <!-- master_password moved to core/keys/strings.xml -->
