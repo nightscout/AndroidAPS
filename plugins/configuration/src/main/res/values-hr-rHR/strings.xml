@@ -15,7 +15,6 @@
     <string name="configbuilder_bgsource_description">Odakle bi AAPS trebao dobiti svoje podatke?</string>
     <string name="description_config_builder">Koristi se za konfiguriranje aktivnih softverskih dodataka</string>
     <string name="allow_hardware_pump_text">Pažnja: ako aktivirate i povežete se s hardverskom pumpom, AAPS će kopirati bazalne postavke iz profila na pumpu, prebrišući postojeću bazalnu dozu pohranjenu na pumpi. Provjerite imate li ispravnu bazalnu postavku u AAPS-u. Ako niste sigurni ili ne želite prebrisati bazalne postavke na pumpi, pritisnite Odustani i ponovite prebacivanje na pumpu kasnije.</string>
-    <string name="a11y_open_settings">otvori postavke</string>
     <string name="nsclient_version_does_not_match">Verzija AAPS klijenta ne odgovara verziji AAPS. Molimo ažurirajte.</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
