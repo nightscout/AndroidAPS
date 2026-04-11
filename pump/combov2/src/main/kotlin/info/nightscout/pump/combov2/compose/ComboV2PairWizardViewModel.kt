@@ -222,8 +222,7 @@ class ComboV2PairWizardViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        // Mirror the legacy ComboV2PairingActivity.onDestroy: if the wizard
-        // is torn down mid-pairing, cancel the in-flight attempt; on terminal
+        // If torn down mid-pairing, cancel the in-flight attempt; on terminal
         // stages, reset the progress flow so future pairings start clean.
         cancelIfInProgress()
         if (combov2Plugin.driverStateUIFlow.value != ComboV2Plugin.DriverState.NotInitialized) {

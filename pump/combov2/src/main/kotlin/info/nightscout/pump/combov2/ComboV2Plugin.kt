@@ -2,12 +2,8 @@ package info.nightscout.pump.combov2
 
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.coroutineScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
@@ -48,15 +44,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.keys.interfaces.withActivity
-import app.aaps.core.keys.interfaces.withClick
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import info.nightscout.pump.combov2.compose.ComboV2ComposeContent
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
@@ -74,11 +66,10 @@ import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
-import info.nightscout.pump.combov2.activities.ComboV2PairingActivity
+import info.nightscout.pump.combov2.compose.ComboV2ComposeContent
 import info.nightscout.pump.combov2.keys.ComboBooleanKey
 import info.nightscout.pump.combov2.keys.ComboIntKey
 import info.nightscout.pump.combov2.keys.ComboIntNonKey
-import info.nightscout.pump.combov2.keys.ComboIntentKey
 import info.nightscout.pump.combov2.keys.ComboLongNonKey
 import info.nightscout.pump.combov2.keys.ComboStringNonKey
 import kotlinx.coroutines.CancellationException
@@ -155,7 +146,7 @@ class ComboV2Plugin @Inject constructor(
             .description(R.string.combov2_plugin_description)
             .preferencesId(PluginDescription.PREFERENCE_SCREEN),
         ownPreferences = listOf(
-            ComboIntentKey::class.java, ComboIntKey::class.java, ComboBooleanKey::class.java,
+            ComboIntKey::class.java, ComboBooleanKey::class.java,
             ComboStringNonKey::class.java, ComboIntNonKey::class.java, ComboLongNonKey::class.java
         ),
         aapsLogger, rh, preferences, commandQueue
@@ -288,8 +279,7 @@ class ComboV2Plugin @Inject constructor(
 
     private val driverStateFlow = _driverStateFlow.asStateFlow()
 
-    // Used by ComboV2PairingActivity to launch its own
-    // custom activities that have a result.
+    // Used by the pairing wizard to launch BT discoverability activities for result.
     var customDiscoveryActivityStartCallback: ((intent: Intent) -> Unit)?
         set(value) {
             bluetoothInterface?.customDiscoveryActivityStartCallback = value
@@ -422,41 +412,6 @@ class ComboV2Plugin @Inject constructor(
         super.onStop()
 
         aapsLogger.info(LTag.PUMP, "combov2 driver stopped")
-    }
-
-    // MIGRATED TO COMPOSE: ComboV2PreferencesCompose handles pair/unpair button enabled state
-    // via enabledCondition on ComboIntentKey using isPumpPaired from visibilityContext
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-
-        // Setup coroutine to enable/disable the pair and unpair
-        // preferences depending on the pairing state.
-        preferenceFragment.run {
-            // We use the fragment's lifecycle instead of the fragment view's, since the latter
-            // is initialized in onCreateView(), and we reach this point here _before_ that
-            // method is called. In other words, the fragment view does not exist at this point.
-            // repeatOnLifecycle() is a utility function that runs its block when the lifecycle
-            // starts. If the fragment is destroyed, the code inside - that is, the flow - is
-            // cancelled. That way, the UI flow is automatically reconstructed when Android
-            // recreates the fragment.
-            lifecycle.coroutineScope.launch {
-                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    val pairPref: Preference? = findPreference(ComboIntentKey.PairWithPump.key)
-                    val unpairPref: Preference? = findPreference(ComboIntentKey.UnpairPump.key)
-
-                    val isInitiallyPaired = pairedStateUIFlow.value
-                    pairPref?.isEnabled = !isInitiallyPaired
-                    unpairPref?.isEnabled = isInitiallyPaired
-
-                    pairedStateUIFlow
-                        .onEach { isPaired ->
-                            pairPref?.isEnabled = !isPaired
-                            unpairPref?.isEnabled = isPaired
-                        }
-                        .launchIn(this)
-                }
-            }
-        }
     }
 
     override fun isConfigured(): Boolean = isPaired()
@@ -2270,8 +2225,6 @@ class ComboV2Plugin @Inject constructor(
         key = "combov2_settings",
         titleResId = R.string.combov2_title,
         items = listOf(
-            ComboIntentKey.PairWithPump.withActivity(ComboV2PairingActivity::class.java),
-            ComboIntentKey.UnpairPump.withClick { unpair() },
             ComboIntKey.DiscoveryDuration,
             ComboBooleanKey.AutomaticReservoirEntry,
             ComboBooleanKey.AutomaticBatteryEntry,
@@ -2290,26 +2243,6 @@ class ComboV2Plugin @Inject constructor(
             key = "combov2_settings"
             title = rh.gs(R.string.combov2_title)
             initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveIntentPreference(
-                    ctx = context, intentKey = ComboIntentKey.PairWithPump, title = R.string.combov2_pair_with_pump_title, summary = R.string.combov2_pair_with_pump_summary,
-                    intent = Intent(context, ComboV2PairingActivity::class.java)
-                )
-            )
-            addPreference(
-                AdaptiveIntentPreference(
-                    ctx = context, intentKey = ComboIntentKey.UnpairPump, title = R.string.combov2_unpair_pump_title, summary = R.string.combov2_unpair_pump_summary
-                ).apply {
-                    onPreferenceClickListener = Preference.OnPreferenceClickListener { preference ->
-                        uiInteraction.showOkCancelDialog(
-                            context = preference.context,
-                            title = "Confirm pump unpairing",
-                            message = "Do you really want to unpair the pump?",
-                            ok = { unpair() })
-                        false
-                    }
-                }
-            )
             addPreference(AdaptiveIntPreference(ctx = context, intKey = ComboIntKey.DiscoveryDuration, title = R.string.combov2_discovery_duration))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticReservoirEntry, title = R.string.combov2_automatic_reservoir_entry))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = ComboBooleanKey.AutomaticBatteryEntry, title = R.string.combov2_automatic_battery_entry))
