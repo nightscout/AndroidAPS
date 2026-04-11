@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">גיל משאבה</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">העתקת הגדרות מ-Nightscout</string>
     <string name="graph_scale_6h">6 שע\'</string>
     <string name="graph_scale_12h">12 שע\'</string>
     <string name="graph_scale_18h">18 שע\'</string>
@@ -46,9 +45,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">בית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
-    <string name="overview_buttons_selection">מקשים</string>
     <string name="data_status">מצב נתוני הסוכר</string>
-    <string name="fill_bolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="run_question">להפעיל %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">חיזוי</string>
@@ -75,7 +72,6 @@
     <string name="lowres_description">סקין רזולוציה נמוכה</string>
     <string name="buttonson_description">לחצנים מוצגים תמיד בתחתית המסך</string>
     <string name="largedisplay_description">תצוגה גדולה</string>
-    <string name="skin">סקין</string>
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
