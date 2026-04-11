@@ -51,9 +51,7 @@ class IntelligoPlugin @Inject constructor(
                 title = resourceHelper.gs(R.string.intelligo)
             )
         }
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_intelligo)
         .icon(IcPluginIntelligo)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.intelligo)
         .shortName(R.string.intelligo)
         .preferencesVisibleInSimpleMode(false)

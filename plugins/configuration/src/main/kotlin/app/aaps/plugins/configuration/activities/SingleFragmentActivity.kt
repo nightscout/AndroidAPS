@@ -1,7 +1,6 @@
 package app.aaps.plugins.configuration.activities
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -29,7 +28,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -276,7 +274,7 @@ class SingleFragmentActivity : AppCompatActivity() {
     }
 
     private fun shouldShowPreferencesMenu(plugin: PluginBase): Boolean {
-        if ((plugin.preferencesId) == PluginDescription.PREFERENCE_NONE) return false
+        if (!plugin.hasPreferences()) return false
         if (preferences.simpleMode && !plugin.pluginDescription.preferencesVisibleInSimpleMode) return false
         return true
     }
@@ -286,12 +284,6 @@ class SingleFragmentActivity : AppCompatActivity() {
             // If we're in compose content AND plugin has compose preferences, show them in-place
             if (plugin.hasComposeContent() && plugin.getPreferenceScreenContent() is PreferenceSubScreenDef) {
                 showingComposePreferences = true
-            } else {
-                // Otherwise use legacy PreferencesActivity
-                val i = Intent(this, uiInteraction.preferencesActivity)
-                    .setAction("app.aaps.plugins.configuration.activities.SingleFragmentActivity")
-                    .putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName)
-                startActivity(i)
             }
         }, null)
     }

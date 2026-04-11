@@ -117,10 +117,4 @@ class DiaconnG8PluginTest : TestBaseWithProfile() {
         assertThat(diaconnG8Plugin.isInitialized()).isFalse()
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        diaconnG8Plugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
 }

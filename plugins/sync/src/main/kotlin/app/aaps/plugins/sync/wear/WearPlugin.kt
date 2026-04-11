@@ -5,9 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Watch
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -36,7 +33,6 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.compose.WearComposeContent
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
@@ -78,11 +74,9 @@ class WearPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .icon(Icons.Default.Watch)
         .pluginName(app.aaps.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_wear)
         .composeContent { plugin ->
             WearComposeContent(
@@ -238,49 +232,6 @@ class WearPlugin @Inject constructor(
                 context.sendBroadcast(intent, WearDataReceiver.PERMISSION)
                 aapsLogger.debug(LTag.WEAR, "Sending broadcast " + intent.action + " to: " + it)
             }
-        }
-    }
-
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "wear_wizard_settings" && requiredKey != "wear_custom_watchface_settings" && requiredKey != "wear_general_settings") return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "wear_settings"
-            title = rh.gs(R.string.wear_settings)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearControl, summary = R.string.wearcontrol_summary, title = R.string.wearcontrol_title))
-            if (config.AAPSCLIENT)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearBroadcastData, summary = R.string.wear_broadcast_data_summary, title = R.string.wear_broadcast_data))
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "wear_wizard_settings"
-                title = rh.gs(app.aaps.core.ui.R.string.wear_wizard_settings)
-                summary = rh.gs(R.string.wear_wizard_settings_summary)
-                //dependency = rh.gs(BooleanKey.WearControl.key)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardBg, title = app.aaps.core.ui.R.string.bg_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardTt, title = app.aaps.core.ui.R.string.tt_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardTrend, title = app.aaps.core.ui.R.string.bg_trend_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardCob, title = app.aaps.core.ui.R.string.treatments_wizard_cob_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearWizardIob, title = app.aaps.core.ui.R.string.iob_label))
-            })
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "wear_custom_watchface_settings"
-                title = rh.gs(R.string.wear_custom_watchface_settings)
-                addPreference(
-                    AdaptiveSwitchPreference(
-                        ctx = context,
-                        booleanKey = BooleanKey.WearCustomWatchfaceAuthorization,
-                        summary = R.string.wear_custom_watchface_authorization_summary,
-                        title = R.string.wear_custom_watchface_authorization_title
-                    )
-                )
-            })
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "wear_general_settings"
-                title = rh.gs(R.string.wear_general_settings)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearNotifyOnSmb, summary = R.string.wear_notifysmb_summary, title = R.string.wear_notifysmb_title))
-            })
         }
     }
 

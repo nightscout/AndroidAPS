@@ -7,9 +7,6 @@ import android.os.HandlerThread
 import android.os.PowerManager
 import android.os.SystemClock
 import androidx.annotation.VisibleForTesting
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
@@ -33,8 +30,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginRandomBg
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.isRunningTest
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.runBlocking
@@ -63,9 +58,7 @@ class RandomBgPlugin @Inject constructor(
                 title = rh.gs(R.string.random_bg)
             )
         }
-        .pluginIcon(R.drawable.ic_dice)
         .icon(IcPluginRandomBg)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.random_bg)
         .shortName(R.string.random_bg_short)
         .preferencesVisibleInSimpleMode(false)
@@ -179,18 +172,4 @@ class RandomBgPlugin @Inject constructor(
         ),
         icon = pluginDescription.icon
     )
-
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "bg_source_upload_settings"
-            title = rh.gs(R.string.random_bg)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceUploadToNs, title = app.aaps.core.ui.R.string.do_ns_upload_title))
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.BgSourceRandomInterval, title = R.string.bg_generation_interval_minutes))
-        }
-    }
 }

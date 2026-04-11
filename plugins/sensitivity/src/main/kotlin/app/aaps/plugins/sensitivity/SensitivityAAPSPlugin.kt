@@ -1,15 +1,10 @@
 package app.aaps.plugins.sensitivity
 
-import android.content.Context
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -26,8 +21,6 @@ import app.aaps.core.ui.compose.icons.IcAs
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
-import app.aaps.core.validators.preferences.AdaptiveDoublePreference
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
 import kotlinx.coroutines.runBlocking
@@ -48,11 +41,9 @@ class SensitivityAAPSPlugin @Inject constructor(
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
         .icon(IcAs)
         .pluginName(R.string.sensitivity_aaps)
         .shortName(R.string.sensitivity_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_sensitivity_aaps),
     aapsLogger, rh, preferences
 ) {
@@ -183,24 +174,4 @@ class SensitivityAAPSPlugin @Inject constructor(
         ),
         icon = pluginDescription.icon
     )
-
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "absorption_aaps_advanced") return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "sensitivity_aaps_settings"
-            title = rh.gs(R.string.absorption_settings_title)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AbsorptionMaxTime, dialogMessage = R.string.absorption_max_time_summary, title = R.string.absorption_max_time_title))
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.AutosensPeriod, dialogMessage = R.string.openapsama_autosens_period_summary, title = R.string.openapsama_autosens_period))
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "absorption_aaps_advanced"
-                title = rh.gs(app.aaps.core.ui.R.string.advanced_settings_title)
-                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AutosensMax, dialogMessage = R.string.openapsama_autosens_max_summary, title = R.string.openapsama_autosens_max))
-                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AutosensMin, dialogMessage = R.string.openapsama_autosens_min_summary, title = R.string.openapsama_autosens_min))
-            })
-        }
-    }
 }

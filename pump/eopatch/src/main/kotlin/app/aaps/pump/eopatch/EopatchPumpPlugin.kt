@@ -1,10 +1,7 @@
 package app.aaps.pump.eopatch
 
 import android.Manifest
-import android.content.Context
 import android.os.SystemClock
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -44,8 +41,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.eopatch.alarm.IAlarmManager
 import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManagerExecutor
@@ -115,7 +110,6 @@ class EopatchPumpPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_eopatch2_128)
         .pluginName(R.string.eopatch)
         .shortName(R.string.eopatch_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.eopatch_pump_description),
     ownPreferences = listOf(
         EopatchIntKey::class.java, EopatchBooleanKey::class.java, EopatchStringNonKey::class.java
@@ -600,25 +594,4 @@ class EopatchPumpPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: androidx.preference.PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        val lowReservoirEntries = arrayOf<CharSequence>("10 U", "15 U", "20 U", "25 U", "30 U", "35 U", "40 U", "45 U", "50 U")
-        val lowReservoirValues = arrayOf<CharSequence>("10", "15", "20", "25", "30", "35", "40", "45", "50")
-        val expirationRemindersEntries =
-            arrayOf<CharSequence>("1 hr", "2 hr", "3 hr", "4 hr", "5 hr", "6 hr", "7 hr", "8 hr", "9 hr", "10 hr", "11 hr", "12 hr", "13 hr", "14 hr", "15 hr", "16 hr", "17 hr", "18 hr", "19 hr", "20 hr", "21 hr", "22 hr", "23 hr", "24 hr")
-        val expirationRemindersValues = arrayOf<CharSequence>("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24")
-
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "eopatch_settings"
-            title = rh.gs(R.string.eopatch)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = EopatchIntKey.LowReservoirReminder, title = R.string.low_reservoir, entries = lowReservoirEntries, entryValues = lowReservoirValues))
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = EopatchIntKey.ExpirationReminder, title = R.string.patch_expiration_reminders, entries = expirationRemindersEntries, entryValues = expirationRemindersValues))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = EopatchBooleanKey.BuzzerReminder, title = R.string.patch_buzzer_reminders))
-        }
-    }
 }

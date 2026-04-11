@@ -5,9 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -49,8 +46,6 @@ import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.xdrip.compose.XdripComposeContent
@@ -113,7 +108,6 @@ class XdripPlugin @Inject constructor(
         .icon(IcXDrip)
         .pluginName(R.string.xdrip)
         .shortName(R.string.xdrip_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_xdrip),
     ownPreferences = listOf(XdripLongKey::class.java, XdripIntentKey::class.java),
     aapsLogger, rh, preferences
@@ -401,23 +395,4 @@ class XdripPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "xdrip_advanced") return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "xdrip_settings"
-            title = rh.gs(R.string.xdrip)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveIntentPreference(ctx = context, intentKey = XdripIntentKey.Info, summary = R.string.xdrip_local_broadcasts_summary, title = R.string.xdrip_local_broadcasts_title))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.XdripSendStatus, title = R.string.xdrip_send_status_title))
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "xdrip_advanced"
-                title = rh.gs(R.string.xdrip_status_settings)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.XdripSendDetailedIob, summary = R.string.xdrip_status_detailed_iob_summary, title = R.string.xdrip_status_detailed_iob_title))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.XdripSendBgi, summary = R.string.xdrip_status_show_bgi_summary, title = R.string.xdrip_status_show_bgi_title))
-            })
-        }
-    }
 }

@@ -89,7 +89,9 @@ fun ImportSettingsScreen(
                 }
             ) { padding ->
                 Box(
-                    modifier = Modifier.fillMaxSize().padding(padding),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -462,40 +464,44 @@ private fun ImportReviewContent(
             // File details card
             FileDetailsCard(file = state.file, source = state.fileSource, onSnackbarMessage = { snackbarMessage = it })
 
-            // Master password
-            OutlinedTextField(
-                value = state.masterPassword,
-                onValueChange = onMasterPasswordChanged,
-                label = { Text(stringResource(CoreUiR.string.import_master_password)) },
-                modifier = Modifier.fillMaxWidth(),
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                isError = state.masterPasswordError,
-                supportingText = if (state.masterPasswordError) {
-                    { Text(stringResource(CoreUiR.string.import_wrong_password)) }
-                } else null,
-                singleLine = true,
-                enabled = !state.isProcessing && state.decryptResult == null
-            )
-
-            // Decrypt & Review button
-            if (state.decryptResult == null && !state.needsDecryptionPassword) {
-                Button(
-                    onClick = onDecrypt,
+            // Master password (shown only if user has a local master password — we try it first
+            // as a shortcut for "importing your own backup". No local master pw → skip straight
+            // to the decryption password field below.)
+            if (!state.needsDecryptionPassword) {
+                OutlinedTextField(
+                    value = state.masterPassword,
+                    onValueChange = onMasterPasswordChanged,
+                    label = { Text(stringResource(CoreUiR.string.import_master_password)) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !state.isProcessing && state.masterPassword.isNotBlank()
-                ) {
-                    if (state.isProcessing) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .height(20.dp)
-                                .width(20.dp),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            strokeWidth = 2.dp
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    isError = state.passwordFieldError,
+                    supportingText = if (state.passwordFieldError) {
+                        { Text(stringResource(CoreUiR.string.import_wrong_password)) }
+                    } else null,
+                    singleLine = true,
+                    enabled = !state.isProcessing && state.decryptResult == null
+                )
+
+                // Decrypt & Review button
+                if (state.decryptResult == null) {
+                    Button(
+                        onClick = onDecrypt,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isProcessing && state.masterPassword.isNotBlank()
+                    ) {
+                        if (state.isProcessing) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .height(20.dp)
+                                    .width(20.dp),
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                strokeWidth = 2.dp
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
+                        Text(stringResource(CoreUiR.string.import_decrypt_review))
                     }
-                    Text(stringResource(CoreUiR.string.import_decrypt_review))
                 }
             }
 

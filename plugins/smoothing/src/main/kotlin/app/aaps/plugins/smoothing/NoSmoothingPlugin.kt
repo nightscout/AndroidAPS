@@ -19,7 +19,6 @@ class NoSmoothingPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_timeline_24)
         .icon(Icons.Default.Timeline)
         .setDefault(true)
         .pluginName(R.string.no_smoothing_name)

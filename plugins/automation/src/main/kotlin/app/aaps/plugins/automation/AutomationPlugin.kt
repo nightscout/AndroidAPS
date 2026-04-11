@@ -9,9 +9,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpType
@@ -40,7 +37,6 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
@@ -133,13 +129,11 @@ class AutomationPlugin @Inject constructor(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutomationFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_automation)
         .icon(IcPluginAutomation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
         .showInList { config.APS }
         .neverVisible(!config.APS)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.automation_description),
     ownPreferences = listOf(AutomationStringKey::class.java),
     aapsLogger, rh, preferences
@@ -632,27 +626,4 @@ class AutomationPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-        val entries = arrayOf<CharSequence>(
-            rh.gs(R.string.use_passive_location),
-            rh.gs(R.string.use_network_location),
-            rh.gs(R.string.use_gps_location),
-        )
-
-        val entryValues = arrayOf<CharSequence>(
-            "PASSIVE",
-            "NETWORK",
-            "GPS",
-        )
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "automation_settings"
-            title = rh.gs(app.aaps.core.ui.R.string.automation)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.AutomationLocation, title = R.string.locationservice, entries = entries, entryValues = entryValues))
-        }
-    }
 }

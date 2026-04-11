@@ -43,7 +43,6 @@
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
-    <string name="treatmentssafety_title">Treatments safety</string>
 
     <!-- Objectives -->
     <string name="completed_well_done">Completed, well done!</string>

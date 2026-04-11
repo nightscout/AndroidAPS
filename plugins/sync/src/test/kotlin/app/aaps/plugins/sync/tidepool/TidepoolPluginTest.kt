@@ -11,7 +11,6 @@ import app.aaps.plugins.sync.tidepool.comm.UploadChunk
 import app.aaps.plugins.sync.tidepool.compose.TidepoolRepository
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.shared.tests.TestBaseWithProfile
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import net.openid.appauth.AuthState
@@ -48,13 +47,6 @@ class TidepoolPluginTest : TestBaseWithProfile() {
         tidepoolPlugin = TidepoolPlugin(
             aapsLogger, rh, preferences, aapsSchedulers, rxBus, fabricPrivacy, tidepoolUploader, uploadChunk, rateLimit, receiverDelegate, authFlowOut, tidepoolRepository, dateUtil, persistenceLayer
         )
-    }
-
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        tidepoolPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 
     @Test

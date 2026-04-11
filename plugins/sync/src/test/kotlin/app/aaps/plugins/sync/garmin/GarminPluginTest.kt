@@ -8,14 +8,10 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.garmin.keys.GarminBooleanKey
 import app.aaps.plugins.sync.garmin.keys.GarminIntKey
 import app.aaps.plugins.sync.garmin.keys.GarminStringKey
 import app.aaps.shared.tests.TestBaseWithProfile
-import com.google.common.truth.Truth
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -54,23 +50,6 @@ class GarminPluginTest : TestBaseWithProfile() {
     @Mock private lateinit var loopHub: LoopHub
     @Mock private lateinit var persistenceLayer: PersistenceLayer
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
-
-    init {
-        addInjector {
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.config = config
-            }
-            if (it is AdaptiveSwitchPreference) {
-                it.preferences = preferences
-                it.config = config
-            }
-            if (it is AdaptiveStringPreference) {
-                it.preferences = preferences
-            }
-        }
-    }
 
     @BeforeEach
     fun setup() {
@@ -484,10 +463,4 @@ class GarminPluginTest : TestBaseWithProfile() {
         verify(loopHub, atLeastOnce()).glucoseUnit
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        gp.addPreferenceScreen(preferenceManager, screen, context, null)
-        Truth.assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
 }

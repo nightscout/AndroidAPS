@@ -37,9 +37,7 @@ class TomatoPlugin @Inject constructor(
                 title = rh.gs(R.string.tomato)
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_sensor)
         .icon(IcPluginTomato)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.tomato)
         .shortName(R.string.tomato_short)
         .preferencesVisibleInSimpleMode(false)

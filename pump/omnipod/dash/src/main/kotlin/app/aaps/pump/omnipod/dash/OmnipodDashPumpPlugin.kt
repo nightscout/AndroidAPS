@@ -1,9 +1,5 @@
 package app.aaps.pump.omnipod.dash
 
-import android.content.Context
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -43,8 +39,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginOmnipod
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.DateTimeUtil
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.ActivationProgress
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertConfiguration
 import app.aaps.pump.omnipod.common.bledriver.pod.definition.AlertTrigger
@@ -136,7 +130,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         .icon(IcPluginOmnipod)
         .pluginName(R.string.omnipod_dash_name)
         .shortName(R.string.omnipod_dash_name_short)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.omnipod_dash_pump_description),
     ownPreferences = listOf(
         OmnipodBooleanPreferenceKey::class.java, OmnipodIntPreferenceKey::class.java,
@@ -1565,141 +1558,4 @@ class OmnipodDashPumpPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-
-        val beepCategory = PreferenceCategory(context)
-        parent.addPreference(beepCategory)
-        beepCategory.apply {
-            key = "omnipod_dash_beeps"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_confirmation_beeps)
-            initialExpandedChildrenCount = 0
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.BolusBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_bolus_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.BasalBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_basal_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SmbBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_smb_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.TbrBeepsEnabled,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_tbr_beeps_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = DashBooleanPreferenceKey.UseBonding,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_dash_use_bonding
-                )
-            )
-        }
-
-        val alertsCategory = PreferenceCategory(context)
-        parent.addPreference(alertsCategory)
-        alertsCategory.apply {
-            key = "omnipod_dash_alerts"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_alerts)
-            initialExpandedChildrenCount = 0
-
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.ExpirationReminder,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_enabled,
-                    summary = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_enabled_summary
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = OmnipodIntPreferenceKey.ExpirationReminderHours,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_reminder_hours_before_expiry
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.ExpirationAlarm,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_alarm_enabled,
-                    summary = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_alarm_enabled_summary
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = OmnipodIntPreferenceKey.ExpirationAlarmHours,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_expiration_alarm_hours_before_shutdown
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.LowReservoirAlert,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_low_reservoir_alert_enabled
-                )
-            )
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = OmnipodIntPreferenceKey.LowReservoirAlertUnits,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_low_reservoir_alert_units
-                )
-            )
-
-        }
-        val notificationsCategory = PreferenceCategory(context)
-        parent.addPreference(notificationsCategory)
-        notificationsCategory.apply {
-            key = "omnipod_dash_notifications"
-            title = rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_category_notifications)
-            initialExpandedChildrenCount = 0
-
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainTbrNotification,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_tbr_sound_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainSmbNotification,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_smb_sound_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = OmnipodBooleanPreferenceKey.SoundUncertainBolusNotification,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_uncertain_bolus_sound_enabled
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = DashBooleanPreferenceKey.SoundDeliverySuspendedNotification,
-                    title = app.aaps.pump.omnipod.common.R.string.omnipod_common_preferences_notification_delivery_suspended_sound_enabled
-                )
-            )
-        }
-    }
 }

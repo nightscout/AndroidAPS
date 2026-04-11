@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -65,7 +64,6 @@ class ConfigBuilderPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync,
-    private val protectionCheck: ProtectionCheck,
     private val uiInteraction: UiInteraction,
     private val context: Context,
     private val config: Config
@@ -375,16 +373,6 @@ class ConfigBuilderPlugin @Inject constructor(
                     switchAllowed(plugin, if (layout.pluginEnabledExclusive.isVisible) layout.pluginEnabledExclusive.isChecked else layout.pluginEnabledInclusive.isChecked, activity, pluginType)
                 }
             }
-
-            layout.pluginPreferences.setOnClickListener {
-                it.context.scanForActivity()?.let { activity ->
-                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
-                        val i = Intent(activity, uiInteraction.preferencesActivity)
-                        i.putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName)
-                        activity.startActivity(i)
-                    }, null)
-                }
-            }
         }
 
         init {
@@ -416,16 +404,6 @@ class ConfigBuilderPlugin @Inject constructor(
             else {
                 layout.pluginDescription.visibility = View.VISIBLE
                 layout.pluginDescription.text = plugin.description
-            }
-            if (preferences.simpleMode) {
-                layout.pluginPreferences.visibility =
-                    if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType) || !plugin.pluginDescription.preferencesVisibleInSimpleMode) View.INVISIBLE else View.VISIBLE
-                layout.pluginVisibility.visibility = false.toVisibility()
-            } else {
-                layout.pluginPreferences.visibility = if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
-                layout.pluginVisibility.visibility = plugin.hasFragment().toVisibility()
-                layout.pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
-                layout.pluginVisibility.isChecked = plugin.isFragmentVisible()
             }
         }
 

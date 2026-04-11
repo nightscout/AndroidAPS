@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaStringNonKey
-import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -70,10 +69,4 @@ class DanaRSPluginTest : DanaRSTestBase() {
             )
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        danaRSPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
 }

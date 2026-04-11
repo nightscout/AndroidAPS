@@ -26,7 +26,6 @@ dependencies {
     implementation(project(":core:libraries"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
     implementation(project(":pump:omnipod:common"))
     implementation(project(":pump:common"))
     implementation(project(":pump:rileylink"))

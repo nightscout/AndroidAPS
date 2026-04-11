@@ -41,10 +41,4 @@ class OpenAPSSMBPluginTest : TestBaseWithProfile() {
         assertThat(openAPSSMBPlugin.specialShowInListCondition()).isTrue()
     }
 
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        openAPSSMBPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
 }

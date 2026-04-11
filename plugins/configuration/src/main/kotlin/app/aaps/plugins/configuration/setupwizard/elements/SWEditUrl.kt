@@ -44,7 +44,7 @@ class SWEditUrl @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper, 
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (Patterns.WEB_URL.matcher(s).matches()) save(s.toString(), updateDelay) else rxBus.send(EventSWLabel(rh.gs(app.aaps.core.validators.R.string.error_url_not_valid)))
+                if (Patterns.WEB_URL.matcher(s).matches()) save(s.toString(), updateDelay) else rxBus.send(EventSWLabel(rh.gs(app.aaps.core.ui.R.string.error_url_not_valid)))
             }
 
             override fun afterTextChanged(s: Editable) {}

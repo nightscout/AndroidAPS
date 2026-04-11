@@ -1,10 +1,6 @@
 package app.aaps.pump.virtual
 
-import android.content.Context
 import android.os.SystemClock
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -46,8 +42,6 @@ import app.aaps.core.keys.interfaces.withEntries
 import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.utils.fabric.InstanceId
-import app.aaps.core.validators.preferences.AdaptiveListPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.pump.virtual.keys.VirtualBooleanNonPreferenceKey
 import kotlinx.coroutines.CoroutineScope
@@ -103,7 +97,6 @@ open class VirtualPumpPlugin @Inject constructor(
         .icon(IcPluginVirtualPump)
         .pluginName(app.aaps.core.ui.R.string.virtual_pump)
         .shortName(R.string.virtual_pump_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_pump_virtual)
         .setDefault()
         .neverVisible(config.AAPSCLIENT),
@@ -425,25 +418,4 @@ open class VirtualPumpPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null) return
-        val entries = mutableListOf<CharSequence>()
-            .also { entries ->
-                PumpType.entries.forEach {
-                    if (it.description != "USER") entries.add(it.description)
-                }
-            }
-            .sortedWith(compareBy { it.toString() })
-            .toTypedArray()
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "virtual_pump_settings"
-            title = rh.gs(R.string.virtualpump_settings)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.VirtualPumpType, title = R.string.virtual_pump_type, entries = entries, entryValues = entries))
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.VirtualPumpStatusUpload, title = app.aaps.core.ui.R.string.virtualpump_uploadstatus_title))
-        }
-    }
 }

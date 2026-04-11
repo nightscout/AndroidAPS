@@ -1,26 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context="app.aaps.MainActivity">
 
     <item
-        android:id="@+id/nav_preferences"
-        android:orderInCategory="1"
-        app:showAsAction="never"
-        android:title="@string/nav_preferences" />
-    <item
-        android:id="@+id/nav_plugin_preferences"
-        android:orderInCategory="1"
-        app:showAsAction="never"
-        android:title="@string/nav_plugin_preferences" />
-    <item
         android:id="@+id/nav_historybrowser"
         android:orderInCategory="1"
-        app:showAsAction="never"
-        android:title="@string/nav_history_browser" />
+        android:title="@string/nav_history_browser"
+        app:showAsAction="never" />
     <item
         android:id="@+id/nav_setupwizard"
         android:orderInCategory="1"
-        app:showAsAction="never"
-        android:title="@string/nav_setupwizard" />
+        android:title="@string/nav_setupwizard"
+        app:showAsAction="never" />
 </menu>
