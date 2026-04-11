@@ -31,7 +31,6 @@
     <string name="result">Resultat</string>
     <string name="settings">Inställningar</string>
     <string name="statuslights">Statuslampor</string>
-    <string name="do_ns_upload_title">Ladda upp BG-data till Nightscout</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="value_unavailable_short">-</string>
     <!-- master_password moved to core/keys/strings.xml -->
