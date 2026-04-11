@@ -47,7 +47,6 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="result">Resultat</string>
     <string name="settings">Innstillinger</string>
-    <string name="nav_preferences">Innstillinger</string>
     <string name="simple_mode">Enkelmodus</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
@@ -58,7 +57,6 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Statuslys</string>
     <string name="copy_existing_values">Kopier NS-innstillinger (hvis det finnes)?</string>
-    <string name="do_ns_upload_title">Last opp BS-data til NS</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
     <string name="configbuilder_smoothing">Utjevning</string>
@@ -741,7 +739,6 @@
     <string name="export_failed">Mislyktes</string>
     <string name="export_alert">Varsel</string>
     <!-- Export dialog strings -->
-    <string name="master_password_missing">Hovedpassord er ikke angitt!\n\nAngi hovedpassordet ditt i innstillingene (%1$s)</string>
     <string name="export_to">Eksporter innstillinger til</string>
     <string name="password_preferences_encrypt_prompt">Du vil bli bedt om å oppgi hovedpassordet, som vil brukes til å kryptere eksporterte innstillinger.</string>
     <string name="preferences_export_canceled">Eksporten ble avbrutt! Innstillingene ble IKKE eksportert!</string>
