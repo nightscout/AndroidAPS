@@ -22,7 +22,6 @@
     <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Einstellung aus NS kopieren</string>
     <string name="a11y_graph">Diagramm</string>
     <string name="a11y_insulin_label">Insulin</string>
     <string name="chart_menu">Diagrammmenü</string>
@@ -33,9 +32,7 @@
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
-    <string name="overview_buttons_selection">Schaltflächen</string>
     <string name="data_status">Status BZ-Daten</string>
-    <string name="fill_bolus_title">Füll-/Vorfüll-Standardmengen</string>
     <string name="run_question">%s ausführen?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
@@ -59,7 +56,6 @@
     <string name="lowres_description">Darstellung niedrige Auflösung</string>
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
-    <string name="skin">Erscheinungsbild</string>
     <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
