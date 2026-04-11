@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Întârziere până la pornirea bolusului (s)</string>
     <string name="medtronic_pump_max_bolus">Bolusul maxim în pompă (U)</string>
     <string name="medtronic_pump_max_basal">Bazală maximă în pompă (U/h)</string>
-    <string name="medtronic_pump_encoding">Criptare Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Porniți și reglați</string>
     <string name="medtronic_custom_action_clear_bolus_block">Ștergeți blocajul de bolus</string>
     <string name="medtronic_custom_action_reset_rileylink">Resetați dispozitivull RileyLink</string>
