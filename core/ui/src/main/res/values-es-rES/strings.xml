@@ -47,6 +47,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="result">Resultado</string>
     <string name="settings">Ajustes</string>
+    <string name="nav_preferences">Preferencias</string>
     <string name="simple_mode">Modo simple</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
@@ -777,6 +778,8 @@
     <string name="send_logs">Enviar registros</string>
     <string name="file_management">Gestión de archivos</string>
     <string name="database_management">Gestión de la base de datos</string>
+    <string name="data_choices">Opciones de datos</string>
+    <string name="unattended_settings_export">Exportación de ajustes desatendida</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Configurar niveles de detalle de los registros</string>
     <string name="maintenance_send_logs_desc">Compartir archivos de registro para solución de problemas</string>
