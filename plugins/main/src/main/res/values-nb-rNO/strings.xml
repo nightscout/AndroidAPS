@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop er deaktivert</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Actions -->
-    <string name="actions">Handlinger</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
-    <string name="actions_shortname">HAND</string>
-    <string name="status">Status</string>
-    <string name="pump_actions">Pumpehandlinger</string>
-    <string name="tempbasal_button">Midlertidig basal</string>
-    <string name="extended_bolus_button">Forlenget bolus</string>
-    <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
-    <string name="tools">Verktøy</string>
     <string name="nav_history_browser">Historikk</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">alder:</string>
