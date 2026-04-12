@@ -299,8 +299,8 @@
     <string name="lang_zh_tw">Chinese Traditional</string>
     <string name="lang_zh_cn">Cinese semplificato</string>
     <string name="pref_title_skin">Tema</string>
-    <string name="pref_title_patient_name">Nome paziente</string>
-    <string name="pref_summary_patient_name">Fornisci il nome del paziente o il nickname per distinguere questa configurazione tra altre</string>
+    <string name="pref_title_patient_name">Nome</string>
+    <string name="pref_summary_patient_name">Nome per identificare questa istanza AAPS (mostrata nei report e sincronizzazione)</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Directory AAPS</string>
     <!-- StringKey: Protection preferences -->
