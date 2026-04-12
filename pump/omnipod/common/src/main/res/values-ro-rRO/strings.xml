@@ -51,7 +51,6 @@
     <string name="omnipod_common_overview_firmware_version">Versiune Firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Timp pompă</string>
     <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minute)</string>
-    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Peste %1$s rămas</string>
     <string name="omnipod_common_uncertain">nesigur</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Dezactivare pompă</string>
