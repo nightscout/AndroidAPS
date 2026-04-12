@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Bolus constraint applied</string>
     <string name="carbs_constraint_applied">Carbs constraint applied</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Dialog canceled</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
@@ -100,11 +99,9 @@
     <string name="cannot_delete_last_insulin">Cannot delete the last insulin</string>
     <string name="cannot_delete_active_insulin">Cannot delete the active insulin</string>
 
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentage</string>
-    <string name="permanent_profile_switch">Permanent (0 = no duration limit)</string>
 
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
