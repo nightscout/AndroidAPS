@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">El campo no debe estar vacío</string>
+    <string name="error_url_not_valid">La URL web no es válida</string>
+    <string name="error_mustbe4hexadidits">Debe tener 4 caracteres de ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Tratamientos</string>
     <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
@@ -69,7 +72,7 @@
     <string name="protection">Protección</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
-    <string name="ue_export_to_csv">Exportar entradas de usuario a Excel (csv)</string>
+    <string name="ue_export_to_csv">Exportar entradas de usuario a Excel (CSV)</string>
     <string name="confirm">Confirmar</string>
     <string name="pump">Bomba</string>
     <string name="pump_management">Bomba</string>
@@ -307,11 +310,11 @@
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
     <string name="careportal_pump_site_change">Cambio de cánula</string>
-    <string name="cgm_sensor_insert">Inserción de sensor</string>
+    <string name="cgm_sensor_insert">Inserción del sensor MCG</string>
     <string name="careportal_pump_site_management">Sitios de la Bomba</string>
     <string name="careportal_cgm_site_management">Sitios del MCG</string>
-    <string name="careportal_cgmsensorstart">Inicio de Sensor</string>
-    <string name="careportal_cgm_sensor_stop">Detener sensor MCG</string>
+    <string name="careportal_cgmsensorstart">Inicio del sensor MCG</string>
+    <string name="careportal_cgm_sensor_stop">Parada del sensor MCG</string>
     <string name="careportal_dad_alert">D.A.D Alerta</string>
     <string name="careportal_insulin_cartridge_change">Cambio de cartucho de insulina</string>
     <string name="careportal_profileswitch">Cambio de perfil</string>
@@ -739,6 +742,7 @@
     <string name="export_failed">Fallido</string>
     <string name="export_alert">ALERTA</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">¡No se ha establecido la contraseña maestra!\n\nPor favor, establece primero una contraseña maestra e inténtalo de nuevo.</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="password_preferences_encrypt_prompt">Se te pedirá la contraseña maestra, que se utilizará para cifrar las preferencias exportadas.</string>
     <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
@@ -764,8 +768,8 @@
     <string name="import_settings_cloud">Opciones de importación (Nube)</string>
     <string name="import_settings_both">Opciones de importación (Local / Nube)</string>
     <string name="send_logs_to_cloud">Exportar registros a la nube</string>
-    <string name="export_csv_to_cloud">Exportar entradas de usuario a la nube (csv)</string>
-    <string name="export_csv_to_local">Exportar entradas de usuario a local (csv)</string>
+    <string name="export_csv_to_cloud">Exportar entradas de usuario a la nube (CSV)</string>
+    <string name="export_csv_to_local">Exportar entradas de usuario a local (CSV)</string>
     <string name="setup_cloud_directory_first">Configure primero el directorio en la nube para usar las opciones de exportación</string>
     <string name="cloud_token_expired_or_invalid">La autorización del almacenamiento en la nube ha caducado o no es válida. Por favor, vuelva a autorizar.</string>
     <!-- Export destination chip labels -->
@@ -837,9 +841,9 @@
     <string name="nav_setupwizard_desc">Configurar AAPS paso a paso</string>
     <string name="statistics">Estadísticas</string>
     <string name="statistics_desc">Ver estadísticas e informes</string>
-    <string name="tdd_cycle_pattern">Patrón de Ciclo de Insulina Total Diaria</string>
+    <string name="tdd_cycle_pattern">Patrón de ciclo de insulina total diaria</string>
     <string name="tdd_cycle_pattern_desc">Superponer totales diarios de insulina en ciclos de 28 días para detectar patrones recurrentes</string>
-    <string name="nav_profile_helper">Ayudante de Perfil</string>
+    <string name="nav_profile_helper">Ayudante de perfil</string>
     <string name="nav_profile_helper_desc">Crea tu perfil basándote en el peso o en la TDD (Dosis Diaria Total)</string>
     <string name="quick_launch_configure">Configurar Lanzamiento Rápido</string>
     <string name="quick_launch_configure_desc">Personalizar botones de acción rápida en la vista general</string>
