@@ -115,7 +115,6 @@
     <string name="equil_history_item18">Unormal infusjon stoppet</string>
     <string name="equil_common_overview_button_suspend_delivery">Pause</string>
     <string name="equil_common_overview_button_resume_delivery">Gjenoppta tilførselen</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fE/t @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">For litt siden</string>
     <string name="equil_common_less_than_a_minute_ago">Mindre enn ett minutt siden</string>
     <string name="equil_common_time_ago">%1$s siden</string>
