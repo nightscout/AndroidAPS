@@ -92,6 +92,9 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (mai puțin de 1 min rămas)</string>
     <string name="combov2_load_tdds_cancelled">Încărcarea DZT a fost anulată</string>
     <string name="combov2_retrieving_tdds_failed">Preluarea DZT a eșuat</string>
+    <string name="combov2_battery_empty">Gol</string>
+    <string name="combov2_battery_low">Scăzut</string>
+    <string name="combov2_battery_full">Plin</string>
     <string name="combov2_battery_low_warning">Nivelul bateriei pompei este scăzut</string>
     <string name="combov2_reservoir_low_warning">Nivelul rezervorului pompei este scăzut</string>
     <string name="combov2_setting_tbr_succeeded">Setarea RBT a reușit</string>
