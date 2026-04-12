@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop Desactivado</string>
     <string name="calculator_label">Calculadora</string>
-    <!-- Actions -->
-    <string name="actions">Acções</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
-    <string name="actions_shortname">ACÇ</string>
-    <string name="tempbasal_button">Basal Temporária</string>
-    <string name="extended_bolus_button">Bólus Prolongado</string>
-    <string name="extended_bolus_cancel_button">Cancelar Bólus Prolongado</string>
-    <string name="tools">Ferramentas</string>
     <string name="nav_history_browser">Navegador do histórico</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">idade:</string>
