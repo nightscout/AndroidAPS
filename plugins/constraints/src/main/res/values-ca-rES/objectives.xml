@@ -24,7 +24,6 @@
     <string name="objectives_usedisconnectpump">Simuleu una dutxa. Desconnecteu la bomba durant 1h (pulsació llarga sobre la icona \"llaç obert\")</string>
     <string name="objectives_usereconnectpump">... i torneu a connectar de la mateixa manera</string>
     <string name="objectives_usetemptarget">Creeu un objectiu temporal personalitzat d\'una durada de 10 minuts (pulsació llarga sobre l\'objectiu actual)</string>
-    <string name="objectives_useactions">Al Configurador, activeu el plugin Accions, feu-lo visible i mostreu el seu contingut des del menú superior</string>
     <string name="objectives_useloop">Mostreu el contingut del plugin Loop (llaç)</string>
     <string name="objectives_usescale">Utilitzeu la funció d\'escala fent pulsació llarga sobre la gràfica de glucèmia</string>
     <string name="objectives_exam_objective">Demostreu els vostres coneixements</string>
