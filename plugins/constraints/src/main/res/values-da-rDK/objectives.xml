@@ -37,7 +37,6 @@
     <string name="objectives_usedisconnectpump">Simulér brusebad. Afbryd pumpen i 1t (Tryk og hold på Open Loop)</string>
     <string name="objectives_usereconnectpump">... og genforbind på samme måde</string>
     <string name="objectives_usetemptarget">Opret brugerdefinerede midlertidige mål med 10 min varighed (Tryk og hold på dit nuværende mål)</string>
-    <string name="objectives_useactions">I Konfigurations bygger, aktivér Handlings plugin, gør det synligt og vis dets indhold fra top menuen</string>
     <string name="objectives_useloop">Vis indhold af Loop plugin</string>
     <string name="objectives_usescale">Brug skala-funktion ved at trykke på BG-diagrammet længe</string>
     <string name="objectives_exam_objective">Bevis din viden</string>
