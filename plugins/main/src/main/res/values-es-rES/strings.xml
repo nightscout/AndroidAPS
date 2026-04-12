@@ -21,7 +21,7 @@
     <string name="pb_label">Batería de bomba</string>
     <string name="cannula">Cánula</string>
     <string name="statuslights_cannula_age">Edad de la cánula</string>
-    <string name="statuslights_patch_pump_age">Edad de la bomba parche</string>
+    <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
     <string name="patch_pump">Bomba parche</string>
     <!-- Overview -->
     <string name="graph_scale_6h">6h</string>
