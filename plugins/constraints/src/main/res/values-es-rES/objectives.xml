@@ -39,12 +39,8 @@
     <string name="objectives_usage_objective">Aprenda cómo controlar AAPS</string>
     <string name="objectives_usage_gate">Ejecutar diferentes acciones en AAPS</string>
     <string name="objectives_usage_learned">Aprendiste a manejar los conceptos básicos de AAPS. Los controles principales se encuentran en la pantalla de Inicio, accesible al hacer clic o hacer clic largo, más controles están en la pantalla de Acciones Deberías saber cómo poner una pantalla de plugin en la parte superior del menú desplegable o dejar que se muestre en la parte superior izquierda de la lista de plugins habilitados.</string>
-    <string name="objectives_useprofileswitch">Establecer perfil 90% durante 10 min (Pulsación larga en nombre del perfil en Resumen)</string>
-    <string name="objectives_usedisconnectpump">Simular ducha. Desconectar bomba durante 1h (Pulsación larga en el bucle abierto)</string>
     <string name="objectives_usereconnectpump">... y volver a conectar de la misma manera</string>
-    <string name="objectives_usetemptarget">Crear un objetivo temporal personalizado con 10 min de duración (Pulsación larga en tu objetivo actual)</string>
     <string name="objectives_useloop">Mostrar contenido del plugin Bucle</string>
-    <string name="objectives_usescale">Usar función de escala mediante un gráfico BG pulsado largo</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>
     <string name="objectives_exam_gate">Estudia las preguntas. Se te dan cuatro respuestas posibles para cada pregunta. Puede haber más de una respuesta correcta. Por favor, marca todas las que son correctas y seleccione VERIFICAR.</string>
     <string name="objectives_exam_learned_prerequisites">No necesitas ser desarrollador, pero necesitas Nightscout para pasar los objetivos, una bomba compatible y un ordenador para construir AAPS por primera vez y para futuras actualizaciones</string>
