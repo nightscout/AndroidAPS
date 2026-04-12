@@ -1,29 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Modo sencillo</string>
+    <string name="pref_title_insulin_concentration">Soporte para concentración de insulina</string>
+    <string name="pref_summary_insulin_concentration">Habilitar soporte para diferentes concentraciones de insulina (U200, U300, etc.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Mantener pantalla encendida</string>
+    <string name="pref_summary_keep_screen_on">Evita que Android apague la pantalla. Consumirá mucha energía cuando el dispositivo no esté conectado a una toma de corriente.</string>
+    <string name="pref_title_show_treatment_button">Mostrar botón de tratamientos</string>
+    <string name="pref_title_show_wizard_button">Mostrar botón del asistente</string>
+    <string name="pref_title_show_insulin_button">Mostrar botón de insulina</string>
+    <string name="pref_title_show_carbs_button">Mostrar botón de carbohidratos</string>
+    <string name="pref_title_show_cgm_button">Mostrar botón de MCG</string>
+    <string name="pref_summary_show_cgm_button">Abre xDrip+ o la aplicación de Dexcom (puedes usar el botón de retroceso para volver a AAPS).</string>
+    <string name="pref_title_show_calibration_button">Mostrar botón de calibración</string>
+    <string name="pref_summary_show_calibration_button">Envía una calibración a xDrip+ (asegúrese de que la opción \'Aceptar calibraciones\' esté activada en xDrip+ dentro de la configuración entre aplicaciones)</string>
+    <string name="pref_title_show_notes_in_dialogs">Mostrar notas en los diálogos</string>
+    <string name="pref_title_use_bolus_advisor">Usar asistente de bolo</string>
+    <string name="pref_summary_use_bolus_advisor">Habilitar el asistente de bolo, que ayuda con los cálculos del bolo durante glucemias elevadas.</string>
+    <string name="pref_title_use_bolus_reminder">Usar recordatorio de bolo</string>
+    <string name="pref_summary_use_bolus_reminder">Activar las notificaciones de recordatorio de bolo para ayudar a realizar el seguimiento de la administración de insulina.</string>
+    <string name="pref_title_use_super_bolus">Usar súper bolo</string>
+    <string name="pref_summary_use_super_bolus">Habilita la función de súper bolo, la cual toma prestada insulina de la basal para una administración inmediata.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">Guardián BT</string>
+    <string name="pref_summary_bt_watchdog">Desactiva el Bluetooth del teléfono durante un segundo si no es posible conectar con la bomba. Esto puede ayudar en algunos teléfonos donde el protocolo (stack) de Bluetooth se bloquea.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Alertar si no se reciben datos de glucemia (BG)</string>
+    <string name="pref_title_alert_pump_unreachable">Alerta si la bomba no es alcanzable</string>
+    <string name="pref_title_alert_carbs_required">Alerta de carbohidratos necesarios</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Emitir alarmas urgentes como notificaciones de Android</string>
+    <string name="pref_title_alert_increase_volume">Aumentar gradualmente el volumen de las notificaciones</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Subir datos de glucemia (BG) a Nightscout</string>
+    <string name="pref_title_bg_source_create_sensor_change">Registrar cambio de sensor</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Crea un evento de terapia de cambio de sensor cuando se inserta el sensor.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Usar sensibilidad dinámica</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Usa DynamicISF para el ajuste de la sensibilidad en lugar de Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Usar Autosens</string>
+    <string name="pref_title_aps_use_smb">Habilitar SMB</string>
+    <string name="pref_summary_aps_use_smb">Habilita los SMB (Súper Micro Bolus). El SMB administra insulina de forma inmediata para responder a los aumentos de glucosa en sangre.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Habilitar SMB con objetivo temporal elevado</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Permitir SMB cuando hay un objetivo temporal alto activo.</string>
+    <string name="pref_title_aps_use_smb_always">Habilitar SMB siempre</string>
+    <string name="pref_summary_aps_use_smb_always">Habilitar SMB siempre (independientemente de bolo o COB)</string>
+    <string name="pref_title_aps_use_smb_with_cob">Habilitar SMB con COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Habilitar SMB cuando hay carbohidratos activos</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Habilitar SMB con objetivo temporal bajo</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Habilitar SMB cuando hay un objetivo temporal bajo activo</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Habilitar SMB después de comer</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Habilitar SMB después de registrar carbohidratos</string>
+    <string name="pref_title_aps_use_uam">Habilitar UAM</string>
+    <string name="pref_summary_aps_use_uam">Habilitar la detección y tratamiento de comidas no anunciadas (UAM)</string>
+    <string name="pref_title_aps_sensitivity_raises_target">La sensibilidad eleva el objetivo</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">La sensibilidad detecta y eleva el objetivo de glucosa</string>
+    <string name="pref_title_aps_resistance_lowers_target">La resistencia baja el objetivo</string>
+    <string name="pref_summary_aps_resistance_lowers_target">La resistencia detecta y baja el objetivo de glucosa</string>
+    <string name="pref_title_aps_always_use_short_deltas">Usar siempre el delta promedio corto</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Usar siempre el delta promedio corto en lugar del delta simple</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
+    <string name="pref_title_sms_report_pump_unreachable">Informar de que la bomba no es alcanzable mediante SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Enviar notificación por SMS cuando la bomba no sea alcanzable</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Subir el estado de la bomba a NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_log_app_start">Registrar evento de inicio de la aplicación</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Crear anuncios a partir de errores</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Crear anuncios de carbohidratos necesarios</string>
+    <string name="pref_title_ns_slow_sync">Usar sincronización lenta (Slow Sync)</string>
+    <string name="pref_title_ns_use_ws">Usar WebSockets</string>
+    <string name="pref_summary_ns_use_ws">Usar WebSockets para comunicación en tiempo real con Nightscout</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Solo WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Solo durante la carga</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Enviar estado a xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Enviar IOB detallado</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Enviar información detallada de IOB a xDrip+ para esferas de reloj</string>
+    <string name="pref_title_xdrip_send_bgi">Mostrar BGI (Blood Glucose Impact)</string>
+    <string name="pref_summary_xdrip_send_bgi">Mostrar el impacto de la glucemia en en la línea de estado de xDrip+</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Control desde el reloj</string>
+    <string name="pref_summary_wear_control">Controlar AAPS desde el reloj Android Wear</string>
+    <string name="pref_title_wear_wizard_bg">Incluir glucosa en el asistente</string>
+    <string name="pref_title_wear_wizard_tt">Incluir objetivo temporal en el asistente</string>
+    <string name="pref_title_wear_wizard_trend">Incluir tendencia en el asistente</string>
+    <string name="pref_title_wear_wizard_cob">Incluir COB en el asistente</string>
+    <string name="pref_title_wear_wizard_iob">Incluir IOB en el asistente</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Autorizar esferas de reloj personalizadas</string>
+    <string name="pref_title_wear_notify_on_smb">Notificar sobre SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">Enviar notificaciones al reloj cuando se administra un SMB</string>
+    <string name="pref_title_wear_broadcast_data">Transmitir datos al reloj</string>
+    <string name="pref_summary_wear_broadcast_data">Transmitir datos de AAPS a aplicaciones de reloj de terceros mediante \"intent\"</string>
     <!-- Wizard preferences -->
+    <string name="pref_title_wizard_calculation_visible">Mostrar cálculo del asistente</string>
+    <string name="pref_title_wizard_correction_percent">Usar porcentaje de corrección</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Gestionar la rotación del lugar de inserción de la bomba</string>
+    <string name="pref_title_site_rotation_manage_cgm">Gestionar la rotación del sitio del MCG</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Incremento del botón de carbohidratos en 1</string>
+    <string name="pref_title_carbs_button_increment_2">Incremento del botón de carbohidratos en 2</string>
+    <string name="pref_title_carbs_button_increment_3">Incremento del botón de carbohidratos en 3</string>
+    <string name="carb_increment_button_message">Incremento de carbohidratos por pulsación</string>
+    <string name="pref_title_cage_warning">Umbral de aviso por antigüedad de la cánula</string>
+    <string name="pref_title_cage_critical">Umbral crítico de antigüedad de la cánula</string>
+    <string name="pref_title_iage_warning">Umbral de aviso por antigüedad de la insulina</string>
+    <string name="pref_title_iage_critical">Umbral crítico de antigüedad de la insulina</string>
+    <string name="pref_title_sage_warning">Umbral de aviso por antigüedad del sensor</string>
+    <string name="pref_title_sage_critical">Umbral crítico de antigüedad del sensor</string>
+    <string name="pref_title_sbat_warning">Umbral de aviso por nivel de batería del sensor</string>
+    <string name="pref_title_sbat_critical">Umbral crítico de nivel de batería del sensor</string>
+    <string name="pref_title_bage_warning">Umbral de advertencia para la antigüedad de la batería de la bomba</string>
+    <string name="pref_title_bage_critical">Umbral crítico para la antigüedad de la batería de la bomba</string>
+    <string name="pref_title_res_warning">Umbral de aviso por nivel del reservorio</string>
+    <string name="pref_title_res_critical">Umbral crítico de nivel del reservorio</string>
+    <string name="pref_title_batt_warning">Umbral de advertencia para el nivel de batería de la bomba</string>
+    <string name="pref_title_batt_critical">Umbral crítico para el nivel de batería de la bomba</string>
+    <string name="pref_title_bolus_percentage">Porcentaje de bolo</string>
+    <string name="deliverpartofboluswizard">Aplicar este valor a la corrección de glucosa y carbohidratos en el resultado del asistente de bolo</string>
+    <string name="pref_title_reset_bolus_percentage_time">Tiempo de restablecimiento del porcentaje de bolo</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Entregar bolo completo (100%) si la glucemia es anterior a</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Tiempo de espera de protección</string>
+    <string name="pref_title_protection_type_application">Nivel 0: Protección de la aplicación</string>
+    <string name="pref_summary_protection_type_application">Inicio de la aplicación. Independiente de otros niveles</string>
+    <string name="pref_title_protection_type_bolus">Nivel 1: Protección de bolo</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <!-- IntKey: Safety preferences -->
     <!-- IntKey: Loop preferences -->
     <!-- IntKey: APS preferences -->
     <!-- IntKey: Maintenance preferences -->
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_pump_unreachable_threshold">Umbral de bomba no alcanzable</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
     <!-- IntKey: SMS preferences -->
@@ -32,7 +144,38 @@
     <!-- IntKey: Site rotation preferences -->
     <!-- StringKey: General preferences -->
     <!-- Formatted unit strings with value only -->
+    <string name="units_format_sec">%1$d seg</string>
+    <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.0f h</string>
+    <string name="units_format_days">%1$d días</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mmol">%1$s mmol/L</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
+    <string name="units_format_sec_range">%1$d seg (%2$d - %3$d)</string>
+    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
+    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
+    <string name="units_format_days_range">%1$d días (%2$d - %3$d)</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="pref_title_language">Idioma</string>
+    <string name="lang_default">Predeterminado del sistema</string>
+    <string name="lang_en">Inglés</string>
+    <string name="pref_title_patient_name">Nombre</string>
+    <string name="pref_summary_patient_name">Nombre para identificar esta instancia de AAPS (se muestra en informes y sincronización)</string>
     <!-- StringKey: Directory preferences -->
     <!-- StringKey: Protection preferences -->
     <!-- Theme switcher dark and light mode-->
@@ -41,11 +184,13 @@
     <!-- StringKey: Automation preferences -->
     <!-- StringKey: SMS preferences -->
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Tipo de bomba</string>
     <!-- StringKey: NS Client preferences -->
     <!-- DoubleKey: Overview preferences -->
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
+    <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los límites de seguridad clave de OpenAPS, y la otra parte de la regla de seguridad \"3x máximo diario; 4x actual\". Esto significa que tu basal, independientemente del basal máximo configurado en tu bomba, no puede ser superior a este número multiplicado por tu nivel de basal actual. El objetivo es evitar que los usuarios entren en terreno peligroso al configurar basales máximos excesivamente altos antes de comprender cómo funciona el algoritmo. De nuevo, el valor predeterminado es 4x; la mayoría de las personas nunca necesitarán ajustar esto y, en su lugar, es más probable que deban ajustar otros parámetros si sienten que están \"chocando\" con este límite de seguridad.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
     <!-- IntentKey preferences -->
