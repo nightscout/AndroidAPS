@@ -42,7 +42,6 @@
     <string name="objectives_usedisconnectpump">Předstírejte, že se jdete sprchovat. Odpojte pumpu na 1 h (Dlouze přidržte tlačítko Otevřená smyčka)</string>
     <string name="objectives_usereconnectpump">... a stejným způsobem ji znovu připojte</string>
     <string name="objectives_usetemptarget">Vytvořte vlastní dočasný cíl s trváním 10 min (Dlouze přidržte aktuální cíl)</string>
-    <string name="objectives_useactions">Na kartě Konfigurace povolte modul Akce, aktivujte jeho zobrazení a zobrazte jeho obsah z horní nabídky</string>
     <string name="objectives_useloop">Zobrazte obsah modulu Smyčka</string>
     <string name="objectives_usescale">Přepněte režim zobrazení dlouhým stisknutím grafu glykémie</string>
     <string name="objectives_exam_objective">Prokažte své znalosti</string>
