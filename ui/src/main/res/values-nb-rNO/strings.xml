@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
     <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
     <string name="temp_target_short">Midlertidig mål</string>
-    <string name="dialog_canceled">Dialogvindu avbrutt</string>
     <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
     <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
     <string name="start_hypo_tt">Start midlertidig mål for Hypo</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">Last topp fra</string>
     <string name="cannot_delete_last_insulin">Kan ikke slette siste insulin</string>
     <string name="cannot_delete_active_insulin">Kan ikke slette aktivt insulin</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
     <string name="timeshift_label">Tidsforskyving</string>
     <string name="percentage_label">Prosent</string>
-    <string name="permanent_profile_switch">Permanent (0 = ingen varighetsgrense)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Pause loop i 1t</string>
     <string name="suspendloopfor2h">Pause loop i 2t</string>
