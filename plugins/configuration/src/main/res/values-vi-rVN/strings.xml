@@ -27,7 +27,6 @@
     <string name="exitwizard">Bỏ qua cài đặt nhanh</string>
     <string name="setupwizard_sensitivity_description">Plugin Sensitivity được sử dụng để phát hiện độ nhạy và tính toán COB. Để biết thêm thông tin, hãy truy cập:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Chọn một trong các thuật toán có sẵn. Chúng được sắp xếp từ cũ nhất đến mới nhất. Thuật toán mới thường mạnh mẽ và điều chỉnh tích cực hơn. Do đó, nếu bạn là người mới dùng loop, có thể nên bắt đầu với AMA thay vì thuật toán mới nhất. Đừng quên đọc tài liệu OpenAPS và cấu hình trước khi sử dụng.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vui lòng cấu hình RileyLink của bạn bên dưới. Sau khi chọn RileyLink, bạn có thể tiếp tục cài đặt khi trạng thái RileyLink hiển thị \'Đã kết nối\'. Việc này có thể mất khoảng một phút.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Lưu ý:</b> Tiếp tục cài đặt sau khi bơm được thiết lập.\n</string>
     <string name="startobjective">Bắt đầu mục tiêu đầu tiên của bạn</string>
