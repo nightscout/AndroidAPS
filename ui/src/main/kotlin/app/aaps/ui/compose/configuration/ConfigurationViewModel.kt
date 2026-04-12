@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ConfigPluginUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -157,9 +158,6 @@ class ConfigurationViewModel @Inject constructor(
             )
         }
 
-        if (config.APS || config.PUMPCONTROL || config.isEngineeringMode()) {
-            addCategory(PluginType.INSULIN, app.aaps.core.ui.R.string.configbuilder_insulin)
-        }
         if (!config.AAPSCLIENT) {
             addCategory(PluginType.BGSOURCE, app.aaps.core.ui.R.string.configbuilder_bgsource)
             addCategory(PluginType.SMOOTHING, app.aaps.core.ui.R.string.configbuilder_smoothing)

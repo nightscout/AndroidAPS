@@ -3,22 +3,7 @@ package app.aaps.ui.compose.configuration
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.plugin.PluginType
-
-/**
- * Immutable UI model for a plugin in the configuration screen.
- * All mutable PluginBase state is snapshotted at build time.
- */
-@Immutable
-data class ConfigPluginUiModel(
-    val id: String,
-    val name: String,
-    val description: String?,
-    val menuIcon: Int,
-    val composeIcon: ImageVector?,
-    val isEnabled: Boolean,
-    val canToggle: Boolean,
-    val showPreferences: Boolean
-)
+import app.aaps.core.ui.compose.ConfigPluginUiModel
 
 /**
  * Immutable UI model for a plugin category in the configuration screen.

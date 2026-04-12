@@ -2,12 +2,14 @@ package app.aaps.plugins.sensitivity
 
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -37,7 +39,8 @@ class SensitivityAAPSPlugin @Inject constructor(
     preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val activePlugin: ActivePlugin
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
@@ -47,6 +50,11 @@ class SensitivityAAPSPlugin @Inject constructor(
         .description(R.string.description_sensitivity_aaps),
     aapsLogger, rh, preferences
 ) {
+
+    override fun specialShowInListCondition(): Boolean {
+        val aps = activePlugin.activeAPS ?: return true
+        return aps.algorithm == APSResult.Algorithm.AMA
+    }
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         val hoursForDetection = preferences.get(IntKey.AutosensPeriod)

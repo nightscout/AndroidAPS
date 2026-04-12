@@ -659,6 +659,8 @@
     <string name="wizard_carb_time">Carb time</string>
     <string name="carb_time_now">Now</string>
     <string name="change">Change</string>
+    <string name="grant">Grant</string>
+    <string name="set">Set</string>
     <string name="wizard_set_alarm">Set alarm</string>
     <string name="wizard_use_percentage">Use percentage</string>
     <string name="wizard_include_bg">Include BG</string>

@@ -330,8 +330,8 @@
     <string name="lang_zh_tw">Chinese, Traditional</string>
     <string name="lang_zh_cn">Chinese, Simplified</string>
     <string name="pref_title_skin">Skin</string>
-    <string name="pref_title_patient_name">Patient name</string>
-    <string name="pref_summary_patient_name">Please provide patient name or nickname to differentiate among multiple setups</string>
+    <string name="pref_title_patient_name">Name</string>
+    <string name="pref_summary_patient_name">Name to identify this AAPS instance (shown in reports and sync)</string>
 
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS directory</string>

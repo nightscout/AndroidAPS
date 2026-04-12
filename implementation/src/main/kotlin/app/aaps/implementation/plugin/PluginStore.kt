@@ -169,6 +169,7 @@ class PluginStore @Inject constructor(
             (activeSensitivityStore as PluginBase).setPluginEnabled(PluginType.SENSITIVITY, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SensitivityInterface")
         }
+        activeSensitivityStore = fallbackIfNotVisible(activeSensitivityStore as PluginBase, PluginType.SENSITIVITY) as Sensitivity
         setFragmentVisibilities((activeSensitivityStore as PluginBase).name, pluginsInCategory, PluginType.SENSITIVITY)
 
         // PluginType.SMOOTHING
@@ -210,6 +211,21 @@ class PluginStore @Inject constructor(
         for (p in pluginsInCategory)
             if (p.name != activePluginName)
                 p.setFragmentVisible(pluginType, false)
+    }
+
+    /**
+     * If the active plugin is no longer visible in its category (e.g., sensitivity plugin
+     * incompatible with the current APS algorithm), disable it and fall back to the default.
+     */
+    private fun fallbackIfNotVisible(active: PluginBase, type: PluginType): PluginBase {
+        if (!active.showInList(type)) {
+            active.setPluginEnabled(type, false)
+            val default = getDefaultPlugin(type)
+            default.setPluginEnabled(type, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Falling back ${type.name} from ${active.name} to ${default.name}")
+            return default
+        }
+        return active
     }
 
     private fun getTheOneEnabledInArray(pluginsInCategory: ArrayList<PluginBase>, type: PluginType): PluginBase? {

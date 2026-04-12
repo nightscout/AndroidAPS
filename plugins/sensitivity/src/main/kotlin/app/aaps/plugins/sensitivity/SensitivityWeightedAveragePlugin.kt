@@ -3,6 +3,7 @@ package app.aaps.plugins.sensitivity
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
@@ -48,6 +49,11 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         .description(R.string.description_sensitivity_weighted_average),
     aapsLogger, rh, preferences
 ) {
+
+    override fun specialShowInListCondition(): Boolean {
+        val aps = activePlugin.activeAPS ?: return true
+        return aps.algorithm == APSResult.Algorithm.AMA
+    }
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         val hoursForDetection = preferences.get(IntKey.AutosensPeriod)

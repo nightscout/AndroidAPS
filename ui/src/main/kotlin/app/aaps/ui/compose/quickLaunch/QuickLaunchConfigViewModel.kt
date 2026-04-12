@@ -7,10 +7,10 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
+import app.aaps.core.interfaces.tempTargets.toTTPresets
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
-import app.aaps.core.interfaces.tempTargets.toTTPresets
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -153,7 +153,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
     private fun buildPluginGroups(selectedSet: Set<String>): List<PluginGroup> {
         val typeOrder = listOf(
             PluginType.PUMP, PluginType.BGSOURCE, PluginType.APS,
-            PluginType.SENSITIVITY, PluginType.INSULIN, PluginType.SMOOTHING,
+            PluginType.SENSITIVITY, PluginType.SMOOTHING,
             PluginType.SYNC, PluginType.GENERAL
         )
         val typeLabelMap = mapOf(
@@ -161,7 +161,6 @@ class QuickLaunchConfigViewModel @Inject constructor(
             PluginType.BGSOURCE to app.aaps.core.ui.R.string.configbuilder_bgsource,
             PluginType.APS to app.aaps.core.ui.R.string.configbuilder_aps,
             PluginType.SENSITIVITY to app.aaps.core.ui.R.string.configbuilder_sensitivity,
-            PluginType.INSULIN to app.aaps.core.ui.R.string.configbuilder_insulin,
             PluginType.SMOOTHING to app.aaps.core.ui.R.string.configbuilder_smoothing,
             PluginType.SYNC to app.aaps.core.ui.R.string.configbuilder_sync,
             PluginType.GENERAL to app.aaps.core.ui.R.string.configbuilder_general
