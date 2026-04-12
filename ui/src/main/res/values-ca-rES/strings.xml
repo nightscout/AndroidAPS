@@ -34,7 +34,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">No lliurar bolus, només anotar</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilitzar %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalatge horari</string>
     <string name="percentage_label">Percentatge</string>
