@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop 중지됨</string>
     <string name="calculator_label">계산기</string>
-    <!-- Actions -->
-    <string name="actions">실행</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">임시Basal</string>
-    <string name="extended_bolus_button">확장 Bolus</string>
-    <string name="extended_bolus_cancel_button">확장Bolus 취소</string>
-    <string name="tools">도구</string>
     <string name="nav_history_browser">이력 브라우저</string>
     <string name="sensor_label">센서</string>
     <string name="age_label">나이:</string>
