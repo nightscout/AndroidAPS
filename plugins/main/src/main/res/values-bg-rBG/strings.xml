@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop изключен</string>
     <string name="calculator_label">Калкулатор</string>
-    <!-- Actions -->
-    <string name="actions">Действия</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Бутони за бърз достъп до основни функции</string>
-    <string name="actions_shortname">ДЕЙСТВ</string>
-    <string name="tempbasal_button">Временен базал</string>
-    <string name="extended_bolus_button">Удължен болус</string>
-    <string name="extended_bolus_cancel_button">Спри удължен болус</string>
-    <string name="tools">Инструменти</string>
     <string name="nav_history_browser">История</string>
     <string name="sensor_label">Сензор</string>
     <string name="age_label">възраст:</string>
