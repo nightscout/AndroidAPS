@@ -38,7 +38,6 @@
     <string name="objectives_usedisconnectpump">דמו מקלחת. הגדירו ניתוק משאבה במשך שעה אחת (לחיצה ארוכה על לולאה פתוחה)</string>
     <string name="objectives_usereconnectpump">... והתחברו מחדש באותה הדרך</string>
     <string name="objectives_usetemptarget">צרו ערך מטרה זמני מותאם אישית במשך 10 דקות (לחיצה ארוכה על ערך המטרה הנוכחי)</string>
-    <string name="objectives_useactions">ב-בונה התצורה יש להפעיל את תוסף הפעולות, להפוך אותו לגלוי ולהציג את תוכנו בתפריט העליון</string>
     <string name="objectives_useloop">הצג תוכן של תוסף לולאה</string>
     <string name="objectives_usescale">השתמשו בפונקציית קנה המידה ע\"י לחיצה ארוכה על תרשים הסוכר</string>
     <string name="objectives_exam_objective">הוכיחו את הידע שלכם\\ן</string>
