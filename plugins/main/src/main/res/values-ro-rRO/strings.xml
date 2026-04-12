@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Buclă inactivă</string>
     <string name="calculator_label">Calculator</string>
-    <!-- Actions -->
-    <string name="actions">Acțiuni</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Butoane pentru accesarea celor mai comune facilități</string>
-    <string name="actions_shortname">ACȚ</string>
-    <string name="status">Stare</string>
-    <string name="pump_actions">Acțiuni pompă</string>
-    <string name="tempbasal_button">Bazală temporară</string>
-    <string name="extended_bolus_button">Bolus extins</string>
-    <string name="extended_bolus_cancel_button">Renunțați la bolusul extins</string>
-    <string name="tools">Instrumente</string>
     <string name="nav_history_browser">Vizualizare istoric</string>
     <string name="sensor_label">Senzor</string>
     <string name="age_label">vârstă:</string>
