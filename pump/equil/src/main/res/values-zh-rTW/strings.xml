@@ -115,7 +115,6 @@
     <string name="equil_history_item18">異常輸液停止</string>
     <string name="equil_common_overview_button_suspend_delivery">暫停</string>
     <string name="equil_common_overview_button_resume_delivery">恢復輸送</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s（%3$d/%4$d 分鐘）</string>
     <string name="equil_common_moments_ago">片刻前</string>
     <string name="equil_common_less_than_a_minute_ago">不到一分鐘前</string>
     <string name="equil_common_time_ago">%1$s前</string>
