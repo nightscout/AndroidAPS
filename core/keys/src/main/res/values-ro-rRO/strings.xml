@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Mod simplu</string>
+    <string name="pref_title_insulin_concentration">Suport pentru concentrația insulinei</string>
+    <string name="pref_summary_insulin_concentration">Permiteți suport pentru diferite concentrații de insulină (U200, U300, șamd)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Păstrați ecranul aprins</string>
+    <string name="pref_summary_keep_screen_on">Împiedicați dezactivarea ecranului de către Android. Va consuma multă energie atunci când nu este conectat la o sursă de alimentare.</string>
+    <string name="pref_title_show_treatment_button">Afișați butonul de tratament</string>
+    <string name="pref_title_show_wizard_button">Afișați butonul asistentului</string>
+    <string name="pref_title_show_insulin_button">Afișați butonul de insulină</string>
+    <string name="pref_title_show_carbs_button">Afișați butonul de carbohidrați</string>
+    <string name="pref_title_show_cgm_button">Afișați butonul CGM</string>
+    <string name="pref_summary_show_cgm_button">Deschideți aplicația xDrip+ sau Dexcom (poți utiliza butonul înapoi pentru a te întoarce la AAPS).</string>
+    <string name="pref_title_show_calibration_button">Afișați butonul de calibrare</string>
+    <string name="pref_summary_show_calibration_button">Trimiteți o calibrare la xDrip+ (asigurați-vă că \'Acceptați calibrări\' este activat în xDrip+ în setările între aplicații).</string>
+    <string name="pref_title_show_notes_in_dialogs">Afișați notele în dialoguri</string>
+    <string name="pref_title_use_bolus_advisor">Utilizați consilierul în bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Activați consilierul în bolus care asistă la calcularea bolusului în timpul glicemiilor mai mari.</string>
+    <string name="pref_title_use_bolus_reminder">Utilizați memento pentru bolus</string>
+    <string name="pref_summary_use_bolus_reminder">Activați notificările de reamintire a bolusului pentru a ajuta la urmărirea administrării insulinei.</string>
+    <string name="pref_title_use_super_bolus">Utilizați super bolus</string>
+    <string name="pref_summary_use_super_bolus">Activați caracteristica super bolus care împrumută insulină din bazală pentru administrare imediată.</string>
     <!-- Pump preferences -->
     <!-- Alert preferences -->
     <!-- BG Source preferences -->
