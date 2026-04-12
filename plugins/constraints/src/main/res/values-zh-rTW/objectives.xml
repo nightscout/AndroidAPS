@@ -42,7 +42,6 @@
     <string name="objectives_usedisconnectpump">模擬淋浴。中斷幫浦連線1小時（長按開環）</string>
     <string name="objectives_usereconnectpump">... 並以同樣方式重新連線</string>
     <string name="objectives_usetemptarget">建立持續10分鐘的自定義臨時目標（長按目前目標）</string>
-    <string name="objectives_useactions">在組態建置工具中勾選啟用外掛，讓他可以顯示頁籤在頂部選單</string>
     <string name="objectives_useloop">在組態設定工具中勾選循環，顯示循環外掛的內容</string>
     <string name="objectives_usescale">通過長按血糖圖使用縮放功能</string>
     <string name="objectives_exam_objective">證明您的知識</string>
