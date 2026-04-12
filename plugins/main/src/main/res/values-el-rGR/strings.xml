@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
     <string name="calculator_label">Υπολογιστής</string>
-    <!-- Actions -->
-    <string name="actions">Ενέργειες</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
-    <string name="actions_shortname">ΔΡΑΣΗ</string>
-    <string name="tempbasal_button">Προσ Ρυθμός</string>
-    <string name="extended_bolus_button">Εκτεταμμένο Bolus</string>
-    <string name="extended_bolus_cancel_button">Ακύρωση Εκτεταμμένου bolus</string>
-    <string name="tools">Εργαλεία</string>
     <string name="nav_history_browser">Ιστορικό περιήγησης</string>
     <string name="sensor_label">Αισθητήρας</string>
     <string name="age_label">ηλικία:</string>
