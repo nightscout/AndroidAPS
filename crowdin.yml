@@ -3,14 +3,14 @@ files:
     translation: /app/src/main/res/values-%android_code%/strings.xml
   - source: /core/interfaces/src/main/res/values/strings.xml
     translation: /core/interfaces/src/main/res/values-%android_code%/strings.xml
+  - source: /core/keys/src/main/res/values/strings.xml
+    translation: /core/keys/src/main/res/values-%android_code%/strings.xml
   - source: /core/objects/src/main/res/values/strings.xml
     translation: /core/objects/src/main/res/values-%android_code%/strings.xml
   - source: /core/ui/src/main/res/values/protection.xml
     translation: /core/ui/src/main/res/values-%android_code%/protection.xml
   - source: /core/ui/src/main/res/values/strings.xml
     translation: /core/ui/src/main/res/values-%android_code%/strings.xml
-  - source: /core/validators/src/main/res/values/validator.xml
-    translation: /core/validators/src/main/res/values-%android_code%/validator.xml
   - source: /implementation/src/main/res/values/strings.xml
     translation: /implementation/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/aps/src/main/res/values/strings.xml
@@ -25,8 +25,6 @@ files:
     translation: /plugins/constraints/src/main/res/values-%android_code%/%original_file_name%
   - source: /plugins/constraints/src/main/res/values/strings.xml
     translation: /plugins/constraints/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/insulin/src/main/res/values/strings.xml
-    translation: /plugins/insulin/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/main/src/main/res/values/strings.xml
     translation: /plugins/main/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/sensitivity/src/main/res/values/strings.xml
@@ -45,8 +43,6 @@ files:
     translation: /pump/dana/src/main/res/values-%android_code%/strings.xml
   - source: /pump/danar/src/main/res/values/strings.xml
     translation: /pump/danar/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/danars/src/main/res/values/strings.xml
-    translation: /pump/danars/src/main/res/values-%android_code%/strings.xml
   - source: /pump/diaconn/src/main/res/values/strings.xml
     translation: /pump/diaconn/src/main/res/values-%android_code%/strings.xml
   - source: /pump/eopatch/src/main/res/values/strings.xml
@@ -67,8 +63,6 @@ files:
     translation: /pump/insight/src/main/res/values-%android_code%/strings.xml
   - source: /pump/medtronic/src/main/res/values/strings.xml
     translation: /pump/medtronic/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/medtrum/src/main/res/values/arrays.xml
-    translation: /pump/medtrum/src/main/res/values-%android_code%/arrays.xml
   - source: /pump/medtrum/src/main/res/values/strings.xml
     translation: /pump/medtrum/src/main/res/values-%android_code%/strings.xml
   - source: /pump/omnipod/common/src/main/res/values/strings.xml
