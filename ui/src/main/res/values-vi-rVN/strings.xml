@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Áp dụng giới hạn liều bolus</string>
     <string name="carbs_constraint_applied">Giới hạn Carbs đã bật</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Đã hủy hộp thoại</string>
     <string name="start_activity_tt">Bắt đầu hoạt động thể lực (TT)</string>
     <string name="start_eating_soon_tt">Sắp ăn (TT)</string>
     <string name="start_hypo_tt">Bắt đầu hạ đường huyết (TT)</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">Lấy đỉnh từ</string>
     <string name="cannot_delete_last_insulin">Không thể xóa insulin gần nhất</string>
     <string name="cannot_delete_active_insulin">Không thể xóa insulin đang dùng</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Tái sử dụng %1$d%% %2$dh</string>
     <string name="timeshift_label">Dịch chuyển thời gian</string>
     <string name="percentage_label">Phần trăm</string>
-    <string name="permanent_profile_switch">Vĩnh viễn (0 = không giới hạn thời gian)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Tạm dừng vòng lặp 1 giờ</string>
     <string name="suspendloopfor2h">Tạm dừng vòng lặp 2 giờ</string>
