@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">Hva er riktig om DIA?</string>
     <string name="dia_label_exam">Insulinets virkningstid (DIA)</string>
+    <string name="dia_profile">Du bør angi verdien for DIA i insulinkonfigurasjonen din.</string>
     <string name="dia_minimumis5h">Minimum tillatt DIA verdi er 5 timer.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Hvis du føler at DIA verdien (insulinvarigheten) som du benyttet i pumpen fungerte godt før du tok i bruk AndroidAPS, da er det ikke nødvendig å endre dette når du starter å loope.</string>
@@ -75,7 +76,9 @@
     <string name="prerequisites2_supportedcgm">En støttet CGM og passende app som mottar blodsukkerverdier på mobilen/enheten.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Oppdatering av AAPS</string>
+    <string name="update_git">Du må ha Git installert og konfigurert på datamaskinen din, eller bruke browser build.</string>
     <string name="update_asap">Når oppdateringer til AndroidAPS lanseres kan tidligere versjoner etter en tidsperiode få begrenset funksjonalitet.</string>
+    <string name="update_keys">Hvis du bruker Android Studio-bygging, bør du lagre og notere plasseringen til din keystore og bruke samme signeringsnøkkel for oppdateringer som for din forrige installasjon.</string>
     <string name="update_askfriend">Hvis du har problemer med å bygge apk filen, kan du installere en apk som er bygget av en venn.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Feilsøking</string>
