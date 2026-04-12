@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">循環已停用</string>
     <string name="calculator_label">計算機</string>
-    <!-- Actions -->
-    <string name="actions">手動操作</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">一些快速查看常用功能的按鈕</string>
-    <string name="actions_shortname">操作</string>
-    <string name="status">狀態</string>
-    <string name="pump_actions">幫浦操作</string>
-    <string name="tempbasal_button">臨時基礎速率</string>
-    <string name="extended_bolus_button">延長注射</string>
-    <string name="extended_bolus_cancel_button">取消延長注射</string>
-    <string name="tools">工具</string>
     <string name="nav_history_browser">歷史瀏覽器</string>
     <string name="sensor_label">傳感器</string>
     <string name="age_label">時間：</string>
