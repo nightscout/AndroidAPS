@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">¿Qué es cierto acerca de DAI?</string>
     <string name="dia_label_exam">Duración de la acción de insulina (DAI)</string>
-    <string name="dia_profile">Debes establecer el valor de DAI en tu perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
     <string name="dia_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Si usted está satisfecho de que el valor para DIA que utilizó en su bomba antes de que AAPS funcionara bien, no hay necesidad de cambiar esto cuando comience usar el bucle cerrado.</string>
@@ -76,9 +75,7 @@
     <string name="prerequisites2_supportedcgm">Un medidor continuo de glucosa (MCG) y una aplicación capaz de recibir los valores proporcionados por el medidor en el móvil o tablet.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/es/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Actualizando AAPS</string>
-    <string name="update_git">Es necesario tener Git instalado y configurado en la computadora.</string>
     <string name="update_asap">Cuando esté disponible una versión más reciente de AAPS, las funciones de las versiones anteriores pueden ser limitadas de forma remota después de una fecha especifica.</string>
-    <string name="update_keys">Se debe guardar en un lugar seguro de su computadora la \"keystore\" (archivo.jks) que se ha empleado previamente y usar la misma \"keystore\" para futuras actualizaciones.</string>
     <string name="update_askfriend">Si tienes problemas creando la aplicación (. apk), puedes instalar el mismo archivo. apk compilado por un amigo.</string>
     <string name="update_hint1">https://wiki.aaps.app/es/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Solucionando problemas</string>
