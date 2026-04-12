@@ -1,13 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Chế độ đơn giản</string>
+    <string name="pref_title_insulin_concentration">Hỗ trợ nồng độ insulin</string>
+    <string name="pref_summary_insulin_concentration">Bật hỗ trợ các nồng độ insulin khác nhau (U200, U300, v.v.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Giữ màn hình bật</string>
+    <string name="pref_summary_keep_screen_on">Ngăn Android tắt màn hình. Tính năng này sẽ tiêu thụ rất nhiều năng lượng khi không cắm nguồn.</string>
+    <string name="pref_title_show_treatment_button">Hiển thị nút điều trị</string>
+    <string name="pref_title_show_wizard_button">Hiển thị nút wizard</string>
+    <string name="pref_title_show_insulin_button">Hiển thị nút Insulin</string>
+    <string name="pref_title_show_carbs_button">Hiển thị nút Carbs</string>
+    <string name="pref_title_show_cgm_button">Hiển thị nút CGM</string>
+    <string name="pref_summary_show_cgm_button">Mở xDrip+ hoặc ứng dụng Dexcom (bạn có thể dùng nút quay lại để trở về AAPS).</string>
+    <string name="pref_title_show_calibration_button">Hiển thị nút Tính toán</string>
+    <string name="pref_summary_show_calibration_button">Gửi hiệu chuẩn đến xDrip+ (hãy đảm bảo rằng tùy chọn \'Accept Calibrations\' đã được bật trong phần Cài đặt liên ứng dụng của xDrip+).</string>
+    <string name="pref_title_show_notes_in_dialogs">Hiển thị ghi chú trong hộp thoại</string>
+    <string name="pref_title_use_bolus_advisor">Sử dụng trợ lý tính liều bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Bật trợ lý bolus để hỗ trợ tính toán liều bolus khi đường huyết cao.</string>
+    <string name="pref_title_use_bolus_reminder">Nhắc tiêm liều bolus</string>
+    <string name="pref_summary_use_bolus_reminder">Bật thông báo nhắc bolus để giúp theo dõi việc tiêm insulin.</string>
+    <string name="pref_title_use_super_bolus">Sử dụng super bolus</string>
+    <string name="pref_summary_use_super_bolus">Bật tính năng super bolus, sử dụng insulin từ liều nền để cung cấp ngay lập tức.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Tắt Bluetooth 1 giây khi không kết nối được bơm (khắc phục lỗi treo Bluetooth).</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Cảnh báo khi không có dữ liệu BG</string>
+    <string name="pref_title_alert_pump_unreachable">Cảnh báo khi bơm mất kết nối</string>
+    <string name="pref_title_alert_carbs_required">Cảnh báo khi cần bổ sung carb</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Tải dữ liệu đường huyết lên NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Ghi lại thay đổi cảm biến</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Sử dụng độ nhạy động</string>
+    <string name="pref_title_aps_use_autosens">Sử dụng Autosens</string>
+    <string name="pref_title_aps_use_smb">Kích hoạt SMB</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_title_aps_use_smb_always">Luôn bật SMB</string>
+    <string name="pref_title_aps_use_smb_with_cob">Kích hoạt SMB với COB</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Kích hoạt SMB sau Carbs</string>
+    <string name="pref_title_aps_use_uam">Kích hoạt UAM</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Độ nhạy tăng mục tiêu</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Khi phát hiện độ nhạy insulin, hãy tăng mức đường huyết mục tiêu.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Kháng insulin làm giảm mục tiêu</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Khi phát hiện kháng insulin, hãy hạ thấp mức đường huyết mục tiêu.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens cũng điều chỉnh cả mục tiêu</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Mục tiêu tạm thời cao làm tăng độ nhạy</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Mục tiêu tạm thời cao sẽ làm tăng độ nhạy insulin.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Mục tiêu tạm thời thấp làm giảm độ nhạy</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_categorize_uam_as_basal">Phân loại UAM như liều nền</string>
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
@@ -46,8 +91,14 @@
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
+    <string name="openapsama_dura_ISF_weight_summary">Đây là trọng số được áp dụng trong các giai đoạn đường huyết cao kéo dài, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Giá trị mặc định: 0,5. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định tỷ lệ insulin cần thiết có thể được bơm dưới dạng SMB. Mục đích là để ngăn tình trạng nguy hiểm khi có yêu cầu SMB được gửi đồng thời từ điện thoại của người chăm sóc. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Giá trị mặc định: 0,5. Đây là giới hạn thấp của một tỷ lệ tăng tuyến tính, thay vì giá trị cố định ở bên trên.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Giá trị mặc định: 0.5. Đây là giá trị giới hạn trên của một tỷ lệ tăng tuyến tính, thay vì là giá trị cố định như bên trên.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Giá trị mặc định: 1. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định hệ số cho phép bạn vượt quá giới hạn thông thường 120 phút maxSMB/maxUAM. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="lgs_threshold_summary">Đường huyết dưới mức này sẽ tạm dừng việc tiêm insulin. Mức mặc định sử dụng mô hình mục tiêu chuẩn. Người dùng có thể đặt giá trị trong khoảng 60 mg/dL (3,3 mmol/L) đến 100 mg/dL (5,5 mmol/L). Các giá trị dưới 65 mg/dL (3,6 mmol/L) sẽ sử dụng mô hình mặc định</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
 </resources>
