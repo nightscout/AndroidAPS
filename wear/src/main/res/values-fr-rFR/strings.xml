@@ -85,6 +85,7 @@
     <string name="menu_default">Défaut</string>
     <string name="menu_menu">Menu</string>
     <string name="quick_wizard_short">XL</string>
+    <string name="action_duration_minutes">Durée [min]</string>
     <string name="action_tempt_confirmation">Cible Temp demandée</string>
     <string name="action_quick_wizard_confirmation">Assistant rapide demandé</string>
     <string name="action_user_action_confirmation">Action de l\'utilisateur demandée</string>
@@ -94,13 +95,25 @@
     <string name="action_fill_confirmation">Remplissage demandé</string>
     <string name="action_ecarb_confirmation">Glucides requis</string>
     <string name="action_profile_switch_confirmation">Changement de profil demandé</string>
+    <string name="action_target_unit" comment="In temp target menu, single target value">Cible [%s]</string>
+    <string name="action_low_unit" comment="In temp target menu, lower value from range">Bas [%s]</string>
+    <string name="action_high_unit" comment="In temp target menu, higher value from range">Haut [%s]</string>
     <string name="action_carbs">Glucides</string>
     <string name="action_carbs_gram">Glucides [g]</string>
     <string name="action_ecarbs">eGlucides</string>
     <string name="action_percentage">Pourcentage\n[%]</string>
     <string name="action_start_minutes">Démarrage\n[minutes]</string>
+    <string name="action_start_minutes_format">%1$d min</string>
     <string name="action_duration_h">Durée [h]</string>
     <string name="action_duration_hours">Durée\n[hours]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
+    <string name="ecarbs_confirm_duration">Durée : %1$d h</string>
+    <string name="action_confirm_reason">Motif : %1$s</string>
+    <string name="action_confirm_duration">Durée : %1$s</string>
+    <string name="action_confirm_timeshift">Décalage horaire: %1$s</string>
     <string name="action_insulin">Insuline</string>
     <string name="action_insulin_units">Insuline [U]</string>
     <string name="action_preset_1">Quantité 1</string>
@@ -190,6 +203,7 @@
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">ancien</string>
     <string name="old_warning">!ancien!</string>
+    <string name="error">Erreur</string>
     <string name="pref_heartRateSampling">Fréquence Cardiaque</string>
     <string name="pref_heartRateSmoothing">Lissage FC</string>
     <string name="pref_stepsSampling">Activer le comptage des pas</string>
@@ -221,6 +235,11 @@
     <string name="complication_iob_icon">Icône IA</string>
     <string name="complication_iob_detailed">IA détaillée</string>
     <string name="complication_uploader_phone_battery">Batterie téléphone</string>
+    <string name="status_running_mode">Mode de fonctionnement</string>
+    <string name="label_running_mode_title">AAPS(Mode de fonctionnement)</string>
+    <string name="action_running_mode_selected">Mode de fonctionnement demandé</string>
+    <string name="title_activity_disconnect_pump">Déconnecter la pompe</string>
+    <string name="title_activity_suspend_loop">Suspendre la boucle</string>
     <string name="wizard_total_insulin">Insuline totale</string>
     <string name="wizard_calculation">Calcul</string>
     <string name="wizard_carbs_format">%1$d g de glucides</string>
@@ -229,12 +248,14 @@
     <string name="wizard_result_bg_tt">Gly (CT : %1$s)</string>
     <string name="wizard_result_trend">Tendance 15\'</string>
     <string name="wizard_result_iob">IA</string>
+    <string name="wizard_result_new_iob">Nouvelle IA : %1$s U</string>
     <string name="wizard_result_cob">GA (%1$.1f g)</string>
     <string name="wizard_result_carbs">Glucides (%1$d g)</string>
     <string name="wizard_result_subtotal">Sous-total</string>
     <string name="wizard_result_total">Total</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="expand_calculation_details">Cliquez pour développer les détails du calcul</string>
     <string name="wizard_confirmation_sent">Envoyé</string>
     <string name="tile_settings">Paramètres des tuiles</string>
@@ -252,6 +273,8 @@
     <string name="loop_status_lgs">Arrêt Glycémie Basse</string>
     <string name="loop_status_disabled">Boucle Désactivée</string>
     <string name="loop_status_suspended">Boucle Suspendue</string>
+    <string name="loop_status_pump_suspended">Pompe suspendue</string>
+    <string name="loop_status_dst_suspended">Boucle suspendue par le changement d\'heure</string>
     <string name="loop_status_disconnected">Pompe Déconnectée</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Inconnue</string>
@@ -268,4 +291,7 @@
     <string name="loop_status_target_range">Plage</string>
     <string name="loop_status_target">Cible</string>
     <string name="loop_status">État de la boucle</string>
+    <string name="loop_status_refresh">Actualiser</string>
+    <string name="confirm">Confirmer</string>
+    <string name="constraint_applied">Restriction appliquée !</string>
 </resources>
