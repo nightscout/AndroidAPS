@@ -634,6 +634,8 @@
     <string name="wizard_carb_time">Hora de los carbohidratos</string>
     <string name="carb_time_now">Ahora</string>
     <string name="change">Cambiar</string>
+    <string name="grant">Conceder</string>
+    <string name="set">Establecer</string>
     <string name="wizard_set_alarm">Establecer alarma</string>
     <string name="wizard_use_percentage">Porcentaje de uso</string>
     <string name="wizard_include_bg">Incluir glucosa</string>
@@ -693,6 +695,7 @@
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Se pulsó \"conectar a la bomba\"</string>
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Unidades diarias</string>
+    <string name="max_daily_units">Máximo de unidades diarias</string>
     <string name="pump_icon">Icono de la bomba</string>
     <string name="view_profile">Ver perfil</string>
     <string name="pump_history">Historial de la bomba</string>
@@ -716,6 +719,7 @@
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
     <string name="bolusspeed" comment="Speed at which bolus is delivered">Velocidad del bolo</string>
     <string name="history" comment="Tab/screen title for viewing past events">Historial</string>
+    <string name="overview_reservoir_concentration_value_over">Más de %1$s restantes</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando la basal máxima a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
