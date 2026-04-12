@@ -38,16 +38,16 @@ class MedtrumPrimingFragment : MedtrumBaseFragment<FragmentMedtrumPrimingBinding
                         MedtrumViewModel.SetupStep.PRIMING -> Unit // Nothing to do here
                         MedtrumViewModel.SetupStep.PRIMED  -> moveStep(PatchStep.PRIME_COMPLETE)
 
-                        MedtrumViewModel.SetupStep.ERROR   -> {
-                            updateSetupStep(MedtrumViewModel.SetupStep.FILLED) // Reset setup step
-                            binding.textWaitForPriming.text = rh.gs(R.string.priming_error)
-                            binding.btnNegative.visibility = View.VISIBLE
-                            binding.btnPositive.visibility = View.VISIBLE
-                        }
-
                         else                               -> {
-                            ToastUtils.errorToast(requireContext(), rh.gs(R.string.unexpected_state, it.toString()))
                             aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
+                            OKDialog.show(
+                                requireActivity(),
+                                rh.gs(app.aaps.core.ui.R.string.error),
+                                rh.gs(R.string.unexpected_state, it.toString()),
+                                runOnDismiss = true
+                            ) {
+                                viewModel?.moveStep(PatchStep.CANCEL)
+                            }
                         }
                     }
                 }

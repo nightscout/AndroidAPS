@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch not activated</string>
     <string name="pump_setting_failed">Setting user settings to pump failed!</string>
     <string name="pump_sync_error">Error while syncing history from pump, a record has been skipped. Check treatment tab to check if bolus is synced correctly. Snooze and if error keep coming back change patch or pumpbase.</string>
+    <string name="patch_reset_after_primed_error">Patch reset detected after priming! Remove the patch and start a new patch.</string>
 
     <!-- overview fragment -->
     <string name="ble_status_label">BLE Status</string>

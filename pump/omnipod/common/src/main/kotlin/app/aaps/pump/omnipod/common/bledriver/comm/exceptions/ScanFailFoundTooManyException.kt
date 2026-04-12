@@ -1,6 +1,6 @@
 package app.aaps.pump.omnipod.common.bledriver.comm.exceptions
 
-import app.aaps.pump.omnipod.common.bledriver.comm.scan.BleDiscoveredDevice
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.BleDiscoveredDevice
 import java.util.*
 
 class ScanFailFoundTooManyException(devices: List<BleDiscoveredDevice>) : ScanException("Found more than one Pod") {

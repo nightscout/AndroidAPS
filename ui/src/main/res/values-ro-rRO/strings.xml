@@ -15,8 +15,9 @@
     <string name="configure">Configurați opacitatea</string>
     <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
-    <string name="activity_monitor">Monitorizare activitate</string>
+    <string name="activity_monitor">Monitor activitate</string>
     <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Doriți să recalculați statisticile DZT?</string>
     <string name="statistics">Statistici</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
     <string name="invalid_age">Valoare vârstă invalidă</string>
@@ -37,6 +38,22 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- SiteRotationDialog -->
+    <string name="site_front">Față</string>
+    <string name="site_back">Spate</string>
+    <string name="site_man">Bărbat</string>
+    <string name="site_woman">Femeie</string>
+    <string name="site_child">Copil</string>
+    <string name="user_profile">Profil utilizator</string>
+    <string name="user_profile_description">Descrierea profilului utilizatorului este utilizată pentru a afișa cele mai frecvente locuri de inserție disponibile pentru bărbați, femei sau copii</string>
+    <string name="site_management">Profil Administrare Loc Inserție</string>
+    <string name="site_management_description">Veți seta aici dacă doriți să gestionați locul de inserție al pompei, al CGM-ului sau ambele. Această setare va fi folosită pentru a trimite automat dialogul de administrare al locului de inserție la fiecare intrare detectată nouă</string>
+    <string name="select_site">Apăsați mai jos pentru a selecta locul de inserție</string>
+    <string name="record_site_change">Înregistrați locul de inserție</string>
+    <string name="edit_site">Editează</string>
+    <string name="record_site_location">Locul de inserție: %1$s</string>
+    <string name="record_site_arrow">Săgeata locului de inserție: %1$s</string>
+    <string name="record_site_note">Notă: %1$s</string>
+    <string name="delete_site_note">Notă ștearsă</string>
     <!-- FillDialog -->
     <string name="fill_warning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
     <string name="record_pump_site_change">Înregistrare schimbare a locului pompei</string>
@@ -51,7 +68,7 @@
     <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
     <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
-    <string name="suspendloopfor10h">Suspendă bucla pentru 10 h</string>
+    <string name="suspendloopfor10h">Suspendă bucla pentru 10h</string>
     <string name="disconnectpump">Deconectează pompa</string>
     <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 min</string>
     <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 min</string>
@@ -59,7 +76,7 @@
     <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
     <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
     <string name="resume">Restabilește</string>
-    <string name="reconnect">Reconectaţi pompa</string>
+    <string name="reconnect">Reconectați pompa</string>
     <string name="duration15m">15 min</string>
     <string name="duration30m">30 min</string>
     <string name="duration1h">1 oră</string>
@@ -122,7 +139,26 @@
     <string name="a11y_only_on_watch">numai pe ceas</string>
     <string name="a11y_only_on_phone">numai pe telefon</string>
     <string name="quickwizard_settings">Setări AsistentRapid</string>
+    <string name="overview_edit_quickwizard_button_text">Text buton</string>
     <string name="overview_edit_quickwizard_valid">Valabil:</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Doar IOB pozitiv</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Procentaj prea mare!</string>
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
+    <string name="additional_ecarbs">Adaugă carbohidrați extinși</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Utilizați pentru calcul:</string>
+    <string name="constraints_violation">Încălcarea constrângerilor</string>
+    <string name="change_your_input">Schimbați-vă intrarea!</string>
+    <string name="confirm_treatment">Vă rugăm să confirmați tratamentul</string>
+    <string name="recalculate">Recalculați</string>
     <!--    Widget-->
+    <string name="use_black_color">Utilizați culoarea neagră</string>
+    <string name="widget_configuration">Configurare widget</string>
+    <string name="until_changed">Până la schimbare</string>
+    <string name="limitations">Limitări</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Ambele</item>
+        <item>Doar pozitiv</item>
+        <item>Doar negativ</item>
+    </string-array>
 </resources>

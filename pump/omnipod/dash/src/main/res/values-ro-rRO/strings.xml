@@ -12,6 +12,7 @@
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Stare Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Adresă Bluetooth</string>
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Calitatea conexiunii</string>
     <string name="omnipod_dash_overview_delivery_status">Stare livrare</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
@@ -29,6 +30,7 @@
     <string name="omnipod_dash_command_not_received_by_the_pod">Comanda nu a fost primită de Pod</string>
     <string name="omnipod_dash_unknown">Stare necunoscută pentru comandă</string>
     <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minute</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Administrarea insulinei este suspendată</string>
     <string name="omnipod_common_history_total_delivered">Total livrat: %1$.2f U</string>
     <string name="omnipod_dash_connection_lost">S-a pierdut conexiunea la pod</string>

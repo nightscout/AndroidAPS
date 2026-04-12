@@ -87,7 +87,9 @@
     <string name="removerecord">Șterge înregistrarea</string>
     <string name="loopisdisabled">Bucla este dezactivată</string>
     <string name="alarm">Alarmă</string>
+    <string name="exportsettings">Exportați setările</string>
     <string name="disableloop">Dezactivează bucla</string>
+    <string name="disabled_loop">Buclă dezactivată</string>
     <string name="resumeloop">Repornește bucla</string>
     <string name="suspendloop">Suspendă bucla</string>
     <string name="duration_min_label">Durată [min]</string>
@@ -101,6 +103,7 @@
     <string name="name_short">Nume:</string>
     <string name="time">Timp</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="loading">Se încarcă…</string>
     <string name="notes_label">Note</string>
     <string name="remove_button">Șterge</string>
     <string name="add_new">Adăugare nouă</string>
@@ -109,12 +112,15 @@
     <string name="bg_label">Gl</string>
     <string name="calibration">Calibrare</string>
     <string name="alarminxmin">Rulează alarma în %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolusarea a raportat o eroare. Verificați manual insulina administrată și cantitatea de carbohidrați</string>
     <string name="bolus_reminder">Memento bolus</string>
     <string name="duration_label">Durată</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
+    <string name="pump_running">Pompa în funcțiune</string>
     <string name="notconfigured">Nu este configurat</string>
     <string name="loopsuspended">Buclă suspendată</string>
+    <string name="loop_suspended_by_dst">Bucla suspendată din cauza orei de vară</string>
     <string name="trend_arrow">Săgeată tendinţă</string>
     <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">req</string>
@@ -149,12 +155,17 @@
     <string name="treatments_wizard_basaliob_label">IOB bazală</string>
     <string name="invalid">INVALID</string>
     <string name="login">Autentificare</string>
+    <string name="logout">Deconectare</string>
     <string name="prime_fill">Amorsare/Umplere</string>
+    <string name="site_rotation">Rotație loc</string>
     <string name="overview_insulin_label">Insulină</string>
     <string name="stoptemptarget">Oprește o țintă temporară</string>
     <string name="closedloop">Buclă închisă</string>
     <string name="openloop">Buclă deschisă</string>
     <string name="lowglucosesuspend">Suspendare la hipoglicemie</string>
+    <string name="pump_disconnected">Pompă deconectată</string>
+    <string name="pump_suspended">Pompă suspendată</string>
+    <string name="mode_reverted">Mod inversat</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -164,6 +175,14 @@
     <string name="iob_label">Insulină activă (IOB)</string>
     <string name="loopstatus_targets">ȚINTE:</string>
     <string name="loopstatus_OAPS_result">REZULTATUL OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
+    <string name="nav_export">Exportă setările</string>
+    <string name="location_permission_not_granted">Permisiunea de locație nu a fost acordată. Permite în setările Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Parola greșită</string>
     <string name="wrongpin">PIN greșit</string>
@@ -194,15 +213,19 @@
     <string name="careportal_bgcheck">Verificare glicemie</string>
     <string name="careportal_mbg">Test glicemie manual sau Calibrare</string>
     <string name="careportal_announcement">Anunț</string>
+    <string name="careportal_settings_export">Exportare Setări</string>
     <string name="careportal_note">Notă</string>
     <string name="careportal_question">Întrebare</string>
     <string name="careportal_exercise">Activitate fizică</string>
     <string name="careportal_announcement_message">Anunț : %1$s</string>
+    <string name="careportal_settings_export_message">Exportare Setări : %1$s</string>
     <string name="careportal_note_message">Notă: %1$s</string>
     <string name="careportal_question_message">Întrebare : %1$s</string>
     <string name="careportal_exercise_message">Exercițiu fizic: %1$s</string>
     <string name="careportal_pump_site_change">Schimbare canulă/loc infuzie</string>
     <string name="cgm_sensor_insert">Inserare senzor</string>
+    <string name="careportal_pump_site_management">Zone pompă</string>
+    <string name="careportal_cgm_site_management">Locuri CGM</string>
     <string name="careportal_cgmsensorstart">Start senzor</string>
     <string name="careportal_cgm_sensor_stop">Stop senzor CGM</string>
     <string name="careportal_dad_alert">Alertă D.A.D.</string>
@@ -218,6 +241,7 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="pump_battery_change">Schimbare baterie pompă</string>
     <string name="temporary_target">Ţintă temporară</string>
+    <string name="running_mode">Mod de rulare</string>
     <string name="careportal_temporarytargetvalue">Valoare țintă temporară</string>
     <string name="careportal_temporarytargetcancel">Oprire ţintă temporară</string>
     <string name="boluswizard">Asistent bolusare</string>
@@ -230,10 +254,44 @@
     <string name="activity">Exercițiu fizic</string>
     <string name="wear">Ceas</string>
     <string name="automation">Automatizare</string>
+    <string name="settingsexport">Setări Export</string>
     <string name="custom">Personalizat</string>
     <string name="loop">Buclă</string>
     <string name="ns">NS</string>
     <string name="record">Înregistrare</string>
+    <string name="location_front_right_upper_chest">Piept dreapta</string>
+    <string name="location_front_left_upper_chest">Piept stânga</string>
+    <string name="location_side_right_upper_arm">Partea superioară laterală a brațului drept</string>
+    <string name="location_side_left_upper_arm">Partea superioară laterală a brațului stâng</string>
+    <string name="location_back_right_upper_arm">Partea superioară posterioară a brațului drept</string>
+    <string name="location_back_left_upper_arm">Partea superioară posterioară a brațului stâng</string>
+    <string name="location_side_right_upper_abdomen">Partea superioară exterioară a abdomenului drept</string>
+    <string name="location_side_left_upper_abdomen">Partea superioară exterioară a abdomenului stâng</string>
+    <string name="location_side_right_lower_abdomen">Partea inferioară exterioară a abdomenului drept</string>
+    <string name="location_side_left_lower_abdomen">Partea inferioară exterioară a abdomenului stâng</string>
+    <string name="location_front_right_upper_abdomen">Partea superioară anterioară a abdomenului drept</string>
+    <string name="location_front_left_upper_abdomen">Partea superioară anterioară a abdomenului stâng</string>
+    <string name="location_front_right_lower_abdomen">Partea inferioară anterioară a abdomenului drept</string>
+    <string name="location_front_left_lower_abdomen">Partea inferioară anterioară a abdomenului stâng</string>
+    <string name="location_back_right_buttock">Fesa dreaptă</string>
+    <string name="location_back_left_buttock">Fesa stângă</string>
+    <string name="location_side_right_upper_thigh">Partea superioară externă a coapsei drepte</string>
+    <string name="location_side_left_upper_thigh">Partea superioară externă a coapsei stângi</string>
+    <string name="location_side_right_lower_thigh">Partea inferioară externă a coapsei drepte</string>
+    <string name="location_side_left_lower_thigh">Partea inferioară externă a coapsei stângi</string>
+    <string name="location_front_right_upper_thigh">Partea din față, sus, a coapsei drepte</string>
+    <string name="location_front_left_upper_thigh">Partea din față, sus, a coapsei stângi</string>
+    <string name="location_front_right_lower_thigh">Partea din față, jos, a coapsei drepte</string>
+    <string name="location_front_left_lower_thigh">Partea din față, jos, a coapsei stângi</string>
+    <string name="arrow_up">Sus</string>
+    <string name="arrow_up_right">Sus dreapta</string>
+    <string name="arrow_right">Dreapta</string>
+    <string name="arrow_down_right">Jos dreapta</string>
+    <string name="arrow_down">Jos</string>
+    <string name="arrow_down_left">Jos stânga</string>
+    <string name="arrow_left">Stânga</string>
+    <string name="arrow_up_left">Sus stînga</string>
+    <string name="arrow_center">Centru</string>
     <!--    Command-->
     <string name="connectiontimedout">Conectare eșuată</string>
     <!--    PumpEnactResult-->
@@ -279,6 +337,8 @@
     <string name="uel_lgs_loop_mode">MOD BUCLA LGS</string>
     <string name="uel_open_loop_mode">MOD BUCLA DESCHISA</string>
     <string name="uel_loop_disabled">BUCLA DEZACTIVATA</string>
+    <string name="uel_loop_resumed">BUCLĂ RELUATĂ</string>
+    <string name="uel_pump_running">POMPĂ ÎN FUNCȚIUNE</string>
     <string name="uel_reconnect">RECONECTARE</string>
     <string name="uel_disconnect">DECONECTARE</string>
     <string name="uel_resume">REPORNIRE</string>
@@ -291,7 +351,9 @@
     <string name="uel_cancel_extended_bolus">ANULEAZĂ BOLUS EXTINS</string>
     <string name="uel_cancel_tt">ANULEAZĂ TINTA TEMPORARA</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_sensor_location">LOC SENZOR</string>
     <string name="uel_site_change">SCHIMBARE CANULA</string>
+    <string name="uel_site_location">LOC DE AMPLASARE</string>
     <string name="uel_reservoir_change">SCHIMBARE REZERVOR</string>
     <string name="uel_calibration">CALIBRARE</string>
     <string name="uel_prime_bolus">BOLUS DE AMORSARE</string>
@@ -330,7 +392,9 @@
     <string name="delete_future_treatments">Șterge tratamentele viitoare</string>
     <string name="uel_export_settings">EXPORT SETARI</string>
     <string name="uel_import_settings">IMPORT SETARI</string>
+    <string name="uel_select_directory">ALEGE DIRECTOR</string>
     <string name="uel_reset_databases">RESETARE BAZE DE DATE</string>
+    <string name="uel_reset_aps_results">RESETARE REZULTATE APS</string>
     <string name="uel_cleanup_databases">CURĂȚĂ BAZELE DE DATE</string>
     <string name="uel_export_databases">EXPORT BAZE DE DATE</string>
     <string name="uel_import_databases">IMPORT BAZE DE DATE</string>
@@ -352,6 +416,9 @@
     <string name="uel_loop_change">BUCLA SCHIMBATA</string>
     <string name="uel_loop_removed">BUCLA ELIMINATA</string>
     <string name="uel_other">ALTELE</string>
+    <string name="uel_running_mode">MODUL DE RULARE</string>
+    <string name="uel_running_mode_removed">MODUL DE RULARE ȘTERS</string>
+    <string name="uel_running_mode_updarted">MODUL DE RULARE ACTUALIZAT</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil ținta joasa</string>
     <string name="profile_high_target">Profil țintă ridicata</string>
@@ -392,6 +459,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Rate bazale</string>
     <string name="basalpct">Bazală %</string>
+    <string name="sensitivity">Sensibilitate</string>
+    <string name="isf_for_carbs">ISF pentru Calculator și Absorbția Carbohidraților: %1$.1f</string>
+    <string name="autosens_long">Valoare Autosens: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens în algoritm: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">fişier</string>
     <string name="a11y_user">utilizator</string>
     <!-- Autotune -->
@@ -473,6 +546,7 @@
     <string name="password_cleared">Parolă ștearsă!</string>
     <string name="pairing">Împerechere</string>
     <string name="initializing">Inițializare...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -491,7 +565,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Vi se va solicita parola principală, care este necesară pentru a decripta setările importate.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Atenție</string>
+    <string name="export_expired">Expirat</string>
+    <string name="export_disabled">Dezactivat</string>
+    <string name="export_failed">Eșuat</string>
+    <string name="export_alert">ALERTĂ</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Setări exportate</string>
+    <string name="export_result_message_failed">Exportare setări EȘUATĂ!</string>
+    <string name="export_result_message_about_to_expire">Setări exportate: parolă pe cale să expire în curând. Exportați manual și (re)introduceți parola.</string>
+    <string name="export_result_message_expired">Exportare setări anulată: parola expirată. Exportați manual și (re)introduceți parola!</string>
+    <string name="export_result_message_disabled">Avertisment (automatizare): Exportarea setărilor nu este activată!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">scădere %1$s cu %2$s</string>
     <string name="a11y_plus_button_description">creștere %1$s cu %2$s</string>
@@ -556,5 +641,10 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="percent_rate_duration">Rată: %1$.2f%% (%2$.2f U/h) Durată: %3$d min</string>
+    <string name="rate_percent_duration">Rată: %1$.2f U/h (%2$.2f%%) Durată: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Rată</b>: %1$.2f%% (%2$.2f U/h)<br><b>Durata</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Rată</b>: %1$.2f U/h (%2$.2f%%) <br><b>Durata</b>: %3$d min<br>]]></string>
     <!--    Playback-->
+    <string name="audio_playback_attribution">"AAPS redă audio"</string>
 </resources>

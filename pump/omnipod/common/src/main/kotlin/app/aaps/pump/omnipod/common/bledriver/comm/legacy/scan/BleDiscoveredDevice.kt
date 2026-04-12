@@ -1,10 +1,17 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.scan
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.scan
 
 import android.bluetooth.le.ScanRecord
 import android.bluetooth.le.ScanResult
 import android.os.ParcelUuid
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.BleDiscoveredDevice as BleDiscoveredDeviceInterface
 
-class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: ScanRecord, private val podId: Long) {
+class BleDiscoveredDevice(
+    val scanResult: ScanResult,
+    private val scanRecord: ScanRecord,
+    private val podId: Long
+) : BleDiscoveredDeviceInterface {
+
+    override val address: String get() = scanResult.device.address
 
     private val sequenceNo: Int
     private val lotNo: Long
@@ -18,15 +25,12 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: Sc
         if (extractUUID16(serviceUuids[0]) != MAIN_SERVICE_UUID) {
             // this is the service that we filtered for
             throw DiscoveredInvalidPodException(
-                "The first exposed service UUID should be 4024, got " + extractUUID16(
-                    serviceUuids[0]
-                ),
+                "The first exposed service UUID should be 4024, got " + extractUUID16(serviceUuids[0]),
                 serviceUuids
             )
         }
         // TODO understand what is serviceUUIDs[1]. 0x2470. Alarms?
         if (extractUUID16(serviceUuids[2]) != UNKNOWN_THIRD_SERVICE_UUID) {
-            // constant?
             throw DiscoveredInvalidPodException(
                 "The third exposed service UUID should be 000a, got " + serviceUuids[2],
                 serviceUuids
@@ -63,17 +67,10 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: Sc
     }
 
     override fun toString(): String {
-        return "BleDiscoveredDevice{" +
-            "scanRecord=" + scanRecord +
-            ", podID=" + podId +
-            "scanResult=" + scanResult +
-            ", sequenceNo=" + sequenceNo +
-            ", lotNo=" + lotNo +
-            '}'
+        return "BleDiscoveredDevice{scanRecord=$scanRecord, podID=$podId, scanResult=$scanResult, sequenceNo=$sequenceNo, lotNo=$lotNo}"
     }
 
     companion object {
-
         const val MAIN_SERVICE_UUID = "4024"
         const val UNKNOWN_THIRD_SERVICE_UUID = "000a" // FIXME: why is this 000a?
         private fun extractUUID16(uuid: ParcelUuid): String {
