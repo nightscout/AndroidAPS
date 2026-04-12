@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Зцикл не работает</string>
     <string name="calculator_label">Калькулятор</string>
-    <!-- Actions -->
-    <string name="actions">Действия</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
-    <string name="actions_shortname">ДЕЙСТВ</string>
-    <string name="tempbasal_button">ВремБазал</string>
-    <string name="extended_bolus_button">Пролонгированный болюс</string>
-    <string name="extended_bolus_cancel_button">Отменить пролонгированный болюс</string>
-    <string name="tools">Инструменты</string>
     <string name="nav_history_browser">Просмотр журнала</string>
     <string name="sensor_label">Сенсор</string>
     <string name="age_label">возраст:</string>
