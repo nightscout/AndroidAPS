@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Le champ ne doit pas être vide</string>
+    <string name="error_url_not_valid">Le lien web est invalide</string>
+    <string name="error_mustbe4hexadidits">Doit avoir 4 caractères parmi ABCDEF0123456789</string>
     <!--    General-->
     <string name="refresh">Actualiser</string>
     <string name="error">Erreur</string>
@@ -37,6 +40,7 @@
     <string name="ue_export_to_csv">Exporter vers Excel (csv)</string>
     <string name="confirm">Confirmer</string>
     <string name="pump">Pompe</string>
+    <string name="pump_management">Pompe</string>
     <string name="missed_bg_readings">Valeurs de glycémie manquantes</string>
     <string name="treatments_iob_label_string">IA: </string>
     <string name="mute5min">Muet pendant 5 minutes</string>
@@ -225,6 +229,7 @@
     <string name="careportal_dad_alert">Chien d\'alerte</string>
     <string name="careportal_insulin_cartridge_change">Changement du réservoir</string>
     <string name="careportal_profileswitch">Changement de profil</string>
+    <string name="profile_management">Profil</string>
     <string name="careportal_snackbolus">Bolus Goûter</string>
     <string name="careportal_mealbolus">Bolus Repas</string>
     <string name="careportal_correctionbolus">Bolus de correction</string>
@@ -239,6 +244,7 @@
     <string name="careportal_temporarytargetvalue">Valeur de Cible Temporaire</string>
     <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="boluswizard">Assistant Bolus</string>
+    <string name="insulin_management">Insuline</string>
     <string name="glucosetype_finger">Doigt</string>
     <string name="glucosetype_sensor">Capteur</string>
     <string name="manual">Manuel</string>
@@ -250,6 +256,7 @@
     <string name="automation">Automatisation</string>
     <string name="settingsexport">Export des paramètres</string>
     <string name="custom">Manuel</string>
+    <string name="temp_target_management">Cible Temp</string>
     <string name="loop">Boucle</string>
     <string name="ns">NS</string>
     <string name="record">Enregistrement</string>
@@ -492,6 +499,7 @@
     <string name="wizard_explain_tt_to">%1$s vers %2$s</string>
     <string name="wizard_pump_not_available">Aucune pompe disponible!</string>
     <string name="quickwizard">Assistant Rapide</string>
+    <string name="quickwizard_managemnt">Assistant Rapide</string>
     <!--    Preferences-->
     <string name="child">Enfant</string>
     <string name="teenage">Adolescent</string>
@@ -534,6 +542,12 @@
     <string name="pairing">Appairage</string>
     <string name="initializing">En cours d\'initialisation...</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Attention</string>
+    <string name="retry" comment="Button label to retry a failed operation">Réessayer</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Terminer</string>
+    <string name="firmware" comment="Pump firmware version label">Firmware</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Vitesse du bolus</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Historique</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">limite de la pompe</string>
@@ -558,6 +572,7 @@
     <string name="export_failed">Échec</string>
     <string name="export_alert">ALERTE</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Le mot de passe principal n\'est pas défini !\n\nVeuillez d\'abord définir un mot de passe principal, puis réessayer.</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Paramètres exportés</string>
     <string name="export_result_message_failed">Échec de l\'export des paramètres !</string>
@@ -640,10 +655,44 @@
     <!-- ProfileEditor -->
     <!--    Search-->
     <!--    Food Management -->
+    <string name="food_management">Aliments</string>
+    <string name="food_deleted">Aliment supprimé</string>
+    <string name="edit_food">Éditer un aliment</string>
+    <string name="add_food">Ajouter un aliment</string>
+    <string name="name">Nom</string>
+    <string name="category">Catégorie</string>
+    <string name="subcategory">Sous-catégorie</string>
+    <string name="portion">Portion</string>
+    <string name="unit_label">Unité</string>
+    <string name="fat">Lipides</string>
+    <string name="protein">Protéines</string>
+    <string name="energy">Énergie</string>
+    <string name="undo">Annuler</string>
+    <string name="no_data">Aucune donnée</string>
+    <string name="manage_food_desc">Gérer les entrées de la base de données alimentaire</string>
+    <string name="label_carbs_g">Glucides (g)</string>
+    <string name="label_fat_g">Lipides (g)</string>
+    <string name="label_protein_g">Protéines (g)</string>
+    <string name="label_energy_kj">Énergie (kJ)</string>
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
+    <string name="graph_add">Ajouter graphique</string>
+    <string name="graph_new">Nouveau graphique</string>
+    <string name="graph_edit">Modifier graphique</string>
+    <string name="graph_number">Graphique %1$d</string>
+    <string name="graph_bg">Graphique Glycémie</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-IGly</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">PENTEDEV</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">FC</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">V_SI</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">PAS</string>
 </resources>
