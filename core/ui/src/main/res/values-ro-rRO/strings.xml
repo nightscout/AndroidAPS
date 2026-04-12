@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Acest câmp nu trebuie lăsat necompletat</string>
+    <string name="error_url_not_valid">Adresa web nu este validă</string>
+    <string name="error_mustbe4hexadidits">Trebuie să conțină 4 caractere din șirul ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Tratamente</string>
     <string name="treatments_desc">Vezi și gestionează istoricul tratamentului</string>
@@ -739,6 +742,7 @@
     <string name="export_failed">Eșuat</string>
     <string name="export_alert">ALERTĂ</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Parola principală nu este setată!\n\nVă rugăm să setați mai întâi o parolă principală, apoi încercați din nou.</string>
     <string name="export_to">Exportați setările către</string>
     <string name="password_preferences_encrypt_prompt">Vi se va solicita parola principală, care va fi utilizată pentru criptare la exportarea setărilor.</string>
     <string name="preferences_export_canceled">Exportare anulată! Preferințele nu au fost exportate!</string>
