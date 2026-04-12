@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop is uitgeschakeld</string>
     <string name="calculator_label">Bolus wizard</string>
-    <!-- Actions -->
-    <string name="actions">Acties</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">Tijdelijk basaal</string>
-    <string name="extended_bolus_button">Vertraagde bolus</string>
-    <string name="extended_bolus_cancel_button">Annuleer vertraagde bolus</string>
-    <string name="tools">Hulpmiddelen</string>
     <string name="nav_history_browser">Historiek venster</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">leeftijd:</string>
