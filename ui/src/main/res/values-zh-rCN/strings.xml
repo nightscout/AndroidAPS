@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">大剂量约束条件应用了</string>
     <string name="carbs_constraint_applied">碳水化合物约束条件应用了</string>
     <string name="temp_target_short">临时目标</string>
-    <string name="dialog_canceled">对话框已取消</string>
     <string name="start_activity_tt">开始运动临时目标</string>
     <string name="start_eating_soon_tt">开始很快吃饭TT(临时目标)</string>
     <string name="start_hypo_tt">开始低的临时目标</string>
@@ -36,7 +35,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">重新使用%1$d%% %2$d小时</string>
     <string name="timeshift_label">时间偏移</string>
     <string name="percentage_label">百分比</string>
