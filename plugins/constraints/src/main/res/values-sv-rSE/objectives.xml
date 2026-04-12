@@ -37,7 +37,6 @@
     <string name="objectives_usedisconnectpump">Simulera dusch. Koppla från pump i 1 timme (Tryck och håll in på Open Loop i Översikten)</string>
     <string name="objectives_usereconnectpump">... och återanslut på samma sätt</string>
     <string name="objectives_usetemptarget">Skapa ett anpassat tillfälligt mål med 10 min varaktighet (Tryck och håll in på nuvarande BG-mål i Översikten)</string>
-    <string name="objectives_useactions">I Konfigurationsverktyget, aktivera insticksprogrammet Åtgärder, gör det synligt och visa dess innehåll från övre menyn</string>
     <string name="objectives_useloop">Visa innehållet i insticksprogrammet \"Loop\"</string>
     <string name="objectives_usescale">Testa skala om BG-grafen genom att trycka och hålla in fingret på den</string>
     <string name="objectives_exam_objective">Bevisa dina kunskaper</string>
