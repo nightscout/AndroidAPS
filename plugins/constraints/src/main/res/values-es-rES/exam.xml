@@ -33,12 +33,12 @@
     <string name="objectives2_easyrestore">Si su teléfono es dañado o perdido, hay formas fáciles de recuperar remotamente su configuración sin hacer una copia de seguridad.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/es/latest/Maintenance/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://wiki.aaps.app/es/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
-    <string name="noisycgm_label">Lecturas CGM con mucha variabilidad</string>
-    <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de CGM tienen mucha variabilidad?</string>
+    <string name="noisycgm_label">Lecturas MCG con mucha variabilidad</string>
+    <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de MCG tienen mucha variabilidad?</string>
     <string name="noisycgm_nothing">No hacer nada: AAPS se ocupará de ello.</string>
     <string name="noisycgm_pause">Deshabilitar el bucle cerrado para evitar posibles sobredosis o subdosis.</string>
     <string name="noisycgm_replacesensor">Sustituya el sensor con valores muy variables o inexactos.</string>
-    <string name="noisycgm_checksmoothing">Comprueba que tu aplicación del CGM proporciona datos suavizados.</string>
+    <string name="noisycgm_checksmoothing">Comprueba que tu aplicación del MCG proporciona datos suavizados.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/es/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Ejercicio y perfiles</string>
     <string name="exerciseprofile_whattodo">¿Cómo puede usar los perfiles para mejorar el sistema durante el ejercicio aeróbico?</string>
