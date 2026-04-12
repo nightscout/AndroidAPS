@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Pętla wyłączona</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Actions -->
-    <string name="actions">Akcje</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">BazaTymczasowa</string>
-    <string name="extended_bolus_button">Bolus Przedłużony</string>
-    <string name="extended_bolus_cancel_button">Anuluj bolus przedłużony </string>
-    <string name="tools">Narzędzia</string>
     <string name="nav_history_browser">Przegląd historii</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">czas:</string>
