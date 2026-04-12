@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">闭环禁用</string>
     <string name="calculator_label">计算器</string>
-    <!-- Actions -->
-    <string name="actions">手动操作</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">一些快速访问常用功能的按钮</string>
-    <string name="actions_shortname">操作</string>
-    <string name="tempbasal_button">临时基础</string>
-    <string name="extended_bolus_button">扩展大剂量</string>
-    <string name="extended_bolus_cancel_button">取消扩展大剂量</string>
-    <string name="tools">工具</string>
     <string name="nav_history_browser">历史浏览</string>
     <string name="sensor_label">传感器</string>
     <string name="age_label">年龄:</string>
