@@ -7,7 +7,7 @@
     <string name="equil_dressing_onkey_msg">Déplacement automatique du piston vers le bas du réservoir. Il s\'arrêtera automatiquement lorsque le fond sera atteint. Cliquez sur \'Arrêter\' pour interrompre si nécessaire.</string>
     <string name="equil_hint_dressing">Cette opération arrêtera l\'injection de l\'insuline et fera en sorte que le piston de la pompe se rétracte vers le bas !</string>
     <string name="equil_insulin_reservoir">Réservoir d\'insuline</string>
-    <string name="equil_mode">En cours de fonctionnement</string>
+    <string name="equil_mode">Mode</string>
     <string name="equil_mode_running">En cours d\'exécution</string>
     <string name="equil_mode_stopped">Arrêté</string>
     <string name="equil_mode_suspended">Suspendu</string>
