@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">关于DIA(胰岛素作用持续时间)哪些是对的?</string>
     <string name="dia_label_exam">胰岛素作用持续时间 ( DIA)</string>
-    <string name="dia_profile">您应该在个人配置文件中设置胰岛素敏感系数DIA的值。</string>
     <string name="dia_minimumis5h">允许的最小值为 5 小时。</string>
     <string name="dia_valuemustbedetermined">您应该为自己确定 DIA 的适当值。</string>
     <string name="hypott_label">低血糖临时目标</string>
@@ -50,8 +49,6 @@
     <string name="prerequisites2_profile">验证参数信息用于个人配置文件（如ISF胰岛素敏感度系数、I:C胰岛素碳水比率、基础率、DIA胰岛素作用持续时间等等）。</string>
     <string name="prerequisites2_device">兼容的Android 设备 (例如：手机、安卓原生系统手表，或平板电脑)。</string>
     <string name="prerequisites2_supportedcgm">一台安装了动态血糖监测应用或兼容软件的手机/设备，用于接收血糖数据。</string>
-    <string name="update_git">您需要在您的计算机上安装和配置Git。</string>
-    <string name="update_keys">您应该保存并记住密钥的存储位置，并使用相同地签名密钥进行更新，与您以前的安装一样。</string>
     <string name="update_askfriend">如果您在构建应用时遇到困难，您可以安装一个由朋友构建的应用程序。</string>
     <string name="troubleshooting_label">疑难解答</string>
     <string name="troubleshooting_yourendo">您应该问您的糖尿病诊所/内分泌专家。</string>
