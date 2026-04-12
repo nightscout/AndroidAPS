@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">此欄位不可留空</string>
+    <string name="error_url_not_valid">Web URL 無效</string>
+    <string name="error_mustbe4hexadidits">必須為 4 個由 ABCDEF0123456789 組成的字元</string>
     <!--    General-->
     <string name="treatments">治療</string>
     <string name="treatments_desc">查看並管理治療紀錄</string>
@@ -739,6 +742,7 @@
     <string name="export_failed">失敗</string>
     <string name="export_alert">警報</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">主密碼尚未設定！\n\n請先設定主密碼，然後再試一次。</string>
     <string name="export_to">匯出設定到</string>
     <string name="password_preferences_encrypt_prompt">系統會要求輸入主密碼，該密碼將用於加密匯出的偏好設定。</string>
     <string name="preferences_export_canceled">已取消匯出！未匯出任何偏好設定！</string>
