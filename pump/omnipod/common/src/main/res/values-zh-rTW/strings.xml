@@ -51,7 +51,6 @@
     <string name="omnipod_common_overview_firmware_version">韌體版本</string>
     <string name="omnipod_common_overview_time_on_pod">Pod 上的時間</string>
     <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d 分鐘)</string>
-    <string name="omnipod_common_overview_reservoir_concentration_value_over50">剩餘超過 %1$s</string>
     <string name="omnipod_common_uncertain">不確定</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">停用 Pod</string>
