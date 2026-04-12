@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Aplikováno omezení bolusu</string>
     <string name="carbs_constraint_applied">Aplikováno omezení sacharidů</string>
     <string name="temp_target_short">DC</string>
-    <string name="dialog_canceled">Dialog zrušen</string>
     <string name="start_activity_tt">Spustit dočasný cíl Aktivita</string>
     <string name="start_eating_soon_tt">Spustit dočasný cíl Před jídlem</string>
     <string name="start_hypo_tt">Spustit dočasný cíl Hypoglykémie</string>
@@ -53,7 +52,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Znovu použít %1$d%% %2$dh</string>
     <string name="timeshift_label">Posun času</string>
     <string name="percentage_label">% změna</string>
