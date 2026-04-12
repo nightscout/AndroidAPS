@@ -2,7 +2,7 @@
 <resources>
     <string name="combov2_plugin_name">Accu-Check Combo</string>
     <string name="combov2_plugin_description">Integración de bombas de insulina Accu-Chek Combo</string>
-    <string name="combov2_could_not_connect">No se pudo conectar a la bomba</string>
+    <string name="combov2_could_not_connect">No se pudo conectar con la bomba</string>
     <string name="combov2_not_paired">No se encuentra emparejado a una bomba</string>
     <string name="combov2_warning">Advertencia de Combo</string>
     <string name="combov2_error">Error de Combo</string>
