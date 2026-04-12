@@ -39,6 +39,8 @@
 3. 再次嘗試配對</string>
     <string name="combov2_enter_pin">輸入 PIN</string>
     <string name="combov2_cancel_pairing">取消配對</string>
+    <string name="combov2_confirm_cancel_pairing_message">確定要取消配對嗎？</string>
+    <string name="combov2_confirm_unpair_message">確定要解除與幫浦的配對嗎？</string>
     <string name="combov2_pin_hint">10 位數 PIN</string>
     <string name="combov2_pairing_finished_successfully">成功與 Combo 配對</string>
     <string name="combov2_pairing_cancelled">用戶取消了與 Combo 的配對</string>
@@ -89,6 +91,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%%（剩餘不到 1 分鐘）</string>
     <string name="combov2_load_tdds_cancelled">載入每日總劑量已取消</string>
     <string name="combov2_retrieving_tdds_failed">檢索每日總劑量失敗</string>
+    <string name="combov2_battery_empty">空</string>
+    <string name="combov2_battery_low">低</string>
+    <string name="combov2_battery_full">滿</string>
     <string name="combov2_battery_low_warning">幫浦電池電量低</string>
     <string name="combov2_reservoir_low_warning">幫浦儲液器液位低</string>
     <string name="combov2_setting_tbr_succeeded">設定臨時基礎率成功</string>
