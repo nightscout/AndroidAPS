@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Ciklas išjungtas</string>
     <string name="calculator_label">Skaičiuotuvas</string>
-    <!-- Actions -->
-    <string name="actions">Veiksmai</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
-    <string name="actions_shortname">VEIKS</string>
-    <string name="tempbasal_button">Laikina bazė</string>
-    <string name="extended_bolus_button">Ištęstas bolusas</string>
-    <string name="extended_bolus_cancel_button">Atšaukti ištęstą bolusą</string>
-    <string name="tools">Įrankiai</string>
     <string name="nav_history_browser">Istorija</string>
     <string name="sensor_label">Sensorius</string>
     <string name="age_label">laikas:</string>
