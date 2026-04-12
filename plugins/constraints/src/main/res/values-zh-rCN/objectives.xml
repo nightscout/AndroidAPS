@@ -24,7 +24,6 @@
     <string name="objectives_usedisconnectpump">模拟淋浴。 将泵断开连接1个小时(长按开环图标)</string>
     <string name="objectives_usereconnectpump">... 然后以同样的方式重新连接</string>
     <string name="objectives_usetemptarget">创建具有 10 分钟持续时间的定制临时目标 (当前目标上长按 )</string>
-    <string name="objectives_useactions">在配置生成器中启用Actions(常用操作) 插件，使其可视并在顶部菜单显示其内容</string>
     <string name="objectives_useloop">显示闭环插件的内容</string>
     <string name="objectives_usescale">长按血糖图来使用缩放功能</string>
     <string name="objectives_exam_objective">证明你的知识</string>
