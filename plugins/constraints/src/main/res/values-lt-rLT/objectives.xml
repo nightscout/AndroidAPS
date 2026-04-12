@@ -39,7 +39,6 @@
     <string name="objectives_usedisconnectpump">Imituokite maudynes duše. Atjunkite pompą 1 valandai (ilgai spauskite Ciklo mygtuką)</string>
     <string name="objectives_usereconnectpump">... ir iš naujo prijunkite tuo pačiu būdu</string>
     <string name="objectives_usetemptarget">Nustatykite pasirinktinį 10 min trukmės laikiną tikslą (paspauskite glikemijos tikslo mygtuką)</string>
-    <string name="objectives_useactions">Konfigūracijoje įjunkite Veiksmų įskiepį, padarykite jį ir jo turinį matomą viršutiniame meniu</string>
     <string name="objectives_useloop">Peržiūrėkite Ciklo įskiepio turinį</string>
     <string name="objectives_usescale">Pakeiskite glikemijos grafiko mastelį ilgai prispaudę ant glikemijos kreivės</string>
     <string name="objectives_exam_objective">Pasitikrinkite žinias</string>
