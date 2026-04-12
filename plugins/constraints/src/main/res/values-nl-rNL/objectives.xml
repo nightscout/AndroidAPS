@@ -43,7 +43,6 @@
     <string name="objectives_usedisconnectpump">Simuleer douchen. Ontkoppel de pomp voor 1u (houd Open Loop lang ingedrukt)</string>
     <string name="objectives_usereconnectpump">... en op dezelfde manier weer aankoppelen</string>
     <string name="objectives_usetemptarget">Stel een aangepast tijdelijk doel in met een duur van 10 min (houd huidige doel lang ingedrukt)</string>
-    <string name="objectives_useactions">Schakel in Configurator de Acties plugin in zodat deze zichtbaar wordt en de inhoud ervan via de menubar bovenaan kan worden ingezien</string>
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
     <string name="objectives_usescale">Gebruik de schaalfunctie: houd de BG grafiek lang ingedrukt</string>
     <string name="objectives_exam_objective">Bewijs je kennis</string>
