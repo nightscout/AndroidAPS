@@ -9,11 +9,27 @@
     <string name="start_hypo_tt">Début Traitement Hypo</string>
     <string name="time_offset">Décalage horaire</string>
     <string name="remind_to_bolus_later">Rappel du bolus plus tard</string>
+    <string name="a11y_carb_reminder">Définir le rappel sur l\'heure des glucides</string>
     <!--    Widget-->
     <string name="configure">Configurer l’opacité</string>
     <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
     <string name="activity_monitor">Moniteur d\'activité</string>
+    <string name="time_range">Plage horaire</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Pentagone glucose (CGP) – 14 jours</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hyper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Moyen</string>
+    <string name="cgp_reference">Personne en bonne santé</string>
+    <string name="cgp_patient">Patient</string>
+    <string name="cgp_pgr_very_low">Risque très faible</string>
+    <string name="cgp_pgr_low">Risque faible</string>
+    <string name="cgp_pgr_moderate">Risque modéré</string>
+    <string name="cgp_pgr_high">Risque élevé</string>
+    <string name="cgp_pgr_extremely_high">Risque extrêmement élevé</string>
     <string name="do_you_want_reset_stats">Voulez-vous réinitialiser les statistiques d\'activité ?</string>
     <string name="do_you_want_recalculate_tdd_stats">Voulez-vous recalculer les statistiques de DTQ ?</string>
     <string name="calculation_in_progress">Calcul en cours</string>
@@ -41,6 +57,7 @@
     <string name="site_management">Paramètres de gestion du site</string>
     <string name="site_management_description">Sélectionnez si vous souhaitez gérer le site de la pompe, le site MGC ou les deux. Ce paramètre permettra d\'ouvrir automatiquement la boîte de dialogue de gestion du site à chaque nouvelle entrée détectée</string>
     <string name="record_site_change">Enregistrer la localisation du site</string>
+    <string name="update_site_change">Mettre à jour la localisation du site</string>
     <string name="edit_site">Éditer</string>
     <string name="record_site_location">Site : %1$s</string>
     <string name="record_site_arrow">Flèche : %1$s</string>
@@ -106,6 +123,8 @@
     <string name="profile_type">Type de profil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Sélectionné :</string>
+    <string name="profile_tab_1">Profil 1</string>
+    <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Profil par défaut</string>
     <string name="current_profile">Profil actuel</string>
     <string name="available_profile">Profils disponibles</string>
