@@ -93,7 +93,6 @@ open class VirtualPumpPlugin @Inject constructor(
                 commandQueue = commandQueue
             )
         }
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_virtual_pump)
         .icon(IcPluginVirtualPump)
         .pluginName(app.aaps.core.ui.R.string.virtual_pump)
         .shortName(R.string.virtual_pump_shortname)

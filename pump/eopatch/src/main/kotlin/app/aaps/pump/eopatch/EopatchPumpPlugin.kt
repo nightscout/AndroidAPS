@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.withEntries
+import app.aaps.core.ui.compose.icons.IcPluginEopatch
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.pump.eopatch.alarm.IAlarmManager
 import app.aaps.pump.eopatch.ble.IPatchManager
@@ -107,7 +108,7 @@ class EopatchPumpPlugin @Inject constructor(
                 blePreCheck = blePreCheck
             )
         }
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_eopatch2_128)
+        .icon(IcPluginEopatch)
         .pluginName(R.string.eopatch)
         .shortName(R.string.eopatch_shortname)
         .description(R.string.eopatch_pump_description),
