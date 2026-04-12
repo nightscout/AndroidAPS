@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Bolusspärr aktiverad</string>
     <string name="carbs_constraint_applied">Kolhydratsspärr aktiverad</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Dialogrutan stängd</string>
     <string name="start_activity_tt">Starta \"Träning\"</string>
     <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
     <string name="start_hypo_tt">Starta \"Hypo\"</string>
@@ -37,7 +36,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Ge ingen bolus, logga bara</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Återanvänd %1$d%% %2$dtim</string>
     <string name="timeshift_label">Tidsförskjutning</string>
     <string name="percentage_label">Procent</string>
