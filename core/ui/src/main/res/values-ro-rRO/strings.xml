@@ -634,6 +634,8 @@
     <string name="wizard_carb_time">Timp carbohidrați</string>
     <string name="carb_time_now">Acum</string>
     <string name="change">Schimbați</string>
+    <string name="grant">Acordați</string>
+    <string name="set">Setați</string>
     <string name="wizard_set_alarm">Setați alarma</string>
     <string name="wizard_use_percentage">Utilizați procentul</string>
     <string name="wizard_include_bg">Includeți glicemia</string>
