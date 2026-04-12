@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.R
@@ -26,32 +25,6 @@ interface UiInteraction {
 
     /** A generic activity that can host a single fragment. */
     val singleFragmentActivity: Class<*>
-
-    /** The main preferences activity. */
-    val preferencesActivity: Class<*>
-
-    /** The fragment for "My Preferences". */
-    val myPreferenceFragment: Class<*>
-
-    companion object {
-
-        /** Key for passing a plugin name in an Intent extra. */
-        const val PLUGIN_NAME = "PluginName"
-
-        /**
-         * Key for identifying a preference from [Preferences].
-         */
-        const val PREFERENCE = "Preference"
-    }
-
-    /**
-     * Enum for specific preference screens.
-     */
-    enum class Preferences {
-
-        /** The protection preference screen. */
-        PROTECTION
-    }
 
     /**
      * Display names for units preferences.
@@ -124,13 +97,6 @@ interface UiInteraction {
         /** An announcement. */
         ANNOUNCEMENT
     }
-
-    /**
-     * Opens the preferences screen for a specific plugin.
-     * @param activity The host activity.
-     * @param pluginSimpleName The simple class name of the plugin. If null, no activity started
-     */
-    fun runPreferencesForPlugin(activity: FragmentActivity, pluginSimpleName: String?)
 
     /**
      * Starts a repeating alarm sound.

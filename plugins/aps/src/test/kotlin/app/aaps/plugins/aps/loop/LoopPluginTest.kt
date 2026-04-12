@@ -2,7 +2,6 @@ package app.aaps.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
-import androidx.preference.PreferenceManager
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -14,7 +13,6 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -60,7 +58,6 @@ class LoopPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         whenever(config.APS).thenReturn(true)
-        preferenceManager = PreferenceManager(context)
         loopPlugin = LoopPlugin(
             aapsLogger, rxBus, preferences, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
@@ -81,7 +78,6 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(loopPlugin.name).isEqualTo("Loop")
         assertThat(loopPlugin.nameShort).isEqualTo("LOOP")
         assertThat(loopPlugin.showInList(PluginType.LOOP)).isTrue()
-        assertThat(loopPlugin.preferencesId.toLong()).isEqualTo(PluginDescription.PREFERENCE_SCREEN)
 
         // Plugin is enabled by default
         assertThat(loopPlugin.isEnabled()).isTrue()
@@ -115,13 +111,6 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(d.value()).isWithin(0.01).of(HardLimits.MAX_IOB_LGS)
         assertThat(d.getReasons()).isEqualTo("Loop: Limiting IOB to 0.0 U because of Low Glucose Suspend")
         assertThat(d.getMostLimitedReasons()).isEqualTo("Loop: Limiting IOB to 0.0 U because of Low Glucose Suspend")
-    }
-
-    @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        loopPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 
     @Test

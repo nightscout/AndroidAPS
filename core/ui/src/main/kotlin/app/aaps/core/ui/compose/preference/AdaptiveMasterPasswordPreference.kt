@@ -31,7 +31,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun AdaptiveMasterPasswordPreferenceItem(
     checkPassword: (password: String, hash: String) -> Boolean,
-    hashPassword: (String) -> String
+    hashPassword: (String) -> String,
+    showTitle: Boolean = true
 ) {
     val preferences = LocalPreferences.current
     val scope = rememberCoroutineScope()
@@ -58,8 +59,14 @@ fun AdaptiveMasterPasswordPreferenceItem(
     var showSetDialog by remember { mutableStateOf(false) }
 
     Preference(
-        title = { Text(stringResource(app.aaps.core.keys.R.string.master_password)) },
-        summary = { Text(summary) },
+        title = if (showTitle) {
+            { Text(stringResource(app.aaps.core.keys.R.string.master_password)) }
+        } else {
+            { Text(summary) }
+        },
+        summary = if (showTitle) {
+            { Text(summary) }
+        } else null,
         enabled = visibility.enabled,
         onClick = if (visibility.enabled) {
             {

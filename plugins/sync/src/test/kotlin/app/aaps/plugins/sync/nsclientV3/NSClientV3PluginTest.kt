@@ -519,13 +519,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        sut.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
-
-    @Test
     fun `resetToFullSync should clear sync timestamps and reset initialLoadFinished flag`() = runTest {
         // Arrange
         // 1. Set the plugin's state to a "synced" status to ensure the reset works.

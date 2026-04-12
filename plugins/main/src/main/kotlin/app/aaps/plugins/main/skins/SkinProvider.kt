@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.skin.SkinDescriptionProvider
  * Use this interface for consumers that need activeSkin() or list.
  * Use SkinDescriptionProvider for consumers that only need skinDescriptions.
  */
+@Deprecated("remove")
 interface SkinProvider : SkinDescriptionProvider {
 
     /**

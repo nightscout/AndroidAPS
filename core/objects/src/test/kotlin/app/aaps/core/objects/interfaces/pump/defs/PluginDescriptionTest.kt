@@ -53,11 +53,6 @@ class PluginDescriptionTest {
         assertThat(pluginDescription.shortName.toLong()).isEqualTo(10)
     }
 
-    @Test fun preferencesIdTest() {
-        val pluginDescription = PluginDescription().preferencesId(10)
-        assertThat(pluginDescription.preferencesId.toLong()).isEqualTo(10)
-    }
-
     @Test fun enableByDefault() {
         val pluginDescription = PluginDescription().enableByDefault(true)
         assertThat(pluginDescription.enableByDefault).isTrue()

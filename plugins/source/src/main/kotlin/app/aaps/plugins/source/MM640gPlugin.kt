@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.core.ui.compose.icons.IcGenericCgm
 import app.aaps.core.ui.compose.icons.IcPluginMM640G
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import kotlinx.coroutines.Dispatchers
@@ -42,8 +41,6 @@ class MM640gPlugin @Inject constructor(
                 title = rh.gs(R.string.mm640g)
             )
         }
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_generic_cgm)
         .icon(IcPluginMM640G)
         .pluginName(R.string.mm640g)
         .preferencesVisibleInSimpleMode(false)

@@ -168,7 +168,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             )
         insightPlugin = InsightPlugin(
             aapsLogger, rh, preferences, commandQueue, rxBus,
-            context, dateUtil, insightDbHelper, pumpSync, insightDatabase, pumpEnactResultProvider, notificationManager, ch, bolusProgressData
+            context, dateUtil, insightDbHelper, pumpSync, insightDatabase, pumpEnactResultProvider, notificationManager, ch, bolusProgressData, aapsSchedulers, blePreCheck
         )
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(

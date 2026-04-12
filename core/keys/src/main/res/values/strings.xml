@@ -330,8 +330,8 @@
     <string name="lang_zh_tw">Chinese, Traditional</string>
     <string name="lang_zh_cn">Chinese, Simplified</string>
     <string name="pref_title_skin">Skin</string>
-    <string name="pref_title_patient_name">Patient name</string>
-    <string name="pref_summary_patient_name">Please provide patient name or nickname to differentiate among multiple setups</string>
+    <string name="pref_title_patient_name">Name</string>
+    <string name="pref_summary_patient_name">Name to identify this AAPS instance (shown in reports and sync)</string>
 
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS directory</string>
@@ -351,9 +351,6 @@
     <string name="pref_dark_theme">Dark theme</string>
     <string name="pref_light_theme">Light theme</string>
     <string name="pref_follow_system_theme">Use device theme</string>
-
-    <!-- StringKey: Overview preferences -->
-    <string name="pref_title_copy_settings_from_ns">Copy settings from NS</string>
 
     <!-- StringKey: Safety preferences -->
     <string name="pref_title_patient_age">Patient age</string>
@@ -468,6 +465,5 @@
 
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Range for visualization</string>
-    <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
 
 </resources>

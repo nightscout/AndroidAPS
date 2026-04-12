@@ -47,7 +47,7 @@ internal fun PasswordStep(
     val focusManager = LocalFocusManager.current
 
     var password by rememberSaveable { mutableStateOf("") }
-    val passwordErrorText = stringResource(app.aaps.core.validators.R.string.error_mustbe4hexadidits)
+    val passwordErrorText = stringResource(app.aaps.core.ui.R.string.error_mustbe4hexadidits)
     val isPasswordValid = password.isEmpty() || HEX_4_PATTERN.matches(password)
 
     WizardStepLayout(

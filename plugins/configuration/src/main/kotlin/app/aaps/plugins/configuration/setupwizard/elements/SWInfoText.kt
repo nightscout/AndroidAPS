@@ -1,9 +1,8 @@
 package app.aaps.plugins.configuration.setupwizard.elements
 
-import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -15,7 +14,6 @@ class SWInfoText @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper,
 
     private var textLabel: String? = null
     private var visibilityValidator: (() -> Boolean)? = null
-    private var textId: Int = 0
 
     override fun label(label: Int): SWInfoText {
         this.label = label
@@ -32,17 +30,10 @@ class SWInfoText @Inject constructor(aapsLogger: AAPSLogger, rh: ResourceHelper,
         return this
     }
 
-    override fun generateDialog(layout: LinearLayout) {
-        val context = layout.context
-        val l = TextView(context)
-        l.id = View.generateViewId()
-        textId = l.id
-        if (textLabel != null) l.text = textLabel else l.setText(label!!)
-        layout.addView(l)
-    }
-
-    override fun processVisibility(activity: AppCompatActivity) {
-        val l = activity.findViewById<TextView>(textId)
-        if (visibilityValidator?.invoke() == false) l?.visibility = View.GONE else l?.visibility = View.VISIBLE
+    @Composable
+    override fun Compose() {
+        if (visibilityValidator?.invoke() == false) return
+        val text = textLabel ?: label?.let { stringResource(it) } ?: return
+        Text(text = text)
     }
 }

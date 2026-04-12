@@ -3,9 +3,6 @@ package app.aaps.plugins.main.general.overview
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TextView
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -29,9 +26,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.StringKey
@@ -40,11 +35,6 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
-import app.aaps.core.validators.preferences.AdaptiveClickPreference
-import app.aaps.core.validators.preferences.AdaptiveDoublePreference
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.keys.OverviewStringKey
 import app.aaps.shared.impl.rx.bus.RxBusImpl
@@ -82,7 +72,6 @@ class OverviewPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_home)
         .pluginName(app.aaps.core.ui.R.string.overview)
         .shortName(R.string.overview_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_overview),
     ownPreferences = listOf(OverviewStringKey::class.java),
     aapsLogger, rh, preferences
@@ -182,148 +171,6 @@ class OverviewPlugin @Inject constructor(
                 view.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.urgentColor))
             }
         } else view.text = ""
-    }
-
-    // TODO: Remove after full migration to Compose preferences (getPreferenceScreenContent)
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "overview_buttons_settings" && requiredKey != "default_temp_targets_settings" && requiredKey != "prime_fill_settings" && requiredKey != "range_settings" && requiredKey != "statuslights_overview_advanced" && requiredKey != "overview_advanced_settings") return
-        val category = PreferenceCategory(context)
-        parent.addPreference(category)
-        category.apply {
-            key = "overview_settings"
-            title = rh.gs(app.aaps.core.ui.R.string.overview)
-            initialExpandedChildrenCount = 0
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewKeepScreenOn, summary = app.aaps.core.keys.R.string.pref_summary_keep_screen_on, title = app.aaps.core.keys.R.string.pref_title_keep_screen_on))
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "overview_buttons_settings"
-                title = rh.gs(R.string.overview_buttons_selection)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowTreatmentButton, title = app.aaps.core.ui.R.string.treatments))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowWizardButton, title = R.string.calculator_label))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowInsulinButton, title = app.aaps.core.ui.R.string.configbuilder_insulin))
-                addPreference(
-                    AdaptiveDoublePreference(
-                        ctx = context,
-                        doubleKey = DoubleKey.OverviewInsulinButtonIncrement1,
-                        dialogMessage = app.aaps.core.keys.R.string.insulin_increment_button_message,
-                        title = app.aaps.core.keys.R.string.pref_title_insulin_button_increment_1
-                    )
-                )
-                addPreference(
-                    AdaptiveDoublePreference(
-                        ctx = context,
-                        doubleKey = DoubleKey.OverviewInsulinButtonIncrement2,
-                        dialogMessage = app.aaps.core.keys.R.string.insulin_increment_button_message,
-                        title = app.aaps.core.keys.R.string.pref_title_insulin_button_increment_2
-                    )
-                )
-                addPreference(
-                    AdaptiveDoublePreference(
-                        ctx = context,
-                        doubleKey = DoubleKey.OverviewInsulinButtonIncrement3,
-                        dialogMessage = app.aaps.core.keys.R.string.insulin_increment_button_message,
-                        title = app.aaps.core.keys.R.string.pref_title_insulin_button_increment_3
-                    )
-                )
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowCarbsButton, title = app.aaps.core.ui.R.string.carbs))
-                addPreference(
-                    AdaptiveIntPreference(
-                        ctx = context,
-                        intKey = IntKey.OverviewCarbsButtonIncrement1,
-                        dialogMessage = app.aaps.core.keys.R.string.carb_increment_button_message,
-                        title = app.aaps.core.keys.R.string.pref_title_carbs_button_increment_1
-                    )
-                )
-                addPreference(
-                    AdaptiveIntPreference(
-                        ctx = context,
-                        intKey = IntKey.OverviewCarbsButtonIncrement2,
-                        dialogMessage = app.aaps.core.keys.R.string.carb_increment_button_message,
-                        title = app.aaps.core.keys.R.string.pref_title_carbs_button_increment_2
-                    )
-                )
-                addPreference(
-                    AdaptiveIntPreference(
-                        ctx = context,
-                        intKey = IntKey.OverviewCarbsButtonIncrement3,
-                        dialogMessage = app.aaps.core.keys.R.string.carb_increment_button_message,
-                        title = app.aaps.core.keys.R.string.pref_title_carbs_button_increment_3
-                    )
-                )
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowCgmButton, summary = app.aaps.core.keys.R.string.pref_summary_show_cgm_button, title = app.aaps.core.ui.R.string.cgm))
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowCalibrationButton, summary = app.aaps.core.keys.R.string.pref_summary_show_calibration_button, title = app.aaps.core.ui.R.string.calibration))
-            })
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "prime_fill_settings"
-                title = rh.gs(R.string.fill_bolus_title)
-                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ActionsFillButton1, title = app.aaps.core.keys.R.string.pref_title_fill_button_1))
-                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ActionsFillButton2, title = app.aaps.core.keys.R.string.pref_title_fill_button_2))
-                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ActionsFillButton3, title = app.aaps.core.keys.R.string.pref_title_fill_button_3))
-            })
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "range_settings"
-                title = rh.gs(app.aaps.core.keys.R.string.prefs_range_title)
-                addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewLowMark, title = app.aaps.core.keys.R.string.pref_title_low_mark))
-                addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewHighMark, title = app.aaps.core.keys.R.string.pref_title_high_mark))
-            })
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowNotesInDialogs, title = app.aaps.core.keys.R.string.overview_show_notes_field_in_dialogs_title))
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                activePlugin.activePump
-                key = "statuslights_overview_advanced"
-                title = rh.gs(app.aaps.core.ui.R.string.statuslights)
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewCageWarning, title = app.aaps.core.keys.R.string.pref_title_cage_warning))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewCageCritical, title = app.aaps.core.keys.R.string.pref_title_cage_critical))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewIageWarning, title = app.aaps.core.keys.R.string.pref_title_iage_warning))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewIageCritical, title = app.aaps.core.keys.R.string.pref_title_iage_critical))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewSageWarning, title = app.aaps.core.keys.R.string.pref_title_sage_warning))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewSageCritical, title = app.aaps.core.keys.R.string.pref_title_sage_critical))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewSbatWarning, title = app.aaps.core.keys.R.string.pref_title_sbat_warning))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewSbatCritical, title = app.aaps.core.keys.R.string.pref_title_sbat_critical))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResWarning, title = app.aaps.core.keys.R.string.pref_title_res_warning))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResCritical, title = app.aaps.core.keys.R.string.pref_title_res_critical))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattWarning, title = app.aaps.core.keys.R.string.pref_title_batt_warning))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattCritical, title = app.aaps.core.keys.R.string.pref_title_batt_critical))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBageWarning, title = app.aaps.core.keys.R.string.pref_title_bage_warning))
-                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBageCritical, title = app.aaps.core.keys.R.string.pref_title_bage_critical))
-                addPreference(
-                    AdaptiveClickPreference(
-                        ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
-                        onPreferenceClickListener = {
-                            applyStatusLightsFromNs(context)
-                            true
-                        })
-                )
-            })
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = app.aaps.core.keys.R.string.deliverpartofboluswizard, title = app.aaps.core.keys.R.string.deliverpartofboluswizard))
-            addPreference(
-                AdaptiveIntPreference(
-                    ctx = context,
-                    intKey = IntKey.OverviewResetBolusPercentageTime,
-                    dialogMessage = app.aaps.core.keys.R.string.deliver_part_of_boluswizard_reset_time,
-                    title = app.aaps.core.keys.R.string.pref_title_reset_bolus_percentage_time
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = BooleanKey.OverviewUseBolusAdvisor,
-                    summary = app.aaps.core.keys.R.string.pref_summary_use_bolus_advisor,
-                    title = app.aaps.core.keys.R.string.pref_title_use_bolus_advisor
-                )
-            )
-            addPreference(
-                AdaptiveSwitchPreference(
-                    ctx = context,
-                    booleanKey = BooleanKey.OverviewUseBolusReminder,
-                    summary = app.aaps.core.keys.R.string.pref_summary_use_bolus_reminder,
-                    title = app.aaps.core.keys.R.string.pref_title_use_bolus_reminder
-                )
-            )
-            addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "overview_advanced_settings"
-                title = rh.gs(app.aaps.core.ui.R.string.advanced_settings_title)
-                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewUseSuperBolus, summary = app.aaps.core.keys.R.string.pref_summary_use_super_bolus, title = app.aaps.core.keys.R.string.pref_title_use_super_bolus))
-            })
-        }
     }
 
     override fun applyStatusLightsFromNs(context: Context?) {

@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.ConfigPluginUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -118,7 +118,7 @@ class ConfigurationViewModel @Inject constructor(
                 val id = plugin.javaClass.simpleName
                 lookup[id] = plugin
                 val pluginEnabled = plugin.isEnabled(type)
-                val hasPreferences = plugin.preferencesId != PluginDescription.PREFERENCE_NONE
+                val hasPreferences = plugin.hasPreferences()
                 ConfigPluginUiModel(
                     id = id,
                     name = plugin.name,
@@ -133,16 +133,16 @@ class ConfigurationViewModel @Inject constructor(
 
             val enabledPlugins = pluginModels.filter { it.isEnabled }
             val subtitle = when {
-                enabledPlugins.size == 1 -> enabledPlugins.first().name
+                enabledPlugins.size == 1                     -> enabledPlugins.first().name
                 isMultiSelect && enabledPlugins.isNotEmpty() -> "${enabledPlugins.size}"
-                else -> "-"
+                else                                         -> "-"
             }
 
             val singleEnabled = enabledPlugins.singleOrNull()
             val defaultIcon = when (type) {
-                PluginType.SYNC -> Icons.Default.Sync
+                PluginType.SYNC    -> Icons.Default.Sync
                 PluginType.GENERAL -> Icons.Default.Extension
-                else -> Icons.Default.Settings
+                else               -> Icons.Default.Settings
             }
 
             categories.add(
@@ -158,9 +158,6 @@ class ConfigurationViewModel @Inject constructor(
             )
         }
 
-        if (config.APS || config.PUMPCONTROL || config.isEngineeringMode()) {
-            addCategory(PluginType.INSULIN, app.aaps.core.ui.R.string.configbuilder_insulin)
-        }
         if (!config.AAPSCLIENT) {
             addCategory(PluginType.BGSOURCE, app.aaps.core.ui.R.string.configbuilder_bgsource)
             addCategory(PluginType.SMOOTHING, app.aaps.core.ui.R.string.configbuilder_smoothing)

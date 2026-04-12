@@ -19,6 +19,4 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
-    // Used for SetupWizardActivity
-    open fun updateButtons() {}
 }

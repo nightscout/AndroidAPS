@@ -47,10 +47,6 @@
     <string name="or">Or</string>
     <string name="xor">Exclusive or</string>
     <string name="atspecifiedtime">At %1$s</string>
-    <string name="use_network_location">Use network location</string>
-    <string name="use_gps_location">Use GPS location</string>
-    <string name="use_passive_location">Use passive location</string>
-    <string name="locationservice">Location service</string>
     <string name="onconnect">On connect</string>
     <string name="ondisconnect">On disconnect</string>
     <string name="short_avgdelta">Short avg. delta</string>

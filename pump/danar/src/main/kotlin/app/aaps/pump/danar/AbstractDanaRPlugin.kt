@@ -94,7 +94,6 @@ abstract class AbstractDanaRPlugin protected constructor(
         .icon(IcPluginDana)
         .pluginName(app.aaps.pump.dana.R.string.danarpump)
         .shortName(app.aaps.pump.dana.R.string.danarpump_shortname)
-        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_r),
     ownPreferences = listOf(DanaStringNonKey::class.java, DanaIntKey::class.java, DanaIntNonKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java),
     aapsLogger, rh, preferences, commandQueue

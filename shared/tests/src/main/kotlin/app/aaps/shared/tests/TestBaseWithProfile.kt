@@ -1,9 +1,7 @@
 package app.aaps.shared.tests
 
-import android.content.SharedPreferences
 import android.content.res.Resources
 import android.content.res.TypedArray
-import androidx.preference.PreferenceManager
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
@@ -42,15 +40,6 @@ import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.core.validators.preferences.AdaptiveClickPreference
-import app.aaps.core.validators.preferences.AdaptiveDoublePreference
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
-import app.aaps.core.validators.preferences.AdaptiveListIntPreference
-import app.aaps.core.validators.preferences.AdaptiveListPreference
-import app.aaps.core.validators.preferences.AdaptiveStringPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
-import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.implementation.aps.DetermineBasalResult
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
@@ -64,14 +53,11 @@ import dagger.android.DaggerApplication
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONObject
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers.anyDouble
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.MockedStatic
-import org.mockito.Mockito
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -96,8 +82,6 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var theme: Resources.Theme
     @Mock lateinit var typedArray: TypedArray
-    @Mock lateinit var sharedPreferences: SharedPreferences
-    @Mock lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     @Mock lateinit var localProfileManager: LocalProfileManager
     @Mock lateinit var insulin: Insulin
     @Mock lateinit var ch: ConcentrationHelper
@@ -129,52 +113,17 @@ open class TestBaseWithProfile : TestBase() {
 
     val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is AdaptiveDoublePreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-            }
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.config = config
-            }
-            if (it is AdaptiveIntentPreference) {
-                it.preferences = preferences
-            }
-            if (it is AdaptiveUnitPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-            }
-            if (it is AdaptiveSwitchPreference) {
-                it.preferences = preferences
-                it.config = config
-            }
-            if (it is AdaptiveStringPreference) {
-                it.preferences = preferences
-            }
-            if (it is AdaptiveListPreference) {
-                it.preferences = preferences
-            }
-            if (it is AdaptiveListIntPreference) {
-                it.preferences = preferences
-            }
-            if (it is AdaptiveClickPreference) {
-                it.preferences = preferences
-            }
             injectors.forEach { fn -> fn(it) }
         }
     }
 
     private lateinit var validProfileJSON: String
     private lateinit var invalidProfileJSON: String
-    lateinit var preferenceManager: PreferenceManager
     lateinit var validProfile: ProfileSealed.Pure
     lateinit var effectiveProfile: ProfileSealed.EPS
     lateinit var effectiveProfileSwitch: EPS
     lateinit var profileSwitch: PS
     lateinit var testPumpPlugin: TestPumpPlugin
-
-    private lateinit var mockedPreferenceManager: MockedStatic<android.preference.PreferenceManager>
 
     var now = 1656358822000L
 
@@ -189,19 +138,6 @@ open class TestBaseWithProfile : TestBase() {
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
 
-        // Mock SharedPreferences for AdaptiveListIntPreference
-        whenever(sharedPreferences.getInt(any(), any())).thenReturn(-1)
-        whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
-        whenever(sharedPreferencesEditor.remove(any())).thenReturn(sharedPreferencesEditor)
-        whenever(sharedPreferencesEditor.putString(any(), any())).thenReturn(sharedPreferencesEditor)
-
-        // Mock static PreferenceManager.getDefaultSharedPreferences
-        mockedPreferenceManager = Mockito.mockStatic(android.preference.PreferenceManager::class.java)
-        mockedPreferenceManager.`when`<SharedPreferences> {
-            android.preference.PreferenceManager.getDefaultSharedPreferences(any())
-        }.thenReturn(sharedPreferences)
-
-        preferenceManager = PreferenceManager(context)
         dateUtil = spy(DateUtilImpl(context))
         decimalFormatter = DecimalFormatterImpl(rh)
         profileUtil = ProfileUtilImpl(preferences, decimalFormatter)
@@ -366,11 +302,6 @@ open class TestBaseWithProfile : TestBase() {
         whenever(ch.fromPump(any<PumpInsulin>(), any<Boolean>())).thenAnswer { invocation ->
             (invocation.arguments[0] as PumpInsulin).cU
         }
-    }
-
-    @AfterEach
-    fun cleanupMock() {
-        mockedPreferenceManager.close()
     }
 
     fun getValidProfileStore(): ProfileStore {

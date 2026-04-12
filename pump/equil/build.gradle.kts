@@ -28,7 +28,6 @@ dependencies {
     implementation(project(":core:objects"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":core:validators"))
 
     testImplementation(project(":shared:tests"))
 

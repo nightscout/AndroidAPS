@@ -41,7 +41,7 @@ sealed interface ImportStep {
         val file: PrefsFile,
         val fileSource: ImportSource,
         val masterPassword: String = "",
-        val masterPasswordError: Boolean = false,
+        val passwordFieldError: Boolean = false,
         val decryptionPassword: String = "",
         val needsDecryptionPassword: Boolean = false,
         val decryptResult: ImportDecryptResult? = null,
@@ -189,7 +189,10 @@ class ImportViewModel @Inject constructor(
     fun selectFile(item: ImportFileItem) {
         importStep.value = ImportStep.Review(
             file = item.prefsFile,
-            fileSource = item.source
+            fileSource = item.source,
+            // No local master password → skip the "try master password first" optimization
+            // and ask for the file's decryption password directly.
+            needsDecryptionPassword = !importExportPrefs.isMasterPasswordSet()
         )
     }
 
@@ -198,7 +201,7 @@ class ImportViewModel @Inject constructor(
         if (current is ImportStep.Review) {
             importStep.value = current.copy(
                 masterPassword = pw,
-                masterPasswordError = false
+                passwordFieldError = false
             )
         }
     }
@@ -214,14 +217,15 @@ class ImportViewModel @Inject constructor(
         val current = importStep.value
         if (current !is ImportStep.Review || current.isProcessing) return
 
-        if (!importExportPrefs.isMasterPasswordSet()) {
-            importStep.value = current.copy(masterPasswordError = true)
-            return
-        }
-
         val password = if (current.needsDecryptionPassword) current.decryptionPassword else current.masterPassword
         if (password.isBlank()) {
-            importStep.value = current.copy(masterPasswordError = !current.needsDecryptionPassword)
+            // Symmetric guard: surface the blank-password error on whichever field is currently active.
+            // Fresh-install path uses decryptResult=WrongPassword (which the decryption password field reads for its error);
+            // master-password path uses passwordFieldError.
+            importStep.value = if (current.needsDecryptionPassword)
+                current.copy(decryptResult = ImportDecryptResult.WrongPassword)
+            else
+                current.copy(passwordFieldError = true)
             return
         }
 

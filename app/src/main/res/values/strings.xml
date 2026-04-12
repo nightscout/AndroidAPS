@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_lang" translatable="false">System default</string>
-    <string name="nav_preferences_plugin">%1$s Preferences</string>
     <string name="delta">Delta</string>
-    <string name="language" translatable="false">Language</string>
     <string name="save">Save</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
     <string name="invalid">INVALID</string>
-    <string name="pump_unreachable_threshold">Pump unreachable threshold [min]</string>
     <string name="close_navigation">Close navigation</string>
     <string name="remove_items">Remove items</string>
     <string name="sort_items">Sort items</string>
-    <string name="unitsnosemicolon">Units</string>
     <string name="authorizationfailed">Authorization failed</string>
     <string name="cannula">Cannula</string>
     <string name="identification_not_set">Identification not set in dev mode</string>

@@ -153,7 +153,7 @@ private fun EnterPasswordStep(
             value = password,
             onValueChange = { input -> input.filter { it.isHexChar() }.take(4).uppercase().let(onPasswordChange) },
             label = { Text(stringResource(R.string.danars_password_title)) },
-            supportingText = { Text(stringResource(app.aaps.core.validators.R.string.error_mustbe4hexadidits)) },
+            supportingText = { Text(stringResource(app.aaps.core.ui.R.string.error_mustbe4hexadidits)) },
             keyboardOptions = hexKeyboardOptions,
             singleLine = true,
             modifier = Modifier.fillMaxWidth()

@@ -66,6 +66,7 @@ android {
             applicationId = "info.nightscout.androidaps"
             dimension = "standard"
             resValue("string", "app_name", "AAPS")
+            resValue("string", "label_actions_activity", "AAPS")
             versionName = Versions.appVersion
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
         }
@@ -73,6 +74,7 @@ android {
             applicationId = "info.nightscout.aapspumpcontrol"
             dimension = "standard"
             resValue("string", "app_name", "Pumpcontrol")
+            resValue("string", "label_actions_activity", "Pumpcontrol")
             versionName = Versions.appVersion + "-pumpcontrol"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_pumpcontrol"
         }
@@ -80,6 +82,7 @@ android {
             applicationId = "info.nightscout.aapsclient"
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient")
+            resValue("string", "label_actions_activity", "AAPSClient")
             versionName = Versions.appVersion + "-aapsclient"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_yellowowl"
         }
@@ -87,6 +90,7 @@ android {
             applicationId = "info.nightscout.aapsclient2"
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient2")
+            resValue("string", "label_actions_activity", "AAPSClient2")
             versionName = Versions.appVersion + "-aapsclient2"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_blueowl"
         }
@@ -94,6 +98,7 @@ android {
             applicationId = "info.nightscout.aapsclient3"
             dimension = "standard"
             resValue("string", "app_name", "AAPSClient3")
+            resValue("string", "label_actions_activity", "AAPSClient3")
             versionName = Versions.appVersion + "-aapsclient3"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_greenowl"
         }

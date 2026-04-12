@@ -116,7 +116,7 @@ import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.protection.BiometricCheck
 import app.aaps.plugins.configuration.activities.OptimizationPermissionContract
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
-import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
+import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.ui.compose.automationSheet.AutomationViewModel
@@ -169,6 +169,7 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var configBuilder: ConfigBuilder
+    @Inject lateinit var swDefinition: SWDefinition
     @Inject lateinit var config: Config
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var visibilityContext: PreferenceVisibilityContext
@@ -393,7 +394,7 @@ class ComposeMainActivity : AppCompatActivity() {
             if (!preferences.get(BooleanNonKey.GeneralSetupWizardProcessed) && !isRunningRealPumpTest()) {
                 protectionCheck.requestProtection(ProtectionCheck.Protection.PREFERENCES) { result ->
                     if (result == ProtectionResult.GRANTED) {
-                        startActivity(Intent(this@ComposeMainActivity, SetupWizardActivity::class.java))
+                        navController.navigate(AppRoute.SetupWizard.route)
                     }
                 }
             }
@@ -644,6 +645,8 @@ class ComposeMainActivity : AppCompatActivity() {
                 statsViewModel = statsViewModel,
                 siteRotationManagementViewModel = siteRotationManagementViewModel,
                 graphViewModel = graphViewModel,
+                swDefinition = swDefinition,
+                rxBus = rxBus,
                 activePlugin = activePlugin,
                 preferences = preferences,
                 rh = rh,
@@ -663,6 +666,13 @@ class ComposeMainActivity : AppCompatActivity() {
                 },
                 onRefreshPermissions = { permissionsViewModel.refresh() },
                 onExecuteQuickWizard = { guid -> mainViewModel.executeQuickWizard(this@ComposeMainActivity, guid) },
+                onRequestDirectoryAccess = {
+                    try {
+                        accessTree?.launch(null)
+                    } catch (_: Exception) {
+                    }
+                },
+                onRequestPermission = { group -> permissionsViewModel.requestPermission(group) },
                 findScreenDef = { key -> findScreenDef(key) },
             )
         }
@@ -687,18 +697,19 @@ class ComposeMainActivity : AppCompatActivity() {
     }
 
     private fun findScreenDef(key: String): PreferenceSubScreenDef? {
-        // Check built-in screens from BuiltInSearchables
+        // Check built-in screens from BuiltInSearchables (including nested subscreens)
         builtInSearchables.getSearchableItems().forEach { item ->
-            if (item is SearchableItem.Category && item.screenDef.key == key) {
-                return item.screenDef
+            if (item is SearchableItem.Category) {
+                if (item.screenDef.key == key) return item.screenDef
+                val nested = findNestedScreen(item.screenDef, key)
+                if (nested != null) return nested
             }
         }
-        // Check plugin screens
+        // Check plugin screens (including nested subscreens)
         for (plugin in activePlugin.getPluginsList()) {
             val content = plugin.getPreferenceScreenContent()
             if (content is PreferenceSubScreenDef) {
                 if (content.key == key) return content
-                // Check nested screens
                 val nested = findNestedScreen(content, key)
                 if (nested != null) return nested
             }
@@ -940,7 +951,7 @@ class ComposeMainActivity : AppCompatActivity() {
 
             ElementType.PROFILE_HELPER          -> navController.navigate(AppRoute.ProfileHelper.route)
             ElementType.HISTORY_BROWSER         -> startActivity(Intent(this@ComposeMainActivity, uiInteraction.historyBrowseActivity))
-            ElementType.SETUP_WIZARD            -> startActivity(Intent(this@ComposeMainActivity, SetupWizardActivity::class.java))
+            ElementType.SETUP_WIZARD            -> navController.navigate(AppRoute.SetupWizard.route)
             ElementType.MAINTENANCE             -> mainViewModel.setShowMaintenanceSheet(true)
             ElementType.CONFIGURATION           -> navController.navigate(AppRoute.Configuration.route)
             ElementType.ABOUT                   -> mainViewModel.setShowAboutDialog(true)

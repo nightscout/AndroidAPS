@@ -1161,13 +1161,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun preferenceScreenTest() {
-        val screen = preferenceManager.createPreferenceScreen(context)
-        smsCommunicatorPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
-        assertThat(screen.preferenceCount).isGreaterThan(0)
-    }
-
-    @Test
     fun `requiredPermissions should include sms permissions`() {
         val allPermissions = smsCommunicatorPlugin.requiredPermissions().flatMap { it.permissions }
         assertThat(allPermissions).contains(Manifest.permission.RECEIVE_SMS)

@@ -65,7 +65,7 @@ private fun SerialNumberStepContent(
     var password by rememberSaveable { mutableStateOf("") }
 
     val serialErrorText = stringResource(R.string.error_mustbe6hexadidits)
-    val passwordErrorText = stringResource(app.aaps.core.validators.R.string.error_mustbe4hexadidits)
+    val passwordErrorText = stringResource(app.aaps.core.ui.R.string.error_mustbe4hexadidits)
 
     val isSerialValid = HEX_6_PATTERN.matches(serial)
     val isPasswordValid = password.isEmpty() || HEX_4_PATTERN.matches(password)

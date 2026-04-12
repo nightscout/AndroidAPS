@@ -20,7 +20,6 @@ android {
 dependencies {
     api(libs.androidx.core)
     api(libs.androidx.appcompat)
-    api(libs.androidx.preference)
     api(libs.androidx.gridlayout)
 
     api(libs.com.google.android.material)
