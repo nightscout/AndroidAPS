@@ -154,8 +154,6 @@
     <string name="lang_zh_tw">Tiếng Trung Phồn Thể</string>
     <string name="lang_zh_cn">Tiếng Trung, Giản thể</string>
     <string name="pref_title_skin">Giao diện</string>
-    <string name="pref_title_patient_name">Tên người dùng</string>
-    <string name="pref_summary_patient_name">Vui lòng cung cấp tên bệnh nhân hoặc biệt danh để phân biệt giữa nhiều thiết lập</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Thư mục AAPS</string>
     <!-- StringKey: Protection preferences -->
