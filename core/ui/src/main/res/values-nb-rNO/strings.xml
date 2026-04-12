@@ -634,6 +634,8 @@
     <string name="wizard_carb_time">Karbotid</string>
     <string name="carb_time_now">Nå</string>
     <string name="change">Endre</string>
+    <string name="grant">Tillat</string>
+    <string name="set">Angi</string>
     <string name="wizard_set_alarm">Sett alarm</string>
     <string name="wizard_use_percentage">Bruk prosent</string>
     <string name="wizard_include_bg">Inkluder BS</string>
