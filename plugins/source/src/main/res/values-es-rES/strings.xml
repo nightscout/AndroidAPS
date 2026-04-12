@@ -40,7 +40,7 @@
     <string name="description_source_notification_reader">Leer los valores de glucosa de las notificaciones publicadas por las aplicaciones oficiales de MCG (Dexcom, Medtronic, Eversense, etc.)</string>
     <!-- Permission rationales -->
     <string name="permission_dexcom_title">MCG Dexcom</string>
-    <string name="permission_dexcom_description">La aplicación necesita permiso para recibir datos del CGM desde la aplicación Dexcom</string>
+    <string name="permission_dexcom_description">La aplicación necesita permiso para recibir datos del MCG desde la aplicación Dexcom</string>
     <string name="permission_notification_listener_title">Acceso a notificaciones</string>
     <string name="permission_notification_listener_description">Requerido para leer los valores de glucosa de las notificaciones de la aplicación MCG</string>
 </resources>
