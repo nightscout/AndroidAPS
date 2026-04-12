@@ -7,7 +7,7 @@
     <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU entregado</string>
     <string name="bolus_delivered_successfully">Bolo %1$.2fU entregado con éxito</string>
     <!-- PumpPluginBase -->
-    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Se ha cambiado el controlador de la bomba.</string>
     <!--    DateUtil-->
     <string name="minago">Hace %1$dm</string>
     <string name="secago">Hace %1$ds</string>
