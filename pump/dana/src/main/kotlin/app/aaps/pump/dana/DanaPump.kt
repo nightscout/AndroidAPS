@@ -210,11 +210,11 @@ class DanaPump @Inject constructor(
             extendedBolusDuration = 0L
             extendedBolusAmount = 0.0
         }
-    private val extendedBolusPassedMinutes: Int
+    val extendedBolusPassedMinutes: Int
         get() = T.msecs(max(0, dateUtil.now() - extendedBolusStart)).mins().toInt()
     val extendedBolusRemainingMinutes: Int
         get() = max(T.msecs(extendedBolusStart + extendedBolusDuration - dateUtil.now()).mins().toInt(), 0)
-    private val extendedBolusDurationInMinutes: Int
+    val extendedBolusDurationInMinutes: Int
         get() = T.msecs(extendedBolusDuration).mins().toInt()
     var extendedBolusAbsoluteRate: Double
         get() = extendedBolusAmount * T.hours(1).msecs() / extendedBolusDuration

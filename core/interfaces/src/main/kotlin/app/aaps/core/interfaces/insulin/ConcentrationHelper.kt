@@ -53,10 +53,11 @@ interface ConcentrationHelper {
      * i.e. "4 U 5 min ago", and with both value if other concentration: i.e. for U200 "4 U (2 CU) 5 min ago"
      *
      * @param amount PumpInsulin
-     * @param ago String
-     * @return String with units (U100) or with both units if not U100
+     * @param lastBolusTime Long
+     * @return String with units (U100) or with both units if not U100 and ago if less than 6 hour ago, else null
      */
     fun insulinAmountAgoString(amount: PumpInsulin, ago: String): String
+    fun insulinAmountAgoString(amount: PumpInsulin, lastBolusTime: Long): String?
 
     /**
      * show insulinConcentration as a String i.e. "U100", "U200", ...

@@ -12,8 +12,11 @@ import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -56,6 +59,7 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class MedtronicOverviewEvent {
     data object ShowHistory : MedtronicOverviewEvent()
@@ -69,6 +73,7 @@ sealed class MedtronicOverviewEvent {
 @HiltViewModel
 class MedtronicOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
+    private val ch: ConcentrationHelper,
     private val medtronicPumpPlugin: MedtronicPumpPlugin,
     private val medtronicPumpStatus: MedtronicPumpStatus,
     private val medtronicUtil: MedtronicUtil,
@@ -158,32 +163,34 @@ class MedtronicOverviewViewModel @Inject constructor(
 
         // Last connection
         val (lastConnText, lastConnLevel) = buildLastConnection()
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = lastConnText, level = lastConnLevel))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = lastConnText, level = lastConnLevel))
 
         // Last bolus
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_bolus_label), value = buildLastBolus()))
+        buildLastBolus()?.let {
+            add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_bolus_label), value = it))
+        }
 
         // Base basal rate
         val basalText = "(" + medtronicPumpStatus.activeProfileName + ")  " +
-            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, medtronicPumpPlugin.baseBasalRate.cU)
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label), value = basalText))
+            ch.basalRateString(medtronicPumpPlugin.baseBasalRate, true)
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = basalText))
 
         // Temp basal
         val tbrText = buildTempBasal()
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.tempbasal_label), value = tbrText, visible = tbrText.isNotEmpty()))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.tempbasal_label), value = tbrText, visible = tbrText.isNotEmpty()))
 
         // Battery
         val (batteryText, batteryLevel) = buildBattery()
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.battery_label), value = batteryText, level = batteryLevel))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.battery_label), value = batteryText, level = batteryLevel))
 
         // Reservoir
         val (reservoirText, reservoirLevel) = buildReservoir()
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.reservoir_label), value = reservoirText, level = reservoirLevel))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.reservoir_label), value = reservoirText, level = reservoirLevel))
 
         // Errors
         val errorsText = medtronicPumpStatus.errorInfo
         val errorsLevel = if (errorsText != PLACEHOLDER) StatusLevel.CRITICAL else StatusLevel.NORMAL
-        add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.errors), value = errorsText, level = errorsLevel))
+        add(PumpInfoRow(label = rh.gs(CoreUiR.string.errors), value = errorsText, level = errorsLevel))
     }
 
     private fun buildPumpStatusText(): String {
@@ -248,31 +255,24 @@ class MedtronicOverviewViewModel @Inject constructor(
         }
     }
 
-    private fun buildLastBolus(): String {
-        val bolus = medtronicPumpStatus.lastBolusAmount
+    private fun buildLastBolus(): String? {
+        val bolus = medtronicPumpStatus.lastBolusAmount?.let { PumpInsulin(it) }
         val bolusTime = medtronicPumpStatus.lastBolusTime
-        if (bolus == null || bolusTime == null) return ""
-
-        val agoMsc = System.currentTimeMillis() - bolusTime.time
-        val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
-        val unit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
-        val ago = when {
-            agoMsc < 60 * 1000 -> rh.gs(R.string.medtronic_pump_connected_now)
-            bolusMinAgo < 60   -> dateUtil.minAgo(rh, bolusTime.time)
-            else               -> dateUtil.hourAgo(bolusTime.time, rh)
-        }
-        return rh.gs(R.string.mdt_last_bolus, bolus, unit, ago)
+        if (bolus == null || bolusTime == null)
+            return null
+        return ch.insulinAmountAgoString(bolus, bolusTime.time)
     }
 
     private fun buildTempBasal(): String {
         val tbrRemainingTime = medtronicPumpStatus.tbrRemainingTime ?: return ""
-        return rh.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime)
+        val tempBasalAmount = medtronicPumpStatus.tempBasalAmount?.let { PumpRate(it) } ?: return ""
+        return rh.gs(R.string.medtronic_tbr_remaining, ch.basalRateString(tempBasalAmount, true), tbrRemainingTime)
     }
 
     private fun buildBattery(): Pair<String, StatusLevel> {
         val remaining = medtronicPumpStatus.batteryRemaining
         val text = if (medtronicPumpStatus.batteryType == BatteryType.None || medtronicPumpStatus.batteryVoltage == null) {
-            remaining?.let { "$it%" } ?: rh.gs(app.aaps.core.ui.R.string.unknown)
+            remaining?.let { "$it%" } ?: rh.gs(CoreUiR.string.unknown)
         } else {
             (remaining?.let { "$it%  " } ?: "") +
                 String.format(Locale.getDefault(), "(%.2f V)", medtronicPumpStatus.batteryVoltage)
@@ -287,12 +287,12 @@ class MedtronicOverviewViewModel @Inject constructor(
     }
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
-        val remaining = medtronicPumpStatus.reservoirRemainingUnits
-        val full = medtronicPumpStatus.reservoirFullUnits
-        val text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, remaining, full)
+        val remaining = PumpInsulin(medtronicPumpStatus.reservoirRemainingUnits)
+        //val full = ch.fromPump(PumpInsulin(medtronicPumpStatus.reservoirFullUnits.toDouble())).toInt()
+        val text = ch.insulinAmountString(remaining) // "/ $full U" removed
         val level = when {
-            remaining <= 20.0 -> StatusLevel.CRITICAL
-            remaining <= 50.0 -> StatusLevel.WARNING
+            ch.fromPump(remaining) <= 20.0 -> StatusLevel.CRITICAL
+            ch.fromPump(remaining) <= 50.0 -> StatusLevel.WARNING
             else              -> StatusLevel.NORMAL
         }
         return text to level
@@ -305,7 +305,7 @@ class MedtronicOverviewViewModel @Inject constructor(
     private fun buildPrimaryActions(): List<PumpAction> {
         return listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
+                label = rh.gs(CoreUiR.string.refresh),
                 icon = Icons.Filled.Refresh,
                 onClick = { onRefreshClicked() }
             )
@@ -323,7 +323,7 @@ class MedtronicOverviewViewModel @Inject constructor(
                 onClick = { _events.tryEmit(MedtronicOverviewEvent.ShowRileyLinkPairWizard) }
             ),
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.pump_history),
+                label = rh.gs(CoreUiR.string.pump_history),
                 icon = Icons.Filled.History,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { _events.tryEmit(MedtronicOverviewEvent.ShowHistory) }
@@ -394,7 +394,7 @@ class MedtronicOverviewViewModel @Inject constructor(
     private fun emitNotConfiguredDialog() {
         _events.tryEmit(
             MedtronicOverviewEvent.ShowDialog(
-                rh.gs(app.aaps.core.ui.R.string.warning),
+                rh.gs(CoreUiR.string.warning),
                 rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration)
             )
         )
