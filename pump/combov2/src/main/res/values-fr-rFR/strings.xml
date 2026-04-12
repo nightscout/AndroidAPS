@@ -30,6 +30,8 @@
     <string name="combov2_steps_if_no_connection_during_pairing">Au bout d\'un moment, le nom du téléphone s\'affiche sur l\'écran de la pompe. Appuyez sur CHECK pour confirmer.\n\nLorsque l\'appairage est terminé avec succès, confirmez sur votre pompe en appuyant deux fois sur le bouton CHECK pour revenir à l\'écran d\'accueil.\n\nSi aucune connexion n\'est établie après plus de ~5 minutes :\n\n1. Appuyez sur le bouton \"Retour\" ou sur le bouton \"Annuler l\'appairage\"\n2. Annulez l\'appairage sur la Combo (appuyez en même temps sur les boutons HAUT et MENU pour annuler l\'appairage)\nEssayez à nouveau de faire l\'appairage</string>
     <string name="combov2_enter_pin">Saisir le code PIN</string>
     <string name="combov2_cancel_pairing">Annuler l\'appairage</string>
+    <string name="combov2_confirm_cancel_pairing_message">Voulez-vous vraiment annuler l\'appairage ?</string>
+    <string name="combov2_confirm_unpair_message">Voulez-vous vraiment dissocier la pompe ?</string>
     <string name="combov2_pin_hint">Code PIN à 10 chiffres</string>
     <string name="combov2_pairing_finished_successfully">Appairage réussi avec Combo</string>
     <string name="combov2_pairing_cancelled">L\'appairage avec Combo a été annulé par l\'utilisateur</string>
@@ -80,6 +82,9 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (moins de 1 min restantes)</string>
     <string name="combov2_load_tdds_cancelled">Chargement des DTQ annulé</string>
     <string name="combov2_retrieving_tdds_failed">Échec de la récupération des DTQ</string>
+    <string name="combov2_battery_empty">Vide</string>
+    <string name="combov2_battery_low">Faible</string>
+    <string name="combov2_battery_full">Pleine</string>
     <string name="combov2_battery_low_warning">Pile pompe faible</string>
     <string name="combov2_reservoir_low_warning">Niveau réservoir pompe bas</string>
     <string name="combov2_setting_tbr_succeeded">Paramétrage du DBT réussi</string>
