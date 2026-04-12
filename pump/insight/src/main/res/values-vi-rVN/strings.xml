@@ -60,4 +60,9 @@
     <string name="pump_alert">Cảnh báo Bơm</string>
     <string name="pairing_information">Thông tin ghép nối</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Hủy ghép nối</string>
+    <string name="reset_pairing">Đặt lại thông tin ghép đôi?</string>
+    <string name="active_basal_rate">Tỷ lệ liều nền đang hoạt động</string>
+    <string name="active_tbr">TBR đang hoạt động</string>
+    <string name="reservoir_level">Mức Insulin</string>
 </resources>
