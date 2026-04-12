@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Bucle desactivado</string>
     <string name="calculator_label">Calculadora</string>
-    <!-- Actions -->
-    <string name="actions">Acciones</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
-    <string name="actions_shortname">ACC</string>
-    <string name="status">Estado</string>
-    <string name="pump_actions">Acciones de la bomba</string>
-    <string name="tempbasal_button">Basal temporal</string>
-    <string name="extended_bolus_button">Bolo extendido</string>
-    <string name="extended_bolus_cancel_button">Cancelar bolo extendido</string>
-    <string name="tools">Herramientas</string>
     <string name="nav_history_browser">Historial</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">Edad:</string>
