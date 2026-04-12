@@ -634,6 +634,8 @@
     <string name="wizard_carb_time">Tempo Carbo</string>
     <string name="carb_time_now">Adesso</string>
     <string name="change">Cambiare</string>
+    <string name="grant">Concedi</string>
+    <string name="set">Imposta</string>
     <string name="wizard_set_alarm">Imposta allarme</string>
     <string name="wizard_use_percentage">Uso percentuale</string>
     <string name="wizard_include_bg">Includi Glicemia</string>
@@ -693,6 +695,7 @@
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Connetti al micro: cliccato</string>
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Unità giornaliere</string>
+    <string name="max_daily_units">Unità massime giornaliere</string>
     <string name="pump_icon">Icona micro</string>
     <string name="view_profile">Visualizza profilo</string>
     <string name="pump_history">Storico micro</string>
@@ -716,6 +719,7 @@
     <string name="firmware" comment="Pump firmware version label">Firmware</string>
     <string name="bolusspeed" comment="Speed at which bolus is delivered">Velocità bolo</string>
     <string name="history" comment="Tab/screen title for viewing past events">Storico</string>
+    <string name="overview_reservoir_concentration_value_over">Oltre %1$s rimaste</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
