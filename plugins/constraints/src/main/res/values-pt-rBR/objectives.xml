@@ -37,7 +37,6 @@
     <string name="objectives_usedisconnectpump">Simular banho. Suspender e desconectar a bomba por 1h (Pressione longo em Loop Aberto)</string>
     <string name="objectives_usereconnectpump">... e volte a conectar da mesma forma</string>
     <string name="objectives_usetemptarget">Crie um alvo temporário personalizado com 10 min de duração (pressione longo no seu alvo atual)</string>
-    <string name="objectives_useactions">No Configurador ative o plugin de Ações, torne-o visível e exiba o seu conteúdo no menu superior</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_usescale">Ajuste a escala ao pressionar por um tempo o gráfico da glicemia</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
