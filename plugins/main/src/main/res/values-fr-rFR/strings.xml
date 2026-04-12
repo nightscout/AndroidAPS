@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Boucle désactivée</string>
     <string name="calculator_label">Assistant</string>
-    <!-- Actions -->
-    <string name="actions">Actions</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">Basal Temporaire</string>
-    <string name="extended_bolus_button">Bolus étendu</string>
-    <string name="extended_bolus_cancel_button">Annuler Bolus étendu</string>
-    <string name="tools">Outils</string>
     <string name="nav_history_browser">Historique</string>
     <string name="sensor_label">Capteur</string>
     <string name="age_label">âge:</string>
