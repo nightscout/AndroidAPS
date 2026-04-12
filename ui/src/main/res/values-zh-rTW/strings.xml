@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">已套用注射限制</string>
     <string name="carbs_constraint_applied">已套用碳水化合物限制</string>
     <string name="temp_target_short">臨時目標</string>
-    <string name="dialog_canceled">對話框已取消</string>
     <string name="start_activity_tt">開始活動(臨時目標)</string>
     <string name="start_eating_soon_tt">即將開始用餐 (臨時目標)</string>
     <string name="start_hypo_tt">開始低血糖(臨時目標)</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">載入峰值來源</string>
     <string name="cannot_delete_last_insulin">無法刪除最後一個胰島素</string>
     <string name="cannot_delete_active_insulin">無法刪除目前使用中的胰島素</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$小時</string>
     <string name="timeshift_label">時間偏移</string>
     <string name="percentage_label">百分比</string>
-    <string name="permanent_profile_switch">永久（0 = 無持續時間限制）</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">暫停循環 1 小時</string>
     <string name="suspendloopfor2h">暫停循環 2 小時</string>
