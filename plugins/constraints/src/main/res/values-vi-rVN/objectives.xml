@@ -43,7 +43,6 @@
     <string name="objectives_usedisconnectpump">Mô phỏng Tắm. Ngắt kết nối bơm trong 1 giờ (nhấn giữ trên Open Loop)</string>
     <string name="objectives_usereconnectpump">… và kết nối lại theo cách tương tự</string>
     <string name="objectives_usetemptarget">Tạo mục tiêu tạm thời tùy chỉnh với thời gian 10 phút (Nhấn và giữ vào mục tiêu hiện tại của bạn)</string>
-    <string name="objectives_useactions">Trong Xây dựng cấu hình, bật plugin Các thao tác, đặt nó ở chế độ hiển thị và mở nội dung của nó từ menu trên cùng</string>
     <string name="objectives_useloop">Hiển thị nội dung của plugin Loop</string>
     <string name="objectives_usescale">Sử dụng chức năng thu phóng bằng cách nhấn giữ biểu đồ đường huyết</string>
     <string name="objectives_exam_objective">Kiểm chứng kiến thức của bạn</string>
