@@ -27,9 +27,13 @@
     <string name="exitwizard">Saltar asistente de configuración</string>
     <string name="setupwizard_sensitivity_description">El complemento de sensibilidad es usado para detectar la sensibilidad y cálculo de COB. Para más info ver:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Seleccione uno de los algoritmos disponibles. Están ordenados del más antiguo al más reciente. Normalmente, el algoritmo más nuevo es más potente. No olvide leer la documentación de OpenAPS y configurarlo antes de su uso.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, a continuación configure su RileyLink. Después de seleccionar un RileyLink, será posible continuar la configuración una vez que el estado de RileyLink esté en \"Conectado\". Esto podría tardar un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puede continuar con la configuración una vez que la bomba se haya configurado.\n</string>
     <string name="startobjective">Comienza tu primer objetivo</string>
+    <string name="setupwizard_permissions">Permisos</string>
+    <string name="setupwizard_profile_info">Cree un perfil con sus tasas basales, ratio de carbohidratos (IC), factor de sensibilidad a la insulina (ISF) y valores objetivo. Puede añadir más perfiles más adelante.</string>
+    <string name="setupwizard_permissions_info">AAPS necesita acceso al almacenamiento y permisos para funcionar correctamente. Por favor, conceda los permisos necesarios a continuación.</string>
     <string name="setupwizard_pump_riley_link_status">Estado de RileyLink:</string>
     <string name="readstatus">Leer estado</string>
     <!-- Provider-agnostic cloud export/import strings -->
