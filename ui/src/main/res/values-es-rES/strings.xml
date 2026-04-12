@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Restricción aplicada en bolo</string>
     <string name="carbs_constraint_applied">Restricción aplicada en carbohidratos</string>
     <string name="temp_target_short">OT</string>
-    <string name="dialog_canceled">Diálogo cancelado</string>
     <string name="start_activity_tt">Iniciar OT Actividad</string>
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">Cargar pico desde</string>
     <string name="cannot_delete_last_insulin">No se puede eliminar la última insulina</string>
     <string name="cannot_delete_active_insulin">No se puede eliminar la insulina activa</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="timeshift_label">Cambio de hora</string>
     <string name="percentage_label">Porcentaje</string>
-    <string name="permanent_profile_switch">Permanente (0 = sin límite de duración)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspender bucle durante 1 hora</string>
     <string name="suspendloopfor2h">Suspender bucle durante 2 horas</string>
