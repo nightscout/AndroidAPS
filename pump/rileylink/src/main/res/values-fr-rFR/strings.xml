@@ -71,4 +71,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Utiliser le scan</string>
     <string name="orange_use_scanning_level_summary">Scanner avant de se connecter à OrangeLink, cela devrait améliorer les connexions (peut également être utilisé avec d\'autres clones RileyLink, si nécessaire)</string>
+    <string name="rileylink_pair">Appairer le RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink appairé avec succès</string>
+    <string name="rileylink_config_reset">Configuration du RileyLink réinitialisée</string>
 </resources>
