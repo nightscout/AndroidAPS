@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Llaç desactivat</string>
     <string name="calculator_label">Calculadora</string>
-    <!-- Actions -->
-    <string name="actions">Accions</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Alguns botons per accedir ràpid a funcions habituals</string>
-    <string name="actions_shortname">ACC</string>
-    <string name="tempbasal_button">BasalTemp</string>
-    <string name="extended_bolus_button">Bolus estès</string>
-    <string name="extended_bolus_cancel_button">Cancel·lar bolus estès</string>
-    <string name="tools">Eines</string>
     <string name="nav_history_browser">Historial</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">edat:</string>
