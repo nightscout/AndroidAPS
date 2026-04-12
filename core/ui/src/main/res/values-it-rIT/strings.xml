@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Il campo non deve essere vuoto</string>
+    <string name="error_url_not_valid">L\'URL non è valido</string>
+    <string name="error_mustbe4hexadidits">Devono essere 4 caratteri tra ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Trattamenti</string>
     <string name="treatments_desc">Visualizza e gestisci la cronologia dei trattamenti</string>
@@ -739,6 +742,7 @@
     <string name="export_failed">Fallito</string>
     <string name="export_alert">SEGNALAZIONE</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze e riprova.</string>
     <string name="export_to">Esporta impostazioni</string>
     <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà usata per crittografare le preferenze esportate.</string>
     <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
