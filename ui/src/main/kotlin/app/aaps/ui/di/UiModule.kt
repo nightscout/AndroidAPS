@@ -7,8 +7,6 @@ import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.compose.overview.OverviewDataCacheImpl
 import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
 
-import app.aaps.ui.dialogs.ProfileSwitchDialog
-
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.DialogSearchables
 import app.aaps.ui.services.AlarmSoundService
@@ -41,8 +39,6 @@ abstract class UiModule {
 
     @ContributesAndroidInjector abstract fun contributesWidget(): Widget
     @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
-
-    @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
 
     @ContributesAndroidInjector abstract fun contributeErrorActivity(): ErrorActivity
 }

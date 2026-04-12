@@ -4,17 +4,6 @@
     <string name="disabled_loop">Loop Disabled</string>
     <string name="calculator_label">Calculator</string>
 
-    <!-- Actions -->
-    <string name="actions">Actions</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Some buttons to quickly access common features</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="status">Status</string>
-    <string name="pump_actions">Pump actions</string>
-    <string name="tempbasal_button">TempBasal</string>
-    <string name="extended_bolus_button">Extended Bolus</string>
-    <string name="extended_bolus_cancel_button">Cancel Extended Bolus</string>
-    <string name="tools">Tools</string>
     <string name="nav_history_browser">History browser</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">age:</string>

@@ -12,7 +12,6 @@ enum class BooleanNonKey(
     GeneralSetupWizardProcessed("startupwizard_processed", false),
     SetupWizardIUnderstand("I_understand", false),
     ObjectivesLoopUsed("ObjectivesLoopUsed", false),
-    ObjectivesActionsUsed("ObjectivesActionsUsed", false),
     ObjectivesScaleUsed("ObjectivesScaleUsed", false),
     ObjectivesPumpStatusIsAvailableInNS("ObjectivespumpStatusIsAvailableInNS", false),
     ObjectivesBgIsAvailableInNs("ObjectivesbgIsAvailableInNS", false),

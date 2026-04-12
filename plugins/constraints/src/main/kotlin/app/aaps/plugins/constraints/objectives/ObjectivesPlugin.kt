@@ -58,7 +58,6 @@ class ObjectivesPlugin @Inject constructor(
         preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, false)
         preferences.put(BooleanNonKey.ObjectivesReconnectUsed, false)
         preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, false)
-        preferences.put(BooleanNonKey.ObjectivesActionsUsed, false)
         preferences.put(BooleanNonKey.ObjectivesLoopUsed, false)
         preferences.put(BooleanNonKey.ObjectivesScaleUsed, false)
     }

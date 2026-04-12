@@ -19,7 +19,6 @@ class RealPumpTest {
         @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
         @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
         @Inject lateinit var loopPlugin: LoopPlugin
-        @Inject lateinit var actionsPlugin: ActionsPlugin
         @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
         @Inject lateinit var objectivesPlugin: ObjectivesPlugin
         @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
