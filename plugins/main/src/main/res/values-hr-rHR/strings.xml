@@ -2,9 +2,6 @@
 <resources>
     <string name="disabled_loop">Petlja onemogućena</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Actions -->
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Nekoliko izbora za brzi pristup uobičajenim funkcijama</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Inzulin</string>
     <!-- Overview -->
