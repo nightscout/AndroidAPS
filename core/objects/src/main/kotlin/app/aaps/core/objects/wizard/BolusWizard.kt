@@ -542,12 +542,16 @@ class BolusWizard @Inject constructor(
                             )
                         )
                         quickWizardEntry?.markAsUsed()
+                        // Schedule carb timer before bolus delivery. Scheduling in the bolus
+                        // completion callback fails when the screen is off because Android
+                        // blocks startActivity() from the background.
+                        if (useAlarm && carbs > 0 && carbTime > 0) {
+                            automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
+                        }
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                                } else if (useAlarm && carbs > 0 && carbTime > 0) {
-                                    automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
                                 }
                             }
                         })
@@ -767,12 +771,16 @@ class BolusWizard @Inject constructor(
                         )
                     )
                     quickWizardEntry?.markAsUsed()
+                    // Schedule carb timer before bolus delivery. Scheduling in the bolus
+                    // completion callback fails when the screen is off because Android
+                    // blocks startActivity() from the background.
+                    if (useAlarm && carbs > 0 && this@BolusWizard.carbTime > 0) {
+                        automation.scheduleTimeToEatReminder(T.mins(this@BolusWizard.carbTime.toLong()).secs().toInt())
+                    }
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
                             if (!result.success) {
                                 onError(result.comment)
-                            } else if (useAlarm && carbs > 0 && this@BolusWizard.carbTime > 0) {
-                                automation.scheduleTimeToEatReminder(T.mins(this@BolusWizard.carbTime.toLong()).secs().toInt())
                             }
                         }
                     })
