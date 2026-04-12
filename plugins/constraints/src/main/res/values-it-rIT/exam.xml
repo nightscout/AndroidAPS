@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Cosa è vero riguardo DIA?</string>
     <string name="dia_label_exam">Durata attività insulina (DIA)</string>
-    <string name="dia_profile">Dovresti impostare il valore DIA nel tuo profilo.</string>
     <string name="dia_minimumis5h">Il valore minimo consentito è 5 ore.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Se sei soddisfatto del valore DIA che hai usato nel tuo micro prima di AAPS, non c\'è bisogno di cambiarlo quando inizi l\'attività di loop.</string>
@@ -76,9 +75,7 @@
     <string name="prerequisites2_supportedcgm">Un CGM supportato e un\'app appropriata per ricevere valori della glicemia sul telefono/dispositivo.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Aggiornamento AAPS</string>
-    <string name="update_git">Devi avere Git installato e configurato sul tuo computer.</string>
     <string name="update_asap">Quando vengono rilasciate versioni aggiornate di AAPS, le precedenti potrebbero essere limitate da remoto dopo un determinato periodo di tempo.</string>
-    <string name="update_keys">Dovresti salvare e annotare la posizione delle tue chiavi di firma e usare per gli aggiornamenti la stessa chiave di firma della tua installazione precedente.</string>
     <string name="update_askfriend">Se hai difficoltà a costruire l\'apk, puoi installare un apk che è stato costruito da un amico.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Risoluzione problemi</string>
