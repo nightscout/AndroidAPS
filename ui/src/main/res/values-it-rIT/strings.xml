@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Vincolo bolo applicato</string>
     <string name="carbs_constraint_applied">Vincolo CHO applicato</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Finestra di dialogo cancellata</string>
     <string name="start_activity_tt">Avvia TT Attività fisica</string>
     <string name="start_eating_soon_tt">Avvia TT Pasto a breve</string>
     <string name="start_hypo_tt">Avvia TT Ipoglicemia</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">Picco di carico da</string>
     <string name="cannot_delete_last_insulin">Impossibile cancellare l\'ultima insulina</string>
     <string name="cannot_delete_active_insulin">Impossibile eliminare l\'insulina attiva</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentuale</string>
-    <string name="permanent_profile_switch">Permanente (0 = nessun limite di durata)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Sospendi loop per 1h</string>
     <string name="suspendloopfor2h">Sospendi loop per 2h</string>
