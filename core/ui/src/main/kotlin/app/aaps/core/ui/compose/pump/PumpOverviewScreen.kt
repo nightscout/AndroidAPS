@@ -122,19 +122,36 @@ private fun CommunicationStatusCard(banner: StatusBanner?, queueStatus: String?)
 // ── Info section ───────────────────────────────────────────────────────────
 
 @Composable
-private fun InfoSection(rows: List<PumpInfoRow>) {
+private fun InfoSection(rows: List<PumpInfoInterface>) {
     AapsCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             rows.forEachIndexed { index, row ->
-                AnimatedVisibility(visible = row.visible) {
-                    Column {
-                        InfoRowItem(row)
-                        if (index < rows.lastIndex) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                color = MaterialTheme.colorScheme.outlineVariant
-                            )
+                if (row is PumpInfoRow) {
+                    AnimatedVisibility(visible = row.visible) {
+                        Column {
+                            InfoRowItem(row)
+                            if (index < rows.lastIndex) {
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    color = MaterialTheme.colorScheme.outlineVariant
+                                )
+                            }
                         }
+                    }
+                } else if (row is PumpInfoGroup) {
+                    for (infoRow in row.list) {
+                        AnimatedVisibility(visible = infoRow.visible) {
+                            Column {
+                                InfoRowItem(infoRow)
+                            }
+                        }
+                    }
+
+                    if (index < rows.lastIndex) {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
                     }
                 }
             }
