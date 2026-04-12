@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop inaktiverad</string>
     <string name="calculator_label">Kalkylator</string>
-    <!-- Actions -->
-    <string name="actions">Åtgärder</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
-    <string name="actions_shortname">Act</string>
-    <string name="tempbasal_button">Temp basal</string>
-    <string name="extended_bolus_button">Förlängd bolus</string>
-    <string name="extended_bolus_cancel_button">Stoppa förlängd bolus</string>
-    <string name="tools">Verktyg</string>
     <string name="nav_history_browser">Historikläsare</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">ålder:</string>
