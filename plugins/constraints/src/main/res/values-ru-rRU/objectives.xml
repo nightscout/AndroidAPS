@@ -43,7 +43,6 @@
     <string name="objectives_usedisconnectpump">Имитация душа. Отключите помпу на 1 час (Долгое нажатие на Открытый цикл Open Loop)</string>
     <string name="objectives_usereconnectpump">... и обратное подключение таким же способом</string>
     <string name="objectives_usetemptarget">Создайте настраиваемую временную цель длительностью 10 мин. (Долгое нажатие на текущую цель)</string>
-    <string name="objectives_useactions">В Конфигураторе активируйте модуль Действия Actions, сделав его видимым и показав содержимое через верхнее меню</string>
     <string name="objectives_useloop">Просмотр содержимого модуля Замкнутый цикл</string>
     <string name="objectives_usescale">Применить функцию масштабирования по долгому нажатию на диаграмму ГК</string>
     <string name="objectives_exam_objective">Подтвердите ваши знания</string>
