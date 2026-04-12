@@ -63,6 +63,10 @@ class GarminDeviceClientTest : TestBase() {
             actions[i.getArgument<IntentFilter>(1).getAction(0)] = i.getArgument(0)
             Intent()
         }
+        on { registerReceiver(any<BroadcastReceiver>(), any(), any<Int>()) } doAnswer { i ->
+            actions[i.getArgument<IntentFilter>(1).getAction(0)] = i.getArgument(0)
+            Intent()
+        }
         on { unregisterReceiver(any()) } doAnswer { i ->
             val keys = actions.entries.filter { (_, br) -> br == i.getArgument(0) }.map { (k, _) -> k }
             keys.forEach { k -> actions.remove(k) }
