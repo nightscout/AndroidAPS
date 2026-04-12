@@ -1,9 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Enkelmodus</string>
+    <string name="pref_title_insulin_concentration">Støtte for insulinkonsentrasjon</string>
+    <string name="pref_summary_insulin_concentration">Aktiver støtte for ulike insulinkonsentrasjoner (U200, U300 osv.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Hold skjermen på</string>
+    <string name="pref_summary_keep_screen_on">Hindrer Android i å slå av skjermen. Dette bruker mye batteri når enheten ikke er koblet til strøm.</string>
+    <string name="pref_title_show_treatment_button">Vis behandlingsknapp</string>
+    <string name="pref_title_show_wizard_button">Vis kalkulatorknapp</string>
+    <string name="pref_title_show_insulin_button">Vis insulinknapp</string>
+    <string name="pref_title_show_carbs_button">Vis karboknapp</string>
+    <string name="pref_title_show_cgm_button">Vis CGM-knapp</string>
+    <string name="pref_summary_show_cgm_button">Åpner xDrip+ eller Dexcom-appen (bruk tilbakeknappen for å returnere).</string>
+    <string name="pref_title_show_calibration_button">Vis kalibreringskapp</string>
+    <string name="pref_summary_show_calibration_button">Sender en kalibrering til xDrip+ (sørg for at \'Aksepter kalibrering\' er aktivert i xDrip+ under Innstillinger mellom apper).</string>
+    <string name="pref_title_show_notes_in_dialogs">Vis merknadsfelt i dialoger</string>
+    <string name="pref_title_use_bolus_advisor">Bruk bolusrådgiver</string>
+    <string name="pref_summary_use_bolus_advisor">Aktiver bolusrådgiver som hjelper med bolusberegninger ved høyt blodsukker.</string>
+    <string name="pref_title_use_bolus_reminder">Bruk boluspåminnelse</string>
+    <string name="pref_summary_use_bolus_reminder">Varsler som hjelper deg å følge opp insulindosering.</string>
+    <string name="pref_title_use_super_bolus">Bruk superbolus</string>
+    <string name="pref_summary_use_super_bolus">Aktiverer superbolus som leverer insulin raskere ved å låne fra basal.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">Bluetooth-overvåker</string>
+    <string name="pref_summary_bt_watchdog">Slår av Bluetooth i ett sekund hvis tilkobling til pumpen feiler. Kan hjelpe på enkelte telefoner.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Varsle hvis BS-data mangler</string>
     <!-- BG Source preferences -->
     <!-- APS preferences -->
     <!-- Maintenance preferences -->
