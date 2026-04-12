@@ -60,4 +60,9 @@
     <string name="pump_alert">幫浦警報</string>
     <string name="pairing_information">配對資訊</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">解除配對</string>
+    <string name="reset_pairing">要重設配對資訊嗎？</string>
+    <string name="active_basal_rate">作用中基礎率</string>
+    <string name="active_tbr">作用中臨時基礎率</string>
+    <string name="reservoir_level">藥量</string>
 </resources>
