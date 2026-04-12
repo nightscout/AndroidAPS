@@ -37,7 +37,6 @@
     <string name="objectives_usedisconnectpump">Προσομοίωση ένδειξης. Αποσυνδέστε την αντλία για 1 ώρα (Παρατεταμένο στο Ανοιχτό Κύκλωμα)</string>
     <string name="objectives_usereconnectpump">... και επανασυνδέστε με τον ίδιο τρόπο</string>
     <string name="objectives_usetemptarget">Φτιάξτε προσωρινούς στόχους με διάρκεια 10 λεπτά (Παρατεταμένο πάτημα στον στόχο σας)</string>
-    <string name="objectives_useactions">Στην Διαμόρφωση ενεργοποιήστε την προσθήκη Ενέργειες, κάντε την ορατή ώστε να την βλέπετε από το δικό της tab</string>
     <string name="objectives_useloop">Εμφάνιση περιεχομένου της προσθήκης Κύκλωμα</string>
     <string name="objectives_usescale">Χρησιμοποιήστε τη λειτουργία κλίμακας πατώντας παρατεταμένα το διάγραμμα BG</string>
     <string name="objectives_exam_objective">Αποδείξτε τις γνώσεις σας</string>
