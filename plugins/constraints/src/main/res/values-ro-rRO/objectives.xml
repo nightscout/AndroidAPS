@@ -42,7 +42,6 @@
     <string name="objectives_usedisconnectpump">Simularea unui duș. Deconectarea pompei pentru 1 oră (Apăsare prelungă pe Buclă deschisă)</string>
     <string name="objectives_usereconnectpump">... și reconectare în același mod</string>
     <string name="objectives_usetemptarget">Creați ținte temporare personalizate pentru o durată de 10 minute (apăsare prelungă pe ținta curentă)</string>
-    <string name="objectives_useactions">În Generatorul de Configurații activați facilitatea Acțiuni, făceți-o vizibilă și afișați-i conținutul folosind meniul de sus</string>
     <string name="objectives_useloop">Afișați conținutul facilității Buclă</string>
     <string name="objectives_usescale">Folosiți funcția scală prin apăsarea prelungă a graficului glicemiei</string>
     <string name="objectives_exam_objective">Dovediți-vă cunoștințele</string>
