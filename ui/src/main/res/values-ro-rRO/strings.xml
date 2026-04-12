@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Constrângere de bolus aplicată</string>
     <string name="carbs_constraint_applied">Constrângere de carbohidrați aplicată</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Dialog anulat</string>
     <string name="start_activity_tt">Start Țintă Temporară activitate</string>
     <string name="start_eating_soon_tt">Start Țintă Temporară mănânc-în-curând</string>
     <string name="start_hypo_tt">Start Țintă Temporară hipoglicemie</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">Încarcă maxim de la</string>
     <string name="cannot_delete_last_insulin">Nu se poate șterge ultima insulină</string>
     <string name="cannot_delete_active_insulin">Nu se poate șterge insulina activă</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalare</string>
     <string name="percentage_label">Procentaj</string>
-    <string name="permanent_profile_switch">Permanent (0 = nicio limită de durată)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspendați bucla pentru 1h</string>
     <string name="suspendloopfor2h">Suspendați bucla pentru 2h</string>
