@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Loop deaktiviert</string>
     <string name="calculator_label">Rechner</string>
-    <!-- Actions -->
-    <string name="actions">Aktionen</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
-    <string name="actions_shortname">AKT</string>
-    <string name="tempbasal_button">TBR</string>
-    <string name="extended_bolus_button">Verzögerter Bolus</string>
-    <string name="extended_bolus_cancel_button">Verzögerten Bolus abbrechen</string>
-    <string name="tools">Tools</string>
     <string name="nav_history_browser">Historie</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">Alter:</string>
