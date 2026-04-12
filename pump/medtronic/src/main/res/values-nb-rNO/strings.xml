@@ -91,6 +91,7 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en midlertidig basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
+    <string name="medtronic_tbr_remaining">%1$s (%2$d min gjenstår)</string>
     <string name="mdt_tbr_remaining">%1$.1f E/t (%2$d min gjenstår)</string>
     <string name="invalid_history_data">Ugyldige data for pumpehistorikken er oppdaget. Rapporter hendelsen til APPS og legg ved logg.</string>
     <string name="riley_statistics">RL statistikk</string>
