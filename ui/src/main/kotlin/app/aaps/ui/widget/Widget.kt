@@ -30,7 +30,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
@@ -60,7 +59,6 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var lastBgData: LastBgData
     @Inject lateinit var trendCalculator: TrendCalculator
-    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var dateUtil: DateUtil
@@ -91,7 +89,6 @@ class Widget : AppWidgetProvider() {
         }
     }
 
-    private val intentAction = "OpenApp"
 
     override fun onReceive(context: Context, intent: Intent?) {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -119,11 +116,11 @@ class Widget : AppWidgetProvider() {
         val alpha = preferences.get(IntComposedKey.WidgetOpacity, appWidgetId)
         val useBlack = preferences.get(BooleanComposedKey.WidgetUseBlack, appWidgetId)
 
-        // Create an Intent to launch MainActivity when clicked
-        val intent = Intent(context, uiInteraction.mainActivity).also { it.action = intentAction }
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        // Create an Intent to launch the main (launcher) activity when clicked
+        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+        val pendingIntent = intent?.let { PendingIntent.getActivity(context, 0, it, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT) }
         // Widgets allow click handlers to only launch pending intents
-        views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
+        pendingIntent?.let { views.setOnClickPendingIntent(R.id.widget_layout, it) }
         if (config.APS || useBlack)
             views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
         else if (config.AAPSCLIENT1)
