@@ -18,7 +18,7 @@
     <string name="pumpdisconnect_unnecessary">Esto es innecesario, ya que no se entregará insulina si la bomba está físicamente desconectada.</string>
     <string name="pumpdisconnect_missinginsulin">Evita que la AAPS contabilice la insulina que no se administró mientras la bomba estaba físicamente desconectada</string>
     <string name="pumpdisconnect_notstop">No detendrá la administración de insulina si la bomba permanece conectada a su cuerpo</string>
-    <string name="pumpdisconnect_openloop">Se activará el modo de bucle abierto en AAPS.</string>
+    <string name="pumpdisconnect_openloop">Se activará el modo de lazo abierto en AAPS.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
     <string name="objectives_label">Ajustes de AAPS</string>
     <string name="objectives2_label">Ajustes de AAPS</string>
