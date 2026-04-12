@@ -1,6 +1,13 @@
 package app.aaps.ui.compose.main
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,7 +31,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.pump.BolusProgressState
@@ -153,121 +165,201 @@ fun MainScreen(
             gesturesEnabled = true,
             modifier = modifier
         ) {
-            Scaffold(
-                snackbarHost = { SnackbarHost(snackbarHostState) },
-                topBar = {
-                    MainTopBar(
-                        searchUiState = searchUiState,
-                        onMenuClick = {
-                            scope.launch {
-                                drawerState.open()
-                                onMenuClick()
-                            }
-                        },
-                        onPreferencesClick = { onNavigate(NavigationRequest.Element(ElementType.SETTINGS)) },
-                        onSearchQueryChange = onSearchQueryChange,
-                        onSearchClear = onSearchClear,
-                        onSearchActiveChange = onSearchActiveChange
-                    )
-                },
-                bottomBar = {
-                    MainNavigationBar(
-                        onManageClick = { manageSheetState.show() },
-                        onTreatmentClick = {
-                            treatmentViewModel.refreshState()
-                            showTreatmentSheet = true
-                        },
-                        quickWizardCount = uiState.quickWizardItems.size,
-                        onAutomationClick = {
-                            automationViewModel.refreshState()
-                            showAutomationSheet = true
-                        },
-                        automationCount = automationViewModel.uiState.collectAsStateWithLifecycle().value.items.size,
-                        pumpSetupClassName = pumpSetupClassName,
-                        pumpSetupIcon = pumpSetupIcon,
-                        pumpSetupLabel = pumpSetupLabel,
-                        onNavigate = onNavigate,
-                        permissionsMissing = permissionsMissing,
-                        onPermissionsClick = onPermissionsClick,
-                    )
-                },
-            ) { paddingValues ->
-                val hasToolbar = quickLaunchItems.isNotEmpty()
-                Box(modifier = Modifier.fillMaxSize()) {
-                    OverviewScreen(
-                        profileName = uiState.profileName,
-                        isProfileModified = uiState.isProfileModified,
-                        profileProgress = uiState.profileProgress,
-                        tempTargetText = uiState.tempTargetText,
-                        tempTargetState = uiState.tempTargetState,
-                        tempTargetProgress = uiState.tempTargetProgress,
-                        tempTargetReason = uiState.tempTargetReason,
-                        runningMode = uiState.runningMode,
-                        runningModeText = uiState.runningModeText,
-                        runningModeProgress = uiState.runningModeProgress,
-                        isSimpleMode = uiState.isSimpleMode,
-                        calcProgress = calcProgress,
-                        graphViewModel = graphViewModel,
-                        manageViewModel = manageViewModel,
-                        statusViewModel = statusViewModel,
-                        statusLightsDef = statusLightsDef,
-                        onNavigate = onNavigate,
-                        notifications = notifications,
-                        onDismissNotification = onDismissNotification,
-                        onNotificationActionClick = onNotificationActionClick,
-                        autoShowNotificationSheet = autoShowNotificationSheet,
-                        onAutoShowConsumed = onAutoShowConsumed,
-                        paddingValues = paddingValues,
-                        fabBottomOffset = if (hasToolbar) 56.dp else 0.dp,
-                        bolusState = bolusState,
-                        pumpStatusText = pumpStatusText,
-                        queueStatusText = queueStatusText,
-                        isPumpCommunicating = isPumpCommunicating,
-                        onStopBolus = onStopBolus
-                    )
+            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                val density = LocalDensity.current
+                val previewMode = maxHeight < PREVIEW_MODE_MIN_HEIGHT
+                var chromeVisible by remember { mutableStateOf(false) }
+                val showChrome = !previewMode || chromeVisible
+                val interactionSource = remember { MutableInteractionSource() }
 
-                    // Search results overlay
-                    if (searchUiState.isSearchActive) {
-                        SearchResults(
-                            results = searchUiState.results,
-                            wikiResults = searchUiState.wikiResults,
-                            isSearching = searchUiState.isSearching,
-                            isSearchingWiki = searchUiState.isSearchingWiki,
-                            wikiOffline = searchUiState.wikiOffline,
-                            onResultClick = onSearchResultClick,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues)
+                // Measure actual bar heights for content padding in non-preview mode
+                var topBarHeightPx by remember { mutableIntStateOf(0) }
+                var bottomBarHeightPx by remember { mutableIntStateOf(0) }
+
+                // Auto-hide chrome after timeout, reset when leaving preview mode
+                LaunchedEffect(chromeVisible, previewMode) {
+                    if (!previewMode) {
+                        chromeVisible = false
+                        return@LaunchedEffect
+                    }
+                    if (chromeVisible) {
+                        delay(AUTO_HIDE_DELAY_MS)
+                        chromeVisible = false
+                    }
+                }
+
+                Scaffold(
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
+                ) { scaffoldPadding ->
+                    val hasToolbar = quickLaunchItems.isNotEmpty()
+
+                    // Content padding: in preview mode use only system bars;
+                    // in normal mode add measured bar heights
+                    val contentPadding = if (previewMode) scaffoldPadding
+                    else {
+                        val topBarHeight = with(density) { topBarHeightPx.toDp() }
+                        val bottomBarHeight = with(density) { bottomBarHeightPx.toDp() }
+                        PaddingValues(
+                            top = scaffoldPadding.calculateTopPadding() + topBarHeight,
+                            bottom = scaffoldPadding.calculateBottomPadding() + bottomBarHeight
                         )
                     }
 
-                    // Version overlay (always visible for screenshots)
-                    VersionOverlay(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(paddingValues)
-                    )
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        // Main content
+                        OverviewScreen(
+                            profileName = uiState.profileName,
+                            isProfileModified = uiState.isProfileModified,
+                            profileProgress = uiState.profileProgress,
+                            tempTargetText = uiState.tempTargetText,
+                            tempTargetState = uiState.tempTargetState,
+                            tempTargetProgress = uiState.tempTargetProgress,
+                            tempTargetReason = uiState.tempTargetReason,
+                            runningMode = uiState.runningMode,
+                            runningModeText = uiState.runningModeText,
+                            runningModeProgress = uiState.runningModeProgress,
+                            isSimpleMode = uiState.isSimpleMode,
+                            calcProgress = calcProgress,
+                            graphViewModel = graphViewModel,
+                            manageViewModel = manageViewModel,
+                            statusViewModel = statusViewModel,
+                            statusLightsDef = statusLightsDef,
+                            onNavigate = onNavigate,
+                            notifications = notifications,
+                            onDismissNotification = onDismissNotification,
+                            onNotificationActionClick = onNotificationActionClick,
+                            autoShowNotificationSheet = autoShowNotificationSheet,
+                            onAutoShowConsumed = onAutoShowConsumed,
+                            paddingValues = contentPadding,
+                            fabBottomOffset = if (hasToolbar && showChrome) 56.dp else 0.dp,
+                            bolusState = bolusState,
+                            pumpStatusText = pumpStatusText,
+                            queueStatusText = queueStatusText,
+                            isPumpCommunicating = isPumpCommunicating,
+                            onStopBolus = onStopBolus
+                        )
 
-                    // Floating quick-action toolbar
-                    if (hasToolbar) {
-                        QuickLaunchToolbar(
-                            items = quickLaunchItems,
-                            onActionClick = onQuickLaunchActionClick,
+                        // Search results overlay
+                        if (searchUiState.isSearchActive) {
+                            SearchResults(
+                                results = searchUiState.results,
+                                wikiResults = searchUiState.wikiResults,
+                                isSearching = searchUiState.isSearching,
+                                isSearchingWiki = searchUiState.isSearchingWiki,
+                                wikiOffline = searchUiState.wikiOffline,
+                                onResultClick = onSearchResultClick,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(contentPadding)
+                            )
+                        }
+
+                        // Version overlay
+                        VersionOverlay(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(contentPadding)
+                        )
+
+                        // Top bar overlay
+                        AnimatedVisibility(
+                            visible = showChrome,
+                            enter = slideInVertically { -it },
+                            exit = slideOutVertically { -it },
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(top = scaffoldPadding.calculateTopPadding())
+                        ) {
+                            MainTopBar(
+                                searchUiState = searchUiState,
+                                onMenuClick = {
+                                    scope.launch {
+                                        drawerState.open()
+                                        onMenuClick()
+                                    }
+                                },
+                                onPreferencesClick = { onNavigate(NavigationRequest.Element(ElementType.SETTINGS)) },
+                                onSearchQueryChange = onSearchQueryChange,
+                                onSearchClear = onSearchClear,
+                                onSearchActiveChange = onSearchActiveChange,
+                                modifier = Modifier.onSizeChanged { topBarHeightPx = it.height }
+                            )
+                        }
+
+                        // Bottom bar overlay
+                        AnimatedVisibility(
+                            visible = showChrome,
+                            enter = slideInVertically { it },
+                            exit = slideOutVertically { it },
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
-                                .padding(bottom = paddingValues.calculateBottomPadding() + 8.dp)
-                        )
-                    }
+                                .padding(bottom = scaffoldPadding.calculateBottomPadding())
+                        ) {
+                            MainNavigationBar(
+                                onManageClick = { manageSheetState.show() },
+                                onTreatmentClick = {
+                                    treatmentViewModel.refreshState()
+                                    showTreatmentSheet = true
+                                },
+                                quickWizardCount = uiState.quickWizardItems.size,
+                                onAutomationClick = {
+                                    automationViewModel.refreshState()
+                                    showAutomationSheet = true
+                                },
+                                automationCount = automationViewModel.uiState.collectAsStateWithLifecycle().value.items.size,
+                                pumpSetupClassName = pumpSetupClassName,
+                                pumpSetupIcon = pumpSetupIcon,
+                                pumpSetupLabel = pumpSetupLabel,
+                                onNavigate = onNavigate,
+                                permissionsMissing = permissionsMissing,
+                                onPermissionsClick = onPermissionsClick,
+                                modifier = Modifier.onSizeChanged { bottomBarHeightPx = it.height }
+                            )
+                        }
 
-                    // FABs — positioned above the toolbar when it's visible
-                    val fabBottomPadding = paddingValues.calculateBottomPadding() +
-                        if (hasToolbar) 64.dp else 16.dp
-                    SwitchUiFab(
-                        onClick = onSwitchToClassicUi,
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(bottom = fabBottomPadding, end = 16.dp)
-                    )
+                        // Quick launch toolbar overlay
+                        AnimatedVisibility(
+                            visible = hasToolbar && showChrome,
+                            enter = slideInVertically { it },
+                            exit = slideOutVertically { it },
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(
+                                    bottom = scaffoldPadding.calculateBottomPadding() +
+                                        with(density) { bottomBarHeightPx.toDp() } + 8.dp
+                                )
+                        ) {
+                            QuickLaunchToolbar(
+                                items = quickLaunchItems,
+                                onActionClick = onQuickLaunchActionClick,
+                            )
+                        }
+
+                        // FABs
+                        if (showChrome) {
+                            val fabBottomPadding = scaffoldPadding.calculateBottomPadding() +
+                                with(density) { bottomBarHeightPx.toDp() } +
+                                if (hasToolbar) 64.dp else 16.dp
+                            SwitchUiFab(
+                                onClick = onSwitchToClassicUi,
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .padding(bottom = fabBottomPadding, end = 16.dp)
+                            )
+                        }
+
+                        // Tap overlay to restore chrome in preview mode (only when hidden)
+                        if (previewMode && !chromeVisible) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clickable(
+                                        interactionSource = interactionSource,
+                                        indication = null
+                                    ) { chromeVisible = true }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -334,6 +426,9 @@ fun MainScreen(
         }
     } // CompositionLocalProvider
 }
+
+private val PREVIEW_MODE_MIN_HEIGHT: Dp = 500.dp
+private const val AUTO_HIDE_DELAY_MS = 3000L
 
 @Composable
 private fun SwitchUiFab(

@@ -9,6 +9,7 @@ import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.ActionsFragmentBinding
 import app.aaps.plugins.main.databinding.OverviewFragmentBinding
 
+@Deprecated("remove")
 interface SkinInterface {
 
     @get:StringRes val description: Int
