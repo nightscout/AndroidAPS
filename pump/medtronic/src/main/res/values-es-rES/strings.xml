@@ -12,7 +12,7 @@
     <string name="medtronic_custom_action_wake_and_tune">Encender y ajustar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Borrar el bloque de bolo</string>
     <string name="medtronic_custom_action_reset_rileylink">Restablecer RileyLink</string>
-    <string name="medtronic_pump_battery_select">Tipo de batería (Vista de energía)</string>
+    <string name="medtronic_pump_battery_select">Tipo de batería (Power View)</string>
     <string name="medtronic_pump_battery_no">No seleccionado (Vista simple)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (vista extendida)</string>
     <string name="medtronic_pump_battery_lithium">Litio (vista extendida)</string>
@@ -40,17 +40,17 @@
     <string name="rl_battery_label">Batería RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_invalid">Número de serie no válido.</string>
-    <string name="medtronic_error_pump_type_not_set">Tipo de infusora no establecido.</string>
-    <string name="medtronic_error_pump_type_invalid">Tipo de infusora no soportado.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frecuencia de la infusora no soportada.</string>
+    <string name="medtronic_error_pump_type_not_set">Tipo de bomba no configurado.</string>
+    <string name="medtronic_error_pump_type_invalid">Tipo de bomba no compatible.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Frecuencia de la bomba no compatible.</string>
     <string name="medtronic_error_rileylink_address_invalid">Dirección de RileyLink no válida.</string>
-    <string name="medtronic_error_pump_type_set_differs_from_detected">El tipo de infusora detectado no es el mismo que el tipo configurado.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">El tipo de bomba detectado no es el mismo que el configurado.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Los perfiles de basal/valor de los patrones no están activados en la bomba. Actívalos en la bomba.</string>
-    <string name="medtronic_error_pump_incorrect_basal_profile_selected">El perfil basal establecido en la infusora es incorrecto (debe ser estándar).</string>
-    <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo incorrecto de basal temporal en la infusora (debe ser Absoluto).</string>
-    <string name="medtronic_error_pump_wrong_max_bolus_set">Valor máximo incorrecto configurado en la infusora (debe ser %1$.2f).</string>
-    <string name="medtronic_error_pump_wrong_max_basal_set">Error en el valor máximo de basal configurado en la infusora (debe ser %1$.2f).</string>
-    <string name="medtronic_error_operation_not_possible_no_configuration">La operación no es posible.\n\n Necesitas configurar primero la infusora Medtronic, antes de poder usar esta operación.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">El perfil basal configurado en la bomba es incorrecto (debe ser STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo de TBR configurado en la bomba incorrecto (debe ser Absoluto).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Bolo máximo configurado en la bomba incorrecto (debe ser %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Basal máxima configurado en la bomba incorrecto (debe ser %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">La operación no es posible.\n\n Primero debes configurar la bomba Medtronic antes de poder utilizar esta función.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">Se ha solicitado un cambio de hora de más de 24h.</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
@@ -59,9 +59,9 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Historial de la infusora Medtronic</string>
+    <string name="medtronic_pump_history">Historial de la bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Has cancelado el bolo después de que ya estaba enviado a la infusora. Debido a que la infusora Medtronic no soporta comando cancelar, tendrás que cancelarlo manualmente. Pon la infusora en modo suspender y luego reinicia (si todavía quieres cancelar). La aplicación recogerá los cambios en la próxima actualización (en menos de 5 minutos).</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelaste el bolo después de que ya se hubiera configurado en la bomba. Dado que la bomba Medtronic no permite la cancelación directa, tendrás que cancelarlo manualmente. Pon la bomba en modo Suspender y luego selecciona Reanudar (si aún deseas cancelarlo). La aplicación detectará los cambios en la próxima actualización (en menos de 5 minutos).</string>
     <string name="medtronic_cmd_cant_read_tbr">No se pudo leer la basal temporal actual.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">No se pudo cancelar la basal temporal actual. Detener la operación.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">El perfil no se pudo activar debido a que los siguientes patrones tienen una basal demasiado grande: %1$s</string>
@@ -73,11 +73,11 @@
     <string name="medtronic_cmd_basal_profile_not_set_is_same">El perfil basal es el mismo, por lo que no será establecido de nuevo.</string>
     <string name="medtronic_cmd_desc_get_history">Recuperar el historial - Página %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Recuperar el historial - Página %1$d</string>
-    <string name="medtronic_cmd_desc_get_time">Obtener la hora de la infusora</string>
+    <string name="medtronic_cmd_desc_get_time">Obtener hora de la bomba</string>
     <string name="medtronic_cmd_desc_set_time">Establecer hora de la bomba</string>
     <string name="medtronic_cmd_desc_get_battery_status">Comprobar Estado Batería</string>
     <string name="medtronic_cmd_desc_get_settings">Obtener la configuración</string>
-    <string name="medtronic_cmd_desc_get_model">Obtener el modelo de la infusora</string>
+    <string name="medtronic_cmd_desc_get_model">Obtener modelo de la bomba</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Obtener el perfil basal</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Establecer el perfil basal</string>
     <string name="medtronic_cmd_desc_get_tbr">Obtener la basal temporal</string>
@@ -87,7 +87,7 @@
     <string name="medtronic_cmd_desc_get_remaining_insulin">Comprobar Insulina Restante</string>
     <string name="medtronic_pump_connected_now" comment="Displayed when pump was connected less than a minute ago">Ahora</string>
     <string name="ago" comment="Time suffix, e.g. '5 min ago'">hace</string>
-    <string name="medtronic_notification_check_time_date">Se necesita actualizar reloj de la bomba</string>
+    <string name="medtronic_notification_check_time_date">Es necesario actualizar el reloj de la bomba</string>
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
     <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>
