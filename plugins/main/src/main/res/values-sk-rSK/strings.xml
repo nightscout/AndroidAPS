@@ -2,17 +2,6 @@
 <resources>
     <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
     <string name="calculator_label">Kalkulačka</string>
-    <!-- Actions -->
-    <string name="actions">Akcie</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
-    <string name="actions_shortname">AKCIA</string>
-    <string name="status">Stav</string>
-    <string name="pump_actions">Akcie pumpy</string>
-    <string name="tempbasal_button">Dočasný bazál</string>
-    <string name="extended_bolus_button">Predĺžený bolus</string>
-    <string name="extended_bolus_cancel_button">Zrušiť predĺžený bolus</string>
-    <string name="tools">Nástroje</string>
     <string name="nav_history_browser">Prehliadač histórie</string>
     <string name="sensor_label">Senzor</string>
     <string name="age_label">vek:</string>
