@@ -240,7 +240,7 @@
     <string name="careportal_openapsoffline">OpenAPS hors ligne</string>
     <string name="pump_battery_change">Changement pile pompe</string>
     <string name="temporary_target">Cible Temp</string>
-    <string name="running_mode">En cours de fonctionnement</string>
+    <string name="running_mode">Mode</string>
     <string name="careportal_temporarytargetvalue">Valeur de Cible Temporaire</string>
     <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="boluswizard">Assistant Bolus</string>
