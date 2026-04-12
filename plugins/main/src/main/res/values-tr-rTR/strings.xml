@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">Döngü devre dışı</string>
     <string name="calculator_label">Hesap makinesi</string>
-    <!-- Actions -->
-    <string name="actions">Eylemler</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
-    <string name="actions_shortname">EYLEM</string>
-    <string name="tempbasal_button">Geçici Bazal</string>
-    <string name="extended_bolus_button">Yayma Bolus</string>
-    <string name="extended_bolus_cancel_button">Yayma Bolusu iptal et</string>
-    <string name="tools">Araçlar</string>
     <string name="nav_history_browser">Geçmiş tarayıcısı</string>
     <string name="sensor_label">Sensör</string>
     <string name="age_label">yaş:</string>
