@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -14,6 +16,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.StatusLevel
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
@@ -81,6 +84,7 @@ class EopatchOverviewViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val commandQueue: CommandQueue,
     private val rxBus: RxBus,
+    private val ch: ConcentrationHelper,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -261,8 +265,8 @@ class EopatchOverviewViewModel @Inject constructor(
             // Connection state — only show when not connected (error states shown in banner)
             if (connState != BleConnectionState.CONNECTED) {
                 val connText = when (connState) {
-                    BleConnectionState.DISCONNECTED -> rh.gs(app.aaps.core.ui.R.string.disconnected)
-                    else                            -> rh.gs(app.aaps.core.ui.R.string.connecting)
+                    BleConnectionState.DISCONNECTED -> rh.gs(CoreUiR.string.disconnected)
+                    else                            -> rh.gs(CoreUiR.string.connecting)
                 }
                 add(PumpInfoRow(label = rh.gs(R.string.eopatch_ble_status), value = connText))
             }
@@ -274,34 +278,34 @@ class EopatchOverviewViewModel @Inject constructor(
                     val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
                     val h = TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
                     val m = TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
-                    "${rh.gs(app.aaps.core.ui.R.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
+                    "${rh.gs(CoreUiR.string.pumpsuspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
                 } else {
                     rh.gs(R.string.string_running)
                 }
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.status), value = statusText))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.status), value = statusText))
 
                 // Basal rate
                 if (preferenceManager.patchState.isNormalBasalRunning) {
-                    val basalRate = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour)
+                    val basalRate = ch.basalRateString(PumpRate(normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour.toDouble()), true)
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_base_basal_rate), value = basalRate))
                 }
 
                 // Temp basal
                 val tempBasal = tempBasalManager.startedBasal
                 if (preferenceManager.patchState.isTempBasalActive && tempBasal != null) {
-                    val tempRate = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, tempBasal.doseUnitPerHour)
+                    val tempRate = ch.basalRateString(PumpRate(tempBasal.doseUnitPerHour.toDouble()), true)
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_temp_basal_rate), value = tempRate))
                 }
             }
 
             // Remaining insulin
             val insulinText = when {
-                insulin > 50f -> "50+ U"
-                insulin < 1f  -> "0 U"
-                else          -> "${insulin.roundToInt()} U"
+                insulin > 50f -> rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0)))
+                insulin < 1f  -> ch.insulinAmountString(PumpInsulin(0.0))
+                else          -> ch.insulinAmountString(PumpInsulin(insulin.roundToInt().toDouble()))
             }
             if (config.isActivated) {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.reservoir_label), value = insulinText))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.reservoir_label), value = insulinText))
             }
 
             // Serial number
@@ -311,7 +315,7 @@ class EopatchOverviewViewModel @Inject constructor(
 
             // Last state update
             if (config.isActivated && stateUpdatedTimestamp > 0L) {
-                add(PumpInfoRow(label = rh.gs(app.aaps.core.ui.R.string.last_connection_label), value = dateUtil.minAgo(rh, stateUpdatedTimestamp)))
+                add(PumpInfoRow(label = rh.gs(CoreUiR.string.last_connection_label), value = dateUtil.minAgo(rh, stateUpdatedTimestamp)))
             }
         }
 
@@ -322,7 +326,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 add(
                     PumpAction(
                         label = rh.gs(R.string.string_activate_patch),
-                        iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                        iconRes = CoreUiR.drawable.ic_swap_horiz,
                         category = ActionCategory.PRIMARY,
                         onClick = { onClickActivation() }
                     )
@@ -331,8 +335,8 @@ class EopatchOverviewViewModel @Inject constructor(
             if (isActivated) {
                 add(
                     PumpAction(
-                        label = if (isPaused) rh.gs(app.aaps.core.ui.R.string.pump_resume) else rh.gs(app.aaps.core.ui.R.string.pump_suspend),
-                        iconRes = if (isPaused) app.aaps.core.ui.R.drawable.ic_loop_resume else app.aaps.core.ui.R.drawable.ic_loop_paused,
+                        label = if (isPaused) rh.gs(CoreUiR.string.pump_resume) else rh.gs(CoreUiR.string.pump_suspend),
+                        iconRes = if (isPaused) CoreUiR.drawable.ic_loop_resume else CoreUiR.drawable.ic_loop_paused,
                         category = ActionCategory.PRIMARY,
                         onClick = { } // Click handled in screen composable (needs dialog)
                     )
@@ -345,7 +349,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 add(
                     PumpAction(
                         label = rh.gs(R.string.string_discard_patch),
-                        iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                        iconRes = CoreUiR.drawable.ic_swap_horiz,
                         category = ActionCategory.MANAGEMENT,
                         onClick = { onClickDeactivation() }
                     )
@@ -364,9 +368,9 @@ class EopatchOverviewViewModel @Inject constructor(
 
     private fun buildStatusBanner(connState: BleConnectionState, isActivated: Boolean, isPaused: Boolean): StatusBanner? = when {
         !isActivated -> StatusBanner(text = rh.gs(R.string.eopatch_not_activated), level = StatusLevel.WARNING)
-        isPaused -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.pumpsuspended), level = StatusLevel.WARNING)
-        connState == BleConnectionState.DISCONNECTED -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.disconnected), level = StatusLevel.CRITICAL)
-        connState != BleConnectionState.CONNECTED -> StatusBanner(text = rh.gs(app.aaps.core.ui.R.string.connecting), level = StatusLevel.UNSPECIFIED)
+        isPaused -> StatusBanner(text = rh.gs(CoreUiR.string.pumpsuspended), level = StatusLevel.WARNING)
+        connState == BleConnectionState.DISCONNECTED -> StatusBanner(text = rh.gs(CoreUiR.string.disconnected), level = StatusLevel.CRITICAL)
+        connState != BleConnectionState.CONNECTED -> StatusBanner(text = rh.gs(CoreUiR.string.connecting), level = StatusLevel.UNSPECIFIED)
         else -> null // Connected, activated, running — no banner needed
     }
 }

@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.implementation.R
 import javax.inject.Inject
@@ -18,7 +19,8 @@ class ConcentrationHelperImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val insulin: Insulin,
     private val rh: ResourceHelper,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val dateUtil: DateUtil
 ) : ConcentrationHelper {
 
     override fun isU100(): Boolean = concentration == 1.0
@@ -51,6 +53,12 @@ class ConcentrationHelperImpl @Inject constructor(
     }
 
     override fun insulinAmountAgoString(amount: PumpInsulin, ago: String): String = "${insulinAmountString(amount)} $ago"
+    override fun insulinAmountAgoString(amount: PumpInsulin, lastBolusTime: Long): String? {
+        val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 3_600_000.0
+        return if (agoHours < 6.0) {
+            "${insulinAmountString(amount)} ${dateUtil.sinceString(lastBolusTime, rh)}"
+        } else null
+    }
 
     override fun insulinConcentrationString(): String = rh.gs(R.string.insulin_concentration, (concentration * 100).toInt())
 

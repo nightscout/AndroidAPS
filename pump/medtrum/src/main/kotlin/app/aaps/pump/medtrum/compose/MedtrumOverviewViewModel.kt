@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
+import app.aaps.core.ui.R as CoreUiR
 
 sealed class MedtrumOverviewEvent {
     data class StartPatchWorkflow(val startStep: PatchStep) : MedtrumOverviewEvent()
@@ -127,7 +128,7 @@ class MedtrumOverviewViewModel @Inject constructor(
             if (profile == null) {
                 _events.tryEmit(
                     MedtrumOverviewEvent.ShowDialog(
-                        title = rh.gs(app.aaps.core.ui.R.string.message),
+                        title = rh.gs(CoreUiR.string.message),
                         message = rh.gs(R.string.no_profile_selected)
                     )
                 )
@@ -191,13 +192,10 @@ class MedtrumOverviewViewModel @Inject constructor(
 
         // Last bolus
         val lastBolus = if (lastBolusTime != null && lastBolusAmount != null) {
-            val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 1000.0 / 60.0 / 60.0
-            if (agoHours < 6.0) {
-                ch.insulinAmountAgoString(
-                    PumpInsulin(lastBolusAmount),
-                    dateUtil.sinceString(lastBolusTime, rh)
-                )
-            } else null
+            ch.insulinAmountAgoString(
+                PumpInsulin(lastBolusAmount),
+                lastBolusTime
+            )
         } else null
 
         // Active bolus
@@ -205,7 +203,7 @@ class MedtrumOverviewViewModel @Inject constructor(
             dateUtil.timeString(medtrumPump.bolusStartTime) + " " +
                 dateUtil.sinceString(medtrumPump.bolusStartTime, rh) + " " +
                 ch.bolusProgressString(PumpInsulin(bolusDelivered), ch.fromPump(PumpInsulin(medtrumPump.bolusAmountToBeDelivered))) +
-                " (" + rh.gs(app.aaps.core.ui.R.string.bolus_delivered_CU, bolusDelivered, medtrumPump.bolusAmountToBeDelivered) + ")"
+                " (" + rh.gs(CoreUiR.string.bolus_delivered_CU, bolusDelivered, medtrumPump.bolusAmountToBeDelivered) + ")"
         } else null
 
         // Battery voltage
@@ -266,15 +264,15 @@ class MedtrumOverviewViewModel @Inject constructor(
         // Primary actions
         val primaryActions = listOf(
             PumpAction(
-                label = rh.gs(app.aaps.core.ui.R.string.refresh),
-                iconRes = app.aaps.core.ui.R.drawable.ic_refresh,
+                label = rh.gs(CoreUiR.string.refresh),
+                iconRes = CoreUiR.drawable.ic_refresh,
                 category = ActionCategory.PRIMARY,
                 enabled = canRefresh,
                 onClick = { onClickRefresh() }
             ),
             PumpAction(
                 label = rh.gs(R.string.reset_alarms_label),
-                iconRes = app.aaps.core.ui.R.drawable.ic_loop_resume,
+                iconRes = CoreUiR.drawable.ic_loop_resume,
                 category = ActionCategory.PRIMARY,
                 enabled = pumpState.isSuspendedByPump(),
                 visible = pumpState.isSuspendedByPump(),
@@ -286,7 +284,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         val managementActions = listOf(
             PumpAction(
                 label = rh.gs(R.string.change_patch_label),
-                iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                iconRes = CoreUiR.drawable.ic_swap_horiz,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { onClickChangePatch() }
             )

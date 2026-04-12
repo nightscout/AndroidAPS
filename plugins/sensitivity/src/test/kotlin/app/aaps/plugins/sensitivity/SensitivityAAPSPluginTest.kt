@@ -16,7 +16,7 @@ class SensitivityAAPSPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         sensitivityAAPSPlugin = SensitivityAAPSPlugin(
-            aapsLogger, rh, preferences, profileFunction, dateUtil, persistenceLayer
+            aapsLogger, rh, preferences, profileFunction, dateUtil, persistenceLayer, activePlugin
         )
     }
 

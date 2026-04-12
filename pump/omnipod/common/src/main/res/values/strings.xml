@@ -54,7 +54,6 @@
     <string name="omnipod_common_overview_firmware_version">Firmware Version</string>
     <string name="omnipod_common_overview_time_on_pod">Time on Pod</string>
     <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minutes)</string>
-    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Over %1$s left</string>
     <string name="omnipod_common_uncertain">uncertain</string>
 
     <!-- Omnipod - Wizard Base -->
