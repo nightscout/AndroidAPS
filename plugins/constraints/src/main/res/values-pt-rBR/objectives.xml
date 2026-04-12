@@ -33,12 +33,8 @@
     <string name="objectives_usage_objective">Aprenda como controlar o AAPS</string>
     <string name="objectives_usage_gate">Realizar diferentes ações no AAPS</string>
     <string name="objectives_usage_learned">Você aprendeu como lidar com o básico do AAPS. Os principais controles estão na tela de Visão Geral, acessíveis com um clique ou clique longo, e mais controles estão na tela de Ação. Você deve saber como colocar uma tela de plugin no menu rolável superior ou deixá-la aparecer na lista superior esquerda de plugins habilitados.</string>
-    <string name="objectives_useprofileswitch">Definir perfil de 90% por 10 min (pressione longo no nome de perfil na Visão Geral)</string>
-    <string name="objectives_usedisconnectpump">Simular banho. Suspender e desconectar a bomba por 1h (Pressione longo em Loop Aberto)</string>
     <string name="objectives_usereconnectpump">... e volte a conectar da mesma forma</string>
-    <string name="objectives_usetemptarget">Crie um alvo temporário personalizado com 10 min de duração (pressione longo no seu alvo atual)</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
-    <string name="objectives_usescale">Ajuste a escala ao pressionar por um tempo o gráfico da glicemia</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
     <string name="objectives_exam_gate">Estude as perguntas.  Haverá quatro respostas possíveis para cada pergunta.  Pode ter mais do que uma resposta correta. Por favor, marque todas as que estão corretas e selecione VERIFICAR.</string>
     <string name="objectives_exam_learned_prerequisites">Você não precisa ser um desenvolvedor, mas precisa do NS para passar pelos objetivos, bomba e computador compatíveis para criar AAPS pela primeira vez e para cada atualização.</string>
