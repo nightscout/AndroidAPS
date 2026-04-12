@@ -51,7 +51,6 @@
     <string name="omnipod_common_overview_firmware_version">Verzia firmvéru</string>
     <string name="omnipod_common_overview_time_on_pod">Čas na Pode</string>
     <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minút)</string>
-    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Zostáva viac ako %1$s</string>
     <string name="omnipod_common_uncertain">neznáme</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Deaktivovať Pod</string>
