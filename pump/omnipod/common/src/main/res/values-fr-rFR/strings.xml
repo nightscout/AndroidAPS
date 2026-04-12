@@ -122,6 +122,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Définir le profil de basal</string>
     <string name="omnipod_common_cmd_set_bolus">Définir Bolus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Annuler Bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Définir DBT</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Annuler DBT</string>
     <string name="omnipod_common_cmd_discard_pod">Supprimer Pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Obtenir l\'état du Pod</string>
     <string name="omnipod_common_cmd_set_time">Définir l\'heure</string>
@@ -130,6 +132,7 @@
     <string name="omnipod_common_cmd_read_pulse_log">Lire journal d\'impulsion</string>
     <string name="omnipod_common_cmd_suspend_delivery">Suspendre l\'injection</string>
     <string name="omnipod_common_cmd_resume_delivery">Reprendre l\'injection</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Annuler DBT (par l\'utilisateur)</string>
     <string name="omnipod_common_cmd_get_pod_info">Obtenir infos Pod</string>
     <string name="omnipod_common_cmd_play_test_beep">Tester bips</string>
     <string name="omnipod_common_cmd_unknown_entry">Entrée inconnue</string>
