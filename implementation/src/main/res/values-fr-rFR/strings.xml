@@ -82,4 +82,21 @@
     <string name="csv_upload_error">Une erreur s\'est produite lors du téléchargement du CSV vers le cloud</string>
     <string name="uploading_to_cloud">Envoi vers le cloud...</string>
     <string name="cloud_directory_path">Répertoire du Cloud: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Impossible d\'actualiser le jeton d\'accès Google Drive</string>
+    <string name="google_drive_token_refresh_error">Impossible d\'actualiser le jeton d\'accès Google Drive : %1$s</string>
+    <string name="google_drive_connection_test_failed">Échec du test de connexion Google Drive</string>
+    <string name="google_drive_connect_error">Impossible de se connecter à Google Drive : %1$s</string>
+    <string name="google_drive_list_folders_failed">Impossible de lister les dossiers Google Drive</string>
+    <string name="google_drive_list_folders_error">Erreur dans la liste des dossiers : %1$s</string>
+    <string name="google_drive_upload_no_id">Envoi réussi mais aucun id retourné</string>
+    <string name="google_drive_upload_verify_failed">Échec de la vérification du téléchargement</string>
+    <string name="google_drive_upload_failed">Échec du téléchargement : %1$s</string>
+    <string name="google_drive_upload_error">Erreur lors du téléchargement du fichier : %1$s</string>
+    <string name="google_drive_folder_access_error">Impossible de créer ou d\'accéder au dossier de destination : %1$s</string>
+    <string name="google_drive_list_settings_failed">Échec pour lister les fichiers paramètres</string>
+    <string name="google_drive_list_settings_error">Erreur pour lister les fichiers paramètres : %1$s</string>
+    <string name="google_drive_download_failed">Échec du téléchargement du fichier</string>
+    <string name="google_drive_download_error">Erreur lors du téléchargement du fichier : %1$s</string>
+    <string name="google_drive_authorized">Google Drive autorisé</string>
+    <string name="google_drive_reauth_required">Veuillez effacer les paramètres et ré-autoriser Google Drive</string>
 </resources>
