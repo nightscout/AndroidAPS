@@ -38,7 +38,6 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="objectives_usedisconnectpump">Simuliere das Duschen . Trenne die Pumpe für 1 Std. (drücke dazu lang auf Open Loop im Homescreen)</string>
     <string name="objectives_usereconnectpump">...und verbinde die Pumpe auf dieselbe Weise wieder</string>
     <string name="objectives_usetemptarget">Erstelle ein benutzerdefiniertes temporäres Ziel mit 10 Min. Dauer (drücke lang auf Deinen aktuellen Zielwert im Homescreen)</string>
-    <string name="objectives_useactions">Aktiviere das Plugin \"Aktionen\" unter Konfiguration, mache es sichtbar und rufe es über das obere Menü auf</string>
     <string name="objectives_useloop">Zeige den Inhalt des Loop-Plugins an</string>
     <string name="objectives_usescale">Nutze die Skalierfunktion. Drücke dazu lange auf das BZ-Diagramm</string>
     <string name="objectives_exam_objective">Prüfe Dein Wissen</string>
