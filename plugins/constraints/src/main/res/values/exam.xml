@@ -2,7 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">What is true about DIA?</string>
     <string name="dia_label_exam">Duration of Insulin Action (DIA)</string>
-    <string name="dia_profile">You should set the value for DIA in your profile.</string>
+    <string name="dia_profile">You should set the value for DIA in your insulin configuration.</string>
     <string name="dia_minimumis5h">The minimum allowed value is 5 hours.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">If you are satisfied that the value for DIA that you used in your pump before AAPS worked well, there is no need to change this when you start looping.</string>
@@ -76,9 +76,9 @@
     <string name="prerequisites2_supportedcgm">A supported CGM and appropriate app to receive blood glucose values on the phone/device.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Updating AAPS</string>
-    <string name="update_git">You need to have Git installed and configured on your computer.</string>
+    <string name="update_git">You need to have Git installed and configured on your computer or use browser build.</string>
     <string name="update_asap">When updated versions of AAPS are released, the earlier versions may be remotely limited after a specified time.</string>
-    <string name="update_keys">You should save and note the location of your keystore and use the same signing key for updates as for your previous installation.</string>
+    <string name="update_keys">If you use Android Studio building you should save and note the location of your keystore and use the same signing key for updates as for your previous installation.</string>
     <string name="update_askfriend">If you have difficulty building the apk, you can install an apk that has been built by a friend.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Troubleshooting</string>

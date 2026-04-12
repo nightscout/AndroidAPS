@@ -123,6 +123,7 @@ import app.aaps.ui.compose.automationSheet.AutomationViewModel
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
+import app.aaps.ui.compose.loopSheet.LoopActionViewModel
 import app.aaps.ui.compose.main.MainScreen
 import app.aaps.ui.compose.main.MainViewModel
 import app.aaps.ui.compose.maintenance.ImportViewModel
@@ -197,6 +198,7 @@ class ComposeMainActivity : AppCompatActivity() {
     private val statusViewModel: StatusViewModel by viewModels()
     private val treatmentViewModel: TreatmentViewModel by viewModels()
     private val automationViewModel: AutomationViewModel by viewModels()
+    private val loopActionViewModel: LoopActionViewModel by viewModels()
     private val graphViewModel: GraphViewModel by viewModels()
     private val treatmentsViewModel: TreatmentsViewModel by viewModels()
     private val insulinManagementViewModel: InsulinManagementViewModel by viewModels()
@@ -546,6 +548,7 @@ class ComposeMainActivity : AppCompatActivity() {
                     statusViewModel = statusViewModel,
                     treatmentViewModel = treatmentViewModel,
                     automationViewModel = automationViewModel,
+                    loopActionViewModel = loopActionViewModel,
                     // Search
                     searchUiState = searchState,
                     onSearchQueryChange = { searchViewModel.onQueryChanged(it) },

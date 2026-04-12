@@ -144,7 +144,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         val objectives = listOf(
             Objective0(preferences, rh, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
-            Objective1(preferences, rh, dateUtil, activePlugin),
+            Objective1(preferences, rh, dateUtil),
             Objective2(preferences, rh, dateUtil),
             Objective3(preferences, rh, dateUtil),
             Objective4(preferences, rh, dateUtil, profileFunction),

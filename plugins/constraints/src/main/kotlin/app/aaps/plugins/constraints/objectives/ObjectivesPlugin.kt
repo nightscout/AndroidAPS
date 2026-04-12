@@ -20,6 +20,7 @@ import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginObjectives
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.objectives.compose.ObjectivesComposeContent
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.objectives.objectives.Objective
@@ -36,7 +37,7 @@ class ObjectivesPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .fragmentClass(ObjectivesFragment::class.qualifiedName)
+        .composeContent { ObjectivesComposeContent() }
         .icon(IcPluginObjectives)
         .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)

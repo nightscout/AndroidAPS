@@ -366,6 +366,10 @@ class GraphViewModel @Inject constructor(
         aapsLogger.debug(LTag.UI, "GraphViewModel initialized - exposing independent series flows")
     }
 
+    fun onGraphInteraction() {
+        preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
+    }
+
     override fun onCleared() {
         super.onCleared()
         aapsLogger.debug(LTag.UI, "GraphViewModel cleared")

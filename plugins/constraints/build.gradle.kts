@@ -32,6 +32,7 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     api(libs.kotlinx.datetime)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Phone checker
     api(libs.com.scottyab.rootbeer.lib)

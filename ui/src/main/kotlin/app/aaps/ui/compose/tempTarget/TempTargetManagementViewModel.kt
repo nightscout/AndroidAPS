@@ -13,13 +13,14 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.tempTargets.toJson
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.ScreenMode
@@ -542,6 +543,7 @@ class TempTargetManagementViewModel @Inject constructor(
                         ValueWithUnit.Minute((durationMs / 60000L).toInt())
                     )
                 )
+                if (durationMs / 60000L == 10L) preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
 
                 onSuccess()
             } catch (e: Exception) {

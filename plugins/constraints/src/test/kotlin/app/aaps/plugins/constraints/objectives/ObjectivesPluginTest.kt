@@ -52,7 +52,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
 
         val objectives = listOf(
             Objective0(emulatedPreferences, rh, dateUtil, activePlugin, virtualPumpPlugin, persistenceLayer, loop, iobCobCalculator, passwordCheck),
-            Objective1(emulatedPreferences, rh, dateUtil, activePlugin),
+            Objective1(emulatedPreferences, rh, dateUtil),
             Objective2(emulatedPreferences, rh, dateUtil),
             Objective3(emulatedPreferences, rh, dateUtil),
             Objective4(emulatedPreferences, rh, dateUtil, profileFunction),

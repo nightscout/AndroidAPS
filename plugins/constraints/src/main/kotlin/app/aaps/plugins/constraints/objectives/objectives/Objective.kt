@@ -23,6 +23,7 @@ abstract class Objective(
     @StringRes val objective: Int,
     @StringRes val gate: Int
 ) {
+
     var startedOn: Long = 0
         get() = preferences.get(ObjectivesLongComposedKey.Started, spName)
         set(value) {
@@ -116,7 +117,7 @@ abstract class Objective(
         }
     }
 
-    inner class UITask internal constructor(objective: Objective, @StringRes task: Int, private val spIdentifier: String, val code: (context: Context, task: UITask, callback: Runnable) -> Unit) : Task(objective, task) {
+    inner class UITask internal constructor(objective: Objective, @StringRes task: Int, private val spIdentifier: String, val code: (context: Context, task: UITask, callback: Runnable, showMessage: (String) -> Unit) -> Unit) : Task(objective, task) {
 
         var answered: Boolean = false
             set(value) {
@@ -160,7 +161,7 @@ abstract class Objective(
         }
     }
 
-    inner class Option internal constructor(@StringRes var option: Int, var isCorrect: Boolean) {
+    class Option internal constructor(@StringRes var option: Int, var isCorrect: Boolean) {
 
         private var cb: CheckBox? = null // TODO: change it, this will block releasing memory
 
@@ -189,5 +190,5 @@ abstract class Objective(
         }
     }
 
-    inner class Learned internal constructor(@StringRes var learned: Int)
+    class Learned internal constructor(@StringRes var learned: Int)
 }

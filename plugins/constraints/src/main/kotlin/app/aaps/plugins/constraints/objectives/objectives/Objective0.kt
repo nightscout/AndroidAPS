@@ -14,7 +14,6 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.constraints.R
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -82,9 +81,9 @@ class Objective0 @Inject constructor(
             override fun isCompleted(): Boolean = runBlocking { persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) } != null
         })
         tasks.add(
-            UITask(this, R.string.verify_master_password, "master_password") { context, task, callback ->
+            UITask(this, R.string.verify_master_password, "master_password") { context, task, callback, showMessage ->
                 if (preferences.get(StringKey.ProtectionMasterPassword) == "") {
-                    ToastUtils.errorToast(context, app.aaps.core.ui.R.string.master_password_not_set)
+                    showMessage(rh.gs(app.aaps.core.ui.R.string.master_password_not_set))
                 } else {
                     passwordCheck.queryPassword(
                         context, app.aaps.core.keys.R.string.master_password, StringKey.ProtectionMasterPassword,

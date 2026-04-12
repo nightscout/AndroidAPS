@@ -35,7 +35,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.pump.BolusProgressState
@@ -66,6 +65,7 @@ import app.aaps.ui.compose.treatmentsSheet.TreatmentViewModel
 import app.aaps.ui.search.SearchIndexEntry
 import app.aaps.ui.search.SearchResults
 import app.aaps.ui.search.SearchUiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -79,6 +79,7 @@ fun MainScreen(
     statusViewModel: StatusViewModel,
     treatmentViewModel: TreatmentViewModel,
     automationViewModel: AutomationViewModel,
+    loopActionViewModel: app.aaps.ui.compose.loopSheet.LoopActionViewModel,
     // Search
     searchUiState: SearchUiState,
     onSearchQueryChange: (String) -> Unit,
@@ -130,6 +131,7 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     var showTreatmentSheet by remember { mutableStateOf(false) }
     var showAutomationSheet by remember { mutableStateOf(false) }
+    var showLoopActionSheet by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Sync drawer state with ui state
@@ -295,6 +297,7 @@ fun MainScreen(
                                 .align(Alignment.BottomCenter)
                                 .padding(bottom = scaffoldPadding.calculateBottomPadding())
                         ) {
+                            val loopActionState = loopActionViewModel.uiState.collectAsStateWithLifecycle().value
                             MainNavigationBar(
                                 onManageClick = { manageSheetState.show() },
                                 onTreatmentClick = {
@@ -313,6 +316,8 @@ fun MainScreen(
                                 onNavigate = onNavigate,
                                 permissionsMissing = permissionsMissing,
                                 onPermissionsClick = onPermissionsClick,
+                                loopActionAvailable = loopActionState.actionAvailable,
+                                onLoopActionClick = { showLoopActionSheet = true },
                                 modifier = Modifier.onSizeChanged { bottomBarHeightPx = it.height }
                             )
                         }
@@ -390,6 +395,16 @@ fun MainScreen(
                 onDismiss = { showAutomationSheet = false },
                 automationItems = automationState.items,
                 onItemClick = { item -> mainViewModel.requestAutomationConfirmation(item.eventId) }
+            )
+        }
+
+        // Loop accept action bottom sheet
+        if (showLoopActionSheet) {
+            val loopState by loopActionViewModel.uiState.collectAsStateWithLifecycle()
+            app.aaps.ui.compose.loopSheet.LoopActionBottomSheet(
+                state = loopState,
+                onPerform = { mainViewModel.performLoopAccept() },
+                onDismiss = { showLoopActionSheet = false }
             )
         }
 

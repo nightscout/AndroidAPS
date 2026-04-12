@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.GppMaybe
 import androidx.compose.material.icons.filled.ManageAccounts
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -38,7 +39,9 @@ fun MainNavigationBar(
     pumpSetupLabel: String? = null,
     onNavigate: (NavigationRequest) -> Unit = {},
     permissionsMissing: Boolean = false,
-    onPermissionsClick: () -> Unit = {}
+    onPermissionsClick: () -> Unit = {},
+    loopActionAvailable: Boolean = false,
+    onLoopActionClick: () -> Unit = {}
 ) {
     val navColors = NavigationBarItemDefaults.colors(
         selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -134,6 +137,31 @@ fun MainNavigationBar(
                     }
                 },
                 label = { Text(text = pumpSetupLabel) },
+                colors = navColors
+            )
+        }
+
+        // Loop accept action (visible only when AAPS has a pending suggestion in open loop)
+        if (loopActionAvailable) {
+            NavigationBarItem(
+                selected = false,
+                onClick = onLoopActionClick,
+                icon = {
+                    BadgedBox(
+                        badge = {
+                            Badge(containerColor = AapsTheme.generalColors.statusNormal, contentColor = Color.Black) {
+                                Text(text = "1")
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayCircle,
+                            contentDescription = stringResource(R.string.loop_accept_nav_label),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                },
+                label = { Text(text = stringResource(R.string.loop_accept_nav_label)) },
                 colors = navColors
             )
         }

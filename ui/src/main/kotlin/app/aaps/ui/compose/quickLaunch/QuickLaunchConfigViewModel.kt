@@ -154,6 +154,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
         val typeOrder = listOf(
             PluginType.PUMP, PluginType.BGSOURCE, PluginType.APS,
             PluginType.SENSITIVITY, PluginType.SMOOTHING,
+            PluginType.CONSTRAINTS,
             PluginType.SYNC, PluginType.GENERAL
         )
         val typeLabelMap = mapOf(
@@ -162,6 +163,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
             PluginType.APS to app.aaps.core.ui.R.string.configbuilder_aps,
             PluginType.SENSITIVITY to app.aaps.core.ui.R.string.configbuilder_sensitivity,
             PluginType.SMOOTHING to app.aaps.core.ui.R.string.configbuilder_smoothing,
+            PluginType.CONSTRAINTS to app.aaps.core.ui.R.string.constraints,
             PluginType.SYNC to app.aaps.core.ui.R.string.configbuilder_sync,
             PluginType.GENERAL to app.aaps.core.ui.R.string.configbuilder_general
         )

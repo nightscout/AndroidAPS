@@ -164,9 +164,15 @@ fun GraphsSection(
         sec2scroll, sec2zoom, sec3scroll, sec3zoom,
         sec4scroll, sec4zoom
     ) {
+        var initialValue = true
         snapshotFlow { bgScrollState.value to bgZoomState.value }
             .debounce(30) // Wait for gesture to settle
             .collect { (scroll, zoom) ->
+                if (initialValue) {
+                    initialValue = false
+                } else {
+                    graphViewModel.onGraphInteraction()
+                }
                 val count = activeCount
                 // Sync zoom first, then scroll (order matters for proper positioning)
                 beltZoomState.zoom(Zoom.fixed(zoom))

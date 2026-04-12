@@ -10,6 +10,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
@@ -25,6 +26,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.ProtectionResult
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
@@ -83,7 +86,9 @@ class MainViewModel @Inject constructor(
     private val quickLaunchResolver: QuickLaunchResolver,
     private val commandQueue: CommandQueue,
     private val uiInteraction: UiInteraction,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    private val loop: Loop,
+    private val protectionCheck: ProtectionCheck
 ) : ViewModel() {
 
     val uiState: StateFlow<MainUiState>
@@ -536,6 +541,21 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun performLoopAccept() {
+        protectionCheck.requestProtection(ProtectionCheck.Protection.BOLUS) { result ->
+            if (result == ProtectionResult.GRANTED) {
+                viewModelScope.launch {
+                    val lastRun = loop.lastRun ?: return@launch
+                    if (lastRun.constraintsProcessed?.isChangeRequested == true) {
+                        uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
+                        loop.invoke("Accept temp button", false)
+                        loop.acceptChangeRequest()
+                    }
+                }
+            }
+        }
+    }
+
     fun dismissActionConfirmation() {
         actionConfirmation.update { null }
     }
@@ -592,6 +612,7 @@ class MainViewModel @Inject constructor(
                     iCfg = insulin.iCfg
                 )
             }
+
         }
     }
 

@@ -4,6 +4,8 @@ import android.os.SystemClock
 import app.aaps.core.interfaces.local.LocaleDependentSetting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -73,28 +75,25 @@ class SntpClient @Inject constructor(
     // round trip time in milliseconds
     private var roundTripTime: Long = 0
 
-    abstract class Callback : Runnable {
+    data class NtpResult(
+        val success: Boolean,
+        val networkConnected: Boolean,
+        val time: Long
+    )
 
-        var networkConnected = false
-        var success = false
-        var time: Long = 0
-    }
-
-    @Synchronized fun ntpTime(callback: Callback, isConnected: Boolean) {
-        callback.networkConnected = isConnected
-        if (callback.networkConnected) {
-            Thread { doNtpTime(callback) }.start()
+    /**
+     * Suspend version of ntpTime for use in coroutines.
+     */
+    suspend fun ntpTime(isConnected: Boolean): NtpResult = withContext(Dispatchers.IO) {
+        if (!isConnected) {
+            NtpResult(success = false, networkConnected = false, time = 0)
         } else {
-            callback.run()
+            aapsLogger.debug("Time detection started")
+            val success = requestTime(localeDependentSetting.ntpServer, 5000)
+            val time = ntpTime + SystemClock.elapsedRealtime() - ntpTimeReference
+            aapsLogger.debug("Time detection ended: $success ${dateUtil.dateAndTimeString(ntpTime)}")
+            NtpResult(success = success, networkConnected = true, time = time)
         }
-    }
-
-    fun doNtpTime(callback: Callback) {
-        aapsLogger.debug("Time detection started")
-        callback.success = requestTime(localeDependentSetting.ntpServer, 5000)
-        callback.time = ntpTime + SystemClock.elapsedRealtime() - ntpTimeReference
-        aapsLogger.debug("Time detection ended: " + callback.success + " " + dateUtil.dateAndTimeString(ntpTime))
-        callback.run()
     }
 
     /**

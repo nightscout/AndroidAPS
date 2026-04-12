@@ -282,5 +282,8 @@
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Select Arrow</string>
+    <string name="loop_accept_nav_label">Loop</string>
+    <string name="loop_accept_set_basal_question">Accept new temp basal:</string>
+    <string name="loop_accept_perform">Perform</string>
 
 </resources>
