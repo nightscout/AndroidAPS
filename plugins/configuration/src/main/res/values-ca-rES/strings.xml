@@ -24,7 +24,6 @@
     <string name="doprofileswitch">Canviar de perfil</string>
     <string name="exitwizard">Ometre assistent de configuració</string>
     <string name="setupwizard_sensitivity_description">El plugin de sensibilitat s\'utilitza per detectar la sensibilitat i calcular els COB. Per més informació:</string>
-    <string name="setupwizard_aps_description">Seleccioneu un dels algoritmes disponibles. Estan ordenats de més antic a més nou. Els més nous son generalment més potents i agressius. Per tant, si us esteu iniciant en el llaç, potser és millor que comenceu amb l\'AMA i no amb el més recent. No oblideu llegir la documentació d\'OpenAPS i configurar l\'algoritme abans d\'utilitzar-lo.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureu el vostre RileyLink a continuació. Un cop seleccionat, serà possible continuar configurant-lo un cop l\'estatus del RileyLink sigui \"Connectat\". Pot trigar un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Podeu continuar amb la configuració un cop la bomba estigui configurada.\n</string>
     <string name="startobjective">Iniciar primer objectiu</string>
