@@ -60,4 +60,9 @@
     <string name="pump_alert">Alertă a pompei</string>
     <string name="pairing_information">Informații despre asociere</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Dezasociați</string>
+    <string name="reset_pairing">Resetați informațiile de asociere?</string>
+    <string name="active_basal_rate">Rata bazală activă</string>
+    <string name="active_tbr">RBT activă</string>
+    <string name="reservoir_level">Nivel rezervor</string>
 </resources>
