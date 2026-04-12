@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Primijenjeno ograničenje bolusa</string>
     <string name="carbs_constraint_applied">Primijenjeno je ograničenje ugljikohidrata</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Dijalog otkazan</string>
     <string name="start_activity_tt">Započni aktivnost TT</string>
     <string name="start_eating_soon_tt">Započnite uskoro počnite jesti TT</string>
     <string name="start_hypo_tt">Pokrenite Hypo TT</string>
@@ -26,7 +25,6 @@
     <!-- FillDialog -->
     <!-- InsulinDialog -->
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
     <!-- WizardDialog -->
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
