@@ -39,12 +39,8 @@
     <string name="objectives_usage_objective">Học cách kiểm soát AAPS</string>
     <string name="objectives_usage_gate">Thực hiện các thao tác khác nhau trong AAPS</string>
     <string name="objectives_usage_learned">Bạn đã học cách sử dụng các thao tác cơ bản của AAPS. Các điều khiển chính nằm trên màn hình Tổng quan (Overview), có thể truy cập bằng nhấp hoặc nhấn giữ; nhiều điều khiển khác nằm ở màn hình Các thao tác (Action). Bạn cũng nên biết cách đưa màn hình của plugin vào menu cuộn trên cùng hoặc hiển thị trong danh sách plugin đã bật ở góc trên bên trái.</string>
-    <string name="objectives_useprofileswitch">Đặt Cấu hình 90% trong 10 phút (nhấn giữ tên Hồ sơ trên màn hình Tổng quan – Overview)</string>
-    <string name="objectives_usedisconnectpump">Mô phỏng Tắm. Ngắt kết nối bơm trong 1 giờ (nhấn giữ trên Open Loop)</string>
     <string name="objectives_usereconnectpump">… và kết nối lại theo cách tương tự</string>
-    <string name="objectives_usetemptarget">Tạo mục tiêu tạm thời tùy chỉnh với thời gian 10 phút (Nhấn và giữ vào mục tiêu hiện tại của bạn)</string>
     <string name="objectives_useloop">Hiển thị nội dung của plugin Loop</string>
-    <string name="objectives_usescale">Sử dụng chức năng thu phóng bằng cách nhấn giữ biểu đồ đường huyết</string>
     <string name="objectives_exam_objective">Kiểm chứng kiến thức của bạn</string>
     <string name="objectives_exam_gate">Nghiên cứu các câu hỏi. Bạn sẽ được đưa ra bốn câu trả lời có thể cho mỗi câu hỏi. Có thể có nhiều hơn một đáp án đúng. Vui lòng kiểm tra tất cả những đáp án đúng và chọn XÁC MINH (VERIFY).</string>
     <string name="objectives_exam_learned_prerequisites">Bạn không cần phải là nhà phát triển, nhưng bạn cần Nightscout để hoàn thành các Mục tiêu, một bơm tương thích và một máy tính để xây dựng AAPS lần đầu tiên cũng như cho mỗi lần cập nhật.</string>
