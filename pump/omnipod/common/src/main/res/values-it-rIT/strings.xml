@@ -51,7 +51,6 @@
     <string name="omnipod_common_overview_firmware_version">Versione firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Ora nel pod</string>
     <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minuti)</string>
-    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Oltre %1$s rimasta</string>
     <string name="omnipod_common_uncertain">incerto</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Disattiva pod</string>
