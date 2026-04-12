@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.keys.BooleanKey
-import app.aaps.wear.BuildConfig
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
@@ -18,13 +17,7 @@ import app.aaps.wear.interaction.utils.MenuListActivity
 class MainMenuActivity : MenuListActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        when (BuildConfig.FLAVOR) {
-            "full"        -> setTitle(R.string.app_name)
-            "aapsclient"  -> setTitle("AAPSClient")
-            "aapsclient2" -> setTitle("AAPSClient2")
-            "aapsclient3" -> setTitle("AAPSClient3")
-            "pumpcontrol" -> setTitle("Pumpcontrol")
-        }
+        setTitle(R.string.app_name)
         super.onCreate(savedInstanceState)
         rxBus.send(EventWearToMobile(ActionResendData("MainMenuListActivity")))
     }
