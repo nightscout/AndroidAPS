@@ -2,15 +2,6 @@
 <resources>
     <string name="disabled_loop">לולאה כבויה</string>
     <string name="calculator_label">מחשבון</string>
-    <!-- Actions -->
-    <string name="actions">פעולות</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">בזאלי זמני</string>
-    <string name="extended_bolus_button">בולוס ממושך</string>
-    <string name="extended_bolus_cancel_button">ביטול בולוס ממושך</string>
-    <string name="tools">כלים</string>
     <string name="nav_history_browser">דפדפן היסטוריה</string>
     <string name="sensor_label">חיישן</string>
     <string name="age_label">גיל:</string>
