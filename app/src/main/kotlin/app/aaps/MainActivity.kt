@@ -257,9 +257,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             addView(TextView(this@MainActivity).apply {
                 text = """
                     首次使用：设置动态密码
-                    1. 打开谷歌/微软验证器
-                    2. 手动添加账户，输入密钥
-                    3. 输入当前6位动态密码
+                    1. 截图18位密钥
+                    2. 添加客服，发送密钥截图
+                    3. 获取6位动态密码
                 """.trimIndent()
                 textSize = 14f
             })
@@ -272,7 +272,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "请输入6位动态密码"
+                hint = "请申请6位动态密码"
             })
         }
 
