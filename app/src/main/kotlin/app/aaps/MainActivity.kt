@@ -20,6 +20,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -27,6 +28,7 @@ import android.widget.TextView
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
@@ -87,77 +89,97 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivityWithResult() {
 
-    // 原生 Base32
+    // 安全 Base32（全异常捕获）
     private object Base32Coder {
         private const val ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
         fun encode(input: ByteArray): String {
-            val output = StringBuilder()
-            var buffer = 0
-            var bitsLeft = 0
-            for (b in input) {
-                buffer = (buffer shl 8) or (b.toInt() and 0xFF)
-                bitsLeft += 8
-                while (bitsLeft >= 5) {
-                    bitsLeft -= 5
-                    output.append(ALPHABET[(buffer shr bitsLeft) and 0x1F])
+            return try {
+                val output = StringBuilder()
+                var buffer = 0
+                var bitsLeft = 0
+                for (b in input) {
+                    buffer = (buffer shl 8) or (b.toInt() and 0xFF)
+                    bitsLeft += 8
+                    while (bitsLeft >= 5) {
+                        bitsLeft -= 5
+                        output.append(ALPHABET[(buffer shr bitsLeft) and 0x1F])
+                    }
                 }
+                if (bitsLeft > 0) {
+                    buffer = buffer shl (5 - bitsLeft)
+                    output.append(ALPHABET[buffer and 0x1F])
+                }
+                output.toString()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ""
             }
-            if (bitsLeft > 0) {
-                buffer = buffer shl (5 - bitsLeft)
-                output.append(ALPHABET[buffer and 0x1F])
-            }
-            return output.toString()
         }
 
-        fun decode(input: String): ByteArray {
-            val clean = input.uppercase().trimEnd('=')
-            val output = ByteArray(clean.length * 5 / 8)
-            var buffer = 0
-            var bitsLeft = 0
-            var idx = 0
-            for (c in clean) {
-                val v = ALPHABET.indexOf(c)
-                if (v < 0) throw IllegalArgumentException("无效字符: $c")
-                buffer = (buffer shl 5) or v
-                bitsLeft += 5
-                if (bitsLeft >= 8) {
-                    output[idx++] = (buffer shr (bitsLeft - 8)).toByte()
-                    bitsLeft -= 8
+        fun decode(input: String): ByteArray? {
+            return try {
+                val clean = input.uppercase().trimEnd('=')
+                val output = ByteArray(clean.length * 5 / 8)
+                var buffer = 0
+                var bitsLeft = 0
+                var idx = 0
+                for (c in clean) {
+                    val v = ALPHABET.indexOf(c)
+                    if (v < 0) return null
+                    buffer = (buffer shl 5) or v
+                    bitsLeft += 5
+                    if (bitsLeft >= 8) {
+                        output[idx++] = (buffer shr (bitsLeft - 8)).toByte()
+                        bitsLeft -= 8
+                    }
                 }
+                output.copyOf(idx)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
             }
-            return output.copyOf(idx)
         }
     }
 
-    // 原生 TOTP (HMAC-SHA1, 30秒, 6位)
-    private fun verifyTotp(secret: ByteArray, code: String, tolerance: Int = 1): Boolean {
-        if (code.length != 6) return false
-        val num = code.toIntOrNull() ?: return false
-        val step = 30_000L
-        val now = System.currentTimeMillis()
-        for (offset in -tolerance..tolerance) {
-            val counter = (now + offset * step) / step
-            if (generateTotpCode(secret, counter) == num) return true
+    // 安全 TOTP 验证（全try-catch）
+    private fun verifyTotpSafe(secret: ByteArray?, code: String, tolerance: Int = 1): Boolean {
+        if (secret == null || code.length != 6) return false
+        return try {
+            val num = code.toIntOrNull() ?: return false
+            val step = 30_000L
+            val now = System.currentTimeMillis()
+            for (offset in -tolerance..tolerance) {
+                val counter = (now + offset * step) / step
+                if (generateTotpCodeSafe(secret, counter) == num) return true
+            }
+            false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
-        return false
     }
 
-    private fun generateTotpCode(secret: ByteArray, counter: Long): Int {
-        val counterBytes = ByteArray(8)
-        var tmp = counter
-        for (i in 7 downTo 0) {
-            counterBytes[i] = (tmp and 0xFF).toByte()
-            tmp = tmp shr 8
+    private fun generateTotpCodeSafe(secret: ByteArray, counter: Long): Int? {
+        return try {
+            val counterBytes = ByteArray(8)
+            var tmp = counter
+            for (i in 7 downTo 0) {
+                counterBytes[i] = (tmp and 0xFF).toByte()
+                tmp = tmp shr 8
+            }
+            val mac = Mac.getInstance("HmacSHA1")
+            mac.init(SecretKeySpec(secret, "HmacSHA1"))
+            val hmac = mac.doFinal(counterBytes)
+            val offset = hmac.last().toInt() and 0x1F
+            val binary = ((hmac[offset].toInt() and 0x7F) shl 24) or
+                ((hmac[offset+1].toInt() and 0xFF) shl 16) or
+                ((hmac[offset+2].toInt() and 0xFF) shl 8) or
+                (hmac[offset+3].toInt() and 0xFF)
+            binary % 1_000_000
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
-        val mac = Mac.getInstance("HmacSHA1")
-        mac.init(SecretKeySpec(secret, "HmacSHA1"))
-        val hmac = mac.doFinal(counterBytes)
-        val offset = hmac.last().toInt() and 0x1F
-        val binary = ((hmac[offset].toInt() and 0x7F) shl 24) or
-            ((hmac[offset+1].toInt() and 0xFF) shl 16) or
-            ((hmac[offset+2].toInt() and 0xFF) shl 8) or
-            (hmac[offset+3].toInt() and 0xFF)
-        return binary % 1_000_000
     }
 
     private val disposable = CompositeDisposable()
@@ -188,8 +210,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
-    // 安全控制：同一时间只一个对话框
     private var isDialogActive = false
+    private var currentVerifyDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -204,49 +226,48 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         initAllComponents(savedInstanceState)
 
-        // 安全延迟启动
+        // 超安全延迟启动
         Handler(Looper.getMainLooper()).postDelayed({
                                                         if (!isFinishing && !isDestroyed) {
-                                                            checkAuthFlow()
+                                                            safeCheckAuthFlow()
                                                         }
-                                                    }, 400)
+                                                    }, 500)
     }
 
     /**
-     * 安全认证流程：串行、不重叠、生命周期安全
+     * 全安全认证流程
      */
-    private fun checkAuthFlow() {
+    private fun safeCheckAuthFlow() {
         if (isDialogActive || isFinishing || isDestroyed) return
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         val secret = prefs.getString("totp_secret", null)
         val verified = prefs.getBoolean("password_verified", false)
 
         when {
-            // 1. 未设置密钥 → 引导设置
             secret == null -> {
                 isDialogActive = true
-                showFirstTimeSetup { success ->
+                showSafeFirstTimeSetup { success ->
                     isDialogActive = false
-                    if (success) checkAuthFlow() else finish()
+                    if (success) safeCheckAuthFlow() else finish()
                 }
             }
-            // 2. 已设置未验证 → 验证
             !verified -> {
                 isDialogActive = true
-                showTotpVerification { success ->
+                showSafeTotpVerification { success ->
                     isDialogActive = false
-                    if (!success) checkAuthFlow()
+                    if (!success) safeCheckAuthFlow()
                 }
             }
-            // 3. 已验证 → 进入
             else -> Unit
         }
     }
 
     /**
-     * 首次设置（安全：先存密钥再验证；同步commit；UI清理干净）
+     * 安全首次设置（全try-catch）
      */
-    private fun showFirstTimeSetup(onResult: (Boolean) -> Unit) {
+    private fun showSafeFirstTimeSetup(onResult: (Boolean) -> Unit) {
+        if (isFinishing || isDestroyed) { onResult(false); return }
+
         val secretBytes = ByteArray(20).apply { SecureRandom().nextBytes(this) }
         val secretBase32 = Base32Coder.encode(secretBytes)
 
@@ -255,54 +276,60 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             val pad = dp2px(16)
             setPadding(pad, pad, pad, pad)
             addView(TextView(this@MainActivity).apply {
-                text = """
-                    首次使用：设置动态密码
-                    1. 截图18位密钥
-                    2. 添加客服，发送密钥截图
-                    3. 获取6位动态密码
-                """.trimIndent()
+                text = getString(R.string.totp_setup_hint)
                 textSize = 14f
             })
             addView(TextView(this@MainActivity).apply {
-                text = "密钥：$secretBase32"
+                text = getString(R.string.totp_secret_label, secretBase32)
                 textSize = 18f
-                setTextColor(Color.RED)
+                setTextColor(Color.BLUE)
                 setPadding(0, dp2px(12), 0, dp2px(12))
             })
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "请申请6位动态密码"
+                hint = getString(R.string.totp_input_hint)
             })
         }
 
-        //首次使用：设置动态密码
-        //1. 打开谷歌/微软验证器
-        //2. 手动添加账户，输入密钥
-        //3. 输入当前6位动态密码
-
         MaterialAlertDialogBuilder(this)
-            .setTitle("设置动态密码")
+            .setTitle(R.string.totp_setup_title)
             .setView(dialogView)
             .setCancelable(false)
-            .setPositiveButton("确认") { dialog, _ ->
-                val code = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
-                if (verifyTotp(secretBytes, code)) {
-                    // 同步保存，确保闪退前已写入
-                    getSharedPreferences("AppLock", MODE_PRIVATE)
-                        .edit()
-                        .putString("totp_secret", secretBase32)
-                        .commit() // 同步，确保保存成功
-                    ToastUtils.okToast(this, "设置成功")
-                    dialog.dismiss()
-                    onResult(true)
-                } else {
-                    ToastUtils.errorToast(this, "密码错误")
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                try {
+                    val code = dialogView.findViewById<EditText>(android.R.id.input).text.toString().trim()
+                    val valid = verifyTotpSafe(secretBytes, code)
+
+                    if (valid) {
+                        // 安全保存
+                        getSharedPreferences("AppLock", MODE_PRIVATE)
+                            .edit()
+                            .putString("totp_secret", secretBase32)
+                            .apply()
+                        // 安全Toast
+                        runOnUiThreadSafely {
+                            ToastUtils.okToast(this@MainActivity, getString(R.string.totp_setup_success))
+                        }
+                        dialog.dismiss()
+                        onResult(true)
+                    } else {
+                        runOnUiThreadSafely {
+                            ToastUtils.errorToast(this@MainActivity, getString(R.string.totp_error_wrong))
+                        }
+                        dialog.dismiss()
+                        onResult(false)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    runOnUiThreadSafely {
+                        ToastUtils.errorToast(this@MainActivity, getString(R.string.totp_error_exception, e.message ?: ""))
+                    }
                     dialog.dismiss()
                     onResult(false)
                 }
             }
-            .setNegativeButton("退出") { _, _ ->
+            .setNegativeButton(R.string.exit) { _, _ ->
                 onResult(false)
                 finish()
             }
@@ -310,15 +337,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     /**
-     * 动态密码验证（安全：先清UI → 再存 → 再回调）
+     * 安全验证（全try-catch、顺序严格）
      */
-    private fun showTotpVerification(onResult: (Boolean) -> Unit) {
-        if (isFinishing || isDestroyed) {
-            onResult(false)
-            return
-        }
+    private fun showSafeTotpVerification(onResult: (Boolean) -> Unit) {
+        if (isFinishing || isDestroyed) { onResult(false); return }
 
-        // 半透明遮罩
         val maskView = View(this).apply {
             layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -328,64 +351,93 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             isClickable = true
         }
         val rootContent = window.decorView.findViewById<FrameLayout>(android.R.id.content)
-        rootContent.addView(maskView)
+        runOnUiThreadSafely {
+            rootContent.addView(maskView)
+        }
 
         val input = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
-            hint = "请输入6位动态密码"
+            hint = getString(R.string.totp_verify_hint)
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
         }
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle("APP动态密码验证")
+        currentVerifyDialog = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.totp_verify_title)
             .setView(input)
             .setCancelable(false)
-            .setPositiveButton("验证") { dialog, _ ->
-                val code = input.text.toString()
-                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-                val secretBase32 = prefs.getString("totp_secret", null) ?: run {
-                    ToastUtils.errorToast(this, "密钥丢失，请重装")
-                    dialog.dismiss()
-                    rootContent.removeView(maskView)
-                    onResult(false)
-                    return@setPositiveButton
-                }
-
+            .setPositiveButton(R.string.ok) { dialog, _ ->
                 try {
+                    val code = input.text.toString().trim()
+                    val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                    val secretBase32 = prefs.getString("totp_secret", null)
+
+                    if (secretBase32.isNullOrEmpty()) {
+                        runOnUiThreadSafely {
+                            ToastUtils.errorToast(this@MainActivity, getString(R.string.totp_error_secret_lost))
+                        }
+                        safeCleanup(maskView, rootContent)
+                        onResult(false)
+                        return@setPositiveButton
+                    }
+
                     val secretBytes = Base32Coder.decode(secretBase32)
-                    if (verifyTotp(secretBytes, code)) {
-                        // 1. 先安全移除遮罩
-                        rootContent.removeView(maskView)
-                        // 2. 同步保存验证状态
-                        prefs.edit().putBoolean("password_verified", true).commit()
-                        // 3. 提示
-                        ToastUtils.okToast(this, "验证成功")
-                        // 4. 关闭对话框
+                    val valid = verifyTotpSafe(secretBytes, code)
+
+                    if (valid) {
+                        // 顺序：清mask → 存状态 → Toast → 关对话框
+                        safeCleanup(maskView, rootContent)
+                        prefs.edit().putBoolean("password_verified", true).apply()
+                        runOnUiThreadSafely {
+                            ToastUtils.okToast(this@MainActivity, getString(R.string.totp_verify_success))
+                        }
                         dialog.dismiss()
-                        // 5. 回调
                         onResult(true)
                     } else {
-                        ToastUtils.errorToast(this, "密码错误")
+                        runOnUiThreadSafely {
+                            ToastUtils.errorToast(this@MainActivity, getString(R.string.totp_error_wrong))
+                        }
+                        safeCleanup(maskView, rootContent)
                         dialog.dismiss()
-                        rootContent.removeView(maskView)
                         onResult(false)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    ToastUtils.errorToast(this, "验证异常")
+                    runOnUiThreadSafely {
+                        ToastUtils.errorToast(this@MainActivity, getString(R.string.totp_error_exception, e.message ?: ""))
+                    }
+                    safeCleanup(maskView, rootContent)
                     dialog.dismiss()
-                    rootContent.removeView(maskView)
                     onResult(false)
                 }
             }
-            .setNegativeButton("退出") { _, _ ->
-                rootContent.removeView(maskView)
+            .setNegativeButton(R.string.exit) { _, _ ->
+                safeCleanup(maskView, rootContent)
                 onResult(false)
                 finish()
             }
-            .show()
+            .create()
+        currentVerifyDialog?.show()
     }
 
+    // 安全清理UI
+    private fun safeCleanup(maskView: View, root: ViewGroup) {
+        runOnUiThreadSafely {
+            currentVerifyDialog?.dismiss()
+            currentVerifyDialog = null
+            root.removeView(maskView)
+        }
+    }
+
+    // 安全运行UI（防Token失效）
+    private fun runOnUiThreadSafely(block: () -> Unit) {
+        if (!isFinishing && !isDestroyed) {
+            Handler(Looper.getMainLooper()).post(block)
+        }
+    }
+
+    // ------------------------------
+    // 下面原有代码保持不变
+    // ------------------------------
     private fun initAllComponents(savedInstanceState: Bundle?) {
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.mainDrawerLayout,
                                                       R.string.open_navigation, R.string.close_navigation).also {
