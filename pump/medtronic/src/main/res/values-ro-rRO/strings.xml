@@ -91,6 +91,7 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Setați bazale temporare neutre</string>
     <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
+    <string name="medtronic_tbr_remaining">%1$s (%2$d minute rămase)</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d minute rămase)</string>
     <string name="invalid_history_data">Au fost detectate date nevalide din istoricul pompei. Deschide o sesizare nouă și trimite jurnalul de activitate.</string>
     <string name="riley_statistics">Statistici RL</string>
