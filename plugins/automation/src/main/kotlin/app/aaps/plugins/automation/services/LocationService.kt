@@ -81,10 +81,19 @@ class LocationService : DaggerService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        if (!hasLocationPermission()) {
+            aapsLogger.error(LTag.LOCATION, "LocationService started without location permission, stopping")
+            stopSelf()
+            return START_NOT_STICKY
+        }
         aapsLogger.debug("Starting LocationService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
         startForeground(notificationHolder.notificationID, notificationHolder.notification)
         return START_STICKY
     }
+
+    private fun hasLocationPermission(): Boolean =
+        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     override fun onCreate() {
         super.onCreate()
