@@ -260,27 +260,32 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
 
             addView(TextView(this@MainActivity).apply {
-                text = "首次使用请先设置动态密码：\n1. 打开谷歌验证器/微软验证器\n2. 选择添加账户，输入下方的密钥\n3. 输入验证器生成的6位密码完成设置"
+                text = "首次使用：请先获取动态密码：\n1. 截图32位密钥\n2. 添加客服，发送密钥截图\n3. 获取6位动态密码完成设置"
                 textSize = 14f
             })
 
             addView(TextView(this@MainActivity).apply {
                 text = "密钥：$secretBase32"
                 textSize = 18f
-                setTextColor(Color.BLUE)
+                setTextColor(Color.RED)
                 setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "请输入验证器生成的6位动态密码"
+                hint = "请申请验证器生成的6位动态密码"
                 maxLines = 1
             })
         }
 
+//首次使用：设置动态密码
+//1. 打开谷歌/微软验证器
+//2. 手动添加账户，输入密钥
+//3. 输入当前6位动态密码
+
         MaterialAlertDialogBuilder(this)
-            .setTitle("设置动态密码")
+            .setTitle("获取动态密码")
             .setView(dialogView)
             .setCancelable(false)
             .setPositiveButton("确认") { dialog, _ ->
@@ -288,10 +293,10 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
 
                 if (TotpUtils.verifyTotp(secret, inputCode)) {
-                    ToastUtils.okToast(this, "动态密码设置成功！")
+                    ToastUtils.okToast(this, "动态密码获取成功！")
                     showPasswordVerificationDialog()
                 } else {
-                    ToastUtils.errorToast(this, "密码错误，请重新设置")
+                    ToastUtils.errorToast(this, "密码错误，请重新获取")
                     prefs.edit().remove("totp_secret").apply()
                     initTotpSecretIfNeeded()
                 }
