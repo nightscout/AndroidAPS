@@ -2,9 +2,7 @@ package app.aaps
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -89,10 +87,9 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivityWithResult() {
 
-    // 自定义Base32编解码，完全原生实现，不用外部库
+    // 原生 Base32
     private object Base32Coder {
         private val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-
         fun encode(input: ByteArray): String {
             val output = StringBuilder()
             var buffer = 0
@@ -111,75 +108,58 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             }
             return output.toString()
         }
-
         fun decode(input: String): ByteArray {
-            val cleanInput = input.uppercase().trimEnd('=')
-            val output = ByteArray(cleanInput.length * 5 / 8)
+            val clean = input.uppercase().trimEnd('=')
+            val output = ByteArray(clean.length * 5 / 8)
             var buffer = 0
             var bitsLeft = 0
-            var index = 0
-            for (c in cleanInput) {
-                val value = alphabet.indexOf(c)
-                if (value < 0) throw IllegalArgumentException("无效的Base32字符: $c")
-                buffer = (buffer shl 5) or value
+            var idx = 0
+            for (c in clean) {
+                val v = alphabet.indexOf(c)
+                if (v < 0) throw IllegalArgumentException("Bad Base32: $c")
+                buffer = (buffer shl 5) or v
                 bitsLeft += 5
                 if (bitsLeft >= 8) {
-                    output[index++] = (buffer shr (bitsLeft - 8)).toByte()
+                    output[idx++] = (buffer shr (bitsLeft - 8)).toByte()
                     bitsLeft -= 8
                 }
             }
-            return output.copyOf(index)
+            return output.copyOf(idx)
         }
     }
 
-    // TOTP核心实现，原生HMAC-SHA1，完全兼容谷歌验证器
+    // 原生 TOTP (HMAC-SHA1)
     private fun verifyTotp(secret: ByteArray, code: String, tolerance: Int = 1): Boolean {
         if (code.length != 6) return false
-        val codeNum = code.toIntOrNull() ?: return false
-
-        val timeStepMs = 30L * 1000L
-        val currentTime = System.currentTimeMillis()
-
-        // 支持前后1个时间步的时间容错
-        for (offset in -tolerance..tolerance) {
-            val checkTime = currentTime + offset * timeStepMs
-            val counter = checkTime / timeStepMs
-            val generatedCode = generateTotp(secret, counter)
-            if (generatedCode == codeNum) {
-                return true
-            }
+        val num = code.toIntOrNull() ?: return false
+        val step = 30_000L
+        val now = System.currentTimeMillis()
+        for (off in -tolerance..tolerance) {
+            val counter = (now + off * step) / step
+            if (generateTotp(secret, counter) == num) return true
         }
         return false
     }
 
     private fun generateTotp(secret: ByteArray, counter: Long): Int {
-        // 把counter转成8字节数组
         val counterBytes = ByteArray(8)
-        var temp = counter
+        var tmp = counter
         for (i in 7 downTo 0) {
-            counterBytes[i] = (temp and 0xFF).toByte()
-            temp = temp shr 8
+            counterBytes[i] = (tmp and 0xFF).toByte()
+            tmp = tmp shr 8
         }
-
-        // 原生HMAC-SHA1计算，Android自带API
         val mac = Mac.getInstance("HmacSHA1")
-        val secretKey = SecretKeySpec(secret, "HmacSHA1")
-        mac.init(secretKey)
-        val hmacResult = mac.doFinal(counterBytes)
-
-        // 动态截断
-        val offset = hmacResult.last().toInt() and 0x1F
-        val binary = ((hmacResult[offset].toInt() and 0x7F) shl 24) or
-            ((hmacResult[offset + 1].toInt() and 0xFF) shl 16) or
-            ((hmacResult[offset + 2].toInt() and 0xFF) shl 8) or
-            (hmacResult[offset + 3].toInt() and 0xFF)
-
-        // 生成6位密码
-        return binary % 1000000
+        mac.init(SecretKeySpec(secret, "HmacSHA1"))
+        val hmac = mac.doFinal(counterBytes)
+        val off = hmac.last().toInt() and 0x1F
+        val bin = ((hmac[off].toInt() and 0x7F) shl 24) or
+            ((hmac[off+1].toInt() and 0xFF) shl 16) or
+            ((hmac[off+2].toInt() and 0xFF) shl 8) or
+            (hmac[off+3].toInt() and 0xFF)
+        return bin % 1_000_000
     }
 
     private val disposable = CompositeDisposable()
-
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
     @Inject lateinit var smsCommunicator: SmsCommunicator
@@ -207,6 +187,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
+    // 防重叠：用标志位保证只弹一个
+    private var isDialogShowing = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Iconify.with(FontAwesomeModule())
@@ -220,94 +203,142 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         initAllComponents(savedInstanceState)
 
-        // 处理原有验证状态的迁移
+        // 启动流程：先初始化密钥 → 再验证 → 绝不重叠
+        Handler(Looper.getMainLooper()).postDelayed({
+                                                        checkTotpAndShowAuth()
+                                                    }, 300)
+    }
+
+    /**
+     * 安全启动：先初始化密钥 → 再显示验证（串行，不重叠）
+     */
+    private fun checkTotpAndShowAuth() {
+        if (isDialogShowing) return
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-        var verified = prefs.getBoolean("password_verified", false)
-        val hasTotpSecret = prefs.getString("totp_secret", null) != null
+        val secret = prefs.getString("totp_secret", null)
 
-        if (!hasTotpSecret && verified) {
-            prefs.edit().putBoolean("password_verified", false).apply()
-            verified = false
-        }
-
-        if (!verified) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                                                            if (initTotpSecretIfNeeded()) {
-                                                                showPasswordVerificationDialog()
-                                                            }
-                                                        }, 200)
+        when {
+            // 1. 未设置 → 引导设置
+            secret == null -> {
+                isDialogShowing = true
+                showFirstTimeSetupDialog {
+                    isDialogShowing = false
+                    checkTotpAndShowAuth() // 成功后再验证
+                }
+            }
+            // 2. 已设置但未验证 → 验证
+            !prefs.getBoolean("password_verified", false) -> {
+                isDialogShowing = true
+                showPasswordVerificationDialog {
+                    isDialogShowing = false
+                }
+            }
+            // 3. 已验证 → 直接进
+            else -> Unit
         }
     }
 
     /**
-     * 初始化TOTP密钥，首次使用引导用户设置
+     * 首次设置引导（成功后回调）
      */
-    private fun initTotpSecretIfNeeded(): Boolean {
-        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-        if (prefs.getString("totp_secret", null) != null) {
-            return true
-        }
+    private fun showFirstTimeSetupDialog(onSuccess: () -> Unit) {
+        // 生成密钥
+        val secretBytes = ByteArray(20).apply { SecureRandom().nextBytes(this) }
+        val secretBase32 = Base32Coder.encode(secretBytes)
 
-        // 生成随机20字节密钥，符合RFC标准
-        val secret = ByteArray(20)
-        SecureRandom().nextBytes(secret)
-        val secretBase32 = Base32Coder.encode(secret)
-
-        // 保存密钥
-        prefs.edit().putString("totp_secret", secretBase32).apply()
-
-        // 构建设置对话框，去掉二维码，只显示密钥，避免外部依赖
-        val dialogView = LinearLayout(this).apply {
+        val view = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
-
             addView(TextView(this@MainActivity).apply {
-                text = "首次使用请先设置动态密码：\n1. 打开谷歌验证器/微软验证器\n2. 选择添加账户，输入下方的密钥\n3. 输入验证器生成的6位密码完成设置"
+                text = "首次使用：请先设置动态密码\n\n1. 打开谷歌/微软验证器\n2. 手动添加账户，输入密钥\n3. 输入6位动态密码"
                 textSize = 14f
             })
-
             addView(TextView(this@MainActivity).apply {
                 text = "密钥：$secretBase32"
                 textSize = 18f
                 setTextColor(Color.BLUE)
                 setPadding(0, dp2px(16), 0, dp2px(16))
             })
-
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "请输入验证器生成的6位动态密码"
-                maxLines = 1
+                hint = "请输入6位动态密码"
             })
         }
 
         MaterialAlertDialogBuilder(this)
             .setTitle("设置动态密码")
-            .setView(dialogView)
+            .setView(view)
             .setCancelable(false)
-            .setPositiveButton("确认") { dialog, _ ->
-                val inputCode = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
-                val secretBytes = Base32Coder.decode(secretBase32)
-
-                if (verifyTotp(secretBytes, inputCode)) {
-                    ToastUtils.okToast(this, "动态密码设置成功！")
-                    showPasswordVerificationDialog()
+            .setPositiveButton("确认") { _, _ ->
+                val code = view.findViewById<EditText>(android.R.id.input).text.toString()
+                if (verifyTotp(secretBytes, code)) {
+                    getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                        .edit().putString("totp_secret", secretBase32).apply()
+                    ToastUtils.okToast(this, "设置成功！")
+                    onSuccess()
                 } else {
-                    ToastUtils.errorToast(this, "密码错误，请重新设置")
-                    prefs.edit().remove("totp_secret").apply()
-                    initTotpSecretIfNeeded()
+                    ToastUtils.errorToast(this, "密码错误")
+                    showFirstTimeSetupDialog(onSuccess)
                 }
             }
-            .setNegativeButton("退出") { _, _ ->
-                finish()
-            }
+            .setNegativeButton("退出") { _, _ -> finish() }
             .show()
+    }
 
-        return false
+    /**
+     * 动态密码验证（成功后回调）
+     */
+    private fun showPasswordVerificationDialog(onSuccess: () -> Unit) {
+        val maskView = View(this).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundColor(Color.parseColor("#CC000000"))
+            isClickable = true
+        }
+        val root = window.decorView.findViewById<FrameLayout>(android.R.id.content)
+        root.addView(maskView)
+
+        val input = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            hint = "请输入6位动态密码"
+            setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("APP动态密码验证")
+            .setView(input)
+            .setCancelable(false)
+            .setPositiveButton("验证") { dialog, _ ->
+                val code = input.text.toString()
+                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                val secret = prefs.getString("totp_secret", null)!!
+                val secretBytes = Base32Coder.decode(secret)
+
+                if (verifyTotp(secretBytes, code)) {
+                    prefs.edit().putBoolean("password_verified", true).apply()
+                    root.removeView(maskView)
+                    dialog.dismiss()
+                    ToastUtils.okToast(this, "验证成功")
+                    onSuccess()
+                } else {
+                    ToastUtils.errorToast(this, "密码错误")
+                    dialog.dismiss()
+                    Handler(Looper.getMainLooper()).post {
+                        root.removeView(maskView)
+                        showPasswordVerificationDialog(onSuccess)
+                    }
+                }
+            }
+            .setNegativeButton("退出") { _, _ -> finish() }
+            .show()
     }
 
     private fun initAllComponents(savedInstanceState: Bundle?) {
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.mainDrawerLayout, R.string.open_navigation, R.string.close_navigation).also {
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.mainDrawerLayout,
+                                                      R.string.open_navigation, R.string.close_navigation).also {
             binding.mainDrawerLayout.addDrawerListener(it)
             it.syncState()
         }
@@ -318,14 +349,15 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .toObservable(EventRebuildTabs::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           if (it.recreate) recreate()
-                           else setupViews()
+                           if (it.recreate) recreate() else setupViews()
                            setWakeLock()
                        }, fabricPrivacy::logException)
+
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
+
         disposable += rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.main)
@@ -333,13 +365,14 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START))
-                    binding.mainDrawerLayout.closeDrawers()
-                else if (menuOpen)
-                    menu?.close()
-                else if (binding.mainPager.currentItem != 0)
-                    binding.mainPager.currentItem = 0
-                else finish()
+                when {
+                    binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START) ->
+                        binding.mainDrawerLayout.closeDrawers()
+                    menuOpen -> menu?.close()
+                    binding.mainPager.currentItem != 0 ->
+                        binding.mainPager.currentItem = 0
+                    else -> finish()
+                }
             }
         })
 
@@ -353,27 +386,31 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                 when (menuItem.itemId) {
-                    R.id.nav_preferences        -> {
+                    R.id.nav_preferences -> {
                         protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
-                            startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                            startActivity(Intent(this@MainActivity, PreferencesActivity::class.java)
+                                              .setAction("info.nightscout.androidaps.MainActivity"))
                         })
                         true
                     }
-                    R.id.nav_historybrowser     -> {
-                        startActivity(Intent(this@MainActivity, HistoryBrowseActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                    R.id.nav_historybrowser -> {
+                        startActivity(Intent(this@MainActivity, HistoryBrowseActivity::class.java)
+                                          .setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-                    R.id.nav_treatments         -> {
-                        startActivity(Intent(this@MainActivity, TreatmentsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                    R.id.nav_treatments -> {
+                        startActivity(Intent(this@MainActivity, TreatmentsActivity::class.java)
+                                          .setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-                    R.id.nav_setupwizard        -> {
+                    R.id.nav_setupwizard -> {
                         protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
-                            startActivity(Intent(this@MainActivity, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                            startActivity(Intent(this@MainActivity, SetupWizardActivity::class.java)
+                                              .setAction("info.nightscout.androidaps.MainActivity"))
                         })
                         true
                     }
-                    R.id.nav_about              -> {
+                    R.id.nav_about -> {
                         var message = "Build: ${config.BUILD_VERSION}\n"
                         message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                         message += "${rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(app.aaps.plugins.main.R.string.not_available_full)}"
@@ -381,15 +418,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
                         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
                         message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
-                        val messageSpanned = SpannableString(message)
-                        Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
+                        val spanned = SpannableString(message)
+                        Linkify.addLinks(spanned, Linkify.WEB_URLS)
                         MaterialAlertDialogBuilder(this@MainActivity)
                             .setTitle(rh.gs(R.string.app_name) + " " + config.VERSION)
                             .setIcon(iconsProvider.getIcon())
-                            .setMessage(messageSpanned)
+                            .setMessage(spanned)
                             .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok), null)
                             .setNeutralButton(rh.gs(app.aaps.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))))
+                                startActivity(Intent(Intent.ACTION_VIEW,
+                                                     Uri.parse("https://dontkillmyapp.com/${Build.MANUFACTURER.lowercase().replace(" ", "-")}")))
                             }
                             .create().apply {
                                 show()
@@ -397,82 +435,40 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             }
                         true
                     }
-                    R.id.nav_exit               -> {
+                    R.id.nav_exit -> {
                         finish()
                         configBuilder.exitApp("Menu", Sources.Aaps, false)
                         true
                     }
                     R.id.nav_plugin_preferences -> {
-                        val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
+                        val plugin = (binding.mainPager.adapter as TabPageAdapter)
+                            .getPluginAt(binding.mainPager.currentItem)
                         protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
-                            startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity").putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName))
+                            startActivity(Intent(this@MainActivity, PreferencesActivity::class.java)
+                                              .setAction("info.nightscout.androidaps.MainActivity")
+                                              .putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName))
                         })
                         true
                     }
-                    R.id.nav_defaultprofile     -> {
-                        startActivity(Intent(this@MainActivity, ProfileHelperActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                    R.id.nav_defaultprofile -> {
+                        startActivity(Intent(this@MainActivity, ProfileHelperActivity::class.java)
+                                          .setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-                    R.id.nav_stats              -> {
-                        startActivity(Intent(this@MainActivity, StatsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                    R.id.nav_stats -> {
+                        startActivity(Intent(this@MainActivity, StatsActivity::class.java)
+                                          .setAction("info.nightscout.androidaps.MainActivity"))
                         true
                     }
-                    else                        ->
-                        actionBarDrawerToggle?.onOptionsItemSelected(menuItem)!!
+                    else -> actionBarDrawerToggle?.onOptionsItemSelected(menuItem)!!
                 }
         }
         mainMenuProvider?.let { addMenuProvider(it) }
         if (config.appInitialized) setupViews()
     }
 
-    private fun showPasswordVerificationDialog() {
-        val maskView = View(this)
-        maskView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-        maskView.setBackgroundColor(Color.parseColor("#CC000000"))
-        maskView.isClickable = true
-        val rootView = window.decorView.findViewById<FrameLayout>(android.R.id.content)
-        rootView.addView(maskView)
-
-        val passwordInput = EditText(this)
-        passwordInput.inputType = InputType.TYPE_CLASS_NUMBER
-        passwordInput.hint = "请输入验证器生成的6位动态密码"
-        val padding = dp2px(16)
-        passwordInput.setPadding(padding, padding, padding, padding)
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle("APP动态密码验证")
-            .setView(passwordInput)
-            .setCancelable(false)
-            .setPositiveButton("验证") { dialog, _ ->
-                val inputPwd = passwordInput.text.toString()
-                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-                val secretBase32 = prefs.getString("totp_secret", null)!!
-                val secretBytes = Base32Coder.decode(secretBase32)
-
-                if (verifyTotp(secretBytes, inputPwd)) {
-                    getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-                        .edit()
-                        .putBoolean("password_verified", true)
-                        .apply()
-
-                    rootView.removeView(maskView)
-                    dialog.dismiss()
-                    ToastUtils.okToast(this, "验证成功")
-                } else {
-                    ToastUtils.errorToast(this, "动态密码错误")
-                    dialog.dismiss()
-                    Handler(Looper.getMainLooper()).post { showPasswordVerificationDialog() }
-                }
-            }
-            .setNegativeButton("退出") { _, _ ->
-                finish()
-            }
-            .show()
-    }
-
-    private fun dp2px(dp: Int): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics).toInt()
-    }
+    private fun dp2px(dp: Int): Int =
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics).toInt()
 
     private fun start() {
         binding.splash.visibility = View.GONE
@@ -481,9 +477,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                startActivity(Intent(this, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                startActivity(Intent(this, SetupWizardActivity::class.java)
+                                  .setAction("info.nightscout.androidaps.MainActivity"))
             })
         }
+
         androidPermission.notifyForStoragePermission(this)
         androidPermission.notifyForBatteryOptimizationPermission(this)
         if (!config.AAPSCLIENT) androidPermission.notifyForLocationPermissions(this)
@@ -503,7 +501,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 buttonText = R.string.set,
                 action = Runnable {
                     preferences.put(BooleanKey.GeneralSimpleMode, false)
-                    startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity").putExtra(UiInteraction.PLUGIN_NAME, MaintenancePlugin::class.java.simpleName))
+                    startActivity(Intent(this@MainActivity, PreferencesActivity::class.java)
+                                      .setAction("info.nightscout.androidaps.MainActivity")
+                                      .putExtra(UiInteraction.PLUGIN_NAME, MaintenancePlugin::class.java.simpleName))
                 },
                 validityCheck = { config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank() }
             )
@@ -514,9 +514,14 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 text = rh.gs(app.aaps.core.ui.R.string.master_password_not_set),
                 level = Notification.NORMAL,
                 buttonText = R.string.set,
-                action = { startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity").putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)) },
+                action = {
+                    startActivity(Intent(this@MainActivity, PreferencesActivity::class.java)
+                                      .setAction("info.nightscout.androidaps.MainActivity")
+                                      .putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION))
+                },
                 validityCheck = { preferences.get(StringKey.ProtectionMasterPassword) == "" }
             )
+
         if (preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty())
             uiInteraction.addNotificationWithAction(
                 id = Notification.AAPS_DIR_NOT_SELECTED,
@@ -548,16 +553,27 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         if (config.appInitialized) binding.splash.visibility = View.GONE
         if (!isProtectionCheckActive) {
             isProtectionCheckActive = true
-            protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
-                                            UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) { isProtectionCheckActive = false; finish() } },
-                                            UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) { isProtectionCheckActive = false; finish() } }
+            protectionCheck.queryProtection(
+                this, ProtectionCheck.Protection.APPLICATION,
+                UIRunnable { isProtectionCheckActive = false },
+                UIRunnable {
+                    OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) {
+                        isProtectionCheckActive = false; finish()
+                    }
+                },
+                UIRunnable {
+                    OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) {
+                        isProtectionCheckActive = false; finish()
+                    }
+                }
             )
         }
     }
 
     private fun setWakeLock() {
-        val keepScreenOn = preferences.get(BooleanKey.OverviewKeepScreenOn)
-        if (keepScreenOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        val keepOn = preferences.get(BooleanKey.OverviewKeepScreenOn)
+        if (keepOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
@@ -566,70 +582,87 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun setupViews() {
-        val pageAdapter = TabPageAdapter(this)
+        val adapter = TabPageAdapter(this)
         binding.mainNavigationView.setNavigationItemSelectedListener { true }
-        val menu = binding.mainNavigationView.menu.also { it.clear() }
-        for (p in activePlugin.getPluginsList())
+        val menu = binding.mainNavigationView.menu.apply { clear() }
+
+        for (p in activePlugin.getPluginsList()) {
             if (p.isEnabled() && p.hasFragment() && p.showInList(p.getType())) {
-                if ((preferences.simpleMode && p.pluginDescription.simpleModePosition == PluginDescription.Position.TAB) || (!preferences.simpleMode && p.isFragmentVisible()))
-                    pageAdapter.registerNewFragment(p)
-                if ((preferences.simpleMode && !p.pluginDescription.neverVisible && p.pluginDescription.simpleModePosition == PluginDescription.Position.MENU) || (!preferences.simpleMode && !p.pluginDescription.neverVisible && !p.isFragmentVisible())) {
-                    val menuItem = menu.add(p.name)
-                    menuItem.isCheckable = true
-                    if (p.menuIcon != -1) menuItem.setIcon(p.menuIcon) else menuItem.setIcon(app.aaps.core.ui.R.drawable.ic_settings)
-                    menuItem.setOnMenuItemClickListener {
-                        startActivity(Intent(this, SingleFragmentActivity::class.java).setAction(this::class.simpleName).putExtra("plugin", activePlugin.getPluginsList().indexOf(p)))
+                val simple = preferences.simpleMode
+                if ((simple && p.pluginDescription.simpleModePosition == PluginDescription.Position.TAB) ||
+                    (!simple && p.isFragmentVisible())) {
+                    adapter.registerNewFragment(p)
+                }
+                if ((simple && !p.pluginDescription.neverVisible && p.pluginDescription.simpleModePosition == PluginDescription.Position.MENU) ||
+                    (!simple && !p.pluginDescription.neverVisible && !p.isFragmentVisible())) {
+                    val item = menu.add(p.name)
+                    item.isCheckable = true
+                    item.setIcon(if (p.menuIcon != -1) p.menuIcon else app.aaps.core.ui.R.drawable.ic_settings)
+                    item.setOnMenuItemClickListener {
+                        startActivity(Intent(this, SingleFragmentActivity::class.java)
+                                          .setAction(this::class.simpleName)
+                                          .putExtra("plugin", activePlugin.getPluginsList().indexOf(p)))
                         binding.mainDrawerLayout.closeDrawers()
                         true
                     }
                 }
             }
-        binding.mainPager.adapter = pageAdapter
+        }
+
+        binding.mainPager.adapter = adapter
         binding.mainPager.offscreenPageLimit = 8
 
         if (preferences.get(BooleanKey.OverviewShortTabTitles)) {
             binding.tabsNormal.visibility = View.GONE
             binding.tabsCompact.visibility = View.VISIBLE
-            binding.toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(app.aaps.core.ui.R.dimen.compact_height).toInt())
-            TabLayoutMediator(binding.tabsCompact, binding.mainPager) { tab, position ->
-                tab.text = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(position).nameShort
+            binding.toolbar.layoutParams = LinearLayout.LayoutParams(
+                Toolbar.LayoutParams.MATCH_PARENT,
+                resources.getDimension(app.aaps.core.ui.R.dimen.compact_height).toInt()
+            )
+            TabLayoutMediator(binding.tabsCompact, binding.mainPager) { tab, pos ->
+                tab.text = adapter.getPluginAt(pos).nameShort
             }.attach()
         } else {
             binding.tabsNormal.visibility = View.VISIBLE
             binding.tabsCompact.visibility = View.GONE
-            val typedValue = TypedValue()
-            if (theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
+            val tv = TypedValue()
+            if (theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
                 binding.toolbar.layoutParams = LinearLayout.LayoutParams(
                     Toolbar.LayoutParams.MATCH_PARENT,
-                    TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
+                    TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
                 )
             }
-            TabLayoutMediator(binding.tabsNormal, binding.mainPager) { tab, position ->
-                tab.text = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(position).name
+            TabLayoutMediator(binding.tabsNormal, binding.mainPager) { tab, pos ->
+                tab.text = adapter.getPluginAt(pos).name
             }.attach()
         }
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        return super.dispatchTouchEvent(event)
-    }
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean = super.dispatchTouchEvent(ev)
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         menuOpen = true
-        if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) binding.mainDrawerLayout.closeDrawers()
-        val result = super.onMenuOpened(featureId, menu)
+        if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START))
+            binding.mainDrawerLayout.closeDrawers()
+        val ret = super.onMenuOpened(featureId, menu)
         menu.findItem(R.id.nav_treatments)?.isEnabled = profileFunction.getProfile() != null
+
         if (binding.mainPager.currentItem >= 0) {
-            val plugin = (binding.mainPager.adapter as TabPageAdapter?)?.getPluginAt(binding.mainPager.currentItem) ?: return result
-            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = rh.gs(R.string.nav_preferences_plugin, plugin.name)
-            pluginPreferencesMenuItem?.isEnabled = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem).preferencesId != PluginDescription.PREFERENCE_NONE
+            val plugin = (binding.mainPager.adapter as TabPageAdapter?)
+                ?.getPluginAt(binding.mainPager.currentItem) ?: return ret
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title =
+                rh.gs(R.string.nav_preferences_plugin, plugin.name)
+            pluginPreferencesMenuItem?.isEnabled =
+                plugin.preferencesId != PluginDescription.PREFERENCE_NONE
         }
+
         if (pluginPreferencesMenuItem?.isEnabled == false) {
-            val spanString = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
-            spanString.setSpan(ForegroundColorSpan(rh.gac(app.aaps.core.ui.R.attr.disabledTextColor)), 0, spanString.length, 0)
-            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = spanString
+            val span = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
+            span.setSpan(ForegroundColorSpan(rh.gac(app.aaps.core.ui.R.attr.disabledTextColor)),
+                         0, span.length, 0)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = span
         }
-        return result
+        return ret
     }
 
     override fun onPanelClosed(featureId: Int, menu: Menu) {
@@ -639,30 +672,41 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     private fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
-        val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
-        val remote = config.REMOTE.lowercase(Locale.getDefault()).replace("https://","").replace("http://","").replace(".git","").replace(".com/",":").replace(".org/",":").replace(".net/",":")
-        fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
+        val loopMode = if (constraintChecker.isClosedLoopAllowed().value())
+            "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
+        val remote = config.REMOTE.lowercase(Locale.getDefault())
+            .replace("https://","").replace("http://","")
+            .replace(".git","").replace(".com/",":")
+            .replace(".org/",":").replace(".net/",":")
+
+        fabricPrivacy.setUserProperty("Mode", "${config.APPLICATION_ID}-$loopMode")
         fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKey.GeneralLanguage) ?: Locale.getDefault().language)
         fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
         fabricPrivacy.setUserProperty("HEAD", BuildConfig.HEAD)
         fabricPrivacy.setUserProperty("Remote", remote)
-        val hashes = signatureVerifierPlugin.shortHashes()
-        if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
+        signatureVerifierPlugin.shortHashes().firstOrNull()?.let {
+            fabricPrivacy.setUserProperty("Hash", it)
+        }
         activePlugin.activePump.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
-        if (!config.AAPSCLIENT && !config.PUMPCONTROL) activePlugin.activeAPS.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
+        if (!config.AAPSCLIENT && !config.PUMPCONTROL)
+            activePlugin.activeAPS.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
         fabricPrivacy.setUserProperty("Profile", activePlugin.activeProfileSource.javaClass.simpleName)
         activePlugin.activeSensitivity.let { fabricPrivacy.setUserProperty("Sensitivity", it::class.java.simpleName) }
         activePlugin.activeInsulin.let { fabricPrivacy.setUserProperty("Insulin", it::class.java.simpleName) }
 
-        FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
-        FirebaseCrashlytics.getInstance().setCustomKey("Version", config.VERSION_NAME)
-        FirebaseCrashlytics.getInstance().setCustomKey("BuildType", config.BUILD_TYPE)
-        FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", config.FLAVOR)
-        FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
-        FirebaseCrashlytics.getInstance().setCustomKey("Committed", config.COMMITTED)
-        if (hashes.isNotEmpty()) FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
-        FirebaseCrashlytics.getInstance().setCustomKey("Email", preferences.get(StringKey.MaintenanceIdentification))
+        FirebaseCrashlytics.getInstance().apply {
+            setCustomKey("HEAD", BuildConfig.HEAD)
+            setCustomKey("Version", config.VERSION_NAME)
+            setCustomKey("BuildType", config.BUILD_TYPE)
+            setCustomKey("BuildFlavor", config.FLAVOR)
+            setCustomKey("Remote", remote)
+            setCustomKey("Committed", config.COMMITTED)
+            signatureVerifierPlugin.shortHashes().firstOrNull()?.let {
+                setCustomKey("Hash", it)
+            }
+            setCustomKey("Email", preferences.get(StringKey.MaintenanceIdentification))
+        }
     }
 
     private fun passwordResetCheck(context: Context) {
@@ -670,10 +714,13 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         if (fh?.exists() == true) {
             Thread {
                 while (activePlugin.activePump.serialNumber().isEmpty()) Thread.sleep(100)
-                preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(activePlugin.activePump.serialNumber()))
+                preferences.put(StringKey.ProtectionMasterPassword,
+                                cryptoUtil.hashPassword(activePlugin.activePump.serialNumber()))
                 fh.delete()
                 exportPasswordDataStore.clearPasswordDataStore(context)
-                ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
+                runOnUiThread {
+                    ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
+                }
             }.start()
         }
     }
