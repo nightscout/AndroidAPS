@@ -126,4 +126,16 @@
     <string name="diaconn_g8_errorcode_34">LGS 状态已关闭，关闭命令被拒绝。</string>
     <string name="diaconn_g8_errorcode_35">临时基础率运行时，临时基础率启动命令被拒绝</string>
     <string name="diaconn_g8_errorcode_36">临时基础率未运行时，临时基础率停止命令被拒绝</string>
+    <string name="diaconn_g8_cloudsend_summary">发送泵日志到 Diaconn Cloud。</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn 云同步</string>
+    <string name="bolus_speed_1">1 U/min</string>
+    <string name="bolus_speed_2">2 U/min</string>
+    <string name="bolus_speed_3">3 U/min</string>
+    <string name="bolus_speed_4">4 U/min</string>
+    <string name="bolus_speed_5">5 U/min</string>
+    <string name="bolus_speed_6">6 U/min</string>
+    <string name="bolus_speed_7">7 U/min</string>
+    <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">配对成功！</string>
+    <string name="diaconn_pairing_successful_message">您的泵已连接并准备使用。</string>
 </resources>
