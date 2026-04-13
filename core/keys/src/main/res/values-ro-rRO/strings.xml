@@ -101,6 +101,12 @@
     <string name="pref_title_ns_receive_profile_switch">Primiți schimbări de profil din NS</string>
     <string name="pref_summary_ns_receive_profile_switch">Acceptați evenimentele de schimbare a profilului de la Nightscout.</string>
     <string name="pref_title_ns_receive_insulin">Primiți date insulină din NS</string>
+    <string name="pref_summary_ns_receive_insulin">Acceptați tratamentele cu insulină din Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">Primiți carbohidrații din NS</string>
+    <string name="pref_summary_ns_receive_carbs">Acceptați intrările de carbohidrați de la Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Primiți evenimente terapeutice din NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Acceptați evenimentele terapeutice din Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Primiți modul de rulare din NS</string>
     <string name="pref_summary_ns_receive_running_mode">Acceptați modificările modului de rulare din Nightscout.</string>
     <string name="pref_title_ns_receive_tbr_eb">Primește RBT/BE din NS</string>
     <string name="pref_summary_ns_receive_tbr_eb">Acceptați rate bazale temporare și bolusuri extinse din Nightscout.</string>
@@ -157,8 +163,28 @@
     <string name="pref_title_sage_warning">Prag avertizare vechime senzor</string>
     <string name="pref_title_sage_critical">Prag critic vechime senzor</string>
     <string name="pref_title_sbat_warning">Prag de avertizare nivel baterie senzor</string>
+    <string name="pref_title_sbat_critical">Prag critic pentru nivelul bateriei senzorului</string>
+    <string name="pref_title_bage_warning">Prag avertizare vechime baterie pompă</string>
+    <string name="pref_title_bage_critical">Prag critic pentru vechimea bateriei pompei</string>
+    <string name="pref_title_res_warning">Prag avertizare nivel rezervor</string>
+    <string name="pref_title_res_critical">Prag critic nivel rezervor</string>
+    <string name="pref_title_batt_warning">Prag avertizare nivel baterie pompă</string>
+    <string name="pref_title_batt_critical">Prag critic nivel baterie pompă</string>
+    <string name="pref_title_bolus_percentage">Procentaj bolus</string>
+    <string name="deliverpartofboluswizard">Aplicați această valoare corecțiilor de glicemie și de carbohidrați în rezultatul asistentului de bolusuri</string>
+    <string name="pref_title_reset_bolus_percentage_time">Resetați timp procentaj bolus</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Administrați bolusul complet (100%) dacă glicemia este mai veche de</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Timp de expirare a protecției</string>
+    <string name="pref_title_protection_type_application">Nivelul 0: Protecția aplicației</string>
+    <string name="pref_summary_protection_type_application">Lansare aplicație. Independent de alte niveluri</string>
+    <string name="pref_title_protection_type_bolus">Nivelul 1: Protecție bolus</string>
+    <string name="pref_summary_protection_type_bolus">Tratamente, activare profil. Necesită nivelul 2</string>
+    <string name="pref_title_protection_type_settings">Nivelul 2: Protecție setări</string>
+    <string name="pref_summary_protection_type_settings">Editare profiluri, preferințe</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Fără protecție</string>
+    <string name="biometric">Biometric</string>
     <string name="master_password">Parola principală</string>
     <string name="custom_password">Parolă personalizată</string>
     <string name="custom_pin">PIN personalizat</string>
@@ -252,14 +278,44 @@
     <string name="automation_location_network">Utilizați localizarea bazată pe rețea</string>
     <string name="automation_location_gps">Utilizați localizarea GPS</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Numere de telefon permise</string>
+    <string name="smscommunicator_allowednumbers_summary">+ XXXXXXXXXX; + YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Cod PIN obligatoriu suplimentar la finalul jetonului</string>
+    <string name="smscommunicator_otp_pin_summary">Cifre suplimentare care ar trebui să fie memorate și adăugate la sfârșitul fiecărei parole unice generate</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Tip pompă</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Adresa Nightscout</string>
+    <string name="ns_client_url_summary">Introduceți adresa URL Nightscout (spre exemplu https://numesite.platforma.dom)</string>
+    <string name="ns_client_secret_title">Secret API Nightscout</string>
+    <string name="ns_client_secret_summary">Introduceți secretul API Nightscout (minimum 12 caractere)</string>
+    <string name="nsclient_token_title">Cod de acces Nightscout</string>
+    <string name="nsclient_token_summary">Introduceți codul de acces Nightscout (minimum 17 caractere)</string>
+    <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="ns_wifi_ssids_summary">Nume rețele Wi-Fi permise (separate prin punct și virgulă)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Increment buton insulină 1</string>
+    <string name="pref_title_insulin_button_increment_2">Increment buton insulină 2</string>
+    <string name="pref_title_insulin_button_increment_3">Increment buton insulină 3</string>
+    <string name="insulin_increment_button_message">Cantitatea de insulină de adăugat când se apasă butonul</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Valoare buton 1</string>
+    <string name="pref_title_fill_button_2">Valoare buton 2</string>
+    <string name="pref_title_fill_button_3">Valoare buton 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Bolus maxim</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Rată bazală maximă</string>
+    <string name="openapsma_max_basal_summary">Această valoare este denumită bazală maximă în contextul OpenAPS</string>
+    <string name="pref_title_smb_max_iob">IOB maxim pentru SMB</string>
+    <string name="openapssmb_max_iob_summary">Această valoare este denumită Max IOB în contextul OpenAPS,\nOpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
+    <string name="pref_title_ama_max_iob">IOB maxim pentru SMB</string>
+    <string name="openapsma_max_iob_summary">Această valoare se numește Max IOB în contextul OpenAPS\nAceasta este insulina maximă în [U] pe care APS o poate livra imediat.</string>
+    <string name="pref_title_max_daily_multiplier">Multiplicator maxim de siguranță zilnic</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3 Aceasta este o limită cheie de siguranță OpenAPS. Ceea ce face este să limiteze bazalele dumneavoastră la a fi de 3x (pentru această persoană) din cea mai mare rată bazală. Probabil că nu va trebui să schimbaţi acest lucru, dar trebuie să ştiţi că asta se discută despre \"3x max zilnic; 4x curent” pentru plafoanele de siguranță.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
+    <string name="prefs_range_title">Intervalul pentru vizualizare</string>
 </resources>
