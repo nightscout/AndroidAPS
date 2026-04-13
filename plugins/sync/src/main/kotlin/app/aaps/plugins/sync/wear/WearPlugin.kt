@@ -14,6 +14,9 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.data.model.TT
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
@@ -24,9 +27,7 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -43,11 +44,13 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -68,9 +71,8 @@ class WearPlugin @Inject constructor(
     private val dataHandlerMobile: DataHandlerMobile,
     private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper,
     private val config: Config,
-    private val dateUtil: DateUtil,
-    private val versionCheckerUtils: VersionCheckerUtils,
     private val bolusProgressData: BolusProgressData,
+    private val persistenceLayer: PersistenceLayer,
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
@@ -102,6 +104,7 @@ class WearPlugin @Inject constructor(
         _savedCustomWatchface.value = cwfData
     }
 
+    @OptIn(FlowPreview::class)
     override fun onStart() {
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -149,6 +152,12 @@ class WearPlugin @Inject constructor(
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ dataHandlerMobile.resendData("EventLoopUpdateGui") }, fabricPrivacy::logException)
+        // Push status to watch quickly when a TT changes, without waiting for the loop's 10s debounce
+        persistenceLayer.observeChanges<TT>()
+            .drop(1) // Skip initial emission on collection start
+            .debounce(2_000L)
+            .onEach { dataHandlerMobile.resendData("TempTargetChange") }
+            .launchIn(newScope)
         disposable += rxBus
             .toObservable(EventWearUpdateTiles::class.java)
             .observeOn(aapsSchedulers.io)
