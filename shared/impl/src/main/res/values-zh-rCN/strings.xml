@@ -2,6 +2,11 @@
 <resources>
     <string name="cwf_comment_background">背景图片</string>
     <string name="cwf_comment_chart">图表(血糖, 基础率, 预测线...)</string>
+    <string name="cwf_comment_freetext1">自由文本 1</string>
+    <string name="cwf_comment_freetext2">自由文本 2</string>
+    <string name="cwf_comment_freetext3">自由文本 3</string>
+    <string name="cwf_comment_freetext4">自由文本 4</string>
+    <string name="cwf_comment_patient_name_ext">患者姓名（来自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_cob2">COB 值</string>
     <string name="cwf_comment_delta">短期血糖增量</string>
     <string name="cwf_comment_avg_delta">平均BG 增量(15分钟)</string>
@@ -17,4 +22,7 @@
     <string name="cwf_comment_month">月(短)</string>
     <string name="cwf_comment_direction">方向箭头</string>
     <string name="cwf_comment_sgv">血糖值</string>
+    <string name="cwf_comment_hour_hand">时针图片 （模拟手表）</string>
+    <string name="cwf_comment_minute_hand">分针图片 （模拟手表）</string>
+    <string name="cwf_comment_second_hand">秒针图片 （模拟手表）</string>
 </resources>
