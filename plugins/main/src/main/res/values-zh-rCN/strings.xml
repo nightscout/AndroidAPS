@@ -13,7 +13,20 @@
     <string name="statuslights_patch_pump_age">patch 泵年龄</string>
     <string name="patch_pump">Patch 泵</string>
     <!-- Overview -->
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
+    <string name="graph_long_scale_6h">6 小时</string>
+    <string name="graph_long_scale_12h">12 小时</string>
+    <string name="graph_long_scale_18h">18 小时</string>
+    <string name="graph_long_scale_24h">24 小时</string>
     <string name="a11y_graph">绘图</string>
+    <string name="a11y_graph_scale">选择图形比例</string>
+    <string name="a11y_graph_scale_6h">图表时刻 6 小时</string>
+    <string name="a11y_graph_scale_12h">图表时刻 12 小时</string>
+    <string name="a11y_graph_scale_18h">图表时刻 18 小时</string>
+    <string name="a11y_graph_scale_24h">图表时刻 24 小时</string>
     <string name="a11y_insulin_label">胰岛素</string>
     <string name="chart_menu">图表菜单</string>
     <string name="a11y_bg_quality">血糖质量</string>
@@ -28,26 +41,33 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">预测</string>
     <string name="overview_show_treatments">治疗</string>
+    <string name="overview_show_heartRate">心率</string>
     <string name="overview_show_deviation_slope">斜度偏差</string>
     <string name="overview_show_activity">活动</string>
     <string name="overview_show_bgi">血糖影响</string>
+    <string name="overview_show_sensitivity">敏感度变化</string>
     <string name="overview_show_deviations">偏差</string>
     <string name="overview_show_cob">活性碳水化合物</string>
     <string name="overview_show_iob">活性胰岛素</string>
     <string name="overview_show_basals">基础率</string>
     <string name="overview_show_abs_insulin">胰岛素绝对值</string>
+    <string name="overview_show_variable_sens">可变灵敏度</string>
     <string name="prediction_shortname">预测</string>
     <string name="basal_shortname">基础率</string>
     <string name="treatments_shortname">治疗</string>
     <string name="graph_scale">图形缩放</string>
     <string name="graph_menu_divider_header">绘图</string>
+    <string name="temp_basal_overview_short_name">T：</string>
     <!-- Skins -->
     <string name="classic_description">原始皮肤</string>
     <string name="lowres_description">低分辨率皮肤</string>
     <string name="buttonson_description">按钮总是显示在屏幕底部</string>
     <string name="largedisplay_description">大显示屏</string>
+    <string name="cannula_usage">用法：</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
     <string name="old_data">旧数据</string>
+    <string name="overview_show_steps">步数</string>
+    <string name="simple_mode_enabled">简单模式已开启</string>
 </resources>
