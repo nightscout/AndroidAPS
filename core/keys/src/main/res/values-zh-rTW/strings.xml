@@ -299,6 +299,8 @@
     <string name="lang_zh_tw">繁體中文</string>
     <string name="lang_zh_cn">簡體中文</string>
     <string name="pref_title_skin">外觀</string>
+    <string name="pref_title_patient_name">名稱</string>
+    <string name="pref_summary_patient_name">用於識別此 AAPS 執行個體的名稱（會顯示在報告與同步中）</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">AAPS 目錄</string>
     <!-- StringKey: Protection preferences -->
