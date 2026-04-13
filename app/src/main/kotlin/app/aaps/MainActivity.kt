@@ -2,7 +2,6 @@ package app.aaps
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import android.net.Uri
@@ -24,7 +23,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.FrameLayout
@@ -129,12 +127,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         initAllComponents(savedInstanceState)
 
-        // 处理原有验证状态的迁移 + TOTP初始化
+        // 处理原有验证状态的迁移
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         var verified = prefs.getBoolean("password_verified", false)
         val hasTotpSecret = prefs.getString("totp_secret", null) != null
 
-        // 迁移旧的静态密码验证状态
         if (!hasTotpSecret && verified) {
             prefs.edit().putBoolean("password_verified", false).apply()
             verified = false
@@ -150,7 +147,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     /**
-     * 纯Kotlin实现TOTP工具类，完全兼容谷歌验证器，无第三方依赖
+     * 纯Kotlin实现TOTP工具类，完全兼容谷歌验证器，无任何外部依赖
      */
     private object TotpUtils {
         private const val DEFAULT_SECRET_SIZE = 20
@@ -231,7 +228,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             var n = 0
             var bits = 0
             for (c in cleanEncoded) {
-                val value = BASE32_MAP[c] ?: throw IllegalArgumentException("Invalid Base32 character: $c")
+                val value = BASE32_MAP[c] ?: throw IllegalArgumentException("无效的Base32字符: $c")
                 n = n shl 5 or value
                 bits += 5
                 if (bits >= 8) {
@@ -241,10 +238,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 }
             }
             return output.toByteArray()
-        }
-
-        fun generateOtpAuthUri(secretBase32: String, issuer: String = "AAPS", account: String = "AppLock"): String {
-            return "otpauth://totp/$issuer:$account?secret=$secretBase32&issuer=$issuer&algorithm=SHA1&digits=$DEFAULT_CODE_DIGITS&period=$DEFAULT_TIME_STEP"
         }
     }
 
@@ -257,31 +250,25 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             return true
         }
 
+        // 生成随机密钥
         val secretBase32 = TotpUtils.generateSecret()
         prefs.edit().putString("totp_secret", secretBase32).apply()
 
-        val otpAuthUri = TotpUtils.generateOtpAuthUri(secretBase32)
-
+        // 构建设置对话框，去掉二维码，只保留手动输入
         val dialogView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
 
             addView(TextView(this@MainActivity).apply {
-                text = "首次使用请先设置动态密码：\n1. 打开谷歌验证器/微软验证器\n2. 扫描下方二维码，或手动输入密钥\n3. 输入验证器生成的6位密码完成设置"
+                text = "首次使用请先设置动态密码：\n1. 打开谷歌验证器/微软验证器\n2. 选择添加账户，输入下方的密钥\n3. 输入验证器生成的6位密码完成设置"
                 textSize = 14f
-            })
-
-            val qrBitmap = generateQrCode(otpAuthUri)
-            addView(ImageView(this@MainActivity).apply {
-                setImageBitmap(qrBitmap)
-                setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
             addView(TextView(this@MainActivity).apply {
                 text = "密钥：$secretBase32"
-                textSize = 16f
+                textSize = 18f
                 setTextColor(Color.BLUE)
-                setPadding(0, 0, 0, dp2px(16))
+                setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
             addView(EditText(this@MainActivity).apply {
@@ -474,28 +461,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 finish()
             }
             .show()
-    }
-
-    private fun generateQrCode(content: String, size: Int = 256): Bitmap? {
-        return try {
-            val hints = hashMapOf<com.google.zxing.EncodeHintType, Any>()
-            hints[com.google.zxing.EncodeHintType.MARGIN] = 1
-            val bitMatrix: com.google.zxing.BitMatrix = com.google.zxing.MultiFormatWriter().encode(
-                content, com.google.zxing.BarcodeFormat.QR_CODE, size, size, hints
-            )
-            val width = bitMatrix.width
-            val height = bitMatrix.height
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE
-                }
-            }
-            bitmap
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
     }
 
     private fun dp2px(dp: Int): Int {
