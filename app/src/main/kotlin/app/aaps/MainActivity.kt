@@ -276,6 +276,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             })
         }
 
+        //首次使用：设置动态密码
+        //1. 打开谷歌/微软验证器
+        //2. 手动添加账户，输入密钥
+        //3. 输入当前6位动态密码
+
         MaterialAlertDialogBuilder(this)
             .setTitle("设置动态密码")
             .setView(dialogView)
