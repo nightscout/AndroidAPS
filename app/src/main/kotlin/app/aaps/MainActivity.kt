@@ -24,7 +24,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.ActionBarDrawerToggle
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
@@ -114,7 +114,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
-    // ========== 这里填你的TOTP密钥，测试用JBSWY3DPEHPK3PXP ==========
+    // ========== TOTP密钥（测试用JBSWY3DPEHPK3PXP，正式使用请替换为自己的密钥） ==========
     private val totpSecret = "JBSWY3DPEHPK3PXP"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -140,7 +140,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
     }
 
-    // ========== 核心TOTP验证，完全兼容老Kotlin版本 ==========
+    // ========== TOTP核心验证方法（完全兼容老Kotlin版本） ==========
     private fun verifyTotp(inputCode: String): Boolean {
         return try {
             val base32 = Base32()
