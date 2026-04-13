@@ -117,7 +117,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private var mainMenuProvider: MenuProvider? = null
 
     // ========== 这里填你自己生成的TOTP密钥！就是刚才你生成的那个16位字符串！ ==========
-    private val TOTP_SECRET = "你自己的TOTP密钥，比如JBSWY3DPEHPK3PXP"
+    private val TOTP_SECRET = "JBSWY3DPEHPK3PXP"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
