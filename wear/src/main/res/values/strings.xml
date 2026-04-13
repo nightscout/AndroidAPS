@@ -284,7 +284,6 @@
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">Basal rate</string>"
-    <string name="complication_br_tt">BR &amp; Target</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">CoB Icon</string>
     <string name="complication_cob_detailed">CoB Detailed</string>
