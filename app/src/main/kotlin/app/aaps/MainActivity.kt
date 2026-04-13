@@ -3,13 +3,11 @@ package app.aaps
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PersistableBundle
 import android.text.InputType
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
@@ -19,12 +17,12 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -116,8 +114,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
-    // ========== 这里填你自己生成的TOTP密钥！就是刚才你生成的那个16位字符串！ ==========
-    private val TOTP_SECRET = "JBSWY3DPEHPK3PXP"
+    // ========== TOTP密钥 ==========
+    private val totpSecret = "JBSWY3DPEHPK3PXP"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,7 +130,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         initAllComponents(savedInstanceState)
 
-        // 已经验证过密码，直接跳过
         val verified = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
             .getBoolean("password_verified", false)
 
@@ -143,44 +140,40 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
     }
 
-    // ========== TOTP验证核心方法 ==========
+    // ========== TOTP验证，用Java原生位运算符 ==========
     private fun verifyTotp(inputCode: String): Boolean {
-        try {
-            // 解码你的TOTP密钥
+        return try {
             val base32 = Base32()
-            val key = base32.decode(TOTP_SECRET.toUpperCase(Locale.getDefault()))
-            val currentTime = System.currentTimeMillis() / 30000 // 每30秒一个周期
+            val key = base32.decode(totpSecret.uppercase(Locale.getDefault()))
+            val currentTime = System.currentTimeMillis() / 30000L
 
-            // 计算当前时间的TOTP密码
             fun calculateTotp(t: Long): Int {
                 val data = ByteArray(8)
                 var value = t
                 for (i in 7 downTo 0) {
-                    data[i] = (value and 0xff).toByte()
-                    value = value shr 8
+                    data[i] = ((value & 0xFF)).toByte()
+                    value = value >>> 8
                 }
                 val hmac = Mac.getInstance("HmacSHA1")
                 hmac.init(SecretKeySpec(key, "RAW"))
                 val hash = hmac.doFinal(data)
-                val offset = hash[hash.size - 1] and 0xf
+                val offset = ((hash[hash.size - 1].toInt() & 0xF))
                 var code = 0
                 for (i in 0..3) {
-                    code = code shl 8
-                    code = code or (hash[offset + i].toInt() and 0xff)
+                    code = (code << 8) | ((hash[offset + i].toInt() & 0xFF))
                 }
-                code = code and 0x7fffffff
+                code = code & 0x7FFFFFFF
                 return code % 1000000
             }
 
-            // 允许前后1个周期的误差（防止时间不同步）
             val current = calculateTotp(currentTime)
             val last = calculateTotp(currentTime - 1)
             val next = calculateTotp(currentTime + 1)
 
-            val input = inputCode.toIntOrNull() ?: return false
-            return input == current || input == last || input == next
-        } catch (e: Exception) {
-            return false
+            val input = inputCode.toIntOrNull() ?: return@try false
+                input == current || input == last || input == next
+            } catch (e: Exception) {
+            false
         }
     }
 
@@ -267,7 +260,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             .setMessage(messageSpanned)
                             .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok), null)
                             .setNeutralButton(rh.gs(app.aaps.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))))
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase(Locale.getDefault()).replace(" ", "-"))))
                             }
                             .create().apply {
                                 show()
@@ -324,7 +317,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .setPositiveButton("验证") { dialog, _ ->
                 val inputCode = passwordInput.text.toString()
                 if (verifyTotp(inputCode)) {
-                    // 验证通过，永久记住
                     getSharedPreferences("AppLock", Context.MODE_PRIVATE)
                         .edit()
                         .putBoolean("password_verified", true)
@@ -405,7 +397,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     private fun startWizard(): Boolean = !preferences.get(BooleanKey.GeneralSetupWizardProcessed)
 
-    override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+    override fun onPostCreate(savedInstanceState: Bundle?, persistentState: android.os.PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
         actionBarDrawerToggle?.syncState()
     }
@@ -485,7 +477,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    override fun dispatchTouchEvent(event: android.view.MotionEvent): Boolean {
         return super.dispatchTouchEvent(event)
     }
 
