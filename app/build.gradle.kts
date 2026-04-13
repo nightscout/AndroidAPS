@@ -218,6 +218,8 @@ dependencies {
     api(libs.com.uber.rxdogtag2.rxdogtag)
     // Remote config
     api(libs.com.google.firebase.config)
+    // 动态密码模块
+    implementation("commons-codec:commons-codec:1.15")
 }
 
 println("-------------------")
