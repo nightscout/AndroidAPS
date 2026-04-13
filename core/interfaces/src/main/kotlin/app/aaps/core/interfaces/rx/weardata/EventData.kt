@@ -365,6 +365,7 @@ sealed class EventData : Event() {
         val patientName: String = "",
         val tempTarget: String,
         val tempTargetLevel: Int,
+        val tempTargetDuration: Long = -1L,
         val reservoirString: String,
         val reservoir: Double,
         val reservoirLevel: Int
