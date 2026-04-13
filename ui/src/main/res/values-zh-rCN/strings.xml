@@ -52,15 +52,25 @@
     <string name="site_man">男性</string>
     <string name="site_woman">女性</string>
     <string name="site_child">儿童</string>
+    <string name="user_profile">用户信息</string>
+    <string name="user_profile_description">用户信息描述用于显示男性、女性或儿童最常用的部位</string>
+    <string name="site_management">部位管理配置</string>
+    <string name="site_management_description">在这里设置是否管理输注部位、CGM 传感器部位，或两者同时管理。该设置将用于在每次检测到新记录时，自动弹出部位更换提醒对话框</string>
     <string name="record_site_change">记录部位位置</string>
     <string name="update_site_change">更新部位位置</string>
     <string name="edit_site">编辑</string>
+    <string name="record_site_location">部位位置：%1$s</string>
+    <string name="record_site_arrow">部位箭头: %1$s</string>
     <string name="record_site_note">备注： %1$s</string>
     <string name="delete_site_note">备注已删除</string>
+    <string name="site_filter_info">选择要查看的治疗事件类型：管路更换和/或传感器更换</string>
     <!-- FillDialog -->
     <string name="fill_warning">请确保数量和输液器里的药量匹配</string>
     <string name="record_pump_site_change">记录泵管路更换</string>
     <string name="record_insulin_cartridge_change">记录胰岛素储药器变化</string>
+    <string name="fill_prime_amount">预注剂量</string>
+    <string name="fill_pump_units_note">预注剂量以泵单位表示</string>
+    <string name="fill_insulin_change">将胰岛素切换为：%1$s（将套用配置切换）</string>
     <string name="fill_current_insulin">当前胰岛素</string>
     <string name="fill_change_insulin">更换胰岛素</string>
     <!-- InsulinDialog -->
@@ -70,10 +80,14 @@
     <string name="insulin_name_exists">胰岛素名称 %1$s 已存在，请选择新的名称</string>
     <string name="a11y_add_new_insulin">新增胰岛素</string>
     <string name="a11y_delete_current_insulin">删除当前的胰岛素</string>
+    <string name="save_or_reset_changes_first">先保存或重置当前更改</string>
     <string name="activate_insulin_no_profile">未找到生效的配置文件</string>
     <string name="activate_insulin_new_insulin">新的胰岛素：%1$s</string>
     <string name="activate_insulin_remaining">剩余： %1$d 分钟</string>
     <string name="activate_insulin_profile_switch">将创建配置文件切换：\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">载入峰值来源</string>
+    <string name="cannot_delete_last_insulin">无法删除最后一个胰岛素</string>
+    <string name="cannot_delete_active_insulin">无法删除当前使用的胰岛素</string>
     <string name="reuse_profile_pct_hours">重新使用%1$d%% %2$d小时</string>
     <string name="timeshift_label">时间偏移</string>
     <string name="percentage_label">百分比</string>
@@ -102,9 +116,14 @@
     <string name="two_hours">2小时</string>
     <string name="result_insulin_carbs">结果: %1$s %2$s</string>
     <string name="missing_carbs">缺少 %1$d 克</string>
+    <string name="wizard_carbs_type_bread_desc">100% 即时碳水，无扩展碳水</string>
+    <string name="wizard_carbs_type_desc">碳水减少了 %1$d%%，添加了eCarbs %2$d%%，延迟了 %3$d 分钟，持续 %4$d 小时</string>
+    <string name="wizard_include_info">轻触以在计算中包含/排除：\n•血糖—血糖（起始为开启）\n•临时目标—临时目标（起始为开启）\n•趋势—血糖趋势（会记住上次状态）\n•IOB—活性胰岛素（起始为开启）\n•COB—活性碳水化合物（会记住上次状态）</string>
+    <string name="wizard_bg_age">血糖时间： %1$d 分钟</string>
     <string name="a11y_current_bg">当前血糖</string>
     <string name="carb_time_label">碳水时间</string>
     <string name="a11y_set_carb_timer">设置碳水计时器提醒</string>
+    <string name="show_calculation">显示计算</string>
     <!-- Treatments -->
     <string name="no_records_available">当前暂无记录</string>
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
@@ -122,10 +141,32 @@
     <string name="show_loop">显示闭环</string>
     <string name="user_entry">用户条目</string>
     <string name="clone_label">克隆</string>
+    <string name="add_new_profile">添加新配置文件</string>
+    <string name="show_profile">显示配置文件</string>
+    <string name="edit_label">编辑</string>
+    <string name="edit_profile">编辑配置文件</string>
+    <string name="activate_label">激活</string>
+    <string name="activate_profile">激活配置文件</string>
+    <string name="remove_label">删除</string>
+    <string name="active_profile_indicator">激活</string>
+    <string name="remaining_time_label">剩余</string>
+    <string name="confirm_remove_profile">删除配置文件 %1$s 吗？</string>
+    <string name="confirm_clone_profile">克隆配置文件 \"%1$s\"？</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">配置文件类型</string>
+    <string name="profile_parameters">配置文件参数</string>
+    <string name="active_profile">激活配置文件</string>
+    <string name="available_profiles">可用的配置文件</string>
+    <string name="profile_switches">切换配置文件</string>
     <string name="basal_pct_from_tdd_label">基础率%</string>
     <string name="selected_profile">已选择:</string>
+    <string name="comparation">比较</string>
+    <string name="profile_tab_1">配置文件 1</string>
+    <string name="profile_tab_2">配置文件 2</string>
     <string name="motol_default_profile">默认个人配置文件</string>
     <string name="current_profile">当前配置文件</string>
     <string name="available_profile">可用配置文件</string>
@@ -137,6 +178,17 @@
     <!-- Other dialogs -->
     <string name="basal_rate">基础率</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">仅在手表</string>
+    <string name="a11y_only_on_phone">仅在手机</string>
+    <string name="overview_edit_quickwizard_button_text">按钮文本</string>
+    <string name="quick_wizard_mode_wizard">向导</string>
+    <string name="quick_wizard_mode_insulin">胰岛素</string>
+    <string name="quick_wizard_mode_carbs">碳水化合物</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">仅限正IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">超级大剂量Superbolus</string>
+    <string name="a11y_drag_and_drop_handle">拖放操作</string>
+    <string name="additional_ecarbs">添加 eCarbs 扩展碳水</string>
+    <string name="calculator_options">计算器选项</string>
     <string name="use_bg">使用 血糖</string>
     <string name="use_cob">使用 COB</string>
     <string name="use_iob">使用 IOB</string>
@@ -175,5 +227,41 @@
     <string name="cycle_offset">循环偏移</string>
     <string name="raw_tdd">原始 TDD</string>
     <string name="cleaned_tdd">净 TDD</string>
+    <string name="cleaned_tdd_explanation">TDD 减去用于碳水化合物的胰岛素。</string>
+    <string name="cycle_lines_legend">单个循环</string>
+    <string name="cycles_found">%1$d 周期(%2$d 天)</string>
+    <string name="cycle_day1_date">第 1 天 = %1$s</string>
+    <string name="calculation_in_progress_percent">正在计算…%1$d%%</string>
+    <string name="not_enough_data_for_cycles">数据不足（至少需要 56 天的数据才能完成 2 个周期计算）</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>两者都</item>
+        <item>仅正数</item>
+        <item>仅负数</item>
+    </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">已选操作</string>
+    <string name="quick_launch_available_actions">可用操作</string>
+    <string name="quick_launch_no_dynamic_items">无可用项目</string>
+    <string name="quick_launch_category_treatment">治疗</string>
+    <string name="quick_launch_category_care">关怀入口</string>
+    <string name="quick_launch_category_profile">配置文件</string>
+    <string name="quick_launch_category_temp_target">临时目标预设</string>
+    <string name="quick_launch_category_quick_wizard">快速向导</string>
+    <string name="quick_launch_category_automation">自动化</string>
+    <string name="quick_launch_all_selected">全部选择</string>
+    <string name="quick_launch_no_quick_wizard">添加快速向导条目以便在此使用</string>
+    <string name="quick_launch_no_automation">创建用户自动化动以便在此使用</string>
+    <string name="quick_launch_no_tt_presets">添加临时目标预设以便在此使用</string>
+    <string name="quick_launch_no_profiles">在本地配置中创建配置文件以便在此使用</string>
+    <string name="quick_launch_edit_profile_preset">编辑配置文件</string>
+    <string name="quick_launch_profile_percentage">百分比</string>
+    <string name="quick_launch_profile_duration">持续时间</string>
+    <string name="quick_launch_profile_permanent">永久</string>
+    <string name="quick_launch_profile_confirm">激活配置文件 %1$s ？</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d 分</string>
+    <string name="select_arrow">选择箭头</string>
+    <string name="loop_accept_nav_label">闭环</string>
+    <string name="loop_accept_set_basal_question">接受新的临时基础率：</string>
+    <string name="loop_accept_perform">执行</string>
 </resources>
