@@ -150,7 +150,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         try {
             // 解码你的TOTP密钥
             val base32 = Base32()
-            val key = base32.decode(totpSecret.uppercase(Locale.getDefault()))
+            val key = base32.decode(totpSecret.toUpperCase(Locale.getDefault()))
             val currentTime = System.currentTimeMillis() / 30000 // 每30秒一个周期
 
             // 计算当前时间的TOTP密码
@@ -158,19 +158,19 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 val data = ByteArray(8)
                 var value = t
                 for (i in 7 downTo 0) {
-                    data[i] = value.and(0xff).toByte()
-                    value = value.shr(8)
+                    data[i] = (value & 0xff).toByte()
+                    value = value shr 8
                 }
                 val hmac = Mac.getInstance("HmacSHA1")
                 hmac.init(SecretKeySpec(key, "RAW"))
                 val hash = hmac.doFinal(data)
-                val offset = hash[hash.size - 1].and(0xf)
+                val offset = hash[hash.size - 1] & 0xf
                 var code = 0
                 for (i in 0..3) {
-                    code = code.shl(8)
-                    code = code.or(hash[offset + i].toInt().and(0xff))
+                    code = code << 8
+                    code = code or (hash[offset + i].toInt() & 0xff)
                 }
-                code = code.and(0x7fffffff)
+                code = code & 0x7fffffff
                 return code % 1000000
             }
 
