@@ -3,6 +3,8 @@ package app.aaps
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,7 +26,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.ActionBarDrawerToggle
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
@@ -85,7 +87,7 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivityWithResult() {
 
-    // 弹窗队列（串行显示，彻底解决遮挡）
+    // 弹窗队列（串行执行，彻底解决遮挡）
     private val dialogQueue = mutableListOf<() -> Unit>()
     private var isDialogShowing = false
 
