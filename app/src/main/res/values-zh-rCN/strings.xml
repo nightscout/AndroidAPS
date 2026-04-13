@@ -14,4 +14,16 @@
     <string name="remove_selected_items">删除选中项？</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="sort_label">排序</string>
+    <string name="search">搜索</string>
+    <string name="use_compose_main_screen">使用Compose主屏幕（实验）</string>
+    <string name="switch_to_compose_ui">切换到 Compose 界面</string>
+    <string name="switch_to_classic_ui">切换到经典界面</string>
+    <string name="select">选择</string>
+    <string name="set">设置</string>
+    <string name="migrating_preferences">正在迁移首选项…</string>
+    <string name="initializing_plugins">初始化插件…</string>
+    <string name="initializing">初始化…</string>
+    <string name="migrating_profile_switches">迁移配置文件切换…</string>
+    <string name="migrating_effective_profile_switches">正在迁移有效的配置文件切换…</string>
+    <string name="migrating_boluses">正在迁移大剂量…</string>
 </resources>
