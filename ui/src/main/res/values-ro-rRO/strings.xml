@@ -261,4 +261,7 @@
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Selectați Săgeată</string>
+    <string name="loop_accept_nav_label">Buclă</string>
+    <string name="loop_accept_set_basal_question">Acceptați noua bazală temporară:</string>
+    <string name="loop_accept_perform">Efectuați</string>
 </resources>
