@@ -117,6 +117,7 @@
     <string name="equil_history_item18">Infuzie anormală oprită</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspendare</string>
     <string name="equil_common_overview_button_resume_delivery">Reluați administrarea</string>
+    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Momente în urmă</string>
     <string name="equil_common_less_than_a_minute_ago">Mai puțin de un minut în urmă</string>
     <string name="equil_common_time_ago">%1$s în urmă</string>
