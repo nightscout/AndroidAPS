@@ -3,11 +3,13 @@ package app.aaps
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PersistableBundle
 import android.text.InputType
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
@@ -17,12 +19,14 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -77,9 +81,6 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import org.apache.commons.codec.binary.Base32
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 import java.util.Locale
 import javax.inject.Inject
 
@@ -114,9 +115,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
-    // ========== TOTP密钥 ==========
-    private val totpSecret = "JBSWY3DPEHPK3PXP"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Iconify.with(FontAwesomeModule())
@@ -130,6 +128,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         initAllComponents(savedInstanceState)
 
+        // 已经验证过密码，直接跳过
         val verified = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
             .getBoolean("password_verified", false)
 
@@ -137,43 +136,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             Handler(Looper.getMainLooper()).postDelayed({
                                                             showPasswordVerificationDialog()
                                                         }, 200)
-        }
-    }
-
-    // ========== TOTP验证，用Java原生位运算符 ==========
-    private fun verifyTotp(inputCode: String): Boolean {
-        return try {
-            val base32 = Base32()
-            val key = base32.decode(totpSecret.uppercase(Locale.getDefault()))
-            val currentTime = System.currentTimeMillis() / 30000L
-
-            fun calculateTotp(t: Long): Int {
-                val data = ByteArray(8)
-                var value = t
-                for (i in 7 downTo 0) {
-                    data[i] = ((value & 0xFF)).toByte()
-                    value = value >>> 8
-                }
-                val hmac = Mac.getInstance("HmacSHA1")
-                hmac.init(SecretKeySpec(key, "RAW"))
-                val hash = hmac.doFinal(data)
-                val offset = ((hash[hash.size - 1].toInt() & 0xF))
-                var code = 0
-                for (i in 0..3) {
-                    code = (code << 8) | ((hash[offset + i].toInt() & 0xFF))
-                }
-                code = code & 0x7FFFFFFF
-                return code % 1000000
-            }
-
-            val current = calculateTotp(currentTime)
-            val last = calculateTotp(currentTime - 1)
-            val next = calculateTotp(currentTime + 1)
-
-            val input = inputCode.toIntOrNull() ?: return@try false
-                input == current || input == last || input == next
-            } catch (e: Exception) {
-            false
         }
     }
 
@@ -260,7 +222,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             .setMessage(messageSpanned)
                             .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok), null)
                             .setNeutralButton(rh.gs(app.aaps.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase(Locale.getDefault()).replace(" ", "-"))))
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))))
                             }
                             .create().apply {
                                 show()
@@ -305,18 +267,19 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         rootView.addView(maskView)
 
         val passwordInput = EditText(this)
-        passwordInput.inputType = InputType.TYPE_CLASS_NUMBER
-        passwordInput.hint = "请输入Google验证器的6位动态码"
+        passwordInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        passwordInput.hint = "请输入启动密码"
         val padding = dp2px(16)
         passwordInput.setPadding(padding, padding, padding, padding)
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("APP动态密码验证")
+            .setTitle("APP访问密码验证")
             .setView(passwordInput)
             .setCancelable(false)
             .setPositiveButton("验证") { dialog, _ ->
-                val inputCode = passwordInput.text.toString()
-                if (verifyTotp(inputCode)) {
+                val inputPwd = passwordInput.text.toString()
+                if (inputPwd == "danamo999") {
+                    // 标记已验证，永久有效（直到清除数据/卸载）
                     getSharedPreferences("AppLock", Context.MODE_PRIVATE)
                         .edit()
                         .putBoolean("password_verified", true)
@@ -326,7 +289,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     dialog.dismiss()
                     ToastUtils.okToast(this, "验证成功")
                 } else {
-                    ToastUtils.errorToast(this, "动态码错误，请重新输入")
+                    ToastUtils.errorToast(this, "密码错误")
                     dialog.dismiss()
                     Handler(Looper.getMainLooper()).post { showPasswordVerificationDialog() }
                 }
@@ -397,7 +360,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     private fun startWizard(): Boolean = !preferences.get(BooleanKey.GeneralSetupWizardProcessed)
 
-    override fun onPostCreate(savedInstanceState: Bundle?, persistentState: android.os.PersistableBundle?) {
+    override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
         actionBarDrawerToggle?.syncState()
     }
@@ -477,7 +440,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
     }
 
-    override fun dispatchTouchEvent(event: android.view.MotionEvent): Boolean {
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         return super.dispatchTouchEvent(event)
     }
 
