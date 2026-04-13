@@ -20,6 +20,9 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.constraints.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -61,7 +64,11 @@ class BgQualityCheckPlugin @Inject constructor(
         disposable.clear()
     }
 
-    override var state: BgQualityCheck.State = BgQualityCheck.State.UNKNOWN
+    private val _stateFlow = MutableStateFlow(BgQualityCheck.State.UNKNOWN)
+    override val stateFlow: StateFlow<BgQualityCheck.State> = _stateFlow.asStateFlow()
+    override var state: BgQualityCheck.State
+        get() = _stateFlow.value
+        set(value) { _stateFlow.value = value }
     override var message: String = ""
 
     // Fallback to LGS if BG values are doubled

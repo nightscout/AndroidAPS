@@ -70,6 +70,7 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationLevel
 import app.aaps.core.interfaces.notifications.NotificationManager
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.LocalProfileManager
@@ -100,7 +101,6 @@ import app.aaps.core.ui.compose.LocalProfileUtil
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.dialogs.OkDialog
-import app.aaps.core.ui.compose.icons.Pump
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.LocalCheckPassword
@@ -185,6 +185,7 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var localProfileManager: LocalProfileManager
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject lateinit var commandQueue: CommandQueue
+    @Inject lateinit var bgQualityCheck: BgQualityCheck
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
     private var callForBatteryOptimization: ActivityResultLauncher<Void?>? = null
@@ -509,10 +510,18 @@ class ComposeMainActivity : AppCompatActivity() {
 
                 // Pump setup button in bottom bar
                 val pumpPlugin = activePlugin.activePumpInternal as PluginBase
-                val showPumpSetup = (!activePlugin.activePump.isInitialized() || activePlugin.activePump.isSuspended()) && (pumpPlugin.hasComposeContent() || pumpPlugin.hasFragment())
-                val pumpSetupClassName = if (showPumpSetup) pumpPlugin.javaClass.simpleName else null
-                val pumpSetupIcon = if (showPumpSetup) pumpPlugin.pluginDescription.icon ?: Pump else null
-                val pumpSetupLabel = if (showPumpSetup) stringResource(pumpPlugin.pluginDescription.pluginName) else null
+                val showPumpSetup = (!activePlugin.activePump.isInitialized() || activePlugin.activePump.isSuspended()) &&
+                    (pumpPlugin.hasComposeContent() || pumpPlugin.hasFragment())
+                val pumpSetupPlugin = if (showPumpSetup) pumpPlugin else null
+
+                // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED
+                val bgQualityState by bgQualityCheck.stateFlow.collectAsStateWithLifecycle()
+                val bgSourcePlugin = activePlugin.activeBgSource as PluginBase
+                val showBgSetup = (bgQualityState == BgQualityCheck.State.FLAT || bgQualityState == BgQualityCheck.State.DOUBLED) &&
+                    (bgSourcePlugin.hasComposeContent() || bgSourcePlugin.hasFragment())
+                val bgSetupPlugin = if (showBgSetup) bgSourcePlugin else null
+                val bgQualityBadgeIconRes = if (showBgSetup) bgQualityCheck.icon() else 0
+                val bgQualityBadgeDescription = if (showBgSetup) bgQualityCheck.stateDescription() else null
 
                 val manageSheetState = ManageSheetHost(
                     manageViewModel = manageViewModel,
@@ -607,9 +616,10 @@ class ComposeMainActivity : AppCompatActivity() {
                     },
                     autoShowNotificationSheet = _autoShowNotifications.value,
                     onAutoShowConsumed = { _autoShowNotifications.value = false },
-                    pumpSetupClassName = pumpSetupClassName,
-                    pumpSetupIcon = pumpSetupIcon,
-                    pumpSetupLabel = pumpSetupLabel,
+                    pumpSetupPlugin = pumpSetupPlugin,
+                    bgSetupPlugin = bgSetupPlugin,
+                    bgQualityBadgeIconRes = bgQualityBadgeIconRes,
+                    bgQualityBadgeDescription = bgQualityBadgeDescription,
                     permissionsMissing = permState.hasAnyMissing,
                     onPermissionsClick = {
                         permissionsViewModel.showSheet()

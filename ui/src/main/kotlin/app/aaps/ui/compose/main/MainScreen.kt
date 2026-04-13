@@ -30,13 +30,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.LocalDateUtil
@@ -105,9 +105,11 @@ fun MainScreen(
     autoShowNotificationSheet: Boolean,
     onAutoShowConsumed: () -> Unit,
     // Pump setup
-    pumpSetupClassName: String? = null,
-    pumpSetupIcon: ImageVector? = null,
-    pumpSetupLabel: String? = null,
+    pumpSetupPlugin: PluginBase? = null,
+    // BG source shortcut
+    bgSetupPlugin: PluginBase? = null,
+    bgQualityBadgeIconRes: Int = 0,
+    bgQualityBadgeDescription: String? = null,
     // Permissions
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
@@ -310,9 +312,10 @@ fun MainScreen(
                                     showAutomationSheet = true
                                 },
                                 automationCount = automationViewModel.uiState.collectAsStateWithLifecycle().value.items.size,
-                                pumpSetupClassName = pumpSetupClassName,
-                                pumpSetupIcon = pumpSetupIcon,
-                                pumpSetupLabel = pumpSetupLabel,
+                                pumpSetupPlugin = pumpSetupPlugin,
+                                bgSetupPlugin = bgSetupPlugin,
+                                bgQualityBadgeIconRes = bgQualityBadgeIconRes,
+                                bgQualityBadgeDescription = bgQualityBadgeDescription,
                                 onNavigate = onNavigate,
                                 permissionsMissing = permissionsMissing,
                                 onPermissionsClick = onPermissionsClick,

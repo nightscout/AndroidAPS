@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.bgQualityCheck
 
 import androidx.annotation.DrawableRes
+import kotlinx.coroutines.flow.StateFlow
 
 interface BgQualityCheck {
     enum class State {
@@ -13,6 +14,7 @@ interface BgQualityCheck {
 
     var state: State
     var message: String
+    val stateFlow: StateFlow<State>
     @DrawableRes fun icon(): Int
     fun stateDescription(): String
 }
