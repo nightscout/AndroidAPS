@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">此欄位不可留空</string>
+    <string name="error_url_not_valid">Web URL 無效</string>
+    <string name="error_mustbe4hexadidits">必須為 4 個由 ABCDEF0123456789 組成的字元</string>
     <!--    General-->
     <string name="treatments">治療</string>
     <string name="treatments_desc">查看並管理治療紀錄</string>
@@ -57,7 +60,6 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">狀態燈</string>
     <string name="copy_existing_values">複製 NS 設定（若存在）？</string>
-    <string name="do_ns_upload_title">將血糖資料上傳至 NS 伺服器</string>
     <string name="configbuilder_insulin">胰島素</string>
     <string name="configbuilder_bgsource">血糖來源</string>
     <string name="configbuilder_smoothing">平滑處理</string>
@@ -73,7 +75,7 @@
     <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
     <string name="confirm">確認</string>
     <string name="pump">幫浦</string>
-    <string name="pump_management">幫浦管理</string>
+    <string name="pump_management">幫浦</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">上傳器</string>
@@ -316,7 +318,7 @@
     <string name="careportal_dad_alert">D.A.D. 警報</string>
     <string name="careportal_insulin_cartridge_change">胰島素匣更換</string>
     <string name="careportal_profileswitch">設定檔切換</string>
-    <string name="profile_management">設定檔管理</string>
+    <string name="profile_management">設定檔</string>
     <string name="careportal_snackbolus">零食注射</string>
     <string name="careportal_mealbolus">餐食注射</string>
     <string name="careportal_correctionbolus">修正注射</string>
@@ -336,7 +338,7 @@
     <string name="treatment_insulin_desc">手動注射</string>
     <string name="treatment_carbs_desc">僅記錄碳水化合物</string>
     <string name="treatment_calculator_desc">計算注射量</string>
-    <string name="insulin_management">胰島素管理</string>
+    <string name="insulin_management">胰島素</string>
     <string name="manage_insulin_desc">管理並啟用胰島素組態</string>
     <string name="concentration_disable_blocked">在存在非 U100 胰島素時無法停用濃度支援。請先移除所有非 U100 的胰島素組態，並切換至 U100 設定檔。</string>
     <string name="simple_mode_blocked_by_concentration">使用非 U100 胰島素時無法啟用簡易模式。請先切換為 U100 胰島素。</string>
@@ -373,7 +375,7 @@
     <string name="custom">自訂</string>
     <string name="preset_settings">預設設定</string>
     <string name="activation">註冊</string>
-    <string name="temp_target_management">臨時目標管理</string>
+    <string name="temp_target_management">臨時目標</string>
     <string name="revert_to_defaults">還原為預設值</string>
     <string name="confirm_remove_preset">要移除預設 %1$s？</string>
     <string name="confirm_cancel_temp_target">要取消目前啟用中的臨時目標？</string>
@@ -425,9 +427,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g 額外碳水化合物需要在 %2$d 分鐘內</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">累積每日總劑量</string>
-    <string name="expweight">指數加權每日總劑量</string>
     <string name="basalrate">基礎率</string>
     <string name="bolus">注射</string>
     <string name="tdd_short">TDD</string>
@@ -635,6 +634,8 @@
     <string name="wizard_carb_time">碳水時間</string>
     <string name="carb_time_now">現在</string>
     <string name="change">變更</string>
+    <string name="grant">授予</string>
+    <string name="set">設定</string>
     <string name="wizard_set_alarm">設定鬧鐘</string>
     <string name="wizard_use_percentage">使用百分比</string>
     <string name="wizard_include_bg">包含血糖</string>
@@ -666,7 +667,7 @@
     <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
     <string name="wizard_pump_not_available">無可用幫浦！</string>
     <string name="quickwizard">快速嚮導</string>
-    <string name="quickwizard_managemnt">快速嚮導管理</string>
+    <string name="quickwizard_managemnt">快速嚮導</string>
     <!--    Preferences-->
     <string name="child">兒童</string>
     <string name="teenage">青少年</string>
@@ -694,6 +695,7 @@
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">已點擊連線到幫浦</string>
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">每日單位</string>
+    <string name="max_daily_units">每日最大單位</string>
     <string name="pump_icon">幫浦圖示</string>
     <string name="view_profile">查看設定檔</string>
     <string name="pump_history">幫浦歷史</string>
@@ -711,6 +713,13 @@
     <string name="pairing">配對中</string>
     <string name="initializing">初始化中…</string>
     <string name="secs" comment="second short">%1$d 秒</string>
+    <string name="warning" comment="Generic warning dialog title">警告</string>
+    <string name="retry" comment="Button label to retry a failed operation">重試</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">完成</string>
+    <string name="firmware" comment="Pump firmware version label">韌體</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">注射速度</string>
+    <string name="history" comment="Tab/screen title for viewing past events">歷史記錄</string>
+    <string name="overview_reservoir_concentration_value_over">剩餘超過 %1$s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">因 %2$s 限制最大基礎率為 %1$.2f U/h</string>
     <string name="pumplimit">幫浦限制</string>
@@ -737,7 +746,7 @@
     <string name="export_failed">失敗</string>
     <string name="export_alert">警報</string>
     <!-- Export dialog strings -->
-    <string name="master_password_missing">主密碼尚未設定！\n\n請在偏好設定 (%1$s) 中設定主密碼</string>
+    <string name="master_password_missing">主密碼尚未設定！\n\n請先設定主密碼，然後再試一次。</string>
     <string name="export_to">匯出設定到</string>
     <string name="password_preferences_encrypt_prompt">系統會要求輸入主密碼，該密碼將用於加密匯出的偏好設定。</string>
     <string name="preferences_export_canceled">已取消匯出！未匯出任何偏好設定！</string>
@@ -774,6 +783,8 @@
     <string name="send_logs">傳送記錄檔</string>
     <string name="file_management">檔案管理</string>
     <string name="database_management">資料庫管理</string>
+    <string name="data_choices">資料選項</string>
+    <string name="unattended_settings_export">自動匯出設定</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">設定記錄檔詳細程度層級</string>
     <string name="maintenance_send_logs_desc">分享記錄檔以進行疑難排解</string>
@@ -939,6 +950,26 @@
     <string name="wiki_search_offline">說明文件搜尋需要網際網路連線</string>
     <string name="no_search_results">找不到結果</string>
     <string name="search_plugin_disabled">外掛 %1$s 已停用</string>
+    <!--    Food Management -->
+    <string name="food_management">食物</string>
+    <string name="food_deleted">食物已刪除</string>
+    <string name="edit_food">編輯食物</string>
+    <string name="add_food">新增食物</string>
+    <string name="name">名稱</string>
+    <string name="category">類別</string>
+    <string name="subcategory">子類別</string>
+    <string name="portion">份量</string>
+    <string name="unit_label">單位</string>
+    <string name="fat">脂肪</string>
+    <string name="protein">蛋白質</string>
+    <string name="energy">能量</string>
+    <string name="undo">復原</string>
+    <string name="no_data">無資料</string>
+    <string name="manage_food_desc">管理食物資料庫項目</string>
+    <string name="label_carbs_g">碳水化合物 (g)</string>
+    <string name="label_fat_g">脂肪 (g)</string>
+    <string name="label_protein_g">蛋白質 (g)</string>
+    <string name="label_energy_kj">能量 (kJ)</string>
     <!--    Log Settings-->
     <string name="nav_logsettings">記錄設定</string>
     <string name="resettodefaults">重設為預設值</string>
@@ -982,4 +1013,21 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="ble_scan_select_pump">請從下方清單中選擇你的幫浦</string>
     <string name="ble_scan_scanning">正在掃描裝置…</string>
+    <!-- Graph configuration -->
+    <string name="graph_add">新增圖表</string>
+    <string name="graph_new">新圖表</string>
+    <string name="graph_edit">編輯圖表</string>
+    <string name="graph_number">圖表 %1$d</string>
+    <string name="graph_bg">血糖圖表</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
+    <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
 </resources>

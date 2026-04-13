@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans đã được thiết lập. Nếu bạn muốn dừng việc tải dữ liệu lên, hãy nhấp vào \'Đăng xuất\'.</string>
     <string name="not_setup_info">Open Humans hiện đang không hoạt động. Để bắt đầu tải dữ liệu lên, hãy nhấp vào \'Cài đặt\'.</string>
     <string name="project_member_id">ID thành viên dự án: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Chỉ tải lên nếu được kết nối với WiFi</string>
-    <string name="only_upload_if_charging">Chỉ tải lên khi đang sạc pin</string>
     <string name="open_humans_uploading">Đang tải lên Open Humans…</string>
     <string name="open_humans_notifications">Thông báo Open Humans</string>
     <string name="uploading_to_open_humans">AAPS đang tải dữ liệu lên Open Humans. Việc này có thể mất một lúc.</string>

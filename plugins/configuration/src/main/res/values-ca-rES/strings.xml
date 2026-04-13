@@ -14,9 +14,6 @@
     <string name="high_mark">Límit ALT</string>
     <string name="low_mark_comment">Valor inferior de l\'area \"en rang\" (només visualització)</string>
     <string name="high_mark_comment">Valor superior de l\'area \"en rang\" (només visualització)</string>
-    <string name="permission">Permís</string>
-    <string name="need_system_window_permission">L\'aplicació necessita permisos a la finestra del sistema pels avisos</string>
-    <string name="askforpermission">Demanar permís</string>
     <string name="storedsettingsfound">Trobada configuració emmagatzemada</string>
     <string name="master_password_summary">La clau mestra es fa servir per encriptar la còpia de seguretat i per editar la seguretat a l\'aplicació. Recordeu-la o emmagatzemeu-la en un lloc segur.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -27,22 +24,16 @@
     <string name="doprofileswitch">Canviar de perfil</string>
     <string name="exitwizard">Ometre assistent de configuració</string>
     <string name="setupwizard_sensitivity_description">El plugin de sensibilitat s\'utilitza per detectar la sensibilitat i calcular els COB. Per més informació:</string>
-    <string name="setupwizard_aps_description">Seleccioneu un dels algoritmes disponibles. Estan ordenats de més antic a més nou. Els més nous son generalment més potents i agressius. Per tant, si us esteu iniciant en el llaç, potser és millor que comenceu amb l\'AMA i no amb el més recent. No oblideu llegir la documentació d\'OpenAPS i configurar l\'algoritme abans d\'utilitzar-lo.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureu el vostre RileyLink a continuació. Un cop seleccionat, serà possible continuar configurant-lo un cop l\'estatus del RileyLink sigui \"Connectat\". Pot trigar un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Podeu continuar amb la configuració un cop la bomba estigui configurada.\n</string>
     <string name="startobjective">Iniciar primer objectiu</string>
     <string name="setupwizard_pump_riley_link_status">Estat RileyLink:</string>
     <string name="readstatus">Estat lectura</string>
-    <string name="data_choices">Opcions de dades</string>
-    <string name="fabric_upload">Enviar a fabric.io</string>
-    <string name="identification">Identificació (correu electrònic, FB, nick de Discord, etc.)</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">Petició</string>
-    <string name="apsmode_title">Mode APS</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Configurador</string>
-    <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_aps_description">Quin algoritme APS ha d\'anar fent ajustos de teràpia?</string>
     <string name="configbuilder_general_description">Plugins diversos que us poden ser útils.</string>
     <string name="configbuilder_constraints_description">Quines restriccions s\'estan aplicant?</string>
@@ -51,67 +42,12 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Configuració</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Importació cancel·lada! Configuració NO importada!</string>
-    <string name="preferences_import_impossible">No s\'ha pogut importar la configuració!</string>
-    <string name="check_preferences_details_btn">Expliqueu problemes d\'importació…</string>
-    <string name="check_preferences_details_title">Detall problemes d\'importació</string>
-    <string name="check_preferences_import_btn">Importar</string>
-    <string name="check_preferences_import_anyway_btn">Importar en qualsevol cas (PERILLÓS!)</string>
-    <string name="check_preferences_before_import">Si us plau comproveu la configuració abans d\'importar:</string>
-    <string name="check_preferences_cannot_import">La configuració no pot ser importada!</string>
-    <string name="check_preferences_dangerous_import">La configuració no s\'hauria d\'importar!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">Importar configuració de</string>
-    <string name="setting_imported">Configuració importada</string>
-    <string name="old_master_password">Clau mestra antiga</string>
-    <string name="different_password_used">Aquest arxiu ha estat exportat i encriptat amb claus mestres diferents. Introdueix la clau mestra antiga per a desencriptar-lo.</string>
-    <string name="master_password_will_be_replaced">Com a resultat de la correcta importació, la clau mestra SERÀ SUBSTITUÏDA per l\'antiga!</string>
-    <string name="exported">Configuració exportada</string>
-    <string name="filenotfound">Arxiu no trobat</string>
-    <string name="goto_main_try_again">Si us plau, torneu a la pantalla principal i torneu-ho a intentar.</string>
-    <string name="restartingapp">Sortint de l\'app per aplicar configuració.</string>
-    <string name="ue_exported">Entrades d\'usuari exportades</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">MANT</string>
-    <string name="maintenance_settings">Configuració de manteniments</string>
-    <string name="maintenance_email">Email destinatari</string>
-    <string name="maintenance_amount">Nr. de logs a enviar</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportat fa %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">exportat a les %1$s</string>
-    <string name="exported_less_than_hour_ago">exportat fa menys d\'una hora</string>
-    <string name="preferences_import_list_title">Selecciona l\'arxiu a importar</string>
-    <string name="metadata_warning_different_flavour">La configuració va ser creada amb una altra versió d\'AAPS (%1$s) i ara teniu la: %2$s.\n\nAlguns dels valors poden faltar o no ser vàlids - si us plau, comproveu la configuració després d\'importar.</string>
-    <string name="metadata_warning_different_device">La configuració va ser creada en un altre dispositiu. No hi ha problema si esteu important des d\'un telèfon més antic/diferent però comproveu que la configuració importada és correcta!</string>
-    <string name="metadata_warning_old_export">La configuració importada és de fa %1$s dies! Potser teniu una configuració més recent o heu escollit el fitxer incorrecte? Recordeu exportar la configuració regularment!</string>
-    <string name="metadata_warning_date_format">Format de data-hora incorrecte!</string>
-    <string name="metadata_warning_different_version">Configuració d\'una versió menor diferent. Cap problema si esteu important després d\'una actualització, però comproveu després d\'importar que la configuració encara sigui correcta!</string>
-    <string name="metadata_urgent_different_version">Configuració d\'una versió major diferent. Les versions majors poden tenir grans diferències i tenir configuracions incompatibles! Comproveu després d\'importar que la configuració encara sigui correcta!</string>
-    <string name="prefdecrypt_settings_tampered">L\'arxiu de configuració ha estat alterat</string>
-    <string name="prefdecrypt_settings_secure">L\'arxiu de configuració és segur</string>
-    <string name="prefdecrypt_settings_unencrypted">Utilitzant format de configuració no segur, no encriptat</string>
-    <string name="prefdecrypt_wrong_json">Error de format JSON, falta camp necessari (format, contingut, metadades o seguretat)</string>
-    <string name="prefdecrypt_wrong_password">Error de desencriptació, la clau proporcionada no pot desencriptar l\'arxiu</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Falta el checksum de l\'arxiu (hash), no es pot verificar l\'autenticitat de la configuració!</string>
-    <string name="prefdecrypt_issue_modified">L\'arxiu ha estat modificat després de l\'exportació!</string>
-    <string name="prefdecrypt_issue_parsing">Error de desencriptació, l\'anàlisi de la configuració ha fallat!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Error de desencriptació, la clau proporcionada no és vàlida o l\'arxiu de configuració ha estat alterat! Pot donar-se si l\'arxiu importat va ser exportat amb una clau mestra diferent.</string>
-    <string name="prefdecrypt_issue_wrong_format">Falta la configuració per encriptar, el format de la configuració és incorrecte!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Format del fitxer</string>
-    <string name="metadata_label_created_at">Creat:</string>
-    <string name="metadata_label_aaps_version">Versió d\'AAPS</string>
-    <string name="metadata_label_aaps_flavour">Variant de compilació</string>
-    <string name="metadata_label_device_name">Exportant nom del pacient del dispositiu</string>
-    <string name="metadata_label_device_model">Exportant model del dispositiu</string>
-    <string name="metadata_label_encryption">Encriptació d\'arxius</string>
-    <string name="metadata_format_new">Format nou d\'encriptació</string>
-    <string name="metadata_format_other">Format d\'exportació desconegut</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->

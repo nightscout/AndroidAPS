@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop 중지됨</string>
-    <string name="smscommunicator_pump_disconnected">펌프가 연결되지 않았습니다.</string>
-    <!-- Food-->
-    <string name="food_short">음식</string>
-    <string name="description_food">Nightscout에서 정의된 음식 설정을 표시합니다.</string>
-    <string name="filter">필터</string>
-    <string name="food">음식</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">단백질</string>
-    <string name="short_fat">지방</string>
-    <string name="category">분류</string>
-    <string name="subcategory">하위 분류</string>
     <string name="calculator_label">계산기</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="a11y_add_new_to_list">목록에 새로운 것 추가하기</string>
-    <string name="do_you_want_switch_profile">프로파일을 변경하고 현재 프로파일에 대한 변경 사항을 버리시겠습니까?</string>
-    <string name="save_or_reset_changes_first">우선 현재 변경사항을을 저장하거나 재설정하세요</string>
-    <string name="delete_current_profile">현재 프로파일을 삭제 하시겠습니까?</string>
-    <string name="units_colon">단위:</string>
-    <!-- Actions -->
-    <string name="actions">실행</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">임시Basal</string>
-    <string name="extended_bolus_button">확장 Bolus</string>
-    <string name="extended_bolus_cancel_button">확장Bolus 취소</string>
-    <string name="tools">도구</string>
     <string name="nav_history_browser">이력 브라우저</string>
     <string name="sensor_label">센서</string>
     <string name="age_label">나이:</string>
@@ -42,7 +13,6 @@
     <string name="statuslights_patch_pump_age">패치 펌프 사용기간</string>
     <string name="patch_pump">패치 펌프</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">NS에서 설정을 복사해오기</string>
     <string name="a11y_graph">그래프</string>
     <string name="a11y_insulin_label">인슐린</string>
     <string name="chart_menu">차트 메뉴</string>
@@ -50,18 +20,10 @@
     <string name="a11y_blood_glucose">혈당</string>
     <string name="a11y_bg_outdated">만료됨</string>
     <string name="set_basal_question">새 임시Basal 적용:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">홈</string>
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
-    <string name="overview_buttons_selection">버튼</string>
-    <string name="not_available_full">알수없음</string>
-    <string name="constraints_violation">제한 위반</string>
-    <string name="change_your_input">입력값을 변경하세요!</string>
     <string name="data_status">BG 데이터 상태</string>
-    <string name="quickwizard_settings">빠른마법사 설정</string>
-    <string name="default_temptargets">임시목표 기본값</string>
-    <string name="fill_bolus_title">교체/채움 기본 인슐린 양</string>
     <string name="run_question">%s 실행?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">예측</string>
@@ -77,13 +39,7 @@
     <string name="overview_show_abs_insulin">인슐린 절대값</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="heartRate_shortname">HR</string>
     <string name="graph_scale">그래프 범위</string>
     <string name="graph_menu_divider_header">그래프</string>
     <!-- Skins -->
@@ -91,7 +47,6 @@
     <string name="lowres_description">저해상도 스킨</string>
     <string name="buttonson_description">버튼을 화면 아래 고정하여 보여주기</string>
     <string name="largedisplay_description">큰 화면</string>
-    <string name="skin">스킨</string>
     <string name="cannula_usage">사용:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

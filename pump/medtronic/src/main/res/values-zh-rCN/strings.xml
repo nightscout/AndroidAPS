@@ -9,9 +9,9 @@
     <string name="medtronic_pump_bolus_delay">启动大剂量之前的延迟。</string>
     <string name="medtronic_pump_max_bolus">泵上的最大大剂量（U）</string>
     <string name="medtronic_pump_max_basal">泵上的最大基础率(U/h)</string>
-    <string name="medtronic_pump_encoding">Medtronic公司的编码</string>
     <string name="medtronic_custom_action_wake_and_tune">唤醒和调整</string>
     <string name="medtronic_custom_action_clear_bolus_block">清除大剂量锁定</string>
+    <string name="medtronic_custom_action_reset_rileylink">重置 RileyLink</string>
     <string name="medtronic_pump_battery_select">电池类型 (电源视图)</string>
     <string name="medtronic_pump_battery_no">未选择 (简单视图)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (扩展视图)</string>
@@ -19,7 +19,23 @@
     <string name="medtronic_pump_battery_nizn">锂(扩展视图)</string>
     <string name="medtronic_pump_battery_nimh">镍氢电池 (扩展视图)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">其他 (不支持)</string>
+    <string name="medtronic_pump_type_512">512</string>
+    <string name="medtronic_pump_type_712">712</string>
+    <string name="medtronic_pump_type_515">515</string>
+    <string name="medtronic_pump_type_715">715</string>
+    <string name="medtronic_pump_type_522">522</string>
+    <string name="medtronic_pump_type_722">722</string>
+    <string name="medtronic_pump_type_523_24a">523 (固件 2.4A 或以下)</string>
+    <string name="medtronic_pump_type_723_24a">723 (固件 2.4A 或以下)</string>
+    <string name="medtronic_pump_type_554_eu">554 (欧盟固件 &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_754_eu">754 (欧盟固件 &lt;= 2.6A)</string>
+    <string name="medtronic_pump_type_554_ca">554 (加拿大固件 &lt;= 2.7A)</string>
+    <string name="medtronic_pump_type_754_ca">754 (加拿大固件 &lt;= 2.7A)</string>
     <!-- Bolus delay entries -->
+    <string name="medtronic_bolus_delay_5s">5 s</string>
+    <string name="medtronic_bolus_delay_10s">10 s</string>
+    <string name="medtronic_bolus_delay_15s">15 s</string>
     <!-- MDT Fragment -->
     <string name="rl_battery_label">RileyLink 电池</string>
     <!-- MDT Errors -->
@@ -75,6 +91,7 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">设置中性临时基础率</string>
     <string name="set_neutral_temps_summary">如果启用，它将在每小时结束前取消临时基础率。 此方法可帮助阻止某些泵在一小时内进行蜂鸣/振动。</string>
+    <string name="medtronic_tbr_remaining">%1$s (剩余%2$d 分钟)</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 分钟剩余)</string>
     <string name="invalid_history_data">检测到无效的泵历史数据。打开新问题并提供日志。</string>
     <string name="riley_statistics">RileyLink状态</string>

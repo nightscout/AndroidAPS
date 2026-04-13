@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Ciklas išjungtas</string>
-    <string name="smscommunicator_pump_disconnected">Pompa atjungta</string>
-    <!-- Food-->
-    <string name="food_short">Maistas</string>
-    <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
-    <string name="filter">Filtruoti</string>
-    <string name="food">Maistas</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">Energ. vertė</string>
-    <string name="short_protein">Balt.</string>
-    <string name="short_fat">Rieb</string>
-    <string name="category">Kategorija</string>
-    <string name="subcategory">Subkategorija</string>
     <string name="calculator_label">Skaičiuotuvas</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">VP</string>
-    <string name="a11y_add_new_to_list">pridėti naują į sąrašą</string>
-    <string name="do_you_want_switch_profile">Ar norite pakeisti profilį ir atsisakyti pakeitimų, atliktų dabartiniame profilyje?</string>
-    <string name="save_or_reset_changes_first">Pirmiausia išsaugoti arba anuliuoti dabartinius pokyčius</string>
-    <string name="delete_current_profile">Ištrinti esamą profilį?</string>
-    <string name="units_colon">Vienetai:</string>
-    <!-- Actions -->
-    <string name="actions">Veiksmai</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
-    <string name="actions_shortname">VEIKS</string>
-    <string name="tempbasal_button">Laikina bazė</string>
-    <string name="extended_bolus_button">Ištęstas bolusas</string>
-    <string name="extended_bolus_cancel_button">Atšaukti ištęstą bolusą</string>
-    <string name="tools">Įrankiai</string>
     <string name="nav_history_browser">Istorija</string>
     <string name="sensor_label">Sensorius</string>
     <string name="age_label">laikas:</string>
@@ -42,7 +13,6 @@
     <string name="statuslights_patch_pump_age">rezervuaro laikas</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Kopijuoti nustatymus iš NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -63,18 +33,10 @@
     <string name="a11y_blood_glucose">kraujo glikemija</string>
     <string name="a11y_bg_outdated">nebegalioja</string>
     <string name="set_basal_question">Patvirtinti naują laikiną bazę:</string>
-    <string name="overview_cgm">NGJ</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
-    <string name="overview_buttons_selection">Mygtukai</string>
-    <string name="not_available_full">Nėra duomenų</string>
-    <string name="constraints_violation">Apribojimų pažeidimas</string>
-    <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
     <string name="data_status">Glikemijos statusas</string>
-    <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
-    <string name="default_temptargets">Numatyti Laikini Tikslai</string>
-    <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="run_question">Vykdyti %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozė</string>
@@ -92,15 +54,7 @@
     <string name="overview_show_variable_sens">Kintamas jautrumas</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">VB</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">VEIKS</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
-    <string name="heartRate_shortname">ŠSD</string>
-    <string name="sensitivity_shortname">JAUTR%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
     <string name="temp_basal_overview_short_name">T:</string>
@@ -109,13 +63,11 @@
     <string name="lowres_description">Žemos rezoliucijos išvaizda</string>
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
-    <string name="skin">Išvaizda</string>
     <string name="cannula_usage">naud:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>
     <string name="overview_show_steps">Žingsniai</string>
-    <string name="steps_shortname">ŽINGSNIAI</string>
     <string name="simple_mode_enabled">Paprastas režimas įjungtas</string>
 </resources>

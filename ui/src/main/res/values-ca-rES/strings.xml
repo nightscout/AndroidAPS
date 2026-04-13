@@ -34,7 +34,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">No lliurar bolus, només anotar</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilitzar %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalatge horari</string>
     <string name="percentage_label">Percentatge</string>
@@ -63,7 +62,6 @@
     <string name="missing_carbs">Falten %1$d g</string>
     <string name="carb_time_label">Temps d\'absorció</string>
     <!-- Treatments -->
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="tempbasals_netratio_label_string">Ràtio:</string>

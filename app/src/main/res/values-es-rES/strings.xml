@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">Preferencias de %1$s</string>
     <string name="delta">Delta</string>
     <string name="save">Guardar</string>
     <string name="wear">Reloj</string>
-    <string name="sensitivity_warning">Al activar Autosens, recuerda introducir todos carbohidratos que has comido, sino, las desviaciones de carbohidratos serán identificados incorrectamente, como un cambio de sensibilidad</string>
     <string name="invalid">INVÁLIDO</string>
-    <string name="pump_unreachable_threshold">Bomba no alcanzable durante [min]</string>
     <string name="close_navigation">Cerrar navegación</string>
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
-    <string name="unitsnosemicolon">Unidades</string>
     <string name="authorizationfailed">Autorización errónea</string>
     <string name="cannula">Cánula</string>
     <string name="identification_not_set">Identificación no establecida en el modo dev</string>

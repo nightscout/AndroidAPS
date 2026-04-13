@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Mit Pumpe verbinden</string>
     <string name="combov2_unpair_pump_title">Pumpe trennen</string>
     <string name="combov2_driver_state_label">Treiberstatus</string>
-    <string name="combov2_current_activity_label">Aktuelle Aktivität</string>
     <string name="bluetooth_address">Bluetooth-Adresse</string>
     <string name="combov2_start_pairing">Pairing starten</string>
     <string name="combov2_pairing_in_progress">Combo-Pairing wird durchgeführt</string>
@@ -100,7 +99,6 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignoriere redundante 100% TBR-Anfrage</string>
     <string name="combov2_hit_unexpected_tbr_limit">Unerwartetes Limit beim Anpassen des TBR gefunden: Ziel Prozentsatz war %1$d%%, Limit bei %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Absolute TBR kann nicht gesetzt werden, wenn die Basisbasalrate 0 ist</string>
-    <string name="combov2_pair_with_pump_summary">Verbinde AndroidAPS und Android mit einer derzeit nicht verbundenen Accu-Chek Combo Pumpe</string>
     <string name="combov2_unpair_pump_summary">Trenne AndroidAPS und Android von der aktuell verbundenen Accu-Chek Combo Pumpe</string>
     <string name="combov2_unknown_tbr_detected">Unbekannte TBR wurde erkannt und gestoppt; Prozentsatz: %1$d%%; verbleibende Dauer: %2$s</string>
     <string name="combov2_connection_error">Verbindungsfehler :%1$</string>

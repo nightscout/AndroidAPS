@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">מה נכון לגבי משך פעילות אינסולין (DIA)?</string>
     <string name="dia_label_exam">משך פעילות האינסולין (DIA)</string>
-    <string name="dia_profile">יש לקבוע ערך DIA בפרופיל.</string>
     <string name="dia_minimumis5h">הערך המינימלי הוא 5 שעות.</string>
     <string name="dia_meaningisequaltodiapump">אם ערך ה-DIA אותו קבעתם במשאבה לפני המעבר ל- AndroidAPS עבד היטב, אפשר להמשיך להשתמש באותו ערך עם הלולאה.</string>
     <string name="dia_valuemustbedetermined">עליכם לקבוע לעצמכם את ערך ה-DIA הרצוי.</string>
@@ -64,9 +63,7 @@
     <string name="prerequisites2_internet">ה-AndroidAPS חייב חיבור לאינטרנט כדי להפעיל לולאה סגורה.</string>
     <string name="prerequisites2_supportedcgm">חיישן סוכר נתמך ואפליקציה מתאימה לקבלת ערכי הסוכר בטלפון\\התקן.</string>
     <string name="update_label">עדכון AAPS</string>
-    <string name="update_git">אתם צריכים להתקין ולהגדיר את Git במחשב שלכם.</string>
     <string name="update_asap">כאשר גרסאות מעודכנות של AndroidAPS ישוחררו, ייתכן שהגרסאות הקודמות יוגבלו מרחוק לאחר זמן מסויים.</string>
-    <string name="update_keys">עליכם לשמור ולציין את מיקום ה-Keystore שלכם ולהשתמש באותו מפתח חתימה בעדכונים בו השתמשתם להתקנה הקודמת שלכם.</string>
     <string name="update_askfriend">אם נתקלתם בקושי בבנייה של ה-APK, אתם יכולים להתקין APK שנבנה על ידי חבר.</string>
     <string name="troubleshooting_label">פתרון תקלות</string>
     <string name="troubleshooting_wheretoask">איפה אפשר לחפש עזרה לגבי AndroidAPS?</string>

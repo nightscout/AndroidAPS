@@ -60,4 +60,9 @@
     <string name="pump_alert">Alerte de la pompe</string>
     <string name="pairing_information">Information sur l’appairage</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Désappairer</string>
+    <string name="reset_pairing">Réinitialiser les informations d\'appairage ?</string>
+    <string name="active_basal_rate">Débit de base</string>
+    <string name="active_tbr">DBT actif</string>
+    <string name="reservoir_level">Niveau du réservoir</string>
 </resources>

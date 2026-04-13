@@ -3,17 +3,33 @@
     <string name="bolus_constraint_applied">Vincolo bolo applicato</string>
     <string name="carbs_constraint_applied">Vincolo CHO applicato</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Finestra di dialogo cancellata</string>
     <string name="start_activity_tt">Avvia TT Attività fisica</string>
     <string name="start_eating_soon_tt">Avvia TT Pasto a breve</string>
     <string name="start_hypo_tt">Avvia TT Ipoglicemia</string>
     <string name="time_offset">Offset</string>
     <string name="remind_to_bolus_later">Ricorda di fare il bolo</string>
+    <string name="a11y_carb_reminder">Imposta il promemoria all\'ora dei carboidrati</string>
     <!--    Widget-->
     <string name="configure">Configura opacità</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor attività</string>
+    <string name="time_range">Intervallo di tempo</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Glucosio Pentagon (CGP) — 14 giorni</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Ipoglicemia</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Iperglicemia</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Media</string>
+    <string name="cgp_reference">Persona sana</string>
+    <string name="cgp_patient">Paziente</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">Rischio molto basso</string>
+    <string name="cgp_pgr_low">Rischio basso</string>
+    <string name="cgp_pgr_moderate">Rischio moderato</string>
+    <string name="cgp_pgr_high">Rischio alto</string>
+    <string name="cgp_pgr_extremely_high">Rischio estremamente elevato</string>
     <string name="do_you_want_reset_stats">Vuoi resettare le statistiche sull\'attività?</string>
     <string name="do_you_want_recalculate_tdd_stats">Vuoi ricalcolare le statistiche TDD?</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
@@ -41,19 +57,37 @@
     <string name="site_management">Profilo Di Gestione Sito</string>
     <string name="site_management_description">Imposta qui se vuoi gestire il sito del micro, il sito del CGM o entrambi. Questa impostazione verrà utilizzata per inviare automaticamente la finestra di gestione del sito su ogni nuovo inserimento rilevato</string>
     <string name="record_site_change">Registra Posizione Sito</string>
+    <string name="update_site_change">Aggiorna Posizione Sito</string>
     <string name="edit_site">Modifica</string>
     <string name="record_site_location">Posizione Del Sito: %1$s</string>
     <string name="record_site_arrow">Freccia Del Sito: %1$s</string>
     <string name="record_site_note">Note: %1$s</string>
     <string name="delete_site_note">Nota eliminata</string>
+    <string name="site_filter_info">Selezionare il tipo di evento Terapia che si desidera visualizzare: Cambio Cannula e/o Cambio Sensore</string>
     <!-- FillDialog -->
     <string name="fill_warning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
+    <string name="fill_prime_amount">Quantità inizializzazione</string>
+    <string name="fill_pump_units_note">La quantità iniziale è nelle unità del micro</string>
+    <string name="fill_insulin_change">Cambia insulina a: %1$s (verrà applicato lo switch del profilo)</string>
+    <string name="fill_current_insulin">Insulina corrente</string>
+    <string name="fill_change_insulin">Cambia insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Non fare il bolo, solo registrazione</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
+    <string name="missing_insulin_name">Nome Insulina Mancante</string>
+    <string name="insulin_name_exists">Il nome dell\'insulina %1$s esiste già, seleziona un nuovo nome</string>
+    <string name="a11y_add_new_insulin">Aggiungi nuova insulina</string>
+    <string name="a11y_delete_current_insulin">Elimina insulina corrente</string>
+    <string name="save_or_reset_changes_first">Salva o resetta prima le modifiche correnti</string>
+    <string name="activate_insulin_no_profile">Nessun profilo attivo trovato</string>
+    <string name="activate_insulin_new_insulin">Nuova insulina: %1$s</string>
+    <string name="activate_insulin_remaining">Rimanente: %1$d min</string>
+    <string name="activate_insulin_profile_switch">Lo switch del profilo verrà creato:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Picco di carico da</string>
+    <string name="cannot_delete_last_insulin">Impossibile cancellare l\'ultima insulina</string>
+    <string name="cannot_delete_active_insulin">Impossibile eliminare l\'insulina attiva</string>
     <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentuale</string>
@@ -82,12 +116,16 @@
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Risultato: %1$s %2$s</string>
     <string name="missing_carbs">Mancanti %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100% carboidrati immediati, senza carboidrati estesi</string>
+    <string name="wizard_carbs_type_desc">Carboidrati ridotti di %1$d%%, aggiunto eCarbs %2$d%% ritardato %3$dmin per %4$dh</string>
+    <string name="wizard_include_info">Tocca per includere/escludere dal calcolo:\n• BG — glucosio nel sangue (ON all\'inizio)\n• TT — obiettivo temporaneo (ON all\'inizio)\n• Tendenza — Tendenza glicemica (ultima condizione ricordata)\n• IOB — insulina a bordo (ON all\'inizio)\n• COB — carboidrati a bordo (ultimo stato ricordato)</string>
+    <string name="wizard_bg_age">Età Glicemia: %1$d min</string>
     <string name="a11y_current_bg">glicemia corrente</string>
     <string name="carb_time_label">Offset CHO</string>
     <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
+    <string name="show_calculation">Mostra calcolo</string>
     <!-- Treatments -->
     <string name="no_records_available">Nessun record disponibile</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">CHO:</string>
     <string name="tempbasals_netratio_label_string">Rapporto:</string>
@@ -103,10 +141,32 @@
     <string name="show_loop">Mostra loop</string>
     <string name="user_entry">Inserimento utente</string>
     <string name="clone_label">Clona</string>
+    <string name="add_new_profile">Aggiungi nuovo profilo</string>
+    <string name="show_profile">Mostra profilo</string>
+    <string name="edit_label">Modifica</string>
+    <string name="edit_profile">Modifica profilo</string>
+    <string name="activate_label">Attiva</string>
+    <string name="activate_profile">Attiva profilo</string>
+    <string name="remove_label">Rimuovi</string>
+    <string name="active_profile_indicator">ATTIVO</string>
+    <string name="remaining_time_label">Rimanenza</string>
+    <string name="confirm_remove_profile">Rimuovere profilo \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Clonare profilo \"%1$s\"?</string>
+    <string name="tbr_type_flag_extended">E</string>
+    <string name="tbr_type_flag_suspended">S</string>
+    <string name="tbr_type_flag_emulated_suspended">ES</string>
+    <string name="tbr_type_flag_superbolus">SB</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Tipo profilo</string>
+    <string name="profile_parameters">Parametri Del Profilo</string>
+    <string name="active_profile">Attiva profilo</string>
+    <string name="available_profiles">Profili disponibili</string>
+    <string name="profile_switches">Cambi profilo</string>
     <string name="basal_pct_from_tdd_label">% di basale</string>
     <string name="selected_profile">Selezionato:</string>
+    <string name="comparation">Confronto</string>
+    <string name="profile_tab_1">Profilo 1</string>
+    <string name="profile_tab_2">Profilo 2</string>
     <string name="motol_default_profile">Profilo predefinito</string>
     <string name="current_profile">Profilo corrente</string>
     <string name="available_profile">Profilo disponibile</string>
@@ -120,30 +180,88 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">solo su smartwatch</string>
     <string name="a11y_only_on_phone">solo su telefono</string>
-    <string name="quickwizard_settings">Impostazioni Calcolatore rapido</string>
     <string name="overview_edit_quickwizard_button_text">Testo del pulsante</string>
-    <string name="overview_edit_quickwizard_valid">Valido:</string>
+    <string name="quick_wizard_mode_wizard">Procedura guidata</string>
+    <string name="quick_wizard_mode_insulin">Insulina</string>
+    <string name="quick_wizard_mode_carbs">Carboidrati</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Solo IOB positivo</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Percentuale troppo alta!</string>
     <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
     <string name="additional_ecarbs">Aggiungi eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Utilizzati per il calcolo:</string>
-    <string name="constraints_violation">Violazione dei vincoli</string>
-    <string name="change_your_input">Cambia il tuo input!</string>
+    <string name="calculator_options">Opzioni Calcolatore</string>
+    <string name="use_bg">Usa Glicemia</string>
+    <string name="use_cob">Usa COB</string>
+    <string name="use_iob">Usa IOB</string>
+    <string name="use_trend">Usa Tendenza</string>
+    <string name="trend_all">Tutto</string>
+    <string name="trend_positive_only">Solo positivo</string>
+    <string name="trend_negative_only">Solo negativo</string>
+    <string name="use_temp_target">Usa Target Temporaneo</string>
+    <string name="use_alarm">Usa Allarme</string>
+    <string name="device_selection">Selezione dispositivo</string>
+    <string name="show_on_phone">Mostra sul telefono</string>
+    <string name="show_on_watch">Mostra sull\'orologio</string>
+    <string name="ecarbs_additional">Carboidrati Aggiuntivi</string>
+    <string name="valid_from_to">Intervallo Di Tempo Valido</string>
+    <string name="carb_time">Tempo Carbo</string>
+    <string name="save_changes_question">Salvare le modifiche a questa voce?</string>
+    <string name="wizard_no_insulin_required">Insulina non necessaria</string>
+    <string name="carbs_constraint_violation">Carboidrati limitati da vincoli</string>
+    <string name="insulin_constraint_violation">Insulina limitata da vincoli</string>
     <string name="confirm_treatment">Si prega di confermare il trattamento</string>
     <string name="recalculate">Ricalcola</string>
     <!--    Widget-->
     <string name="use_black_color">Usa colore nero</string>
     <string name="widget_configuration">Configurazione widget</string>
     <string name="until_changed">Fino a Modifica</string>
-    <string name="limitations">Limitazioni</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Permessi richiesti</string>
+    <string name="permission_sheet_subtitle">Sono necessari alcuni permessi affinché l\'app funzioni correttamente</string>
+    <string name="permission_grant">Concedi</string>
+    <string name="permission_change">Cambiare</string>
+    <string name="permission_denied_go_to_settings">Permesso definitivamente negato. Si prega di attivarlo nelle impostazioni dell\'app.</string>
+    <string name="permission_open_settings">Impostazioni</string>
+    <string name="permission_directory_picker_error">Impossibile avviare il selettore di directory. Solitamente problema di Android o Family Link.</string>
+    <string name="permission_nav_label">Permessi</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Scostamento ciclo</string>
+    <string name="raw_tdd">Tdd Grezzo</string>
+    <string name="cleaned_tdd">Tdd Pulito</string>
+    <string name="cleaned_tdd_explanation">TDD meno insulina per carboidrati.</string>
+    <string name="cycle_lines_legend">Cicli individuali</string>
+    <string name="cycles_found">%1$d cicli (%2$d giorni)</string>
+    <string name="cycle_day1_date">Giorno 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Calcolo… %1$d%%</string>
+    <string name="not_enough_data_for_cycles">Dati insufficienti (richiedono almeno 56 giorni per 2 cicli)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Entrambi</item>
         <item>Solo positivo</item>
         <item>Solo negativo</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Azioni selezionate</string>
+    <string name="quick_launch_available_actions">Azioni disponibili</string>
+    <string name="quick_launch_no_dynamic_items">Nessun elemento disponibile</string>
+    <string name="quick_launch_category_treatment">Trattamento</string>
+    <string name="quick_launch_category_care">Care Portal</string>
+    <string name="quick_launch_category_profile">Profilo</string>
+    <string name="quick_launch_category_temp_target">Temp Target Presets</string>
+    <string name="quick_launch_category_quick_wizard">Procedura Guidata Veloce</string>
+    <string name="quick_launch_category_automation">Automazione</string>
+    <string name="quick_launch_all_selected">Tutti gli elementi selezionati</string>
+    <string name="quick_launch_no_quick_wizard">Aggiungi le voci della procedura guidata veloce per usarle qui</string>
+    <string name="quick_launch_no_automation">Crea azioni di automazione utente per usarle qui</string>
+    <string name="quick_launch_no_tt_presets">Aggiungi preset Temp Target per usarli qui</string>
+    <string name="quick_launch_no_profiles">Crea profili in Profilo Locale per usarli qui</string>
+    <string name="quick_launch_edit_profile_preset">Modifica preimpostazione profilo</string>
+    <string name="quick_launch_profile_percentage">Percentuale</string>
+    <string name="quick_launch_profile_duration">Durata</string>
+    <string name="quick_launch_profile_permanent">Permanente</string>
+    <string name="quick_launch_profile_confirm">Profilo Autotune %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Seleziona Freccia</string>
+    <string name="loop_accept_nav_label">Loop</string>
+    <string name="loop_accept_set_basal_question">Accetta nuova basale temporanea:</string>
+    <string name="loop_accept_perform">Esegui</string>
 </resources>

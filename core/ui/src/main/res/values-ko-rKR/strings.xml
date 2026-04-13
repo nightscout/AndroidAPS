@@ -31,7 +31,6 @@
     <string name="result">결과</string>
     <string name="settings">설정</string>
     <string name="statuslights">상태 등</string>
-    <string name="do_ns_upload_title">NS에 혈당데이터 업로드하기</string>
     <string name="configbuilder_insulin">인슐린</string>
     <string name="value_unavailable_short">사용불가</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -240,9 +239,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d 분 내에 %1$d g의 추가적인 탄수화물이 필요함</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">누적 TDD</string>
-    <string name="expweight">지수가중 일총량</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">비율</string>
@@ -551,8 +547,11 @@
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

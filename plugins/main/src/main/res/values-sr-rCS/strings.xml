@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop Onesposobljen</string>
-    <string name="smscommunicator_pump_disconnected">Pumpa nije povezana</string>
-    <!-- Food-->
-    <string name="description_food">Prikazuje unapred podešene postavke hrane definisane u Nightscout-u</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <!-- Actions -->
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Neke tipke za brzi pristup uobičajenim funkcijama</string>
-    <string name="tempbasal_button">Privremeni Basal</string>
-    <string name="extended_bolus_button">Produženi Bolus</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Insulin</string>
     <!-- Overview -->
@@ -19,9 +9,6 @@
     <string name="set_basal_question">Prihvatite novi privremeni bazal:</string>
     <!-- overview moved to core:ui module -->
     <string name="description_overview">Prikazuje trenutno stanje tvog loop-a i tipke za najčešće radnje</string>
-    <string name="constraints_violation">Kršenje ograničenja</string>
-    <string name="change_your_input">Promeni tvoj unos!</string>
-    <string name="quickwizard_settings">Brzi Čarobnjak postavke</string>
     <!--    OverviewMenu-->
     <string name="overview_show_treatments">Tretmani</string>
     <!-- Skins -->

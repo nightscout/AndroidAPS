@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">העדפות %1$s</string>
     <string name="delta">דלתא</string>
     <string name="save">שמירה</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">בהפעלת פונקציית ה-Autosens יש לזכור שחייבים להזין למערכת את כל הפחמימות שנאכלו. אחרת פחמימות לא יזוהו נכון כשינוי ברגישות!</string>
     <string name="invalid">לא חוקי</string>
-    <string name="pump_unreachable_threshold">סף משאבה בלתי נגישה [min]</string>
     <string name="close_navigation">סגור ניווט</string>
     <string name="remove_items">הסר פריטים</string>
     <string name="sort_items">מיין פריטים</string>
-    <string name="unitsnosemicolon">יחידות</string>
     <string name="authorizationfailed">ההרשאה נכשלה</string>
     <string name="cannula">צינורית</string>
     <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>

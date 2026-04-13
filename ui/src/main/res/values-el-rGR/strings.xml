@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Ενεργός Περιορισμός Bolus</string>
     <string name="carbs_constraint_applied">Ενεργός περιορισμός Υδατανθράκων</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Το παράθυρο διαλόγου ακυρώθηκε</string>
     <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
     <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
     <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
@@ -37,7 +36,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Επαναχρησιμοποίηση %1$d%% %2$dh</string>
     <string name="timeshift_label">Αλλαγή της ώρας</string>
     <string name="percentage_label">Ποσοστό</string>
@@ -71,7 +69,6 @@
     <string name="a11y_set_carb_timer">ορισμός ειδοποίησης χρονομέτρου υδατανθράκων</string>
     <!-- Treatments -->
     <string name="no_records_available">Δεν υπάρχουν διαθέσιμες εγγραφές</string>
-    <string name="calculation_short">Υπολογ</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
     <string name="tempbasals_netratio_label_string">Αναλογία:</string>
@@ -104,8 +101,6 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">μόνο στο ρολόι</string>
     <string name="a11y_only_on_phone">μόνο στο τηλέφωνο</string>
-    <string name="quickwizard_settings">Ρυθμίσεις QuickWizard</string>
-    <string name="overview_edit_quickwizard_valid">Έγκυρο:</string>
     <string name="a11y_drag_and_drop_handle">διαχείριση μεταφοράς και απόθεσης</string>
     <!--    Widget-->
     <!--    Permissions-->

@@ -34,8 +34,8 @@
     <string name="equil_unbind_content">Această operațiune va opri infuzia de insulină și va retrage pistonul pompei până la capăt! De asemenea, va șterge legătura!</string>
     <string name="equil_ble_config_confirmation_title">Asociere pompă plasture Equil</string>
     <string name="equil_error">Eroare conexiune</string>
-    <string name="equil_change">Schimbă pompa</string>
-    <string name="equil_change_content">Detașează pompa de pe placa de bază.</string>
+    <string name="equil_change">Schimbați pompa</string>
+    <string name="equil_change_content">Detașați pompa de pe placa de bază.</string>
     <string name="equil_unpair_alert">Sunteți sigur că vreți să renunțați la controlul asupra %1$s?</string>
     <string name="equil_devices_number_hint">Numărul dispozitivului</string>
     <string name="equil_record_basal">Rată bazală %1$s U/h</string>
@@ -46,7 +46,7 @@
     <string name="equil_low_battery">Nivel scăzut al bateriei</string>
     <string name="equil_low_insulin">Nu a rămas suficientă insulină în rezervor</string>
     <string name="equil_pump_not_run">Pompa nu funcționează</string>
-    <string name="equil_pair">Asociază</string>
+    <string name="equil_pair">Asociați</string>
     <string name="equil_pair_error">Eroare asociere</string>
     <string name="equil_fill">Amorsare/Umplere</string>
     <string name="equil_air">Evacuare aer</string>
@@ -68,7 +68,7 @@
     <string name="equil_common_cmd_resume_delivery">Reluare administrare</string>
     <string name="equil_common_cmd_pair">Asociați Equil</string>
     <string name="equil_common_cmd_insert_cannula">Inserați canula</string>
-    <string name="equil_common_cmd_unpair">Dezasociază Equil</string>
+    <string name="equil_common_cmd_unpair">Dezasociați Equil</string>
     <string name="equil_common_cmd_set_extended_bolus">Setați bolusul extins</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Anulați bolusul extins</string>
     <!--    推杆回退-->
@@ -77,7 +77,7 @@
     <string name="equil_common_set_alarm_shake">Configurare doar pentru vibrații</string>
     <string name="equil_common_set_alarm_mute">Configurează pentru silențios</string>
     <string name="equil_common_set_alarm_tone_and_shake">Configurare pentru notificare sunet și vibrații</string>
-    <string name="equil_common_read_devices">Citește informații dispozitiv</string>
+    <string name="equil_common_read_devices">Citiți informații dispozitiv</string>
     <string name="equil_common_cmd_fill">Umplere</string>
     <string name="history_manual_confirm">Confirmare manuală</string>
     <string name="equil_command_not_found">Dispozitivul nu a fost găsit</string>
@@ -117,7 +117,7 @@
     <string name="equil_history_item18">Infuzie anormală oprită</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspendare</string>
     <string name="equil_common_overview_button_resume_delivery">Reluați administrarea</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fU/o @%2$s (%3$d/%4$d minute)</string>
+    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Momente în urmă</string>
     <string name="equil_common_less_than_a_minute_ago">Mai puțin de un minut în urmă</string>
     <string name="equil_common_time_ago">%1$s în urmă</string>

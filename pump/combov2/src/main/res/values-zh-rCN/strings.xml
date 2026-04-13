@@ -1,16 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Accu-Chek Combo 泵集成</string>
+    <string name="combov2_could_not_connect">无法连接到泵</string>
+    <string name="combov2_not_paired">未与泵配对</string>
+    <string name="combov2_warning">Combo 警告</string>
+    <string name="combov2_error">Combo 错误</string>
+    <string name="combov2_warning_4">拨打热线电话获取更新</string>
+    <string name="combov2_warning_10">蓝牙错误；重新配对</string>
+    <string name="combov2_error_1">储药器空</string>
     <string name="combov2_error_2">电池耗尽</string>
     <string name="combov2_error_4">堵管</string>
+    <string name="combov2_error_5">备用泵操作结束</string>
     <string name="combov2_error_6">机械错误</string>
+    <string name="combov2_error_7">电子错误</string>
+    <string name="combov2_error_8">电源中断</string>
+    <string name="combov2_error_9">借用泵操作结束</string>
+    <string name="combov2_error_10">储液器错误。</string>
+    <string name="combov2_error_11">输液器未预充</string>
+    <string name="combov2_extended_bolus_not_supported">不支持扩展大剂量</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">与泵配对</string>
+    <string name="combov2_unpair_pump_title">与泵取消配对</string>
+    <string name="combov2_driver_state_label">驱动状态</string>
     <string name="bluetooth_address">蓝牙地址</string>
+    <string name="combov2_start_pairing">开始配对</string>
+    <string name="combov2_pairing_in_progress">Combo 配对中</string>
+    <string name="combov2_pairing_start_steps">与您的 Combo 配对的步骤：\n\n
+1. 在您的泵上，导航至蓝牙设置\n
+2. 检查是否已有设备显示为已配对；若有，请前往\"删除设备\"泵界面删除/取消配对该设备\n
+3. 前往\"添加设备\"泵界面，并在泵上启动配对\n
+4. 点击下方的“开始配对”按钮以在 AndroidAPS 中启动配对\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">过了一会儿，手机名称会显示在泵的屏幕上；按下 CHECK 键确认。\n\n
+配对成功后，在泵上确认配对完成，并通过按下 CHECK 键两次返回主屏幕。\n\n
+如果超过~5 分钟仍无法建立连接：\n\n
+1. 按下返回键或\"取消配对\"按钮\n
+2. 在 Combo 上取消配对（同时按下 UP 和 MENU 以取消配对）\n
+3. 再试一次配对</string>
+    <string name="combov2_enter_pin">输入PIN码</string>
+    <string name="combov2_cancel_pairing">取消配对</string>
+    <string name="combov2_confirm_cancel_pairing_message">您真的想要取消配对吗？</string>
+    <string name="combov2_confirm_unpair_message">您真的想要解除配对泵吗？</string>
+    <string name="combov2_pin_hint">10 位数PIN码</string>
+    <string name="combov2_pairing_finished_successfully">成功配对 Combo</string>
+    <string name="combov2_pairing_cancelled">用户取消了与Combo配对</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Combo 扫描超时</string>
+    <string name="combov2_pairing_failed_due_to_error">配对失败: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">配对因未知原因中止</string>
+    <string name="combov2_pairing_invalid_pin_length">"无效配对的 PIN 长度：需要 %1$d 数字，得到 %2$d"</string>
+    <string name="combov2_scanning_for_pump">正在扫描泵</string>
+    <string name="combov2_establishing_bt_connection">建立蓝牙连接（尝试次数：%1$d）</string>
+    <string name="combov2_pairing_performing_handshake">与泵握手</string>
+    <string name="combov2_pairing_pump_requests_pin">泵需要10位密码</string>
+    <string name="combov2_pairing_finishing">正在完成配对</string>
+    <string name="combov2_no_connection_for_n_mins">没有连接 %1$d 分钟</string>
+    <string name="combov2_less_than_one_minute_ago">不到一分钟前</string>
+    <string name="combov2_setting_current_pump_time">设置当前泵时间</string>
+    <string name="combov2_setting_current_pump_date">设置当前泵时间</string>
     <string name="combov2_not_initialized">尚未初始化</string>
+    <string name="combov2_checking_pump">正在检查泵...</string>
     <string name="combov2_ready">就绪</string>
     <string name="combov2_suspended">挂起</string>
+    <string name="combov2_pump_is_suspended">胰岛素泵暂停输注</string>
+    <string name="combov2_executing_command">执行命令</string>
+    <string name="combov2_getting_basal_profile_cmddesc">正在读取基础率配置文件</string>
     <string name="combov2_setting_basal_profile_cmddesc">设置基础率配置文件</string>
+    <string name="combov2_setting_tbr_cmddesc">设置临时基础率 %1$d%% 持续时间%2$d 分钟</string>
+    <string name="combov2_cancelling_tbr">取消正在进行的临时基础率</string>
+    <string name="combov2_delivering_bolus_cmddesc">正在输注 %1$.1f U</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">获取 TDD 历史记录</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">正在更新泵时间</string>
+    <string name="combov2_updating_pump_status_cmddesc">更新泵状态</string>
+    <string name="combov2_pairing_pin_failure">PIN 无效。请检查是否有输入错误。如果问题仍然存在，取消配对并重试。</string>
+    <string name="combov2_discovery_duration">发现持续时间(秒)</string>
+    <string name="combov2_verbose_logging">启用详细 Combo 日志记录</string>
+    <string name="combov2_getting_basal_profile">获取基础配置；读取了%1$d 个因子</string>
+    <string name="combov2_setting_basal_profile">设置基础配置；已写入%1$d 个因子</string>
+    <string name="combov2_delivering_bolus">输注中 (%1$.1f of %2$.1f U delivered)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">无法提供治疗 - 泵已暂停</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">储液器中胰岛素不足。</string>
     <string name="combov2_bolus_cancelled">大剂量已经取消</string>
     <string name="combov2_bolus_delivery_failed">大剂量输注失败，看起来好像没有大剂量被输注。安全起见，请检查泵，避免重复输注大剂量。软件考虑安全因素，不会再自动重试大剂量输注.</string>
+    <string name="combov2_bolus_not_delivered">胰岛素未输注</string>
+    <string name="combov2_cannot_access_pump_data">无法获取泵数据；必须重新配对</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">检查到未计入的注射，为安全起见，取消注射。</string>
+    <string name="combov2_incorrect_active_basal_profile">活动基础率配置错误；必须是配置 1 为活动配置，而不是配置 %1$d</string>
+    <string name="combov2_unrecognized_alert">无法识别的 Combo 警报</string>
+    <string name="combov2_combo_alert">Combo 警告</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d 分钟剩余)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% （剩余不到一分钟）</string>
+    <string name="combov2_load_tdds_cancelled">已取消加载 TDD</string>
+    <string name="combov2_retrieving_tdds_failed">获取 TDD 失败</string>
+    <string name="combov2_battery_empty">电量不足</string>
+    <string name="combov2_battery_low">低电量</string>
+    <string name="combov2_battery_full">充足电量</string>
     <string name="combov2_battery_low_warning">泵电池电量不足</string>
+    <string name="combov2_reservoir_low_warning">泵储药器剩余胰岛素低</string>
+    <string name="combov2_setting_tbr_succeeded">设置临时基础率成功</string>
+    <string name="combov2_setting_tbr_failed">设置临时基础率失败</string>
+    <string name="combov2_set_emulated_100_tbr">设置模拟100% TBR</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">让正在进行的模拟 100% TBR 完成</string>
+    <string name="combov2_ignoring_redundant_100_tbr">忽略冗余的 100% TBR 请求</string>
+    <string name="combov2_hit_unexpected_tbr_limit">调整 TBR 时遇到意外限制：目标百分比为 %1$d%%，达到 %2$d%% 的限制</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">如果基础胰岛素输注率为零，则无法设置绝对 TBR</string>
+    <string name="combov2_unpair_pump_summary">将 AndroidAPS 和 Android 从当前配对的 Accu-Chek Combo 泵中解除配对</string>
+    <string name="combov2_unknown_tbr_detected">检测到未知的 TBR 并停止；百分比：%1$d%%；剩余时长：%2$s</string>
+    <string name="combov2_connection_error">连接错误:%1$s</string>
+    <string name="combov2_short_status_alert">警告: %s</string>
+    <string name="combov2_automatic_reservoir_entry">自动检测并执行电池及储药器更换操作</string>
+    <string name="combov2_automatic_battery_entry">自动检测并执行电池及储药器更换操作</string>
+    <string name="combov2_timezone_changed">时区已更改</string>
+    <string name="combov2_datetime_changed">日期和/或时间已更改</string>
+    <string name="combov2_dst_started">夏令时 (DST) 已启动</string>
+    <string name="combov2_dst_ended">夏令时 (DST) 结束</string>
+    <string name="combov2_cannot_connect_pump_error_observed">无法连接到泵，因为泵报告了错误。用户必须处理错误后，等待 5 分钟或点击驱动标签页中的刷新按钮。</string>
+    <string name="combov2_refresh_pump_status_after_error">泵报告错误后刷新泵状态</string>
+    <string name="combov2_go_back">返回</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">由于驱动程序未初始化，无法进行配对。这通常是因为尚未授予必要的蓝牙权限。请返回并授予蓝牙权限，然后重试配对。</string>
+    <string name="combov2_bluetooth_disabled">无法启动驱动程序 - 蓝牙已禁用</string>
+    <string name="combov2_bluetooth_not_supported">驱动程序无法运行 - 此设备不支持蓝牙</string>
 </resources>

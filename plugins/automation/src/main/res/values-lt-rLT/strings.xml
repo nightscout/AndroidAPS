@@ -47,10 +47,6 @@
     <string name="or">Arba</string>
     <string name="xor">Išskyrus arba</string>
     <string name="atspecifiedtime">%1$s</string>
-    <string name="use_network_location">Naudoti tinklo vietovę</string>
-    <string name="use_gps_location">Naudoti GPS vietovę</string>
-    <string name="use_passive_location">Naudoti pasyviąją vietovę</string>
-    <string name="locationservice">Vietovės paslaugos</string>
     <string name="onconnect">Sujungimo metu</string>
     <string name="ondisconnect">Atjungimo metu</string>
     <string name="short_avgdelta">Trumpo laik. delta</string>

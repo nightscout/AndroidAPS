@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Preferências</string>
     <string name="delta">Delta</string>
     <string name="save">Salvar</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">Ao ativar a função Autosense lembre-se de introduzir todos os carboidratos (carbs) que comeu. Caso contra contrário os desvios de carbs serão erroneamente identificados como uma variação da sensibilidade!!</string>
     <string name="invalid">INVÁLIDO</string>
-    <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
     <string name="close_navigation">Fechar a navegação</string>
     <string name="remove_items">Remover itens</string>
     <string name="sort_items">Ordenar itens</string>
-    <string name="unitsnosemicolon">Unidades</string>
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="cannula">Cânula</string>
     <string name="identification_not_set">Identificação não definida no modo de desenvolvimento</string>

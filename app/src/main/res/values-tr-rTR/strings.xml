@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Tercihler</string>
     <string name="delta">Delta</string>
     <string name="save">Kaydet</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">Otoduyarlılık özelliğini açarsanız tüm yenen karbonhidratları girmeyi unutmayın. Aksi halde, karbonhidrat sapmaları duyarlılık değiştikçe yanlış tanımlanacaktır!!</string>
     <string name="invalid">GEÇERSİZ</string>
-    <string name="pump_unreachable_threshold">Pompa ulaşılamaz eşiği [dk]</string>
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="remove_items">Öğeleri kaldır</string>
     <string name="sort_items">Öğeleri sırala</string>
-    <string name="unitsnosemicolon">Birim</string>
     <string name="authorizationfailed">Yetkilendirme başarısız oldu</string>
     <string name="cannula">Kanül</string>
     <string name="identification_not_set">Tanımlama geliştirme modunda ayarlanmadı</string>

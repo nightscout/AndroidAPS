@@ -47,10 +47,6 @@
     <string name="or">Hoặc</string>
     <string name="xor">Hoặc loại trừ</string>
     <string name="atspecifiedtime">Lúc %1$s</string>
-    <string name="use_network_location">Sử dụng vị trí mạng</string>
-    <string name="use_gps_location">Sử dụng vị trí GPS</string>
-    <string name="use_passive_location">Sử dụng vị trí thụ động</string>
-    <string name="locationservice">Dịch vụ vị trí</string>
     <string name="onconnect">Khi kết nối</string>
     <string name="ondisconnect">Khi ngắt kết nối</string>
     <string name="short_avgdelta">Short avg. delta</string>

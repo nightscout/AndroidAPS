@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Restricción aplicada en bolo</string>
     <string name="carbs_constraint_applied">Restricción aplicada en carbohidratos</string>
     <string name="temp_target_short">OT</string>
-    <string name="dialog_canceled">Diálogo cancelado</string>
     <string name="start_activity_tt">Iniciar OT Actividad</string>
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
@@ -17,7 +16,7 @@
     <string name="activity_monitor">Monitor de actividad</string>
     <string name="time_range">Rango de tiempo</string>
     <string name="dexcom_tir">TIR de Dexcom</string>
-    <string name="cgp_title">Pentágono de Glucosa (CGP) — 14 días</string>
+    <string name="cgp_title">Pentágono de glucosa (CGP) — 14 días</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
     <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hipo</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">Cargar pico desde</string>
     <string name="cannot_delete_last_insulin">No se puede eliminar la última insulina</string>
     <string name="cannot_delete_active_insulin">No se puede eliminar la insulina activa</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="timeshift_label">Cambio de hora</string>
     <string name="percentage_label">Porcentaje</string>
-    <string name="permanent_profile_switch">Permanente (0 = sin límite de duración)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspender bucle durante 1 hora</string>
     <string name="suspendloopfor2h">Suspender bucle durante 2 horas</string>
@@ -129,7 +126,6 @@
     <string name="show_calculation">Ver desglose del cálculo</string>
     <!-- Treatments -->
     <string name="no_records_available">No hay registros disponibles</string>
-    <string name="calculation_short">Cálculo</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
     <string name="tempbasals_netratio_label_string">Relación:</string>
@@ -184,18 +180,14 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">sólo en reloj</string>
     <string name="a11y_only_on_phone">sólo en teléfono</string>
-    <string name="quickwizard_settings">Configuración del asistente de configuración</string>
     <string name="overview_edit_quickwizard_button_text">Botón texto</string>
     <string name="quick_wizard_mode_wizard">Asistente</string>
     <string name="quick_wizard_mode_insulin">Insulina</string>
     <string name="quick_wizard_mode_carbs">Carbohidratos</string>
-    <string name="overview_edit_quickwizard_valid">Válido:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Sólo IOB positiva</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">¡Porcentaje demasiado alto!</string>
     <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
     <string name="additional_ecarbs">Añadir eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Usado para el cálculo:</string>
     <string name="calculator_options">Opciones de la calculadora</string>
     <string name="use_bg">Usar glucemia</string>
     <string name="use_cob">Usar COB</string>
@@ -212,10 +204,7 @@
     <string name="ecarbs_additional">Carbohidratos adicionales</string>
     <string name="valid_from_to">Rango de tiempo válido</string>
     <string name="carb_time">Hora de la ingesta</string>
-    <string name="no_quickwizard_entries">Sin entradas en QuickWizard. Toca + para añadir una.</string>
     <string name="save_changes_question">¿Guardar los cambios de esta entrada?</string>
-    <string name="constraints_violation">Violación de restricciones</string>
-    <string name="change_your_input">Cambiar datos de entrada</string>
     <string name="wizard_no_insulin_required">No se requiere insulina</string>
     <string name="carbs_constraint_violation">Carbohidratos limitados por restricciones</string>
     <string name="insulin_constraint_violation">Insulina limitada por restricciones</string>
@@ -225,7 +214,6 @@
     <string name="use_black_color">Usar modo oscuro</string>
     <string name="widget_configuration">Configuración del Widget</string>
     <string name="until_changed">Hasta el cambio</string>
-    <string name="limitations">Limitaciones</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Permisos necesarios</string>
     <string name="permission_sheet_subtitle">Se necesitan algunos permisos para que la aplicación funcione correctamente</string>
@@ -251,4 +239,26 @@
         <item>Sólo negativo</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Acciones seleccionadas</string>
+    <string name="quick_launch_available_actions">Acciones disponibles</string>
+    <string name="quick_launch_no_dynamic_items">No hay elementos disponibles</string>
+    <string name="quick_launch_category_treatment">Tratamiento</string>
+    <string name="quick_launch_category_care">Portal de cuidados</string>
+    <string name="quick_launch_category_profile">Perfil</string>
+    <string name="quick_launch_category_temp_target">Ajustes de objetivos temporales</string>
+    <string name="quick_launch_category_quick_wizard">Asistente rápido</string>
+    <string name="quick_launch_category_automation">Automatización</string>
+    <string name="quick_launch_all_selected">Todos los elementos seleccionados</string>
+    <string name="quick_launch_no_quick_wizard">Agregue entradas al Asistente Rápido para usarlas aquí</string>
+    <string name="quick_launch_no_automation">Cree acciones de automatización de usuario para usarlas aquí</string>
+    <string name="quick_launch_no_tt_presets">Agregue ajustes de objetivos temporales para usarlos aquí</string>
+    <string name="quick_launch_no_profiles">Cree perfiles en Perfil Local para usarlos aquí</string>
+    <string name="quick_launch_edit_profile_preset">Editar ajuste de perfil</string>
+    <string name="quick_launch_profile_percentage">Porcentaje</string>
+    <string name="quick_launch_profile_duration">Duración</string>
+    <string name="quick_launch_profile_permanent">Permanente</string>
+    <string name="quick_launch_profile_confirm">¿Activar el perfil %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
+    <string name="quick_launch_profile_confirm_dur">%1$d min</string>
+    <string name="select_arrow">Seleccionar flecha</string>
 </resources>

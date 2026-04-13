@@ -98,8 +98,6 @@
     <string name="retry_activation_filled_error">No se puede reanudar la activación. Se ha perdido el estado de la bomba. NO realices un purgado (cebado), ya que el parche podría estar insertado. Por favor, desecha el parche y comienza una nueva activación.</string>
     <string name="reading_activation_status">Por favor, espera, leyendo el estado de activación de la bomba.</string>
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">Se ha habilitado la alerta de \"Inaccesible forzada\" debido a la posibilidad de que el parche de Medtrum falle y no pueda ser contactado.</string>
-    <string name="pump_unreachable_threshold_minutes_summary">Se recomienda configurarlo a 30 minutos, debido a que el parche de Medtrum puede presentar fallos y quedar inaccesible.</string>
     <string name="sn_input_title">Número de serie</string>
     <string name="sn_input_invalid">¡Número de serie inválido!</string>
     <string name="change_sn">Cambiar</string>

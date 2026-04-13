@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Σύζευξη με αντλία</string>
     <string name="combov2_unpair_pump_title">Αποσύζευξη αντλίας</string>
     <string name="combov2_driver_state_label">Κατάσταση οδηγού</string>
-    <string name="combov2_current_activity_label">Τρέχουσα δραστηριότητα</string>
     <string name="bluetooth_address">Διεύθυνση Bluetooth</string>
     <string name="combov2_start_pairing">Έναρξη σύζευξης</string>
     <string name="combov2_pairing_in_progress">Σύζευξη Combo σε εξέλιξη</string>
@@ -100,7 +99,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Αγνόηση περιττού αιτήματος 100% TBR</string>
     <string name="combov2_hit_unexpected_tbr_limit">Παρουσιάστηκε απρόσμενο όριο κατά τη ρύθμιση του TBR, το ποσοστό στόχος που ήταν %1$d%%, έφτασε το όριο %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Αδυναμία ορισμού απόλυτου TBR αν ο βασικός ρυθμός είναι μηδέν</string>
-    <string name="combov2_pair_with_pump_summary">Σύζευξη του AndroidAPS και του Android με μια μη συζευγμένη αντλία Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Αποσύζευξη του AndroidAPS και του Android από την τρέχουσα συζευγμένη αντλία Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Άγνωστο TBR ανιχνεύθηκε και διακόπηκε: ποσοστό: %1$d%%; εναπομένουσα διάρκεια: %2$s</string>
     <string name="combov2_connection_error">Σφάλμα σύνδεσης: %1$s</string>

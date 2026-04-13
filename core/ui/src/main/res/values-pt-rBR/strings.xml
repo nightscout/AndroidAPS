@@ -31,7 +31,6 @@
     <string name="result">Resultado</string>
     <string name="settings">Definições</string>
     <string name="statuslights">Luzes de estado</string>
-    <string name="do_ns_upload_title">Enviar dados Glic. para NS</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -237,9 +236,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g de carboidratos necessários em %2$d minutos</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Dose diária acumulada (TDD)</string>
-    <string name="expweight">Dose diária exponencialmente ponderada</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bólus</string>
     <string name="ratio">Média</string>
@@ -546,8 +542,11 @@
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

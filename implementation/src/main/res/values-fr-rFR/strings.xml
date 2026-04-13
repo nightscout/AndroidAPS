@@ -26,5 +26,77 @@
     <string name="short_status_battery">Batt. : %1$d%%</string>
     <string name="short_status_not_initialized">Pompe non initialisée</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Optimisation de la batterie</string>
+    <string name="permission_battery_description">L\'application doit être exclue de l\'optimisation de la batterie pour s\'exécuter de manière fiable en arrière-plan</string>
+    <string name="permission_directory_title">Répertoire AAPS</string>
+    <string name="permission_directory_description">Sélectionnez un répertoire pour les paramètres de l\'application et les fichiers journaux</string>
+    <string name="permission_notifications_title">Notifications</string>
+    <string name="permission_notifications_description">Requis pour afficher les alertes, les alarmes et les mises à jour des états de la pompe</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s U (%2$.1f µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Les paramètres ont été exportés avec succès vers le stockage cloud</string>
+    <string name="export_to_cloud_failed">Échec de l\'exportation vers le stockage cloud</string>
+    <string name="csv_uploaded_to_cloud">Les entrées utilisateur CSV ont été téléchargées avec succès sur le stockage cloud</string>
+    <string name="exported">Préférences exportées</string>
+    <string name="exported_failed">L\'export des préférences a échoué !</string>
+    <string name="filenotfound">Fichier introuvable</string>
+    <string name="ue_exported">Entrées utilisateur exportées</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporté il y a %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">exporté le %1$s</string>
+    <string name="exported_less_than_hour_ago">exporté il y a moins d\'une heure</string>
+    <string name="metadata_warning_different_flavour">Les préférences ont été créées avec différentes variantes d\'AAPS (%1$s) alors que vous avez: %2$s.\n\nCertains paramètres peuvent être manquants ou invalides - après avoir importé veuillez vérifier et mettre à jour vos préférences.</string>
+    <string name="metadata_warning_different_device">Les préférences ont été créées sur un autre périphérique. C\'est OK si vous importez à partir d\'un téléphone ancien/différent, mais vérifiez que les préférences importées sont correctes !</string>
+    <string name="metadata_warning_old_export">Les préférences importées ont déjà %1$s jours ! Vous avez peut-être des préférences plus récentes ou vous avez sélectionné un mauvais fichier ? N\'oubliez pas d\'exporter vos préférences régulièrement !</string>
+    <string name="metadata_warning_date_format">Format date et heure non valide !</string>
+    <string name="metadata_warning_different_version">Préférences d\'une autre version mineure, différente de l\'application. C\'est OK si vous importez après la mise à jour, mais vérifiez après l\'importation si les préférences sont toujours correctes !</string>
+    <string name="metadata_urgent_different_version">Préférences d\'une autre version majeure, différente de l\'application. Les versions majeures diffèrent significativement et peuvent avoir des préférences incompatibles ! Vérifiez bien après l\'import que les préférences sont toujours correctes !</string>
+    <string name="prefdecrypt_settings_tampered">Fichier paramètres altérés</string>
+    <string name="prefdecrypt_settings_secure">Fichier paramètres sécurisé</string>
+    <string name="prefdecrypt_settings_unencrypted">Utilisation de paramètres de format non sécurisés et non chiffrés</string>
+    <string name="prefdecrypt_wrong_json">Erreur de format JSON, champs obligatoire manquants (format, contenu, métadonnées ou sécurité)</string>
+    <string name="prefdecrypt_wrong_password">Erreur de décryptage, le mot de passe indiqué ne permet pas le décryptage du fichier</string>
+    <string name="prefdecrypt_issue_missing_file_hash">La somme de contrôle du fichier (hash) est manquante, impossible de vérifier l\'authenticité des paramètres !</string>
+    <string name="prefdecrypt_issue_modified">Le fichier a été modifié après l\'export !</string>
+    <string name="prefdecrypt_issue_parsing">Erreur de décryptage, l\'analyse des préférences a échoué !</string>
+    <string name="prefdecrypt_issue_wrong_pass">Erreur de décryptage, le mot de passe fourni est invalide ou le fichier de paramètres a été modifié ! Cela peut arriver si le fichier a été exporté avec un mot de passe principal différent.</string>
+    <string name="prefdecrypt_issue_wrong_format">Configuration du cryptage manquant, format des paramètres invalide !</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algorithme de cryptage non pris en charge ou non spécifié !</string>
+    <string name="metadata_label_format">Format du fichier</string>
+    <string name="metadata_label_created_at">Créé le</string>
+    <string name="metadata_label_aaps_version">Version AAPS</string>
+    <string name="metadata_label_aaps_flavour">Version de Build</string>
+    <string name="metadata_label_device_name">Export du nom du patient de l\'appareil</string>
+    <string name="metadata_label_device_model">Export du modèle de l\'appareil</string>
+    <string name="metadata_label_encryption">Cryptage du fichier</string>
+    <string name="metadata_format_new">Nouveau format de cryptage</string>
+    <string name="metadata_format_other">Format d\'export inconnu</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Erreur lors de l’accès au fichier. Sélectionnez le répertoire AAPS correctement.</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">Sauvegarder sur Google Drive</string>
+    <string name="csv_upload_failed">Impossible de télécharger les entrées utilisateur CSV vers le stockage cloud</string>
+    <string name="csv_upload_error">Une erreur s\'est produite lors du téléchargement du CSV vers le cloud</string>
+    <string name="uploading_to_cloud">Envoi vers le cloud...</string>
+    <string name="cloud_directory_path">Répertoire du Cloud: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Impossible d\'actualiser le jeton d\'accès Google Drive</string>
+    <string name="google_drive_token_refresh_error">Impossible d\'actualiser le jeton d\'accès Google Drive : %1$s</string>
+    <string name="google_drive_connection_test_failed">Échec du test de connexion Google Drive</string>
+    <string name="google_drive_connect_error">Impossible de se connecter à Google Drive : %1$s</string>
+    <string name="google_drive_list_folders_failed">Impossible de lister les dossiers Google Drive</string>
+    <string name="google_drive_list_folders_error">Erreur dans la liste des dossiers : %1$s</string>
+    <string name="google_drive_upload_no_id">Envoi réussi mais aucun id retourné</string>
+    <string name="google_drive_upload_verify_failed">Échec de la vérification du téléchargement</string>
+    <string name="google_drive_upload_failed">Échec du téléchargement : %1$s</string>
+    <string name="google_drive_upload_error">Erreur lors du téléchargement du fichier : %1$s</string>
+    <string name="google_drive_folder_access_error">Impossible de créer ou d\'accéder au dossier de destination : %1$s</string>
+    <string name="google_drive_list_settings_failed">Échec pour lister les fichiers paramètres</string>
+    <string name="google_drive_list_settings_error">Erreur pour lister les fichiers paramètres : %1$s</string>
+    <string name="google_drive_download_failed">Échec du téléchargement du fichier</string>
+    <string name="google_drive_download_error">Erreur lors du téléchargement du fichier : %1$s</string>
+    <string name="google_drive_authorized">Google Drive autorisé</string>
+    <string name="google_drive_reauth_required">Veuillez effacer les paramètres et ré-autoriser Google Drive</string>
 </resources>

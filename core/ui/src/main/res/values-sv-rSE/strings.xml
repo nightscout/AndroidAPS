@@ -31,7 +31,6 @@
     <string name="result">Resultat</string>
     <string name="settings">Inställningar</string>
     <string name="statuslights">Statuslampor</string>
-    <string name="do_ns_upload_title">Ladda upp BG-data till Nightscout</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="value_unavailable_short">-</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -237,9 +236,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g kolhydrater behövs inom %2$d minuter</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Sammanlagd TDD</string>
-    <string name="expweight">Exponentiellt viktad TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Kvot</string>
@@ -534,8 +530,11 @@
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

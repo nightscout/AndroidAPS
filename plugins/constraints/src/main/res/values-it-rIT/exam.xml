@@ -78,7 +78,7 @@
     <string name="update_label">Aggiornamento AAPS</string>
     <string name="update_git">Devi avere Git installato e configurato sul tuo computer.</string>
     <string name="update_asap">Quando vengono rilasciate versioni aggiornate di AAPS, le precedenti potrebbero essere limitate da remoto dopo un determinato periodo di tempo.</string>
-    <string name="update_keys">Dovresti salvare e annotare la posizione delle tue chiavi di firma e usare per gli aggiornamenti la stessa chiave di firma della tua installazione precedente.</string>
+    <string name="update_keys">Se usi Android Studio dovresti salvare e annotare la posizione delle tue chiavi di firma e usare per gli aggiornamenti la stessa chiave di firma della tua installazione precedente.</string>
     <string name="update_askfriend">Se hai difficoltà a costruire l\'apk, puoi installare un apk che è stato costruito da un amico.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Risoluzione problemi</string>

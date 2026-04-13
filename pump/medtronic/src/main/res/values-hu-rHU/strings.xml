@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Várakozás bólus indítása előtt (mp)</string>
     <string name="medtronic_pump_max_bolus">Max. Bólus a pumpán (E)</string>
     <string name="medtronic_pump_max_basal">Max. Bázis a pumpán (E/ó)</string>
-    <string name="medtronic_pump_encoding">Medtronic kódolás</string>
     <string name="medtronic_custom_action_wake_and_tune">Ébresztés és hangolás</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bólus blokk törlése</string>
     <string name="medtronic_pump_battery_select">Elem típusa (Töltöttség nézet)</string>

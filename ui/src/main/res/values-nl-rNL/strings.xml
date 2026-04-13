@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Bolus limiet ingesteld</string>
     <string name="carbs_constraint_applied">Koolhydraten beperking ingesteld</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Dialoog geannuleerd</string>
     <string name="start_activity_tt">Start inspanning TT</string>
     <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
@@ -53,7 +52,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Geen bolus, enkel registreren</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
     <string name="timeshift_label">Tijd verschuiving</string>
     <string name="percentage_label">Percentage</string>
@@ -87,7 +85,6 @@
     <string name="a11y_set_carb_timer">koolhydraten timer alarm instellen</string>
     <!-- Treatments -->
     <string name="no_records_available">Geen records beschikbaar</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Koolhydraten:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
@@ -120,24 +117,17 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">alleen op smartwatch</string>
     <string name="a11y_only_on_phone">alleen op telefoon</string>
-    <string name="quickwizard_settings">QuickWizard instellingen</string>
     <string name="overview_edit_quickwizard_button_text">Knop tekst</string>
-    <string name="overview_edit_quickwizard_valid">Geldig:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Alleen positieve IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Percentage te hoog!</string>
     <string name="a11y_drag_and_drop_handle">sleep-modus</string>
     <string name="additional_ecarbs">Voeg eCarbs toe</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Gebruik voor berekening:</string>
-    <string name="constraints_violation">Voldoet niet aan de beperkingen</string>
-    <string name="change_your_input">Wijzig de invoer!</string>
     <string name="confirm_treatment">Bevestig alstublieft de behandeling</string>
     <string name="recalculate">Herberekenen</string>
     <!--    Widget-->
     <string name="use_black_color">Gebruik zwarte kleur</string>
     <string name="widget_configuration">Widget configuratie</string>
     <string name="until_changed">Totdat gewijzigd</string>
-    <string name="limitations">Beperkingen</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">

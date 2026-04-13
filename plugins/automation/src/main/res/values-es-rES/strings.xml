@@ -47,10 +47,6 @@
     <string name="or">O</string>
     <string name="xor">Xor (O exclusiva)</string>
     <string name="atspecifiedtime">A las %1$s</string>
-    <string name="use_network_location">Permitir la ubicación de red</string>
-    <string name="use_gps_location">Añadir ubicación GPS</string>
-    <string name="use_passive_location">Usar ubicación automática</string>
-    <string name="locationservice">Servicios de localización</string>
     <string name="onconnect">Al conectar</string>
     <string name="ondisconnect">Al desconectar</string>
     <string name="short_avgdelta">Delta medio corto</string>

@@ -15,9 +15,6 @@
     <string name="high_mark">高標記</string>
     <string name="low_mark_comment">範圍內區域的下限值（僅顯示）</string>
     <string name="high_mark_comment">範圍內區域的上限值（僅顯示）</string>
-    <string name="permission">權限</string>
-    <string name="need_system_window_permission">應用程式需要系統窗口權限以顯示通知</string>
-    <string name="askforpermission">請求權限</string>
     <string name="storedsettingsfound">找到已存儲的設定</string>
     <string name="master_password_summary">主密碼用於備份加密和覆蓋應用程式中的安全設置。請記住它或將其存放在安全的地方。</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -30,33 +27,22 @@
     <string name="exitwizard">跳過設定嚮導</string>
     <string name="setupwizard_sensitivity_description">敏感度外掛用於敏感度偵測和COB計算。更多資訊請查看：</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">從可用的算法中選擇一個。它們按從舊到新的順序排列。較新的算法通常更強大和更積極。因此，如果您是新手循環用戶，可能會從AMA開始，而不是最新的。請勿忘記閱讀OpenAPS文檔並在使用前進行配置。</string>
+    <string name="setupwizard_aps_description">請從可用的演算法中選擇一個。它們依從舊到新排序。較新的演算法通常更強大。別忘了閱讀 OpenAPS 文件，並在使用前完成設定。</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">請在下方配置您的RileyLink。選擇RileyLink後，一旦RileyLink狀態顯示為“已連線”，即可繼續設置。這可能需要一分鐘。\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b> 您可以在幫浦設置完成後繼續設置。\n</string>
     <string name="startobjective">開始您的第一個目標</string>
+    <string name="setupwizard_permissions">權限</string>
+    <string name="setupwizard_profile_info">使用你的基礎率、胰島素-碳水比 (IC)、胰島素敏感度 (ISF) 與目標值建立一個設定檔。之後可以新增多個設定檔。</string>
+    <string name="setupwizard_permissions_info">AAPS 需要儲存空間存取與其他權限才能正常運作。請在下方授予所需權限。</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink狀態：</string>
     <string name="readstatus">讀取狀態</string>
-    <string name="data_choices">資料選擇</string>
-    <string name="fabric_upload">Fabric上傳</string>
-    <string name="unattended_settings_export">自動設定匯出</string>
-    <string name="unattended_settings_export_summary">啟用此功能將安全儲存您的密碼於手機上</string>
-    <string name="identification">標識（電子郵件、FB或Discord暱稱等）</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="exported_to_cloud">已成功將設定匯出到雲端儲存空間</string>
-    <string name="export_to_cloud_failed">匯出到雲端儲存空間失敗</string>
-    <string name="cloud_connection_failed">雲端儲存空間連線失敗</string>
-    <string name="loading_from_cloud">正在從雲端儲存空間載入設定，請稍候…</string>
-    <string name="cloud_folder_error">無法載入雲端儲存空間資料夾</string>
-    <string name="csv_uploaded_to_cloud">已成功將使用者輸入 CSV 上傳到雲端儲存空間</string>
-    <string name="cloud_reauthorize_message">雲端儲存空間連線失敗。要重新驗證嗎？</string>
     <string name="request">請求</string>
-    <string name="apsmode_title">APS模式</string>
     <string name="error_asking_for_permissions">請求權限時出錯</string>
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">組態建置工具</string>
     <string name="configbuilder_pump_description">您想用AAPS使用哪個幫浦？</string>
-    <string name="configbuilder_profile">檔案</string>
     <string name="configbuilder_aps_description">哪個APS算法應進行療法調整？</string>
     <string name="configbuilder_general_description">這些是一些您可能覺得有用的一般外掛。</string>
     <string name="configbuilder_sync_description">資料上傳、同步與通訊外掛。</string>
@@ -69,160 +55,23 @@
     <string name="config_builder_shortname">組態</string>
     <string name="description_config_builder">用於配置活動外掛</string>
     <string name="allow_hardware_pump_text">注意：如果您啟用並連線到硬體幫浦，AAPS將從檔案中複製基礎設置到幫浦，覆蓋幫浦上存儲的現有基礎率。請確保您在AAPS中具有正確的基礎設置。如果您不確定或不想覆蓋幫浦上的基礎設置，請按取消並在稍後重複切換到幫浦。</string>
-    <string name="a11y_open_settings">打開設置</string>
     <string name="nsclient_version_does_not_match">AAPSClient 版本與 AAPS 版本不一致，請更新為一致版本。</string>
     <string name="expand_category">展開分類</string>
     <string name="collapse_category">隱藏分類</string>
     <!--ImportExport-->
-    <string name="nav_preferences">偏好設定</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">匯入取消！偏好設定未匯入！</string>
-    <string name="preferences_import_impossible">無法匯入偏好設定！</string>
-    <string name="check_preferences_details_btn">說明匯入問題...</string>
-    <string name="check_preferences_details_title">匯入問題詳細資訊</string>
-    <string name="check_preferences_import_btn">匯入</string>
-    <string name="check_preferences_import_anyway_btn">仍然匯入（危險！）</string>
-    <string name="check_preferences_before_import">請在匯入前檢查偏好設定：</string>
-    <string name="check_preferences_cannot_import">無法匯入偏好設定！</string>
-    <string name="check_preferences_dangerous_import">不應匯入偏好設定！</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">從...匯入設定</string>
-    <string name="setting_imported">設定已匯入</string>
-    <string name="old_master_password">舊主密碼</string>
-    <string name="different_password_used">此文件是用不同的主密碼匯出和加密的。請提供舊主密碼以解密文件。</string>
-    <string name="master_password_will_be_replaced">成功匯入後目前主密碼將被替換為舊主密碼！</string>
-    <string name="exported">偏好設定已匯出</string>
-    <string name="exported_failed">偏好設定匯出失敗!</string>
-    <string name="filenotfound">文件未找到</string>
-    <string name="goto_main_try_again">請返回主畫面並重試。</string>
-    <string name="restartingapp">退出應用程式以應用設定。</string>
-    <string name="ue_exported">用戶條目已匯出</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">維護</string>
-    <string name="maintenance_settings">維護設定</string>
-    <string name="maintenance_email">電子郵件收件人</string>
-    <string name="maintenance_amount">要發送的日誌數量</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">於 %1$s 前匯出</string>
-    <string name="exported_at" comment="at placeholder we add export date">匯出於 %1$s</string>
-    <string name="exported_less_than_hour_ago">於不到一小時前匯出</string>
-    <string name="preferences_import_list_title">選擇要匯入的文件</string>
-    <string name="metadata_warning_different_flavour">偏好設定是用不同版本的AAPS (%1$s) 建立的，而您目前的版本是：%2$s。\n\n某些設定可能丟失或無效 - 請在匯入後檢查並更新您的偏好設定。</string>
-    <string name="metadata_warning_different_device">偏好設定是在不同的設備上建立的。如果您是從舊手機或不同手機匯入，這是可以的，但請確保匯入的偏好設定是正確的！</string>
-    <string name="metadata_warning_old_export">匯入的偏好設定已經有 %1$s 天了！也許您有更更新的偏好設定，或者您選擇了錯誤的文件？請記住定期匯出偏好設定！</string>
-    <string name="metadata_warning_date_format">日期時間格式無效！</string>
-    <string name="metadata_warning_different_version">偏好設定來自應用程式的不同小版本。如果您是升級後匯入，這是可以的，但請在匯入後檢查偏好設定是否仍然正確！</string>
-    <string name="metadata_urgent_different_version">偏好設定來自應用程式的不同主要版本。主要版本差異很大，偏好設定可能不相容！請在匯入後確保偏好設定仍然正確！</string>
-    <string name="prefdecrypt_settings_tampered">設定文件被篡改</string>
-    <string name="prefdecrypt_settings_secure">設定文件安全</string>
-    <string name="prefdecrypt_settings_unencrypted">使用不安全的未加密設定格式</string>
-    <string name="prefdecrypt_wrong_json">JSON格式錯誤，缺少必需欄位（格式、內容、元資料或安全性）</string>
-    <string name="prefdecrypt_wrong_password">解密錯誤，給定的密碼無法解密文件</string>
-    <string name="prefdecrypt_issue_missing_file_hash">文件校驗和（哈希）缺少，無法驗證設定的真實性！</string>
-    <string name="prefdecrypt_issue_modified">文件在匯出後被修改過！</string>
-    <string name="prefdecrypt_issue_parsing">解密錯誤，解析偏好設定失敗！</string>
-    <string name="prefdecrypt_issue_wrong_pass">解密錯誤，提供的密碼無效或設定文件已被修改！可能是因為匯出的文件使用了不同的主密碼。</string>
-    <string name="prefdecrypt_issue_wrong_format">缺少加密配置，設定格式無效！</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">不支援或未指定的加密算法！</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">文件格式</string>
-    <string name="metadata_label_created_at">建立於</string>
-    <string name="metadata_label_aaps_version">AAPS版本</string>
-    <string name="metadata_label_aaps_flavour">構建變體</string>
-    <string name="metadata_label_device_name">匯出設備患者名稱</string>
-    <string name="metadata_label_device_model">匯出設備型號</string>
-    <string name="metadata_label_encryption">文件加密</string>
-    <string name="metadata_format_new">新加密格式</string>
-    <string name="metadata_format_other">未知的匯出格式</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">無法存取檔案系統。請正確選擇 AAPS 目錄。</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
-    <string name="storage_local">本機儲存空間</string>
-    <string name="storage_google_drive">Google 雲端硬碟</string>
-    <string name="select_storage_type">選擇儲存空間類型</string>
-    <string name="backup_to_google_drive">備份到 Google 雲端硬碟</string>
-    <string name="google_drive_connection_error">Google 雲端硬碟連線錯誤</string>
-    <string name="reauthorize">重新驗證</string>
-    <string name="cloud_auth_success">雲端儲存空間驗證成功</string>
-    <string name="cloud_auth_failed">雲端儲存空間驗證失敗</string>
-    <string name="cloud_auth_error">雲端儲存空間驗證錯誤：%1$s</string>
-    <string name="enable_cloud_export_title">啟用雲端匯出</string>
-    <string name="enable_cloud_export_message">要啟用雲端匯出嗎？這會在匯出設定中啟用 \"全部雲端\" 選項。</string>
-    <string name="can_change_in_export_settings">之後可在匯出設定中變更</string>
-    <string name="setup_cloud_directory_first">請先設定雲端目錄以使用匯出設定</string>
-    <string name="local_directory">本機目錄</string>
-    <string name="cloud_directory">雲端目錄</string>
-    <string name="export_options">匯出選項</string>
-    <string name="log_export_option">記錄</string>
-    <string name="user_settings_export_option">使用者設定</string>
-    <string name="user_entries_csv_export_option">將使用者輸入匯出成 Excel (CSV)</string>
-    <string name="email_option">電子郵件</string>
-    <string name="local_storage_option">本機儲存空間</string>
-    <string name="cloud_storage_option">雲端儲存空間</string>
-    <string name="export_all_cloud">全部雲端</string>
-    <string name="send_logs_to_cloud">將記錄匯出到雲端</string>
-    <string name="export_csv_to_cloud">將使用者輸入匯出到雲端 (CSV)</string>
-    <string name="export_csv_to_local">將使用者輸入匯出到本機 (CSV)</string>
-    <string name="export_settings_local">匯出設定 (本機)</string>
-    <string name="export_settings_cloud">匯出設定 (雲端)</string>
-    <string name="export_settings_both">匯出設定 (本機 + 雲端)</string>
-    <string name="import_settings_local">匯入設定 (本機)</string>
-    <string name="import_settings_cloud">匯入設定 (雲端)</string>
-    <string name="import_settings_both">匯入設定（本機/雲端）</string>
     <!-- Import source selection dialog -->
-    <string name="select_import_source">選擇匯入來源</string>
-    <string name="import_from_local">從本機儲存空間匯入</string>
-    <string name="import_from_cloud">從雲端儲存空間匯入</string>
-    <string name="import_source_local_description">從裝置儲存空間匯入設定</string>
-    <string name="import_source_cloud_description">從雲端儲存空間匯入設定</string>
-    <string name="cloud_import_file_count">顯示 %1$d 個檔案（共 %2$d 個）</string>
-    <string name="cloud_import_file_count_all">顯示全部 %1$d 個檔案</string>
-    <string name="load_more">載入更多</string>
-    <string name="load_more_with_count">載入接下來的 %1$d（已載入 %2$d）</string>
     <string name="loading">載入中…</string>
-    <string name="loading_progress">正在載入第 %1$d 個（共 %2$d 個）…</string>
-    <string name="loading_file_progress">正在載入 %1$s（%2$d/%3$d）…</string>
-    <string name="logs_uploaded_to_cloud">記錄檔已成功上傳至雲端儲存空間</string>
-    <string name="logs_upload_failed">無法將記錄檔上傳至雲端儲存空間</string>
-    <string name="logs_upload_error">上傳記錄檔至雲端儲存空間時發生錯誤</string>
-    <string name="csv_upload_failed">無法將使用者輸入 CSV 上傳至雲端儲存空間</string>
-    <string name="csv_upload_error">上傳 CSV 到雲端時發生錯誤</string>
-    <string name="export_options_updated">匯出選項已更新</string>
-    <string name="no_settings_files_found">雲端儲存空間中找不到設定檔</string>
-    <string name="clear_action">清除設定</string>
-    <string name="clear_cloud_settings">清除雲端設定</string>
-    <string name="clear_cloud_settings_message">這將切換到本機儲存並清除授權。是否繼續？</string>
-    <string name="uploading_to_cloud">正在上傳到雲端…</string>
-    <string name="cloud_directory_path">雲端目錄：%1$s</string>
     <string name="warning_wrong_directory_selected">目錄選擇錯誤</string>
     <string name="warning_wrong_directory_message">你選的是「%1$s」這個子目錄，而不是 AAPS 的根目錄。請改選上一層的 AAPS 目錄。App 會自動建立並管理子目錄。</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
-    <string name="google_drive_token_refresh_failed">無法重新整理 Google Drive 存取權杖</string>
-    <string name="google_drive_token_refresh_error">無法重新整理 Google Drive 存取權杖：%1$s</string>
-    <string name="google_drive_connection_test_failed">Google Drive 連線測試失敗</string>
-    <string name="google_drive_connect_error">無法連線至 Google Drive：%1$s</string>
-    <string name="google_drive_list_folders_failed">無法列出 Google Drive 資料夾</string>
-    <string name="google_drive_list_folders_error">列出資料夾時發生錯誤：%1$s</string>
-    <string name="google_drive_upload_no_id">上傳成功，但未返回 id</string>
-    <string name="google_drive_upload_verify_failed">上傳驗證失敗</string>
-    <string name="google_drive_upload_failed">上傳失敗：%1$s</string>
-    <string name="google_drive_upload_error">上傳檔案時發生錯誤：%1$s</string>
-    <string name="google_drive_folder_access_error">無法建立或存取目的資料夾：%1$s</string>
-    <string name="google_drive_list_settings_failed">無法列出設定檔</string>
-    <string name="google_drive_list_settings_error">列出設定檔時發生錯誤：%1$s</string>
-    <string name="google_drive_download_failed">無法下載檔案</string>
-    <string name="google_drive_download_error">下載檔案時發生錯誤：%1$s</string>
     <!-- Provider-agnostic cloud storage strings -->
-    <string name="cloud_authorization_title">%1$s 授權</string>
-    <string name="cloud_authorization_message">已在您的瀏覽器中開啟 %1$s 授權頁面。\n\n請完成授權，然後返回此 App。\n\n此對話框將在授權完成後自動關閉。</string>
-    <string name="cloud_auth_start_failed">無法啟動授權</string>
-    <string name="cloud_auth_cancelled">已取消授權</string>
-    <string name="cloud_auth_timeout">授權逾時，請重試</string>
-    <string name="cloud_token_expired_or_invalid">雲端儲存空間授權已過期或無效。請重新授權。</string>
     <!-- Authorization status strings -->
-    <string name="authorization_status">授權狀態</string>
-    <string name="google_drive_authorized">Google Drive 已授權</string>
-    <string name="google_drive_reauth_required">請清除設定並重新授權 Google Drive</string>
 </resources>

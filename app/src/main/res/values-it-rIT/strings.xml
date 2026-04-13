@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Preferenze</string>
     <string name="delta">Delta</string>
     <string name="save">Salva</string>
     <string name="wear">Smartwatch</string>
-    <string name="sensitivity_warning">Attivando la funzione Autosense, ricorda di inserire tutti i carboidrati assunti. Altrimenti le deviazioni di glicemia dovute ai carboidrati saranno identificate erroneamente come variazione di sensibilità !!</string>
     <string name="invalid">NON VALIDO</string>
-    <string name="pump_unreachable_threshold">Soglia micro irraggiungibile [min]</string>
     <string name="close_navigation">Chiudi navigazione</string>
     <string name="remove_items">Rimuovi elementi</string>
     <string name="sort_items">Ordina elementi</string>
-    <string name="unitsnosemicolon">Unità</string>
     <string name="authorizationfailed">Autorizzazione fallita</string>
     <string name="cannula">Cannula</string>
     <string name="identification_not_set">Identificazione non impostata in modalità dev</string>
@@ -19,6 +15,15 @@
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
     <string name="search">Cerca</string>
+    <string name="use_compose_main_screen">Usa la schermata principale di composizione (sperimentale)</string>
+    <string name="switch_to_compose_ui">Passa alla composizione UI</string>
+    <string name="switch_to_classic_ui">Passa all\'IU classica</string>
     <string name="select">Seleziona</string>
     <string name="set">Imposta</string>
+    <string name="migrating_preferences">Migrazione preferenze…</string>
+    <string name="initializing_plugins">Inizializzazione plugin…</string>
+    <string name="initializing">Inizializzazione…</string>
+    <string name="migrating_profile_switches">Migrazione switch profilo…</string>
+    <string name="migrating_effective_profile_switches">Migrazione effettiva switch profilo…</string>
+    <string name="migrating_boluses">Migrazione boli…</string>
 </resources>

@@ -8,13 +8,11 @@
     <string name="setup_completed_info">Open Humans a fost configurat. În cazul în care doriți să încetați încărcarea, apăsați „Deconectare”.</string>
     <string name="not_setup_info">Open Humans este deocamdată inactiv. Pentru a începe încărcarea datelor, apasă \"Configurare\".</string>
     <string name="project_member_id">ID Membru proiect: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Încarcă numai pe conexiune WiFi</string>
-    <string name="only_upload_if_charging">Încărca numai dacă telefonul este la încărcat</string>
     <string name="open_humans_uploading">Se încarcă în Open Humans…</string>
     <string name="open_humans_notifications">Notificări Open Humans</string>
     <string name="uploading_to_open_humans">AAPS încarcă datele în Open Humans. Poate dura ceva timp.</string>
-    <string name="you_have_been_signed_out_of_open_humans">Ai fost deconectat de la Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Dați click aici pentru a vă conecta din nou, dacă a fost din greșeală.</string>
+    <string name="you_have_been_signed_out_of_open_humans">Ați fost deconectat de la Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Atingeți aici pentru a vă conecta din nou, dacă a fost din greșeală.</string>
     <string name="next">Următor</string>
     <string name="welcome_to_open_humans">Bine ați venit la Open Humans</string>
     <string name="setup_data_upload">Pentru a configura modul de încărcare a datelor, apasă \'Pasul următor\'.</string>
@@ -52,5 +50,5 @@
     <string name="this_may_take_a_few_seconds">Poate dura câteva secunde.</string>
     <string name="we_re_done">Gata!</string>
     <string name="silently_upload_date_note">De acum, telefonul va încărca din când în când datele în fundal.</string>
-    <string name="close">Închide</string>
+    <string name="close">Închideți</string>
 </resources>

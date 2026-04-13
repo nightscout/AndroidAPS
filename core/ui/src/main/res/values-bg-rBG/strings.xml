@@ -31,7 +31,6 @@
     <string name="result">Резултат</string>
     <string name="settings">Настройки</string>
     <string name="statuslights">Индикатори</string>
-    <string name="do_ns_upload_title">Качвай данните за КЗ в NS</string>
     <string name="configbuilder_insulin">Инсулин (ед.):</string>
     <string name="value_unavailable_short">---</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -237,9 +236,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d гр допълнителни въглехидрати ще са необходими до %2$d минути</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Комулативна TDD</string>
-    <string name="expweight">Експоненциално претеглена TDD</string>
     <string name="basalrate">Базал</string>
     <string name="bolus">Болус</string>
     <string name="ratio">Коефициент</string>
@@ -547,8 +543,11 @@
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

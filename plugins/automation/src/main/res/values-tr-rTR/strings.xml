@@ -47,10 +47,6 @@
     <string name="or">Veya</string>
     <string name="xor">Özel veya</string>
     <string name="atspecifiedtime">%1$s\'de</string>
-    <string name="use_network_location">Ağ konumunu kullan</string>
-    <string name="use_gps_location">GPS konumunu kullan</string>
-    <string name="use_passive_location">Pasif konumu kullan</string>
-    <string name="locationservice">Konum servisi</string>
     <string name="onconnect">Bağlandığında</string>
     <string name="ondisconnect">Bağlantı kesildiğinde</string>
     <string name="short_avgdelta">Kısa ortalama delta</string>

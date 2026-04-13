@@ -27,4 +27,5 @@
     <string name="short_status_not_initialized">Помпа не иниц</string>
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
 </resources>

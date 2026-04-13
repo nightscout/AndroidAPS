@@ -15,9 +15,6 @@
     <string name="high_mark">Limite ALTO</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
-    <string name="permission">Autorizzazione</string>
-    <string name="need_system_window_permission">L\'applicazione richiede l\'autorizzazione \"finestra di sistema\" per le notifiche</string>
-    <string name="askforpermission">Chiedi l\'autorizzazione</string>
     <string name="storedsettingsfound">Trovate impostazioni memorizzate</string>
     <string name="master_password_summary">La password master viene usata per la crittografia del backup e per gestire la sicurezza nell\'applicazione. Ricordala o conservala in un luogo sicuro.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -30,35 +27,25 @@
     <string name="exitwizard">Salta configurazione guidata</string>
     <string name="setupwizard_sensitivity_description">Il plugin di sensibilità è usato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
+    <string name="setupwizard_aps_description">Selezionane uno dagli algoritmi disponibili. Sono ordinati dal più vecchio al più nuovo. L\'algoritmo più recente è solitamente più potente. Non dimenticare di leggere la documentazione di OpenAPS e configurarla prima dell\'uso.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configura il RileyLink di seguito. Dopo aver selezionato un RileyLink, sarà possibile continuare la configurazione una volta che lo stato del RileyLink sarà \"Connesso\". Questo potrebbe richiedere un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puoi continuare la configurazione una volta che il micro è stato configurato.\n</string>
     <string name="startobjective">Avvia il tuo primo obiettivo</string>
+    <string name="setupwizard_permissions">Permessi</string>
+    <string name="setupwizard_profile_info">Crea un profilo con i tuoi valori basali, IC, ISF e destinazione. Puoi aggiungere più profili in seguito.</string>
+    <string name="setupwizard_permissions_info">AAPS ha bisogno di accesso all\'archivio e di autorizzazioni per funzionare correttamente. Si prega di concedere le autorizzazioni richieste qui sotto.</string>
     <string name="setupwizard_pump_riley_link_status">Stato RileyLink:</string>
     <string name="readstatus">Lettura stato</string>
-    <string name="data_choices">Scelta dei dati</string>
-    <string name="fabric_upload">Invio a fabric.io</string>
-    <string name="unattended_settings_export">Esportazione Impostazioni Non presidiata</string>
-    <string name="unattended_settings_export_summary">Abilitando questa opzione memorizzerai in modo sicuro la tua password sul tuo telefono</string>
-    <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="exported_to_cloud">Impostazioni esportate con successo su cloud storage</string>
-    <string name="export_to_cloud_failed">Esportazione nell\'archivio cloud non riuscita</string>
-    <string name="cloud_connection_failed">Connessione all\'archiviazione cloud fallita</string>
-    <string name="loading_from_cloud">Caricamento impostazioni dall\'archivio cloud, attendere…</string>
-    <string name="cloud_folder_error">Caricamento delle cartelle di archiviazione cloud non riuscito</string>
-    <string name="csv_uploaded_to_cloud">Voci utente CSV caricate con successo su cloud storage</string>
-    <string name="cloud_reauthorize_message">Connessione all\'archiviazione cloud non riuscita. Vuoi autenticarti?</string>
     <string name="request">Richiesta</string>
-    <string name="apsmode_title">Modalità APS</string>
     <string name="error_asking_for_permissions">Errore nel richiedere le autorizzazioni</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Configuratore strutturale</string>
     <string name="configbuilder_pump_description">Quale micro vorresti usare con AAPS?</string>
-    <string name="configbuilder_profile">Profilo</string>
     <string name="configbuilder_aps_description">Quale algoritmo APS dovrebbe apportare aggiustamenti terapeutici?</string>
     <string name="configbuilder_general_description">Questi sono alcuni plugin generali che potresti trovare utili.</string>
+    <string name="configbuilder_sync_description">Plugin di caricamento, sincronizzazione e comunicazione dati.</string>
     <string name="configbuilder_constraints_description">Quali vincoli sono applicati?</string>
     <string name="configbuilder_loop_description">Usalo per attivare l\'integrazione del loop di AAPS.</string>
     <string name="configbuilder_insulin_description">Quale tipo di insulina stai usando?</string>
@@ -68,160 +55,23 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Usato per configurare i plugin attivi</string>
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
-    <string name="a11y_open_settings">apri impostazioni</string>
     <string name="nsclient_version_does_not_match">La versione di AAPSClient non corrisponde alla versione di AAPS. Aggiorna.</string>
     <string name="expand_category">Espandi categoria</string>
     <string name="collapse_category">Comprimi categoria</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Preferenze</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Importazione annullata! Le preferenze NON sono state importate!</string>
-    <string name="preferences_import_impossible">Impossibile importare le preferenze!</string>
-    <string name="check_preferences_details_btn">Descrivi i problemi di importazione…</string>
-    <string name="check_preferences_details_title">Dettagli dei problemi di importazione</string>
-    <string name="check_preferences_import_btn">Importa</string>
-    <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
-    <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
-    <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
-    <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">Importare impostazioni da</string>
-    <string name="setting_imported">Impostazioni importate</string>
-    <string name="old_master_password">Password Master precedente</string>
-    <string name="different_password_used">Questo file è stato esportato e crittografato con una password master differente. Fornire la password master precedente per decrittare il file.</string>
-    <string name="master_password_will_be_replaced">Come risultato dell\'importazione riuscita, la password master corrente VERRÀ SOSTITUITA con la password master precedente contenuta nel file importato!</string>
-    <string name="exported">Preferenze esportate</string>
-    <string name="exported_failed">Esportazione delle preferenze fallita!</string>
-    <string name="filenotfound">File non trovato</string>
-    <string name="goto_main_try_again">Torna alla schermata principale e riprova.</string>
-    <string name="restartingapp">Uscita dall\'applicazione per applicare le impostazioni.</string>
-    <string name="ue_exported">Voci utente esportate</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">MANUT</string>
-    <string name="maintenance_settings">Impostazioni manutenzione</string>
-    <string name="maintenance_email">Destinatario email</string>
-    <string name="maintenance_amount">Numero di log da inviare</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">esportato %1$s fa</string>
-    <string name="exported_at" comment="at placeholder we add export date">esportato: %1$s</string>
-    <string name="exported_less_than_hour_ago">esportato meno di un\'ora fa</string>
-    <string name="preferences_import_list_title">Seleziona il file da importare</string>
-    <string name="metadata_warning_different_flavour">Le preferenze sono state create con una differente versione di AAPS (%1$s) mentre invece tu hai: %2$s.\n\nAlcune impostazioni potrebbero mancare o non essere valide - dopo l\'importazione controlla e aggiornare le tue preferenze.</string>
-    <string name="metadata_warning_different_device">Le preferenze sono state create su un dispositivo diverso. Va bene importarle da un vecchio/diverso telefono, ma assicurati che le preferenze importate siano corrette!</string>
-    <string name="metadata_warning_old_export">Le preferenze importate hanno già %1$s giorni! Forse hai preferenze più aggiornate. Hai scelto il file sbagliato? Ricorda di esportare le preferenze regolarmente!</string>
-    <string name="metadata_warning_date_format">Formato data-ora non valido!</string>
-    <string name="metadata_warning_different_version">Le preferenze arrivano da una differente versione secondaria dell\'applicazione (minor). Va bene se le stai importando dopo l\'aggiornamento, ma controlla che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
-    <string name="metadata_urgent_different_version">Le preferenze arrivano da una differente versione principale dell\'applicazione (major). Le versioni principali differiscono in modo significativo e potrebbero avere preferenze incompatibili! Assicurati che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
-    <string name="prefdecrypt_settings_tampered">File delle impostazioni manomesso</string>
-    <string name="prefdecrypt_settings_secure">Il file delle impostazioni è sicuro</string>
-    <string name="prefdecrypt_settings_unencrypted">Uso non sicuro, formato impostazioni non crittografato</string>
-    <string name="prefdecrypt_wrong_json">Errore formato JSON, campo obbligatorio mancante (formato, contenuto, metadati o sicurezza)</string>
-    <string name="prefdecrypt_wrong_password">Errore decrittazione, la password data non può decrittare il file</string>
-    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) mancante, impossibile verificare l\'autenticità delle impostazioni!</string>
-    <string name="prefdecrypt_issue_modified">Il file è stato modificato dopo l\'esportazione!</string>
-    <string name="prefdecrypt_issue_parsing">Errore decrittazione, analisi preferenze fallita!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Errore decrittazione, la password fornita è errata o il file delle impostazioni è stato modificato! È possibile che il file importato sia stato esportato con una diversa password master.</string>
-    <string name="prefdecrypt_issue_wrong_format">Configurazione crittografia mancante, il formato delle impostazioni non è valido!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo di crittografia non supportato o non specificato!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Formato file</string>
-    <string name="metadata_label_created_at">Creato:</string>
-    <string name="metadata_label_aaps_version">Versione AAPS</string>
-    <string name="metadata_label_aaps_flavour">Variante build</string>
-    <string name="metadata_label_device_name">Esportazione nome dispositivo paziente</string>
-    <string name="metadata_label_device_model">Esportazione modello dispositivo</string>
-    <string name="metadata_label_encryption">Crittografia file</string>
-    <string name="metadata_format_new">Nuovo formato crittografato</string>
-    <string name="metadata_format_other">Formato esportazione sconosciuto</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">Errore nell\'accedere al filesystem. Selezionare correttamente la directory AAPS.</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
-    <string name="storage_local">Archiviazione locale</string>
-    <string name="storage_google_drive">Google Drive</string>
-    <string name="select_storage_type">Seleziona il Tipo di Storage</string>
-    <string name="backup_to_google_drive">Backup su Google Drive</string>
-    <string name="google_drive_connection_error">Errore di connessione Google Drive</string>
-    <string name="reauthorize">Ri-autenticazione</string>
-    <string name="cloud_auth_success">Autenticazione archiviazione cloud riuscita</string>
-    <string name="cloud_auth_failed">Connessione all\'archiviazione cloud fallita</string>
-    <string name="cloud_auth_error">Errore di autenticazione archiviazione cloud: %1$s</string>
-    <string name="enable_cloud_export_title">Abilita Esportazione Cloud</string>
-    <string name="enable_cloud_export_message">Vuoi abilitare l\'esportazione in cloud? Questo attiverà l\'opzione \"All Cloud\" nelle impostazioni di esportazione.</string>
-    <string name="can_change_in_export_settings">È possibile modificare questo in seguito nelle impostazioni di esportazione</string>
-    <string name="setup_cloud_directory_first">Si prega di impostare la directory Cloud prima di utilizzare le impostazioni di esportazione</string>
-    <string name="local_directory">Directory LOCALE</string>
-    <string name="cloud_directory">Directory Cloud</string>
-    <string name="export_options">Opzioni di esportazione</string>
-    <string name="log_export_option">Log</string>
-    <string name="user_settings_export_option">Impostazioni Utente</string>
-    <string name="user_entries_csv_export_option">Esporta voci utente in Excel (csv)</string>
-    <string name="email_option">Email</string>
-    <string name="local_storage_option">Archiviazione locale</string>
-    <string name="cloud_storage_option">Archiviazione cloud</string>
-    <string name="export_all_cloud">Tutto Il Cloud</string>
-    <string name="send_logs_to_cloud">Esporta log su Cloud</string>
-    <string name="export_csv_to_cloud">Esporta in cloud le voci utente (csv)</string>
-    <string name="export_csv_to_local">Esporta in locale le voci utente (csv)</string>
-    <string name="export_settings_local">Esporta impostazioni (locale)</string>
-    <string name="export_settings_cloud">Esporta impostazioni (Cloud)</string>
-    <string name="export_settings_both">Impostazioni di esportazione (Local+Cloud)</string>
-    <string name="import_settings_local">Importa impostazioni (locale)</string>
-    <string name="import_settings_cloud">Importa impostazioni (Cloud)</string>
-    <string name="import_settings_both">Importa impostazioni (Local/Cloud)</string>
     <!-- Import source selection dialog -->
-    <string name="select_import_source">Seleziona Sorgente Importazione</string>
-    <string name="import_from_local">Importa da Archivio Locale</string>
-    <string name="import_from_cloud">Importa dall\'archivio cloud</string>
-    <string name="import_source_local_description">Importa impostazioni dalla memoria del dispositivo</string>
-    <string name="import_source_cloud_description">Importa impostazioni dal cloud storage</string>
-    <string name="cloud_import_file_count">Mostra %1$d di %2$d files</string>
-    <string name="cloud_import_file_count_all">Mostra tutti i %1$d files</string>
-    <string name="load_more">Carica Altre</string>
-    <string name="load_more_with_count">Carica il prossimo %1$d (caricato %2$d)</string>
     <string name="loading">Caricamento…</string>
-    <string name="loading_progress">Caricamento di %1$d di %2$d…</string>
-    <string name="loading_file_progress">Caricamento %1$s (%2$d/%3$d)…</string>
-    <string name="logs_uploaded_to_cloud">Log caricati con successo nell\'archivio cloud</string>
-    <string name="logs_upload_failed">Impossibile caricare i log nella memoria cloud</string>
-    <string name="logs_upload_error">Si è verificato un errore durante il caricamento dei log nell\'archivio cloud</string>
-    <string name="csv_upload_failed">Impossibile caricare le Voci dell\'Utente CSV nell\'archivio cloud</string>
-    <string name="csv_upload_error">Si è verificato un errore durante il caricamento del CSV nel cloud</string>
-    <string name="export_options_updated">Opzioni di esportazione aggiornate</string>
-    <string name="no_settings_files_found">Nessun file di impostazioni trovato nell\'archivio cloud</string>
-    <string name="clear_action">Cancella impostazioni</string>
-    <string name="clear_cloud_settings">Cancella Impostazioni Cloud</string>
-    <string name="clear_cloud_settings_message">Questo passerà alla memoria locale cancellerà l\'autenticazione. Continuare?</string>
-    <string name="uploading_to_cloud">Caricamento nel cloud...</string>
-    <string name="cloud_directory_path">Directory cloud: %1$s</string>
     <string name="warning_wrong_directory_selected">Directory Selezionata Errata</string>
     <string name="warning_wrong_directory_message">Hai selezionato la sottodirectory \"%1$s\" invece della directory AAPS principale. Seleziona la directory AAPS principale. L\'applicazione creerà e gestirà automaticamente le sottodirectory.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
-    <string name="google_drive_token_refresh_failed">Impossibile aggiornare il token di accesso a Google Drive</string>
-    <string name="google_drive_token_refresh_error">Impossibile aggiornare il token di accesso a Google Drive: %1$s</string>
-    <string name="google_drive_connection_test_failed">Test di connessione Google Drive non riuscito</string>
-    <string name="google_drive_connect_error">Impossibile connettersi a Google Drive: %1$s</string>
-    <string name="google_drive_list_folders_failed">Elenco delle cartelle Google Drive non riuscito</string>
-    <string name="google_drive_list_folders_error">Errore nell\'elencare le cartelle: %1$s</string>
-    <string name="google_drive_upload_no_id">Caricamento riuscito ma nessun id restituito</string>
-    <string name="google_drive_upload_verify_failed">Verifica del caricamento fallita</string>
-    <string name="google_drive_upload_failed">Caricamento fallito: %1$s</string>
-    <string name="google_drive_upload_error">Errore nel caricare il file: %1$s</string>
-    <string name="google_drive_folder_access_error">Impossibile creare o accedere alla cartella di destinazione: %1$s</string>
-    <string name="google_drive_list_settings_failed">Impossibile elencare i file delle impostazioni</string>
-    <string name="google_drive_list_settings_error">Errore nell\'elencare i file delle impostazioni: %1$s</string>
-    <string name="google_drive_download_failed">Download del file non riuscito</string>
-    <string name="google_drive_download_error">Errore nello scaricare il file: %1$s</string>
     <!-- Provider-agnostic cloud storage strings -->
-    <string name="cloud_authorization_title">Autorizzazione %1$s</string>
-    <string name="cloud_authorization_message">La pagina di autorizzazione %1$s è stata aperta nel tuo browser.\n\nSi prega di completare l\'autorizzazione, quindi tornare a questa app.\n\nQuesta finestra si chiuderà automaticamente una volta completata l\'autorizzazione.</string>
-    <string name="cloud_auth_start_failed">Impossibile avviare l\'autorizzazione</string>
-    <string name="cloud_auth_cancelled">Autorizzazione cancellata</string>
-    <string name="cloud_auth_timeout">Autorizzazione scaduta, riprova</string>
-    <string name="cloud_token_expired_or_invalid">Autorizzazione all\'archiviazione cloud scaduta o non valida. Per favore ri-autorizza.</string>
     <!-- Authorization status strings -->
-    <string name="authorization_status">Stato Autorizzazione</string>
-    <string name="google_drive_authorized">Google Drive Autorizzato</string>
-    <string name="google_drive_reauth_required">Si prega di cancellare le impostazioni e ri-autorizzare Google Drive</string>
 </resources>

@@ -106,7 +106,6 @@
     <string name="equil_history_item18">Abnormale toediening gestopt</string>
     <string name="equil_common_overview_button_suspend_delivery">Onderbreken</string>
     <string name="equil_common_overview_button_resume_delivery">Insulinetoediening hervatten</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fE/u @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Zojuist</string>
     <string name="equil_common_less_than_a_minute_ago">Minder dan een minuut geleden</string>
     <string name="equil_common_time_ago">%1$s geleden</string>

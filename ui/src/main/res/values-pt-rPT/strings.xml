@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Restrição de bólus aplicada</string>
     <string name="carbs_constraint_applied">Restrição de hidratos de carbono aplicada</string>
     <string name="temp_target_short">AT</string>
-    <string name="dialog_canceled">Janela cancelada</string>
     <string name="start_activity_tt">Iniciar AT de atividade</string>
     <string name="start_eating_soon_tt">Iniciar AT de Comer em breve</string>
     <string name="start_hypo_tt">Iniciar AT de Hipo</string>
@@ -37,7 +36,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Sem bólus, registar apenas</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="timeshift_label">Deslocamento temporal</string>
     <string name="percentage_label">Percentagem</string>
@@ -71,7 +69,6 @@
     <string name="a11y_set_carb_timer">definir alarme do temporizador de hidratos</string>
     <!-- Treatments -->
     <string name="no_records_available">Não há registos disponíveis</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IA:</string>
     <string name="treatments_carbs_label_string">Hidratos:</string>
     <string name="tempbasals_netratio_label_string">Rácio:</string>
@@ -104,8 +101,6 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">apenas no relógio</string>
     <string name="a11y_only_on_phone">apenas no telefone</string>
-    <string name="quickwizard_settings">Definições do Assistente Rápido</string>
-    <string name="overview_edit_quickwizard_valid">Válido:</string>
     <string name="a11y_drag_and_drop_handle">alça de arrastar e soltar</string>
     <!--    Widget-->
     <!--    Permissions-->

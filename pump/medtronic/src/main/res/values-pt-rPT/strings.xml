@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Tempo de espera para iniciar Bólus (s)</string>
     <string name="medtronic_pump_max_bolus">Bólus Máximo na Bomba (U)</string>
     <string name="medtronic_pump_max_basal">Basal Máxima na Bomba (U/h)</string>
-    <string name="medtronic_pump_encoding">Codificação Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Acordar e Sintonizar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Limpar Bloqueio de Bólus</string>
     <string name="medtronic_pump_battery_select">Tipo de Bateria (Visualização Detalhada)</string>

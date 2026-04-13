@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General preferences -->
+    <string name="pref_title_simple_mode">Chế độ đơn giản</string>
+    <string name="pref_title_insulin_concentration">Hỗ trợ nồng độ insulin</string>
+    <string name="pref_summary_insulin_concentration">Bật hỗ trợ các nồng độ insulin khác nhau (U200, U300, v.v.)</string>
+    <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Giữ màn hình bật</string>
+    <string name="pref_summary_keep_screen_on">Ngăn Android tắt màn hình. Tính năng này sẽ tiêu thụ rất nhiều năng lượng khi không cắm nguồn.</string>
+    <string name="pref_title_show_treatment_button">Hiển thị nút điều trị</string>
+    <string name="pref_title_show_wizard_button">Hiển thị nút wizard</string>
+    <string name="pref_title_show_insulin_button">Hiển thị nút Insulin</string>
+    <string name="pref_title_show_carbs_button">Hiển thị nút Carbs</string>
+    <string name="pref_title_show_cgm_button">Hiển thị nút CGM</string>
+    <string name="pref_summary_show_cgm_button">Mở xDrip+ hoặc ứng dụng Dexcom (bạn có thể dùng nút quay lại để trở về AAPS).</string>
+    <string name="pref_title_show_calibration_button">Hiển thị nút Tính toán</string>
+    <string name="pref_summary_show_calibration_button">Gửi hiệu chuẩn đến xDrip+ (hãy đảm bảo rằng tùy chọn \'Accept Calibrations\' đã được bật trong phần Cài đặt liên ứng dụng của xDrip+).</string>
+    <string name="pref_title_show_notes_in_dialogs">Hiển thị ghi chú trong hộp thoại</string>
+    <string name="pref_title_use_bolus_advisor">Sử dụng trợ lý tính liều bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Bật trợ lý bolus để hỗ trợ tính toán liều bolus khi đường huyết cao.</string>
+    <string name="pref_title_use_bolus_reminder">Nhắc tiêm liều bolus</string>
+    <string name="pref_summary_use_bolus_reminder">Bật thông báo nhắc bolus để giúp theo dõi việc tiêm insulin.</string>
+    <string name="pref_title_use_super_bolus">Sử dụng super bolus</string>
+    <string name="pref_summary_use_super_bolus">Bật tính năng super bolus, sử dụng insulin từ liều nền để cung cấp ngay lập tức.</string>
+    <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Tắt Bluetooth 1 giây khi không kết nối được bơm (khắc phục lỗi treo Bluetooth).</string>
+    <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Cảnh báo khi không có dữ liệu BG</string>
+    <string name="pref_title_alert_pump_unreachable">Cảnh báo khi bơm mất kết nối</string>
+    <string name="pref_title_alert_carbs_required">Cảnh báo khi cần bổ sung carb</string>
+    <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Tải dữ liệu đường huyết lên NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Ghi lại thay đổi cảm biến</string>
+    <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Sử dụng độ nhạy động</string>
+    <string name="pref_title_aps_use_autosens">Sử dụng Autosens</string>
+    <string name="pref_title_aps_use_smb">Kích hoạt SMB</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_title_aps_use_smb_always">Luôn bật SMB</string>
+    <string name="pref_title_aps_use_smb_with_cob">Kích hoạt SMB với COB</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Kích hoạt SMB sau Carbs</string>
+    <string name="pref_title_aps_use_uam">Kích hoạt UAM</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Độ nhạy tăng mục tiêu</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Khi phát hiện độ nhạy insulin, hãy tăng mức đường huyết mục tiêu.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Kháng insulin làm giảm mục tiêu</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Khi phát hiện kháng insulin, hãy hạ thấp mức đường huyết mục tiêu.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens cũng điều chỉnh cả mục tiêu</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Mục tiêu tạm thời cao làm tăng độ nhạy</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Mục tiêu tạm thời cao sẽ làm tăng độ nhạy insulin.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Mục tiêu tạm thời thấp làm giảm độ nhạy</string>
+    <!-- Maintenance preferences -->
+    <!-- Autotune preferences -->
+    <string name="pref_title_autotune_categorize_uam_as_basal">Phân loại UAM như liều nền</string>
+    <!-- SMS preferences -->
+    <!-- Virtual pump preferences -->
+    <!-- NS Client preferences -->
+    <!-- OpenHumans preferences -->
+    <!-- xDrip preferences -->
+    <!-- Wear preferences -->
+    <!-- Wizard preferences -->
+    <!-- Site rotation preferences -->
+    <!-- IntKey: Overview preferences -->
+    <string name="pref_title_sbat_warning">Ngưỡng cảnh báo mức pin cảm biến</string>
+    <string name="pref_title_sbat_critical">Ngưỡng pin cảm biến mức nguy cấp</string>
+    <string name="pref_title_bage_warning">Ngưỡng cảnh báo pin bơm</string>
+    <string name="pref_title_bage_critical">Ngưỡng pin bơm mức nguy cấp</string>
+    <string name="pref_title_res_warning">Ngưỡng cảnh báo bình chứa insulin</string>
+    <string name="pref_title_res_critical">Ngưỡng bình insulin nguy cấp</string>
+    <string name="pref_title_batt_warning">Ngưỡng cảnh báo mức pin bơm</string>
+    <string name="pref_title_batt_critical">Ngưỡng pin bơm mức nguy cấp</string>
+    <!-- IntKey: Protection preferences -->
+    <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <!-- IntKey: Safety preferences -->
+    <!-- IntKey: Loop preferences -->
+    <!-- IntKey: APS preferences -->
+    <!-- IntKey: Maintenance preferences -->
+    <!-- IntKey: Alert preferences -->
+    <!-- IntKey: Insulin preferences -->
+    <!-- IntKey: Autotune preferences -->
+    <!-- IntKey: SMS preferences -->
+    <!-- IntKey: BG Source preferences -->
+    <!-- IntKey: NS Client preferences -->
+    <!-- IntKey: Site rotation preferences -->
+    <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Đơn vị</string>
+    <string name="units_mgdl">mg/dl</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_min">phút</string>
+    <string name="units_sec">giây</string>
+    <string name="units_hours">h</string>
+    <string name="units_days">ngày</string>
+    <string name="units_grams">g</string>
+    <string name="units_kg">kg</string>
+    <string name="units_years">y</string>
+    <string name="units_percent">%</string>
+    <!-- Formatted unit strings with value only -->
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_min">%1$d phút</string>
+    <string name="units_format_sec">%1$d giây</string>
+    <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.0f h</string>
+    <string name="units_format_days">%1$d ngày</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mmol">%1$s mmol/L</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
+    <!-- Formatted unit strings with value and range -->
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_min_range">%1$d phút (%2$d - %3$d)</string>
+    <string name="units_format_sec_range">%1$d giây (%2$d - %3$d)</string>
+    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
+    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
+    <string name="units_format_days_range">%1$d ngày (%2$d - %3$d)</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="pref_title_language">Ngôn ngữ</string>
+    <string name="lang_default">Mặc định hệ thống</string>
+    <string name="lang_en">Tiếng Anh</string>
+    <string name="lang_af">Tiếng Nam Phi</string>
+    <string name="lang_bg">Tiếng Bulgaria</string>
+    <string name="lang_cs">Tiếng Séc</string>
+    <string name="lang_de">Tiếng Đức</string>
+    <string name="lang_dk">Tiếng Đan Mạch</string>
+    <string name="lang_fr">Tiếng Pháp</string>
+    <string name="lang_nl">Tiếng Hà Lan</string>
+    <string name="lang_es">Tiếng Tây Ban Nha</string>
+    <string name="lang_el">Tiếng Hy Lạp</string>
+    <string name="lang_ga">Tiếng Ai-len</string>
+    <string name="lang_it">Tiếng Ý</string>
+    <string name="lang_ko">Tiếng Hàn</string>
+    <string name="lang_lt">Tiếng Lít-va</string>
+    <string name="lang_nb">Tiếng Na Uy</string>
+    <string name="lang_pl">Tiếng Ba Lan</string>
+    <string name="lang_pt">Tiếng Bồ Đào Nha</string>
+    <string name="lang_pt_br">Tiếng Bồ Đào Nha, Brazil</string>
+    <string name="lang_ro">Tiếng Ru-ma-ni</string>
+    <string name="lang_ru">Tiếng Nga</string>
+    <string name="lang_sv">Tiếng Thuỵ Điển</string>
+    <string name="lang_tr">Tiếng Thổ Nhĩ Kỳ</string>
+    <string name="lang_zh_tw">Tiếng Trung Phồn Thể</string>
+    <string name="lang_zh_cn">Tiếng Trung, Giản thể</string>
+    <string name="pref_title_skin">Giao diện</string>
+    <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">Thư mục AAPS</string>
+    <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Mật khẩu chính</string>
+    <string name="pref_title_settings_password">Cài đặt mật khẩu</string>
+    <string name="pref_title_settings_pin">Cài đặt mã PIN</string>
+    <string name="pref_title_application_password">Mật khẩu ứng dụng</string>
+    <string name="pref_title_application_pin">Mã PIN ứng dụng</string>
+    <string name="pref_title_bolus_password">Mật khẩu liều Bolus</string>
+    <string name="pref_title_bolus_pin">Mã PIN liều Bolus</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Chọn chế độ tối, sáng hoặc theo giao diện hệ thống</string>
+    <string name="pref_title_app_color_scheme">Bảng màu ứng dụng</string>
+    <string name="pref_dark_theme">Chủ đề tối</string>
+    <string name="pref_light_theme">Chủ đề sáng</string>
+    <string name="pref_follow_system_theme">Sử dụng giao diện của thiết bị</string>
+    <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Tuổi người dùng</string>
+    <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Người nhận email</string>
+    <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Dịch vụ vị trí</string>
+    <string name="automation_location_passive">Sử dụng vị trí thụ động</string>
+    <string name="automation_location_network">Sử dụng vị trí mạng</string>
+    <string name="automation_location_gps">Sử dụng vị trí GPS</string>
+    <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Các số điện thoại được phép</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Mã PIN bắt buộc bổ sung ở cuối token</string>
+    <string name="smscommunicator_otp_pin_summary">Các chữ số bổ sung cần được ghi nhớ và gắn vào cuối mỗi mật khẩu dùng một lần (Otp) được tạo</string>
+    <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Loại Bơm</string>
+    <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_summary">Nhập đường dẫn Nightscout của bạn (ví dụ: https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="nsclient_token_title">Nightscout access token</string>
+    <string name="ns_wifi_ssids">Tên Wi-Fi</string>
+    <string name="ns_wifi_ssids_summary">SSID được phép (ngăn cách bằng dấu chấm phẩy)</string>
+    <!-- DoubleKey: Overview preferences -->
+    <!-- DoubleKey: Actions preferences -->
+    <!-- DoubleKey: Safety preferences -->
+    <!-- DoubleKey: APS preferences -->
+    <string name="openapssmb_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB. \nOpenAPS sẽ không đưa thêm insulin nếu IOB hiện tại lớn hơn giá trị này</string>
+    <string name="openapsma_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB.\n Đây là lượng insulin tối đa [U] mà APS có thể đưa vào cùng một lúc.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Mặc định: 3. Đây là một giới hạn an toàn quan trọng của OpenAPS. Nó giới hạn liều liều nền tối đa của bạn bằng 3 lần liều liều nền lớn nhất của bạn (áp dụng cho người này). Thông thường bạn không cần thay đổi, nhưng bạn nên biết rằng đây là những gì được nói đến khi nhắc đến ‘3x max daily; 4x current’ cho giới hạn an toàn.</string>
+    <string name="pref_title_current_basal_multiplier">Hệ số an toàn của liều nền hiện tại</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Giá trị mặc định: 4. Đây là nửa còn lại của các giới hạn an toàn chính của OpenAPS, và là nửa còn lại của ‘3x max daily; 4x current’ trong các giới hạn an toàn. Điều này có nghĩa là liều liều nền của bạn, bất kể liều liều nền tối đa được thiết lập trên bơm, không thể cao hơn con số này nhân với mức liều nền hiện tại. Điều này nhằm ngăn người dùng rơi vào tình huống nguy hiểm khi thiết lập liều liều nền tối đa quá cao trước khi hiểu cách thuật toán hoạt động. Giá trị mặc định là 4x; hầu hết người dùng sẽ không cần điều chỉnh, và thay vào đó có thể cần điều chỉnh các cài đặt khác nếu cảm thấy “đang chạm” vào giới hạn an toàn này.</string>
+    <string name="pref_title_bolus_snooze_divisor">Hệ số chia DIA khi hoãn bolus</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Giá trị mặc định: 2\nHoãn liều Bolus được kích hoạt sau khi bạn thực hiện một bolus bữa ăn, để vòng lặp không điều chỉnh bằng các temp thấp khi bạn vừa ăn. Ví dụ ở đây và giá trị mặc định là 2; nghĩa là với DIA 3 giờ, bolus snooze sẽ được loại bỏ dần trong 1,5 giờ (3DIA/2).</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Giá trị mặc định: 3,0 (AMA) hoặc 8,0 (SMB). Đây là cài đặt cho mức ảnh hưởng hấp thụ carb mặc định trong mỗi 5 phút. Giá trị mặc định là 3mg/dl/5 phút. Thông số này ảnh hưởng đến tốc độ giảm của COB, và lượng hấp thụ carb được giả định khi tính toán dự đoán đường huyết trong dự kiến, trong trường hợp đường huyết giảm nhiều hơn dự kiến hoặc không tăng như mong đợi.</string>
+    <string name="absorption_cutoff_summary">Thời điểm mà mọi bữa ăn được coi là đã hấp thụ xong. Lượng carb còn lại sẽ bị cắt bỏ.</string>
+    <string name="absorption_max_time_summary">Thời gian (giờ) mà dự kiến toàn bộ carb từ bữa ăn sẽ được hấp thụ</string>
+    <string name="pref_title_autosens_min">Autosens tối thiểu</string>
+    <string name="openapsama_autosens_min_summary">Giá trị mặc định: 0,7\nĐây là giới hạn an toàn phía ngược lại của autosens, đặt mức trần cho việc autosens có thể điều chỉnh liều nền xuống thấp nhất bao nhiêu, cũng như điều chỉnh ISF và mục tiêu BG lên cao nhất bao nhiêu.</string>
+    <string name="pref_title_autosens_max">Autosens tối đa</string>
+    <string name="openapsama_autosens_max_summary">Giá trị mặc định: 1,2\nĐây là giới hạn hệ số nhân cho autosens (và sắp tới là autotune) để đặt mức giới hạn tối đa 20%% đối với tỷ lệ autosens. Điều này sẽ quyết định autosens có thể điều chỉnh liều nền tối đa bao nhiêu, điều chỉnh ISF xuống thấp nhất bao nhiêu, và đặt mục tiêu BG thấp đến mức nào.</string>
+    <string name="pref_title_autoisf_min">AutoISF tối thiểu</string>
+    <string name="openapsama_autoISF_min_summary">Tương tự như autosens_min, thiết lập này xác định mức yếu tối đa mà ISF có thể đạt được.\n\nGiá trị mặc định 1,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="pref_title_autoisf_max">AutoISF tối đa</string>
+    <string name="openapsama_autoISF_max_summary">Tương tự như autosens_max, thiết lập này xác định mức độ mạnh tối đa mà ISF có thể đạt được.\n\nGiá trị mặc định 1,0 về cơ bản tắt hiệu ứng này.\n\nCẢNH BÁO: Hãy cực kỳ thận trọng khi sử dụng giá trị trên 2,5</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết tăng nhanh, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết giảm tốc, giúp làm yếu ISF và do đó có thể làm giảm lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Đây là thệ số được áp dụng khi đường huyết thấp hơn mục tiêu, giúp làm yếu ISF và do đó có thể làm giảm lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Đây là hệ số được áp dụng khi đường huyết cao hơn mục tiêu, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Giá trị mặc định: 0. Tỷ lệ phân phối SMB tăng tuyến tính được ánh xạ theo khoảng đường huyết [target_bg, target_bg + bg_range].\nTại mức target_bg, tỷ lệ SMB là smb_delivery_ratio_min, và tại target_bg + bg_range, tỷ lệ SMB là smb_delivery_ratio_max.\nKhi đặt 0, tỷ lệ SMB tăng tuyến tính sẽ bị tắt và thay vào đó dùng tỷ lệ SMB cố định (smb_delivery_ratio).</string>
+    <string name="openapsama_pp_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết đang tăng, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Đây là trọng số được áp dụng trong các giai đoạn đường huyết cao kéo dài, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Giá trị mặc định: 0,5. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định tỷ lệ insulin cần thiết có thể được bơm dưới dạng SMB. Mục đích là để ngăn tình trạng nguy hiểm khi có yêu cầu SMB được gửi đồng thời từ điện thoại của người chăm sóc. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Giá trị mặc định: 0,5. Đây là giới hạn thấp của một tỷ lệ tăng tuyến tính, thay vì giá trị cố định ở bên trên.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Giá trị mặc định: 0.5. Đây là giá trị giới hạn trên của một tỷ lệ tăng tuyến tính, thay vì là giá trị cố định như bên trên.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Giá trị mặc định: 1. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định hệ số cho phép bạn vượt quá giới hạn thông thường 120 phút maxSMB/maxUAM. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
+    <!-- UnitDoubleKey: Overview preferences -->
+    <!-- UnitDoubleKey: APS preferences -->
+    <string name="lgs_threshold_summary">Đường huyết dưới mức này sẽ tạm dừng việc tiêm insulin. Mức mặc định sử dụng mô hình mục tiêu chuẩn. Người dùng có thể đặt giá trị trong khoảng 60 mg/dL (3,3 mmol/L) đến 100 mg/dL (5,5 mmol/L). Các giá trị dưới 65 mg/dL (3,6 mmol/L) sẽ sử dụng mô hình mặc định</string>
+    <!-- IntentKey preferences -->
+    <!--    Appearance preferences-->
+</resources>

@@ -8,6 +8,7 @@
     <string name="pump_status_error_comm">Errore nella comunicazione</string>
     <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
     <string name="pump_status_invalid_config">Configurazione non valida</string>
+    <string name="medtronic_pump_encoding_title">Codifica Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">Codifica hardware 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Codifica hardware 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">USA &amp; Canada (916 MHz)</string>
@@ -71,4 +72,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Usa scansione</string>
     <string name="orange_use_scanning_level_summary">Scansiona prima della connessione a OrangeLink, dovrebbe migliorare le connessioni (può essere usato anche con altri cloni di RileyLink, se necessario)</string>
+    <string name="rileylink_pair">Accoppia RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink accoppiato con successo</string>
+    <string name="rileylink_config_reset">Reset configurazione RileyLink</string>
 </resources>

@@ -2,8 +2,6 @@
 <resources>
     <string name="units">Jedinice</string>
     <string name="next_button">Sljedeći</string>
-    <string name="permission">Dozvola</string>
-    <string name="need_system_window_permission">Aplikacija treba dopuštenje sustava za obavijesti</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="profile">Profil</string>
     <!-- Provider-agnostic cloud export/import strings -->
@@ -13,44 +11,17 @@
     <!--    ConfigBuilder-->
     <string name="config_builder">Config Builder</string>
     <string name="configbuilder_pump_description">Koju pumpu želite koristiti s AndroidAPS-om?</string>
-    <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_loop_description">Koristite ovo za aktiviranje integracije AAPS-ove petlje.</string>
     <string name="configbuilder_bgsource_description">Odakle bi AAPS trebao dobiti svoje podatke?</string>
     <string name="description_config_builder">Koristi se za konfiguriranje aktivnih softverskih dodataka</string>
     <string name="allow_hardware_pump_text">Pažnja: ako aktivirate i povežete se s hardverskom pumpom, AAPS će kopirati bazalne postavke iz profila na pumpu, prebrišući postojeću bazalnu dozu pohranjenu na pumpi. Provjerite imate li ispravnu bazalnu postavku u AAPS-u. Ako niste sigurni ili ne želite prebrisati bazalne postavke na pumpi, pritisnite Odustani i ponovite prebacivanje na pumpu kasnije.</string>
-    <string name="a11y_open_settings">otvori postavke</string>
     <string name="nsclient_version_does_not_match">Verzija AAPS klijenta ne odgovara verziji AAPS. Molimo ažurirajte.</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Osobne postavke</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
     <!-- export_to moved to core:ui -->
-    <string name="setting_imported">Postavke su uvezene</string>
-    <string name="filenotfound">Datoteka nije pronađena</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">izvezeno prije %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">izvezeno u %1$s</string>
-    <string name="exported_less_than_hour_ago">izvezeno prije manje od sat vremena</string>
-    <string name="preferences_import_list_title">Odaberite datoteku za uvoz</string>
-    <string name="metadata_warning_different_flavour">Postavke su stvorene s drugom varijantom AAPS-a (%1$s) dok vi imate: %2$s.\n\nNeke postavke možda nedostaju ili su nevažeće - nakon uvoza provjerite i ažurirajte svoje postavke.</string>
-    <string name="metadata_warning_different_device">Postavke su stvorene na drugom uređaju. U redu je ako uvozite sa starijeg/drugog telefona, ali provjerite jesu li uvezene postavke točne!</string>
-    <string name="metadata_warning_old_export">Uvezene postavke stare su već %1$s dana! Možda imate ažurnije postavke ili ste odabrali pogrešnu datoteku? Ne zaboravite redovito izvoziti postavke!</string>
-    <string name="metadata_warning_date_format">Nevažeći format datuma i vremena!</string>
-    <string name="metadata_warning_different_version">Postavke iz različite manje verzije aplikacije. U redu je ako uvozite nakon nadogradnje, ali nakon uvoza provjerite jesu li postavke još uvijek točne!</string>
-    <string name="metadata_urgent_different_version">Postavke iz različitih glavnih verzija aplikacije. Glavne verzije se značajno razlikuju i mogu imati nekompatibilne postavke! Provjerite jesu li postavke još uvijek točne nakon uvoza!</string>
-    <string name="prefdecrypt_settings_tampered">Datoteka postavki neovlašteno mijenjana</string>
-    <string name="prefdecrypt_settings_secure">Datoteka postavki je sigurna</string>
-    <string name="prefdecrypt_settings_unencrypted">Korištenje nesigurnog, nekriptiranog formata postavki</string>
-    <string name="prefdecrypt_wrong_json">Pogreška JSON formata, nedostaje obavezno polje (format, sadržaj, metapodaci ili sigurnost)</string>
-    <string name="prefdecrypt_wrong_password">Pogreška dešifriranja, dana lozinka ne može dešifrirati datoteku</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Nedostaje kontrolni zbroj datoteke (hash), ne može se provjeriti autentičnost postavki!</string>
-    <string name="prefdecrypt_issue_modified">Datoteka je izmijenjena nakon izvoza!</string>
-    <string name="prefdecrypt_issue_parsing">Pogreška dešifriranja, postavke raščlambe nisu uspjele!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Pogreška dešifriranja, navedena lozinka je nevažeća ili je datoteka postavki izmijenjena! Može se dogoditi da je uvezena datoteka izvezena s drugom glavnom lozinkom.</string>
-    <string name="prefdecrypt_issue_wrong_format">Nedostaje konfiguracija enkripcije, format postavki nije valjan!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritam šifriranja nije podržan ili nije naveden!</string>
     <!-- Maintenance -->
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->

@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">胰島素注射延後 (秒)</string>
     <string name="medtronic_pump_max_bolus">幫浦最大注射量 (U)</string>
     <string name="medtronic_pump_max_basal">幫浦最大基礎率 (U/h)</string>
-    <string name="medtronic_pump_encoding">Medtronic 編碼</string>
     <string name="medtronic_custom_action_wake_and_tune">喚醒並調整</string>
     <string name="medtronic_custom_action_clear_bolus_block">清除注射阻塞</string>
     <string name="medtronic_custom_action_reset_rileylink">重設 RileyLink</string>
@@ -92,6 +91,7 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">設置中性臨時基礎率</string>
     <string name="set_neutral_temps_summary">如果啟用，將在每小時結束前取消臨時基礎率。這種方法可以幫助防止某些幫浦在整點發出聲音/震動。</string>
+    <string name="medtronic_tbr_remaining">%1$s（剩餘 %2$d 分鐘）</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h（剩餘 %2$d 分鐘）</string>
     <string name="invalid_history_data">偵測到無效的幫浦歷史紀錄資料。打開新問題並提供日誌。</string>
     <string name="riley_statistics">RL 統計</string>

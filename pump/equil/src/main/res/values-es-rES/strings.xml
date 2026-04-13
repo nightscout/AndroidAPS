@@ -115,7 +115,7 @@
     <string name="equil_history_item18">Infusión anormal detenida</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspender</string>
     <string name="equil_common_overview_button_resume_delivery">Reanudar la entrega</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d min)</string>
+    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Hace un momento</string>
     <string name="equil_common_less_than_a_minute_ago">Hace menos de un minuto</string>
     <string name="equil_common_time_ago">%1$s ago</string>

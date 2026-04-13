@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop deaktiviert</string>
-    <string name="smscommunicator_pump_disconnected">Verbindung zur Pumpe getrennt</string>
-    <!-- Food-->
-    <string name="food_short">Essen</string>
-    <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
-    <string name="filter">Filter</string>
-    <string name="food">Essen</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Prot</string>
-    <string name="short_fat">Ft</string>
-    <string name="category">Kategorie</string>
-    <string name="subcategory">Unterkategorie</string>
     <string name="calculator_label">Rechner</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
-    <string name="do_you_want_switch_profile">Willst Du das Profil wechseln und die Änderungen am aktuellen Profil verwerfen?</string>
-    <string name="save_or_reset_changes_first">Speichere oder verwerfe die aktuellen Änderungen zuerst</string>
-    <string name="delete_current_profile">Aktuelles Profil löschen?</string>
-    <string name="units_colon">Einheiten:</string>
-    <!-- Actions -->
-    <string name="actions">Aktionen</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
-    <string name="actions_shortname">AKT</string>
-    <string name="tempbasal_button">TBR</string>
-    <string name="extended_bolus_button">Verzögerter Bolus</string>
-    <string name="extended_bolus_cancel_button">Verzögerten Bolus abbrechen</string>
-    <string name="tools">Tools</string>
     <string name="nav_history_browser">Historie</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">Alter:</string>
@@ -42,7 +13,6 @@
     <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Einstellung aus NS kopieren</string>
     <string name="a11y_graph">Diagramm</string>
     <string name="a11y_insulin_label">Insulin</string>
     <string name="chart_menu">Diagrammmenü</string>
@@ -50,18 +20,10 @@
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
     <string name="set_basal_question">Akzeptiere neue TBR:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
-    <string name="overview_buttons_selection">Schaltflächen</string>
-    <string name="not_available_full">Nicht verfügbar</string>
-    <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
-    <string name="change_your_input">Ändere deine Eingabe!</string>
     <string name="data_status">Status BZ-Daten</string>
-    <string name="quickwizard_settings">QuickWizard-Einstellungen</string>
-    <string name="default_temptargets">Vordefinierte temporäre Ziele</string>
-    <string name="fill_bolus_title">Füll-/Vorfüll-Standardmengen</string>
     <string name="run_question">%s ausführen?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
@@ -77,13 +39,7 @@
     <string name="overview_show_abs_insulin">Gesamtinsulin</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
-    <string name="heartRate_shortname">HF</string>
     <string name="graph_scale">Diagrammskala</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <!-- Skins -->
@@ -91,7 +47,6 @@
     <string name="lowres_description">Darstellung niedrige Auflösung</string>
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
-    <string name="skin">Erscheinungsbild</string>
     <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

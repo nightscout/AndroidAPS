@@ -44,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Dočasný bazál na Pode prebieha, ale AAPS o tomto dočasnom bazále nevie. Prosím zrušte svoj dočasný bazál ručne.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Štatistika RileyLink</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetovať RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">Čítať protokol pulzov</string>
     <string name="omnipod_eros_pod_management_pulse_log">Protokol pulzov</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Protokol pulzov (skopírované do schránky)</string>

@@ -137,8 +137,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g dodatnih ugljikohidrata potrebnih unutar %2$d minuta</string>
-    <!--    TDDStatsActivity-->
-    <string name="expweight">Eksponencijalno ponderirani TDD</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Omjer</string>
@@ -296,8 +294,11 @@
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

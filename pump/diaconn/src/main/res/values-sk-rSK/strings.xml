@@ -128,4 +128,14 @@
     <string name="diaconn_g8_errorcode_36">Koniec dočasného bazálu nie je možný, ak nebeží dočasný bazál</string>
     <string name="diaconn_g8_cloudsend_summary">Odoslať protokoly pumpy do Diaconn Cloudu.</string>
     <string name="diaconn_g8_cloudsend_title">Synchronizácia do Diaconn cloudu</string>
+    <string name="bolus_speed_1">1 U/min</string>
+    <string name="bolus_speed_2">2 U/min</string>
+    <string name="bolus_speed_3">3 U/min</string>
+    <string name="bolus_speed_4">4 U/min</string>
+    <string name="bolus_speed_5">5 U/min</string>
+    <string name="bolus_speed_6">6 U/min</string>
+    <string name="bolus_speed_7">7 U/min</string>
+    <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">Spárovanie úspešné!</string>
+    <string name="diaconn_pairing_successful_message">Vaša pumpa je teraz pripojená a pripravená na použitie.</string>
 </resources>

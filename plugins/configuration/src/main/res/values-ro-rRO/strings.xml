@@ -15,9 +15,6 @@
     <string name="high_mark">Pragul HIPER</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
-    <string name="permission">Permisiune</string>
-    <string name="need_system_window_permission">Aplicația are nevoie de permisiune la fereastra sistemului pentru a afișa notificări</string>
-    <string name="askforpermission">Solicitați permisiunea</string>
     <string name="storedsettingsfound">Au fost găsite setări stocate</string>
     <string name="master_password_summary">Parola principală este folosită pentru criptarea copiilor de rezervă și pentru a suprascrie securitatea în aplicație. Rețineți-o sau păstrați-o într-un loc sigur.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -26,37 +23,26 @@
     <string name="status">Stare:</string>
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="profile">Profil</string>
-    <string name="doprofileswitch">Schimbă profilul</string>
+    <string name="doprofileswitch">Schimbați profilul</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
     <string name="setupwizard_sensitivity_description">Modulul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
+    <string name="setupwizard_aps_description">Selectați unul dintre algoritmii disponibili. Aceștia sunt sortate de la cel mai vechi la cel mai nou. Algoritmul mai nou este de obicei mai puternic. Nu uitați să citiți documentația OpenAPS și să o configurați înainte de utilizare.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configurați RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuați setarea odată ce starea RieyLink este \"Conectată\". Acest lucru ar putea dura un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
     <string name="startobjective">Începeți primul obiectiv</string>
+    <string name="setupwizard_permissions">Permisiuni</string>
+    <string name="setupwizard_profile_info">Creați un profil cu ratele bazale, IC, ISF și valorile țintă. Puteți adăuga mai multe profiluri mai târziu.</string>
+    <string name="setupwizard_permissions_info">AAPS are nevoie de acces și de permisiuni la stocare pentru a funcționa corect. Vă rugăm să acordați permisiunile necesare mai jos.</string>
     <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
     <string name="readstatus">Citire stare</string>
-    <string name="data_choices">Alegeri date</string>
-    <string name="fabric_upload">Încărcare fabrică</string>
-    <string name="unattended_settings_export">Exportare nesupravegheată setări</string>
-    <string name="unattended_settings_export_summary">Activarea acestei opțiuni va stoca în siguranță parola pe telefon</string>
-    <string name="identification">Identificare (email, FB sau Discord etc)</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="exported_to_cloud">Setări exportate cu succes către stocarea în cloud</string>
-    <string name="export_to_cloud_failed">Nu s-a reușit exportarea în stocarea din cloud</string>
-    <string name="cloud_connection_failed">Conexiune eșuată către stocarea din cloud</string>
-    <string name="loading_from_cloud">Se încarcă setările din spațiul de stocare cloud, vă rugăm să așteptați…</string>
-    <string name="cloud_folder_error">Încărcarea dosarelor din stocare cloud a eșuat</string>
-    <string name="csv_uploaded_to_cloud">Intrările CSV ale utilizatorilor au fost încărcate cu succes în stocarea în cloud</string>
-    <string name="cloud_reauthorize_message">Conexiunea către stocarea din cloud a eșuat. Doriți să vă reautentificați?</string>
     <string name="request">Cerință</string>
-    <string name="apsmode_title">Mod APS</string>
     <string name="error_asking_for_permissions">Eroare în solicitarea permisiunilor</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Configurator</string>
     <string name="configbuilder_pump_description">Ce pompă dorești să folosești cu AAPS?</string>
-    <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
     <string name="configbuilder_general_description">Există pluginuri generale pe care le-ați putea găsi utile.</string>
     <string name="configbuilder_sync_description">Module de încărcare date, sincronizare și de comunicare.</string>
@@ -69,160 +55,23 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Folosit pentru configurarea facilităților active</string>
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AAPS va copia setările ratei bazale din profilul din aplicație în pompă. Profilul existent în pompă va fi suprascris cu cel din AAPS. Asigurați-vă că sunt corecte setările ratei bazale în profilul din AAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
-    <string name="a11y_open_settings">Deschideți setările</string>
     <string name="nsclient_version_does_not_match">Versiunea AAPSClient nu se potrivește cu versiunea AAPS. Vă rugăm să actualizați.</string>
     <string name="expand_category">Extindere categorie</string>
     <string name="collapse_category">Restrângere categorie</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Preferințe</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Importarea a eșuat! Preferințele NU au fost importate!</string>
-    <string name="preferences_import_impossible">Nu se pot prelua setările!</string>
-    <string name="check_preferences_details_btn">Explicații problemele de import…</string>
-    <string name="check_preferences_details_title">Detalii probleme de import</string>
-    <string name="check_preferences_import_btn">Importă</string>
-    <string name="check_preferences_import_anyway_btn">Importă oricum (PERICOL!)</string>
-    <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
-    <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
-    <string name="check_preferences_dangerous_import">Preferințele nu ar trebui importate!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">Importă setările din</string>
-    <string name="setting_imported">Setări importate</string>
-    <string name="old_master_password">Parola Master veche</string>
-    <string name="different_password_used">Acest fișier a fost exportat și criptat cu o parolă master diferită. Furnizați parola master veche pentru a decripta fișierul.</string>
-    <string name="master_password_will_be_replaced">Ca rezultat al unui import reușit, parola principală curentă VA FI ÎNLOCUITĂ cu parola principală veche!</string>
-    <string name="exported">Am exportat preferințele</string>
-    <string name="exported_failed">Exportarea preferințelor a eșuat!</string>
-    <string name="filenotfound">Nu am găsit fișierul</string>
-    <string name="goto_main_try_again">Mergeți la ecranul principal și încercați din nou.</string>
-    <string name="restartingapp">Se iese din aplicație în vederea aplicării setărilor.</string>
-    <string name="ue_exported">Înregistrările de la Utilizator exportate</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">GESTIONARE</string>
-    <string name="maintenance_settings">Setări de întreținere</string>
-    <string name="maintenance_email">Destinatar email</string>
-    <string name="maintenance_amount">Nr de loguri de trimis</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportat cu %1$s în urmă</string>
-    <string name="exported_at" comment="at placeholder we add export date">exportat în data de %1$s</string>
-    <string name="exported_less_than_hour_ago">exportat acum mai puțin de o ora</string>
-    <string name="preferences_import_list_title">Selectați fișierul pentru import</string>
-    <string name="metadata_warning_different_flavour">Preferințele au fost create folosind o alta versiune de AAPS (%1$s) în timp ce versiunea curentă este: %2$s.\n\nCâteva setări pot lipsi sau pot fi invalide - după import verificați și actualizați preferințele.</string>
-    <string name="metadata_warning_different_device">Preferințele au fost create pe un dispozitiv diferit. Este în regulă să le importați de pe un alt telefon, dar asigurați-vă că sunt corecte!</string>
-    <string name="metadata_warning_old_export">Preferințele importate sunt vechi de %1$s zile deja! Poate aveți preferințe mai recente sau ați ales un fișier greșit? Amintiți-vă să exportați preferințele în mod regulat!</string>
-    <string name="metadata_warning_date_format">Format dată invalid!</string>
-    <string name="metadata_warning_different_version">Preferințe dintr-o versiune minoră diferită a aplicației. Este OK dacă importați după upgrade, dar verificați după import că preferințele sunt corecte!</string>
-    <string name="metadata_urgent_different_version">Preferințe dintr-o versiune majoră a aplicației. Versiunile majore au diferențe semnificative și pot avea preferințe incompatibile! Asigurați-vă după import ca preferințele sunt corecte!</string>
-    <string name="prefdecrypt_settings_tampered">Fișier de setări modificat</string>
-    <string name="prefdecrypt_settings_secure">Fișierul de setări este securizat</string>
-    <string name="prefdecrypt_settings_unencrypted">Folosirea formatului nesecurizat, necriptat pentru setări</string>
-    <string name="prefdecrypt_wrong_json">Eroare format JSON, lipsește un câmp necesar (format, conținut, metadate sau securitate)</string>
-    <string name="prefdecrypt_wrong_password">Eroare la decriptare, parola dată nu poate decripta fișierul</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Suma de control a fișierului lipsește, nu se poate verifica autenticitatea setărilor!</string>
-    <string name="prefdecrypt_issue_modified">Fișierul a fost modificat după export!</string>
-    <string name="prefdecrypt_issue_parsing">Eroare la decriptare, parsarea preferințelor a eșuat!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Eroare la decriptare, parola furnizată este invalidă sau fișierul de setări a fost modificat! Se poate întâmpla ca fișierul importat să fi fost exportat cu o parolă master diferită.</string>
-    <string name="prefdecrypt_issue_wrong_format">Lipsește configurația de criptare, formatul setărilor este invalid!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritm de criptare nesuportat sau nespecificat!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Format fișier</string>
-    <string name="metadata_label_created_at">Creat la</string>
-    <string name="metadata_label_aaps_version">Versiune AAPS</string>
-    <string name="metadata_label_aaps_flavour">Varianta construită</string>
-    <string name="metadata_label_device_name">Exportă numele dispozitivului pacientului</string>
-    <string name="metadata_label_device_model">Exportare model dispozitiv</string>
-    <string name="metadata_label_encryption">Criptare fișier</string>
-    <string name="metadata_format_new">Format nou criptat</string>
-    <string name="metadata_format_other">Format necunoscut pentru export</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">Eroare la accesarea sistemului de fișiere. Selectați corect directorul AAPS.</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
-    <string name="storage_local">Stocare locală</string>
-    <string name="storage_google_drive">Google Drive</string>
-    <string name="select_storage_type">Alegeți tipul de stocare</string>
-    <string name="backup_to_google_drive">Copie de rezervă pe Google Drive</string>
-    <string name="google_drive_connection_error">Eroare de conectare Google Drive</string>
-    <string name="reauthorize">Reautentificare</string>
-    <string name="cloud_auth_success">Autentificare reușită în stocarea din cloud</string>
-    <string name="cloud_auth_failed">Autentificare eșuată în stocareaa din cloud</string>
-    <string name="cloud_auth_error">Eroare la autentificare în stocarea din cloud: %1$s</string>
-    <string name="enable_cloud_export_title">Activează exportul în cloud</string>
-    <string name="enable_cloud_export_message">Doriți să activați exportul în cloud? Aceasta va activa opțiunea \"Toate în cloud\" din Setările de export.</string>
-    <string name="can_change_in_export_settings">Puteți modifica acest lucru mai târziu în Setări Exportare</string>
-    <string name="setup_cloud_directory_first">Vă rugăm să setați Dosarul Cloud mai întâi pentru a utiliza Setările de Export</string>
-    <string name="local_directory">Dosar LOCAL</string>
-    <string name="cloud_directory">Dosar Cloud</string>
-    <string name="export_options">Opțiuni exportare</string>
-    <string name="log_export_option">Jurnal</string>
-    <string name="user_settings_export_option">Setările utilizatorului</string>
-    <string name="user_entries_csv_export_option">Exportă intrările utilizatorului în Excel (CSV)</string>
-    <string name="email_option">Email</string>
-    <string name="local_storage_option">Stocare locală</string>
-    <string name="cloud_storage_option">Stocare în cloud</string>
-    <string name="export_all_cloud">Toate Cloud</string>
-    <string name="send_logs_to_cloud">Exportă jurnalele în Cloud</string>
-    <string name="export_csv_to_cloud">Exportă intrările utilizatorului în Cloud (csv)</string>
-    <string name="export_csv_to_local">Exportă intrările utilizatorului în stocarea locală (csv)</string>
-    <string name="export_settings_local">Exportă setările (local)</string>
-    <string name="export_settings_cloud">Exportă setările (Cloud)</string>
-    <string name="export_settings_both">Exportă setările (local+Cloud)</string>
-    <string name="import_settings_local">Importă setări (local)</string>
-    <string name="import_settings_cloud">Importă setări (Cloud)</string>
-    <string name="import_settings_both">Importă setări (local/Cloud)</string>
     <!-- Import source selection dialog -->
-    <string name="select_import_source">Selectați sursa de import</string>
-    <string name="import_from_local">Importă din stocarea locală</string>
-    <string name="import_from_cloud">Importă din stocarea în Cloud</string>
-    <string name="import_source_local_description">Importă setările din spațiul de stocarea al dispozitivului</string>
-    <string name="import_source_cloud_description">Importă setările din stocarea din cloud</string>
-    <string name="cloud_import_file_count">Se afișează %1$d din %2$d fișiere</string>
-    <string name="cloud_import_file_count_all">Se afișează toate cele %1$d fișiere</string>
-    <string name="load_more">Încarcă mai multe</string>
-    <string name="load_more_with_count">Încarcă următorul %1$d (%2$d încărcat)</string>
     <string name="loading">Se încarcă…</string>
-    <string name="loading_progress">Se încarcă %1$d din %2$d…</string>
-    <string name="loading_file_progress">Se încarcă %1$s (%2$d/%3$d)…</string>
-    <string name="logs_uploaded_to_cloud">Jurnalele au fost încărcate cu succes în stocarea din Cloud</string>
-    <string name="logs_upload_failed">Eșec la încărcarea jurnalelor în stocarea din Cloud</string>
-    <string name="logs_upload_error">Eroare în timpul încărcării jurnalelor în stocarea din Cloud</string>
-    <string name="csv_upload_failed">Încărcarea fișierului CSV cu înregistrările utilizatorului în spațiul de stocare în Cloud a eșuat</string>
-    <string name="csv_upload_error">Eroare la încărcarea fișierului CSV în Cloud</string>
-    <string name="export_options_updated">Opțiunile de export actualizate</string>
-    <string name="no_settings_files_found">Nu au fost găsite fișiere setări în stocarea din Cloud</string>
-    <string name="clear_action">Ștergeți setările</string>
-    <string name="clear_cloud_settings">Ștergeți setările Cloud</string>
-    <string name="clear_cloud_settings_message">Se va comuta la stocarea locală și se va șterge autorizarea. Continuați?</string>
-    <string name="uploading_to_cloud">Se încarcă în Cloud...</string>
-    <string name="cloud_directory_path">Dosar Cloud: %1$s</string>
     <string name="warning_wrong_directory_selected">Dosarul selectat este greșit</string>
     <string name="warning_wrong_directory_message">Ați selectat subdosarul \"%1$s\" în loc de dosarul rădăcină AAPS. Vă rugăm să selectați dosarul AAPS părinte. Aplicația va crea și administra automat subdosarele.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
-    <string name="google_drive_token_refresh_failed">Nu s-a putut reîmprospăta jetonul de acces pentru Google Drive</string>
-    <string name="google_drive_token_refresh_error">Nu s-a putut reîmprospăta jetonul de acces pentru Google Drive: %1$s</string>
-    <string name="google_drive_connection_test_failed">Testul de conectare Google Drive a eșuat</string>
-    <string name="google_drive_connect_error">Nu s-a putut conecta la Google Drive: %1$s</string>
-    <string name="google_drive_list_folders_failed">Eșuare afișare dosare Google Drive</string>
-    <string name="google_drive_list_folders_error">Eroare la afișarea dosarelor: %1$s</string>
-    <string name="google_drive_upload_no_id">Încărcarea a reușit dar niciun id returnat</string>
-    <string name="google_drive_upload_verify_failed">Verificarea încărcării a eșuat</string>
-    <string name="google_drive_upload_failed">Încărcare nereușită: %1$s</string>
-    <string name="google_drive_upload_error">Eroare încărcare fișier: %1$s</string>
-    <string name="google_drive_folder_access_error">Nu se poate crea sau accesa dosarul destinație: %1$s</string>
-    <string name="google_drive_list_settings_failed">Eșuare în afișarea fișierelor de setări</string>
-    <string name="google_drive_list_settings_error">Eroare în afișarea fișierelor de setări: %1$s</string>
-    <string name="google_drive_download_failed">Descărcarea fișierului a eșuat</string>
-    <string name="google_drive_download_error">Eroare la descărcarea fișierului: %1$s</string>
     <!-- Provider-agnostic cloud storage strings -->
-    <string name="cloud_authorization_title">Autorizare %1$s</string>
-    <string name="cloud_authorization_message">Pagina de autorizare %1$s a fost deschisă în browser-ul dumneavoastră.\n\nVă rugăm să finalizați autorizarea, apoi reveniți în această aplicație.\n\nAcest dialog se va închide automat de îndată ce autorizarea este finalizată.</string>
-    <string name="cloud_auth_start_failed">Pornirea procesului de autorizare a eșuat</string>
-    <string name="cloud_auth_cancelled">Autorizare anulată</string>
-    <string name="cloud_auth_timeout">Procesul de autorizare a expirat, vă rugăm reîncercați</string>
-    <string name="cloud_token_expired_or_invalid">Autorizarea stocării în cloud a expirat sau este invalidă. Vă rugăm să reautorizați.</string>
     <!-- Authorization status strings -->
-    <string name="authorization_status">Stare autorizare</string>
-    <string name="google_drive_authorized">Google Drive autorizat</string>
-    <string name="google_drive_reauth_required">Vă rugăm să ștergeți setările și să reautorizați Google Drive</string>
 </resources>

@@ -54,6 +54,7 @@
     <string name="retry">Opakovať</string>
     <string name="step_prepare_patch">Aktivovať Patch</string>
     <string name="step_prepare_patch_connect">Pripojiť a naplniť</string>
+    <string name="step_select_insulin">Zvoľte inzulín</string>
     <string name="step_prime">Naplniť</string>
     <string name="step_priming">Plnenie</string>
     <string name="step_priming_complete">Plnenie dokončené</string>
@@ -94,14 +95,22 @@
     <string name="press_next_or_OK">Stlačte <b>OK</b> pre návrat na hlavnú obrazovku. Stlačte <b>Ďalšia</b> pre zahájenie aktivácie novej Patch.</string>
     <string name="activation_in_progress">Ups! Niečo sa pokazilo, zdá sa, že už prebieha aktivácia.</string>
     <string name="press_retry_or_discard">Stlačte <b>Ďalšia</b> pre obnovenie aktivácie alebo <b>Zahodiť</b> pre resetovanie stavu aktivácie.</string>
+    <string name="retry_activation_filled_error">Aktivácia nemôže pokračovať. Stav pumpy sa stratil. Neopakujte plnenie, keď už je Patch zavedený. Prosím zahoďte Patch a začnite novú aktiváciu.</string>
     <string name="reading_activation_status">Počkajte prosím, načítanie stavu aktivácie z Patch.</string>
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">Výstraha pri nedostupnej pumpe bola vynutená, pretože patch pumpa Medtrum môže zlyhať a byť nedostupná.</string>
-    <string name="pump_unreachable_threshold_minutes_summary">Doporučujeme nastaviť na 30 minút, protože patch pumpa Medtrum môže zlyhať a byť nedostupná.</string>
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
+    <string name="change_sn">Zmeniť</string>
     <string name="alarm_setting_title">Nastavenie výstrah</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavenie výstrah.</string>
+    <string name="alarm_setting_light_vibrate_beep">Svetlo, vibrácie a pípnutie</string>
+    <string name="alarm_setting_light_vibrate">Svetlo a vibrácie</string>
+    <string name="alarm_setting_light_beep">Svetlo a pípnutie</string>
+    <string name="alarm_setting_light">Svetlo</string>
+    <string name="alarm_setting_vibrate_beep">Vibrácie a pípnutie</string>
+    <string name="alarm_setting_vibrate">Vibrácie</string>
+    <string name="alarm_setting_beep">Pípnutie</string>
+    <string name="alarm_setting_silent">Tichý</string>
     <string name="pump_warning_notification_title">Oznámenie o výstrahe pumpy</string>
     <string name="pump_warning_notification_summary">Zobraziť upozornenie na nie kritické varovanie pumpy: vybitá batéria, takmer prázdny zásobník (20 jednotiek) a čoskoro dojde inzulín. Doporučené ponechať zapnuté, keď sú výstrahy pumpy nastavené na ticho.</string>
     <string name="pump_warning_expiry_hour_title">Výstraha expirácie pumpy (hodiny)</string>

@@ -1,40 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop er deaktivert</string>
-    <string name="smscommunicator_pump_disconnected">Pumpe frakoblet</string>
-    <!-- Food-->
-    <string name="food_short">Mat</string>
-    <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
-    <string name="filter">Filter</string>
-    <string name="food">Mat</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Fett</string>
-    <string name="category">Kategori</string>
-    <string name="subcategory">Underkategori</string>
     <string name="calculator_label">Kalkulator</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Definer en profil som beskriver ditt insulinbehov.</string>
-    <string name="a11y_add_new_to_list">legg til ny i liste</string>
-    <string name="do_you_want_switch_profile">Ønsker du å bytte profil og forkaste endringer i gjeldende profil?</string>
-    <string name="save_or_reset_changes_first">Lagre eller nullstill gjeldende endringer først</string>
-    <string name="delete_current_profile">Slette gjeldende profil?</string>
-    <string name="units_colon">Enheter:</string>
-    <!-- Actions -->
-    <string name="actions">Handlinger</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
-    <string name="actions_shortname">HAND</string>
-    <string name="status">Status</string>
-    <string name="pump_actions">Pumpehandlinger</string>
-    <string name="tempbasal_button">Midlertidig basal</string>
-    <string name="extended_bolus_button">Forlenget bolus</string>
-    <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
-    <string name="tools">Verktøy</string>
-    <string name="site_rotation">Rotasjon av sted</string>
     <string name="nav_history_browser">Historikk</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">alder:</string>
@@ -46,7 +13,6 @@
     <string name="statuslights_patch_pump_age">pumpealder</string>
     <string name="patch_pump">Pumpe</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Kopier innstillingene fra NS</string>
     <string name="graph_scale_6h">6t</string>
     <string name="graph_scale_12h">12t</string>
     <string name="graph_scale_18h">18t</string>
@@ -67,18 +33,10 @@
     <string name="a11y_blood_glucose">blodsukker</string>
     <string name="a11y_bg_outdated">utdatert</string>
     <string name="set_basal_question">Aksepter ny midl. basal:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
-    <string name="overview_buttons_selection">Knapper</string>
-    <string name="not_available_full">Ikke tilgjengelig</string>
-    <string name="constraints_violation">Brudd på begrensninger</string>
-    <string name="change_your_input">Endre dine inndata!</string>
     <string name="data_status">Status BS-data</string>
-    <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
-    <string name="default_temptargets">Standard midlertidig mål</string>
-    <string name="fill_bolus_title">Standardverdier for påfyll/prime</string>
     <string name="run_question">Kjør %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prediksjoner</string>
@@ -96,15 +54,7 @@
     <string name="overview_show_variable_sens">Dynamisk ISF</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">AVVIK</string>
-    <string name="activity_shortname">AKT</string>
-    <string name="bgi_shortname">BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
-    <string name="heartRate_shortname">PULS</string>
-    <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">DISF</string>
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="temp_basal_overview_short_name">M:</string>
@@ -113,13 +63,11 @@
     <string name="lowres_description">Tema for lav oppløsning</string>
     <string name="buttonson_description">Knapper vises alltid på bunnen av skjermen</string>
     <string name="largedisplay_description">Stor skjerm</string>
-    <string name="skin">Tema</string>
     <string name="cannula_usage">bruk:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="old_data">GAMLE DATA</string>
     <string name="overview_show_steps">Skritt</string>
-    <string name="steps_shortname">SKRITT</string>
     <string name="simple_mode_enabled">Enkel modus aktivert</string>
 </resources>

@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Ghép đôi với bơm</string>
     <string name="combov2_unpair_pump_title">Hủy ghép đôi bơm</string>
     <string name="combov2_driver_state_label">Trạng thái trình điều khiển</string>
-    <string name="combov2_current_activity_label">Hoạt động hiện tại</string>
     <string name="bluetooth_address">Địa chỉ Bluetooth</string>
     <string name="combov2_start_pairing">Bắt đầu ghép nối</string>
     <string name="combov2_pairing_in_progress">Đang ghép nối Combo</string>
@@ -40,6 +39,8 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
 3. Thử ghép đôi lại từ đầu</string>
     <string name="combov2_enter_pin">Nhập PIN</string>
     <string name="combov2_cancel_pairing">Hủy ghép nối</string>
+    <string name="combov2_confirm_cancel_pairing_message">Bạn có thực sự muốn hủy ghép nối không?</string>
+    <string name="combov2_confirm_unpair_message">Bạn có thực sự muốn hủy ghép nối bơm không?</string>
     <string name="combov2_pin_hint">Mã PIN 10 chữ số</string>
     <string name="combov2_pairing_finished_successfully">Đã ghép nối thành công với Combo</string>
     <string name="combov2_pairing_cancelled">Ghép nối với Combo đã bị hủy bởi người dùng</string>
@@ -90,6 +91,9 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (còn dưới 1 phút)</string>
     <string name="combov2_load_tdds_cancelled">Việc tải tổng liều insulin hằng ngày (TDD) bị hủy</string>
     <string name="combov2_retrieving_tdds_failed">Không lấy được TDD</string>
+    <string name="combov2_battery_empty">Trống rỗng</string>
+    <string name="combov2_battery_low">Thấp</string>
+    <string name="combov2_battery_full">Đầy</string>
     <string name="combov2_battery_low_warning">Pin của bơm yếu</string>
     <string name="combov2_reservoir_low_warning">Mức insulin trong bình bơm thấp</string>
     <string name="combov2_setting_tbr_succeeded">Cài đặt TBR thành công</string>
@@ -99,7 +103,6 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Bỏ qua yêu cầu TBR 100% dư thừa</string>
     <string name="combov2_hit_unexpected_tbr_limit">Gặp giới hạn bất ngờ khi điều chỉnh TBR: phần trăm mục tiêu là %1$d%%, nhưng đạt giới hạn ở %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Không thể đặt TBR tuyệt đối khi basal nền bằng 0</string>
-    <string name="combov2_pair_with_pump_summary">Ghép nối AndroidAPS/Android với bơm Combo chưa ghép</string>
     <string name="combov2_unpair_pump_summary">Hủy ghép nối AndroidAPS và Android khỏi bơm Accu-Chek Combo đã ghép nối</string>
     <string name="combov2_unknown_tbr_detected">Phát hiện TBR không xác định và đã dừng; phần trăm: %1$d%%; thời gian còn lại: %2$s</string>
     <string name="combov2_connection_error">Lỗi kết nối: %1$s</string>

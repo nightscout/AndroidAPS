@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop deaktiveret</string>
-    <string name="smscommunicator_pump_disconnected">Pumpe afbrudt</string>
-    <!-- Food-->
-    <string name="food_short">Mad</string>
-    <string name="description_food">Viser forudindstillede madvarer defineret i Nightscout</string>
-    <string name="filter">Filter</string>
-    <string name="food">Mad</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Fedt</string>
-    <string name="category">Kategori</string>
-    <string name="subcategory">Underkategori</string>
     <string name="calculator_label">Beregner</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="a11y_add_new_to_list">tilføj ny til listen</string>
-    <string name="do_you_want_switch_profile">Vil du skifte profil og kassere ændringer, der er foretaget i den aktuelle profil?</string>
-    <string name="save_or_reset_changes_first">Gem eller nulstil aktuelle ændringer først</string>
-    <string name="delete_current_profile">Fjern aktuelle profil?</string>
-    <string name="units_colon">Enheder:</string>
-    <!-- Actions -->
-    <string name="actions">Handlinger</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Nogle knapper til hurtigt at få adgang til almindelige funktioner</string>
-    <string name="actions_shortname">AKT</string>
-    <string name="tempbasal_button">Midlertidig basal </string>
-    <string name="extended_bolus_button">Forlænget bolus</string>
-    <string name="extended_bolus_cancel_button">Annuller Forlænget Bolus</string>
-    <string name="tools">Værktøjer</string>
     <string name="nav_history_browser">Historik browser</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">alder:</string>
@@ -42,7 +13,6 @@
     <string name="statuslights_patch_pump_age">patch pumpe alder</string>
     <string name="patch_pump">Patch pumpe</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Kopier indstillinger fra NS</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_insulin_label">insulin</string>
     <string name="chart_menu">Diagrammenu</string>
@@ -50,18 +20,10 @@
     <string name="a11y_blood_glucose">blodglucose</string>
     <string name="a11y_bg_outdated">forældet</string>
     <string name="set_basal_question">Acceptér ny midlertidig basal:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
-    <string name="overview_buttons_selection">Knapper</string>
-    <string name="not_available_full">Ikke tilgængelig</string>
-    <string name="constraints_violation">Begrænsninger overtrådt</string>
-    <string name="change_your_input">Skift dit input!</string>
     <string name="data_status">BG data status</string>
-    <string name="quickwizard_settings">Indstillinger for lynguide</string>
-    <string name="default_temptargets">Standard Midlertidige mål</string>
-    <string name="fill_bolus_title">Fyld / Klargør standard insulinmængder</string>
     <string name="run_question">Kør %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Forudsigelser</string>
@@ -77,13 +39,7 @@
     <string name="overview_show_abs_insulin">Absolut insulin</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">AFV</string>
-    <string name="activity_shortname">AKT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">AFVHÆL</string>
     <string name="treatments_shortname">BEHANDL</string>
-    <string name="heartRate_shortname">HR</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
@@ -91,7 +47,6 @@
     <string name="lowres_description">Lav kvalitets udseende</string>
     <string name="buttonson_description">Knapper vises altid nederst på skærmen</string>
     <string name="largedisplay_description">Stort display</string>
-    <string name="skin">Udseende</string>
     <string name="cannula_usage">brug:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

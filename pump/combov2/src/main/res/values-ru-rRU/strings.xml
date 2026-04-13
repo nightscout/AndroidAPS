@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Сопряжение с помпой</string>
     <string name="combov2_unpair_pump_title">Разорвать сопряжение с помпой</string>
     <string name="combov2_driver_state_label">Статус драйвера помпы</string>
-    <string name="combov2_current_activity_label">Текущие действия</string>
     <string name="bluetooth_address">Адрес Bluetooth</string>
     <string name="combov2_start_pairing">Начните сопряжение</string>
     <string name="combov2_pairing_in_progress">Идёт сопряжение с Combo</string>
@@ -100,7 +99,6 @@
     <string name="combov2_ignoring_redundant_100_tbr">Игнорирование избыточного запроса на 100% TBR</string>
     <string name="combov2_hit_unexpected_tbr_limit">При настройке ВБС: обнаружен непредвиденный предел: целевой процент %1$d%%, достиг предела %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Невозможно установить абсолютный TBR, если базовая скорость равна нулю</string>
-    <string name="combov2_pair_with_pump_summary">Выполнить сопряжение AndroidAPS и Android с помпой Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Отключить AndroidAPS и AndroidAPS от помпы Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Обнаружена и остановлена неизвестная временная базальная скоростьTBR; в процентах: %1$d%%; оставшаяся продолжительность: %2$s</string>
     <string name="combov2_connection_error">Ошибка соединения: %1$s</string>

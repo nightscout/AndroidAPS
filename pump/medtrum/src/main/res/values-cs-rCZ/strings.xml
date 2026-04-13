@@ -96,8 +96,6 @@
     <string name="press_retry_or_discard">Stiskněte <b>Další</b> pro obnovení aktivace nebo <b>Zahodit</b> pro resetování stavu aktivace.</string>
     <string name="reading_activation_status">Počkejte prosím, čtení stavu aktivace z Patche.</string>
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">Výstraha při nedostupné pumpě byla vynucena, protože patch pumpa Medtrum může selhat a být nedostupná.</string>
-    <string name="pump_unreachable_threshold_minutes_summary">Doporučujeme nastavit na 30 minut, protože patch pumpa Medtrum může selhat a být nedostupná.</string>
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
     <string name="alarm_setting_title">Nastavení alarmů</string>

@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Bolus 시작전 지연시간(초)</string>
     <string name="medtronic_pump_max_bolus">펌프의 최대 Bolus(U)</string>
     <string name="medtronic_pump_max_basal">펌프의 최대 Basal(U/h)</string>
-    <string name="medtronic_pump_encoding">메드트로닉 인코딩</string>
     <string name="medtronic_custom_action_wake_and_tune">켜기 및 튜닝</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus 블록 삭제</string>
     <string name="medtronic_pump_battery_select">배터리 타입(파워뷰)</string>

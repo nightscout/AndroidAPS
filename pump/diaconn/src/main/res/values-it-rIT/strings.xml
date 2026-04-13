@@ -128,4 +128,14 @@
     <string name="diaconn_g8_errorcode_36">Lo stop della basale temporanea viene rifiutato quando non è in esecuzione alcuna basale temporanea</string>
     <string name="diaconn_g8_cloudsend_summary">Invia i log del micro a Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Sincronizzazione Diaconn Cloud</string>
+    <string name="bolus_speed_1">1 U/min</string>
+    <string name="bolus_speed_2">2 U/min</string>
+    <string name="bolus_speed_3">3 U/min</string>
+    <string name="bolus_speed_4">4 U/min</string>
+    <string name="bolus_speed_5">5 U/min</string>
+    <string name="bolus_speed_6">6 U/min</string>
+    <string name="bolus_speed_7">7 U/min</string>
+    <string name="bolus_speed_8">8 U/min</string>
+    <string name="diaconn_pairing_successful">Associazione riuscita!</string>
+    <string name="diaconn_pairing_successful_message">Il micro è ora connesso e pronto per l\'uso.</string>
 </resources>

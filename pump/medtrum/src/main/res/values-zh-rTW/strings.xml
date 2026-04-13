@@ -98,8 +98,6 @@
     <string name="retry_activation_filled_error">無法繼續註冊。幫浦狀態已遺失。請勿重新預充，因為貼片可能已經插入。請丟棄該貼片並重新開始新的註冊流程。</string>
     <string name="reading_activation_status">請稍候，從幫浦讀取啟動狀態。</string>
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">強制啟用無法連線警報，因為 Medtrum 貼片可能會失敗並無法連線。</string>
-    <string name="pump_unreachable_threshold_minutes_summary">建議設定為 30 分鐘，因為 Medtrum 貼片可能會失敗並無法連線。</string>
     <string name="sn_input_title">序列號</string>
     <string name="sn_input_invalid">無效的序列號！</string>
     <string name="change_sn">變更</string>

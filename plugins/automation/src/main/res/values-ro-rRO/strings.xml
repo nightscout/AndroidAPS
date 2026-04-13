@@ -17,19 +17,19 @@
     <string name="notsuspended">Nu este suspendată</string>
     <string name="suspendloopforXmin">Pune pauză buclei pentru %1$d min</string>
     <string name="notification_message">Notificare: %1$s</string>
-    <string name="profilename">Schimbă profilul în</string>
-    <string name="changengetoprofilename">Schimbă profilul la %1$s</string>
+    <string name="profilename">Schimbați profilul în</string>
+    <string name="changengetoprofilename">Schimbați profilul la %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Ultima conexiune la pompă</string>
     <string name="automation_trigger_pump_last_connection_description">Ultima conexiune la pompă [minute în urmă]</string>
     <string name="automation_trigger_pump_last_connection_compared">Ultima conexiune la pompă %1$s %2$s minute în urmă</string>
     <string name="alreadyset">Deja setat</string>
     <string name="profilepercentage">Procentajul profilului</string>
-    <string name="startprofileforever">Pornește profilul %1$d%%</string>
+    <string name="startprofileforever">Porniți profilul %1$d%%</string>
     <string name="percent_u">Procent [%]:</string>
-    <string name="sendsmsactionlabel">Trimite SMS: %1$s</string>
-    <string name="sendsmsactiondescription">Trimite SMS către toate numerele</string>
-    <string name="sendsmsactiontext">Trimite SMS cu text</string>
-    <string name="starttemptarget">Pornește o țintă temporară</string>
+    <string name="sendsmsactionlabel">Trimiteți SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Trimiteți SMS către toate numerele</string>
+    <string name="sendsmsactiontext">Trimiteți SMS cu text</string>
+    <string name="starttemptarget">Porniți o țintă temporară</string>
     <string name="islesser">este mai mică decât</string>
     <string name="isequalorlesser">este mai mică sau egală cu</string>
     <string name="isequal">este egală cu</string>
@@ -47,10 +47,6 @@
     <string name="or">Sau</string>
     <string name="xor">Sau exclusiv</string>
     <string name="atspecifiedtime">La %1$s</string>
-    <string name="use_network_location">Folosește localizarea bazată pe rețea</string>
-    <string name="use_gps_location">Folosește localizarea GPS</string>
-    <string name="use_passive_location">Folosește localizarea pasivă</string>
-    <string name="locationservice">Servicii de localizare</string>
     <string name="onconnect">La conectare</string>
     <string name="ondisconnect">La deconectare</string>
     <string name="short_avgdelta">Media scurtă a deviației</string>
@@ -65,9 +61,9 @@
     <string name="time_range">Interval de timp</string>
     <string name="timerange_value">Timpul este între %1$s și %2$s</string>
     <string name="between">Între </string>
-    <string name="delete_short">ȘTERGE</string>
-    <string name="add_short">ADAUGĂ</string>
-    <string name="copy_short">COPIAZĂ</string>
+    <string name="delete_short">ȘTERGEȚI</string>
+    <string name="add_short">ADAUGĂȚI</string>
+    <string name="copy_short">COPIAȚI</string>
     <string name="temptargetcompared">Țintă temporară %1$s</string>
     <string name="btdevicecompared">Conexiune Bluetooth cu dispozitivul %1$s %2$s</string>
     <string name="btdevice">Conexiune la dispozitivul Bluetooth </string>
@@ -110,20 +106,20 @@
     <string name="condition">Condiție:</string>
     <string name="action">Acțiune:</string>
     <string name="taskname">Numele acțiunii</string>
-    <string name="edit_short">EDITARE</string>
+    <string name="edit_short">EDITAȚI</string>
     <string name="please_choose_an_action_type">Selectați tipul de acțiune</string>
     <string name="please_choose_a_trigger_type">Selectați un tip de factor declanșator</string>
     <string name="please_choose_a_operation_type">Alege tipul de operațiune</string>
     <string name="triggers">Declanșatori:</string>
     <string name="preconditions">Condiții pre-existente:</string>
     <string name="automation_event">Eveniment automatizare</string>
-    <string name="reorder_label">Reordonează</string>
+    <string name="reorder_label">Reordonați</string>
     <string name="user_action">Acțiunea utilizatorului</string>
     <string name="remove_selected_items">Ștergeți obiectele selectate</string>
     <string name="count_selected">%1$d selectat(e)</string>
     <string name="system_automation">Automatizare sistem</string>
-    <string name="run_automations">Rulează automatizările</string>
-    <string name="add_automation">Adaugă regulă</string>
+    <string name="run_automations">Rulați automatizările</string>
+    <string name="add_automation">Adăugați regulă</string>
     <string name="stop_processing">Oprire procesare</string>
     <!--    Reminders-->
     <string name="time_to_eat">E timpul pentru a mânca!\nRulează asistentul de bolusare și refă calculele.</string>
@@ -131,7 +127,7 @@
     <string name="error_setting_reminder">Eroare la setarea alarmei viitoare</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">Profil reglare automată (Autotune) %1$s</string>
-    <string name="autotune_run">Rulează Autotune</string>
+    <string name="autotune_run">Rulați Autotune</string>
     <string name="autotune_run_without_autoswitch">Autotune a rulat fără schimbarea profilului</string>
     <string name="autotune_run_with_autoswitch">Autotune a rulat și profilul a fost automat schimbat</string>
     <string name="autotune_run_with_error">Eroare în timpul ultimei rulări Autotune</string>
@@ -141,8 +137,8 @@
     <string name="triggerStepsCountDesc">Număr de pași per %1$s minute %2$s %3$.0f</string>
     <string name="triggerStepsCountDropdownLabel">Durata de măsurare</string>
     <!--    SMB mode-->
-    <string name="changeSmbState">Activează/dezactivează SMB</string>
-    <string name="changeSmbTo">Schimbă SMB la %1$s</string>
+    <string name="changeSmbState">Activați/dezactivați SMB</string>
+    <string name="changeSmbTo">Schimbați SMB la %1$s</string>
     <string name="newSmbMode">Noul mod SMB:</string>
     <string name="on">PORNIT</string>
     <string name="off">OPRIT</string>

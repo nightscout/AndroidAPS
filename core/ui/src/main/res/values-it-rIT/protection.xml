@@ -24,6 +24,13 @@
     <string name="password_not_changed">Password non modificata</string>
     <string name="pin_not_changed">PIN non modificato</string>
     <string name="pin_cleared">PIN eliminato!</string>
+    <string name="protection_password_hint">Inserisci qui la password</string>
+    <string name="protection_pin_hint">Inserisci il PIN qui</string>
+    <string name="auth_hint_master_password">Inserisci la master password</string>
+    <string name="auth_hint_master_or_pin">Inserisci la master password o il PIN</string>
+    <string name="auth_hint_master_or_password">Inserisci la master password o una password personalizzata</string>
+    <string name="use_pin_password">Usa PIN/Password</string>
+    <string name="current_master_password">Password Master corrente</string>
     <string name="master_password_not_set">Password principale non impostata</string>
     <string name="aaps_directory_not_selected">Directory AAPS non selezionata</string>
 </resources>

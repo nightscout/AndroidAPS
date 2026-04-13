@@ -25,11 +25,7 @@
     <string name="random_bg">Náhodná glykémia</string>
     <string name="description_source_random_bg">Vygeneruj náhodné dáta glykémií (iba Demo režim)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="bgsource_settings">Nastavenie zdroja glykémie</string>
-    <string name="bgsource_log_sensor_change_title">Prijať spustenie senzora</string>
-    <string name="bgsource_log_sensor_change_summary">Automaticky vytvoriť udalosť „Výmena senzora“ v časti Starostlivosť pri spustení senzora zo zdroja glykémie pomocou lokálneho odosielania dát</string>
     <string name="direction">smer</string>
-    <string name="bg_generation_interval_minutes">Interval generovania glykémie v minútach</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Prijímať glykémie z aplikáce Syai/Ottai.</string>
@@ -40,5 +36,11 @@
     <string name="patched_sino_app">Aplikácia Sino</string>
     <string name="description_source_patched_sino_app">Prijímať glykémie z upravenej aplikácie Sino.</string>
     <!-- Notification Reader -->
+    <string name="notification_reader">Čítačka notifikácií</string>
+    <string name="description_source_notification_reader">Prečítaj hodnoty glykémií z notifikácií poslaných oficiálnymi CGM aplikáciami (Dexcom, Medtronic, Eversense, atď.).</string>
     <!-- Permission rationales -->
+    <string name="permission_dexcom_title">Dexcom CGM</string>
+    <string name="permission_dexcom_description">Aplikácia potrebuje povolenie, pre príjimanie CGM dát z Dexcom aplikácie</string>
+    <string name="permission_notification_listener_title">Prístup k notifikáciam</string>
+    <string name="permission_notification_listener_description">Potrebné pre čítanie hodnôt glykémie z notifikácií CGM aplikácie</string>
 </resources>

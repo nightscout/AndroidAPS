@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Изчакване преди старт на болус (сек)</string>
     <string name="medtronic_pump_max_bolus">Макс болус в помпата (Е)</string>
     <string name="medtronic_pump_max_basal">Максимален базал в помпата (Е/ч)</string>
-    <string name="medtronic_pump_encoding">Медтроник коодиране</string>
     <string name="medtronic_custom_action_wake_and_tune">Събуди и настрой</string>
     <string name="medtronic_custom_action_clear_bolus_block">Изчисти Bolus Block</string>
     <string name="medtronic_pump_battery_select">Тип батерия (напреднали)</string>
