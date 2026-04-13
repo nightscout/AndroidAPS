@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">DIA 有哪些實際的情況？</string>
     <string name="dia_label_exam">胰島素作用時間 (DIA)</string>
+    <string name="dia_profile">你應在胰島素設定中設定 DIA（胰島素作用持續時間）的數值。</string>
     <string name="dia_minimumis5h">允許的最小值是5小時。</string>
     <string name="dia_hint1">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">如果您對之前在幫浦中使用的DIA值感到滿意，則在開始循環時無需更改。</string>
@@ -75,7 +76,9 @@
     <string name="prerequisites2_supportedcgm">一個受支援的CGM和適當的應用來接收手機/設備上的血糖值。</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/zh-tw/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">更新AAPS</string>
+    <string name="update_git">你需要在電腦上安裝並設定 Git，或使用瀏覽器建置。</string>
     <string name="update_asap">當AAPS的更新版本釋出時，早期版本可能在指定時間後被遠端限制。</string>
+    <string name="update_keys">若你使用 Android Studio 建置，請儲存並記下你的金鑰庫 (keystore) 位置，且更新時請使用與先前安裝相同的簽署金鑰。</string>
     <string name="update_askfriend">如果您在構建apk時遇到困難，您可以安裝由朋友構建的apk。</string>
     <string name="update_hint1">https://wiki.aaps.app/zh-tw/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">故障排除</string>
