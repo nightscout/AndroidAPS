@@ -177,12 +177,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     /**
      * 验证TOTP密码，支持1个时间步的时间容错（处理用户手机时间偏差）
      */
+
     private fun isValidTotpCode(generator: TimeBasedOneTimePasswordGenerator, code: String, tolerance: Int = 1): Boolean {
-        if (code.length != generator.config.codeDigits) return false
-        val currentCounter = generator.counter()
-        // 检查当前、前一个、后一个时间步的密码，兼容时间偏差
+        // 我们的配置固定是6位密码，直接判断长度，不用访问私有config属性
+        if (code.length != 6) return false
+
+        // 用时间戳做偏移验证，兼容2.4.0版本的API
         for (offset in -tolerance..tolerance) {
-            if (generator.isValid(code, counter = currentCounter + offset)) {
+            // 每个时间步30秒，计算偏移后的时间戳
+            val checkTimestamp = System.currentTimeMillis() + offset * 30 * 1000L
+            if (generator.isValid(code, checkTimestamp)) {
                 return true
             }
         }
