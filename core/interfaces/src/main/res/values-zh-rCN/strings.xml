@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">确认</string>
     <!--    Events-->
+    <string name="bolus_delivering">正在输注 %1$.2fU</string>
+    <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU 已输注</string>
+    <string name="bolus_delivered_successfully">大剂量 %1$.2f U已经成功输注</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">泵驱动程序已变更</string>
     <!--    DateUtil-->
+    <string name="minago">%1$d 分钟前</string>
+    <string name="secago">%1$d 秒前</string>
     <string name="minago_long">%1$d 分钟前</string>
+    <string name="hoursago">%1$.1f 小时前</string>
     <string name="days_ago">%1$.1f 天前</string>
     <string name="days_ago_round">%1$.0f 天前</string>
+    <plurals name="plurals_day_hour_ago">
+        <item quantity="other">%1$s 天 %2$s 小时前</item>
+    </plurals>
+    <plurals name="plurals_hour_ago">
+        <item quantity="other">%1$s 小时前</item>
+    </plurals>
+    <plurals name="plurals_minute_ago">
+        <item quantity="other">%1$s 分钟前</item>
+    </plurals>
+    <string name="seconds_ago">几秒钟前</string>
     <string name="in_days">在 %1$.0f 天内</string>
     <string name="in_days_round">在 %1$.0f 天内</string>
     <string name="shorthour">h</string>
@@ -33,6 +50,7 @@
     <string name="connecting_for">正在连接 %1$d s</string>
     <string name="handshaking">握手</string>
     <string name="connected">已连接</string>
+    <string name="authorized">已授权</string>
     <string name="disconnecting">正在断开连接</string>
     <string name="waiting_for_disconnection">正在等待连接</string>
     <!-- Custom Watchface -->
@@ -42,20 +60,55 @@
     <string name="metadata_wear_import_filename">文件名: %1$s</string>
     <string name="metadata_label_plugin_version">插件版本: %1$s</string>
     <string name="metadata_label_watchface_name_version">姓名: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">信息：%1$s</string>
     <string name="pref_show_iob">显示 IOB</string>
     <string name="pref_show_detailed_iob">显示IOB详细信息</string>
     <string name="pref_show_cob">显示COB</string>
     <string name="pref_show_delta">显示差异</string>
     <string name="pref_show_detailed_delta">显示详细信息</string>
     <string name="pref_show_avgdelta">显示平均增量</string>
+    <string name="pref_show_tempTarget">显示临时目标</string>
+    <string name="pref_show_reservoir_level">显示储药器量</string>
     <string name="pref_show_phone_battery">显示手机电量</string>
     <string name="pref_show_rig_battery">显示设备电量</string>
     <string name="pref_show_basal_rate">显示基础率</string>
     <string name="pref_show_loop_status">显示闭环状态</string>
     <string name="pref_show_bg">显示血糖</string>
+    <string name="pref_show_bgi">显示血糖曲线</string>
     <string name="pref_show_direction_arrow">显示方向箭头</string>
     <string name="pref_show_ago">显示Ago信息</string>
+    <string name="pref_show_week_number">显示星期几</string>
+    <string name="pref_show_date">显示日期</string>
+    <string name="pref_show_seconds">显示秒</string>
+    <string name="default_custom_watchface_comment">默认表盘。您可以点击 “导出表盘” 按钮生成模板</string>
+    <string name="default_custom_watchface_external_comment">默认表盘包括关注者的外部视图，您可以点击“导出表盘”按钮来生成模板</string>
+    <string name="wear_default_watchface">默认表盘</string>
+    <string name="wear_more_watchfaces">更多表盘</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
+    <string name="forever">永久</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">蓝牙</string>
+    <string name="permission_bluetooth_description">应用程序需要蓝牙权限才能通过泵进行通信</string>
     <!-- Insulin -->
+    <string name="insulin_plugin">胰岛素</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="unknown">未知</string>
+    <string name="rapid_acting_oref">Novorapid(诺和锐)</string>
+    <string name="lyumjev">Lyumjev(超速效赖脯)</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp(超速效门冬)</string>
+    <string name="fast_acting_insulin_comment">Novorapid(诺和锐), Novolog(门冬), Humalog(优泌乐)</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp(超速效门冬)</string>
+    <string name="insulin_peak_time">峰值时间 [min]</string>
+    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
 </resources>
