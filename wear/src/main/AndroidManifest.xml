@@ -302,6 +302,24 @@
         </service>
 
         <service
+            android:name=".complications.TargetComplication"
+            android:exported="true"
+            android:icon="@drawable/ic_tt"
+            android:label="@string/complication_target"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
             android:name=".complications.BrIobComplication"
             android:exported="true"
             android:icon="@drawable/ic_br_iob"
