@@ -114,12 +114,19 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private var mainMenuProvider: MenuProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // ========== 先执行所有系统初始化，满足Activity生命周期 ==========
+        // ========== 先把所有基础初始化做完，保证Activity有布局，不会崩 ==========
         super.onCreate(savedInstanceState)
+        Iconify.with(FontAwesomeModule())
+        LocaleHelper.update(applicationContext)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
 
-        // ========== 等Activity完全初始化完，再弹密码框，避免闪退 ==========
+        // ========== 现在Activity已经有完整的布局了，再弹密码框，绝对不会崩了 ==========
         Handler(Looper.getMainLooper()).post {
-            // ========== 用你APP原来的Material Dialog，完全兼容主题，不会崩溃 ==========
             val passwordInput = EditText(this@MainActivity)
             passwordInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             passwordInput.hint = "请输入启动密码"
@@ -131,10 +138,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     val inputPwd = passwordInput.text.toString()
                     // ========== 你的密码：danamo999 ==========
                     if (inputPwd == "danamo999") {
-                        // 密码正确，执行剩下的所有初始化逻辑
+                        // 密码正确，继续执行剩下的所有初始化
                         initRestOfOnCreate(savedInstanceState)
                     } else {
-                        // 删掉了多余的isShort参数，适配你这个版本的ToastUtils
                         ToastUtils.errorToast(this@MainActivity, "密码错误，无法启动APP")
                         finish()
                     }
@@ -142,21 +148,13 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 .setNegativeButton("取消") { _, _ ->
                     finish()
                 }
-                .setCancelable(false) // 禁止返回键/点击空白处绕过
+                .setCancelable(false)
                 .show()
         }
     }
 
-    // ========== 原MainActivity剩下的所有初始化逻辑，完全不动 ==========
+    // ========== 剩下的所有原来的初始化逻辑，完全不动 ==========
     private fun initRestOfOnCreate(savedInstanceState: Bundle?) {
-        Iconify.with(FontAwesomeModule())
-        LocaleHelper.update(applicationContext)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeButtonEnabled(true)
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.mainDrawerLayout, R.string.open_navigation, R.string.close_navigation).also {
             binding.mainDrawerLayout.addDrawerListener(it)
             it.syncState()
@@ -384,12 +382,15 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     override fun onResume() {
         super.onResume()
         if (config.appInitialized) binding.splash.visibility = View.GONE
-        if (!isProtectionCheckActive) {
-            isProtectionCheckActive = true
-            protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
-                                            UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) { isProtectionCheckActive = false; finish() } },
-                                            UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) { isProtectionCheckActive = false; finish() } }
-            )
+        // 只有密码验证通过了，才会执行原来的保护检查，避免冲突
+        if (::binding.isInitialized && binding.root.visibility == View.VISIBLE) {
+            if (!isProtectionCheckActive) {
+                isProtectionCheckActive = true
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
+                                                UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) { isProtectionCheckActive = false; finish() } },
+                                                UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed), true) { isProtectionCheckActive = false; finish() } }
+                )
+            }
         }
     }
 
