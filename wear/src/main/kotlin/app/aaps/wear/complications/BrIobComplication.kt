@@ -6,15 +6,14 @@ import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.data.PlainComplicationText
 import androidx.wear.watchface.complications.data.ShortTextComplicationData
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.wear.interaction.utils.DisplayFormat
-import app.aaps.wear.interaction.utils.SmallestDoubleString
+import app.aaps.wear.R
 import dagger.android.AndroidInjection
 
 /**
  * Basal Rate + IOB Complication
  *
  * Shows insulin on board (IOB) and basal rate
- * Text: IOB value (minimized to fit)
+ * Text: IOB value
  * Title: Basal rate with symbol
  *
  */
@@ -35,13 +34,13 @@ class BrIobComplication : ModernBaseComplicationProviderService() {
 
         return when (type) {
             ComplicationType.SHORT_TEXT      -> {
-                val iob = SmallestDoubleString(statusData.iobSum, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MIN_FIELD_LEN_IOB)
+                val iob = statusData.iobSum + getString(R.string.insulin_unit_short)
 
                 ShortTextComplicationData.Builder(
                     text = PlainComplicationText.Builder(text = iob).build(),
                     contentDescription = PlainComplicationText.Builder(text = "IOB, Basal Rate").build()
                 )
-                    .setTitle(PlainComplicationText.Builder(text = displayFormat.basalRateSymbol() + statusData.currentBasal).build())
+                    .setTitle(PlainComplicationText.Builder(text = displayFormat.basalRateSymbol().trimEnd() + statusData.currentBasal.replaceFirst(" ", "")).build())
                     .setTapAction(complicationPendingIntent)
                     .build()
             }
