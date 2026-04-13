@@ -505,11 +505,39 @@ fun SecondaryGraphCompose(
             dataMin to (dataMax / 0.75) // extend so data fills 75%, top 25% reserved for basal
         }
     }
-    val primaryRangeProvider = remember(maxX, primaryYMax) {
-        if (primaryYMax != null)
-            CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryYMax.first, maxY = primaryYMax.second)
-        else
-            CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)
+    // Dual-axis zero alignment.
+    // Why: Vico computes each vertical axis range independently, so y=0 on the
+    // left axis lands at a different pixel row than y=0 on the right axis. When
+    // both selected series can cross zero (e.g. IOB vs BGI), misaligned zeros
+    // are visually misleading — a point "above zero" on one axis can appear
+    // below a point that is "below zero" on the other. We compute a shared zero
+    // fraction from both data extents and extend each side's range to match it.
+    // Only applied to true dual-axis case (no basal overlay, secondary present).
+    val dualAxisRanges = remember(
+        isDualAxis, hasBasalLayer, processedIob, processedCob, processedSimpleSeries,
+        processedDevSlopeMin, processedDeviationLines, processedSecondary
+    ) {
+        if (!isDualAxis || hasBasalLayer) return@remember null
+        val primaryY = buildList {
+            addAll(processedIob.map { it.second })
+            addAll(processedCob.first.map { it.second })
+            for ((_, pts) in processedSimpleSeries) addAll(pts.map { it.second })
+            addAll(processedDevSlopeMin.map { it.second })
+            processedDeviationLines?.series?.values?.forEach { addAll(it) }
+        }
+        val secondaryY = processedSecondary.map { it.second }
+        if (primaryY.isEmpty() || secondaryY.isEmpty()) return@remember null
+        alignZeros(primaryY.min(), primaryY.max(), secondaryY.min(), secondaryY.max())
+    }
+
+    val primaryRangeProvider = remember(maxX, primaryYMax, dualAxisRanges) {
+        when {
+            // Basal overlay case takes precedence (reserves top 25% of axis for basal)
+            primaryYMax != null    -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = primaryYMax.first, maxY = primaryYMax.second)
+            // Dual-axis: use zero-aligned primary range so zeros line up with secondary axis
+            dualAxisRanges != null -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = dualAxisRanges.aMin, maxY = dualAxisRanges.aMax)
+            else                   -> CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)
+        }
     }
     // Basal range: 0 at top, -maxBasal*4 at bottom → basal occupies top 25%
     val basalRangeProvider = remember(maxX, basalMaxY) {
@@ -526,7 +554,13 @@ fun SecondaryGraphCompose(
         )
     }
     val secondaryAxisLines = remember(secondaryAxisLine, normalizerLine) { listOf(secondaryAxisLine, normalizerLine) }
-    val secondaryRangeProvider = remember(maxX) { CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX) }
+    // Secondary range: zero-aligned counterpart to primary when available, otherwise auto-range.
+    val secondaryRangeProvider = remember(maxX, dualAxisRanges) {
+        if (dualAxisRanges != null)
+            CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX, minY = dualAxisRanges.bMin, maxY = dualAxisRanges.bMax)
+        else
+            CartesianLayerRangeProvider.fixed(minX = 0.0, maxX = maxX)
+    }
 
     // Build chart layers
     val primaryLayer = rememberLineCartesianLayer(
@@ -996,4 +1030,49 @@ private data class ProcessedDeviationLines(
     val allX: List<Double>,
     val series: Map<DeviationType, List<Double>>
 )
+
+/** Aligned y-ranges for primary (a*) and secondary (b*) axes — zeros share the same fractional position. */
+private data class AlignedRanges(val aMin: Double, val aMax: Double, val bMin: Double, val bMax: Double)
+
+/**
+ * Adjusts two y-ranges so y=0 lands at the same fractional height on both axes.
+ *
+ * Strategy: whenever either series crosses (or touches) zero, symmetrize each
+ * axis around zero independently — both zeros then sit at the mid of their
+ * own axis, so they share the same pixel row regardless of the individual
+ * scales. When both series are strictly positive or strictly negative, zero
+ * is pinned to the edge and no stretching is needed.
+ *
+ * Why this over a "shared zero fraction p" approach: an extension-only
+ * alignment breaks down when one series is all-negative and the other is
+ * bipolar (target p → 1 requires clipping positive data). Symmetrize-on-cross
+ * is simpler, always works without clipping, and matches how the old
+ * OverviewFragment aligned bipolar series (see GraphData.kt lines 150/151).
+ */
+private fun alignZeros(aMin: Double, aMax: Double, bMin: Double, bMax: Double): AlignedRanges? {
+    // Treat touching zero (min=0 or max=0) as crossing — the zero line is in-range either way.
+    val aCrosses = aMin <= 0 && aMax >= 0
+    val bCrosses = bMin <= 0 && bMax >= 0
+    return when {
+        // At least one series straddles zero → symmetrize both around zero so zeros align at mid.
+        // Degenerate case: if one side is all zeros (half=0) we still symmetrize it using the
+        // other side's half (or 1.0 if both are all zero) so Vico gets a non-empty range and the
+        // zero line still lands at mid.
+        aCrosses || bCrosses       -> {
+            val aHalfRaw = maxOf(-aMin, aMax)
+            val bHalfRaw = maxOf(-bMin, bMax)
+            if (aHalfRaw <= 0 && bHalfRaw <= 0) return null // both completely flat at zero
+            val fallback = maxOf(aHalfRaw, bHalfRaw, 1.0)
+            val aHalf = if (aHalfRaw > 0) aHalfRaw else fallback
+            val bHalf = if (bHalfRaw > 0) bHalfRaw else fallback
+            AlignedRanges(-aHalf, aHalf, -bHalf, bHalf)
+        }
+        // Both strictly positive → pin zeros to bottom (use 0 as shared floor).
+        aMin > 0 && bMin > 0       -> AlignedRanges(0.0, aMax, 0.0, bMax)
+        // Both strictly negative → pin zeros to top (use 0 as shared ceiling).
+        aMax < 0 && bMax < 0       -> AlignedRanges(aMin, 0.0, bMin, 0.0)
+        // One all-positive, one all-negative (neither touches zero) → no useful shared alignment.
+        else                       -> null
+    }
+}
 
