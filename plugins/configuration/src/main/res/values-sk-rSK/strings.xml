@@ -27,9 +27,13 @@
     <string name="exitwizard">Preskočiť sprievodcu</string>
     <string name="setupwizard_sensitivity_description">Modul citlivosť slúži k detekcii zmien v citlivosti a k počítaniu COB. Viac informácií tu:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Zvoľte jeden z dostupných algoitmov. Sú zoradené od najstaršieho po najnovší. Novší algoritums je zvyčajne viac výkonný. Nezabudnite si prečítať OpenAPS dokumentáciu a nastavte ho pred použitím.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svoj RileyLink nižšie. Po výbere RileyLinku bude možné pokračovať v nastavení, akonáhle je stav RileyLinku \"Pripojené\". Táto akcia môže chvíľku trvať.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
+    <string name="setupwizard_permissions">Povolenia</string>
+    <string name="setupwizard_profile_info">Vytvorte si profil s Vašimi bazálnymi dávkami (BR), sacharidovo-inzulínovými prevodmi (IC), cistlivosťami (ISF) a cieľovými hodnotami (TT). Neskôr môžete pridať viacero profilov.</string>
+    <string name="setupwizard_permissions_info">AAPS potrebuje prístup k úložisku a povolenia na to, aby pracovalo správne. Prosím udeľte potrebné povolenia nižšie.</string>
     <string name="setupwizard_pump_riley_link_status">Stav RileyLinku:</string>
     <string name="readstatus">Načítať stav</string>
     <!-- Provider-agnostic cloud export/import strings -->
