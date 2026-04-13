@@ -9,6 +9,8 @@
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">在Pod管理菜单中显示Pulse日志按钮</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">在Pod管理菜单中显示RileyLink状态按键</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">在操作中启用电池更改记录</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, 碳水=%2$.1f 克</string>
     <string name="omnipod_eros_history_tbr_value">速率： %1$.2f U，持续时间： %2$d 分钟</string>
     <!-- Omnipod Eros - Error -->
@@ -42,6 +44,7 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pod上运行了一个临时基础率，但AAPS不知道这个临时基础。请手动取消您的临时基础率。</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink 状态</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">重置 RileyLink</string>
     <string name="omnipod_eros_pod_management_button_read_pulse_log">读取Pulse日志</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse 日志</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse 日志(复制到剪贴板)</string>
