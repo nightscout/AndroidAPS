@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">Care afirmații despre DIA sunt adevărate?</string>
     <string name="dia_label_exam">Durata Acțiunii Insulinei (DIA)</string>
+    <string name="dia_profile">Ar trebui să setați valoarea pentru DIA în profilul dumneavoastră.</string>
     <string name="dia_minimumis5h">Valoarea minimă permisă este de 5 ore.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Dacă ai considerat ca fiind bună valoarea DIA utilizată în pompă înainte de a trece pe AAPS, atunci nu este necesară modificarea acestei valori atunci când începi să folosești bucla.</string>
@@ -75,7 +76,9 @@
     <string name="prerequisites2_supportedcgm">Un CGM suportat și o aplicație corespunzătoare pentru a primi valorile glicemiei pe telefon/dispozitiv.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Actualizare AAPS</string>
+    <string name="update_git">Trebuie să aveți Git instalat și configurat pe computer sau să utilizați metoda de construire prin navigatorul de internet.</string>
     <string name="update_asap">Când versiunile actualizate ale AAPS sunt lansate, versiunile anterioare pot fi limitate de la distanță după un anumit timp.</string>
+    <string name="update_keys">Dacă folosiți metoda de construire prin Android Studio, ar trebui să salvați și să rețineți locația fișierului keystore și să utilizați aceeași cheie de semnare pentru actualizări ca și pentru instalarea anterioară.</string>
     <string name="update_askfriend">Dacă aveți dificultăți la construirea aplicației, puteți instala o aplicație care a fost construită de un prieten.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Depanare</string>
