@@ -219,8 +219,6 @@ dependencies {
     // Remote config
     api(libs.com.google.firebase.config)
     // 动态密码模块
-    implementation("dev.turingcomplete:kotlin-onetimepassword:2.4.0")
-    implementation("com.google.zxing:core:3.5.3")
 }
 
 println("-------------------")
