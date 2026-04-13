@@ -27,9 +27,13 @@
     <string name="exitwizard">跳過設定嚮導</string>
     <string name="setupwizard_sensitivity_description">敏感度外掛用於敏感度偵測和COB計算。更多資訊請查看：</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">請從可用的演算法中選擇一個。它們依從舊到新排序。較新的演算法通常更強大。別忘了閱讀 OpenAPS 文件，並在使用前完成設定。</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">請在下方配置您的RileyLink。選擇RileyLink後，一旦RileyLink狀態顯示為“已連線”，即可繼續設置。這可能需要一分鐘。\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b> 您可以在幫浦設置完成後繼續設置。\n</string>
     <string name="startobjective">開始您的第一個目標</string>
+    <string name="setupwizard_permissions">權限</string>
+    <string name="setupwizard_profile_info">使用你的基礎率、胰島素-碳水比 (IC)、胰島素敏感度 (ISF) 與目標值建立一個設定檔。之後可以新增多個設定檔。</string>
+    <string name="setupwizard_permissions_info">AAPS 需要儲存空間存取與其他權限才能正常運作。請在下方授予所需權限。</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink狀態：</string>
     <string name="readstatus">讀取狀態</string>
     <!-- Provider-agnostic cloud export/import strings -->
