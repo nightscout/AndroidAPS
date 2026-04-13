@@ -2,9 +2,13 @@
 <resources>
     <string name="dia_whatmeansdia">关于DIA(胰岛素作用持续时间)哪些是对的?</string>
     <string name="dia_label_exam">胰岛素作用持续时间 ( DIA)</string>
+    <string name="dia_profile">您应该在您的胰岛素配置中设置 DIA的值。</string>
     <string name="dia_minimumis5h">允许的最小值为 5 小时。</string>
+    <string name="dia_hint1">https://wiki.aaps.app/zh-cn/latest/SettingUpAaps/YourAapsProfile.html</string>
+    <string name="dia_meaningisequaltodiapump">如果您确认在使用 AAPS 之前，泵里设置的 DIA（胰岛素作用时长） 数值效果良好，那么开始闭环时无需更改该值。</string>
     <string name="dia_valuemustbedetermined">您应该为自己确定 DIA 的适当值。</string>
     <string name="hypott_label">低血糖临时目标</string>
+    <string name="hypott_whenhypott">设定低血糖临时目标的主要原因是什么？</string>
     <string name="hypott_wrongbasal">纠正由于基础率设置不准确而引起的低血糖事件。</string>
     <string name="hypott_exercise">纠正由于运动引起的低血糖事件。</string>
     <string name="hypott_0basal">在已设定0%临时基础率的基础上，进一步防止血糖降低。</string>
