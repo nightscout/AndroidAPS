@@ -11,10 +11,6 @@
     <!-- nsclient_token_title moved to core:keys module -->
     <!-- nsclient_token_summary moved to core:keys module -->
     <string name="ns_alarm_options">Параметри сповіщень</string>
-    <string name="ns_alarms">Створювати сповіщення з тривог NS</string>
-    <string name="ns_announcements">Створювати сповіщення з оголошень NS</string>
-    <string name="ns_alarm_stale_data_value_label">Поріг застарівання даних [хв]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Терміновий поріг застарівання даних [хв]</string>
     <!-- Tidepool -->
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->

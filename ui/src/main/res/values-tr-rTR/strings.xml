@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Bolus kısıtlaması uygulandı</string>
     <string name="carbs_constraint_applied">Karbonhidrat kısıtlaması uygulandı</string>
     <string name="temp_target_short">GH</string>
-    <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
     <string name="start_activity_tt">Egzersiz Başlat GH</string>
     <string name="start_eating_soon_tt">Yakında Yemek GH</string>
     <string name="start_hypo_tt">Hipo GH başlat</string>
@@ -38,7 +37,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
     <string name="timeshift_label">Zaman kaydırma</string>
     <string name="percentage_label">Yüzde</string>
@@ -72,7 +70,6 @@
     <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
     <!-- Treatments -->
     <string name="no_records_available">Kayıt mevcut değil</string>
-    <string name="calculation_short">Hesap</string>
     <string name="treatments_iob_label_string">AİNS:</string>
     <string name="treatments_carbs_label_string">Karbonhidrat:</string>
     <string name="tempbasals_netratio_label_string">Oran:</string>
@@ -105,17 +102,11 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">sadece saatte</string>
     <string name="a11y_only_on_phone">sadece telefonda</string>
-    <string name="quickwizard_settings">Hızlı asistan ayarları</string>
     <string name="overview_edit_quickwizard_button_text">Buton Metni</string>
-    <string name="overview_edit_quickwizard_valid">Geçerli:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Yalnızca pozitif AİNS</string>
     <string name="overview_edit_quickwizard_superbolus">Süperbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Yüzde çok yüksek!</string>
     <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
     <string name="additional_ecarbs">yKarb ekle</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Hesaplama için kullanın:</string>
-    <string name="constraints_violation">Kısıtlamalar ihlali</string>
-    <string name="change_your_input">Girişinizi değiştirin!</string>
     <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
     <string name="recalculate">Tekrar Hesapla</string>
     <!--    Widget-->

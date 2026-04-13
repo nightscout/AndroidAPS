@@ -7,7 +7,7 @@
     <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU entregado</string>
     <string name="bolus_delivered_successfully">Bolo %1$.2fU entregado con éxito</string>
     <!-- PumpPluginBase -->
-    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Se ha cambiado el controlador de la bomba.</string>
     <!--    DateUtil-->
     <string name="minago">Hace %1$dm</string>
     <string name="secago">Hace %1$ds</string>
@@ -100,6 +100,7 @@
     <string name="unknown">Desconocido</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Pico Libre de OREF</string>
     <string name="ultra_rapid_oref">Fiasp</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>

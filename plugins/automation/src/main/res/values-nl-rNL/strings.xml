@@ -47,10 +47,6 @@
     <string name="or">Of</string>
     <string name="xor">Exclusieve of</string>
     <string name="atspecifiedtime">Om %1$s</string>
-    <string name="use_network_location">Gebruik netwerklocatie</string>
-    <string name="use_gps_location">Gebruik GPS-locatie</string>
-    <string name="use_passive_location">Gebruik passieve locatie</string>
-    <string name="locationservice">Locatieservice</string>
     <string name="onconnect">Bij verbinden</string>
     <string name="ondisconnect">Bij verbinding verbreken</string>
     <string name="short_avgdelta">Kort gemiddeld verschil</string>

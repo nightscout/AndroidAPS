@@ -95,8 +95,6 @@
     <string name="press_retry_or_discard">Etkinleştirmeyi sürdürmek için <b>İleri</b>\'ye veya etkinleştirmeyi iptal etmek için <b>Çıkar</b>\'a basın.</string>
     <string name="reading_activation_status">Lütfen bekleyin, pompadan aktivasyon durumu okunuyor.</string>
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">Medtrum yaması başarısız olabileceği ve erişilemeyebileceği için ulaşılamıyor uyarısı zorunlu olarak etkinleştirildi.</string>
-    <string name="pump_unreachable_threshold_minutes_summary">Medtrum yaması başarısız olabileceği ve erişilemeyebileceği için 30 dakikaya ayarlanması önerilir.</string>
     <string name="sn_input_title">Seri Numarası</string>
     <string name="sn_input_invalid">Geçersiz seri numarası!</string>
     <string name="alarm_setting_title">Alarm Ayarları</string>

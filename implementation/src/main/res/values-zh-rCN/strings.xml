@@ -11,7 +11,93 @@
     <string name="in_range">在范围内</string>
     <string name="above" comment="above &quot;in range&quot;">上方</string>
     <string name="hba1c">糖化血红蛋白: </string>
+    <string name="std_deviation">标准差: %1$s</string>
+    <string name="detailed_14_days">14天详细数据</string>
+    <string name="day_tir">白天TIR</string>
+    <string name="night_tir">夜晚TIR</string>
+    <string name="carbs_short" comment="max 6 characters">碳水</string>
     <!--    PumpStatusGenerator-->
+    <string name="short_status_last_connection">上次连接: %1$d 分钟以前</string>
+    <string name="short_status_alert">警告: %1$s</string>
+    <string name="short_status_last_bolus">上次大剂量: %1$sU @ %2$s</string>
+    <string name="short_status_temp_basal">临时基础率：%1$s</string>
+    <string name="short_status_extended">Ext: %1$s</string>
+    <string name="short_status_reservoir">储药器: %1$dU</string>
+    <string name="short_status_battery">电池: %1$d%%</string>
+    <string name="short_status_not_initialized">泵未初始化</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">电池优化</string>
+    <string name="permission_battery_description">应用程序需要从电池优化中排除，以便在后台可靠运行</string>
+    <string name="permission_directory_title">AAPS目录</string>
+    <string name="permission_directory_description">为应用程序设置和日志文件选择一个目录</string>
+    <string name="permission_notifications_title">通知</string>
+    <string name="permission_notifications_description">需要显示提醒、警报与泵状态更新</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
+    <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">设置成功导出到云存储</string>
+    <string name="export_to_cloud_failed">导出到云存储失败</string>
+    <string name="csv_uploaded_to_cloud">用户条目 CSV 已成功上传到云存储</string>
+    <string name="exported">首选项已导出</string>
+    <string name="exported_failed">首选项导出失败！</string>
+    <string name="filenotfound">找不到文件</string>
+    <string name="ue_exported">用户条目已导出</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s 前导出</string>
+    <string name="exported_at" comment="at placeholder we add export date">导出 %1$s</string>
+    <string name="exported_less_than_hour_ago">不到一小时前导出</string>
+    <string name="metadata_warning_different_flavour">该首选项由其他版本的 AAPS（%1$s）创建，而你的版本为：%2$s\n\n部分设置可能缺失或无效 —— 导入后请检查并更新您的偏好设置。</string>
+    <string name="metadata_warning_different_device">该首选项是在其他设备上创建的。
+如果您是从旧手机或其他手机导入，可正常使用，但请务必确认导入的偏好设置正确无误！</string>
+    <string name="metadata_warning_old_export">导入的首选项已存在 %1$s 天 ! 您可能有更多最新的首选项，还是选择了错误的文件? 请记住定期导出首选项！</string>
+    <string name="metadata_warning_date_format">日期-时间格式无效！</string>
+    <string name="metadata_warning_different_version">来自应用不同次版本的首选项。如果是升级后导入，可正常使用，但导入后请检查首选项是否仍然正确！</string>
+    <string name="metadata_urgent_different_version">来自应用不同主版本的首选项。主版本之间差异较大，首选项可能存在不兼容情况！导入后请务必检查首选项是否仍然正确！</string>
+    <string name="prefdecrypt_settings_tampered">设置文件已更改</string>
+    <string name="prefdecrypt_settings_secure">设置文件是安全的</string>
+    <string name="prefdecrypt_settings_unencrypted">使用不安全且未加密的设置格式</string>
+    <string name="prefdecrypt_wrong_json">JSON 格式错误，缺少必填字段 (格式，内容，元数据或安全性)</string>
+    <string name="prefdecrypt_wrong_password">解密错误，该密码无法解密文件</string>
+    <string name="prefdecrypt_issue_missing_file_hash">缺少文件校验码（哈希值），无法验证设置的真实性！</string>
+    <string name="prefdecrypt_issue_modified">文件在导出后已被修改！</string>
+    <string name="prefdecrypt_issue_parsing">解密错误，解析首选项失败！</string>
+    <string name="prefdecrypt_issue_wrong_pass">解密错误，提供的密码无效或设置文件已被修改! 导入的文件可能是使用其他主密码导出的。</string>
+    <string name="prefdecrypt_issue_wrong_format">缺少加密配置，设置格式无效！</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法！</string>
+    <string name="metadata_label_format">文件格式</string>
+    <string name="metadata_label_created_at">创建于</string>
+    <string name="metadata_label_aaps_version">AAPS 版本</string>
+    <string name="metadata_label_aaps_flavour">构建变体</string>
+    <string name="metadata_label_device_name">导出设备的患者姓名</string>
+    <string name="metadata_label_device_model">导出设备型号</string>
+    <string name="metadata_label_encryption">文件加密密钥</string>
+    <string name="metadata_format_new">新的加密格式</string>
+    <string name="metadata_format_other">未知的导出格式</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">访问文件系统时出错。请正确选择 AAPS 目录。</string>
+    <string name="storage_google_drive">Google Drive</string>
+    <string name="backup_to_google_drive">备份到 Google Drive</string>
+    <string name="csv_upload_failed">上传用户条目CSV到云存储失败</string>
+    <string name="csv_upload_error">上传CSV到云端时出错</string>
+    <string name="uploading_to_cloud">上传到云端……</string>
+    <string name="cloud_directory_path">云目录: %1$s</string>
+    <string name="google_drive_token_refresh_failed">无法刷新 Google Drive 访问令牌</string>
+    <string name="google_drive_token_refresh_error">无法刷新 Google Drive 访问令牌: %1$s</string>
+    <string name="google_drive_connection_test_failed">Google Drive 连接测试失败</string>
+    <string name="google_drive_connect_error">无法连接到 Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">无法列出Google Drive文件夹</string>
+    <string name="google_drive_list_folders_error">列出文件夹时出错: %1$s</string>
+    <string name="google_drive_upload_no_id">上传成功，但没有返回id</string>
+    <string name="google_drive_upload_verify_failed">上传验证失败</string>
+    <string name="google_drive_upload_failed">上传失败: %1$s</string>
+    <string name="google_drive_upload_error">上传文件时出错： %1$s</string>
+    <string name="google_drive_folder_access_error">无法创建或访问目标文件夹： %1$s</string>
+    <string name="google_drive_list_settings_failed">列出设置文件失败</string>
+    <string name="google_drive_list_settings_error">列出设置文件时出错： %1$s</string>
+    <string name="google_drive_download_failed">下载文件失败</string>
+    <string name="google_drive_download_error">下载文件时出错： %1$s</string>
+    <string name="google_drive_authorized">Google Drive 已授权</string>
+    <string name="google_drive_reauth_required">请清除设置并重新授权 Google Drive</string>
 </resources>

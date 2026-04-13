@@ -15,9 +15,6 @@
     <string name="high_mark">Horná značka</string>
     <string name="low_mark_comment">Spodná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
-    <string name="permission">Povolenie</string>
-    <string name="need_system_window_permission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
-    <string name="askforpermission">Vyžiadať si povolenie</string>
     <string name="storedsettingsfound">Nájdené uložené nastavenia</string>
     <string name="master_password_summary">Hlavné heslo sa používa na šifrovanie zálohy a na \"prebitie\" zabezpečenia v aplikácii. Dobre si ho zapamätajte, alebo uložte na bezpečnom mieste.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -30,35 +27,25 @@
     <string name="exitwizard">Preskočiť sprievodcu</string>
     <string name="setupwizard_sensitivity_description">Modul citlivosť slúži k detekcii zmien v citlivosti a k počítaniu COB. Viac informácií tu:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Vyberte jeden z algoritmov. Sú zoradené od najstaršieho po najnovší. Novší je obvykle lepší a agresívnejší, ale vyžaduje presnejšie nastavenie. Preto pokiaľ s uzavretým okruhom začínate, mali by ste najskôr vybrať jen AMA a nie ten posledný. Nezabudnite si prečítať dokumentáciu k OpenAPS a prejsť nastavenia, kým ho začnete používať.</string>
+    <string name="setupwizard_aps_description">Zvoľte jeden z dostupných algoitmov. Sú zoradené od najstaršieho po najnovší. Novší algoritums je zvyčajne viac výkonný. Nezabudnite si prečítať OpenAPS dokumentáciu a nastavte ho pred použitím.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svoj RileyLink nižšie. Po výbere RileyLinku bude možné pokračovať v nastavení, akonáhle je stav RileyLinku \"Pripojené\". Táto akcia môže chvíľku trvať.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
+    <string name="setupwizard_permissions">Povolenia</string>
+    <string name="setupwizard_profile_info">Vytvorte si profil s Vašimi bazálnymi dávkami (BR), sacharidovo-inzulínovými prevodmi (IC), cistlivosťami (ISF) a cieľovými hodnotami (TT). Neskôr môžete pridať viacero profilov.</string>
+    <string name="setupwizard_permissions_info">AAPS potrebuje prístup k úložisku a povolenia na to, aby pracovalo správne. Prosím udeľte potrebné povolenia nižšie.</string>
     <string name="setupwizard_pump_riley_link_status">Stav RileyLinku:</string>
     <string name="readstatus">Načítať stav</string>
-    <string name="data_choices">Možnosti dát</string>
-    <string name="fabric_upload">Odosielanie do Fabric</string>
-    <string name="unattended_settings_export">Automatický export nastavení</string>
-    <string name="unattended_settings_export_summary">Povolenie tejto voľby bezpečne uloží vaše heslo do telefónu</string>
-    <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="exported_to_cloud">Nastavenie úspešne exportované do cloudového úložiska</string>
-    <string name="export_to_cloud_failed">Export do cloudového úložiska zlyhal</string>
-    <string name="cloud_connection_failed">Pripojenie ku cloudovému úložisku zlyhalo</string>
-    <string name="loading_from_cloud">Načítanie nastavení z cloudového úložiska, čakajte prosím…</string>
-    <string name="cloud_folder_error">Nepodarilo se načítať zložky cloudového úložiska</string>
-    <string name="csv_uploaded_to_cloud">Užívateľské záznamy CSV boli úspešne nahrané do cloudového úložiska</string>
-    <string name="cloud_reauthorize_message">Pripojenie ku cloudovému úložisku zlyhalo. Chcete sa znovu overiť?</string>
     <string name="request">Požiadavka</string>
-    <string name="apsmode_title">APS mód</string>
     <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigurácia</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
-    <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps_description">Aký APS algoritmus má byť použitý pre prispôsobenie liečby?</string>
     <string name="configbuilder_general_description">Toto sú všeobecné moduly, ktoré môžu byť užitočné.</string>
+    <string name="configbuilder_sync_description">Nahrávanie dát, synchronizácia a komunikácia pluginov.</string>
     <string name="configbuilder_constraints_description">Aké obmedzenia sú použité?</string>
     <string name="configbuilder_loop_description">Použi toto, pre aktiváciu integrácie AndroidAPS uzavretého okruhu.</string>
     <string name="configbuilder_insulin_description">Aký druh inzulínu používate?</string>
@@ -68,160 +55,23 @@
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje nastavenie bazálu z aktívneho profilu do pumpy. Overte si, že máte v AAPS korektný bazálny profil. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
-    <string name="a11y_open_settings">otvoriť nastavenia</string>
     <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
     <string name="expand_category">Rozbaliť kategóriu</string>
     <string name="collapse_category">Zbaliť kategóriu</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Nastavenia</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Import zrušený! Nastavenia neboli importované!</string>
-    <string name="preferences_import_impossible">Nastavenia sa nedajú importovať!</string>
-    <string name="check_preferences_details_btn">Vysvetli chyby pri importe...</string>
-    <string name="check_preferences_details_title">Podrobnosti chýb pri importe</string>
-    <string name="check_preferences_import_btn">Importovať</string>
-    <string name="check_preferences_import_anyway_btn">Importovať rovnako (NEBEZPEČNÉ!)</string>
-    <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
-    <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
-    <string name="check_preferences_dangerous_import">Nastavenia by nemali byť importované!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">Importovať nastavenia z</string>
-    <string name="setting_imported">Nastavenia importované</string>
-    <string name="old_master_password">Staré hlavné heslo</string>
-    <string name="different_password_used">Tento súbor bol exportovaný a zašifrovaný iným hlavným heslom. Pre dešifrovanie súboru použite staré hlavné heslo.</string>
-    <string name="master_password_will_be_replaced">V dôsledku úspešného importu bude aktuálne hlavné heslo NAHRADENÉ týmto starým hlavným heslom!</string>
-    <string name="exported">Nastavenie exportované</string>
-    <string name="exported_failed">Export nastavení se zlyhal!</string>
-    <string name="filenotfound">Súbor nenájdený</string>
-    <string name="goto_main_try_again">Prosím, vráťte se späť na hlavnú obrazovku a skúste to znovu.</string>
-    <string name="restartingapp">Zatváram aplikáciu, aby sa aplikovali nové nastavenia.</string>
-    <string name="ue_exported">Užívateľské záznamy exportované</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">Údržba</string>
-    <string name="maintenance_settings">Nastavenie údržby</string>
-    <string name="maintenance_email">E-Mail</string>
-    <string name="maintenance_amount">Počet protokolov na odoslanie</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportované pred %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">exportované v %1$s</string>
-    <string name="exported_less_than_hour_ago">exportované pred menej ako hodinou</string>
-    <string name="preferences_import_list_title">Vyberte súbor, ktorý chcete importovať</string>
-    <string name="metadata_warning_different_flavour">Nastavenia boli vytvorené inou verziou AAPS (%1$s) pretože máte: %2$s.\n\nNiektoré nastavenia môžu chýbať, alebo byť poškodené - po importovaní prosím skontrolujte a upravte nastavenia.</string>
-    <string name="metadata_warning_different_device">Nastavenia boli vytvorené na inom zariadení. Je to v poriadku, keď importujete zo staršieho/iného telefónu, ale skontrolujte, že importované nastavenia sú správne!</string>
-    <string name="metadata_warning_old_export">Importované nastavenia sú už %1$s dní staré! Možno máte viacero novších nastavení, alebo ste zvolili nesprávny súbor? Nezabúdajte pravidelne exportovať nastavenia!</string>
-    <string name="metadata_warning_date_format">Nesprávny formát dátumu a času!</string>
-    <string name="metadata_warning_different_version">Nastavenie z odlišnej, nižšej verzie aplikácie. Je to v poriadku, pokiaľ importujete po aktualizácii, po importe však skontrolujte, či sú nastavenia stále správne!</string>
-    <string name="metadata_urgent_different_version">Nastavenia z odlišnej hlavnej verzie aplikácie. Hlavná verzia sa výrazne líši a nemusia mať kompatibilné nastavenia. Po importe skontrolujte, či sú nastavenia stále správne!</string>
-    <string name="prefdecrypt_settings_tampered">Súbor s nastaveniami poškodený</string>
-    <string name="prefdecrypt_settings_secure">Súbor s nastaveniami je zabezpečený</string>
-    <string name="prefdecrypt_settings_unencrypted">Použitie nezabezpečeného, nešifrovaného formátu nastavení</string>
-    <string name="prefdecrypt_wrong_json">Chyba formátu JSON, chýba povinné pole (formát, obsah, metadáta, alebo zabezpečenie)</string>
-    <string name="prefdecrypt_wrong_password">Chyba dešifrovania, dané heslo nemôže dešifrovať súbor</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Chýba kontrolný súčet súboru (hash), nedá sa overiť pravosť nastavení!</string>
-    <string name="prefdecrypt_issue_modified">Súbor bol po exporte zmenený!</string>
-    <string name="prefdecrypt_issue_parsing">Chyba dešifrovania, analýza nastavení zlyhala!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrovania, zadané heslo je neplatné, alebo bol súbor nastavení zmenený! Môže sa stať, že importovaný súbor bol exportovaný s iným hlavným heslom.</string>
-    <string name="prefdecrypt_issue_wrong_format">Chýba konfigurácia šifrovania, formát nastavení je neplatný!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Formát súboru</string>
-    <string name="metadata_label_created_at">Vytvorené</string>
-    <string name="metadata_label_aaps_version">Verzia AAPS</string>
-    <string name="metadata_label_aaps_flavour">Verzia zostavy</string>
-    <string name="metadata_label_device_name">Meno pacienta použité pri exporte</string>
-    <string name="metadata_label_device_model">Model zariadenia použitý pri exporte</string>
-    <string name="metadata_label_encryption">Šifrovanie súborov</string>
-    <string name="metadata_format_new">Nový šifrovaný formát</string>
-    <string name="metadata_format_other">Neznámy formát exportu</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">Chyba pri prístupe k súborom. Vyberte adresár AAPS.</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
-    <string name="storage_local">Lokálne úložisko</string>
-    <string name="storage_google_drive">Google Disk</string>
-    <string name="select_storage_type">Vyberte typ úložiska</string>
-    <string name="backup_to_google_drive">Zálohovať na Google Disk</string>
-    <string name="google_drive_connection_error">Chyba pripojenia na Google Disk</string>
-    <string name="reauthorize">Znovu overiť</string>
-    <string name="cloud_auth_success">Overenie cloudového úložiska prebehlo úspešne</string>
-    <string name="cloud_auth_failed">Overenie cloudového úložiska zlyhalo</string>
-    <string name="cloud_auth_error">Chyba overenia cloudového úložiska: %1$s</string>
-    <string name="enable_cloud_export_title">Povoliť export do cloudu</string>
-    <string name="enable_cloud_export_message">Chcete povoliť export do cloudu? Týmto povolíte voľbu „Všetko do cloudu“ v nastaveniach exportu.</string>
-    <string name="can_change_in_export_settings">Toto môžete neskôr zmenit v časti Export nastavení</string>
-    <string name="setup_cloud_directory_first">Ak chcete používať Export nastavení, najskôr nastavte adresár cloudu</string>
-    <string name="local_directory">Lokálny adresár</string>
-    <string name="cloud_directory">Cloudový adresár</string>
-    <string name="export_options">Nastavenia exportu</string>
-    <string name="log_export_option">Log</string>
-    <string name="user_settings_export_option">Užívateľské nastavenia</string>
-    <string name="user_entries_csv_export_option">Exportovať záznamy užívateľa do Excelu (CSV)</string>
-    <string name="email_option">E-mail</string>
-    <string name="local_storage_option">Lokálne úložisko</string>
-    <string name="cloud_storage_option">Cloudové úložisko</string>
-    <string name="export_all_cloud">Všetko do cloudu</string>
-    <string name="send_logs_to_cloud">Exportovať logy do cloudu</string>
-    <string name="export_csv_to_cloud">Exportovat záznamy užívateľa do cloudu (CSV)</string>
-    <string name="export_csv_to_local">Exportovať užívateľské záznamy do lokálneho úložiska (CSV)</string>
-    <string name="export_settings_local">Exportovať nastavenia (lokálne)</string>
-    <string name="export_settings_cloud">Exportovať nastavenia (Cloud)</string>
-    <string name="export_settings_both">Exportovať nastavenia (Lokálne+Cloud)</string>
-    <string name="import_settings_local">Importovať nastavenia (Lokálne)</string>
-    <string name="import_settings_cloud">Importovať nastavenia (Cloud)</string>
-    <string name="import_settings_both">Importovať nastavenia (Lokálne+Cloud)</string>
     <!-- Import source selection dialog -->
-    <string name="select_import_source">Vybrať zdroj importu</string>
-    <string name="import_from_local">Importovať z lokálneho úložiska</string>
-    <string name="import_from_cloud">Importovať z cloudového úložiska</string>
-    <string name="import_source_local_description">Importovať nastavenia z úložiska zariadenia</string>
-    <string name="import_source_cloud_description">Importovať nastavenia z úložiska cloudu</string>
-    <string name="cloud_import_file_count">Zobrazujem %1$d z %2$d súborov</string>
-    <string name="cloud_import_file_count_all">Zobrazujem všetky súbory: %1$d</string>
-    <string name="load_more">Načítať viac</string>
-    <string name="load_more_with_count">Načítať ďalšie %1$d (načítaných %2$d)</string>
     <string name="loading">Načítavanie…</string>
-    <string name="loading_progress">Načítavanie %1$d z %2$d…</string>
-    <string name="loading_file_progress">Načítavanie %1$s (%2$d/%3$d)…</string>
-    <string name="logs_uploaded_to_cloud">Logy boli úspešne nahrané na cloudové úložisko</string>
-    <string name="logs_upload_failed">Nahrávanie logov na cloudové úložisko zlyhalo</string>
-    <string name="logs_upload_error">Pri nahrávaní logov na cloudové úložisko došlo k chybe</string>
-    <string name="csv_upload_failed">Nahrávanie záznamov užívateľa CSV na cloudové úložisko zlyhalo</string>
-    <string name="csv_upload_error">Pri nahrávaní CSV na cloudové úložisko došlo k chybe</string>
-    <string name="export_options_updated">Nastavenia exportu boli aktualizované</string>
-    <string name="no_settings_files_found">Na cloudovom úložisku neboli nájdené žiadne súbory z nastaveniami</string>
-    <string name="clear_action">Vymazať nastavenia</string>
-    <string name="clear_cloud_settings">Vymazať nastavenia cloudu</string>
-    <string name="clear_cloud_settings_message">Táto voľba prepne na lokálne úložisko a vymaže udelené oprávnenia. Pokračovať?</string>
-    <string name="uploading_to_cloud">Nahrávanie do cloudu…</string>
-    <string name="cloud_directory_path">Adresár Cloudu: %1$s</string>
     <string name="warning_wrong_directory_selected">Bol vybratý nesprávny adresár</string>
     <string name="warning_wrong_directory_message">Namiesto koreňového adresára AAPS ste vybrali podadresár „%1$s“. Vyberte prosím hlavný adresár AAPS. Podadresáre sú automaticky vytvorené a spravované aplikáciou.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
-    <string name="google_drive_token_refresh_failed">Nie je možné aktualizovať prístupový token Google Disku</string>
-    <string name="google_drive_token_refresh_error">Nie je možné aktualizovať prístupový token Google Disku: %1$s</string>
-    <string name="google_drive_connection_test_failed">Test pripojenia Google Disku zlyhal</string>
-    <string name="google_drive_connect_error">Nie je možné pripojiť sa ku Google Disku: %1$s</string>
-    <string name="google_drive_list_folders_failed">Nepodarilo sa načítať zložky Google Disku</string>
-    <string name="google_drive_list_folders_error">Chyba pri načítavaní zložiek: %1$s</string>
-    <string name="google_drive_upload_no_id">Nahrávanie prebehlo úspešne, ale nevrátilo žiadne ID</string>
-    <string name="google_drive_upload_verify_failed">Overenie nahrávania zlyhalo</string>
-    <string name="google_drive_upload_failed">Nahrávanie zlyhalo: %1$s</string>
-    <string name="google_drive_upload_error">Chyba pri nahrávaní súboru: %1$s</string>
-    <string name="google_drive_folder_access_error">Nie je možné vytvoriť cieľovú zložku, alebo k nej získať prístup: %1$s</string>
-    <string name="google_drive_list_settings_failed">Načítavanie súborov s nastaveniami zlyhalo</string>
-    <string name="google_drive_list_settings_error">Chyba pri načítavaní súborov s nastaveniami: %1$s</string>
-    <string name="google_drive_download_failed">Sťahovanie súboru zlyhalo</string>
-    <string name="google_drive_download_error">Chyba pri sťahovaní súboru: %1$s</string>
     <!-- Provider-agnostic cloud storage strings -->
-    <string name="cloud_authorization_title">Autorizácia %1$s</string>
-    <string name="cloud_authorization_message">Vo vašom prehliadači bola otvorená stránka pre autorizáciu%1$s .\n\nProsím dokončite autorizáciu a potom se vráťte do tejto aplikácie.\n\nToto dialogové okno sa automaticky zatvorí po úspešnej autorizácii.</string>
-    <string name="cloud_auth_start_failed">Zahájanie autorizácie zlyhalo</string>
-    <string name="cloud_auth_cancelled">Autorizácia zrušená</string>
-    <string name="cloud_auth_timeout">Vypršal časový limit pre autorizáciu, skúste to prosím znovu</string>
-    <string name="cloud_token_expired_or_invalid">Platnosť autorizácie cloudového úložiska vypršala, alebo je autorizácia neplatná. Prosím zopakujte pokus o autorizáciu.</string>
     <!-- Authorization status strings -->
-    <string name="authorization_status">Stav autorizácie</string>
-    <string name="google_drive_authorized">Autorizácia na Google Disk úspešná</string>
-    <string name="google_drive_reauth_required">Prosím vymažte nastavenia a znovu sa autorizujte na Google Disk</string>
 </resources>

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s 首选项</string>
     <string name="delta">增量</string>
     <string name="save">保存</string>
     <string name="wear">手表</string>
-    <string name="sensitivity_warning">如果要打开 Autosense功能, 记住输入所有吃的碳水化合物。否则碳水化合物的偏差将被识别为错误的灵敏度变化!!</string>
     <string name="invalid">无效</string>
-    <string name="pump_unreachable_threshold">泵无法连接的时间阈值[min]</string>
     <string name="close_navigation">关闭导航栏</string>
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
-    <string name="unitsnosemicolon">单位</string>
     <string name="authorizationfailed">授权失败</string>
     <string name="cannula">输注导管</string>
     <string name="identification_not_set">开发模式下未设置身份识别联系方式</string>
@@ -18,4 +14,16 @@
     <string name="remove_selected_items">删除选中项？</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="sort_label">排序</string>
+    <string name="search">搜索</string>
+    <string name="use_compose_main_screen">使用Compose主屏幕（实验）</string>
+    <string name="switch_to_compose_ui">切换到 Compose 界面</string>
+    <string name="switch_to_classic_ui">切换到经典界面</string>
+    <string name="select">选择</string>
+    <string name="set">设置</string>
+    <string name="migrating_preferences">正在迁移首选项…</string>
+    <string name="initializing_plugins">初始化插件…</string>
+    <string name="initializing">初始化…</string>
+    <string name="migrating_profile_switches">迁移配置文件切换…</string>
+    <string name="migrating_effective_profile_switches">正在迁移有效的配置文件切换…</string>
+    <string name="migrating_boluses">正在迁移大剂量…</string>
 </resources>

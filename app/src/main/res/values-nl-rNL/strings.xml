@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Instellingen</string>
     <string name="delta">Verschil</string>
     <string name="save">Opslaan</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
     <string name="invalid">Ongeldig</string>
-    <string name="pump_unreachable_threshold">Pomp niet beschikbaar sinds [min]</string>
     <string name="close_navigation">Sluit navigatie</string>
     <string name="remove_items">Items verwijderen</string>
     <string name="sort_items">Sorteer items</string>
-    <string name="unitsnosemicolon">Eenheden</string>
     <string name="authorizationfailed">Autorisatie mislukt</string>
     <string name="cannula">Canule</string>
     <string name="identification_not_set">Identificatie niet ingesteld in dev modus</string>

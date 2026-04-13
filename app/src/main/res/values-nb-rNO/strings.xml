@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Innstillinger</string>
     <string name="delta">Delta</string>
     <string name="save">Lagre</string>
     <string name="wear">Klokke</string>
-    <string name="sensitivity_warning">Hvis du slår på Autosens-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil Karbo-avvik bli identifisert feil som sensitivitetsendring !!</string>
     <string name="invalid">UGYLDIG</string>
-    <string name="pump_unreachable_threshold">Pumpen er ikke tilgjengelig etter [min]</string>
     <string name="close_navigation">Lukk meny</string>
     <string name="remove_items">Fjern oppføringer</string>
     <string name="sort_items">Sorter elementer</string>
-    <string name="unitsnosemicolon">Enheter</string>
     <string name="authorizationfailed">Autentisering feilet</string>
     <string name="cannula">Kanyle</string>
     <string name="identification_not_set">Identifikasjon ikke satt i utviklermodus</string>

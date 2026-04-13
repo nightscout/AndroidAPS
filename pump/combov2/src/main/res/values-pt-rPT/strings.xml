@@ -22,7 +22,6 @@
     <string name="combov2_pair_with_pump_title">Emparelhar com bomba</string>
     <string name="combov2_unpair_pump_title">Desemparelhar bomba</string>
     <string name="combov2_driver_state_label">Estado do driver</string>
-    <string name="combov2_current_activity_label">Atividade atual</string>
     <string name="bluetooth_address">Endereço Bluetooth</string>
     <string name="combov2_start_pairing">Iniciar o emparelhamento</string>
     <string name="combov2_pairing_in_progress">Emparelhamento em andamento</string>
@@ -98,7 +97,6 @@ para cancelar o emparelhamento)\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorar a requisição redundante de 100% de DBT</string>
     <string name="combov2_hit_unexpected_tbr_limit">Limite inesperado encontrado ao definir a DBT: percentagem alvo era %1$d%%, e atingiu um limite em %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Não é possível definir DBT se a basal é zero</string>
-    <string name="combov2_pair_with_pump_summary">Emparelhar a AndroidAPS e o Android com uma bomba Combo Accu-Chek não emparelhada</string>
     <string name="combov2_unpair_pump_summary">Desemparelhar a AndroidAPS e o Android com a bomba Combo Accu-Chek emparelhada</string>
     <string name="combov2_unknown_tbr_detected">Foi detectada e parada uma DBT; percentagem: %1$d%%; duração restante: %2$s</string>
     <string name="combov2_connection_error">Erro de ligação: %1$s</string>

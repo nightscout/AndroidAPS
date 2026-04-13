@@ -29,7 +29,6 @@
     <string name="smbnotallowedinopenloopmode">Açık Döngü modunda SMB\'ye (Super Micro Bolus) izin verilmiyor</string>
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
     <string name="hardlimit">sert sınır</string>
-    <string name="treatmentssafety_title">Tedavi güvenliği</string>
     <!-- Objectives -->
     <string name="completed_well_done">Tamamlandı, tebrikler!</string>
     <string name="not_completed_yet">Henüz tamamlanmadı</string>

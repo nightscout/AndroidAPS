@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AAPS</string>
-    <string name="label_actions_activity">AAPS</string>
     <string name="label_watchface_circle">AAPS(Kružni)</string>
     <string name="menu_wizard">Kalkulator</string>
     <string name="menu_wizard_short">Izračun</string>

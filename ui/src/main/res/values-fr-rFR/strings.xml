@@ -3,17 +3,32 @@
     <string name="bolus_constraint_applied">Restriction de bolus appliquée</string>
     <string name="carbs_constraint_applied">Restriction des glucides appliquée</string>
     <string name="temp_target_short">CT</string>
-    <string name="dialog_canceled">Boîte de dialogue annulée</string>
     <string name="start_activity_tt">Début Activités</string>
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
     <string name="start_hypo_tt">Début Traitement Hypo</string>
     <string name="time_offset">Décalage horaire</string>
     <string name="remind_to_bolus_later">Rappel du bolus plus tard</string>
+    <string name="a11y_carb_reminder">Définir le rappel sur l\'heure des glucides</string>
     <!--    Widget-->
     <string name="configure">Configurer l’opacité</string>
     <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
     <string name="activity_monitor">Moniteur d\'activité</string>
+    <string name="time_range">Plage horaire</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">Pentagone glucose (CGP) – 14 jours</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">Hyper</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Moyen</string>
+    <string name="cgp_reference">Personne en bonne santé</string>
+    <string name="cgp_patient">Patient</string>
+    <string name="cgp_pgr_very_low">Risque très faible</string>
+    <string name="cgp_pgr_low">Risque faible</string>
+    <string name="cgp_pgr_moderate">Risque modéré</string>
+    <string name="cgp_pgr_high">Risque élevé</string>
+    <string name="cgp_pgr_extremely_high">Risque extrêmement élevé</string>
     <string name="do_you_want_reset_stats">Voulez-vous réinitialiser les statistiques d\'activité ?</string>
     <string name="do_you_want_recalculate_tdd_stats">Voulez-vous recalculer les statistiques de DTQ ?</string>
     <string name="calculation_in_progress">Calcul en cours</string>
@@ -41,6 +56,7 @@
     <string name="site_management">Paramètres de gestion du site</string>
     <string name="site_management_description">Sélectionnez si vous souhaitez gérer le site de la pompe, le site MGC ou les deux. Ce paramètre permettra d\'ouvrir automatiquement la boîte de dialogue de gestion du site à chaque nouvelle entrée détectée</string>
     <string name="record_site_change">Enregistrer la localisation du site</string>
+    <string name="update_site_change">Mettre à jour la localisation du site</string>
     <string name="edit_site">Éditer</string>
     <string name="record_site_location">Site : %1$s</string>
     <string name="record_site_arrow">Flèche : %1$s</string>
@@ -53,7 +69,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Ne pas administrer de bolus, enregistrer uniquement</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Réutiliser %1$d%% %2$dh</string>
     <string name="timeshift_label">Décalage horaire</string>
     <string name="percentage_label">Pourcentage</string>
@@ -87,7 +102,6 @@
     <string name="a11y_set_carb_timer">régler l\'alarme du minuteur de glucides</string>
     <!-- Treatments -->
     <string name="no_records_available">Aucun enregistrement disponible</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IA: </string>
     <string name="treatments_carbs_label_string">Glucides:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
@@ -107,6 +121,8 @@
     <string name="profile_type">Type de profil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Sélectionné :</string>
+    <string name="profile_tab_1">Profil 1</string>
+    <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Profil par défaut</string>
     <string name="current_profile">Profil actuel</string>
     <string name="available_profile">Profils disponibles</string>
@@ -120,24 +136,17 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">uniquement sur la montre</string>
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
-    <string name="quickwizard_settings">Paramètres de l\'Assistant Rapide</string>
     <string name="overview_edit_quickwizard_button_text">Texte du bouton</string>
-    <string name="overview_edit_quickwizard_valid">Valide:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">IA positive uniquement</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Pourcentage trop élevé !</string>
     <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
     <string name="additional_ecarbs">Ajouter eGlucides</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Utiliser pour le calcul:</string>
-    <string name="constraints_violation">Violation des restrictions</string>
-    <string name="change_your_input">Changez votre entrée !</string>
     <string name="confirm_treatment">Veuillez confirmer le traitement</string>
     <string name="recalculate">Recalculer</string>
     <!--    Widget-->
     <string name="use_black_color">Utiliser la couleur noire</string>
     <string name="widget_configuration">Configuration du widget</string>
     <string name="until_changed">Jusqu\'à nouvel ordre</string>
-    <string name="limitations">Limitations</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">

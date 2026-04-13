@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Conferma</string>
     <!--    Events-->
     <string name="bolus_delivering">Erogazione di %1$.2fU</string>
     <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U erogate</string>
@@ -91,6 +92,26 @@
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Sempre</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_title">Bluetooth</string>
+    <string name="permission_bluetooth_description">L\'applicazione ha bisogno del permesso bluetooth per comunicare con il micro</string>
     <!-- Insulin -->
+    <string name="insulin_plugin">Insulina</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="unknown">Sconosciuto</string>
+    <string name="rapid_acting_oref">NovoRapid</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">Fiasp</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="insulin_peak_time">Tempo del picco [min]</string>
+    <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
     <!-- Concentration -->
+    <string name="u10">U10</string>
+    <string name="u40">U40</string>
+    <string name="u50">U50</string>
+    <string name="u100">U100</string>
+    <string name="u200">U200</string>
+    <string name="u300">U300</string>
+    <string name="u500">U500</string>
 </resources>

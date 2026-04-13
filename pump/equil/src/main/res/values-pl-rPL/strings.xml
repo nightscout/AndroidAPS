@@ -106,7 +106,6 @@
     <string name="equil_history_item18">Nieprawidłowa infuzja zatrzymana</string>
     <string name="equil_common_overview_button_suspend_delivery">Zawieś</string>
     <string name="equil_common_overview_button_resume_delivery">Wznów podawanie</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Chwilę temu</string>
     <string name="equil_common_less_than_a_minute_ago">Mniej niż minutę temu</string>
     <string name="equil_common_time_ago">%1$s temu</string>

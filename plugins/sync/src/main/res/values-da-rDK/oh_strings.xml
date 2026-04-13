@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans er blevet konfigureret. Hvis du vil stoppe med at uploade, skal du klikke på \'Log af\'.</string>
     <string name="not_setup_info">Open Humans er i øjeblikket inaktivt. For at begynde at uploade data, klik på \'Opsætning\'.</string>
     <string name="project_member_id">Projekt medlem ID: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Upload kun hvis forbundet til WiFi</string>
-    <string name="only_upload_if_charging">Upload kun ved opladning</string>
     <string name="open_humans_uploading">Uploader til Open Humans…</string>
     <string name="open_humans_notifications">Open Humans Notifikationer</string>
     <string name="uploading_to_open_humans">AAPS uploader til Open Humans. Dette kan tage et stykke tid.</string>

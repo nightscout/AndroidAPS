@@ -45,10 +45,6 @@
     <string name="or">또는</string>
     <string name="xor">전용 또는</string>
     <string name="atspecifiedtime">%1$s 에</string>
-    <string name="use_network_location">네트워크 위치 사용</string>
-    <string name="use_gps_location">GPS 위치 사용</string>
-    <string name="use_passive_location">수동 위치 사용</string>
-    <string name="locationservice">위치 서비스</string>
     <string name="onconnect">연결 중</string>
     <string name="ondisconnect">연결 해제 중</string>
     <string name="short_avgdelta">단기 평균 증분</string>

@@ -1,35 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Llaç desactivat</string>
-    <string name="smscommunicator_pump_disconnected">Bomba desconnectada</string>
-    <!-- Food-->
-    <string name="food_short">Aliments</string>
-    <string name="description_food">Mostra els valors preestablerts per alimentació definits a Nightscout</string>
-    <string name="filter">Filtre</string>
-    <string name="food">Aliments</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Greix</string>
-    <string name="category">Categoria</string>
-    <string name="subcategory">Subcategoria</string>
     <string name="calculator_label">Calculadora</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">PL</string>
-    <string name="do_you_want_switch_profile">Voleu canviar de perfil i descartar els canvis fets a l\'actual?</string>
-    <string name="save_or_reset_changes_first">Gravar o restablir primer els canvis</string>
-    <string name="delete_current_profile">Eliminar perfil actual?</string>
-    <string name="units_colon">Unitats:</string>
-    <!-- Actions -->
-    <string name="actions">Accions</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Alguns botons per accedir ràpid a funcions habituals</string>
-    <string name="actions_shortname">ACC</string>
-    <string name="tempbasal_button">BasalTemp</string>
-    <string name="extended_bolus_button">Bolus estès</string>
-    <string name="extended_bolus_cancel_button">Cancel·lar bolus estès</string>
-    <string name="tools">Eines</string>
     <string name="nav_history_browser">Historial</string>
     <string name="sensor_label">Sensor</string>
     <string name="age_label">edat:</string>
@@ -38,23 +10,14 @@
     <string name="pb_label">Pila de la bomba</string>
     <string name="cannula">Cànula</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copiar configuració d\'NS</string>
     <string name="a11y_graph">gràfica</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menú gràfica</string>
     <string name="set_basal_question">Acceptar nova basal temporal:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">INICI</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
-    <string name="overview_buttons_selection">Botons</string>
-    <string name="not_available_full">No disponible</string>
-    <string name="constraints_violation">Violació de restriccions</string>
-    <string name="change_your_input">Modifiqueu les dades!</string>
     <string name="data_status">Estat de dades de glucèmia</string>
-    <string name="quickwizard_settings">Configuració de l\'assistent</string>
-    <string name="default_temptargets">Objectius temporals per defecte</string>
-    <string name="fill_bolus_title">Encebar quantitats d\'insulina estàndard</string>
     <string name="run_question">Executa %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prediccions</string>
@@ -69,11 +32,6 @@
     <string name="overview_show_abs_insulin">Insulina absoluta</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DESV</string>
-    <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">PENDENTDESV</string>
     <string name="treatments_shortname">TRACT</string>
     <string name="graph_menu_divider_header">Gràfica</string>
     <!-- Skins -->
@@ -81,7 +39,6 @@
     <string name="lowres_description">Tema baixa resolució</string>
     <string name="buttonson_description">Els botons sempre es mostren a la part inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grossa</string>
-    <string name="skin">Tema</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>

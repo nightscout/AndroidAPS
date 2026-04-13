@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Food-->
-    <string name="food_short">Étel</string>
-    <string name="filter">Szűrő</string>
-    <string name="food">Étel</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <!-- Actions -->
-    <string name="actions">Műveletek</string>
-    <!-- manage moved to core:ui module -->
-    <string name="tools">Eszközök</string>
     <string name="sensor_label">Szenzor</string>
     <string name="age_label">kor:</string>
     <string name="insulin_label">Inzulin</string>
@@ -17,10 +7,8 @@
     <!-- Overview -->
     <string name="a11y_graph">grafikon</string>
     <string name="a11y_insulin_label">inzulin</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">KEZD</string>
-    <string name="overview_buttons_selection">Gombok</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Előrejelzések</string>
     <string name="overview_show_basals">Bázis</string>
@@ -30,7 +18,6 @@
     <!-- Skins -->
     <string name="classic_description">Eredeti megjelenés</string>
     <string name="lowres_description">Alacsony felbontás</string>
-    <string name="skin">Megjelenés</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="old_data">RÉGI ADAT</string>

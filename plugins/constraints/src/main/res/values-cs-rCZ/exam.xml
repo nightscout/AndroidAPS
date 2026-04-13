@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Co je pravda o DIA?</string>
     <string name="dia_label_exam">Doba působnosti inzulínu (DIA)</string>
-    <string name="dia_profile">Měli byste nastavit hodnotu DIA ve vašem profilu.</string>
     <string name="dia_minimumis5h">Minimální hodnota je 5 hodin.</string>
     <string name="dia_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Pokud jste spokojeni s tím, že hodnota DIA použitá v pumpě před AAPS dobře fungovala, není třeba ji měnit, když začínáte se smyčkou.</string>
@@ -76,9 +75,7 @@
     <string name="prerequisites2_supportedcgm">Podporované CGM a vhodná aplikace pro příjem glykémií v telefonu/zařízení.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Aktualizace AAPS</string>
-    <string name="update_git">Musíte mít nainstalovaný a nakonfigurovaný Git na vašem počítači.</string>
     <string name="update_asap">Pokud jsou uvolněny aktualizované verze AAPS, starší verze mohou být po určité době vzdálené omezeny.</string>
-    <string name="update_keys">Měli byste uložit a zaznamenat umístění úložiště klíčů a použít stejný podpisový klíč pro aktualizace jako pro vaši předchozí instalaci.</string>
     <string name="update_askfriend">Máte-li potíže se sestavením apk, můžete nainstalovat apk, který byl vybudován přítelem.</string>
     <string name="update_hint1">https://wiki.aaps.app/cs/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Řešení problémů</string>

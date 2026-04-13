@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">לולאה כבויה</string>
-    <string name="smscommunicator_pump_disconnected">המשאבה מנותקת</string>
-    <!-- Food-->
-    <string name="food_short">מזון</string>
-    <string name="description_food">מציג את ההגדרות הקבועות מראש עבור מזון המוגדר ב-Nightscout</string>
-    <string name="filter">סינון</string>
-    <string name="food">מזון</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">אנרגיה</string>
-    <string name="short_protein">חלבון</string>
-    <string name="short_fat">שומן</string>
-    <string name="category">קטגוריה</string>
-    <string name="subcategory">תת קטגוריה</string>
     <string name="calculator_label">מחשבון</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="a11y_add_new_to_list">הוסף לרשימה</string>
-    <string name="do_you_want_switch_profile">האם ברצונכם להחליף את הפרופיל ולזנוח את השינויים שבוצעו בפרופיל הנוכחי?</string>
-    <string name="save_or_reset_changes_first">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>
-    <string name="delete_current_profile">למחוק את הפרופיל הנוכחי?</string>
-    <string name="units_colon">יחידות:</string>
-    <!-- Actions -->
-    <string name="actions">פעולות</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
-    <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">בזאלי זמני</string>
-    <string name="extended_bolus_button">בולוס ממושך</string>
-    <string name="extended_bolus_cancel_button">ביטול בולוס ממושך</string>
-    <string name="tools">כלים</string>
     <string name="nav_history_browser">דפדפן היסטוריה</string>
     <string name="sensor_label">חיישן</string>
     <string name="age_label">גיל:</string>
@@ -42,7 +13,6 @@
     <string name="statuslights_patch_pump_age">גיל משאבה</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">העתקת הגדרות מ-Nightscout</string>
     <string name="graph_scale_6h">6 שע\'</string>
     <string name="graph_scale_12h">12 שע\'</string>
     <string name="graph_scale_18h">18 שע\'</string>
@@ -63,18 +33,10 @@
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
     <string name="set_basal_question">אשר בזאלי זמני חדש:</string>
-    <string name="overview_cgm">סנסור</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">בית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
-    <string name="overview_buttons_selection">מקשים</string>
-    <string name="not_available_full">לא זמין</string>
-    <string name="constraints_violation">הפרת מגבלות</string>
-    <string name="change_your_input">שנה קלט!</string>
     <string name="data_status">מצב נתוני הסוכר</string>
-    <string name="quickwizard_settings">הגדרות אשף מהיר</string>
-    <string name="default_temptargets">ברירות מחדל ערכי מטרה</string>
-    <string name="fill_bolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="run_question">להפעיל %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">חיזוי</string>
@@ -92,15 +54,7 @@
     <string name="overview_show_variable_sens">רגישות משתנה</string>
     <string name="prediction_shortname">חיזוי</string>
     <string name="basal_shortname">בזאל\'</string>
-    <string name="deviation_shortname">סטייה</string>
-    <string name="activity_shortname">פעילות</string>
-    <string name="bgi_shortname">השפעה</string>
-    <string name="abs_insulin_shortname">אבס\'</string>
-    <string name="devslope_shortname">שיפוע</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="heartRate_shortname">דופק</string>
-    <string name="sensitivity_shortname">רגישות%</string>
-    <string name="variable_sensitivity_shortname">רג\' משתנה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
     <string name="temp_basal_overview_short_name">T:</string>
@@ -109,13 +63,11 @@
     <string name="lowres_description">סקין רזולוציה נמוכה</string>
     <string name="buttonson_description">לחצנים מוצגים תמיד בתחתית המסך</string>
     <string name="largedisplay_description">תצוגה גדולה</string>
-    <string name="skin">סקין</string>
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
     <string name="overview_show_steps">צעדים</string>
-    <string name="steps_shortname">צעדים</string>
     <string name="simple_mode_enabled">נבחר המצב הפשוט</string>
 </resources>

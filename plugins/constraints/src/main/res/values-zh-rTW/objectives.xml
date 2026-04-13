@@ -38,13 +38,12 @@
     <string name="objectives_usage_objective">學習如何控制AAPS</string>
     <string name="objectives_usage_gate">在AAPS中執行不同操作</string>
     <string name="objectives_usage_learned">您已學會處理AAPS的基本操作。主控件在首頁總覽螢幕上可通過點擊或長按查看，更多控件在操作螢幕上。您應該知道如何將外掛螢幕放到頂部可滾動選單，或讓它顯示在左上角的已啟用外掛列表中。</string>
-    <string name="objectives_useprofileswitch">將個人配置檔設為90%持續10分鐘 (長按首頁總覽左上角的配置檔名稱)</string>
-    <string name="objectives_usedisconnectpump">模擬淋浴。中斷幫浦連線1小時（長按開環）</string>
+    <string name="objectives_useprofileswitch">將設定檔調整為 90%，持續 10 分鐘</string>
+    <string name="objectives_usedisconnectpump">模擬洗澡。中斷幫浦連線 1 小時</string>
     <string name="objectives_usereconnectpump">... 並以同樣方式重新連線</string>
-    <string name="objectives_usetemptarget">建立持續10分鐘的自定義臨時目標（長按目前目標）</string>
-    <string name="objectives_useactions">在組態建置工具中勾選啟用外掛，讓他可以顯示頁籤在頂部選單</string>
+    <string name="objectives_usetemptarget">建立自訂臨時目標，持續 10 分鐘</string>
     <string name="objectives_useloop">在組態設定工具中勾選循環，顯示循環外掛的內容</string>
-    <string name="objectives_usescale">通過長按血糖圖使用縮放功能</string>
+    <string name="objectives_usescale">在血糖圖表上捲動或縮放</string>
     <string name="objectives_exam_objective">證明您的知識</string>
     <string name="objectives_exam_gate">研究問題。每個問題有四個可能的答案。可能有不止一個正確答案。請檢查所有正確的並選擇驗證。</string>
     <string name="objectives_exam_learned_prerequisites">您不需要成為開發人員，但需要Nightscout才能通過目標，需要相容的幫浦和電腦來第一次構建AAPS和每次更新。</string>
@@ -85,4 +84,14 @@
     <string name="requirementnotmet">未滿足目標要求</string>
     <string name="what_i_ve_learned">我學到了什麼：</string>
     <string name="verify_master_password">驗證你的主密碼</string>
+    <string name="objectives_collapse">較少</string>
+    <string name="objectives_expand">更多</string>
+    <string name="objectives_no_learned">此目標尚未記錄任何課程。</string>
+    <string name="objectives_open_exam">開啟測驗</string>
+    <string name="objectives_exam_question_progress">第 %1$d 題，共 %2$d 題</string>
+    <string name="objectives_exam_reset">重設</string>
+    <string name="objectives_exam_previous">上一題</string>
+    <string name="objectives_exam_next">下一題</string>
+    <string name="objectives_exam_next_unanswered">下一個未作答</string>
+    <string name="objectives_show_hint">提示</string>
 </resources>

@@ -15,7 +15,6 @@
     <string name="smbnotallowedinopenloopmode">SMB no permès en mode llaç obert</string>
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>
-    <string name="treatmentssafety_title">Seguretat tractaments</string>
     <!-- Objectives -->
     <string name="not_completed_yet">No finalitzat encara</string>
     <string name="time_elapsed">Temps transcorregut</string>

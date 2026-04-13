@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">Inställningar för %1$s</string>
     <string name="delta">Delta</string>
     <string name="save">Spara</string>
     <string name="wear">Klocka (Wear)</string>
-    <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
     <string name="invalid">OGILTIG</string>
-    <string name="pump_unreachable_threshold">Pumpen ses som ej nåbar efter [min]</string>
     <string name="close_navigation">Stäng menyn</string>
     <string name="remove_items">Ta bort objekt</string>
     <string name="sort_items">Sortera objekt</string>
-    <string name="unitsnosemicolon">Enheter</string>
     <string name="authorizationfailed">Behörighetskontroll misslyckades</string>
     <string name="cannula">Kanyl</string>
     <string name="identification_not_set">Identifiering inte angiven i dev-läge</string>

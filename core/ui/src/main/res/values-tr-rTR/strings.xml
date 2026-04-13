@@ -31,7 +31,6 @@
     <string name="result">Sonuç</string>
     <string name="settings">Ayarlar</string>
     <string name="statuslights">Durum ışıkları</string>
-    <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
     <string name="configbuilder_insulin">İnsülin</string>
     <string name="value_unavailable_short">yok</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -253,9 +252,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%2$d dakika içinde %1$d g ek karbonhidrat gerekiyor</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Kümülatif GTD (Günlük Toplam Doz)</string>
-    <string name="expweight">Üstel Ağırlıklı GTD</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Oran</string>
@@ -590,8 +586,11 @@
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

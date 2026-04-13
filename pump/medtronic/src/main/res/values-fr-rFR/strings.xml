@@ -9,9 +9,9 @@
     <string name="medtronic_pump_bolus_delay">Délai avant le début du Bolus (s)</string>
     <string name="medtronic_pump_max_bolus">Bolus Max sur Pompe (U)</string>
     <string name="medtronic_pump_max_basal">Basal Max sur Pompe (U/h)</string>
-    <string name="medtronic_pump_encoding">Encodage Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Réveil et Réglage</string>
     <string name="medtronic_custom_action_clear_bolus_block">Effacer le bloc Bolus</string>
+    <string name="medtronic_custom_action_reset_rileylink">Réinitialiser le RileyLink</string>
     <string name="medtronic_pump_battery_select">Type de batterie (vue d\'alimentation)</string>
     <string name="medtronic_pump_battery_no">Non sélectionné (vue simple)</string>
     <string name="medtronic_pump_battery_alkaline">Alcaline (vue étendue)</string>

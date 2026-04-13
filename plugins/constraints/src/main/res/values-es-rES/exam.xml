@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">¿Qué es cierto acerca de DAI?</string>
     <string name="dia_label_exam">Duración de la acción de insulina (DAI)</string>
-    <string name="dia_profile">Debes establecer el valor de DAI en tu perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
     <string name="dia_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Si usted está satisfecho de que el valor para DIA que utilizó en su bomba antes de que AAPS funcionara bien, no hay necesidad de cambiar esto cuando comience usar el bucle cerrado.</string>
@@ -18,7 +17,7 @@
     <string name="pumpdisconnect_unnecessary">Esto es innecesario, ya que no se entregará insulina si la bomba está físicamente desconectada.</string>
     <string name="pumpdisconnect_missinginsulin">Evita que la AAPS contabilice la insulina que no se administró mientras la bomba estaba físicamente desconectada</string>
     <string name="pumpdisconnect_notstop">No detendrá la administración de insulina si la bomba permanece conectada a su cuerpo</string>
-    <string name="pumpdisconnect_openloop">Se activará el modo de bucle abierto en AAPS.</string>
+    <string name="pumpdisconnect_openloop">Se activará el modo de lazo abierto en AAPS.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
     <string name="objectives_label">Ajustes de AAPS</string>
     <string name="objectives2_label">Ajustes de AAPS</string>
@@ -33,12 +32,12 @@
     <string name="objectives2_easyrestore">Si su teléfono es dañado o perdido, hay formas fáciles de recuperar remotamente su configuración sin hacer una copia de seguridad.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/es/latest/Maintenance/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://wiki.aaps.app/es/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
-    <string name="noisycgm_label">Lecturas CGM con mucha variabilidad</string>
-    <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de CGM tienen mucha variabilidad?</string>
+    <string name="noisycgm_label">Lecturas MCG con mucha variabilidad</string>
+    <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de MCG tienen mucha variabilidad?</string>
     <string name="noisycgm_nothing">No hacer nada: AAPS se ocupará de ello.</string>
     <string name="noisycgm_pause">Deshabilitar el bucle cerrado para evitar posibles sobredosis o subdosis.</string>
     <string name="noisycgm_replacesensor">Sustituya el sensor con valores muy variables o inexactos.</string>
-    <string name="noisycgm_checksmoothing">Comprueba que tu aplicación del CGM proporciona datos suavizados.</string>
+    <string name="noisycgm_checksmoothing">Comprueba que tu aplicación del MCG proporciona datos suavizados.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/es/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Ejercicio y perfiles</string>
     <string name="exerciseprofile_whattodo">¿Cómo puede usar los perfiles para mejorar el sistema durante el ejercicio aeróbico?</string>
@@ -76,9 +75,7 @@
     <string name="prerequisites2_supportedcgm">Un medidor continuo de glucosa (MCG) y una aplicación capaz de recibir los valores proporcionados por el medidor en el móvil o tablet.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/es/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Actualizando AAPS</string>
-    <string name="update_git">Es necesario tener Git instalado y configurado en la computadora.</string>
     <string name="update_asap">Cuando esté disponible una versión más reciente de AAPS, las funciones de las versiones anteriores pueden ser limitadas de forma remota después de una fecha especifica.</string>
-    <string name="update_keys">Se debe guardar en un lugar seguro de su computadora la \"keystore\" (archivo.jks) que se ha empleado previamente y usar la misma \"keystore\" para futuras actualizaciones.</string>
     <string name="update_askfriend">Si tienes problemas creando la aplicación (. apk), puedes instalar el mismo archivo. apk compilado por un amigo.</string>
     <string name="update_hint1">https://wiki.aaps.app/es/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Solucionando problemas</string>

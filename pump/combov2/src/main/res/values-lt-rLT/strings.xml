@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Susieti pompą</string>
     <string name="combov2_unpair_pump_title">Atsieti pompą</string>
     <string name="combov2_driver_state_label">Valdiklio būsena</string>
-    <string name="combov2_current_activity_label">Dabartinė veikla</string>
     <string name="bluetooth_address">Bluetooth adresas</string>
     <string name="combov2_start_pairing">Pradėti susiejimą</string>
     <string name="combov2_pairing_in_progress">Vyksta Combo susiejimas</string>
@@ -99,7 +98,6 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignoruoti perteklines 100% bazės užklausas</string>
     <string name="combov2_hit_unexpected_tbr_limit">Nustatant laikiną bazę pasiektas nenumatytas limitas: LB tikslas %1$d%%, limitas %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Negalima nustatyti absoliučios laikinos bazės, jei pagrindinė bazė yra nulinė</string>
-    <string name="combov2_pair_with_pump_summary">Susieti AndroidAPS su dar nesusieta Accu-Chek Combo pompa</string>
     <string name="combov2_unpair_pump_summary">Atsieti AndroidAPS ir Android nuo dabartinės susietos Accu-Chek Combo pompos</string>
     <string name="combov2_unknown_tbr_detected">Aptikta ir sustabdyta nežinoma laikina bazė: %1$d%%; likęs laikas: %2$s</string>
     <string name="combov2_connection_error">Sujungimo klaida: %1$s</string>

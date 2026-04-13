@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">בולוס מעבר למגבלה</string>
     <string name="carbs_constraint_applied">פחמימות מעבר למגבלה</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">דו-שיח בוטל</string>
     <string name="start_activity_tt">התחל ערך מטרה פ\' גופנית</string>
     <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
     <string name="start_hypo_tt">הפעלת היפו TT</string>
@@ -38,7 +37,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">רישום בולוס ללא הזרקה</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
     <string name="timeshift_label">היסט זמן</string>
     <string name="percentage_label">אחוזים</string>
@@ -72,7 +70,6 @@
     <string name="a11y_set_carb_timer">הגדרת אזעקה טיימר פחמימות</string>
     <!-- Treatments -->
     <string name="no_records_available">אין רישומים זמינים</string>
-    <string name="calculation_short">חישוב</string>
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
     <string name="treatments_carbs_label_string">פחמימות:</string>
     <string name="tempbasals_netratio_label_string">יחס:</string>
@@ -105,9 +102,6 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">על השעון בלבד</string>
     <string name="a11y_only_on_phone">על הטלפון בלבד</string>
-    <string name="quickwizard_settings">הגדרות אשף מהיר</string>
-    <string name="overview_edit_quickwizard_valid">תקין:</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">האחוזים גבוהים מדי!</string>
     <string name="a11y_drag_and_drop_handle">לחצן גרירה</string>
     <string name="confirm_treatment">אשר טיפול</string>
     <string name="recalculate">חשב מחדש</string>

@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Η καθυστέρηση πριν το bolus ξεκίνησε (s)</string>
     <string name="medtronic_pump_max_bolus">Μέγιστο Bolus στην αντλία (U)</string>
     <string name="medtronic_pump_max_basal">Μέγιστος Βασικός στην αντλία (U/h)</string>
-    <string name="medtronic_pump_encoding">Αποκωδικοποίηση Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
     <string name="medtronic_custom_action_clear_bolus_block">Καθαρισμός Bolus Block</string>
     <string name="medtronic_pump_battery_select">Τύπος Μπαταρίας (Power View)</string>

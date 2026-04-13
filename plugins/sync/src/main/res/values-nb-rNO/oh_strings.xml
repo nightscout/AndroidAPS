@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans er konfigurert. Hvis du vil stoppe opplastinger, klikk \"Logg ut\".</string>
     <string name="not_setup_info">Open Humans er inaktiv. For å starte opplasting av data, klikk på \"Oppsett\".</string>
     <string name="project_member_id">Prosjektmedlems ID: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Last opp kun dersom du er koblet til WiFi</string>
-    <string name="only_upload_if_charging">Last opp kun ved mobillading</string>
     <string name="open_humans_uploading">Laster opp til Open Humans…</string>
     <string name="open_humans_notifications">Open Humans varsler</string>
     <string name="uploading_to_open_humans">AndroidAPS laster opp til Open Humans. Dette kan ta en stund.</string>

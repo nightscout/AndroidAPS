@@ -31,7 +31,6 @@
     <string name="result">Resultaat</string>
     <string name="settings">Instellingen</string>
     <string name="statuslights">Statusindicatoren</string>
-    <string name="do_ns_upload_title">Upload BG gegevens naar NS</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -298,9 +297,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g extra koolhydraten nodig binnen %2$d minuten</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Cumulatieve TDD</string>
-    <string name="expweight">Exponentieel gewogen TDD</string>
     <string name="basalrate">Basaal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Ratio</string>
@@ -643,8 +639,11 @@
     <string name="audio_playback_attribution">"AAPS speelt geluid"</string>
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

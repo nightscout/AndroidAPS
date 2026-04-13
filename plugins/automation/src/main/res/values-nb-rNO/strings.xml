@@ -47,10 +47,6 @@
     <string name="or">Eller</string>
     <string name="xor">Eksklusiv eller</string>
     <string name="atspecifiedtime">Kl %1$s</string>
-    <string name="use_network_location">Bruk nettverkslokasjon</string>
-    <string name="use_gps_location">Bruk GPS posisjon</string>
-    <string name="use_passive_location">Bruk passiv posisjon</string>
-    <string name="locationservice">Posisjonstjeneste</string>
     <string name="onconnect">Ved tilkobling</string>
     <string name="ondisconnect">Ved frakobling</string>
     <string name="short_avgdelta">Kort middelverdi</string>

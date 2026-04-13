@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Bolus göndermeden önceki bekleme süresi (sn)</string>
     <string name="medtronic_pump_max_bolus">Pompadaki Maks Bolus (Ü)</string>
     <string name="medtronic_pump_max_basal">Pompadaki Maks Bazal (Ü/s)</string>
-    <string name="medtronic_pump_encoding">Medtronic Kodlama</string>
     <string name="medtronic_custom_action_wake_and_tune">Uyan ve Ayarla</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Bloğunu Temizle</string>
     <string name="medtronic_pump_battery_select">Pil Türü (Güç Görünümü)</string>

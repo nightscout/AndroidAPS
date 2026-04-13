@@ -47,10 +47,6 @@
     <string name="or">lub</string>
     <string name="xor">wyłącznie lub</string>
     <string name="atspecifiedtime">W %1$s</string>
-    <string name="use_network_location">Użyj lokalizacji sieciowej</string>
-    <string name="use_gps_location">Użyj lokalizacji GPS</string>
-    <string name="use_passive_location">Użyj biernej lokalizacji</string>
-    <string name="locationservice">Usługa lokalizacji</string>
     <string name="onconnect">Przy połączeniu</string>
     <string name="ondisconnect">Przy rozłączeniu</string>
     <string name="short_avgdelta">Krótka średnia delta</string>

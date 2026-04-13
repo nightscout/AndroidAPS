@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Áp dụng giới hạn liều bolus</string>
     <string name="carbs_constraint_applied">Giới hạn Carbs đã bật</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Đã hủy hộp thoại</string>
     <string name="start_activity_tt">Bắt đầu hoạt động thể lực (TT)</string>
     <string name="start_eating_soon_tt">Sắp ăn (TT)</string>
     <string name="start_hypo_tt">Bắt đầu hạ đường huyết (TT)</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">Lấy đỉnh từ</string>
     <string name="cannot_delete_last_insulin">Không thể xóa insulin gần nhất</string>
     <string name="cannot_delete_active_insulin">Không thể xóa insulin đang dùng</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Tái sử dụng %1$d%% %2$dh</string>
     <string name="timeshift_label">Dịch chuyển thời gian</string>
     <string name="percentage_label">Phần trăm</string>
-    <string name="permanent_profile_switch">Vĩnh viễn (0 = không giới hạn thời gian)</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Tạm dừng vòng lặp 1 giờ</string>
     <string name="suspendloopfor2h">Tạm dừng vòng lặp 2 giờ</string>
@@ -129,7 +126,6 @@
     <string name="show_calculation">Hiển thị tính toán</string>
     <!-- Treatments -->
     <string name="no_records_available">Không có bản ghi nào</string>
-    <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
@@ -184,18 +180,14 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">chỉ trên đồng hồ</string>
     <string name="a11y_only_on_phone">chỉ trên điện thoại</string>
-    <string name="quickwizard_settings">Cài đặt QuickWizard</string>
     <string name="overview_edit_quickwizard_button_text">Button text</string>
     <string name="quick_wizard_mode_wizard">Wizard</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Carbs</string>
-    <string name="overview_edit_quickwizard_valid">Hợp lệ:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB > 0</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Tỷ lệ phần trăm quá cao!</string>
     <string name="a11y_drag_and_drop_handle">nút kéo–thả</string>
     <string name="additional_ecarbs">Thêm eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Sử dụng để tính toán:</string>
     <string name="calculator_options">Tùy chọn tính toán</string>
     <string name="use_bg">Sử dụng BG</string>
     <string name="use_cob">Sử dụng COB</string>
@@ -212,10 +204,7 @@
     <string name="ecarbs_additional">Lượng carb bổ sung</string>
     <string name="valid_from_to">Khoảng thời gian hợp lệ</string>
     <string name="carb_time">Thời điểm ăn carb</string>
-    <string name="no_quickwizard_entries">Chưa có mục QuickWizard nào. Nhấn + để thêm một mục.</string>
     <string name="save_changes_question">Lưu các thay đổi cho mục này?</string>
-    <string name="constraints_violation">Vượt giới hạn cho phép</string>
-    <string name="change_your_input">Nhập lại dữ liệu!</string>
     <string name="wizard_no_insulin_required">Không cần insulin</string>
     <string name="carbs_constraint_violation">Lượng carb bị giới hạn bởi các giới hạn an toàn</string>
     <string name="insulin_constraint_violation">Lượng insulin bị giới hạn bởi các giới hạn an toàn</string>
@@ -225,7 +214,6 @@
     <string name="use_black_color">Sử dụng màu đen</string>
     <string name="widget_configuration">Cấu hình tiện ích</string>
     <string name="until_changed">Cho đến khi thay đổi</string>
-    <string name="limitations">Các hạn chế</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Yêu cầu quyền truy cập</string>
     <string name="permission_sheet_subtitle">Một số quyền truy cập là cần thiết để ứng dụng hoạt động đúng cách</string>

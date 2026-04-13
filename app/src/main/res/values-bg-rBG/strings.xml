@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">Настройки на %1$s</string>
     <string name="delta">Изменение (Δ)</string>
     <string name="save">Съхрани</string>
     <string name="wear">Часовник</string>
-    <string name="sensitivity_warning">Когато включите Autosense, трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно, като повишена чувствителност!!</string>
     <string name="invalid">НЕВАЛИДНО</string>
-    <string name="pump_unreachable_threshold">Лимит за недостъпна помпа [мин]</string>
     <string name="close_navigation">Затвори меню</string>
     <string name="remove_items">Премахни артикули</string>
     <string name="sort_items">Подреди артикули</string>
-    <string name="unitsnosemicolon">Единици</string>
     <string name="authorizationfailed">Удостоверяването неуспешно</string>
     <string name="cannula">Канюла</string>
     <string name="identification_not_set">Идентификацията не е зададена в режим на разработчик</string>

@@ -14,7 +14,6 @@
     <!-- nsclient_token_summary moved to core:keys module -->
     <string name="status">Állapot:</string>
     <string name="clear_log">Napló törlése</string>
-    <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
     <!-- Tidepool -->
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
@@ -24,7 +23,6 @@
     <!-- GarminPlugin -->
     <!--    Wear-->
     <string name="pump_status">Pumpa állapot</string>
-    <string name="wear_settings">Wear beállítások</string>
     <string name="wear_general_settings">Általános beállítások</string>
     <string name="units_short">E</string>
     <string name="grams_short">g</string>

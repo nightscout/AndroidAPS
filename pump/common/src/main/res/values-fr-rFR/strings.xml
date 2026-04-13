@@ -11,6 +11,24 @@
     <string name="pump_status_suspended">Suspendu</string>
     <string name="pump_status_executing_command">Exécution de la commande</string>
     <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Obtenir les paramètres</string>
+    <string name="pump_cmd_desc_get_firmware">Obtenir le firmware de la pompe</string>
+    <string name="pump_cmd_desc_get_basal_profile">Définir profil de basal</string>
+    <string name="pump_cmd_desc_set_basal_profile">Définir profil de basal</string>
+    <string name="pump_cmd_desc_get_tbr">Obtenir la basale temporaire</string>
+    <string name="pump_cmd_desc_cancel_tbr">Annuler basale temporaire</string>
+    <string name="pump_cmd_desc_set_tbr">Définir la basale temporaire</string>
+    <string name="pump_cmd_desc_set_bolus">Définir le bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Obtenir le bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Annuler le bolus</string>
+    <string name="pump_cmd_desc_get_remaining_insulin">Obtenir l\'insuline restante</string>
+    <string name="pump_cmd_desc_get_battery_status">Obtenir l\'état de la batterie</string>
+    <string name="pump_cmd_desc_get_time">Obtenir l\'heure</string>
+    <string name="pump_cmd_desc_set_time">Définir l\'heure</string>
+    <string name="pump_cmd_desc_get_pump_status">Obtenir l\'état de la pump</string>
+    <string name="pump_cmd_desc_get_history">Obtenir l\'historique</string>
+    <string name="pump_cmd_desc_get_history_params">Obtenir l\'historique %s</string>
+    <string name="pump_cmd_desc_custom">Commandes personnalisées</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basales</string>
     <string name="history_group_configuration">Configurations</string>
@@ -32,6 +50,7 @@
     <string name="time_last_3_hours">3 dernières heures</string>
     <string name="time_last_6_hours">6 dernières heures</string>
     <string name="time_last_12_hours">12 dernières heures</string>
+    <string name="time_last_24_hours">Dernières 24 heures</string>
     <string name="time_last_2_days">2 derniers jours</string>
     <string name="time_last_4_days">4 derniers jours</string>
     <string name="time_last_week">Dernière semaine</string>

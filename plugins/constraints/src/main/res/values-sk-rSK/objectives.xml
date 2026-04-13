@@ -38,13 +38,12 @@
     <string name="objectives_usage_objective">Naučte sa, ako ovládať AndroidAPS</string>
     <string name="objectives_usage_gate">Vykonávajte v AndroidAPS rôzne akcie</string>
     <string name="objectives_usage_learned">Naučili ste sa ovládať základy AAPS. Hlavné ovládacie prvky sú dostupné na záložke Prehľad na stlačenie, alebo dlhšie stlačenie, viac ovládacích prvkov je na stránke Akcie. Mali by ste takisto vedieť, ako pripnúť modul na hlavnú obrazovku, alebo ho nechať zobrazený v zozname aktívnych modulov naľavo.</string>
-    <string name="objectives_useprofileswitch">Nastavte profil na 90 % na 10 min (Dlhé stlačenie názvu profilu na obrazovke Prehľad)</string>
-    <string name="objectives_usedisconnectpump">Predstierajte, že se idete sprchovať. Odpojte pumpu na 1 h (Dlhšie pridržte tlačítko Otvorený okruh)</string>
+    <string name="objectives_useprofileswitch">Nastaviť profil 90% na 10 min</string>
+    <string name="objectives_usedisconnectpump">Simulujte sprchovanie. Odpojte pumpu na 1h</string>
     <string name="objectives_usereconnectpump">...a rovnakým spôsobom ju znovu pripojte</string>
-    <string name="objectives_usetemptarget">Vytvorte vlastný dočasný cieľ s trvaním 10 min (Dlhšie pridržte aktuálny cieľ)</string>
-    <string name="objectives_useactions">V Konfigurácii povoľte modul Akcie, aktivujte jeho zobrazenie a zobrazte jeho obsah z hornej ponuky</string>
+    <string name="objectives_usetemptarget">Vytvorte vlastný dočasný cieľ s trvaním 10 minút</string>
     <string name="objectives_useloop">Zobrazte obsah modulu uzavretý okruh</string>
-    <string name="objectives_usescale">Prepnite režim zobrazenia dlhým stlačením grafu glykémie</string>
+    <string name="objectives_usescale">Použite skrolovanie a priblíženie na grafe glykémie</string>
     <string name="objectives_exam_objective">Preukážte svoje znalosti</string>
     <string name="objectives_exam_gate">Preštudujte si otázky. Dostali ste štyri možné odpovede na každú otázku. Môže existovať viac ako jedna správna odpoveď. Zaškrtnite všetky správne odpovede a potvrďte voľbou KONTROLA.</string>
     <string name="objectives_exam_learned_prerequisites">Nemusíte byť vývojár, ale potrebujete NS na prejdenie cieľov, kompatibilnú pumpu a počítač na prvotné vytvorenie AAPS a pre každú jeho aktualizáciu.</string>
@@ -85,4 +84,14 @@
     <string name="requirementnotmet">Požiadavky cieľa nie sú splnené</string>
     <string name="what_i_ve_learned">Čo som sa naučil:</string>
     <string name="verify_master_password">Overte, či poznáte hlavné heslo</string>
+    <string name="objectives_collapse">Menej</string>
+    <string name="objectives_expand">Viac</string>
+    <string name="objectives_no_learned">Nezaznamenaná žiadna lekcia pre tento cieľ.</string>
+    <string name="objectives_open_exam">Otvoriť cvičenie</string>
+    <string name="objectives_exam_question_progress">Otázka %1$d z %2$d</string>
+    <string name="objectives_exam_reset">Resetovať</string>
+    <string name="objectives_exam_previous">Predošlá</string>
+    <string name="objectives_exam_next">Ďalšia</string>
+    <string name="objectives_exam_next_unanswered">Ďalšia nezodpovedaná</string>
+    <string name="objectives_show_hint">Nápoveda</string>
 </resources>

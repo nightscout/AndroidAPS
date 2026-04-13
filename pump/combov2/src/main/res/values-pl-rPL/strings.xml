@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Paruj z pompą</string>
     <string name="combov2_unpair_pump_title">Usuń sparowanie z pompą</string>
     <string name="combov2_driver_state_label">Stan sterownika</string>
-    <string name="combov2_current_activity_label">Bieżąca aktywność</string>
     <string name="bluetooth_address">Adres Bluetooth</string>
     <string name="combov2_start_pairing">Rozpocznij parowanie</string>
     <string name="combov2_pairing_in_progress">Trwa parowanie z Combo</string>
@@ -99,7 +98,6 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorowanie zbędnego żądania o 100% TBR</string>
     <string name="combov2_hit_unexpected_tbr_limit">Napotkano nieoczekiwany limit podczas dostosowywania TBR: oczekiwany docelowy procent %1$d%%, osiągnął limit przy %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nie można ustawić bezwzględnego TBR, jeśli wyjściowa dawka bazowa jest zerowa</string>
-    <string name="combov2_pair_with_pump_summary">Sparuj AAPS i Androida z aktualnie niesparowaną pompą Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Usuń parowanie AAPS i Androida z aktualnie sparowanej pompy Accu-Chek Combo</string>
     <string name="combov2_unknown_tbr_detected">Nieznany TBR został wykryty i zatrzymany; procent: %1$d%%; pozostały czas trwania: %2$s</string>
     <string name="combov2_connection_error">Błąd połączenia: %1$s</string>

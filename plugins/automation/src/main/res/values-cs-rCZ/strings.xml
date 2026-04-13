@@ -47,10 +47,6 @@
     <string name="or">Nebo</string>
     <string name="xor">Exkluzivní nebo</string>
     <string name="atspecifiedtime">Ve %1$s</string>
-    <string name="use_network_location">Povolit zjištění polohy podle sítě</string>
-    <string name="use_gps_location">Použití GPS pozice</string>
-    <string name="use_passive_location">Použít pasivní polohu</string>
-    <string name="locationservice">Služba určování polohy</string>
     <string name="onconnect">Při připojení</string>
     <string name="ondisconnect">Při odpojení</string>
     <string name="short_avgdelta">Krátkodobý průměr</string>

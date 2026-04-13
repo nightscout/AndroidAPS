@@ -15,9 +15,6 @@
     <string name="high_mark">סימון גבוה</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
-    <string name="permission">הרשאה</string>
-    <string name="need_system_window_permission">האפליקציה צריכה הרשאת מערכת של חלונות לצורך התראות</string>
-    <string name="askforpermission">מבקש הרשאה</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
     <string name="master_password_summary">הסיסמה הראשית משמשת להצפנת גיבוי וכדי לעקוף את האבטחה ביישום. זכרו אותה או שמרו אותה במקום בטוח.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -29,24 +26,18 @@
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="exitwizard">דלג על אשף ההתקנה</string>
     <string name="setupwizard_sensitivity_description">תוסף רגישות משמש לזיהוי רגישות וחישוב הפחמ\' הפעילות. לקבלת מידע נוסף, בקרו בכתובת:</string>
-    <string name="setupwizard_aps_description">בחרו באחד מהאלגוריתמים הזמינים. הם ממוינים מהישן לחדש. אלגוריתם חדש יותר הוא בדרך כלל חזק ואגרסיבי יותר. לפיכך, אם אתם משתמשים חדשים רצוי שתתחילו עם AMA ולא עם האלגוריתם האחרון. נא לא לשכוח לקרוא את תיעוד OpenAPS ולהגדיר אותו כראוי לפני השימוש.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">הגדירו את תצורת הריילילינק מטה. לאחר שתבחרו באפשרות ריילילינק, ניתן יהיה להמשיך בהתקנה אחרי שסטטוס הריילילינק יהיה \"מחובר\". פעולה זו עשויה להימשך דקה.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>הערה:</b> ניתן יהיה להמשיך בהתקנה לאחר חיבור ההמשאבה.\n</string>
     <string name="startobjective">התחלת המשימה הראשונה שלכם</string>
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
     <string name="readstatus">קרא סטטוס</string>
-    <string name="data_choices">אפשרויות נתונים</string>
-    <string name="fabric_upload">העלאה ל-Fabric</string>
-    <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
     <!-- Provider-agnostic cloud export/import strings -->
     <string name="request">בקשה</string>
-    <string name="apsmode_title">מצב APS</string>
     <string name="error_asking_for_permissions">שגיאה בעת בקשת הרשאות</string>
     <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">בונה התצורה</string>
     <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
-    <string name="configbuilder_profile">פרופיל</string>
     <string name="configbuilder_aps_description">איזה אלגוריתם של APS יבצע התאמות טיפול?</string>
     <string name="configbuilder_general_description">מס\' תוספים כלליים שעשויים להיות יעילים.</string>
     <string name="configbuilder_constraints_description">אילו מגבלות פעילות?</string>
@@ -58,77 +49,18 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
     <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
-    <string name="a11y_open_settings">פתח הגדרות</string>
     <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
     <string name="expand_category">הרחב קטגוריה</string>
     <string name="collapse_category">צמצם קטגוריה</string>
     <!--ImportExport-->
-    <string name="nav_preferences">העדפות</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">ייבוא בוטל! ההעדפות לא הובאו!</string>
-    <string name="preferences_import_impossible">לא ניתן לייבא את ההגדרות!</string>
-    <string name="check_preferences_details_btn">הסבר בעיות ייבוא…</string>
-    <string name="check_preferences_details_title">פרטי בעיות ייבוא</string>
-    <string name="check_preferences_import_btn">ייבוא</string>
-    <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
-    <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
-    <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
-    <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">יבא הגדרות מ-</string>
-    <string name="setting_imported">הגדרות מיובאות</string>
-    <string name="old_master_password">סיסמה ראשית ישנה</string>
-    <string name="different_password_used">קובץ זה יוצא והוצפן באמצעות סיסמה ראשית שונה. אנא ספקו סיסמה ראשית זו כדי לפענח את הקובץ.</string>
-    <string name="master_password_will_be_replaced">בעקבות ייבוא ההגדרות הסיסמה הראשית הקיימת תוחלף עם הסיסמה הראשית המיובאת!</string>
-    <string name="exported">ההעדפות יוצאו</string>
-    <string name="exported_failed">יצוא ההעדפות נכשל!</string>
-    <string name="filenotfound">הקובץ לא נמצא</string>
-    <string name="goto_main_try_again">נא לחזור למסך הראשי ולנסות שוב.</string>
-    <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
-    <string name="ue_exported">רשומות המשתמש יוצאו</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">תחזוקה</string>
-    <string name="maintenance_settings">הגדרות תחזוקה</string>
-    <string name="maintenance_email">נמען דוא\"ל</string>
-    <string name="maintenance_amount">מספר הרשומות למשלוח</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">יוצא לפני %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">יוצא ב-%1$s</string>
-    <string name="exported_less_than_hour_ago">יוצא לפני פחות משעה</string>
-    <string name="preferences_import_list_title">בחרו קובץ לייבוא</string>
-    <string name="metadata_warning_different_flavour">ההעדפות נוצרו בגרסה אחרת של AAPS (%1$s) בעוד גירסתכם %2$s. \n\n חלק מההגדרות עלולות להיות חסרות או בלתי תקינות - לאחר הייבוא נא לבדוק ולעדכן את ההעדפות.</string>
-    <string name="metadata_warning_different_device">ההעדפות נוצרו במכשיר אחר. זה בסדר אם ייבאתם אותן ממכשיר ישן או שונה, אך וודאו שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_warning_old_export">ההעדפות המיובאות הן כבר בנות %1$s ימים! אולי יש לכם עדפות עדכניות יותר או שבחרתם קובץ לא נכון? זכרו לייצא את ההעדפות באופן סדיר!</string>
-    <string name="metadata_warning_date_format">פורמט תאריך ושעה לא חוקי!</string>
-    <string name="metadata_warning_different_version">ההעדפות נוצרו בגרסה משנית ישנה של AAPS. זה בסדר אם ייבאתם אותן לאחר שדרוג גרסה, אך וודאו שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_urgent_different_version">ההעדפות נוצרו בגרסה ראשית אחרת של AAPS. גרסאות ראשיות הן שונות מאוד והגדרותיהן עלולות להיות לא תואמות אחת לשניה. נא לוודא שההעדפות שהובאו נכונות!</string>
-    <string name="prefdecrypt_settings_tampered">קובץ ההגדרות פגום</string>
-    <string name="prefdecrypt_settings_secure">קובץ ההגדרות מאובטח</string>
-    <string name="prefdecrypt_settings_unencrypted">משתמש בפורמט הגדרות בלתי מאובטח ובלתי מוצפן</string>
-    <string name="prefdecrypt_wrong_json">שגיאה בפורמט JSON, חסר שדה חובה (פורמט, תוכן, מטא דאטה, בטיחות)</string>
-    <string name="prefdecrypt_wrong_password">שגיאת פענוח, הסיסמה שהתקבלה לא מפענחת את הקובץ</string>
-    <string name="prefdecrypt_issue_missing_file_hash">בקרת קבצים (hash) חסרה, לא ניתן לאמת את אותנטיות ההגדרות!</string>
-    <string name="prefdecrypt_issue_modified">הקובץ שונה לאחר הייצוא!</string>
-    <string name="prefdecrypt_issue_parsing">שגיאת פענוח, נתוח ההעדפות נכשל!</string>
-    <string name="prefdecrypt_issue_wrong_pass">שגיאת פענוח, הסיסמה שסופקה אינה חוקית או שקובץ ההגדרות שונה! יתכן שהקובץ המיובא יוצא עם סיסמה ראשית אחרת.</string>
-    <string name="prefdecrypt_issue_wrong_format">תצורת הצפנה חסרה, פורמט ההגדרות אינו חוקי!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">אלגוריתם ההצפנה לא צוין או שלא נתמך!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">פורמט הקובץ</string>
-    <string name="metadata_label_created_at">נוצר ב-</string>
-    <string name="metadata_label_aaps_version">גרסת AAPS</string>
-    <string name="metadata_label_aaps_flavour">גרסת בנייה</string>
-    <string name="metadata_label_device_name">מייצא את שם מכשיר המטופל\\ת</string>
-    <string name="metadata_label_device_model">מייצא את דגם המכשיר</string>
-    <string name="metadata_label_encryption">הצפנת קבצים</string>
-    <string name="metadata_format_new">פורמט הצפנה חדש</string>
-    <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">שגיאה בגישה למערכת הקבצים. אנא בחרו את תיקיית AAPS כראוי.</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
-    <string name="export_options">אפשרויות ייצוא</string>
     <!-- Import source selection dialog -->
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->

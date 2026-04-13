@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Trường này không được để trống</string>
+    <string name="error_url_not_valid">Địa chỉ Url không hợp lệ</string>
+    <string name="error_mustbe4hexadidits">Phải gồm 4 ký tự trong tập ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Điều trị</string>
     <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
@@ -57,7 +60,6 @@
     <string name="preference_range_summary" comment="%1$s=current value, %2$s=unit label, %3$s=minimum, %4$s=maximum. Example: 5.0 U (0.0 – 10.0)">%1$s%2$s (%3$s – %4$s)</string>
     <string name="statuslights">Đèn báo trạng thái</string>
     <string name="copy_existing_values">Sao chép cài đặt NS (nếu có)?</string>
-    <string name="do_ns_upload_title">Tải dữ liệu đường huyết lên NS</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_bgsource">Nguồn Đường huyết</string>
     <string name="configbuilder_smoothing">Làm mượt</string>
@@ -73,7 +75,7 @@
     <string name="ue_export_to_csv">Xuất dữ liệu sang Excel (csv)</string>
     <string name="confirm">Xác nhận</string>
     <string name="pump">Bơm</string>
-    <string name="pump_management">Quản lý bơm insulin</string>
+    <string name="pump_management">Bơm Insulin</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader">Tải lên</string>
@@ -316,7 +318,7 @@
     <string name="careportal_dad_alert">Cảnh báo D.A.D</string>
     <string name="careportal_insulin_cartridge_change">Thay ống chứa insulin</string>
     <string name="careportal_profileswitch">Chuyển Hồ sơ</string>
-    <string name="profile_management">Quản lý hồ sơ</string>
+    <string name="profile_management">Hồ sơ</string>
     <string name="careportal_snackbolus">Bolus bữa ăn nhẹ</string>
     <string name="careportal_mealbolus">Bolus cho bữa ăn</string>
     <string name="careportal_correctionbolus">Bolus hiệu chỉnh</string>
@@ -336,7 +338,7 @@
     <string name="treatment_insulin_desc">Tiêm liều bolus thủ công</string>
     <string name="treatment_carbs_desc">Ghi nhận carb không kèm insulin</string>
     <string name="treatment_calculator_desc">Tính toán liều bolus</string>
-    <string name="insulin_management">Quản lý insulin</string>
+    <string name="insulin_management">Insulin</string>
     <string name="manage_insulin_desc">Quản lý và kích hoạt các cấu hình insulin</string>
     <string name="concentration_disable_blocked">Không thể tắt hỗ trợ nồng độ khi vẫn còn insulin không phải U100. Hãy xóa tất cả các cấu hình insulin không phải U100 và chuyển sang hồ sơ U100 trước.</string>
     <string name="simple_mode_blocked_by_concentration">Không thể bật chế độ đơn giản khi đang sử dụng insulin không phải U100. Hãy chuyển sang insulin U100 trước.</string>
@@ -373,7 +375,7 @@
     <string name="custom">Tuỳ chỉnh</string>
     <string name="preset_settings">Thiết lập cài đặt sẵn</string>
     <string name="activation">Kích hoạt</string>
-    <string name="temp_target_management">Quản lý mục tiêu tạm thời</string>
+    <string name="temp_target_management">Mục tiêu tạm thời</string>
     <string name="revert_to_defaults">Khôi phục về mặc định</string>
     <string name="confirm_remove_preset">Xóa cài đặt sẵn %1$s?</string>
     <string name="confirm_cancel_temp_target">Hủy mục tiêu tạm thời đang hoạt động?</string>
@@ -425,9 +427,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Cần thêm %1$d g carb trong vòng %2$d phút</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Tổng liều TDD tích lũy</string>
-    <string name="expweight">Tổng liều hằng ngày theo cấp số nhân</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="tdd_short">TDD</string>
@@ -635,6 +634,8 @@
     <string name="wizard_carb_time">Thời gian ăn tinh bột</string>
     <string name="carb_time_now">Bây giờ</string>
     <string name="change">Thay đổi</string>
+    <string name="grant">Cấp quyền</string>
+    <string name="set">Thiết lập</string>
     <string name="wizard_set_alarm">Đặt báo thức</string>
     <string name="wizard_use_percentage">Sử dụng phần trăm</string>
     <string name="wizard_include_bg">Bao gồm BG</string>
@@ -666,7 +667,7 @@
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">Không có bơm khả dụng!</string>
     <string name="quickwizard">QuickWizard</string>
-    <string name="quickwizard_managemnt">Quản lý Quick Wizar</string>
+    <string name="quickwizard_managemnt">QuickWizard</string>
     <!--    Preferences-->
     <string name="child">Trẻ em</string>
     <string name="teenage">Thanh thiếu niên</string>
@@ -694,6 +695,7 @@
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Đã nhấn kết nối với Bơm</string>
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Đơn vị hàng ngày</string>
+    <string name="max_daily_units">Số đơn vị tối đa mỗi ngày</string>
     <string name="pump_icon">Biểu tượng Bơm</string>
     <string name="view_profile">Xem Hồ sơ</string>
     <string name="pump_history">Lịch sử bơm</string>
@@ -717,6 +719,7 @@
     <string name="firmware" comment="Pump firmware version label">Phần mềm</string>
     <string name="bolusspeed" comment="Speed at which bolus is delivered">Tốc độ liều Bolus</string>
     <string name="history" comment="Tab/screen title for viewing past events">Lịch sử</string>
+    <string name="overview_reservoir_concentration_value_over">Còn hơn %1$s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Giới hạn tỷ lệ nền tối đa ở %1$.2f U/h do %2$s</string>
     <string name="pumplimit">giới hạn Bơm</string>
@@ -743,7 +746,7 @@
     <string name="export_failed">Thất bại</string>
     <string name="export_alert">CẢNH BÁO</string>
     <!-- Export dialog strings -->
-    <string name="master_password_missing">Chưa thiết lập mật khẩu chính!\n\nVui lòng đặt mật khẩu chính trong Tùy chọn cài đặt (%1$s)</string>
+    <string name="master_password_missing">Chưa thiết lập mật khẩu chính!\n\nVui lòng thiết lập mật khẩu chính trước, sau đó thử lại.</string>
     <string name="export_to">Xuất cài đặt đến</string>
     <string name="password_preferences_encrypt_prompt">Hệ thống sẽ yêu cầu mật khẩu chính để mã hóa các thiết lập bạn xuất ra.</string>
     <string name="preferences_export_canceled">Xuất dữ liệu đã bị hủy! Tùy chọn KHÔNG được xuất dữ liệu!</string>
@@ -780,6 +783,8 @@
     <string name="send_logs">Gửi nhật ký</string>
     <string name="file_management">Quản lý tập tin</string>
     <string name="database_management">Quản lý cơ sở dữ liệu</string>
+    <string name="data_choices">Lựa chọn dữ liệu</string>
+    <string name="unattended_settings_export">Xuất cài đặt tự động</string>
     <!-- Maintenance bottom sheet descriptions -->
     <string name="maintenance_log_settings_desc">Cấu hình mức độ chi tiết của nhật ký</string>
     <string name="maintenance_send_logs_desc">Chia sẻ nhật ký để khắc phục sự cố</string>
@@ -945,6 +950,26 @@
     <string name="wiki_search_offline">Cần có Internet để tìm kiếm tài liệu</string>
     <string name="no_search_results">Không tìm thấy kết quả</string>
     <string name="search_plugin_disabled">Plugin %1$s đã bị tắt</string>
+    <!--    Food Management -->
+    <string name="food_management">Món ăn</string>
+    <string name="food_deleted">Đã xóa món ăn</string>
+    <string name="edit_food">Sửa món ăn</string>
+    <string name="add_food">Thêm món ăn</string>
+    <string name="name">Tên</string>
+    <string name="category">Danh mục</string>
+    <string name="subcategory">Danh mục con</string>
+    <string name="portion">Phần</string>
+    <string name="unit_label">Đơn vị</string>
+    <string name="fat">Chất béo</string>
+    <string name="protein">Chất đạm</string>
+    <string name="energy">Năng lượng</string>
+    <string name="undo">Hoàn tác</string>
+    <string name="no_data">Không có dữ liệu</string>
+    <string name="manage_food_desc">Quản lý cơ sở dữ liệu thực phẩm</string>
+    <string name="label_carbs_g">Carbs ( g)</string>
+    <string name="label_fat_g">Chất béo (g)</string>
+    <string name="label_protein_g">Chất đạm (g)</string>
+    <string name="label_energy_kj">Năng lượng (kJ)</string>
     <!--    Log Settings-->
     <string name="nav_logsettings">Cài đặt nhật ký</string>
     <string name="resettodefaults">Đặt lại về mặc định</string>
@@ -988,4 +1013,21 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <string name="ble_scan_select_pump">Chọn bơm của bạn từ danh sách bên dưới</string>
     <string name="ble_scan_scanning">Đang quét các thiết bị…</string>
+    <!-- Graph configuration -->
+    <string name="graph_add">Thêm biểu đồ</string>
+    <string name="graph_new">Biểu đồ mới</string>
+    <string name="graph_edit">Sửa biểu đồ</string>
+    <string name="graph_number">Biểu đồ %1$d</string>
+    <string name="graph_bg">Biểu đồ BG</string>
+    <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
+    <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
+    <string name="activity_shortname" comment="Short label for Activity graph series">ACT</string>
+    <string name="bgi_shortname" comment="Short label for Blood Glucose Impact graph series">-BGI</string>
+    <string name="abs_insulin_shortname" comment="Short label for Absolute Insulin graph series">ABS</string>
+    <string name="devslope_shortname" comment="Short label for Deviation Slope graph series">DEVSLOPE</string>
+    <string name="heartRate_shortname" comment="Short label for Heart Rate graph series">HR</string>
+    <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
+    <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
+    <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
 </resources>

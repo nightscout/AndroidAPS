@@ -21,7 +21,7 @@
     <string name="settingextendedbolus">Ajustando bolo extendido</string>
     <string name="stoppingextendedbolus">Parando bolo extendido</string>
     <string name="updatingbasalrates">Actualizando tasa basal</string>
-    <string name="description_pump_diaconn_g8">Integración de bombas de Insulina Diaconn G8</string>
+    <string name="description_pump_diaconn_g8">Integración de la bomba para bombas Diaconn G8</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
     <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Vulneración del bolo máximo</string>

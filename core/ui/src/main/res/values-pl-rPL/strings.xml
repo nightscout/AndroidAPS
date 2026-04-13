@@ -31,7 +31,6 @@
     <string name="result">Rezultat</string>
     <string name="settings">Ustawienia</string>
     <string name="statuslights">Wskaźniki stanu</string>
-    <string name="do_ns_upload_title">Przekaż dane BG do NS</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -298,9 +297,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Zalecane podanie %1$d g węglowodanów w przeciągu %2$d minut</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Kumulatywna TDD (dawka dzienna)</string>
-    <string name="expweight">Ważona wykładniczo TDD</string>
     <string name="basalrate">Baza</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Stosunek</string>
@@ -649,8 +645,11 @@
     <string name="audio_playback_attribution">"AAPS odtwarza dźwięk"</string>
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

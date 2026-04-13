@@ -9,6 +9,7 @@
     <string name="eopatch_ble_status">Stav BLE</string>
     <string name="eopatch_serial_number">Sériové číslo</string>
     <string name="eopatch_expiration_time">Čas exspirácie</string>
+    <string name="eopatch_not_activated">Neaktivovaný</string>
     <string name="eopatch_base_basal_rate">Základná hodnota bazálu</string>
     <string name="eopatch_temp_basal_rate">Dočasná bazálna dávka</string>
     <string name="invalid_basal_rate">Bazál profilu je menší než 0.05 U/h. EOPatch má minimálnu dávku 0.05 U. Prosím skúste to znovu po nastavení v profile na viac ako minimálnu dávku.</string>
@@ -37,17 +38,21 @@
     <string name="patch_wake_up">Plnenie inzulínu</string>
     <string name="patch_wake_up_desc_1">Naplňte novú pumpu inzulínom pri izbovej teplote. Skontrolujte uhol ihly.</string>
     <string name="patch_wake_up_desc_2">Čakajte na jedno pípnutie.</string>
+    <string name="patch_wake_up_pairing_info">Počas párovania, budú zobrazené dve Android vyskakovacie okná. Musíte obe potvrdiť pre úspešné ukončenie Bluetooth párovania.</string>
     <string name="patch_start_pairing">Spustiť párovanie</string>
     <string name="patch_connect_new">Párovanie pumpy</string>
     <string name="patch_connect_new_desc">Nová pumpa je spárovaná.\nUdržujte vzdialenosť medzi pumpou a telefónom čo možno najbližšie</string>
     <string name="patch_remove_needle_cap">Pripravte sa na pripojenie pumpy</string>
     <string name="patch_remove_needle_cap_desc_1">Odstráňte lepiacu pásku a kliknite na \"Ďalší\".</string>
+    <string name="patch_remove_needle_cap_desc_2">Keď trčí ihla, stlač \"Zahodiť\".</string>
+    <string name="patch_remove_needle_cap_desc_3">Ak je Patch mokrý, alebo špinavý, alebo je pokrčená lepiaca plocha, stlač \"Zahodiť\".</string>
     <string name="patch_remove_protection_tape">Pripojenie pumpy</string>
     <string name="patch_remove_protection_tape_desc_1">Vyčistite a vysušte miesto aplikácie a potom prilepte pumpu ku pokožke.</string>
     <string name="patch_remove_protection_tape_desc_2">Skontrolujte infuzne miesto a kliknite na tlačítko \'Spustiť kontrolu bezpečnosti\'.</string>
     <string name="patch_start_safety_check">Spustiť kontrolu bezpečnosti</string>
     <string name="patch_safety_check">Kontrola bezpečnosti…</string>
     <string name="patch_safety_check_desc_1">Bude to trvať asi 30 sekúnd.</string>
+    <string name="patch_safety_check_desc_2">Pre bezpečné používanie, neodstraňuj poistku ihly, kým nie je dokončená bezpečnostná kontrola!</string>
     <string name="patch_rotate_knob">Vkladanie ihly</string>
     <string name="patch_rotate_knob_desc_1">Otočte páku ihly o viac ako 100° pre vloženie a potom ju úplne otočte, aby bola odstránená</string>
     <string name="patch_rotate_knob_desc_2">Skontrolujte 1 pípnutie a potom kliknite na \'Ďalší\'.</string>
@@ -59,6 +64,7 @@
     <string name="patch_activate_reminder_desc">Aktivácia pumpy nebola dokončená.\n Pokračovať.</string>
     <string name="patch_communication_check_helper_1">Prineste mobil čo možno najbližšie ku pumpe.</string>
     <string name="patch_communication_check_helper_2">Prosím presuňte pumpu na iné miesto a skuste to znovu.</string>
+    <string name="patch_safety_check_failed_desc">Bezpečnostná kontrola zlyhala. Prosím skúste to znova.</string>
     <string name="patch_communication_failed">Chyba komunikácie</string>
     <string name="patch_communication_succeed">Komunikácia bola úspešná</string>
     <string name="patch_communication_succeed_message">Pripojené k Patch.</string>
@@ -77,9 +83,17 @@
     <string name="needle_insertion_error_3">Kliknite na \'Zahodiť\' pre deaktiváciu pumpy.</string>
     <string name="string_suspend_time_insulin_delivery_title">Čas pozastavenia pumpy</string>
     <string name="string_resume_insulin_delivery_title">Obnoviť podávanie inzulínu</string>
+    <string name="string_resume_insulin_delivery_message">Koniec pozastavenia inzulínu.\n Stlač ´Potvrdiť´ pre pokračovanie podávania inzulínu.\n\nPodávanie inzulínu nebude pokračovať, kým to nepotvrdíte stlačením ´Potvrdiť´.\nAk nestlačíte ´Potvrdiť´, mohli by ste spôsobiť hyperglykémiu.</string>
     <string name="string_suspended_insulin_delivery_message">Podávanie inzulínu je pozastavené.</string>
     <string name="string_resumed_insulin_delivery_message">Podávanie inzulínu je obnovené.</string>
     <string name="string_temp_basal_remained_hhmm">zostávajúci čas: %1$s:%2$s</string>
+    <string name="string_pause_failed">Pozastavenie zlyhalo.</string>
     <string name="string_resume_failed">Obnovenie zlyhalo.</string>
+    <string name="wizard_exit_activation_warning">Odísť zo sprievodcu aktivácie? Patch môže byť v nekompletnom stave a bude treba nový Patch.</string>
+    <string name="wizard_exit_deactivation_warning">Odísť zo sprievodcu deaktivácie? Patch môže zostať aktívna a pokračovať v podávaní inzulínu.</string>
+    <string name="patch_force_reset">Vynútiť Reset</string>
+    <string name="patch_force_reset_confirm">Toto vymaže stav Patch-u lokálne, bez odoslania príkazov do Patch-u. Použi iba ak normálna deaktivácia zlyhá. Patch bude pokračovať v podávaní pokiaľ sa nevybije batéria, alebo sa manuálne nevypne.</string>
     <!-- Permission rationales -->
+    <string name="permission_exact_alarm_title">Presné alarmy</string>
+    <string name="permission_exact_alarm_description">Aplikácia vyžaduje povolenie na plánovanie presných alarmov pre správu Patch</string>
 </resources>

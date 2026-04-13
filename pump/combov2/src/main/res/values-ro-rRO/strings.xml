@@ -20,10 +20,9 @@
     <string name="combov2_error_11">Setul de infuzie neamorsat</string>
     <string name="combov2_extended_bolus_not_supported">Bolusul extins nu este acceptat</string>
     <string name="combov2_title">Accu-Check Combo v2</string>
-    <string name="combov2_pair_with_pump_title">Împerechere pompă</string>
-    <string name="combov2_unpair_pump_title">Deconectare pompă</string>
+    <string name="combov2_pair_with_pump_title">Asociere pompă</string>
+    <string name="combov2_unpair_pump_title">Dezasociere pompă</string>
     <string name="combov2_driver_state_label">Stare soft conexiune</string>
-    <string name="combov2_current_activity_label">Activitate curentă</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
     <string name="combov2_start_pairing">Începeți asocierea</string>
     <string name="combov2_pairing_in_progress">Asocierea Combo în curs</string>
@@ -41,6 +40,8 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
 3. Încearcă să asociezi din nou</string>
     <string name="combov2_enter_pin">Introduceți PIN</string>
     <string name="combov2_cancel_pairing">Anulați asocierea</string>
+    <string name="combov2_confirm_cancel_pairing_message">Sigur doriți să anulați asocierea?</string>
+    <string name="combov2_confirm_unpair_message">Sigur doriți să dezasociați pompa?</string>
     <string name="combov2_pin_hint">PIN de 10 cifre</string>
     <string name="combov2_pairing_finished_successfully">Asociat cu succes cu Combo</string>
     <string name="combov2_pairing_cancelled">Asocierea cu Combo a fost anulată de utilizator</string>
@@ -91,6 +92,9 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (mai puțin de 1 min rămas)</string>
     <string name="combov2_load_tdds_cancelled">Încărcarea DZT a fost anulată</string>
     <string name="combov2_retrieving_tdds_failed">Preluarea DZT a eșuat</string>
+    <string name="combov2_battery_empty">Gol</string>
+    <string name="combov2_battery_low">Scăzut</string>
+    <string name="combov2_battery_full">Plin</string>
     <string name="combov2_battery_low_warning">Nivelul bateriei pompei este scăzut</string>
     <string name="combov2_reservoir_low_warning">Nivelul rezervorului pompei este scăzut</string>
     <string name="combov2_setting_tbr_succeeded">Setarea RBT a reușit</string>
@@ -100,12 +104,11 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Se ignoră cererea redundantă pentru 100% RBT</string>
     <string name="combov2_hit_unexpected_tbr_limit">Limită neprevăzută întâlnită în timpul ajustării RBT: procentul țintă a fost %1$d%%, dar s-a atins o limită la %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nu se poate seta RBT absolută dacă rata bazală este zero</string>
-    <string name="combov2_pair_with_pump_summary">Împerechează AndroidAPS și Android cu o pompă Accu-Chek Combo neîmperecheată</string>
-    <string name="combov2_unpair_pump_summary">Desperechează AndroidAPS și Android de pompa Accu-Chek Combo asociată în prezent</string>
+    <string name="combov2_unpair_pump_summary">Dezasociați AndroidAPS și Android de pompa Accu-Chek Combo asociată în prezent</string>
     <string name="combov2_unknown_tbr_detected">RBT necunoscută a fost detectată și oprită; procentaj: %1$d%%; durată rămasă: %2$s</string>
     <string name="combov2_connection_error">Eroare conexiune: %1$s</string>
     <string name="combov2_short_status_alert">Alertă: %s</string>
-    <string name="combov2_automatic_reservoir_entry">Autodetectează și introdu automat schimbarea rezervorului de insulină</string>
+    <string name="combov2_automatic_reservoir_entry">Autodetectați și introduceți automat schimbarea rezervorului de insulină</string>
     <string name="combov2_automatic_battery_entry">Autodetectează și introdu automat schimbarea bateriei</string>
     <string name="combov2_timezone_changed">Fus orar schimbat</string>
     <string name="combov2_datetime_changed">Data și/sau ora schimbate</string>

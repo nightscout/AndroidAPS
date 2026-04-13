@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Приложено ограничение на болус</string>
     <string name="carbs_constraint_applied">Приложено ограничение на въглехидрати</string>
     <string name="temp_target_short">Вр.цел</string>
-    <string name="dialog_canceled">Диалогът е анулиран</string>
     <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
     <string name="start_eating_soon_tt">Старт на вр. цел за хранене</string>
     <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
@@ -38,7 +37,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Не стартирай болус, а само запиши в базата данни</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
     <string name="timeshift_label">Време на отместване</string>
     <string name="percentage_label">% от профила</string>
@@ -72,7 +70,6 @@
     <string name="a11y_set_carb_timer">задайте таймер за въглехидратна аларма</string>
     <!-- Treatments -->
     <string name="no_records_available">Няма налични записи</string>
-    <string name="calculation_short">Калк</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_carbs_label_string">Вълехидрати:</string>
     <string name="tempbasals_netratio_label_string">Съотношение:</string>
@@ -105,17 +102,11 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">само на часовник</string>
     <string name="a11y_only_on_phone">само на смартфон</string>
-    <string name="quickwizard_settings">Настройки Бърз достъп</string>
     <string name="overview_edit_quickwizard_button_text">Текст на бутона</string>
-    <string name="overview_edit_quickwizard_valid">Валиден:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Само при позитивен инсулин</string>
     <string name="overview_edit_quickwizard_superbolus">Суперболус</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Процентът е много висок!</string>
     <string name="a11y_drag_and_drop_handle">опция \"плъзни и пусни\"</string>
     <string name="additional_ecarbs">Добави уд въглехидрати</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Включете в калкулация:</string>
-    <string name="constraints_violation">Ограниченията са нарушени</string>
-    <string name="change_your_input">Променете въведенето!</string>
     <string name="confirm_treatment">Моля потвърдете</string>
     <string name="recalculate">Преизчисляване</string>
     <!--    Widget-->

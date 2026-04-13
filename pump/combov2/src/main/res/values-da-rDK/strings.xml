@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Par med pumpe</string>
     <string name="combov2_unpair_pump_title">Upar pumpe</string>
     <string name="combov2_driver_state_label">Driver-status</string>
-    <string name="combov2_current_activity_label">Nuværende aktivitet</string>
     <string name="bluetooth_address">Bluetooth adresse</string>
     <string name="combov2_start_pairing">Start parring</string>
     <string name="combov2_pairing_in_progress">Combo-parring i gang</string>
@@ -99,7 +98,6 @@ Hvis der ikke oprettes forbindelse efter mere end omkring 5 minutter:\n\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorerer redundant 100% TBR-anmodning</string>
     <string name="combov2_hit_unexpected_tbr_limit">Uventet grænse opstod under justering af TBR: målprocent var %1$d%%, ramte en grænse på %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan ikke indstille absolut TBR hvis basalraten er nul</string>
-    <string name="combov2_pair_with_pump_summary">Par AndroidAPS og Android med en pt. uparret Accu-Chek Combo-pumpe</string>
     <string name="combov2_unpair_pump_summary">Frakobl AndroidAPS og Android med en pt. parret Accu-Chek Combo-pumpe</string>
     <string name="combov2_unknown_tbr_detected">Ukendt TBR blev fundet og stoppet; procent: %1$d%%; resterende varighed: %2$s</string>
     <string name="combov2_connection_error">Forbindelsesfejl: %1$s</string>

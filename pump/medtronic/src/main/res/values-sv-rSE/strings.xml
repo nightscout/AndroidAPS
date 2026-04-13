@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Fördröjning innan bolus startas (s)</string>
     <string name="medtronic_pump_max_bolus">Max bolus enligt pumpen (U)</string>
     <string name="medtronic_pump_max_basal">Max basal på pumpen (U/h)</string>
-    <string name="medtronic_pump_encoding">Medtronickodning</string>
     <string name="medtronic_custom_action_wake_and_tune">Väck och finjustera frekvens</string>
     <string name="medtronic_custom_action_clear_bolus_block">Ta bort bolusblockering</string>
     <string name="medtronic_pump_battery_select">Batterityp</string>

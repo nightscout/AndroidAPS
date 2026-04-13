@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Parkoppla med pump</string>
     <string name="combov2_unpair_pump_title">Koppla från pump</string>
     <string name="combov2_driver_state_label">Drivrutinsstatus</string>
-    <string name="combov2_current_activity_label">Nuvarande aktivitet</string>
     <string name="bluetooth_address">Bluetooth-adress</string>
     <string name="combov2_start_pairing">Påbörja parkoppling</string>
     <string name="combov2_pairing_in_progress">Parkoppling pågår</string>
@@ -100,7 +99,6 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_ignoring_redundant_100_tbr">Ignorerar överflödig begäran av 100% temp basal</string>
     <string name="combov2_hit_unexpected_tbr_limit">Oväntad gräns påträffades vid justering av temp basal: målprocenten var %1$d%%, nådde en gräns vid %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan inte ställa in absolut temp basal om basaldosen är noll</string>
-    <string name="combov2_pair_with_pump_summary">Parkoppla AndroidAPS och Android med en för närvarande icke-parad Accu-Chek Combo-pump</string>
     <string name="combov2_unpair_pump_summary">Koppla bort AndroidAPS och Android från den nuvarande parkopplade Accu-Chek Combo-pumpen</string>
     <string name="combov2_unknown_tbr_detected">Okänd temp basal upptäcktes och stoppades; procentsats: %1$d%%; återstående varaktighet: %2$s</string>
     <string name="combov2_connection_error">Anslutningsfel: %1$s</string>

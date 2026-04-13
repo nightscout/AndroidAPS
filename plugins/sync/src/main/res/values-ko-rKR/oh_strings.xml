@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans가 설정되었습니다. 데이터 업로드의 중단을 원할 경우, \'로그아웃\'을 누르십시오.</string>
     <string name="not_setup_info">Open Humans가 현재 비활성화되어 있습니다. 데이터 업로드의 시작을 원할 경우, \'설정\'을 누르십시오.</string>
     <string name="project_member_id">프로젝트 회원 ID: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">WiFi에 연결되었을 경우에만 업로드함</string>
-    <string name="only_upload_if_charging">충전 중에만 업로드함</string>
     <string name="open_humans_uploading">Open Humans에 업로드 중...</string>
     <string name="open_humans_notifications">Open Humans 알림</string>
     <string name="uploading_to_open_humans">AAPS가 Open Humans에 업로드 중입니다. 시간이 조금 걸릴 예정입니다.</string>

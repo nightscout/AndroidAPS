@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General preferences -->
+    <!-- Overview preferences -->
+    <!-- Pump preferences -->
+    <!-- Alert preferences -->
+    <!-- BG Source preferences -->
+    <!-- APS preferences -->
+    <!-- Maintenance preferences -->
+    <!-- Autotune preferences -->
+    <!-- SMS preferences -->
+    <!-- Virtual pump preferences -->
+    <!-- NS Client preferences -->
+    <!-- OpenHumans preferences -->
+    <!-- xDrip preferences -->
+    <!-- Wear preferences -->
+    <!-- Wizard preferences -->
+    <!-- Site rotation preferences -->
+    <!-- IntKey: Overview preferences -->
+    <!-- IntKey: Protection preferences -->
+    <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <!-- IntKey: Safety preferences -->
+    <!-- IntKey: Loop preferences -->
+    <!-- IntKey: APS preferences -->
+    <!-- IntKey: Maintenance preferences -->
+    <!-- IntKey: Alert preferences -->
+    <!-- IntKey: Insulin preferences -->
+    <!-- IntKey: Autotune preferences -->
+    <!-- IntKey: SMS preferences -->
+    <!-- IntKey: BG Source preferences -->
+    <!-- IntKey: NS Client preferences -->
+    <!-- IntKey: Site rotation preferences -->
+    <!-- StringKey: General preferences -->
+    <!-- Formatted unit strings with value only -->
+    <!-- Formatted unit strings with value and range -->
+    <!-- StringKey: Directory preferences -->
+    <!-- StringKey: Protection preferences -->
+    <!-- Theme switcher dark and light mode-->
+    <!-- StringKey: Safety preferences -->
+    <!-- StringKey: Maintenance preferences -->
+    <!-- StringKey: Automation preferences -->
+    <!-- StringKey: SMS preferences -->
+    <!-- StringKey: Virtual pump preferences -->
+    <!-- StringKey: NS Client preferences -->
+    <!-- DoubleKey: Overview preferences -->
+    <!-- DoubleKey: Actions preferences -->
+    <!-- DoubleKey: Safety preferences -->
+    <!-- DoubleKey: APS preferences -->
+    <!-- UnitDoubleKey: Overview preferences -->
+    <!-- UnitDoubleKey: APS preferences -->
+    <!-- IntentKey preferences -->
+    <!--    Appearance preferences-->
+</resources>

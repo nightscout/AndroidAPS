@@ -91,6 +91,10 @@
     <string name="option_off">关闭</string>
     <string name="danars_password_title">泵密码 (仅v1)</string>
     <string name="danar_password_title">泵密码</string>
+    <string name="danar_useextended_title">对于 &gt;200% 使用扩展大剂量</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">已选择的泵</string>
     <string name="rs_loginsulinchange_title">记录储药器更换</string>
     <string name="rs_loginsulinchange_summary">在历史记录中检测到时，在护理中添加\"胰岛素更换\" 事件</string>
@@ -100,4 +104,18 @@
     <string name="num1pin">1: (12位数字)</string>
     <string name="num2pin">2: (8位数字)</string>
     <string name="basal_bolus_step">基础率/大剂量步进</string>
+    <string name="connecting_to_pump">连接到泵…</string>
+    <string name="pairing_successful">配对成功！</string>
+    <string name="pairing_successful_message">您的泵已连接并准备使用。</string>
+    <string name="cancel_pairing_title">取消配对？</string>
+    <string name="cancel_pairing_message">配对过程将被中止。</string>
+    <string name="done">完成</string>
+    <string name="open_bluetooth_settings">打开蓝牙设置</string>
+    <string name="enter_pump_password">输入泵密码</string>
+    <string name="select_paired_device">选择配对的设备</string>
+    <string name="no_paired_devices">未找到配对的 Dana 设备。请先在 Android 蓝牙设置中配对您的泵。</string>
+    <string name="password_hint">4 位密码 (0-9999)</string>
+    <string name="connecting_verifying">正在连接和验证密码…</string>
+    <string name="password_ok">密码验证成功！</string>
+    <string name="password_wrong">密码错误。请返回并纠正。</string>
 </resources>

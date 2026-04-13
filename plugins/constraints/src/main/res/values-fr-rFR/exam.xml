@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Qu\'est-ce qu\'il y a de vrai pour le DAI (Durée Action Insuline)?</string>
     <string name="dia_label_exam">Durée d\'Action de l\'Insuline (DAI)</string>
-    <string name="dia_profile">Vous devez définir la valeur de DAI dans votre profil.</string>
     <string name="dia_minimumis5h">La valeur minimale autorisée est de 5 heures.</string>
     <string name="dia_hint1">https://wiki.aaps.app/fr/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Si vous êtes convaincu que la valeur de DAI utilisée dans votre pompe avant AAPS marche bien, il n\'y a pas besoin de la changer lorsque vous commencez à utiliser la boucle.</string>
@@ -76,9 +75,7 @@
     <string name="prerequisites2_supportedcgm">Une MGC prise en charge et une application appropriée pour recevoir des valeurs de glycémie sur le téléphone/appareil.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Mise à jour d\'AAPS</string>
-    <string name="update_git">Git doit être installé et configuré sur votre ordinateur.</string>
     <string name="update_asap">Lorsque des versions mises à jour d\'AAPS sont disponibles, les versions précédentes peuvent avoir des fonctionnalités limitées à distance après une période donnée.</string>
-    <string name="update_keys">Vous devez enregistrer et noter l\'emplacement de votre magasin de clés et utiliser la même clé de signature que votre installation précédente pour les mises à jour.</string>
     <string name="update_askfriend">Si vous avez des difficultés à construire l\'apk, vous pouvez installer un apk qui a été construit par un ami.</string>
     <string name="update_hint1">https://wiki.aaps.app/fr/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Résolution de problèmes</string>

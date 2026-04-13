@@ -24,6 +24,13 @@
     <string name="password_not_changed">Heslo nezmenené</string>
     <string name="pin_not_changed">PIN nebol zmenený</string>
     <string name="pin_cleared">PIN bol vymazaný!</string>
+    <string name="protection_password_hint">Zadajte heslo</string>
+    <string name="protection_pin_hint">Zadajte PIN</string>
+    <string name="auth_hint_master_password">Zadajte hlavné heslo</string>
+    <string name="auth_hint_master_or_pin">Zadajte hlavné heslo alebo PIN</string>
+    <string name="auth_hint_master_or_password">Zadajte hlavné heslo, alebo heslo používateľa</string>
+    <string name="use_pin_password">Použi PIN/Heslo</string>
+    <string name="current_master_password">Aktuálne hlavné heslo</string>
     <string name="master_password_not_set">Master password not set</string>
     <string name="aaps_directory_not_selected">Nebol vybratý priečinok AAPS</string>
 </resources>

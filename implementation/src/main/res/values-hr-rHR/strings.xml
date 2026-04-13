@@ -15,4 +15,5 @@
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <!-- Maintenance strings (moved from plugins/configuration) -->
 </resources>

@@ -31,7 +31,6 @@
     <string name="result">Výsledek</string>
     <string name="settings">Nastavení</string>
     <string name="statuslights">Stavové indikátory</string>
-    <string name="do_ns_upload_title">Nahrávat data do NS</string>
     <string name="configbuilder_insulin">Inzulín</string>
     <string name="value_unavailable_short">n/a</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -298,9 +297,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Požadováno dalších %1$d g sacharidů během %2$d minut</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Kumulativní CDD</string>
-    <string name="expweight">Exponenciálně vážená CDD</string>
     <string name="basalrate">Bazál</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Koef</string>
@@ -649,8 +645,11 @@
     <string name="audio_playback_attribution">"AAPS přehrává zvuk"</string>
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

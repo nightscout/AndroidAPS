@@ -15,6 +15,13 @@
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Successo</string>
     <string name="equil_title_dressing">Cambia cartuccia</string>
+    <string name="equil_title_assemble">Assembla micro</string>
+    <string name="equil_title_serial">Associa dispositivo</string>
+    <string name="equil_title_fill">Carica/Riempi</string>
+    <string name="equil_title_attach">Collega pompa</string>
+    <string name="equil_title_air">Riempi la cannula</string>
+    <string name="equil_title_unpair_detach">Scollega pompa</string>
+    <string name="equil_title_unpair_confirm">Conferma disaccoppiamento</string>
     <string name="equil_title_history_events">Storico eventi</string>
     <string name="equil_tone">Tono di allerta</string>
     <string name="equil_tone_mode_mute">Muto</string>
@@ -22,6 +29,7 @@
     <string name="equil_tone_mode_tone">Solo suoneria</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrazione e suoneria</string>
     <string name="equil_unit_u">%1$s U</string>
+    <string name="equil_unbind_content">Questa operazione interromperà l\'infusione di insulina e ritrarrà lo stantuffo della pompa verso il basso! Inoltre, eliminerà lo stato!</string>
     <string name="equil_ble_config_confirmation_title">Accoppiamento Micro Equil Patch</string>
     <string name="equil_error">Errore di connessione</string>
     <string name="equil_change">Cambia Micro</string>
@@ -74,6 +82,7 @@
     <string name="equil_command_connect_error">Errore connessione micro</string>
     <string name="equil_command_connect_no_response">Nessuna risposta dal micro</string>
     <string name="equil_command__unknown">Stato sconosciuto per il comando</string>
+    <string name="equil_install">Apporre il micro sul corpo</string>
     <string name="equil_settings_alarm_battery">Allarme batteria bassa</string>
     <string name="equil_settings_alarm_insulin">Allarme livello basso insulina</string>
     <string name="equil_init_insulin_error">L\'inizializzazione del serbatoio non è completa</string>
@@ -106,7 +115,7 @@
     <string name="equil_history_item18">Infusione Anomala Fermata</string>
     <string name="equil_common_overview_button_suspend_delivery">Sospendi</string>
     <string name="equil_common_overview_button_resume_delivery">Riprendi erogazione</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d min)</string>
+    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Un momento fa</string>
     <string name="equil_common_less_than_a_minute_ago">Meno di 1 minuto fa</string>
     <string name="equil_common_time_ago">%1$sm fa</string>
@@ -126,12 +135,15 @@
         <item quantity="other">%1$d giorni</item>
     </plurals>
     <string name="equil_support_error">Versione firmware troppo vecchia. Non supportata</string>
+    <string name="equil_password_tips">Si prega di impostare una nuova password per l\'accoppiamento col micro Equil v5.3. Questa password verrà utilizzata anche per disaccoppiarsi con la pompa in futuro, quindi assicurati di ricordarla.
+Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</string>
     <string name="equil_set_pair_password">Imposta Password Di Accoppiamento</string>
     <string name="equil_hint1">Dopo aver installato la pompa sulla piastra di base, selezionare se eliminare l’aria dall’ago.</string>
     <string name="equil_unbind">Disaccoppia dispositivo</string>
     <string name="equil_device_unpaired">Dispositivo disaccoppiato</string>
     <string name="equil_assemble">Si prega di assemblare il micro, riempire il serbatoio e caricaere la batteria</string>
     <string name="equil_devices_number">Inserisci Il Nuovo ID Del Micro</string>
+    <string name="equil_pair_password_title">Inserisci la password per %1$s</string>
     <string name="equil_insert">Si prega di caricare il serbatoio fino a quando non vi è una goccia di insulina sulla punta dell’ago</string>
     <string name="equil_insert2">Il Micro non deve trovarsi sulla sua base.</string>
     <string name="equil_attach">Si prega di collegare il micro alla base</string>

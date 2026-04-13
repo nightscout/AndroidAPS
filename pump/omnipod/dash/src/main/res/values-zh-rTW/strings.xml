@@ -11,7 +11,11 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">請確認使用足夠的胰島素填充新的幫浦，確保可以使用三天。\n\n在填充過程中聽到幫浦發出的兩聲嗶聲，這表示已注入最少 80U 的胰島素。聽到兩聲嗶聲後，請繼續注射完針筒內的全部胰島素。\n\n填充幫浦後，請按 <b>下一步</b>。\n\n<b>注意：</b> 此時不要取下幫浦的針頭蓋。</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">嘗試與新幫浦配對並進行啟動。\n\n當初始化過程完成後，您可以按 <b>下一步</b>。</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">無法連線</string>
+    <string name="omnipod_dash_found_too_many_pods">偵測到過多的 Pod</string>
+    <string name="omnipod_dash_scan_failed">掃描失敗</string>
     <string name="omnipod_dash_generic_error">一般錯誤：%1$s</string>
+    <string name="omnipod_dash_connection_lost">連線中斷</string>
     <string name="omnipod_dash_failed_to_send">無法發送指令</string>
     <string name="omnipod_dash_command_not_sent">指令未發送</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">幫浦未接收到指令</string>

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Postavke</string>
     <string name="delta">Delta</string>
     <string name="save">Sačuvaj</string>
     <string name="wear">Sat</string>
-    <string name="sensitivity_warning">Kada uključite funkciju Autosens, obavezno unesite SVE ugljene hidrate koje pojedete. U suprotnom će odstupanja u unosu ugljenih hidrata biti pogrešno shvaćena kao promena osetljivosti!</string>
     <string name="invalid">NEVAŽEĆE</string>
-    <string name="pump_unreachable_threshold">Prag nedostupnosti pumpe [min]</string>
     <string name="close_navigation">Zatvori navigaciju</string>
     <string name="remove_items">Ukloni stavke</string>
     <string name="sort_items">Sortiraj stavke</string>
-    <string name="unitsnosemicolon">Jedinice</string>
     <string name="authorizationfailed">Ovlašćenje nije uspelo</string>
     <string name="cannula">Kanila</string>
     <string name="identification_not_set">Identifikacija nije podešena u razvojnom režimu</string>

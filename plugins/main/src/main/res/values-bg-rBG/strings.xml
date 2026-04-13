@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop изключен</string>
-    <string name="smscommunicator_pump_disconnected">Помпата е разкачена</string>
-    <!-- Food-->
-    <string name="food_short">Храна</string>
-    <string name="description_food">Показва въведените в Nightscout храни</string>
-    <string name="filter">Филтър</string>
-    <string name="food">Храна</string>
-    <string name="short_kilo_joul">килодж.</string>
-    <string name="short_energy">Ен</string>
-    <string name="short_protein">Бел.</string>
-    <string name="short_fat">Маз.</string>
-    <string name="category">Категория</string>
-    <string name="subcategory">Подкатегория</string>
     <string name="calculator_label">Калкулатор</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">ЛПр</string>
-    <string name="a11y_add_new_to_list">Добавяне към списък</string>
-    <string name="do_you_want_switch_profile">Искате да смените профила и премахнете на промените, направени в текущия профил?</string>
-    <string name="save_or_reset_changes_first">Първо запазете или се откажете от промените</string>
-    <string name="delete_current_profile">Изтриване на текущия профил?</string>
-    <string name="units_colon">Единици:</string>
-    <!-- Actions -->
-    <string name="actions">Действия</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Бутони за бърз достъп до основни функции</string>
-    <string name="actions_shortname">ДЕЙСТВ</string>
-    <string name="tempbasal_button">Временен базал</string>
-    <string name="extended_bolus_button">Удължен болус</string>
-    <string name="extended_bolus_cancel_button">Спри удължен болус</string>
-    <string name="tools">Инструменти</string>
     <string name="nav_history_browser">История</string>
     <string name="sensor_label">Сензор</string>
     <string name="age_label">възраст:</string>
@@ -42,7 +13,6 @@
     <string name="statuslights_patch_pump_age">възраст на помпата</string>
     <string name="patch_pump">Пач помпа</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Копиране на настройки от NS</string>
     <string name="a11y_graph">графика</string>
     <string name="a11y_insulin_label">инсулин</string>
     <string name="chart_menu">Меню на графиката</string>
@@ -50,18 +20,10 @@
     <string name="a11y_blood_glucose">кръвна захар</string>
     <string name="a11y_bg_outdated">остаряло</string>
     <string name="set_basal_question">Приложи нов временен базал:</string>
-    <string name="overview_cgm">CGM</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ОСН</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
-    <string name="overview_buttons_selection">Бутони</string>
-    <string name="not_available_full">Недостъпно</string>
-    <string name="constraints_violation">Нарушено ограничение</string>
-    <string name="change_your_input">Променете данните!</string>
     <string name="data_status">Статус на данни за КЗ</string>
-    <string name="quickwizard_settings">Настройки за бърз болус</string>
-    <string name="default_temptargets">Временна цел по подразбиране</string>
-    <string name="fill_bolus_title">Fill/Prime количества инсулин по подразбиране</string>
     <string name="run_question">Пусни %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Прогнозни КЗ</string>
@@ -77,13 +39,7 @@
     <string name="overview_show_abs_insulin">Абсолютен инсулин</string>
     <string name="prediction_shortname">Предв</string>
     <string name="basal_shortname">БАЗА</string>
-    <string name="deviation_shortname">Откл</string>
-    <string name="activity_shortname">АКТ</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">АБС</string>
-    <string name="devslope_shortname">ОТК.НАКЛ</string>
     <string name="treatments_shortname">Леч</string>
-    <string name="heartRate_shortname">СР</string>
     <string name="graph_scale">Мащаб на графиката</string>
     <string name="graph_menu_divider_header">Графика</string>
     <!-- Skins -->
@@ -91,7 +47,6 @@
     <string name="lowres_description">Скин за ниска резолюция</string>
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
-    <string name="skin">Тема</string>
     <string name="cannula_usage">употреба:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

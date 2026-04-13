@@ -31,7 +31,6 @@
     <string name="result">תוצאה</string>
     <string name="settings">הגדרות</string>
     <string name="statuslights">אורות חיווי</string>
-    <string name="do_ns_upload_title">שלח נתוני סוכר לנייטסקאוט</string>
     <string name="configbuilder_insulin">אינסולין</string>
     <string name="value_unavailable_short">לא זמין</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -242,9 +241,6 @@
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d גר\' פחמימות דרושות ב-%2$d הדקות הקרובות</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">מינון יומי מצטבר (TDD)</string>
-    <string name="expweight">TDD משוקלל אקספוננציאלי</string>
     <string name="basalrate">בזאלי</string>
     <string name="bolus">בולוס</string>
     <string name="ratio">יחס</string>
@@ -572,8 +568,11 @@
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

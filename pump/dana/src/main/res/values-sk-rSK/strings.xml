@@ -92,6 +92,9 @@
     <string name="danars_password_title">Heslo pumpy (iba v1)</string>
     <string name="danar_password_title">Heslo do pumpy</string>
     <string name="danar_useextended_title">Použiť predĺžené bolusy pre &gt;200%</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="rs_loginsulinchange_title">Zaznamenať výmenu zásobníka</string>
     <string name="rs_loginsulinchange_summary">Pridať udalosť \"Výmena inzulínu\" do portálu starostlivosti, pokiaľ je zistená v histórii</string>
@@ -101,4 +104,18 @@
     <string name="num1pin">1: (12 číslic)</string>
     <string name="num2pin">2: (8 číslic)</string>
     <string name="basal_bolus_step">Krok bazálu/bolusu</string>
+    <string name="connecting_to_pump">Pripájanie k pumpe...</string>
+    <string name="pairing_successful">Spárovanie úspešné!</string>
+    <string name="pairing_successful_message">Vaša pumpa je teraz pripojená a pripravená na použitie.</string>
+    <string name="cancel_pairing_title">Zrušiť párovanie?</string>
+    <string name="cancel_pairing_message">Proces párovania bude zrušený.</string>
+    <string name="done">Hotovo</string>
+    <string name="open_bluetooth_settings">Otvorte nastavenia Bluetooth</string>
+    <string name="enter_pump_password">Zadajte heslo do pumpy</string>
+    <string name="select_paired_device">Zvoľte spárované zariadenie</string>
+    <string name="no_paired_devices">Nenájdené spárované zariadenia Dana. Najskôr spárujte Vašu pumpu v Androide v nastaveniach Bluetooth.</string>
+    <string name="password_hint">4-miestne heslo (0--9999)</string>
+    <string name="connecting_verifying">Pripájanie a overovanie hesla...</string>
+    <string name="password_ok">Heslo overené úspešne!</string>
+    <string name="password_wrong">Nesprávne heslo. Choďte naspäť a opravte ho.</string>
 </resources>

@@ -51,7 +51,6 @@
     <string name="omnipod_common_overview_firmware_version">Phiên bản phần mềm</string>
     <string name="omnipod_common_overview_time_on_pod">Thời gian trên Pod</string>
     <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d phút)</string>
-    <string name="omnipod_common_overview_reservoir_concentration_value_over50">Còn hơn %1$s</string>
     <string name="omnipod_common_uncertain">không chắc chắn</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Hủy kích hoạt Pod</string>

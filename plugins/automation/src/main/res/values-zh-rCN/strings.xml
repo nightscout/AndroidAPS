@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">请输入任务的名称</string>
     <string name="automation_missing_trigger">请选择至少一个过滤条件</string>
     <string name="automation_missing_action">请指定至少一个操作。</string>
+    <string name="exportsettings_message">设置导出：%1$s</string>
+    <string name="export_settings_short">治疗中的文字：</string>
     <string name="alarm_message">警告: %1$s</string>
     <string name="alarm_short">报警:</string>
     <string name="message_short">消息:</string>
@@ -45,10 +47,6 @@
     <string name="or">或</string>
     <string name="xor">唯一的</string>
     <string name="atspecifiedtime">在 %1$s</string>
-    <string name="use_network_location">打开网络位置</string>
-    <string name="use_gps_location">使用 GPS 定位</string>
-    <string name="use_passive_location">使用设备位置</string>
-    <string name="locationservice">定位服务</string>
     <string name="onconnect">连接时</string>
     <string name="ondisconnect">断开时</string>
     <string name="short_avgdelta">短平均增量</string>
@@ -76,6 +74,7 @@
     <string name="deltalabel">BG 差异</string>
     <string name="deltalabel_u">BG 差异 [%1$s]</string>
     <string name="currentlocation">当前位置</string>
+    <string name="choose_from_map">从地图中选择</string>
     <string name="location">所在位置</string>
     <string name="glucose_u">血糖值 %1$s]:</string>
     <string name="target_u">目标 [%1$s]:</string>
@@ -83,6 +82,22 @@
     <string name="lastboluscompared">上次大剂量时间 %1$s %2$s 分钟前</string>
     <string name="triggercoblabel">碳水</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">心率</string>
+    <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">传感器使用时间</string>
+    <string name="triggerSensorAgeDesc">传感器使用时间 %1$s %2$.1f 小时</string>
+    <string name="triggerCannulaAgeLabel">管路使用时间</string>
+    <string name="triggerCannulaAgeDesc">管路使用时间 %1$s %2$.1f 小时</string>
+    <string name="triggerPodChangeLabel">Pod激活</string>
+    <string name="triggerPodChangeDesc">Pod 已激活</string>
+    <string name="triggerInsulinAgeLabel">胰岛素使用时间</string>
+    <string name="triggerInsulinAgeDesc">胰岛素使用时间 %1$s %2$.1f 小时</string>
+    <string name="triggerPumpBatteryAgeLabel">泵电池使用时间</string>
+    <string name="triggerPumpBatteryAgeDesc">泵电池使用时间 %1$s %2$.1f 小时</string>
+    <string name="triggerReservoirLevelLabel">储药器量</string>
+    <string name="triggerReservoirLevelDesc">储药器量%1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">泵电池电量</string>
+    <string name="triggerPumpBatteryLevelDesc">泵电池电量 %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">区 [m]:</string>
     <string name="recurringTime">重复的时间</string>
@@ -105,15 +120,34 @@
     <string name="system_automation">系统自动化</string>
     <string name="run_automations">运行自动化</string>
     <string name="add_automation">添加规则</string>
+    <string name="stop_processing">停止处理</string>
     <!--    Reminders-->
+    <string name="time_to_eat">吃饭时间到了！\n请运行大剂量向导，然后进行计算。</string>
     <string name="time_to_bolus">输注胰岛素时间到了！\n请运行大剂量向导，然后再次进行计算。</string>
+    <string name="error_setting_reminder">设置未来提醒时出错</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">自动调整配置文件 %1$s</string>
     <string name="autotune_run">运行自动协调</string>
+    <string name="autotune_run_without_autoswitch">无需切换配置文件即可运行自动调谐</string>
     <string name="autotune_run_with_autoswitch">运行 Autotune 并自动切换配置文件</string>
     <string name="autotune_run_with_error">上次 Autotune 运行期间出错</string>
     <string name="autotune_run_cancelled">检测到另一次自动调试运行，本次运行已取消</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">步数统计</string>
+    <string name="triggerStepsCountDesc">每 %1$s 分钟 %2$s %3$.0f 的步数</string>
+    <string name="triggerStepsCountDropdownLabel">测量持续时间</string>
     <!--    SMB mode-->
+    <string name="changeSmbState">启用/禁用 SMB</string>
+    <string name="changeSmbTo">将 SMB 更改为 %1$s</string>
+    <string name="newSmbMode">新的 SMB 模式：</string>
+    <string name="on">开</string>
+    <string name="off">关</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">从地图中选</string>
+    <string name="tap_to_select_location">点击地图选择一个位置</string>
+    <string name="selected_coords">已选择： %1$.6f， %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">位置</string>
+    <string name="permission_location_description">需要基于位置的自动触发器和WiFi网络识别</string>
+    <string name="permission_background_location_description">当应用在后台运行时，自动化触发器需要此功能才能正常工作</string>
 </resources>

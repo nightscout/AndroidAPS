@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Forsinkelse før Bolus starter (s)</string>
     <string name="medtronic_pump_max_bolus">Maks. Bolus på pumpe (IE)</string>
     <string name="medtronic_pump_max_basal">Maks. Basal på pumpe (E/t)</string>
-    <string name="medtronic_pump_encoding">Medtronisk kodning</string>
     <string name="medtronic_custom_action_wake_and_tune">Vågn og Tune op</string>
     <string name="medtronic_custom_action_clear_bolus_block">Ryd Bolus-blok</string>
     <string name="medtronic_pump_battery_select">Batteritype</string>

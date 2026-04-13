@@ -31,7 +31,6 @@
     <string name="result">Результат</string>
     <string name="settings">Настройки</string>
     <string name="statuslights">Индикаторы состояния</string>
-    <string name="do_ns_upload_title">Выгружать (передавать данные) ГК в Nightscout</string>
     <string name="configbuilder_insulin">Инсулин</string>
     <string name="value_unavailable_short">н/д</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -298,9 +297,6 @@
     <string name="smb_shortname">Супер микро болюс SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Необходимо дополнительно %1$d г углеводов в течение %2$d минут</string>
-    <!--    TDDStatsActivity-->
-    <string name="cumulative_tdd">Накопительная суточная доза TDD</string>
-    <string name="expweight">экспоненциально взвешенные TDD</string>
     <string name="basalrate">базал</string>
     <string name="bolus">Болюс</string>
     <string name="ratio">коэффициент</string>
@@ -649,8 +645,11 @@
     <string name="audio_playback_attribution">"AAPS воспроизводит аудио"</string>
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

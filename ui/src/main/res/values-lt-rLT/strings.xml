@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">Pritaikytas boluso apribojimas</string>
     <string name="carbs_constraint_applied">Pritaikytas AV apribojimas</string>
     <string name="temp_target_short">LT</string>
-    <string name="dialog_canceled">Ryšys nutrauktas</string>
     <string name="start_activity_tt">Pradėti Aktyvumo LT</string>
     <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
     <string name="start_hypo_tt">Pradėti \"Hipo\" LT</string>
@@ -38,7 +37,6 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
     <!-- Insulin Management -->
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
     <string name="timeshift_label">Laiko perstūmimas</string>
     <string name="percentage_label">Procentais</string>
@@ -72,7 +70,6 @@
     <string name="a11y_set_carb_timer">nustatyti AV laiko perspėjimą</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
-    <string name="calculation_short">Skaič.</string>
     <string name="treatments_iob_label_string">AIO:</string>
     <string name="treatments_carbs_label_string">AV:</string>
     <string name="tempbasals_netratio_label_string">Santykis:</string>
@@ -105,17 +102,11 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">tik laikrodyje</string>
     <string name="a11y_only_on_phone">tik telefone</string>
-    <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
     <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas</string>
-    <string name="overview_edit_quickwizard_valid">Galioja:</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Tik teigiamas AIO</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolusas</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">Procentas per aukštas!</string>
     <string name="a11y_drag_and_drop_handle">nutempti ir padėti</string>
     <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
-    <string name="overview_edit_quickwizard_useforcalculation">Naudota skaičiavimams:</string>
-    <string name="constraints_violation">Apribojimų pažeidimas</string>
-    <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
     <string name="confirm_treatment">Patvirtinkite terapiją</string>
     <string name="recalculate">Perskaičiuoti</string>
     <!--    Widget-->

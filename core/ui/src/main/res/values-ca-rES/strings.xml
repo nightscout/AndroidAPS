@@ -31,7 +31,6 @@
     <string name="result">Resultat</string>
     <string name="settings">Configuració</string>
     <string name="statuslights">Llums d\'estat</string>
-    <string name="do_ns_upload_title">Enviar dades de glucèmia a NS</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="value_unavailable_short">n/d</string>
     <!-- master_password moved to core/keys/strings.xml -->
@@ -200,8 +199,6 @@
     <string name="waitingforpumpresult">Esperant resultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <!--    TDDStatsActivity-->
-    <string name="expweight">TDD ponderada exponencialment</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
     <string name="ratio">Ràtio</string>
@@ -447,8 +444,11 @@
     <!--    Playback-->
     <!-- ProfileEditor -->
     <!--    Search-->
+    <!--    Food Management -->
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
+    <!-- Graph configuration -->
+    <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>

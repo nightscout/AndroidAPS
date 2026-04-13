@@ -106,7 +106,6 @@
     <string name="equil_history_item18">Neįprastas suleidimas sustabdytas</string>
     <string name="equil_common_overview_button_suspend_delivery">Sustabdyti</string>
     <string name="equil_common_overview_button_resume_delivery">Atnaujinti suleidimą</string>
-    <string name="equil_common_overview_temp_basal_value">%1$.2fvv/val @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Neseniai</string>
     <string name="equil_common_less_than_a_minute_ago">Mažiau nei prieš minutę</string>
     <string name="equil_common_time_ago">prieš %1$s</string>

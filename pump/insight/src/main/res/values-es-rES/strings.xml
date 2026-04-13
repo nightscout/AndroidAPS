@@ -60,4 +60,9 @@
     <string name="pump_alert">Alerta de infusor</string>
     <string name="pairing_information">Información de emparejamiento</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Desvincular</string>
+    <string name="reset_pairing">¿Restablecer la información de emparejamiento?</string>
+    <string name="active_basal_rate">Tasa basal activa</string>
+    <string name="active_tbr">TBR activa</string>
+    <string name="reservoir_level">Nivel del reservorio</string>
 </resources>

@@ -45,10 +45,6 @@
     <string name="or">ή</string>
     <string name="xor">Αποκλειστικό</string>
     <string name="atspecifiedtime">Σε %1$s</string>
-    <string name="use_network_location">Χρήση τοποθεσίας δικτύου</string>
-    <string name="use_gps_location">Χρήση τοποθεσίας GPS</string>
-    <string name="use_passive_location">Χρήση προσαρμοσμένης τοποθεσίας</string>
-    <string name="locationservice">Υπηρεσίες τοποθεσίας</string>
     <string name="onconnect">Κατά τη σύνδεση</string>
     <string name="ondisconnect">Κατά την αποσύνδεση</string>
     <string name="short_avgdelta">Βραχυπρόθεσμος Μέσος Όρος</string>

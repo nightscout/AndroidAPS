@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_cellular">Mobiele verbinding gebruiken</string>
-    <string name="ns_wifi">Gebruik WiFi verbinding</string>
     <!-- ns_wifi_ssids moved to core:keys module -->
-    <string name="ns_charging">Tijdens opladen</string>
-    <string name="ns_battery">Op batterij</string>
     <string name="connection_settings_title">Verbindings instellingen</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="ns_allow_roaming">Sta verbinding tijdens roaming toe</string>
-    <string name="ns_create_announcements_from_errors_title">Creëer een melding bij storingen</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Maak melding bij waarschuwingen voor benodigde koolhydraten</string>
-    <string name="ns_create_announcements_from_errors_summary">Creëer een Nightscout melding voor storingen en lokale waarschuwingen (ook zichtbaar in het Careportal en Behandelingen)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Maak Nightscout melding bij waarschuwingen voor benodigde koolhydraten</string>
     <string name="description_ns_client">Synchroniseert je data met Nightscout via de v1 API</string>
     <string name="description_ns_client_v3">Synchroniseert je data met Nightscout via de v3 API</string>
     <string name="blocked_by_charging">Geblokkeerd door oplaad instellingen</string>
@@ -41,35 +32,7 @@
     <string name="full_sync">Volledige synchronisatie</string>
     <string name="full_sync_comment">Volledige synchronisatie? Dit kan een aantal uren duren. Je ziet dan geen nieuwe gegevens in Nightscout.</string>
     <string name="ns_sync_options">Synchronisatie</string>
-    <string name="ns_upload_summary">Profielen, bolussen, koolhydraten, tijdelijke basaal standen worden geupload naar NS</string>
-    <string name="ns_upload">Upload data naar NS</string>
-    <string name="ns_receive_profile_store">Ontvang profiel opslag</string>
-    <string name="ns_receive_profile_store_summary">Synchroniseer profielen van NS profiel editor</string>
-    <string name="ns_receive_temp_target">Ontvang tijdelijke doelen</string>
-    <string name="ns_receive_temp_target_summary">Accepteer tijdelijke doelen ingevoerd in NS of NSClient</string>
-    <string name="ns_receive_profile_switch">Ontvang profielwissels</string>
-    <string name="ns_receive_profile_switch_summary">Accepteer profielwisselingen zoals ingevoerd in NS of NSClient</string>
-    <string name="ns_receive_running_mode">Ontvang Running mode gebeurtenissen</string>
-    <string name="ns_receive_running_mode_summary">Accepteer Running mode gebeurtenissen ingevoerd via NS of AAPSClient</string>
-    <string name="ns_receive_tbr_eb">Ontvang TBR en EB</string>
-    <string name="ns_receive_tbr_eb_summary">Accepteer TBR en EB ingevoerd vanaf een andere bron</string>
-    <string name="ns_receive_insulin">Ontvang insuline</string>
-    <string name="ns_receive_insulin_summary">Accepteer insuline zoals ingevoerd in NS of AAPSClient (insuline wordt niet toegediend, het wordt alleen in IOB calculatie meegenomen)</string>
-    <string name="ns_receive_carbs">Ontvang koolhydraten</string>
-    <string name="ns_receive_carbs_summary">Accepteer koolhydraten ingevoerd in NS of AAPSClient</string>
-    <string name="ns_receive_therapy_events">Accepteer behandelingen</string>
-    <string name="ns_receive_therapy_events_summary">Accepteer therapie gebeurtenissen (cannula, insuline, batterijwissel etc) ingevoerd via NS of AAPSClient</string>
-    <string name="ns_receive_cgm">Ontvang / backfill CGM gegevens</string>
-    <string name="ns_receive_cgm_summary">Accepteer CGM data van NS</string>
-    <string name="ns_sync_slow">Vertraag uploads</string>
     <string name="ns_alarm_options">Alarm opties</string>
-    <string name="ns_alarms">Maak meldingen van NS alarmen</string>
-    <string name="ns_announcements">Maak meldingen van NS aankondigingen</string>
-    <string name="ns_alarm_stale_data_value_label">Oude gegevens sinds [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Alarm oude gegevens sinds [min]</string>
-    <string name="ns_log_app_started_event">Log app start naar NS</string>
-    <string name="ns_use_ws_title">Verbind met websockets</string>
-    <string name="ns_use_ws_summary">Inschakelen betekent: snellere updates, ontvangen van alarmen, aankondigingen en een hoger batterijverbruik, vergelijkbaar met v1. Alle andere uploaders naar NS moeten gebruik maken van het v3 protocol.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Indien ingeschakeld zullen uploads naar de test servers gaan in plaats van de standaard servers</string>
     <string name="title_tidepool_dev_servers">Gebruik integratie (test) servers</string>
@@ -84,13 +47,8 @@
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Stuur data naar xDrip+</string>
-    <string name="xdrip_status_detailed_iob_title">Toon gedetailleerde IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Splits IOB in bolus en basaal op de watchface</string>
-    <string name="xdrip_status_show_bgi_title">Toon BGI</string>
-    <string name="xdrip_status_show_bgi_summary">BGI aan statusregel toevoegen</string>
     <string name="xdrip_status_settings">xDrip+ Geavanceerde Statusregel</string>
     <string name="disabled_loop">Loop is uitgeschakeld</string>
-    <string name="xdrip_send_status_title">Stuur Statusregel naar xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ niet geïnstalleerd</string>
     <string name="calibration_sent">Kalibratie naar xDrip+ verzonden</string>
     <string name="xdrip_local_broadcasts_summary">Verzend glucose en behandelingsgegevens naar xDrip+. Gegevensbron \"xDrip+ Sync Follower\" moet worden geselecteerd en het accepteren van gegevens moet worden ingeschakeld in Instellingen - Inter-app instellingen - Accepteer Glucose/Behandelingen</string>
@@ -124,18 +82,9 @@
     <string name="wear_action_tempt_manual_message">Tijdelijk streefdoel:\n\nDoel: %1$s\nDuur: %2$d minuten</string>
     <string name="wear_action_tempt_preset_message">Tijdelijk streefdoel:\n\nReden: %1$s\nDoel: %2$s\nDuur: %3$d minuten</string>
     <string name="no_success">Niet geslaagd - controleer de telefoon</string>
-    <string name="wear_settings">Wear instellingen</string>
-    <string name="wearcontrol_title">Bedieningen via horloge</string>
-    <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
-    <string name="wear_broadcast_data">Gegevens verzenden</string>
-    <string name="wear_broadcast_data_summary">Verzend gegevens naar AAPS of AAPSClient</string>
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
     <string name="wear_general_settings">Algemene instellingen</string>
-    <string name="wear_notifysmb_title">Waarschuw bij SMB</string>
-    <string name="wear_notifysmb_summary">Toon SMB op horloge zoals gewone bolussen.</string>
     <string name="wear_custom_watchface_settings">Aanpasbare Wijzerplaat Instellingen</string>
-    <string name="wear_custom_watchface_authorization_title">Aanpasbare Wijzerplaat Autorisatie</string>
-    <string name="wear_custom_watchface_authorization_summary">Sta geladen aanpasbare wijzerplaat toe om sommige weergave-instellingen van horloge te wijzigen en te vergrendelen voor het ontwerp van de wijzerplaat</string>
     <string name="wear_custom_watchface">Aanpasbare Watchface: %1$s</string>
     <string name="wear_load_watchface">Laad Watchface</string>
     <string name="wear_infos_watchface">Watchface informatie</string>
@@ -186,6 +135,5 @@
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Ongeldig</string>
     <string name="garmin_request_key">Sleutel aanvragen</string>
-    <string name="garmin_request_key_summary">Optionele sleutel om de HTTP communicatie tussen het Garmin apparaat en AAPS te beveiligen.</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>

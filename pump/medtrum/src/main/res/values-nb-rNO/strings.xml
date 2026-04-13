@@ -98,8 +98,6 @@
     <string name="retry_activation_filled_error">Aktiveringen kan ikke gjenopptas. Pumpens tilstand har gått tapt. IKKE prime på nytt, da patchen kan allerede være satt inn. Kast patchen og start en ny aktivering.</string>
     <string name="reading_activation_status">Vennligst vent, leser aktiveringsstatus fra pumpen.</string>
     <!-- settings-->
-    <string name="enable_pump_unreachable_alert_summary">Varsel om pumpe utilgjengelig tvinges aktivert, fordi Medtrum-patching kan mislykkes og bli utilgjengelig.</string>
-    <string name="pump_unreachable_threshold_minutes_summary">Anbefales å sette til 30 minutter, fordi Medtrum-patching kan mislykkes og bli utilgjengelig.</string>
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_invalid">Ugyldig serienummer!</string>
     <string name="change_sn">Endre</string>

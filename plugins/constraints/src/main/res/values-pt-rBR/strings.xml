@@ -27,7 +27,6 @@
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
-    <string name="treatmentssafety_title">Segurança do Tratamento</string>
     <!-- Objectives -->
     <string name="completed_well_done">Terminado, parabéns!</string>
     <string name="not_completed_yet">Incompleto</string>

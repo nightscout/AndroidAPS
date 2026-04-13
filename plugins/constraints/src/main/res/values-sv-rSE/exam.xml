@@ -2,7 +2,6 @@
 <resources>
     <string name="dia_whatmeansdia">Vad är sant om DIA?</string>
     <string name="dia_label_exam">Insulinduration (DIA)</string>
-    <string name="dia_profile">Du bör ange värdet för DIA i din profil.</string>
     <string name="dia_minimumis5h">Det minsta tillåtna värdet är 5 timmar.</string>
     <string name="dia_meaningisequaltodiapump">Om du tycker att värdet för DIA som du använde i din pump före AAPS fungerade väl, behöver du inte ändra det här när du börjar looping.</string>
     <string name="dia_valuemustbedetermined">Du bör själv fastställa det lämpliga värdet för DIA.</string>
@@ -64,9 +63,7 @@
     <string name="prerequisites2_internet">AAPS kräver en Internetanslutning för att kunna köras i closed loop-läge.</string>
     <string name="prerequisites2_supportedcgm">En stödd CGM och lämplig app för att ta emot blodsockervärden på telefonen/enheten.</string>
     <string name="update_label">Uppdaterar AAPS</string>
-    <string name="update_git">Du måste ha Git installerat och konfigurerat på din dator.</string>
     <string name="update_asap">När uppdaterade versioner av AAPS släpps, kan de tidigare versionerna få begränsad funktionalitet efter en viss tid.</string>
-    <string name="update_keys">Du bör spara och notera platsen för ditt keystore och använda samma signeringsnyckel för uppdateringar som för den föregående installationen.</string>
     <string name="update_askfriend">Om du har problem att bygga apk-filen, kan du installera en apk som har byggts av en vän.</string>
     <string name="troubleshooting_label">Felsökning</string>
     <string name="troubleshooting_wheretoask">Vart vänder du dig för att få hjälp med AAPS?</string>

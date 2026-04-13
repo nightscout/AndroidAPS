@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General preferences -->
+    <string name="pref_title_simple_mode">Mod simplu</string>
+    <string name="pref_title_insulin_concentration">Suport pentru concentrația insulinei</string>
+    <string name="pref_summary_insulin_concentration">Permiteți suport pentru diferite concentrații de insulină (U200, U300, șamd)</string>
+    <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Păstrați ecranul aprins</string>
+    <string name="pref_summary_keep_screen_on">Împiedicați dezactivarea ecranului de către Android. Va consuma multă energie atunci când nu este conectat la o sursă de alimentare.</string>
+    <string name="pref_title_show_treatment_button">Afișați butonul de tratament</string>
+    <string name="pref_title_show_wizard_button">Afișați butonul asistentului</string>
+    <string name="pref_title_show_insulin_button">Afișați butonul de insulină</string>
+    <string name="pref_title_show_carbs_button">Afișați butonul de carbohidrați</string>
+    <string name="pref_title_show_cgm_button">Afișați butonul CGM</string>
+    <string name="pref_summary_show_cgm_button">Deschideți aplicația xDrip+ sau Dexcom (poți utiliza butonul înapoi pentru a te întoarce la AAPS).</string>
+    <string name="pref_title_show_calibration_button">Afișați butonul de calibrare</string>
+    <string name="pref_summary_show_calibration_button">Trimiteți o calibrare la xDrip+ (asigurați-vă că \'Acceptați calibrări\' este activat în xDrip+ în setările între aplicații).</string>
+    <string name="pref_title_show_notes_in_dialogs">Afișați notele în dialoguri</string>
+    <string name="pref_title_use_bolus_advisor">Utilizați consilierul în bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Activați consilierul în bolus care asistă la calcularea bolusului în timpul glicemiilor mai mari.</string>
+    <string name="pref_title_use_bolus_reminder">Utilizați memento pentru bolus</string>
+    <string name="pref_summary_use_bolus_reminder">Activați notificările de reamintire a bolusului pentru a ajuta la urmărirea administrării insulinei.</string>
+    <string name="pref_title_use_super_bolus">Utilizați super bolus</string>
+    <string name="pref_summary_use_super_bolus">Activați caracteristica super bolus care împrumută insulină din bazală pentru administrare imediată.</string>
+    <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Opriți funcția Bluetooth al telefonului pentru o secundă în cazul în care nu este posibilă nicio conexiune la pompă. Aceasta poate ajuta anumite telefoane ale căror stivă Bluetooth îngheață.</string>
+    <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Alertă dacă nu sunt primite date de glicemie</string>
+    <string name="pref_title_alert_pump_unreachable">Alertă dacă pompa nu este accesibilă</string>
+    <string name="pref_title_alert_carbs_required">Alertă pentru carbohidrații necesari</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Ridicați alarmele urgente ca notificări Android</string>
+    <string name="pref_title_alert_increase_volume">Creșteți treptat volumul notificărilor</string>
+    <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Încărcați datele de glicemie în NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Înregistrați schimbarea senzorului</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Creați un eveniment de schimbare a senzorului când este introdus senzorul.</string>
+    <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Utilizați sensibilitatea dinamică</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Utilizați DynamicISF pentru ajustarea sensibilității în loc de Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Utilizați Autosens</string>
+    <string name="pref_title_aps_use_smb">Activați SMB</string>
+    <string name="pref_summary_aps_use_smb">Activați Super Micro Bolus. SMB eliberează insulină imediat pentru a răspunde la creșterea glicemiei.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Activați SMB cu ținte temporare ridicate</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Permiteți SMB atunci când ținta temporară ridicată este activă.</string>
+    <string name="pref_title_aps_use_smb_always">Activați SMB întotdeauna</string>
+    <string name="pref_summary_aps_use_smb_always">Activați SMB în toate condițiile, indiferent de bolus sau COB.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Activați SMB cu COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Permiteți SMB când sunt prezenți carbohidrați la bord.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Activați SMB cu ținte temporare joase</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Permiteți SMB atunci când ținta temporară joasă este activă.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Activați SMB după carbohidrați</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Permiteți SMB pentru o perioadă de timp după introducerea carbohidraților.</string>
+    <string name="pref_title_aps_use_uam">Activați UAM</string>
+    <string name="pref_summary_aps_use_uam">Activați detectarea și tratamentul meselor neanunțate.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Sensibilitatea ridică ținta</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Când este detectată sensibilitate la insulină, creșteți intervalul țintă de glicemie.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Rezistența la insulină coboară ținta</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Când este detectată rezistență la insulină, coboară ținta.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Utilizați întotdeauna media scurtă a diferenței</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Utilizați întotdeauna o medie scurtă în loc de o medie simplă pentru calculele de schimbare a valorii glicemiei.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF ajustează sensibilitatea</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Reglați calculele de sensibilitate atunci când utilizați DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens adaptează țintele</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Permiteți Autosens să ajusteze glicemia țintă pe lângă bazală și ISF.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Ținta temporară ridicată crește sensibilitatea</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Țintele temporare ridicate vor crește sensibilitatea la insulină.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Ținta temporară scăzută scade sensibilitatea</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Țintele temporare scăzute vor reduce sensibilitatea la insulină.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Activați AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Activează ajustările ISF pe bază de greutate în AutoISF.</string>
+    <string name="pref_title_aps_smb_on_even_target">Activați SMB pe o țintă uniformă</string>
+    <string name="pref_summary_aps_smb_on_even_target">Activarea alternativă a SMB întotdeauna în funcție de valoarea țintă a glicemiei.</string>
+    <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Activați raportare erori Fabric</string>
+    <string name="pref_title_maintenance_enable_export_automation">Activați exportarea automată a setărilor</string>
+    <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Schimbare automată a profilului</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Schimbați automat la profilul generat prin Autotune după calcul.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Clasificați UAM ca bazală</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Tratați mesele neanunțate ca necesar de insulină bazală pentru calculele Autotune.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Reglați curba insulinei</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Utilizați IC/ISF circadiene</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Aplicați variația circadiană la IC și ISF în calculele Autotune.</string>
+    <string name="pref_title_autotune_additional_log">Jurnalizare suplimentară</string>
+    <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Permiteți comenzi la distanță prin SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Raportați pompa inaccesibilă prin SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Trimiteți notificări SMS atunci când pompa devine inaccesibilă.</string>
+    <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Încărcați starea pompei în NS</string>
+    <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Încărcați date în NS</string>
+    <string name="pref_summary_ns_upload_data">Încărcați tratamente, bazale temporare și alte date în Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Primiți date CGM din NS</string>
+    <string name="pref_summary_ns_receive_cgm">Acceptați citirile CGM de la Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Primiți baza de date cu profiluri din NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Acceptați actualizările bazei de date de profiluri de la Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Primiți ținte temporare din NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Acceptă modificările țintelor temporare de la Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Primiți schimbări de profil din NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Acceptați evenimentele de schimbare a profilului de la Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">Primiți date insulină din NS</string>
+    <string name="pref_summary_ns_receive_insulin">Acceptați tratamentele cu insulină din Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">Primiți carbohidrații din NS</string>
+    <string name="pref_summary_ns_receive_carbs">Acceptați intrările de carbohidrați de la Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Primiți evenimente terapeutice din NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Acceptați evenimentele terapeutice din Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Primiți modul de rulare din NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Acceptați modificările modului de rulare din Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Primește RBT/BE din NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Acceptați rate bazale temporare și bolusuri extinse din Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">Alarme NS</string>
+    <string name="pref_title_ns_notifications_from_announcements">Anunțuri NS</string>
+    <string name="pref_title_ns_use_cellular">Utilizați datele mobile</string>
+    <string name="pref_title_ns_use_roaming">Utilizați roaming</string>
+    <string name="pref_title_ns_use_wifi">Utilizați WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Sincronizați la baterie</string>
+    <string name="pref_title_ns_use_on_charging">Sincronizați în timpul încărcării</string>
+    <string name="pref_title_ns_log_app_start">Înregistrați evenimentul de pornire al aplicației</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Creați anunțuri din erori</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Creați anunțuri din carbohidrații necesari</string>
+    <string name="pref_title_ns_slow_sync">Utilizați sincronizare lentă</string>
+    <string name="pref_title_ns_use_ws">Utilizați websockets</string>
+    <string name="pref_summary_ns_use_ws">Utilizați conexiuni de tip websocket pentru comunicarea în timp real cu Nightscout.</string>
+    <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Doar WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Doar la încărcare</string>
+    <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Trimiteți starea către xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Trimiteți IOB detaliat</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Trimiteți informații detaliate despre IOB la xDrip+ pentru afișare pe fețele de ceas.</string>
+    <string name="pref_title_xdrip_send_bgi">Afișați impactul asupra glicemiei</string>
+    <string name="pref_summary_xdrip_send_bgi">Afișați impactul asupra glicemiei în linia de stare xDrip+.</string>
+    <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Control Wear</string>
+    <string name="pref_summary_wear_control">Controlați AAPS de pe ceasul Android Wear.</string>
+    <string name="pref_title_wear_wizard_bg">Includeți glicemia în asistent</string>
+    <string name="pref_title_wear_wizard_tt">Includeți ținta temporară în asistent</string>
+    <string name="pref_title_wear_wizard_trend">Includeți tendința în asistent</string>
+    <string name="pref_title_wear_wizard_cob">Includeți COB în asistent</string>
+    <string name="pref_title_wear_wizard_iob">Includeți IOB în asistent</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Autorizați cadrane de ceas personalizate</string>
+    <string name="pref_title_wear_notify_on_smb">Notificați despre SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">Trimiteți notificări către ceas atunci când SMB este livrat.</string>
+    <string name="pref_title_wear_broadcast_data">Transmiteți date către ceas</string>
+    <string name="pref_summary_wear_broadcast_data">Transmiteți date AAPS către aplicații terțe pentru ceas prin intermediul intențiilor.</string>
+    <!-- Wizard preferences -->
+    <string name="pref_title_wizard_calculation_visible">Afișați calculul asistentului</string>
+    <string name="pref_title_wizard_correction_percent">Utilizați procentajul de corecție</string>
+    <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Gestionați rotația locului de infuzare al pompei</string>
+    <string name="pref_title_site_rotation_manage_cgm">Gestionați rotația locației senzorului</string>
+    <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Treaptă buton carbohidrați 1</string>
+    <string name="pref_title_carbs_button_increment_2">Treaptă buton carbohidrați 2</string>
+    <string name="pref_title_carbs_button_increment_3">Treaptă buton carbohidrați 3</string>
+    <string name="carb_increment_button_message">Cantitate de carbohidrați de adăugat când se apasă butonul</string>
+    <string name="pref_title_cage_warning">Prag avertizare vechime canulă</string>
+    <string name="pref_title_cage_critical">Prag critic vechime canulă</string>
+    <string name="pref_title_iage_warning">Prag avertizare vechime insulină</string>
+    <string name="pref_title_iage_critical">Prag critic vechime insulină</string>
+    <string name="pref_title_sage_warning">Prag avertizare vechime senzor</string>
+    <string name="pref_title_sage_critical">Prag critic vechime senzor</string>
+    <string name="pref_title_sbat_warning">Prag de avertizare nivel baterie senzor</string>
+    <string name="pref_title_sbat_critical">Prag critic pentru nivelul bateriei senzorului</string>
+    <string name="pref_title_bage_warning">Prag avertizare vechime baterie pompă</string>
+    <string name="pref_title_bage_critical">Prag critic pentru vechimea bateriei pompei</string>
+    <string name="pref_title_res_warning">Prag avertizare nivel rezervor</string>
+    <string name="pref_title_res_critical">Prag critic nivel rezervor</string>
+    <string name="pref_title_batt_warning">Prag avertizare nivel baterie pompă</string>
+    <string name="pref_title_batt_critical">Prag critic nivel baterie pompă</string>
+    <string name="pref_title_bolus_percentage">Procentaj bolus</string>
+    <string name="deliverpartofboluswizard">Aplicați această valoare corecțiilor de glicemie și de carbohidrați în rezultatul asistentului de bolusuri</string>
+    <string name="pref_title_reset_bolus_percentage_time">Resetați timp procentaj bolus</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Administrați bolusul complet (100%) dacă glicemia este mai veche de</string>
+    <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Timp de expirare a protecției</string>
+    <string name="pref_title_protection_type_application">Nivelul 0: Protecția aplicației</string>
+    <string name="pref_summary_protection_type_application">Lansare aplicație. Independent de alte niveluri</string>
+    <string name="pref_title_protection_type_bolus">Nivelul 1: Protecție bolus</string>
+    <string name="pref_summary_protection_type_bolus">Tratamente, activare profil. Necesită nivelul 2</string>
+    <string name="pref_title_protection_type_settings">Nivelul 2: Protecție setări</string>
+    <string name="pref_summary_protection_type_settings">Editare profiluri, preferințe</string>
+    <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Fără protecție</string>
+    <string name="biometric">Biometric</string>
+    <string name="master_password">Parola principală</string>
+    <string name="custom_password">Parolă personalizată</string>
+    <string name="custom_pin">PIN personalizat</string>
+    <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Maximul de carbohidrați permis</string>
+    <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Schimbare minimă în modul deschis</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Buclă deschisă va afișa o nouă cerere de schimbare doar dacă schimbarea este mai mare decât această valoare în %. Valoarea implicită este 20%</string>
+    <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Interval SMB</string>
+    <string name="pref_title_smb_max_minutes">Maximul de minute de bazală la care să se limiteze SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">Maximul UAM de minute de bazală la care să se limiteze SMB</string>
+    <string name="uam_smb_max_minutes">Maximul de minute UAM SMB</string>
+    <string name="pref_title_carbs_request_threshold">Pragul de carbohidrați necesari</string>
+    <string name="carbs_req_threshold_summary">Cantitatea minimă de carbohidrați în grame pentru a afișa o alertă de sugestie. Sugestiile de carbohidrați sub acest număr nu vor declanșa o notificare.</string>
+    <string name="pref_title_half_basal_exercise_target">Țină exercițiu, înjumătățire exercițiu</string>
+    <string name="half_basal_exercise_target_summary">Setat la un număr, spre exemplu 160, înseamnă că atunci când Ținta Temporară este de 160 mg/dL și Ținta Temporară ridicată crește sensibilitatea = adevărat, se execută 50%% bazală la acest nivel (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">Pragul procentual IOB</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procentul de maxIOB peste care SMB-urile sunt dezactivate.\\nValoarea implicită: 100%\\nCu 100% această caracteristică este de fapt dezactivată.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Factor de ajustare DynamicISF</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Factor de ajustare pentru DynamicISF. Setează peste 100% pentru doze de corecție mai agresive, și sub 100% pentru corecții mai puțin agresive.</string>
+    <string name="pref_title_autosens_period">Perioadă Autosens</string>
+    <string name="openapsama_autosens_period_summary">Numărul de ore din trecut pentru detectarea sensibilității (se exclude timpul de absorbție al carbohidraților)</string>
+    <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Numărul de jurnale de trimis</string>
+    <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Prag pentru date învechite</string>
+    <string name="pref_title_pump_unreachable_threshold">Prag pompă inaccesibilă</string>
+    <!-- IntKey: Insulin preferences -->
+    <string name="pref_title_insulin_oref_peak">Vârf de acțiune</string>
+    <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Număr implicit de zile pentru ajustare</string>
+    <string name="autotune_default_tune_days_summary">Numărul implicit de zile de date pentru a fi procesate de Autotune (până la 30)</string>
+    <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Interval minim în minute pentru bolusurile de la distanță</string>
+    <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Interval de glicemie aleatoriu</string>
+    <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Prag alarmă date învechite</string>
+    <string name="pref_title_urgent_alarm_stale_data">Prag alarmă urgentă date învechite</string>
+    <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Profil utilizator pentru rotația locurilor de pe corp</string>
+    <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Unități</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_min">minute</string>
+    <string name="units_sec">secunde</string>
+    <string name="units_hours">h</string>
+    <string name="units_days">zile</string>
+    <string name="units_grams">g</string>
+    <string name="units_kg">kg</string>
+    <string name="units_years">an</string>
+    <string name="units_percent">%</string>
+    <!-- Formatted unit strings with value only -->
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_min">%1$d min</string>
+    <string name="units_format_sec">%1$d sec</string>
+    <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.0f h</string>
+    <string name="units_format_days">%1$d zile</string>
+    <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_patient_name">Nume</string>
+    <string name="pref_summary_patient_name">Numele pentru a identifica această instanță AAPS (afișată în rapoarte și sincronizare)</string>
+    <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">Dosar AAPS</string>
+    <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Parola principală</string>
+    <string name="pref_title_settings_password">Parolă setări</string>
+    <string name="pref_title_settings_pin">Setări PIN</string>
+    <string name="pref_title_application_password">Parolă aplicație</string>
+    <string name="pref_title_application_pin">PIN aplicație</string>
+    <string name="pref_title_bolus_password">Parolă bolus</string>
+    <string name="pref_title_bolus_pin">PIN bolus</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Alegeți tema întunecată, luminoasă sau cea a sistemului</string>
+    <string name="pref_title_app_color_scheme">Schema de culori a aplicației</string>
+    <string name="pref_dark_theme">Temă întunecată</string>
+    <string name="pref_light_theme">Temă luminoasă</string>
+    <string name="pref_follow_system_theme">Utilizați tema dispozitivului</string>
+    <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Vârsta pacientului</string>
+    <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Destinatar email</string>
+    <string name="pref_title_identification">Identificare pentru rapoartele de eroare</string>
+    <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Servicii de localizare</string>
+    <string name="automation_location_passive">Utilizați localizarea pasivă</string>
+    <string name="automation_location_network">Utilizați localizarea bazată pe rețea</string>
+    <string name="automation_location_gps">Utilizați localizarea GPS</string>
+    <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Numere de telefon permise</string>
+    <string name="smscommunicator_allowednumbers_summary">+ XXXXXXXXXX; + YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Cod PIN obligatoriu suplimentar la finalul jetonului</string>
+    <string name="smscommunicator_otp_pin_summary">Cifre suplimentare care ar trebui să fie memorate și adăugate la sfârșitul fiecărei parole unice generate</string>
+    <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Tip pompă</string>
+    <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Adresa Nightscout</string>
+    <string name="ns_client_url_summary">Introduceți adresa URL Nightscout (spre exemplu https://numesite.platforma.dom)</string>
+    <string name="ns_client_secret_title">Secret API Nightscout</string>
+    <string name="ns_client_secret_summary">Introduceți secretul API Nightscout (minimum 12 caractere)</string>
+    <string name="nsclient_token_title">Cod de acces Nightscout</string>
+    <string name="nsclient_token_summary">Introduceți codul de acces Nightscout (minimum 17 caractere)</string>
+    <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="ns_wifi_ssids_summary">Nume rețele Wi-Fi permise (separate prin punct și virgulă)</string>
+    <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Increment buton insulină 1</string>
+    <string name="pref_title_insulin_button_increment_2">Increment buton insulină 2</string>
+    <string name="pref_title_insulin_button_increment_3">Increment buton insulină 3</string>
+    <string name="insulin_increment_button_message">Cantitatea de insulină de adăugat când se apasă butonul</string>
+    <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Valoare buton 1</string>
+    <string name="pref_title_fill_button_2">Valoare buton 2</string>
+    <string name="pref_title_fill_button_3">Valoare buton 3</string>
+    <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Bolus maxim</string>
+    <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Rată bazală maximă</string>
+    <string name="openapsma_max_basal_summary">Această valoare este denumită bazală maximă în contextul OpenAPS</string>
+    <string name="pref_title_smb_max_iob">IOB maxim pentru SMB</string>
+    <string name="openapssmb_max_iob_summary">Această valoare este denumită Max IOB în contextul OpenAPS,\nOpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
+    <string name="pref_title_ama_max_iob">IOB maxim pentru SMB</string>
+    <string name="openapsma_max_iob_summary">Această valoare se numește Max IOB în contextul OpenAPS\nAceasta este insulina maximă în [U] pe care APS o poate livra imediat.</string>
+    <string name="pref_title_max_daily_multiplier">Multiplicator maxim de siguranță zilnic</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3 Aceasta este o limită cheie de siguranță OpenAPS. Ceea ce face este să limiteze bazalele dumneavoastră la a fi de 3x (pentru această persoană) din cea mai mare rată bazală. Probabil că nu va trebui să schimbaţi acest lucru, dar trebuie să ştiţi că asta se discută despre \"3x max zilnic; 4x curent” pentru plafoanele de siguranță.</string>
+    <string name="pref_title_current_basal_multiplier">Multiplicator de siguranță pentru bazala curentă</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4 Aceasta este cealaltă jumătate a limitelor de siguranţă OpenAPS şi cealaltă jumătate de \"3x max zilnic; 4x curent” al plafoanelor de siguranță. Asta înseamnă că bazala dumneavoastră, indiferent de valoarea maximă a bazalei din pompă, nu poate fi mai mare decât acest număr ori nivelul curent al bazalei dumneavoastră. Acest lucru este menit să împiedice pacienții să intre pe teritoriu periculos prin stabilirea bazalelor maxime excesiv de mari înainte de a înțelege cum funcționează algoritmul. Din nou, valoarea implicită este 4x; majoritatea persoanelor nu vor trebui niciodată să o ajusteze și este mai probabil ca acestea să fie nevoite să adapteze alte setări în cazul în care simt că „ating” acest plafon de siguranță.</string>
+    <string name="pref_title_bolus_snooze_divisor">Divizor DIA pentru amânarea alertei de bolus</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Valoare implicită: 2\\nAmânarea bolusului este pusă în aplicare după ce faceți un bolus pentru masă, astfel încât bucla să nu contracareze cu bazale joase când tocmai ați mâncat. Exemplul de aici şi valoarea implicită este 2; prin urmare, un DIA de 3 ore înseamnă că amânarea bolusului va fi eliminată treptat în decurs de 1,5 ore (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">Impactul minim al carbohidraților pe 5 minute (Advanced Meal Assist - AMA)</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">Impactul minim al carbohidraților pe 5 minute (SMB)</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valoarea implicită: 3.0 (AMA) sau 8.0 (SMB). Aceasta este o setare pentru impactul implicit al carbohidraţilor pe 5 minute. Valoarea implicită este 3mg/dl la 5min. Aceasta influenţează rapiditatea cu care se scade COB şi modul în care se ia în calcul absorbţia carbohidraţilor în calcularea valorilor estimate ale glicemiei, atunci când glicemia este în scădere mai mare decât se aştepta sau nu creşte atât de repede pe cât se aştepta.</string>
+    <string name="pref_title_absorption_cutoff">Limită de absorbție</string>
+    <string name="absorption_cutoff_summary">Timpul în care orice mâncare se consideră absorbită. Carbohidrații rămași vor fi ignorați.</string>
+    <string name="pref_title_absorption_maxtime">Timpul maxim de absorbție</string>
+    <string name="absorption_max_time_summary">Timpul în ore în care este de așteptat ca toți carbohidrații de la masă să fie absorbiți</string>
+    <string name="pref_title_autosens_min">Autosens min</string>
+    <string name="openapsama_autosens_min_summary">Valoare implicită: 0.7\\nCealaltă parte a limitelor de siguranță Autosens, care limitează cât de jos poate Autosens ajusta bazalele și cât de mult poate mări ISF și țintele de glicemie.</string>
+    <string name="pref_title_autosens_max">Autosens max</string>
+    <string name="openapsama_autosens_max_summary">Valoare implicită: 1.2\\nAceasta este valoarea limită de multiplicare pentru autosens (și pentru autotune, în curând) pentru a seta o limită maximă de 20%% din cât de mare poate fi raportul autosens, care, la rândul ei, determină cât de mult poate autosens să modifice bazalele, cât de jos poate modifica ISF și cât de jos poate pune ținta glicemiei.</string>
+    <string name="pref_title_autoisf_min">AutoISF min</string>
+    <string name="openapsama_autoISF_min_summary">Similar cu autosens_min, acesta definește cât de slab poate deveni ISF.\n\nValoarea implicită 1,0 dezactivează acest efect.</string>
+    <string name="pref_title_autoisf_max">AutoISF max</string>
+    <string name="openapsama_autoISF_max_summary">Similar cu autosens_max, aceasta definește cât de puternic poate deveni ISF.\\n\nValoarea implicită de 1,0 dezactivează acest efect.\\n\nAVERTISMENT: Atenție mare la folosirea unei valori peste 2,5.</string>
+    <string name="pref_title_bg_accel_weight">Ponderea accelerației glicemiei în ISF</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_bg_brake_weight">Ponderea frânei glicemiei în ISF</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în scădere și care determină slăbirea ISF și, prin urmare, reducerea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <!-- UnitDoubleKey: Overview preferences -->
+    <!-- UnitDoubleKey: APS preferences -->
+    <!-- IntentKey preferences -->
+    <!--    Appearance preferences-->
+    <string name="prefs_range_title">Intervalul pentru vizualizare</string>
+</resources>

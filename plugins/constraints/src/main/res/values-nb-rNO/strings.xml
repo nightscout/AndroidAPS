@@ -29,7 +29,6 @@
     <string name="smbnotallowedinopenloopmode">SMB ikke tillatt i åpen loop</string>
     <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
     <string name="hardlimit">hard begrensning</string>
-    <string name="treatmentssafety_title">Sikkerhet ved behandlinger</string>
     <!-- Objectives -->
     <string name="completed_well_done">Fullført, bra jobba!</string>
     <string name="not_completed_yet">Enda Ikke fullført</string>

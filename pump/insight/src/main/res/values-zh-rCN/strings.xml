@@ -24,7 +24,10 @@
     <string name="pairing_completed">配对已完成</string>
     <string name="code_compare">此设备和您的泵上显示的代码是否匹配？</string>
     <string name="insight_pairing">Insight 正在配对</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">管路已经更换</string>
+    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Insight 泵警报</string>
     <string name="disable_vibration">在手动输注大剂量时禁用振动</string>
     <string name="disable_vibration_summary">用于大剂量和扩展大剂量(仅适用于Insight 固件3.x版本)</string>
@@ -56,4 +59,10 @@
     <string name="min_recovery_duration">最小恢复持续时间 [s]</string>
     <string name="pump_alert">泵警报</string>
     <string name="pairing_information">配对信息</string>
+    <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">取消配对</string>
+    <string name="reset_pairing">重置配对信息？</string>
+    <string name="active_basal_rate">活动基础率</string>
+    <string name="active_tbr">活动临时基础率</string>
+    <string name="reservoir_level">储药器量</string>
 </resources>

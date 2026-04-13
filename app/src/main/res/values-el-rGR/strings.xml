@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_preferences_plugin">%1$s Preferences</string>
     <string name="delta">Διαφορά</string>
     <string name="save">Αποθήκευση</string>
     <string name="wear">Wear</string>
-    <string name="sensitivity_warning">Ενεργοποιώντας το autosense θυμηθείτε να εισάγετε όλους τους υδατάνθρακες. Διαφορετικά, οι αποκλίσεις των υδατανθράκων θα εντοπιστούν λανθασμένα ως αλλαγή ευαισθησίας!!</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>
-    <string name="pump_unreachable_threshold">Όριο για μη διαθεσιμότητα της αντλίας [λεπτά]</string>
     <string name="close_navigation">Κλείσιμο μενού πλοήγησης</string>
     <string name="remove_items">Αφαίρεση αντικειμένου</string>
     <string name="sort_items">Ταξινόμηση στοιχείων</string>
-    <string name="unitsnosemicolon">Μονάδες</string>
     <string name="authorizationfailed">Η εξουσιοδότηση απέτυχε</string>
     <string name="cannula">Υποδόριος καθετήρας</string>
     <string name="identification_not_set">Η ταυτοποίηση δεν έχει οριστεί στη λειτουργία προγραμματισμού</string>

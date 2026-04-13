@@ -15,9 +15,6 @@
     <string name="high_mark">Mức CAO</string>
     <string name="low_mark_comment">Giá trị thấp nhất trong mục tiêu (chỉ hiển thị)</string>
     <string name="high_mark_comment">Giá trị cao nhất trong mục tiêu (chỉ hiển thị)</string>
-    <string name="permission">Quyền truy cập</string>
-    <string name="need_system_window_permission">Ứng dụng cần quyền hiển thị cửa sổ hệ thống để gửi thông báo</string>
-    <string name="askforpermission">Yêu cầu cấp quyền truy cập</string>
     <string name="storedsettingsfound">Đã tìm thấy cài đặt đã lưu</string>
     <string name="master_password_summary">Mật khẩu chính được dùng để mã hóa bản sao lưu và ghi đè các bảo mật trong ứng dụng. Hãy nhớ nó hoặc lưu ở nơi an toàn.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
@@ -30,33 +27,18 @@
     <string name="exitwizard">Bỏ qua cài đặt nhanh</string>
     <string name="setupwizard_sensitivity_description">Plugin Sensitivity được sử dụng để phát hiện độ nhạy và tính toán COB. Để biết thêm thông tin, hãy truy cập:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Chọn một trong các thuật toán có sẵn. Chúng được sắp xếp từ cũ nhất đến mới nhất. Thuật toán mới thường mạnh mẽ và điều chỉnh tích cực hơn. Do đó, nếu bạn là người mới dùng loop, có thể nên bắt đầu với AMA thay vì thuật toán mới nhất. Đừng quên đọc tài liệu OpenAPS và cấu hình trước khi sử dụng.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vui lòng cấu hình RileyLink của bạn bên dưới. Sau khi chọn RileyLink, bạn có thể tiếp tục cài đặt khi trạng thái RileyLink hiển thị \'Đã kết nối\'. Việc này có thể mất khoảng một phút.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Lưu ý:</b> Tiếp tục cài đặt sau khi bơm được thiết lập.\n</string>
     <string name="startobjective">Bắt đầu mục tiêu đầu tiên của bạn</string>
     <string name="setupwizard_pump_riley_link_status">Trạng thái RileyLink:</string>
     <string name="readstatus">Đọc trạng thái</string>
-    <string name="data_choices">Lựa chọn dữ liệu</string>
-    <string name="fabric_upload">Tải lên Fabric</string>
-    <string name="unattended_settings_export">Xuất cài đặt tự động</string>
-    <string name="unattended_settings_export_summary">Bật tùy chọn này sẽ lưu mật khẩu của bạn một cách an toàn trên điện thoại</string>
-    <string name="identification">Nhận dạng (email, Facebook hoặc Discord, v.v.)</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="exported_to_cloud">Đã xuất cài đặt thành công lên lưu trữ đám mây</string>
-    <string name="export_to_cloud_failed">Xuất lên lưu trữ đám mây thất bại</string>
-    <string name="cloud_connection_failed">Không thể kết nối tới lưu trữ đám mây</string>
-    <string name="loading_from_cloud">Đang tải cài đặt từ lưu trữ đám mây, vui lòng chờ…</string>
-    <string name="cloud_folder_error">Không thể tải các thư mục lưu trữ đám mây</string>
-    <string name="csv_uploaded_to_cloud">Đã tải CSV mục nhập người dùng lên đám mây thành công</string>
-    <string name="cloud_reauthorize_message">Không thể kết nối tới lưu trữ đám mây. Xác thực lại chứ?</string>
     <string name="request">Yêu cầu</string>
-    <string name="apsmode_title">Chế độ APS</string>
     <string name="error_asking_for_permissions">Lỗi khi yêu cầu cấp quyền</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Thiết bị này dường như không hỗ trợ loại trừ khỏi tối ưu pin – bạn có thể gặp các vấn đề về hiệu suất.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Xây dựng Cấu hình</string>
     <string name="configbuilder_pump_description">Bạn muốn sử dụng loại bơm nào với AAPS?</string>
-    <string name="configbuilder_profile">Hồ sơ</string>
     <string name="configbuilder_aps_description">Thuật toán APS nào sẽ thực hiện điều chỉnh điều trị?</string>
     <string name="configbuilder_general_description">Đây là một số Tiện ích chung mà bạn có thể thấy hữu ích.</string>
     <string name="configbuilder_sync_description">Các plugin tải lên dữ liệu, đồng bộ hóa và giao tiếp.</string>
@@ -69,160 +51,23 @@
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Được dùng để thiết lập các Tiện ích đang chạy</string>
     <string name="allow_hardware_pump_text">Chú ý: Nếu bạn kích hoạt và kết nối với phần cứng bơm insulin, AAPS sẽ sao chép các thiết lập liều nền từ Hồ sơ sang bơm, ghi đè lên tốc độ liều nền hiện có được lưu trên bơm. Hãy đảm bảo rằng bạn đã có thiết lập liều nền chính xác trong AAPS. Nếu bạn không chắc chắn hoặc không muốn ghi đè các thiết lập liều nền trên bơm, hãy nhấn Hủy và thực hiện lại việc chuyển sang bơm sau.</string>
-    <string name="a11y_open_settings">mở cài đặt</string>
     <string name="nsclient_version_does_not_match">Phiên bản AAPSClient không khớp với phiên bản AAPS. Vui lòng cập nhật.</string>
     <string name="expand_category">Mở rộng danh mục</string>
     <string name="collapse_category">Thu gọn danh mục</string>
     <!--ImportExport-->
-    <string name="nav_preferences">Tùy chọn</string>
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
-    <string name="preferences_import_canceled">Nhập dữ liệu đã bị hủy! Tùy chọn KHÔNG được nhập dữ liệu!</string>
-    <string name="preferences_import_impossible">Không thể nhập các tùy chọn!</string>
-    <string name="check_preferences_details_btn">Giải thích sự cố nhập dữ liệu…</string>
-    <string name="check_preferences_details_title">Chi tiết sự cố nhập dữ liệu</string>
-    <string name="check_preferences_import_btn">Nhập dữ liệu</string>
-    <string name="check_preferences_import_anyway_btn">Tiếp tục nhập (NGUY HIỂM!)</string>
-    <string name="check_preferences_before_import">Vui lòng xem lại các thiết lập trước khi nhập:</string>
-    <string name="check_preferences_cannot_import">Không thể nhập các tùy chọn cài đặt!</string>
-    <string name="check_preferences_dangerous_import">Không nên nhập các tùy chọn cài đặt này!</string>
     <!-- export_to moved to core:ui -->
-    <string name="import_from">Nhập cài đặt từ</string>
-    <string name="setting_imported">Các cài đặt đã được nhập</string>
-    <string name="old_master_password">Mật khẩu chính cũ</string>
-    <string name="different_password_used">Tệp này đã được xuất và mã hóa bằng mật khẩu khác. Vui lòng nhập mật khẩu cũ để giải mã tệp.</string>
-    <string name="master_password_will_be_replaced">Khi nhập thành công, mật khẩu chính hiện tại SẼ BỊ THAY THẾ bằng mật khẩu chính cũ!</string>
-    <string name="exported">Đã xuất cài đặt tùy chọn</string>
-    <string name="exported_failed">Xuất tùy cài đặt tùy chọn thất bại!</string>
-    <string name="filenotfound">Không tìm thấy tệp</string>
-    <string name="goto_main_try_again">Vui lòng quay lại màn hình chính và thử lại.</string>
-    <string name="restartingapp">Thoát ứng dụng để áp dụng thiết lập.</string>
-    <string name="ue_exported">Dữ liệu người dùng đã được xuất</string>
     <!-- master_password_missing moved to core:ui -->
-    <!--    Maintenance-->
-    <string name="maintenance_shortname">MAINT</string>
-    <string name="maintenance_settings">Cấu hình bảo trì</string>
-    <string name="maintenance_email">Người nhận email</string>
-    <string name="maintenance_amount">Số lượng nhật ký gửi đi</string>
     <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">đã xuất dữ liệu cách đây %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">đã xuất vào lúc %1$s</string>
-    <string name="exported_less_than_hour_ago">đã xuất dưới 1 giờ trước</string>
-    <string name="preferences_import_list_title">Chọn tập tin để nhập</string>
-    <string name="metadata_warning_different_flavour">Các tùy chọn cài đặt được tạo bằng phiên bản AAPS khác (%1$s), trong khi bạn đang dùng: %2$s.\n\nMột số cài đặt có thể bị thiếu hoặc không hợp lệ – sau khi nhập, vui lòng kiểm tra và cập nhật lại tùy chọn của bạn.</string>
-    <string name="metadata_warning_different_device">Các tùy chọn cài đặt được tạo trên thiết bị khác. Điều này không sao nếu bạn đang nhập từ điện thoại cũ hoặc thiết bị khác, nhưng hãy chắc chắn rằng các tùy chọn được nhập là chính xác!</string>
-    <string name="metadata_warning_old_export">Các tùy chọn cài đặt nhập vào đã cũ %1$s ngày! Có thể bạn có các tùy chọn mới hơn hoặc đã chọn nhầm tệp? Hãy nhớ xuất tùy chọn đều đặn!</string>
-    <string name="metadata_warning_date_format">Định dạng ngày-giờ không hợp lệ!</string>
-    <string name="metadata_warning_different_version">Các tùy chọn cài đặt từ phiên bản nhỏ khác của ứng dụng. Điều này không sao nếu bạn đang nhập sau khi nâng cấp, nhưng hãy kiểm tra sau khi nhập xem các tùy chọn có vẫn chính xác không!</string>
-    <string name="metadata_urgent_different_version">Các tùy chọn cài đặt từ phiên bản chính khác của ứng dụng. Các phiên bản chính khác nhau đáng kể và có thể không tương thích với nhau! Hãy chắc chắn rằng các tùy chọn vẫn chính xác sau khi nhập!</string>
-    <string name="prefdecrypt_settings_tampered">Tệp cài đặt bị can thiệp</string>
-    <string name="prefdecrypt_settings_secure">Tệp cài đặt được bảo mật</string>
-    <string name="prefdecrypt_settings_unencrypted">Đang sử dụng định dạng cài đặt không bảo mật, chưa được mã hóa</string>
-    <string name="prefdecrypt_wrong_json">Lỗi định dạng JSON, thiếu trường bắt buộc (format, content, metadata hoặc security)</string>
-    <string name="prefdecrypt_wrong_password">Lỗi giải mã, mật khẩu đã nhập không thể giải mã tệp</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Tệp không có mã kiểm tra (checksum/hash), không thể xác minh tính hợp lệ của cài đặt!</string>
-    <string name="prefdecrypt_issue_modified">Tệp đã bị chỉnh sửa sau khi xuất dữ liệu!</string>
-    <string name="prefdecrypt_issue_parsing">Lỗi giải mã: không thể đọc tệp cài đặt tùy chọn!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Lỗi giải mã, mật khẩu cung cấp không hợp lệ hoặc tệp cài đặt đã bị chỉnh sửa! Điều này có thể xảy ra nếu tệp nhập dữ liệu vào được xuất dữ liệu bằng mật khẩu khác.</string>
-    <string name="prefdecrypt_issue_wrong_format">Thiếu cấu hình mã hóa, định dạng cài đặt không hợp lệ!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Thuật toán mã hóa không được hỗ trợ hoặc chưa được chỉ định!</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Định dạng tệp tin</string>
-    <string name="metadata_label_created_at">Đã tạo lúc</string>
-    <string name="metadata_label_aaps_version">Phiên bản AAPS</string>
-    <string name="metadata_label_aaps_flavour">Phiên bản xây dựng</string>
-    <string name="metadata_label_device_name">Đang xuất tên bệnh nhân</string>
-    <string name="metadata_label_device_model">Đang xuất mẫu thiết bị</string>
-    <string name="metadata_label_encryption">Mã hóa tệp</string>
-    <string name="metadata_format_new">Định dạng mã hóa mới</string>
-    <string name="metadata_format_other">Định dạng xuất dữ liệu không xác định</string>
-    <string name="error_accessing_filesystem_select_aaps_directory_properly">Lỗi truy cập hệ thống tệp. Hãy chọn đúng thư mục AAPS.</string>
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
-    <string name="storage_local">Lưu trữ Cục bộ</string>
-    <string name="storage_google_drive">Google Drive</string>
-    <string name="select_storage_type">Chọn Kiểu lưu trữ</string>
-    <string name="backup_to_google_drive">Sao lưu vào Google Drive</string>
-    <string name="google_drive_connection_error">Lỗi kết nối Google Drive</string>
-    <string name="reauthorize">Xác thực lại</string>
-    <string name="cloud_auth_success">Xác thực lưu trữ đám mây thành công</string>
-    <string name="cloud_auth_failed">Không thể kết nối tới lưu trữ đám mây</string>
-    <string name="cloud_auth_error">Lỗi xác thực lưu trữ đám mây: %1$s</string>
-    <string name="enable_cloud_export_title">Bật xuất dữ liệu lên đám mây</string>
-    <string name="enable_cloud_export_message">Bạn có muốn bật xuất lên đám mây không? Thao tác này sẽ kích hoạt tùy chọn “All Cloud” trong Cài đặt xuất.</string>
-    <string name="can_change_in_export_settings">Bạn có thể thay đổi việc này sau trong Xuất Cài đặt</string>
-    <string name="setup_cloud_directory_first">Vui lòng thiết lập Thư mục đám mây trước để sử dụng Xuất Cài đặt</string>
-    <string name="local_directory">Thư mục CỤC BỘ</string>
-    <string name="cloud_directory">Thư mục đám mây</string>
-    <string name="export_options">Xuất các tuỳ chọn</string>
-    <string name="log_export_option">Nhật ký</string>
-    <string name="user_settings_export_option">Cài đặt người sử dụng</string>
-    <string name="user_entries_csv_export_option">Xuất dữ liệu sang Excel (csv)</string>
-    <string name="email_option">Email</string>
-    <string name="local_storage_option">Lưu trữ Cục bộ</string>
-    <string name="cloud_storage_option">Lưu trữ đám mây</string>
-    <string name="export_all_cloud">Toàn bộ lên đám mây</string>
-    <string name="send_logs_to_cloud">Xuất nhật ký lên đám mây</string>
-    <string name="export_csv_to_cloud">Xuất dữ liệu người dùng lên đám mây (csv)</string>
-    <string name="export_csv_to_local">Xuất mục dữ liệu vào cục bộ (csv)</string>
-    <string name="export_settings_local">Xuất cài đặt (Cục bộ)</string>
-    <string name="export_settings_cloud">Xuất cài đặt (Đám mây)</string>
-    <string name="export_settings_both">Xuất cài đặt (Cục bộ + Đám mây)</string>
-    <string name="import_settings_local">Nhập cài đặt (Cục bộ)</string>
-    <string name="import_settings_cloud">Nhập cài đặt (Đám mây)</string>
-    <string name="import_settings_both">Nhập cài đặt (Cục bộ + Đám mây)</string>
     <!-- Import source selection dialog -->
-    <string name="select_import_source">Chọn nguồn nhập dữ liệu</string>
-    <string name="import_from_local">Nhập từ lưu trữ Cục bộ</string>
-    <string name="import_from_cloud">Nhập từ lưu trữ Đám mây</string>
-    <string name="import_source_local_description">Nhập cài đặt từ thiết bị lưu trữ</string>
-    <string name="import_source_cloud_description">Nhập cài đặt từ lưu trữ đám mây</string>
-    <string name="cloud_import_file_count">Đang hiển thị %1$d của %2$d tệp</string>
-    <string name="cloud_import_file_count_all">Đang hiển thị tất cả %1$d tệp</string>
-    <string name="load_more">Tải thêm</string>
-    <string name="load_more_with_count">Tải thêm %1$d (đã tải %2$d)</string>
     <string name="loading">Đang tải…</string>
-    <string name="loading_progress">Đang tải %1$d của %2$d…</string>
-    <string name="loading_file_progress">Đang tải %1$s (%2$d/%3$d)…</string>
-    <string name="logs_uploaded_to_cloud">Đã tải nhật ký lên đám mây thành công</string>
-    <string name="logs_upload_failed">Tải nhật ký lên đám mây thất bại</string>
-    <string name="logs_upload_error">Đã xảy ra lỗi khi tải nhật ký lên lưu trữ đám mây</string>
-    <string name="csv_upload_failed">Tải dữ liệu CSV lên đám mây thất bại</string>
-    <string name="csv_upload_error">Đã xảy ra lỗi khi tải CSV lên đám mây</string>
-    <string name="export_options_updated">Đã cập nhật tùy chọn Xuất dữ liệu</string>
-    <string name="no_settings_files_found">Không có tệp cài đặt trên đám mây</string>
-    <string name="clear_action">Xóa Cài Đặt</string>
-    <string name="clear_cloud_settings">Xóa Cài Đặt Đám mây</string>
-    <string name="clear_cloud_settings_message">Sẽ chuyển sang lưu trữ cục bộ và xóa xác thực. Tiếp tục?</string>
-    <string name="uploading_to_cloud">Đang tải lên Đám mây...</string>
-    <string name="cloud_directory_path">Thư mục Đám mây: %1$s</string>
     <string name="warning_wrong_directory_selected">Đã chọn sai thư mục</string>
     <string name="warning_wrong_directory_message">Bạn đã chọn thư mục con “%1$s” thay vì thư mục gốc của AAPS. Vui lòng chọn thư mục AAPS cấp cha. Ứng dụng sẽ tự động tạo và quản lý các thư mục con.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
-    <string name="google_drive_token_refresh_failed">Không thể làm mới mã truy cập Google Drive</string>
-    <string name="google_drive_token_refresh_error">Không thể làm mới mã truy cập Google Drive: %1$s</string>
-    <string name="google_drive_connection_test_failed">Kiểm tra kết nối Google Drive thất bại</string>
-    <string name="google_drive_connect_error">Không thể kết nối tới Google Drive: %1$s</string>
-    <string name="google_drive_list_folders_failed">Không thể liệt kê các thư mục Google Drive</string>
-    <string name="google_drive_list_folders_error">Lỗi khi liệt kê thư mục: %1$s</string>
-    <string name="google_drive_upload_no_id">Đã tải lên nhưng không nhận được ID</string>
-    <string name="google_drive_upload_verify_failed">Xác minh tải lên thất bại</string>
-    <string name="google_drive_upload_failed">Tải lên thất bại: %1$s</string>
-    <string name="google_drive_upload_error">Lỗi khi tải tệp lên: %1$s</string>
-    <string name="google_drive_folder_access_error">Không thể tạo hoặc truy cập thư mục đích: %1$s</string>
-    <string name="google_drive_list_settings_failed">Không thể liệt kê các tệp cài đặt</string>
-    <string name="google_drive_list_settings_error">Lỗi khi liệt kê tệp cài đặt: %1$s</string>
-    <string name="google_drive_download_failed">Không thể tải tệp xuống</string>
-    <string name="google_drive_download_error">Lỗi khi tải tệp xuống: %1$s</string>
     <!-- Provider-agnostic cloud storage strings -->
-    <string name="cloud_authorization_title">Xác thực %1$s</string>
-    <string name="cloud_authorization_message">Trang xác thực %1$s đã được mở trong trình duyệt của bạn.\n\nVui lòng hoàn tất việc xác thực, sau đó quay lại ứng dụng này.\n\nHộp thoại này sẽ tự động đóng khi quá trình xác thực hoàn tất.</string>
-    <string name="cloud_auth_start_failed">Không thể bắt đầu quá trình xác thực</string>
-    <string name="cloud_auth_cancelled">Đã hủy xác thực</string>
-    <string name="cloud_auth_timeout">Xác thực đã hết hạn, vui lòng thử lại</string>
-    <string name="cloud_token_expired_or_invalid">Quyền xác thực lưu trữ đám mây đã hết hạn hoặc không hợp lệ. Vui lòng xác thực lại.</string>
     <!-- Authorization status strings -->
-    <string name="authorization_status">Trạng thái xác thực</string>
-    <string name="google_drive_authorized">Đã xác thực Google Drive</string>
-    <string name="google_drive_reauth_required">Vui lòng xóa cài đặt và xác thực lại Google Drive</string>
 </resources>

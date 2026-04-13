@@ -3,7 +3,6 @@
     <string name="bolus_constraint_applied">已套用注射限制</string>
     <string name="carbs_constraint_applied">已套用碳水化合物限制</string>
     <string name="temp_target_short">臨時目標</string>
-    <string name="dialog_canceled">對話框已取消</string>
     <string name="start_activity_tt">開始活動(臨時目標)</string>
     <string name="start_eating_soon_tt">即將開始用餐 (臨時目標)</string>
     <string name="start_hypo_tt">開始低血糖(臨時目標)</string>
@@ -89,11 +88,9 @@
     <string name="load_peak_from">載入峰值來源</string>
     <string name="cannot_delete_last_insulin">無法刪除最後一個胰島素</string>
     <string name="cannot_delete_active_insulin">無法刪除目前使用中的胰島素</string>
-    <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$小時</string>
     <string name="timeshift_label">時間偏移</string>
     <string name="percentage_label">百分比</string>
-    <string name="permanent_profile_switch">永久（0 = 無持續時間限制）</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">暫停循環 1 小時</string>
     <string name="suspendloopfor2h">暫停循環 2 小時</string>
@@ -129,7 +126,6 @@
     <string name="show_calculation">顯示計算</string>
     <!-- Treatments -->
     <string name="no_records_available">無可用紀錄</string>
-    <string name="calculation_short">計算</string>
     <string name="treatments_iob_label_string">IOB：</string>
     <string name="treatments_carbs_label_string">碳水化合物：</string>
     <string name="tempbasals_netratio_label_string">比例：</string>
@@ -169,6 +165,8 @@
     <string name="basal_pct_from_tdd_label">基礎率百分比</string>
     <string name="selected_profile">已選擇：</string>
     <string name="comparation">比較</string>
+    <string name="profile_tab_1">設定檔 1</string>
+    <string name="profile_tab_2">設定檔 2</string>
     <string name="motol_default_profile">預設設定檔</string>
     <string name="current_profile">目前設定檔</string>
     <string name="available_profile">可用設定檔</string>
@@ -182,18 +180,14 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">僅在手錶上</string>
     <string name="a11y_only_on_phone">僅在手機上</string>
-    <string name="quickwizard_settings">快速響導設定</string>
     <string name="overview_edit_quickwizard_button_text">按鈕文字</string>
     <string name="quick_wizard_mode_wizard">嚮導</string>
     <string name="quick_wizard_mode_insulin">胰島素</string>
     <string name="quick_wizard_mode_carbs">碳水化合物</string>
-    <string name="overview_edit_quickwizard_valid">有效：</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">僅使用正 IOB</string>
     <string name="overview_edit_quickwizard_superbolus">超級注射</string>
-    <string name="overview_edit_quickwizard_percentage_too_high">百分比過高！</string>
     <string name="a11y_drag_and_drop_handle">拖放操作把手</string>
     <string name="additional_ecarbs">新增 eCarbs</string>
-    <string name="overview_edit_quickwizard_useforcalculation">用於計算：</string>
     <string name="calculator_options">計算機選項</string>
     <string name="use_bg">使用 血糖</string>
     <string name="use_cob">使用 COB</string>
@@ -210,10 +204,7 @@
     <string name="ecarbs_additional">額外碳水化合物</string>
     <string name="valid_from_to">有效時間範圍</string>
     <string name="carb_time">碳水化合物時間</string>
-    <string name="no_quickwizard_entries">沒有快速嚮導項目。點選 + 以新增一個。</string>
     <string name="save_changes_question">要儲存此項目的變更嗎？</string>
-    <string name="constraints_violation">限制違反</string>
-    <string name="change_your_input">更改您的輸入！</string>
     <string name="wizard_no_insulin_required">不需要胰島素</string>
     <string name="carbs_constraint_violation">碳水化合物受限制條件限制</string>
     <string name="insulin_constraint_violation">胰島素受限制條件限制</string>
@@ -223,7 +214,6 @@
     <string name="use_black_color">使用黑色</string>
     <string name="widget_configuration">小工具設定</string>
     <string name="until_changed">直到更改</string>
-    <string name="limitations">限制</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">需要權限</string>
     <string name="permission_sheet_subtitle">此應用程式需要部分權限才能正常運作</string>
@@ -271,4 +261,7 @@
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d 分鐘</string>
     <string name="select_arrow">選擇箭頭</string>
+    <string name="loop_accept_nav_label">循環</string>
+    <string name="loop_accept_set_basal_question">接受新的臨時基礎率：</string>
+    <string name="loop_accept_perform">執行</string>
 </resources>

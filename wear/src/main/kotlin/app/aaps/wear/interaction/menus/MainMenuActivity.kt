@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.keys.BooleanKey
+import app.aaps.wear.BuildConfig
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
@@ -22,7 +23,10 @@ class MainMenuActivity : MenuListActivity() {
         rxBus.send(EventWearToMobile(ActionResendData("MainMenuListActivity")))
     }
 
-    override fun provideTitleIcon(): Int = R.drawable.ic_aaps_light
+    override fun provideTitleIcon(): Int = when (BuildConfig.FLAVOR) {
+        "aapsclient", "aapsclient2", "aapsclient3" -> R.drawable.ic_aaps_client_light
+        else                                        -> R.drawable.ic_aaps_light
+    }
 
     override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {

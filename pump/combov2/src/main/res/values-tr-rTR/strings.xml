@@ -23,7 +23,6 @@
     <string name="combov2_pair_with_pump_title">Pompayla eşleştir</string>
     <string name="combov2_unpair_pump_title">Pompayla eşleşmeyi kaldır</string>
     <string name="combov2_driver_state_label">Sürücü durumu</string>
-    <string name="combov2_current_activity_label">Şu anki etkinlik</string>
     <string name="bluetooth_address">Bluetooth adresi</string>
     <string name="combov2_start_pairing">Eşleştirmeye başla</string>
     <string name="combov2_pairing_in_progress">Pompa eşleştirme devam ediyor</string>
@@ -100,7 +99,6 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_ignoring_redundant_100_tbr">Gereksiz %100 GBO isteği yoksayılıyor</string>
     <string name="combov2_hit_unexpected_tbr_limit">GBO ayarlanırken beklenmeyen bir sınırla karşılaşıldı: hedef yüzde %1$d%% idi, fakat %2$d%%\'de bir sınıra ulaştı</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Temel bazal oran sıfırsa mutlak GBO ayarlanamaz</string>
-    <string name="combov2_pair_with_pump_summary">AndroidAPS ile şu anda eşleştirilmemiş bir Accu-Chek Combo pompasını eşleştirin</string>
     <string name="combov2_unpair_pump_summary">Şu anda eşleştirilmiş olan Accu-Chek Combo pompasından AndroidAPS ve Android\'in eşlemesini kaldırın</string>
     <string name="combov2_unknown_tbr_detected">Bilinmeyen GBO tespit edildi ve durduruldu; yüzde: %1$d%%; kalan süre: %2$s</string>
     <string name="combov2_connection_error">Bağlantı Hatası: %1$s</string>

@@ -9,7 +9,6 @@
     <string name="medtronic_pump_bolus_delay">Retard fins que bolus comenci (s)</string>
     <string name="medtronic_pump_max_bolus">Màx. bolus a la bomba (U)</string>
     <string name="medtronic_pump_max_basal">Màx. basal a la bomba (U/h)</string>
-    <string name="medtronic_pump_encoding">Codificació Medtronic</string>
     <string name="medtronic_custom_action_wake_and_tune">Engegar i ajustar</string>
     <string name="medtronic_custom_action_clear_bolus_block">Esborrar bloc de bolus</string>
     <string name="medtronic_pump_battery_select">Tipo de batería (Vista d\'energia)</string>

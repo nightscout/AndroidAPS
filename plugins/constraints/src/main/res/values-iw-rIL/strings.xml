@@ -28,7 +28,6 @@
     <string name="smbnotallowedinopenloopmode">SMB אינו פעיל במצב לולאה פתוחה</string>
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
     <string name="hardlimit">מגבלה קשיחה</string>
-    <string name="treatmentssafety_title">בטיחות טיפולים</string>
     <!-- Objectives -->
     <string name="completed_well_done">הושלם, כל הכבוד!</string>
     <string name="not_completed_yet">עוד לא הושלם</string>

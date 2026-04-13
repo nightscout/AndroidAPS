@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AAPSClient -->
-    <string name="ns_cellular">Utiliser la connexion mobile</string>
-    <string name="ns_wifi">Utilisez la connexion Wi-Fi</string>
     <!-- ns_wifi_ssids moved to core:keys module -->
-    <string name="ns_charging">Pendant la charge</string>
-    <string name="ns_battery">Sur batterie</string>
     <string name="connection_settings_title">Paramètres de connexion</string>
     <!-- ns_wifi_ssids_summary moved to core:keys module -->
-    <string name="ns_allow_roaming">Autoriser connexion données itinérance</string>
-    <string name="ns_create_announcements_from_errors_title">Créer des messages d’erreurs</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Créer des annonces à partir des alertes Glucides requis</string>
-    <string name="ns_create_announcements_from_errors_summary">Créer une annonce Nightscout pour les messages d\'erreur et les alertes locales (également visible dans la section Careportal de l\'onglet traitements)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Créer des annonces Nightscout pour les alertes besoins de glucides</string>
     <string name="description_ns_client">Synchronise vos données avec Nightscout en utilisant l\'API v1</string>
     <string name="description_ns_client_v3">Synchronise vos données avec Nightscout en utilisant l\'API v3</string>
     <string name="blocked_by_charging">Bloqué par les options de recharge</string>
@@ -41,35 +32,7 @@
     <string name="full_sync">Synchronisation complète</string>
     <string name="full_sync_comment">Synchronisation complète ? Cela peut prendre plusieurs heures et jusqu\'à la fin, vous ne verrez pas de nouvelles données sur NS.</string>
     <string name="ns_sync_options">Synchronisation</string>
-    <string name="ns_upload_summary">Profils, boluses, glucides, basals temporaires sont téléchargés vers NS</string>
-    <string name="ns_upload">Télécharger des données vers NS</string>
-    <string name="ns_receive_profile_store">Recevoir les profils sauvegardés</string>
-    <string name="ns_receive_profile_store_summary">Synchroniser les profils à partir de l\'éditeur de profil NS</string>
-    <string name="ns_receive_temp_target">Recevoir les cibles temporaires</string>
-    <string name="ns_receive_temp_target_summary">Accepter les cibles temporaires entrées via NS ou AAPSClient</string>
-    <string name="ns_receive_profile_switch">Recevoir les changements de profil</string>
-    <string name="ns_receive_profile_switch_summary">Accepter les changements de profil entrés via NS ou NSClient</string>
-    <string name="ns_receive_running_mode">Recevoir les événements de fonctionnement</string>
-    <string name="ns_receive_running_mode_summary">Accepter les évènements de fonctionnement entrés via NS ou AAPSCLIENT</string>
-    <string name="ns_receive_tbr_eb">Recevoir des DBT et des BE</string>
-    <string name="ns_receive_tbr_eb_summary">Accepter le DBT et le BE entrés dans une autre instance</string>
-    <string name="ns_receive_insulin">Recevoir l\'insuline</string>
-    <string name="ns_receive_insulin_summary">Acceptez l\'insuline entrée via NS ou AAPSClient (elle n\'est pas injectée, uniquement pour le calcul pour IA)</string>
-    <string name="ns_receive_carbs">Recevoir les glucides</string>
-    <string name="ns_receive_carbs_summary">Accepter les glucides entrés par NS ou AAPSClient</string>
-    <string name="ns_receive_therapy_events">Recevoir des événements thérapeutiques</string>
-    <string name="ns_receive_therapy_events_summary">Accepter les événements de thérapie (canule, insuline, changement de batterie, etc.) entrés via NS ou NSClient</string>
-    <string name="ns_receive_cgm">Recevoir/remplir les anciennes données MGC</string>
-    <string name="ns_receive_cgm_summary">Accepter les données MGC de NS</string>
-    <string name="ns_sync_slow">Ralentir les téléchargements</string>
     <string name="ns_alarm_options">Options d\'alarme</string>
-    <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
-    <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
-    <string name="ns_alarm_stale_data_value_label">Seuil sans nouvelle donnée Gly [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Seuil d\'urgence pour les données obsolètes [min]</string>
-    <string name="ns_log_app_started_event">Démarrage AAPS entré dans NS</string>
-    <string name="ns_use_ws_title">Se connecter aux websockets</string>
-    <string name="ns_use_ws_summary">L\'activation signifie : des mises à jour plus rapides, la réception d\'alarmes et d\'annonces et une consommation de batterie plus élevée similaire à la v1. Tous les autres téléchargeurs vers NS doivent utiliser le protocole v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_dev_servers">Si activé, les téléchargements iront vers les serveurs de test au lieu des serveurs habituels</string>
     <string name="title_tidepool_dev_servers">Utiliser les serveurs d\'Intégration (test)</string>
@@ -84,13 +47,8 @@
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Envoyer des données à xDrip+</string>
-    <string name="xdrip_status_detailed_iob_title">Afficher l\'IA détaillée</string>
-    <string name="xdrip_status_detailed_iob_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
-    <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
-    <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly dans la barre d\'état</string>
     <string name="xdrip_status_settings">xDrip+ barre d\'état avancée</string>
     <string name="disabled_loop">Boucle désactivée</string>
-    <string name="xdrip_send_status_title">Envoyer la barre d\'état à xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ n\'est pas installé</string>
     <string name="calibration_sent">Étalonnage envoyé à xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Envoyer les glycémies et les traitements à xDrip+. La source de données \"xDrip+ Sync Follower\" doit être sélectionnée et l\'acceptation des données doit être activée dans Paramètres - Paramètres Inter-app - Accepter Glycémies/Traitements</string>
@@ -124,18 +82,9 @@
     <string name="wear_action_tempt_manual_message">Cible Temp.:\n\nCible: %1$s\nDurée: %2$d min</string>
     <string name="wear_action_tempt_preset_message">Cible Temp.:\n\nRaison: %1$s\nCible : %2$s\nDurée : %3$d min</string>
     <string name="no_success">échec - veuillez vérifier le téléphone</string>
-    <string name="wear_settings">Paramètres Wear</string>
-    <string name="wearcontrol_title">Commandes depuis la montre</string>
-    <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre.</string>
-    <string name="wear_broadcast_data">Diffuser les données</string>
-    <string name="wear_broadcast_data_summary">Diffuser les données à AAPS ou AAPSClient</string>
     <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
     <string name="wear_general_settings">Paramètres généraux</string>
-    <string name="wear_notifysmb_title">Notifier en cas de SMB</string>
-    <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
     <string name="wear_custom_watchface_settings">Paramètres du Cadran Personnalisé</string>
-    <string name="wear_custom_watchface_authorization_title">Autorisation du Cadran Personnalisé</string>
-    <string name="wear_custom_watchface_authorization_summary">Autoriser le cadran perso chargé à modifier et bloquer certains paramètres d\'affichage de la montre pour un affichage correct du cadran</string>
     <string name="wear_custom_watchface">Cadran personnalisé : %1$s</string>
     <string name="wear_load_watchface">Charger le cadran</string>
     <string name="wear_infos_watchface">Infos Cadran</string>
@@ -186,6 +135,5 @@
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Invalide</string>
     <string name="garmin_request_key">Demande de clé</string>
-    <string name="garmin_request_key_summary">Clé optionnelle pour sécuriser la communication HTTP entre le périphérique Garmin et AAPS.</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>

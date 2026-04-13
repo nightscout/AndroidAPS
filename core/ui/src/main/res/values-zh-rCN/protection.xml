@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="biometric_title">需要身份验证</string>
+    <string name="biometric_description">请将手指放在指纹识别器上以验证身份</string>
+    <string name="settings_protection">设置保护</string>
+    <string name="application_protection">应用保护</string>
+    <string name="bolus_protection">大剂量安全验证</string>
+    <string name="settings_password">设置密码</string>
+    <string name="settings_pin">设置 PIN 码</string>
+    <string name="application_password">应用程序密码</string>
+    <string name="application_pin">应用程序 PIN 码</string>
+    <string name="bolus_password">大剂量密码</string>
+    <string name="bolus_pin">大剂量 PIN 码</string>
+    <string name="protection_timeout_title">密码与 PIN 保留时长 [秒]</string>
+    <string name="protection_timeout_summary">密码 / PIN 有效时长</string>
     <!-- Protection type entries moved to core/keys/strings.xml -->
+    <string name="unsecure_fallback_biometric">不安全备用方案</string>
+    <string name="unsecure_fallback_descriotion_biometric">要使生物识别保护生效，必须设置主密码作为备用方案。\n\n请设置主密码！</string>
+    <string name="password_set">密码已设置！</string>
+    <string name="datastore_password_cleared">存储的导出密码已清除！</string>
+    <string name="pin_set">PIN 码已设置！</string>
+    <string name="password_not_set">密码未设置</string>
+    <string name="pin_not_set">PIN 码未设置</string>
+    <string name="password_not_changed">密码未更改</string>
+    <string name="pin_not_changed">PIN 码未更改</string>
+    <string name="pin_cleared">PIN 码已清除！</string>
+    <string name="protection_password_hint">在此输入密码</string>
+    <string name="protection_pin_hint">在此输入 PIN 码</string>
+    <string name="auth_hint_master_password">输入主密码</string>
+    <string name="auth_hint_master_or_pin">输入主密码或PIN码</string>
+    <string name="auth_hint_master_or_password">输入主密码或自定义密码</string>
+    <string name="use_pin_password">使用 PIN/密码</string>
+    <string name="current_master_password">当前主密码</string>
+    <string name="master_password_not_set">未设置主密码</string>
+    <string name="aaps_directory_not_selected">未选择 AAPS 目录</string>
 </resources>

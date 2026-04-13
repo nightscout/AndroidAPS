@@ -8,8 +8,6 @@
     <string name="setup_completed_info">Open Humans foi configurado. Caso queira interromper o envio de seus dados, clique em \'Sair da sua conta\'</string>
     <string name="not_setup_info">Open Humans está inativo. Para iniciar o envio de seus dados, clique em \'Configuração\'</string>
     <string name="project_member_id">ID de Membro do Projeto: %1$s</string>
-    <string name="only_upload_if_connected_to_wifi">Enviar apenas se conectado ao WiFi</string>
-    <string name="only_upload_if_charging">Enviar apenas se estiver carregando</string>
     <string name="open_humans_uploading">Enviando para Open Humans…</string>
     <string name="open_humans_notifications">Notificações Open Humans</string>
     <string name="uploading_to_open_humans">AAPS está fazendo upload para Open Humans. Isto pode levar um tempo.</string>

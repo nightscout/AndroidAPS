@@ -1,40 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Buclă inactivă</string>
-    <string name="smscommunicator_pump_disconnected">Pompă deconectată</string>
-    <!-- Food-->
-    <string name="food_short">Mâncare</string>
-    <string name="description_food">Afișează mâncărurile predefinite în Nightscout</string>
-    <string name="filter">Filtru</string>
-    <string name="food">Mâncare</string>
-    <string name="short_kilo_joul">kJ</string>
-    <string name="short_energy">En</string>
-    <string name="short_protein">Pr</string>
-    <string name="short_fat">Grăsime</string>
-    <string name="category">Categorie</string>
-    <string name="subcategory">Subcategorie</string>
     <string name="calculator_label">Calculator</string>
-    <!-- Profile -->
-    <!-- localprofile moved to core:ui module -->
-    <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Definiți un profil care descrie nevoile dumneavoastră de insulină.</string>
-    <string name="a11y_add_new_to_list">adăugare nouă la listă</string>
-    <string name="do_you_want_switch_profile">Doriți să schimbați profilul și să renunțați la modificările făcute profilului curent?</string>
-    <string name="save_or_reset_changes_first">Salvează sau resetează modificările curente mai întâi</string>
-    <string name="delete_current_profile">Ștergeți profilul curent?</string>
-    <string name="units_colon">Unități:</string>
-    <!-- Actions -->
-    <string name="actions">Acțiuni</string>
-    <!-- manage moved to core:ui module -->
-    <string name="description_actions">Butoane pentru accesarea celor mai comune facilități</string>
-    <string name="actions_shortname">ACȚ</string>
-    <string name="status">Stare</string>
-    <string name="pump_actions">Acțiuni pompă</string>
-    <string name="tempbasal_button">Bazală temporară</string>
-    <string name="extended_bolus_button">Bolus extins</string>
-    <string name="extended_bolus_cancel_button">Renunță la bolusul extins</string>
-    <string name="tools">Instrumente</string>
-    <string name="site_rotation">Rotație loc</string>
     <string name="nav_history_browser">Vizualizare istoric</string>
     <string name="sensor_label">Senzor</string>
     <string name="age_label">vârstă:</string>
@@ -46,7 +13,6 @@
     <string name="statuslights_patch_pump_age">vârstă pompă</string>
     <string name="patch_pump">Pompă</string>
     <!-- Overview -->
-    <string name="statuslights_copy_ns">Copiați setările din NS</string>
     <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
@@ -56,7 +22,7 @@
     <string name="graph_long_scale_18h">18 ore</string>
     <string name="graph_long_scale_24h">24 de ore</string>
     <string name="a11y_graph">grafic</string>
-    <string name="a11y_graph_scale">alege scara graficului</string>
+    <string name="a11y_graph_scale">alegeți scara graficului</string>
     <string name="a11y_graph_scale_6h">scară grafică 6 ore</string>
     <string name="a11y_graph_scale_12h">scară grafică 12 ore</string>
     <string name="a11y_graph_scale_18h">scară grafică 18 ore</string>
@@ -66,19 +32,11 @@
     <string name="a11y_bg_quality">calitatea valorii glicemiei</string>
     <string name="a11y_blood_glucose">glicemie din sânge</string>
     <string name="a11y_bg_outdated">învechită</string>
-    <string name="set_basal_question">Acceptă noua bazală temporară:</string>
-    <string name="overview_cgm">CGM</string>
+    <string name="set_basal_question">Acceptați noua bazală temporară:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ACASĂ</string>
-    <string name="description_overview">Afișează starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
-    <string name="overview_buttons_selection">Butoane</string>
-    <string name="not_available_full">Nu este disponibil</string>
-    <string name="constraints_violation">Încălcare a unei limite</string>
-    <string name="change_your_input">Schimbați ceea ce ați introdus!</string>
+    <string name="description_overview">Afișați starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
     <string name="data_status">Stare date glicemie</string>
-    <string name="quickwizard_settings">Setări AsistentRapid</string>
-    <string name="default_temptargets">Ținte-Temporare implicite</string>
-    <string name="fill_bolus_title">Umplere/Amorsare - cantități standard de insulină</string>
     <string name="run_question">Executați %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicții</string>
@@ -95,31 +53,21 @@
     <string name="overview_show_abs_insulin">Insulină totală</string>
     <string name="overview_show_variable_sens">Sensibilitate variabilă</string>
     <string name="prediction_shortname">PRED</string>
-    <string name="basal_shortname">R_BAZ</string>
-    <string name="deviation_shortname">DEV</string>
-    <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-BGI</string>
-    <string name="abs_insulin_shortname">ABS</string>
-    <string name="devslope_shortname">DEVSLOPE</string>
+    <string name="basal_shortname">BAZ</string>
     <string name="treatments_shortname">TRAT</string>
-    <string name="heartRate_shortname">RC</string>
-    <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Scară grafică</string>
     <string name="graph_menu_divider_header">Grafic</string>
     <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Tema originală</string>
-    <string name="lowres_description">Skin de rezoluție redusă</string>
+    <string name="lowres_description">Temă de rezoluție redusă</string>
     <string name="buttonson_description">Butoanele sunt afișate întotdeauna în partea de jos a ecranului</string>
     <string name="largedisplay_description">Display mare</string>
-    <string name="skin">Tema</string>
     <string name="cannula_usage">folosire:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Afișează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
     <string name="overview_show_steps">Pași</string>
-    <string name="steps_shortname">PAȘI</string>
     <string name="simple_mode_enabled">Mod simplu activat</string>
 </resources>

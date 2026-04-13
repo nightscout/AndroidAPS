@@ -11,7 +11,11 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Riempi il nuovo pod con abbastanza insulina per 3 giorni.\n\nResta in ascolto di due bip dal pod durante il processo di riempimento. Questi indicano che è stata inserita la quantità minima di 80U. Assicurati di svuotare completamente la siringa di riempimento, anche dopo aver sentito i due segnali acustici.\n\nDopo il riempimento del pod, premi <b>Avanti</b>.\n\n<b>Nota:</b> non rimuovere la protezione dell\'ago del pod in questo momento.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Tentativo di associazione nuovo pod e caricamento.\n\nQuando il processo di inizializzazione è stato completato con successo, puoi premere <b>Avanti</b>.</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Connessione fallita</string>
+    <string name="omnipod_dash_found_too_many_pods">Trovati troppi pod</string>
+    <string name="omnipod_dash_scan_failed">Scansione fallita</string>
     <string name="omnipod_dash_generic_error">Errore generico: %1$s</string>
+    <string name="omnipod_dash_connection_lost">Connessione persa</string>
     <string name="omnipod_dash_failed_to_send">L\'invio del comando è fallito</string>
     <string name="omnipod_dash_command_not_sent">Comando non inviato</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Comando non ricevuto dal pod</string>
