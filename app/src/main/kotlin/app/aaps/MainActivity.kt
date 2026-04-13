@@ -89,7 +89,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     // 原生 Base32
     private object Base32Coder {
-        private val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+        private const val ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
         fun encode(input: ByteArray): String {
             val output = StringBuilder()
             var buffer = 0
@@ -99,15 +99,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 bitsLeft += 8
                 while (bitsLeft >= 5) {
                     bitsLeft -= 5
-                    output.append(alphabet[(buffer shr bitsLeft) and 0x1F])
+                    output.append(ALPHABET[(buffer shr bitsLeft) and 0x1F])
                 }
             }
             if (bitsLeft > 0) {
                 buffer = buffer shl (5 - bitsLeft)
-                output.append(alphabet[buffer and 0x1F])
+                output.append(ALPHABET[buffer and 0x1F])
             }
             return output.toString()
         }
+
         fun decode(input: String): ByteArray {
             val clean = input.uppercase().trimEnd('=')
             val output = ByteArray(clean.length * 5 / 8)
@@ -115,8 +116,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             var bitsLeft = 0
             var idx = 0
             for (c in clean) {
-                val v = alphabet.indexOf(c)
-                if (v < 0) throw IllegalArgumentException("Bad Base32: $c")
+                val v = ALPHABET.indexOf(c)
+                if (v < 0) throw IllegalArgumentException("无效字符: $c")
                 buffer = (buffer shl 5) or v
                 bitsLeft += 5
                 if (bitsLeft >= 8) {
@@ -128,20 +129,20 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
     }
 
-    // 原生 TOTP (HMAC-SHA1)
+    // 原生 TOTP (HMAC-SHA1, 30秒, 6位)
     private fun verifyTotp(secret: ByteArray, code: String, tolerance: Int = 1): Boolean {
         if (code.length != 6) return false
         val num = code.toIntOrNull() ?: return false
         val step = 30_000L
         val now = System.currentTimeMillis()
-        for (off in -tolerance..tolerance) {
-            val counter = (now + off * step) / step
-            if (generateTotp(secret, counter) == num) return true
+        for (offset in -tolerance..tolerance) {
+            val counter = (now + offset * step) / step
+            if (generateTotpCode(secret, counter) == num) return true
         }
         return false
     }
 
-    private fun generateTotp(secret: ByteArray, counter: Long): Int {
+    private fun generateTotpCode(secret: ByteArray, counter: Long): Int {
         val counterBytes = ByteArray(8)
         var tmp = counter
         for (i in 7 downTo 0) {
@@ -151,12 +152,12 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val mac = Mac.getInstance("HmacSHA1")
         mac.init(SecretKeySpec(secret, "HmacSHA1"))
         val hmac = mac.doFinal(counterBytes)
-        val off = hmac.last().toInt() and 0x1F
-        val bin = ((hmac[off].toInt() and 0x7F) shl 24) or
-            ((hmac[off+1].toInt() and 0xFF) shl 16) or
-            ((hmac[off+2].toInt() and 0xFF) shl 8) or
-            (hmac[off+3].toInt() and 0xFF)
-        return bin % 1_000_000
+        val offset = hmac.last().toInt() and 0x1F
+        val binary = ((hmac[offset].toInt() and 0x7F) shl 24) or
+            ((hmac[offset+1].toInt() and 0xFF) shl 16) or
+            ((hmac[offset+2].toInt() and 0xFF) shl 8) or
+            (hmac[offset+3].toInt() and 0xFF)
+        return binary % 1_000_000
     }
 
     private val disposable = CompositeDisposable()
@@ -187,8 +188,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
-    // 防重叠：用标志位保证只弹一个
-    private var isDialogShowing = false
+    // 安全控制：同一时间只一个对话框
+    private var isDialogActive = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -203,61 +204,70 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         initAllComponents(savedInstanceState)
 
-        // 启动流程：先初始化密钥 → 再验证 → 绝不重叠
+        // 安全延迟启动
         Handler(Looper.getMainLooper()).postDelayed({
-                                                        checkTotpAndShowAuth()
-                                                    }, 300)
+                                                        if (!isFinishing && !isDestroyed) {
+                                                            checkAuthFlow()
+                                                        }
+                                                    }, 400)
     }
 
     /**
-     * 安全启动：先初始化密钥 → 再显示验证（串行，不重叠）
+     * 安全认证流程：串行、不重叠、生命周期安全
      */
-    private fun checkTotpAndShowAuth() {
-        if (isDialogShowing) return
+    private fun checkAuthFlow() {
+        if (isDialogActive || isFinishing || isDestroyed) return
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         val secret = prefs.getString("totp_secret", null)
+        val verified = prefs.getBoolean("password_verified", false)
 
         when {
-            // 1. 未设置 → 引导设置
+            // 1. 未设置密钥 → 引导设置
             secret == null -> {
-                isDialogShowing = true
-                showFirstTimeSetupDialog {
-                    isDialogShowing = false
-                    checkTotpAndShowAuth() // 成功后再验证
+                isDialogActive = true
+                showFirstTimeSetup { success ->
+                    isDialogActive = false
+                    if (success) checkAuthFlow() else finish()
                 }
             }
-            // 2. 已设置但未验证 → 验证
-            !prefs.getBoolean("password_verified", false) -> {
-                isDialogShowing = true
-                showPasswordVerificationDialog {
-                    isDialogShowing = false
+            // 2. 已设置未验证 → 验证
+            !verified -> {
+                isDialogActive = true
+                showTotpVerification { success ->
+                    isDialogActive = false
+                    if (!success) checkAuthFlow()
                 }
             }
-            // 3. 已验证 → 直接进
+            // 3. 已验证 → 进入
             else -> Unit
         }
     }
 
     /**
-     * 首次设置引导（成功后回调）
+     * 首次设置（安全：先存密钥再验证；同步commit；UI清理干净）
      */
-    private fun showFirstTimeSetupDialog(onSuccess: () -> Unit) {
-        // 生成密钥
+    private fun showFirstTimeSetup(onResult: (Boolean) -> Unit) {
         val secretBytes = ByteArray(20).apply { SecureRandom().nextBytes(this) }
         val secretBase32 = Base32Coder.encode(secretBytes)
 
-        val view = LinearLayout(this).apply {
+        val dialogView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
+            val pad = dp2px(16)
+            setPadding(pad, pad, pad, pad)
             addView(TextView(this@MainActivity).apply {
-                text = "首次使用：请先设置动态密码\n\n1. 打开谷歌/微软验证器\n2. 手动添加账户，输入密钥\n3. 输入6位动态密码"
+                text = """
+                    首次使用：设置动态密码
+                    1. 打开谷歌/微软验证器
+                    2. 手动添加账户，输入密钥
+                    3. 输入当前6位动态密码
+                """.trimIndent()
                 textSize = 14f
             })
             addView(TextView(this@MainActivity).apply {
                 text = "密钥：$secretBase32"
                 textSize = 18f
                 setTextColor(Color.BLUE)
-                setPadding(0, dp2px(16), 0, dp2px(16))
+                setPadding(0, dp2px(12), 0, dp2px(12))
             })
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
@@ -268,28 +278,42 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         MaterialAlertDialogBuilder(this)
             .setTitle("设置动态密码")
-            .setView(view)
+            .setView(dialogView)
             .setCancelable(false)
-            .setPositiveButton("确认") { _, _ ->
-                val code = view.findViewById<EditText>(android.R.id.input).text.toString()
+            .setPositiveButton("确认") { dialog, _ ->
+                val code = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
                 if (verifyTotp(secretBytes, code)) {
-                    getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-                        .edit().putString("totp_secret", secretBase32).apply()
-                    ToastUtils.okToast(this, "设置成功！")
-                    onSuccess()
+                    // 同步保存，确保闪退前已写入
+                    getSharedPreferences("AppLock", MODE_PRIVATE)
+                        .edit()
+                        .putString("totp_secret", secretBase32)
+                        .commit() // 同步，确保保存成功
+                    ToastUtils.okToast(this, "设置成功")
+                    dialog.dismiss()
+                    onResult(true)
                 } else {
                     ToastUtils.errorToast(this, "密码错误")
-                    showFirstTimeSetupDialog(onSuccess)
+                    dialog.dismiss()
+                    onResult(false)
                 }
             }
-            .setNegativeButton("退出") { _, _ -> finish() }
+            .setNegativeButton("退出") { _, _ ->
+                onResult(false)
+                finish()
+            }
             .show()
     }
 
     /**
-     * 动态密码验证（成功后回调）
+     * 动态密码验证（安全：先清UI → 再存 → 再回调）
      */
-    private fun showPasswordVerificationDialog(onSuccess: () -> Unit) {
+    private fun showTotpVerification(onResult: (Boolean) -> Unit) {
+        if (isFinishing || isDestroyed) {
+            onResult(false)
+            return
+        }
+
+        // 半透明遮罩
         val maskView = View(this).apply {
             layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -298,8 +322,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             setBackgroundColor(Color.parseColor("#CC000000"))
             isClickable = true
         }
-        val root = window.decorView.findViewById<FrameLayout>(android.R.id.content)
-        root.addView(maskView)
+        val rootContent = window.decorView.findViewById<FrameLayout>(android.R.id.content)
+        rootContent.addView(maskView)
 
         val input = EditText(this).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
@@ -314,25 +338,46 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .setPositiveButton("验证") { dialog, _ ->
                 val code = input.text.toString()
                 val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-                val secret = prefs.getString("totp_secret", null)!!
-                val secretBytes = Base32Coder.decode(secret)
+                val secretBase32 = prefs.getString("totp_secret", null) ?: run {
+                    ToastUtils.errorToast(this, "密钥丢失，请重装")
+                    dialog.dismiss()
+                    rootContent.removeView(maskView)
+                    onResult(false)
+                    return@setPositiveButton
+                }
 
-                if (verifyTotp(secretBytes, code)) {
-                    prefs.edit().putBoolean("password_verified", true).apply()
-                    root.removeView(maskView)
-                    dialog.dismiss()
-                    ToastUtils.okToast(this, "验证成功")
-                    onSuccess()
-                } else {
-                    ToastUtils.errorToast(this, "密码错误")
-                    dialog.dismiss()
-                    Handler(Looper.getMainLooper()).post {
-                        root.removeView(maskView)
-                        showPasswordVerificationDialog(onSuccess)
+                try {
+                    val secretBytes = Base32Coder.decode(secretBase32)
+                    if (verifyTotp(secretBytes, code)) {
+                        // 1. 先安全移除遮罩
+                        rootContent.removeView(maskView)
+                        // 2. 同步保存验证状态
+                        prefs.edit().putBoolean("password_verified", true).commit()
+                        // 3. 提示
+                        ToastUtils.okToast(this, "验证成功")
+                        // 4. 关闭对话框
+                        dialog.dismiss()
+                        // 5. 回调
+                        onResult(true)
+                    } else {
+                        ToastUtils.errorToast(this, "密码错误")
+                        dialog.dismiss()
+                        rootContent.removeView(maskView)
+                        onResult(false)
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    ToastUtils.errorToast(this, "验证异常")
+                    dialog.dismiss()
+                    rootContent.removeView(maskView)
+                    onResult(false)
                 }
             }
-            .setNegativeButton("退出") { _, _ -> finish() }
+            .setNegativeButton("退出") { _, _ ->
+                rootContent.removeView(maskView)
+                onResult(false)
+                finish()
+            }
             .show()
     }
 
