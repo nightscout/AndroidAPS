@@ -8,11 +8,30 @@
     <string name="start_hypo_tt">开始低的临时目标</string>
     <string name="time_offset">时区偏移</string>
     <string name="remind_to_bolus_later">稍后提醒输注大剂量</string>
+    <string name="a11y_carb_reminder">将提醒设置碳水时间</string>
     <!--    Widget-->
     <string name="configure">配置透明度</string>
+    <string name="widget_description">AAPS 小部件</string>
     <!--     Activities-->
     <string name="activity_monitor">活动监视器</string>
+    <string name="time_range">时间范围</string>
+    <string name="dexcom_tir">Dexcom TIR</string>
+    <string name="cgp_title">血糖五边形（CGP）- 14天</string>
+    <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
+    <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
+    <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">低血糖</string>
+    <string name="cgp_hyper" comment="Glucose Pentagon axis: Hyperglycemia">高血糖</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">平均</string>
+    <string name="cgp_reference">健康人</string>
+    <string name="cgp_patient">患者</string>
+    <string name="cgp_pgr" comment="Prognostic Glycemic Risk score label">PGR</string>
+    <string name="cgp_pgr_very_low">极低风险</string>
+    <string name="cgp_pgr_low">低风险</string>
+    <string name="cgp_pgr_moderate">中等风险</string>
+    <string name="cgp_pgr_high">高风险</string>
+    <string name="cgp_pgr_extremely_high">极高风险</string>
     <string name="do_you_want_reset_stats">您想要重置所有的统计信息吗？</string>
+    <string name="do_you_want_recalculate_tdd_stats">您想重新计算 TDD每日总剂量统计数据吗？</string>
     <string name="calculation_in_progress">正在进行计算</string>
     <string name="invalid_age">输入的年龄无效</string>
     <string name="invalid_weight">输入的权重无效</string>
@@ -28,13 +47,33 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">总计</string>
     <!-- SiteRotationDialog -->
+    <string name="site_front">前面</string>
+    <string name="site_back">后面</string>
+    <string name="site_man">男性</string>
+    <string name="site_woman">女性</string>
+    <string name="site_child">儿童</string>
+    <string name="record_site_change">记录部位位置</string>
+    <string name="update_site_change">更新部位位置</string>
+    <string name="edit_site">编辑</string>
+    <string name="record_site_note">备注： %1$s</string>
+    <string name="delete_site_note">备注已删除</string>
     <!-- FillDialog -->
     <string name="fill_warning">请确保数量和输液器里的药量匹配</string>
     <string name="record_pump_site_change">记录泵管路更换</string>
     <string name="record_insulin_cartridge_change">记录胰岛素储药器变化</string>
+    <string name="fill_current_insulin">当前胰岛素</string>
+    <string name="fill_change_insulin">更换胰岛素</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">缺少胰岛素名称</string>
+    <string name="insulin_name_exists">胰岛素名称 %1$s 已存在，请选择新的名称</string>
+    <string name="a11y_add_new_insulin">新增胰岛素</string>
+    <string name="a11y_delete_current_insulin">删除当前的胰岛素</string>
+    <string name="activate_insulin_no_profile">未找到生效的配置文件</string>
+    <string name="activate_insulin_new_insulin">新的胰岛素：%1$s</string>
+    <string name="activate_insulin_remaining">剩余： %1$d 分钟</string>
+    <string name="activate_insulin_profile_switch">将创建配置文件切换：\n\n<b>%1$s</b></string>
     <string name="reuse_profile_pct_hours">重新使用%1$d%% %2$d小时</string>
     <string name="timeshift_label">时间偏移</string>
     <string name="percentage_label">百分比</string>
@@ -98,8 +137,43 @@
     <!-- Other dialogs -->
     <string name="basal_rate">基础率</string>
     <!--QuickWizard-->
+    <string name="use_bg">使用 血糖</string>
+    <string name="use_cob">使用 COB</string>
+    <string name="use_iob">使用 IOB</string>
+    <string name="use_trend">使用趋势</string>
+    <string name="trend_all">全部</string>
+    <string name="trend_positive_only">仅正数</string>
+    <string name="trend_negative_only">仅负数</string>
+    <string name="use_temp_target">使用临时目标</string>
+    <string name="use_alarm">使用警报</string>
+    <string name="device_selection">选择设备</string>
+    <string name="show_on_phone">在手机上显示</string>
+    <string name="show_on_watch">在手表上显示</string>
+    <string name="ecarbs_additional">额外碳水化合物</string>
+    <string name="valid_from_to">有效时间范围</string>
+    <string name="carb_time">碳水化合物时间</string>
+    <string name="save_changes_question">是否保存对此项目的更改？</string>
+    <string name="wizard_no_insulin_required">不需要胰岛素</string>
+    <string name="carbs_constraint_violation">碳水化合物受限</string>
+    <string name="insulin_constraint_violation">胰岛素受限</string>
+    <string name="confirm_treatment">请确认治疗</string>
+    <string name="recalculate">重新计算</string>
     <!--    Widget-->
+    <string name="use_black_color">使用黑色</string>
+    <string name="widget_configuration">小组件配置</string>
+    <string name="until_changed">直到更改</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">需要权限</string>
+    <string name="permission_sheet_subtitle">应用正常运行需要获取部分权限</string>
+    <string name="permission_grant">允许</string>
+    <string name="permission_change">更改</string>
+    <string name="permission_denied_go_to_settings">权限被永久拒绝。请在应用程序设置中启用它。</string>
+    <string name="permission_open_settings">设置</string>
+    <string name="permission_directory_picker_error">无法启动目录选择器。通常是 Android 或 Family Link问题。</string>
+    <string name="permission_nav_label">权限</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">循环偏移</string>
+    <string name="raw_tdd">原始 TDD</string>
+    <string name="cleaned_tdd">净 TDD</string>
     <!-- Toolbar configuration -->
 </resources>
