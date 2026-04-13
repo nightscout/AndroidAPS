@@ -115,6 +115,7 @@
     <string name="equil_history_item18">Zastavené abnormálne podávanie izulínu</string>
     <string name="equil_common_overview_button_suspend_delivery">Pozastaviť</string>
     <string name="equil_common_overview_button_resume_delivery">Obnoviť podávanie inzulínu</string>
+    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Pred chvíľou</string>
     <string name="equil_common_less_than_a_minute_ago">Pred menej ako minútou</string>
     <string name="equil_common_time_ago">pred %1$s</string>
