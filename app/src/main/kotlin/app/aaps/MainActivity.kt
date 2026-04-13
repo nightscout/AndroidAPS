@@ -25,6 +25,8 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -116,8 +118,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private lateinit var binding: ActivityMainBinding
     private var mainMenuProvider: MenuProvider? = null
 
-    // ========== 这里填你自己生成的TOTP密钥！就是刚才你生成的那个16位字符串！ ==========
-    private val TOTP_SECRET = "JBSWY3DPEHPK3PXP"
+    // ========== 这里填你自己的TOTP密钥！ ==========
+    private val totpSecret = "JBSWY3DPEHPK3PXP"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,9 +148,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     // ========== TOTP验证核心方法 ==========
     private fun verifyTotp(inputCode: String): Boolean {
         try {
-            // 解码你的TOTP密钥
+            // 解码你的TOTP密钥，改了deprecated的toUpperCase
             val base32 = Base32()
-            val key = base32.decode(TOTP_SECRET.toUpperCase(Locale.getDefault()))
+            val key = base32.decode(totpSecret.uppercase(Locale.getDefault()))
             val currentTime = System.currentTimeMillis() / 30000 // 每30秒一个周期
 
             // 计算当前时间的TOTP密码
