@@ -502,6 +502,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 while (activePlugin.activePump.serialNumber().isEmpty()) Thread.sleep(100)
                 preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(activePlugin.activePump.serialNumber()))
                 fh.delete()
+                fh.delete()
                 exportPasswordDataStore.clearPasswordDataStore(context)
                 ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
             }.start()
