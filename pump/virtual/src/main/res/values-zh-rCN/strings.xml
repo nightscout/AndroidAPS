@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">虚拟泵类型</string>
+    <string name="virtual_pump_definition">胰岛素泵定义</string>
+    <string name="virtual_pump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\n临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">虚拟泵</string>
     <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
     <string name="virtualpump_settings">虚拟泵设置</string>
     <!--    PumpType-->
