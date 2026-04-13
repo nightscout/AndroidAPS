@@ -73,10 +73,34 @@
     <string name="pref_summary_aps_smb_on_even_target">Activarea alternativă a SMB întotdeauna în funcție de valoarea țintă a glicemiei.</string>
     <!-- Maintenance preferences -->
     <string name="pref_title_maintenance_enable_fabric">Activați raportare erori Fabric</string>
+    <string name="pref_title_maintenance_enable_export_automation">Activați exportarea automată a setărilor</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Schimbare automată a profilului</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Schimbați automat la profilul generat prin Autotune după calcul.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Clasificați UAM ca bazală</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Tratați mesele neanunțate ca necesar de insulină bazală pentru calculele Autotune.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Reglați curba insulinei</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Utilizați IC/ISF circadiene</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Aplicați variația circadiană la IC și ISF în calculele Autotune.</string>
+    <string name="pref_title_autotune_additional_log">Jurnalizare suplimentară</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Permiteți comenzi la distanță prin SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Raportați pompa inaccesibilă prin SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Trimiteți notificări SMS atunci când pompa devine inaccesibilă.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Încărcați starea pompei în NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Încărcați date în NS</string>
+    <string name="pref_summary_ns_upload_data">Încărcați tratamente, bazale temporare și alte date în Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Primiți date CGM din NS</string>
+    <string name="pref_summary_ns_receive_cgm">Acceptați citirile CGM de la Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Primiți baza de date cu profiluri din NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Acceptați actualizările bazei de date de profiluri de la Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Primiți ținte temporare din NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Acceptă modificările țintelor temporare de la Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Primiți schimbări de profil din NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Acceptați evenimentele de schimbare a profilului de la Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">Primiți date insulină din NS</string>
     <string name="pref_summary_ns_receive_running_mode">Acceptați modificările modului de rulare din Nightscout.</string>
     <string name="pref_title_ns_receive_tbr_eb">Primește RBT/BE din NS</string>
     <string name="pref_summary_ns_receive_tbr_eb">Acceptați rate bazale temporare și bolusuri extinse din Nightscout.</string>
@@ -135,26 +159,98 @@
     <string name="pref_title_sbat_warning">Prag de avertizare nivel baterie senzor</string>
     <!-- IntKey: Protection preferences -->
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="master_password">Parola principală</string>
+    <string name="custom_password">Parolă personalizată</string>
+    <string name="custom_pin">PIN personalizat</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Maximul de carbohidrați permis</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Schimbare minimă în modul deschis</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Buclă deschisă va afișa o nouă cerere de schimbare doar dacă schimbarea este mai mare decât această valoare în %. Valoarea implicită este 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Interval SMB</string>
+    <string name="pref_title_smb_max_minutes">Maximul de minute de bazală la care să se limiteze SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">Maximul UAM de minute de bazală la care să se limiteze SMB</string>
+    <string name="uam_smb_max_minutes">Maximul de minute UAM SMB</string>
+    <string name="pref_title_carbs_request_threshold">Pragul de carbohidrați necesari</string>
+    <string name="carbs_req_threshold_summary">Cantitatea minimă de carbohidrați în grame pentru a afișa o alertă de sugestie. Sugestiile de carbohidrați sub acest număr nu vor declanșa o notificare.</string>
+    <string name="pref_title_half_basal_exercise_target">Țină exercițiu, înjumătățire exercițiu</string>
+    <string name="half_basal_exercise_target_summary">Setat la un număr, spre exemplu 160, înseamnă că atunci când Ținta Temporară este de 160 mg/dL și Ținta Temporară ridicată crește sensibilitatea = adevărat, se execută 50%% bazală la acest nivel (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">Pragul procentual IOB</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procentul de maxIOB peste care SMB-urile sunt dezactivate.\\nValoarea implicită: 100%\\nCu 100% această caracteristică este de fapt dezactivată.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Factor de ajustare DynamicISF</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Factor de ajustare pentru DynamicISF. Setează peste 100% pentru doze de corecție mai agresive, și sub 100% pentru corecții mai puțin agresive.</string>
+    <string name="pref_title_autosens_period">Perioadă Autosens</string>
+    <string name="openapsama_autosens_period_summary">Numărul de ore din trecut pentru detectarea sensibilității (se exclude timpul de absorbție al carbohidraților)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Numărul de jurnale de trimis</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Prag pentru date învechite</string>
+    <string name="pref_title_pump_unreachable_threshold">Prag pompă inaccesibilă</string>
     <!-- IntKey: Insulin preferences -->
+    <string name="pref_title_insulin_oref_peak">Vârf de acțiune</string>
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Număr implicit de zile pentru ajustare</string>
+    <string name="autotune_default_tune_days_summary">Numărul implicit de zile de date pentru a fi procesate de Autotune (până la 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Interval minim în minute pentru bolusurile de la distanță</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Interval de glicemie aleatoriu</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Prag alarmă date învechite</string>
+    <string name="pref_title_urgent_alarm_stale_data">Prag alarmă urgentă date învechite</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Profil utilizator pentru rotația locurilor de pe corp</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Unități</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_min">minute</string>
+    <string name="units_sec">secunde</string>
+    <string name="units_hours">h</string>
+    <string name="units_days">zile</string>
+    <string name="units_grams">g</string>
+    <string name="units_kg">kg</string>
+    <string name="units_years">an</string>
+    <string name="units_percent">%</string>
     <!-- Formatted unit strings with value only -->
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_min">%1$d min</string>
+    <string name="units_format_sec">%1$d sec</string>
+    <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.0f h</string>
+    <string name="units_format_days">%1$d zile</string>
     <!-- Formatted unit strings with value and range -->
+    <string name="pref_title_patient_name">Nume</string>
+    <string name="pref_summary_patient_name">Numele pentru a identifica această instanță AAPS (afișată în rapoarte și sincronizare)</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">Dosar AAPS</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Parola principală</string>
+    <string name="pref_title_settings_password">Parolă setări</string>
+    <string name="pref_title_settings_pin">Setări PIN</string>
+    <string name="pref_title_application_password">Parolă aplicație</string>
+    <string name="pref_title_application_pin">PIN aplicație</string>
+    <string name="pref_title_bolus_password">Parolă bolus</string>
+    <string name="pref_title_bolus_pin">PIN bolus</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Alegeți tema întunecată, luminoasă sau cea a sistemului</string>
+    <string name="pref_title_app_color_scheme">Schema de culori a aplicației</string>
+    <string name="pref_dark_theme">Temă întunecată</string>
+    <string name="pref_light_theme">Temă luminoasă</string>
+    <string name="pref_follow_system_theme">Utilizați tema dispozitivului</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Vârsta pacientului</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Destinatar email</string>
+    <string name="pref_title_identification">Identificare pentru rapoartele de eroare</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Servicii de localizare</string>
+    <string name="automation_location_passive">Utilizați localizarea pasivă</string>
+    <string name="automation_location_network">Utilizați localizarea bazată pe rețea</string>
+    <string name="automation_location_gps">Utilizați localizarea GPS</string>
     <!-- StringKey: SMS preferences -->
     <!-- StringKey: Virtual pump preferences -->
     <!-- StringKey: NS Client preferences -->
