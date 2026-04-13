@@ -266,7 +266,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             addView(TextView(this@MainActivity).apply {
                 text = "密钥：$secretBase32"
                 textSize = 18f
-                setTextColor(Color.BLUE)
+                setTextColor(Color.RED)
                 setPadding(0, dp2px(12), 0, dp2px(12))
             })
             addView(EditText(this@MainActivity).apply {
