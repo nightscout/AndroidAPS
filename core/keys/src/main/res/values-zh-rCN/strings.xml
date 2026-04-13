@@ -1,53 +1,335 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">简单模式</string>
+    <string name="pref_title_insulin_concentration">胰岛素浓度支持</string>
+    <string name="pref_summary_insulin_concentration">启用对不同的胰岛素浓度支持（U200、U300等）</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">保持屏幕常亮</string>
+    <string name="pref_summary_keep_screen_on">阻止 Android 系统关闭手机屏幕。这将非常耗电。</string>
+    <string name="pref_title_show_treatment_button">显示治疗按钮</string>
+    <string name="pref_title_show_wizard_button">显示向导按钮</string>
+    <string name="pref_title_show_insulin_button">显示胰岛素按钮</string>
+    <string name="pref_title_show_carbs_button">显示碳水按钮</string>
+    <string name="pref_title_show_cgm_button">显示 CGM 按钮</string>
+    <string name="pref_summary_show_cgm_button">打开 xDrip+ 或 Dexcom App (您可以使用返回按钮返回AAPS)。</string>
+    <string name="pref_title_show_calibration_button">显示校准按钮</string>
+    <string name="pref_summary_show_calibration_button">将校准发送到 xDrip+（确保在xDrip App设置中启用“接受校准”）。</string>
+    <string name="pref_title_show_notes_in_dialogs">在对话框中显示备注</string>
+    <string name="pref_title_use_bolus_advisor">启用大剂量向导</string>
+    <string name="pref_summary_use_bolus_advisor">启用大剂量向导，在高血糖状态下辅助进行大剂量计算。</string>
+    <string name="pref_title_use_bolus_reminder">启用大剂量提醒</string>
+    <string name="pref_summary_use_bolus_reminder">启用大剂量提醒通知，协助追踪胰岛素给药情况。</string>
+    <string name="pref_title_use_super_bolus">启用超级大剂量</string>
+    <string name="pref_summary_use_super_bolus">启用超级大剂量功能，该功能将从基础率中预借胰岛素进行即时输注。</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">蓝牙看门狗</string>
+    <string name="pref_summary_bt_watchdog">若无法连接胰岛素泵，将短暂关闭手机蓝牙 1 秒。部分蓝牙协议栈卡死的手机可通过此方法恢复连接。</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">如果未收到血糖数据, 则发出警报</string>
+    <string name="pref_title_alert_pump_unreachable">如果无法连接泵, 则发出警报</string>
+    <string name="pref_title_alert_carbs_required">需补充碳水时发出提醒</string>
+    <string name="pref_title_alert_urgent_as_android_notification">紧急警报以安卓通知形式提醒</string>
+    <string name="pref_title_alert_increase_volume">逐步提高通知音量</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">上传血糖数据到 NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">记录传感器更换</string>
+    <string name="pref_summary_bg_source_create_sensor_change">插入传感器时，创建传感器更换治疗事件。</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">启用动态灵敏度</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">启用动态胰岛素敏感系数（DynamicISF）进行灵敏度调整，而非自动灵敏度（Autosens）。</string>
+    <string name="pref_title_aps_use_autosens">启用自动灵敏度（Autosens）</string>
+    <string name="pref_title_aps_use_smb">启用 SMB</string>
+    <string name="pref_summary_aps_use_smb">启用超级微型大剂量（SMB），当血糖升高时即时输注胰岛素。</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">启用具有高临时目标的 SMB</string>
+    <string name="pref_title_aps_use_smb_always">始终启用 SMB</string>
+    <string name="pref_summary_aps_use_smb_always">无论是否有大剂量或 COB，所有情况下均启用 SMB。</string>
+    <string name="pref_title_aps_use_smb_with_cob">启用带活性碳水化合物(COB)的SMB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">允许有活性碳水化合物(COB)时使用 SMB</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">启用具有低临时目标的 SMB</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">低临时目标激活时允许启用SMB。</string>
+    <string name="pref_title_aps_use_smb_after_carbs">在输入碳水化合物后启用SMB</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">允许碳水输入后的一段时间启用SMB。</string>
+    <string name="pref_title_aps_use_uam">启用 UAM</string>
+    <string name="pref_summary_aps_use_uam">启用未报备进餐检测与应对处理。</string>
+    <string name="pref_title_aps_sensitivity_raises_target">敏感时提高目标</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">当检测到胰岛素敏感时，提高血糖的目标值。</string>
+    <string name="pref_title_aps_resistance_lowers_target">抗药时降低目标</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
+    <string name="pref_summary_ns_receive_tbr_eb">接收来自 Nightscout 的临时基础率和扩展大剂量。</string>
+    <string name="pref_title_ns_notifications_from_alarms">NS 报警</string>
+    <string name="pref_title_ns_notifications_from_announcements">NS 通知</string>
+    <string name="pref_title_ns_use_cellular">使用蜂窝数据</string>
+    <string name="pref_title_ns_use_roaming">使用漫游功能</string>
+    <string name="pref_title_ns_use_wifi">使用 WiFi</string>
+    <string name="pref_title_ns_use_on_battery">电量同步</string>
+    <string name="pref_title_ns_use_on_charging">充电时同步</string>
+    <string name="pref_title_ns_log_app_start">记录应用启动事件</string>
+    <string name="pref_title_ns_create_announcements_from_errors">创建错误通知</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">需补充碳水时生成通知</string>
+    <string name="pref_title_ns_slow_sync">使用缓慢同步</string>
+    <string name="pref_title_ns_use_ws">使用 websockets</string>
+    <string name="pref_summary_ns_use_ws">使用 websockets 与 Nightscout 进行实时通信。</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">仅使用 WiFi</string>
+    <string name="pref_title_openhumans_charging_only">仅充电</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">发送状态至 xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">发送详细的 IOB</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">发送详细的 IOB 信息到 xDrip+ 以便在观察面上显示。</string>
+    <string name="pref_title_xdrip_send_bgi">显示BGI（血糖影响）</string>
+    <string name="pref_summary_xdrip_send_bgi">在 xDrip + 状态栏显示血糖影响值</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">穿戴控制</string>
+    <string name="pref_summary_wear_control">从 Android Wear 手表控制 AAPS。</string>
+    <string name="pref_title_wear_wizard_bg">向导中包含血糖值</string>
+    <string name="pref_title_wear_wizard_tt">向导中包含临时目标</string>
+    <string name="pref_title_wear_wizard_trend">向导中包含趋势</string>
+    <string name="pref_title_wear_wizard_cob">向导中包含COB</string>
+    <string name="pref_title_wear_wizard_iob">向导中包含 IOB</string>
+    <string name="pref_title_wear_custom_watchface_authorization">授权自定义看板</string>
+    <string name="pref_title_wear_notify_on_smb">在 SMB 上通知</string>
+    <string name="pref_summary_wear_notify_on_smb">当执行微型大剂量（SMB）时，向手表发送通知。</string>
+    <string name="pref_title_wear_broadcast_data">向手表广播数据</string>
+    <string name="pref_summary_wear_broadcast_data">通过Intent将 AAPS 数据广播给第三方手表应用。</string>
     <!-- Wizard preferences -->
+    <string name="pref_title_wizard_calculation_visible">显示向导计算</string>
+    <string name="pref_title_wizard_correction_percent">使用校正百分比</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">管理泵部位轮换</string>
+    <string name="pref_title_site_rotation_manage_cgm">管理 CGM 部位轮换</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">碳水按钮增量 1</string>
+    <string name="pref_title_carbs_button_increment_2">碳水按钮增量 2</string>
+    <string name="pref_title_carbs_button_increment_3">碳水按钮增量 3</string>
+    <string name="carb_increment_button_message">按下按钮时添加的碳水化合物数量</string>
+    <string name="pref_title_cage_warning">留置针使用时长阈值提醒</string>
+    <string name="pref_title_cage_critical">留置针使用时长临界阈值</string>
+    <string name="pref_title_iage_warning">胰岛素使用时长阈值提醒</string>
+    <string name="pref_title_iage_critical">胰岛素使用时长临界阈值</string>
+    <string name="pref_title_sage_warning">传感器使用时长阈值提醒</string>
+    <string name="pref_title_sage_critical">传感器使用时长临界阈值</string>
+    <string name="pref_title_sbat_warning">传感器电量阈值提醒</string>
+    <string name="pref_title_sbat_critical">传感器电量临界阈值</string>
+    <string name="pref_title_bage_warning">胰岛素泵电池使用时长阈值提醒</string>
+    <string name="pref_title_bage_critical">胰岛素泵电池使用时长临界阈值</string>
+    <string name="pref_title_res_warning">储药器药量阈值提醒</string>
+    <string name="pref_title_res_critical">储药器药量临界阈值</string>
+    <string name="pref_title_batt_warning">胰岛素泵电量阈值提醒</string>
+    <string name="pref_title_batt_critical">胰岛素泵电量临界阈值</string>
+    <string name="pref_title_bolus_percentage">大剂量百分比</string>
+    <string name="deliverpartofboluswizard">将此数值应用于大剂量向导计算结果中的血糖及碳水化合物校正</string>
+    <string name="pref_title_reset_bolus_percentage_time">重置大剂量百分比时间</string>
+    <string name="deliver_part_of_boluswizard_reset_time">如果血糖数据超时（早于）该时间，则输注全额大剂量（100%）</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">保护超时</string>
+    <string name="pref_title_protection_type_application">0 级：应用保护</string>
+    <string name="pref_summary_protection_type_application">应用启动，独立于其他级别</string>
+    <string name="pref_title_protection_type_bolus">1 级：大剂量保护</string>
+    <string name="pref_summary_protection_type_bolus">治疗操作、配置文件激活。需要 2 级权限</string>
+    <string name="pref_title_protection_type_settings">2 级：设置保护</string>
+    <string name="pref_summary_protection_type_settings">编辑配置文件、偏好设置</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">无保护</string>
+    <string name="biometric">生物识别</string>
+    <string name="master_password">主密码</string>
+    <string name="custom_password">自定义密码</string>
+    <string name="custom_pin">自定义 PIN 码</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">最大允许碳水</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">开放模式最小调整值</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">仅当调整幅度超过此百分比时，开环才会弹出新的调整请求。默认值为 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">短信间隔</string>
+    <string name="pref_title_smb_max_minutes">SMB 最长基础时长限制</string>
+    <string name="pref_title_uam_smb_max_minutes">UAM 模式下限制 SMB 的最长基础率时长（分钟）</string>
+    <string name="uam_smb_max_minutes">UAM(未通知膳食) SMB(微型大剂量) 最大分钟数</string>
+    <string name="pref_title_carbs_request_threshold">所需碳水阈值</string>
+    <string name="carbs_req_threshold_summary">显示碳水化合物需求警告的最小克数。低于此数值的碳水化合物需求不会触发通知。</string>
+    <string name="pref_title_half_basal_exercise_target">半基础率运动目标</string>
+    <string name="half_basal_exercise_target_summary">设置为一个数字，例如 160，这意味着当临时目标为 160 mg/dL 且高临时目标提高敏感度=true 时，在此水平运行 50%% 基础率（120 = 75%%；140 = 60%%）。</string>
+    <string name="pref_title_iob_threshold_percent">IOB 阈值百分比</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">最大IOB（活性胰岛素）的百分比，超过该百分比时 SMB（微型大剂量）将被禁用。\\n默认值：100%\\n设置为 100% 时此功能将被有效禁用。</string>
+    <string name="pref_title_dynisf_adjustment_factor">动态 ISF胰岛素敏感系数调整系数</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">动态 ISF胰岛素敏感系数的调整系数。设置大于 100% 可获得更积极的校正剂量，小于 100% 可获得更温和的校正剂量。</string>
+    <string name="pref_title_autosens_period">自动灵敏度检测周期</string>
+    <string name="openapsama_autosens_period_summary">灵敏度检测过去的小时数 (排除碳水化合物吸收时间)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">要发送的日志数</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">失效数据阈值</string>
+    <string name="pref_title_pump_unreachable_threshold">泵无法连接阈值</string>
     <!-- IntKey: Insulin preferences -->
+    <string name="pref_title_insulin_oref_peak">峰值时间</string>
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">默认调节天数</string>
+    <string name="autotune_default_tune_days_summary">Autotune 处理数据的默认天数（最多 30 天）</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">远程大剂量最小间隔（时间）</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">随机血糖间隔时间</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">失效数据报警阈值</string>
+    <string name="pref_title_urgent_alarm_stale_data">紧急失效数据报警阈值</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">部位轮换配置</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">单位</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_min">分</string>
+    <string name="units_sec">秒</string>
+    <string name="units_hours">小时</string>
+    <string name="units_days">天</string>
+    <string name="units_grams">g</string>
+    <string name="units_kg">kg</string>
+    <string name="units_years">年</string>
+    <string name="units_percent">%</string>
     <!-- Formatted unit strings with value only -->
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_min">%1$d 分</string>
+    <string name="units_format_sec">%1$d 秒</string>
+    <string name="units_format_hours">%1$d 小时</string>
+    <string name="units_format_hours_double">%1$.0f 小时</string>
+    <string name="units_format_days">%1$d 天</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mmol">%1$s mmol/L</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_min_range">%1$d 分(%2$d - %3$d)</string>
+    <string name="units_format_sec_range">%1$d 秒(%2$d - %3$d)</string>
+    <string name="units_format_hours_range">%1$d 小时(%2$d - %3$d)</string>
+    <string name="units_format_hours_double_range">%1$.0f 小时(%2$.0f - %3$.0f)</string>
+    <string name="units_format_days_range">%1$d 天 (%2$d - %3$d)</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="pref_title_language">语言</string>
+    <string name="lang_default">系统默认</string>
+    <string name="lang_en">英语</string>
+    <string name="lang_af">南非语</string>
+    <string name="lang_bg">保加利亚语</string>
+    <string name="lang_cs">捷克语</string>
+    <string name="lang_de">德语</string>
+    <string name="lang_dk">丹麦语</string>
+    <string name="lang_fr">法语</string>
+    <string name="lang_nl">荷兰语</string>
+    <string name="lang_es">西班牙语</string>
+    <string name="lang_el">希腊语</string>
+    <string name="lang_ga">爱尔兰语</string>
+    <string name="lang_it">意大利语</string>
+    <string name="lang_ko">韩语</string>
+    <string name="lang_lt">立陶宛语</string>
+    <string name="lang_nb">挪威语</string>
+    <string name="lang_pl">波兰语</string>
+    <string name="lang_pt">葡萄牙语</string>
+    <string name="lang_pt_br">葡萄牙语 (巴西)</string>
+    <string name="lang_ro">罗马尼亚语</string>
+    <string name="lang_ru">俄语</string>
+    <string name="lang_sk">斯洛伐克语</string>
+    <string name="lang_sv">瑞典语</string>
+    <string name="lang_tr">土耳其语</string>
+    <string name="lang_zh_tw">繁体中文</string>
+    <string name="lang_zh_cn">简体中文</string>
+    <string name="pref_title_skin">皮肤</string>
+    <string name="pref_title_patient_name">名字</string>
+    <string name="pref_summary_patient_name">用于标识此AAPS实例的名称（显示在报告和同步中）</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">AAPS目录</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">主密码</string>
+    <string name="pref_title_settings_password">设置密码</string>
+    <string name="pref_title_settings_pin">设置 PIN 码</string>
+    <string name="pref_title_application_password">应用程序密码</string>
+    <string name="pref_title_application_pin">应用程序 PIN 码</string>
+    <string name="pref_title_bolus_password">大剂量密码</string>
+    <string name="pref_title_bolus_pin">大剂量 PIN 码</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">选择暗色，亮色，或跟随系统主题</string>
+    <string name="pref_title_app_color_scheme">App颜色主题</string>
+    <string name="pref_dark_theme">暗色主题</string>
+    <string name="pref_light_theme">亮色主题</string>
+    <string name="pref_follow_system_theme">跟随系统主题</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">病人年龄</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">电子邮箱收件人</string>
+    <string name="pref_title_identification">崩溃报告标识</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">定位服务</string>
+    <string name="automation_location_passive">使用设备位置</string>
+    <string name="automation_location_network">使用网络位置</string>
+    <string name="automation_location_gps">使用 GPS 定位</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">允许的手机号码</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">验证码末尾强制附加的PIN码</string>
+    <string name="smscommunicator_otp_pin_summary">在每次生成的一次性随机密码末尾，需要记住并强制附加的数字</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">泵类型</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">Nightscout URL(网址)</string>
+    <string name="ns_client_url_summary">设置您的Nightscout网址（例如https://yoursitename.yourplatform.dom）</string>
+    <string name="ns_client_secret_title">Nightscout API密钥</string>
+    <string name="ns_client_secret_summary">输入您的 Nightscout API 密钥 (最小12个字符)</string>
+    <string name="nsclient_token_title">Nightscout 访问令牌</string>
+    <string name="nsclient_token_summary">输入您的 Nightscout 访问令牌 (最小17个字符)</string>
+    <string name="ns_wifi_ssids">Wi-Fi SSID</string>
+    <string name="ns_wifi_ssids_summary">允许的 SSIDs (分号分隔)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">胰岛素按钮增量 1</string>
+    <string name="pref_title_insulin_button_increment_2">胰岛素按钮增量 2</string>
+    <string name="pref_title_insulin_button_increment_3">胰岛素按钮增量 3</string>
+    <string name="insulin_increment_button_message">按下按钮时添加的胰岛素量</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">填充按钮 1</string>
+    <string name="pref_title_fill_button_2">填充按钮 2</string>
+    <string name="pref_title_fill_button_3">填充按钮 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">最大大剂量限制</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">最大基础率</string>
+    <string name="openapsma_max_basal_summary">这个值在 OpenAPS被称为最大基础率</string>
+    <string name="pref_title_smb_max_iob">SMB 模式下的最大 IOB 上限</string>
+    <string name="openapssmb_max_iob_summary">该值在OpenAPS中称为最大 IOB\n如果当前IOB大于此值，则OpenAPS不会输注更多胰岛素</string>
+    <string name="pref_title_ama_max_iob">AMA 最大 IOB 上限</string>
+    <string name="openapsma_max_iob_summary">这个值在OpenAPS中被成为最大IOB\n这是APS单次可以输注的胰岛素的最大值[U]</string>
+    <string name="pref_title_max_daily_multiplier">最大日基础率安全倍数</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">默认值：3 这是 OpenAPS 中一项关键的安全上限设置。作用是将你的基础率限制为最高基础率的 3 倍（当前示例为 3 倍）。你通常无需修改此值，但需要了解：这就是相关说明中提到的 “最大每日 3 倍、当前 4 倍” 安全上限机制。</string>
+    <string name="pref_title_current_basal_multiplier">当前基础率安全倍数</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">默认值：4 这是 OpenAPS 另一项关键安全上限，也就是 “最大每日 3 倍、当前 4 倍” 中的后半部分。该设置表示：无论你在泵中设置了多高的基础率上限，实际基础率都不会超过当前基础率的该倍数。此设计用于防止用户在尚未完全理解算法逻辑前，因设置过高的基础率上限而陷入危险。同样，默认值为 4 倍；大多数人完全不需要调整此项。如果感觉触发了该安全限制，通常应优先调整其他参数，而非修改本项。</string>
+    <string name="pref_title_bolus_snooze_divisor">大剂量延迟胰岛素作用时长除数</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">默认值：2\n大剂量延后（Bolus Snooze）会在进餐大剂量注射后生效，避免闭环系统在刚进食后因给出低临时基础率而抵消餐时胰岛素效果。此处默认值为 2；以作用时长 DIA 为 3 小时为例，大剂量延后会在 1.5 小时（3 小时 DIA ÷ 2） 内逐步失效。</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA 5 分钟最小碳水影响</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB 5 分钟最小碳水影响</string>
+    <string name="pref_title_absorption_cutoff">吸收截止时间</string>
+    <string name="absorption_cutoff_summary">任何膳食被认为完全吸收的时间。 剩余的碳水化合物将被忽略。</string>
+    <string name="pref_title_absorption_maxtime">吸收最长时间</string>
+    <string name="absorption_max_time_summary">预计膳食中所有的碳水化合物被吸收的时间，以小时为单位</string>
+    <string name="pref_title_autosens_min">自动敏感系数优化(Autosens)最小值</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">低血糖标记</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">LGS 阈值</string>
     <!-- IntentKey preferences -->
+    <string name="pref_title_link_to_docs">算法文档</string>
     <!--    Appearance preferences-->
 </resources>
