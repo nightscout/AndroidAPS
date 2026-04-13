@@ -26,6 +26,7 @@ class EversenseState {
     var mmaFeatures: Int = 0
     var extFirmwareVersion: String = ""
     var transmitterSerialNumber: String = ""
+    var transmitterName: String = ""
     var sensorId: String = ""
     var settings = EversenseTransmitterSettings()
 }

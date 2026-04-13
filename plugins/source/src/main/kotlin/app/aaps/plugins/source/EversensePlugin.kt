@@ -33,11 +33,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.source.compose.BgSourceComposeContent
 import com.nightscout.eversense.EversenseCGMPlugin
 import com.nightscout.eversense.callbacks.EversenseScanCallback
 import com.nightscout.eversense.callbacks.EversenseWatcher
+import app.aaps.plugins.source.compose.BgSourceComposeContent
 import com.nightscout.eversense.enums.CalibrationReadiness
+import com.nightscout.eversense.enums.EversenseAlarm
 import com.nightscout.eversense.enums.EversenseType
 import com.nightscout.eversense.models.EversenseCGMResult
 import com.nightscout.eversense.models.EversenseScanResult
@@ -195,6 +196,7 @@ class EversensePlugin @Inject constructor(
                 true
             }
             category.addPreference(eselSmoothing)
+
         }
 
         // Credentials section — E365 only
@@ -300,6 +302,7 @@ class EversensePlugin @Inject constructor(
                 true
             }
             addPreference(signOut)
+
         }
 
         // Calibration section
@@ -308,6 +311,7 @@ class EversensePlugin @Inject constructor(
         calibration.apply {
             title = rh.gs(R.string.eversense_calibration_title)
             initialExpandedChildrenCount = 0
+            // Calibration is not supported on E3 transmitters
             isEnabled = eversense.is365()
 
             val currentPhase = Preference(context)
@@ -450,6 +454,7 @@ class EversensePlugin @Inject constructor(
             }
             addPreference(lastSync)
             lastSyncPreference = lastSync
+
         }
 
         // Notifications section — E365 only
@@ -474,6 +479,7 @@ class EversensePlugin @Inject constructor(
     }
 
     private fun startOfficialAppReleaseReconnectLoop() {
+
         if (false) return
         if (!releaseForOfficialApp) return
         aapsLogger.info(LTag.BGSOURCE, "Release mode — attempting reconnect")
@@ -510,8 +516,8 @@ class EversensePlugin @Inject constructor(
         // Sync SAGE color thresholds to match Eversense sensor lifetime and notification days
         if (state.insertionDate > 0) {
             val lifetimeDays = if (eversense.is365()) 365 else 180
-            val warnHours  = (lifetimeDays - 30) * 24
-            val urgentHours = (lifetimeDays - 10) * 24
+            val warnHours  = (lifetimeDays - 30) * 24   // orange when 30 days remaining
+            val urgentHours = (lifetimeDays - 10) * 24  // red when 10 days remaining
             preferences.put(IntKey.OverviewSageWarning, warnHours)
             preferences.put(IntKey.OverviewSageCritical, urgentHours)
         }
@@ -619,6 +625,19 @@ class EversensePlugin @Inject constructor(
 
     override fun onAlarmReceived(alarm: ActiveAlarm) {
         aapsLogger.info(LTag.BGSOURCE, "Eversense alarm received: ${alarm.code.title}")
+        // CRITICAL_FAULT (code 0) is sent for both hardware faults and calibration-overdue events.
+        // If the stored next calibration date has already passed, treat it as a calibration alarm.
+        val title = if (alarm.code == EversenseAlarm.CRITICAL_FAULT) {
+            val stateJson = securePrefs.getString(StorageKeys.STATE, null)
+            val state = stateJson?.let { json.decodeFromString<EversenseState>(it) }
+            if (state != null && state.nextCalibrationDate > 0 && state.nextCalibrationDate < System.currentTimeMillis()) {
+                "Eversense Calibration Due Now"
+            } else {
+                alarm.code.title
+            }
+        } else {
+            alarm.code.title
+        }
         val level = when {
             alarm.code.isCritical -> NotificationLevel.URGENT
             alarm.code.isWarning  -> NotificationLevel.NORMAL
@@ -627,7 +646,7 @@ class EversensePlugin @Inject constructor(
         mainHandler.post {
             notificationManager.post(
                 NotificationId.EVERSENSE_ALARM,
-                alarm.code.title,
+                title,
                 level = level
             )
         }
@@ -665,7 +684,7 @@ class EversensePlugin @Inject constructor(
                 val uploadOk = com.nightscout.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
                     preferences = prefs,
                     readings = readings,
-                    transmitterSerialNumber = state.transmitterSerialNumber,
+                    transmitterSerialNumber = state.transmitterName.ifEmpty { state.transmitterSerialNumber },
                     firmwareVersion = state.firmwareVersion
                 )
                 val msg = if (uploadOk)
@@ -739,3 +758,5 @@ class EversensePlugin @Inject constructor(
         private val eversense get() = EversenseCGMPlugin.instance
     }
 }
+
+
