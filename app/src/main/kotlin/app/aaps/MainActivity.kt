@@ -134,8 +134,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         // 密码正确，执行剩下的所有初始化逻辑
                         initRestOfOnCreate(savedInstanceState)
                     } else {
-                        // 用你APP原来的Toast，完全兼容
-                        ToastUtils.errorToast(this@MainActivity, "密码错误，无法启动APP", isShort = false)
+                        // 删掉了多余的isShort参数，适配你这个版本的ToastUtils
+                        ToastUtils.errorToast(this@MainActivity, "密码错误，无法启动APP")
                         finish()
                     }
                 }
@@ -558,7 +558,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 fh.delete()
                 // Also clear any stored password
                 exportPasswordDataStore.clearPasswordDataStore(context)
-                ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set), isShort = false)
+                ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
             }.start()
         }
     }
