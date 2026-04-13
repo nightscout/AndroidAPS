@@ -80,11 +80,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
-import dev.turingcomplete.kotlinonetimepassword.*
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivityWithResult() {
@@ -136,7 +134,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         var verified = prefs.getBoolean("password_verified", false)
         val hasTotpSecret = prefs.getString("totp_secret", null) != null
 
-        // 迁移旧的静态密码验证状态：如果已经验证过静态密码但还没设置TOTP，触发新的设置
+        // 迁移旧的静态密码验证状态
         if (!hasTotpSecret && verified) {
             prefs.edit().putBoolean("password_verified", false).apply()
             verified = false
@@ -144,7 +142,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         if (!verified) {
             Handler(Looper.getMainLooper()).postDelayed({
-                                                            // 先初始化TOTP密钥，没有的话先引导用户设置
                                                             if (initTotpSecretIfNeeded()) {
                                                                 showPasswordVerificationDialog()
                                                             }
@@ -153,114 +150,133 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     /**
-     * 获取TOTP生成器，使用和谷歌验证器完全兼容的配置
+     * 纯Kotlin实现TOTP工具类，完全兼容谷歌验证器，无第三方依赖
      */
-    private fun getTotpGenerator(): TimeBasedOneTimePasswordGenerator {
-        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-        val secretBase32 = prefs.getString("totp_secret", null)
-            ?: throw IllegalStateException("TOTP密钥未初始化")
+    private object TotpUtils {
+        private const val DEFAULT_SECRET_SIZE = 20
+        private const val DEFAULT_CODE_DIGITS = 6
+        private const val DEFAULT_TIME_STEP = 30L
+        private const val DEFAULT_TOLERANCE = 1
 
-        // 解码Base32格式的密钥
-        val secret = Base32().decode(secretBase32)
+        private val BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ2345678".toCharArray()
+        private val BASE32_MAP = BASE32_CHARS.withIndex().associate { it.value to it.index }.toMap()
 
-        // 标准谷歌验证器配置：6位密码、SHA1算法、30秒刷新周期
-        val config = TimeBasedOneTimePasswordConfig(
-            codeDigits = 6,
-            hmacAlgorithm = HmacAlgorithm.SHA1,
-            timeStep = 30,
-            timeStepUnit = TimeUnit.SECONDS
-        )
-
-        return TimeBasedOneTimePasswordGenerator(secret, config)
-    }
-
-    /**
-     * 验证TOTP密码，支持1个时间步的时间容错（处理用户手机时间偏差）
-     */
-    private fun isValidTotpCode(generator: TimeBasedOneTimePasswordGenerator, code: String, tolerance: Int = 1): Boolean {
-        if (code.length != generator.config.codeDigits) return false
-        val currentCounter = generator.counter()
-        // 检查当前、前一个、后一个时间步的密码，兼容时间偏差
-        for (offset in -tolerance..tolerance) {
-            if (generator.isValid(code, counter = currentCounter + offset)) {
-                return true
-            }
+        fun generateSecret(): String {
+            val random = java.security.SecureRandom()
+            val secret = ByteArray(DEFAULT_SECRET_SIZE)
+            random.nextBytes(secret)
+            return encodeBase32(secret)
         }
-        return false
-    }
 
-    /**
-     * 生成QR码，方便用户扫描添加密钥到验证器
-     */
-    private fun generateQrCode(content: String, size: Int = 256): Bitmap? {
-        return try {
-            val hints = hashMapOf<com.google.zxing.EncodeHintType, Any>()
-            hints[com.google.zxing.EncodeHintType.MARGIN] = 1
-            val bitMatrix: com.google.zxing.BitMatrix = com.google.zxing.MultiFormatWriter().encode(
-                content, com.google.zxing.BarcodeFormat.QR_CODE, size, size, hints
-            )
-            val width = bitMatrix.width
-            val height = bitMatrix.height
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE)
+        fun generateTotp(secretBase32: String, time: Long = System.currentTimeMillis() / 1000L): String {
+            val secret = decodeBase32(secretBase32)
+            val counter = time / DEFAULT_TIME_STEP
+            val counterBytes = ByteArray(8)
+            for (i in 7 downTo 0) {
+                counterBytes[i] = (counter shr (8 * (7 - i))).toByte()
+            }
+
+            val mac = javax.crypto.Mac.getInstance("HmacSHA1")
+            mac.init(javax.crypto.spec.SecretKeySpec(secret, "HmacSHA1"))
+            val hash = mac.doFinal(counterBytes)
+
+            val offset = hash[hash.size - 1].toInt() and 0xF
+            var binary = (hash[offset].toInt() and 0x7F) shl 24
+            binary = binary or ((hash[offset + 1].toInt() and 0xFF) shl 16)
+            binary = binary or ((hash[offset + 2].toInt() and 0xFF) shl 8)
+            binary = binary or (hash[offset + 3].toInt() and 0xFF)
+
+            val otp = binary % 1000000
+            return otp.toString().padStart(DEFAULT_CODE_DIGITS, '0')
+        }
+
+        fun verifyTotp(secretBase32: String, inputCode: String, tolerance: Int = DEFAULT_TOLERANCE): Boolean {
+            val currentTime = System.currentTimeMillis() / 1000L
+            for (offset in -tolerance..tolerance) {
+                val time = currentTime + offset * DEFAULT_TIME_STEP
+                val expectedCode = generateTotp(secretBase32, time)
+                if (expectedCode == inputCode) {
+                    return true
                 }
             }
-            bitmap
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+            return false
+        }
+
+        private fun encodeBase32(data: ByteArray): String {
+            val output = StringBuilder()
+            var i = 0
+            var n = 0
+            var bits = 0
+            while (i < data.size) {
+                n = n shl 8 or (data[i].toInt() and 0xFF)
+                bits += 8
+                while (bits >= 5) {
+                    bits -= 5
+                    output.append(BASE32_CHARS[n shr bits])
+                    n = n and ((1 shl bits) - 1)
+                }
+                i++
+            }
+            if (bits > 0) {
+                n = n shl (5 - bits)
+                output.append(BASE32_CHARS[n])
+            }
+            return output.toString()
+        }
+
+        private fun decodeBase32(encoded: String): ByteArray {
+            val cleanEncoded = encoded.uppercase().replace("=", "")
+            val output = mutableListOf<Byte>()
+            var i = 0
+            var n = 0
+            var bits = 0
+            for (c in cleanEncoded) {
+                val value = BASE32_MAP[c] ?: throw IllegalArgumentException("Invalid Base32 character: $c")
+                n = n shl 5 or value
+                bits += 5
+                if (bits >= 8) {
+                    bits -= 8
+                    output.add((n shr bits).toByte())
+                    n = n and ((1 shl bits) - 1)
+                }
+            }
+            return output.toByteArray()
+        }
+
+        fun generateOtpAuthUri(secretBase32: String, issuer: String = "AAPS", account: String = "AppLock"): String {
+            return "otpauth://totp/$issuer:$account?secret=$secretBase32&issuer=$issuer&algorithm=SHA1&digits=$DEFAULT_CODE_DIGITS&period=$DEFAULT_TIME_STEP"
         }
     }
 
     /**
-     * 初始化TOTP密钥，如果是首次使用则引导用户设置
+     * 初始化TOTP密钥
      */
     private fun initTotpSecretIfNeeded(): Boolean {
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-        // 如果已经有密钥，直接返回
         if (prefs.getString("totp_secret", null) != null) {
             return true
         }
 
-        // 1. 生成符合RFC标准的随机共享密钥
-        val randomSecretGenerator = RandomSecretGenerator()
-        val secret = randomSecretGenerator.createRandomSecret(HmacAlgorithm.SHA1) // 20字节密钥，符合标准
-        val secretBase32 = Base32().encode(secret)
-
-        // 2. 保存密钥到本地
+        val secretBase32 = TotpUtils.generateSecret()
         prefs.edit().putString("totp_secret", secretBase32).apply()
 
-        // 3. 生成标准的otpauth链接，用于生成二维码
-        val issuer = "AAPS"
-        val account = "AppLock"
-        val otpAuthUri = OtpAuthUriBuilder.forTotp(secretBase32)
-            .issuer(issuer)
-            .label(account, issuer)
-            .digits(6)
-            .period(30)
-            .buildToString()
+        val otpAuthUri = TotpUtils.generateOtpAuthUri(secretBase32)
 
-        // 4. 构建设置对话框，显示密钥和二维码
         val dialogView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
 
-            // 提示文字
             addView(TextView(this@MainActivity).apply {
                 text = "首次使用请先设置动态密码：\n1. 打开谷歌验证器/微软验证器\n2. 扫描下方二维码，或手动输入密钥\n3. 输入验证器生成的6位密码完成设置"
                 textSize = 14f
             })
 
-            // 二维码
             val qrBitmap = generateQrCode(otpAuthUri)
             addView(ImageView(this@MainActivity).apply {
                 setImageBitmap(qrBitmap)
                 setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
-            // 密钥文本
             addView(TextView(this@MainActivity).apply {
                 text = "密钥：$secretBase32"
                 textSize = 16f
@@ -268,7 +284,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 setPadding(0, 0, 0, dp2px(16))
             })
 
-            // 密码输入框
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
@@ -277,22 +292,19 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             })
         }
 
-        // 显示设置对话框
         MaterialAlertDialogBuilder(this)
             .setTitle("设置动态密码")
             .setView(dialogView)
             .setCancelable(false)
             .setPositiveButton("确认") { dialog, _ ->
                 val inputCode = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
-                val generator = getTotpGenerator()
+                val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
 
-                if (isValidTotpCode(generator, inputCode)) {
+                if (TotpUtils.verifyTotp(secret, inputCode)) {
                     ToastUtils.okToast(this, "动态密码设置成功！")
-                    // 设置完成，进入验证流程
                     showPasswordVerificationDialog()
                 } else {
                     ToastUtils.errorToast(this, "密码错误，请重新设置")
-                    // 重置密钥，重新引导设置
                     prefs.edit().remove("totp_secret").apply()
                     initTotpSecretIfNeeded()
                 }
@@ -433,7 +445,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         rootView.addView(maskView)
 
         val passwordInput = EditText(this)
-        // 动态密码是纯数字，修改输入类型
         passwordInput.inputType = InputType.TYPE_CLASS_NUMBER
         passwordInput.hint = "请输入验证器生成的6位动态密码"
         val padding = dp2px(16)
@@ -445,22 +456,17 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .setCancelable(false)
             .setPositiveButton("验证") { dialog, _ ->
                 val inputPwd = passwordInput.text.toString()
-                // 替换原来的硬编码密码，改成TOTP动态验证
-                val generator = getTotpGenerator()
-                if (isValidTotpCode(generator, inputPwd)) {
-                    // 标记已验证，永久有效（和原来的逻辑保持一致，直到清除数据/卸载）
-                    getSharedPreferences("AppLock", Context.MODE_PRIVATE)
-                        .edit()
-                        .putBoolean("password_verified", true)
-                        .apply()
+                val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+                val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
 
+                if (TotpUtils.verifyTotp(secret, inputPwd)) {
+                    prefs.edit().putBoolean("password_verified", true).apply()
                     rootView.removeView(maskView)
                     dialog.dismiss()
                     ToastUtils.okToast(this, "验证成功")
                 } else {
                     ToastUtils.errorToast(this, "动态密码错误")
                     dialog.dismiss()
-                    // 验证失败重新弹出验证框
                     Handler(Looper.getMainLooper()).post { showPasswordVerificationDialog() }
                 }
             }
@@ -468,6 +474,28 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 finish()
             }
             .show()
+    }
+
+    private fun generateQrCode(content: String, size: Int = 256): Bitmap? {
+        return try {
+            val hints = hashMapOf<com.google.zxing.EncodeHintType, Any>()
+            hints[com.google.zxing.EncodeHintType.MARGIN] = 1
+            val bitMatrix: com.google.zxing.BitMatrix = com.google.zxing.MultiFormatWriter().encode(
+                content, com.google.zxing.BarcodeFormat.QR_CODE, size, size, hints
+            )
+            val width = bitMatrix.width
+            val height = bitMatrix.height
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE
+                }
+            }
+            bitmap
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     private fun dp2px(dp: Int): Int {
