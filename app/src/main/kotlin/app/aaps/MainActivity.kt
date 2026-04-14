@@ -127,7 +127,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         initAllComponents(savedInstanceState)
 
-        // 处理原有验证状态的迁移
         val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
         var verified = prefs.getBoolean("password_verified", false)
         val hasTotpSecret = prefs.getString("totp_secret", null) != null
@@ -147,7 +146,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     /**
-     * 纯Kotlin实现TOTP工具类，完全兼容谷歌验证器，无任何外部依赖
+     * 纯Kotlin TOTP工具类，无外部依赖
      */
     private object TotpUtils {
         private const val DEFAULT_SECRET_SIZE = 20
@@ -250,54 +249,47 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             return true
         }
 
-        // 生成随机密钥
         val secretBase32 = TotpUtils.generateSecret()
         prefs.edit().putString("totp_secret", secretBase32).apply()
 
-        // 构建设置对话框，去掉二维码，只保留手动输入
         val dialogView = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp2px(16), dp2px(16), dp2px(16), dp2px(16))
 
             addView(TextView(this@MainActivity).apply {
-                text = "首次使用：请先获取动态密码：\n1. 截图32位密钥\n2. 添加客服，发送密钥截图\n3. 获取6位动态密码完成设置"
+                text = "首次使用请先设置动态密码：\n1. 打开谷歌验证器/微软验证器\n2. 选择添加账户，输入下方的密钥\n3. 输入验证器生成的6位密码完成设置"
                 textSize = 14f
             })
 
             addView(TextView(this@MainActivity).apply {
                 text = "密钥：$secretBase32"
                 textSize = 18f
-                setTextColor(Color.RED)
+                setTextColor(Color.BLUE)
                 setPadding(0, dp2px(16), 0, dp2px(16))
             })
 
             addView(EditText(this@MainActivity).apply {
                 id = android.R.id.input
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = "请申请验证器生成的6位动态密码"
+                hint = "请输入验证器生成的6位动态密码"
                 maxLines = 1
             })
         }
 
-//首次使用：设置动态密码
-//1. 打开谷歌/微软验证器
-//2. 手动添加账户，输入密钥
-//3. 输入当前6位动态密码
-
         MaterialAlertDialogBuilder(this)
-            .setTitle("获取动态密码")
+            .setTitle("设置动态密码")
             .setView(dialogView)
             .setCancelable(false)
             .setPositiveButton("确认") { dialog, _ ->
                 val inputCode = dialogView.findViewById<EditText>(android.R.id.input).text.toString()
-                val secret = prefs.getString("totp_secret", null) ?: return@setPositiveButton
+                val secret = getSharedPreferences("AppLock", Context.MODE_PRIVATE).getString("totp_secret", null) ?: return@setPositiveButton
 
                 if (TotpUtils.verifyTotp(secret, inputCode)) {
-                    ToastUtils.okToast(this, "动态密码获取成功！")
+                    ToastUtils.okToast(this, "动态密码设置成功！")
                     showPasswordVerificationDialog()
                 } else {
-                    ToastUtils.errorToast(this, "密码错误，请重新获取")
-                    prefs.edit().remove("totp_secret").apply()
+                    ToastUtils.errorToast(this, "密码错误，请重新设置")
+                    getSharedPreferences("AppLock", Context.MODE_PRIVATE).edit().remove("totp_secret").apply()
                     initTotpSecretIfNeeded()
                 }
             }
@@ -307,6 +299,18 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .show()
 
         return false
+    }
+
+    /**
+     * 重置TOTP密钥（找回密码用）
+     */
+    private fun resetTotpSecret() {
+        val prefs = getSharedPreferences("AppLock", Context.MODE_PRIVATE)
+        prefs.edit()
+            .remove("totp_secret")
+            .remove("password_verified")
+            .apply()
+        initTotpSecretIfNeeded()
     }
 
     private fun initAllComponents(savedInstanceState: Bundle?) {
@@ -394,6 +398,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             .setNeutralButton(rh.gs(app.aaps.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
                                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))))
                             }
+                            .setNegativeButton("重置动态密码") { _, _ ->
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setTitle("确认重置")
+                                    .setMessage("重置后将清除当前动态密码，需要重新设置，是否继续？")
+                                    .setPositiveButton("确认") { _, _ ->
+                                        resetTotpSecret()
+                                    }
+                                    .setNegativeButton("取消", null)
+                                    .show()
+                            }
                             .create().apply {
                                 show()
                                 findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
@@ -459,7 +473,19 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 } else {
                     ToastUtils.errorToast(this, "动态密码错误")
                     dialog.dismiss()
-                    Handler(Looper.getMainLooper()).post { showPasswordVerificationDialog() }
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("密码错误")
+                        .setMessage("是否忘记了动态密码？可以重置密钥重新设置")
+                        .setPositiveButton("重试") { _, _ ->
+                            showPasswordVerificationDialog()
+                        }
+                        .setNegativeButton("忘记密码，重置密钥") { _, _ ->
+                            resetTotpSecret()
+                        }
+                        .setNeutralButton("退出") { _, _ ->
+                            finish()
+                        }
+                        .show()
                 }
             }
             .setNegativeButton("退出") { _, _ ->
