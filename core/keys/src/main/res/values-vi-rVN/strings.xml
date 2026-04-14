@@ -29,13 +29,18 @@
     <string name="pref_title_alert_missed_bg_reading">Cảnh báo khi không có dữ liệu BG</string>
     <string name="pref_title_alert_pump_unreachable">Cảnh báo khi bơm mất kết nối</string>
     <string name="pref_title_alert_carbs_required">Cảnh báo khi cần bổ sung carb</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Cảnh báo khẩn cấp dưới dạng thông báo Android</string>
+    <string name="pref_title_alert_increase_volume">Tăng dần âm lượng thông báo</string>
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Tải dữ liệu đường huyết lên NS</string>
     <string name="pref_title_bg_source_create_sensor_change">Ghi lại thay đổi cảm biến</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Tạo sự kiện thay cảm biến khi cảm biến được lắp.</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Sử dụng độ nhạy động</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Sử dụng DynamicISF để điều chỉnh độ nhạy thay cho Autosens.</string>
     <string name="pref_title_aps_use_autosens">Sử dụng Autosens</string>
     <string name="pref_title_aps_use_smb">Kích hoạt SMB</string>
+    <string name="pref_summary_aps_use_smb">Bật Super Micro Bolus. SMB cung cấp insulin ngay lập tức để đáp ứng khi đường huyết tăng.</string>
     <string name="pref_title_aps_use_smb_with_high_tt">Bật SMB với mục tiêu tạm thời cao</string>
     <string name="pref_title_aps_use_smb_always">Luôn bật SMB</string>
     <string name="pref_title_aps_use_smb_with_cob">Kích hoạt SMB với COB</string>
