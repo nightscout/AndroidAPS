@@ -269,6 +269,9 @@
     <string name="units_format_insulin_rate_range">%1$.1f U/o (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
     <string name="units_format_mmol_range">%1$s mmol/l (%2$s - %3$s)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="pref_title_language">Limba</string>
     <string name="pref_title_patient_name">Nume</string>
     <string name="pref_summary_patient_name">Numele pentru a identifica această instanță AAPS (afișată în rapoarte și sincronizare)</string>
     <!-- StringKey: Directory preferences -->
