@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.PumpState
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.actions.CustomActionType
+import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -539,7 +540,7 @@ class OmnipodErosPumpPlugin @Inject constructor(
     override val baseBasalRate: PumpRate
         get() = PumpRate(
             if (!podStateManager.isPodRunning) 0.0
-            else podStateManager.basalSchedule?.rateAt(TimeUtil.toDuration(DateTime.now())) ?: 0.0
+            else model().determineCorrectBasalSize(podStateManager.basalSchedule?.rateAt(TimeUtil.toDuration(DateTime.now())) ?: 0.0)
         )
 
     private val _reservoirLevel = MutableStateFlow(PumpInsulin(0.0))

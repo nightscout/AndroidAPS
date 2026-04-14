@@ -56,8 +56,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
-import kotlin.math.min
-import kotlin.math.roundToInt
 import app.aaps.core.ui.R as CoreUiR
 
 sealed class DiaconnOverviewEvent {
@@ -180,20 +178,23 @@ class DiaconnOverviewViewModel @Inject constructor(
         val pump = diaconnG8Pump
         if (!pump.isTempBasalInProgress) return ""
 
-        val passedMin = ((min(dateUtil.now(), pump.tempBasalStart + pump.tempBasalDuration) - pump.tempBasalStart) / 60.0 / 1000).roundToInt()
-        return ch.basalRateString(PumpRate(pump.tempBasalAbsoluteRate), true) +
-            "\n" + dateUtil.timeString(pump.tempBasalStart) +
-            " " + passedMin + "/" + T.msecs(pump.tempBasalDuration).mins() + "'"
+        return ch.basalTbrString(
+            rate = PumpRate(pump.tempBasalAbsoluteRate),
+            startTime = pump.tempBasalStart,
+            durationInMin = T.msecs(pump.tempBasalDuration).mins().toInt()
+        )
     }
 
     private fun extendedBolusToString(): String {
         val pump = diaconnG8Pump
         if (!pump.isExtendedInProgress) return ""
-        //return "E "+ decimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
-        //     " " + extendedBolusPassedMinutes + "/" + extendedBolusMinutes + "'"
-        return "E " + ch.basalRateString(PumpRate(pump.extendedBolusAbsoluteRate), true) +
-            dateUtil.timeString(pump.extendedBolusStart) +
-            " " + pump.extendedBolusPassedMinutes + "/" + pump.extendedBolusDurationInMinutes + "'"
+
+        return ch.basalTbrString(
+            rate = PumpRate(pump.extendedBolusAbsoluteRate),
+            startTime = pump.extendedBolusStart,
+            durationInMin = pump.extendedBolusDurationInMinutes,
+            isExtended = true
+        )
     }
 
     private fun buildUiState(

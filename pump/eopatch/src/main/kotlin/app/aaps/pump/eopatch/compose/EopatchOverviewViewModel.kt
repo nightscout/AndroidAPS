@@ -293,7 +293,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 // Temp basal
                 val tempBasal = tempBasalManager.startedBasal
                 if (preferenceManager.patchState.isTempBasalActive && tempBasal != null) {
-                    val tempRate = ch.basalRateString(PumpRate(tempBasal.doseUnitPerHour.toDouble()), true)
+                    val tempRate = ch.basalTbrString(PumpRate(tempBasal.doseUnitPerHour.toDouble()), tempBasal.startTimestamp, tempBasal.durationMinutes.toInt())
                     add(PumpInfoRow(label = rh.gs(R.string.eopatch_temp_basal_rate), value = tempRate))
                 }
             }

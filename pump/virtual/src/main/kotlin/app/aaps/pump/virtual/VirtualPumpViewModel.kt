@@ -8,6 +8,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.observeChanges
 import android.content.Context
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
@@ -95,11 +96,25 @@ class VirtualPumpViewModel(
 
         val tempBasalText = profile?.let {
             runBlocking { persistenceLayer.getTemporaryBasalActiveAt(now) }
-                ?.toStringFull(it, dateUtil, ch)
+                ?.let { tempBasal ->
+                    ch.basalTbrString(
+                        rate = PumpRate(tempBasal.rate),
+                        startTime = tempBasal.timestamp,
+                        durationInMin = T.msecs(tempBasal.duration).mins().toInt(),
+                        isAbsolute = tempBasal.isAbsolute
+                    )
+                }
         } ?: ""
 
         val extendedBolusText = runBlocking { persistenceLayer.getExtendedBolusActiveAt(now) }
-            ?.toStringFull(dateUtil, ch) ?: ""
+            ?.let {
+                ch.basalTbrString(
+                    rate = PumpRate(it.rate),
+                    startTime = it.timestamp,
+                    durationInMin = T.msecs(it.duration).mins().toInt(),
+                    isExtended = true
+                )
+            } ?: ""
 
         // Format values for the shared builder
         val lastConnection = virtualPumpPlugin.lastDataTime.value.takeIf { it != 0L }

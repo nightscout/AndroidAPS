@@ -41,6 +41,20 @@ interface ConcentrationHelper {
      */
     fun basalRateString(rate: PumpRate, isAbsolute: Boolean, decimals: Int = 2): String
 
+    /**
+     * tbr rate with units in U/h if U100 (to be used within Pump driver only)
+     * i.e. "0.6 U/h @10h20 5/30'" or "E 2.6 U/h @10h20 5/30'"
+     * and with both value if other concentration: i.e. for U200 "0.6 U/h (0.3 CU/h) @10h20 5/30'"
+     *
+     * @param rate PumpRate
+     * @param startTime Long
+     * @param durationInMin Int
+     * @param isAbsolute Boolean
+     * @param isExtended Boolean
+     * @return String with units (U100) or with both units if not U100
+     */
+    fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int, isAbsolute: Boolean = true, isExtended: Boolean = false, decimals: Int = 2): String
+
     /** show bolus or reservoir level with units in U if U100 (to be used within Pump driver only)
      * i.e. "4 U", and with both value if other concentration: i.e. for U200 "4 U (2 CU)"
      *

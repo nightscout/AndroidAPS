@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -209,10 +210,11 @@ class ComboV2OverviewViewModel @Inject constructor(
             lastBolusRow(snapshot.lastBolus)?.let { add(it) }
             currentTbrRow(snapshot.currentTbr)?.let { add(it) }
             snapshot.baseBasalRate?.let {
+                val basalRateString = ch.basalRateString(PumpRate(it), true)
                 add(
                     PumpInfoRow(
                         label = rh.gs(CoreUiR.string.base_basal_rate_label),
-                        value = rh.gs(CoreUiR.string.pump_base_basal_rate, it)
+                        value = basalRateString
                     )
                 )
             }
@@ -289,7 +291,7 @@ class ComboV2OverviewViewModel @Inject constructor(
                         rh.gs(R.string.combov2_cancelling_tbr)
 
                 is ComboCtlPump.DeliveringBolusCommandDesc      ->
-                    rh.gs(R.string.combov2_delivering_bolus_cmddesc, desc.immediateBolusAmount.cctlBolusToIU())
+                    ch.bolusProgressString(PumpInsulin(desc.immediateBolusAmount.cctlBolusToIU()))
 
                 is ComboCtlPump.FetchingTDDHistoryCommandDesc   ->
                     rh.gs(R.string.combov2_fetching_tdd_history_cmddesc)

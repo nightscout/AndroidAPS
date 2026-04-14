@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpInsulin
+import app.aaps.core.interfaces.pump.PumpRate
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -357,8 +358,8 @@ internal class InsightOverviewState(
             insightPlugin.activeBasalRate?.let { basal ->
                 add(
                     PumpInfoRow(
-                        label = rh.gs(R.string.active_basal_rate),
-                        value = rh.gs(CoreUiR.string.pump_base_basal_rate, basal.activeBasalRate) + " (${basal.activeBasalProfileName})"
+                        label = rh.gs(CoreUiR.string.base_basal_rate_label),
+                        value = "${ch.basalRateString(PumpRate(basal.activeBasalRate), true)} (${basal.activeBasalProfileName})"
                     )
                 )
             }
@@ -366,7 +367,7 @@ internal class InsightOverviewState(
             insightPlugin.activeTBR?.let { tbr ->
                 add(
                     PumpInfoRow(
-                        label = rh.gs(R.string.active_tbr),
+                        label = rh.gs(CoreUiR.string.tempbasal_label),
                         value = rh.gs(R.string.tbr_formatter, tbr.percentage, tbr.initialDuration - tbr.remainingDuration, tbr.initialDuration)
                     )
                 )

@@ -1,5 +1,6 @@
 package app.aaps.implementation.insulin
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -12,6 +13,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.implementation.R
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
+import kotlin.math.min
 
 @Singleton
 class ConcentrationHelperImpl @Inject constructor(
@@ -41,6 +44,15 @@ class ConcentrationHelperImpl @Inject constructor(
             return rh.gs(R.string.concentration_format, iUString, cUString)
         }
     }
+
+override fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int, isAbsolute: Boolean, isExtended: Boolean, decimals: Int): String {
+    val startTimeString = dateUtil.timeString(startTime)
+    val passedMinutes = min(T.msecs(max(0, dateUtil.now() - startTime)).mins().toInt(), durationInMin)
+    return rh.gs(
+        if (isExtended) R.string.concentration_etbr_format else R.string.concentration_tbr_format,
+        basalRateString(rate, isAbsolute), startTimeString, passedMinutes, durationInMin
+    )
+}
 
     override fun insulinAmountString(amount: PumpInsulin): String {
         if (isU100())

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.snapshots.toInt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.configuration.Config
@@ -226,7 +227,7 @@ class ErosOverviewViewModel @Inject constructor(
             // Base basal rate
             val basalText = if (podStateManager.isPodActivationCompleted) {
                 ch.basalRateString(
-                    rate = PumpRate(omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now())))),
+                    rate = omnipodErosPumpPlugin.baseBasalRate,
                     isAbsolute = true
                 )
             } else PLACEHOLDER
@@ -498,14 +499,10 @@ class ErosOverviewViewModel @Inject constructor(
             if (!podStateManager.hasTempBasal()) {
                 return "???" to StatusLevel.CRITICAL
             }
-            val now = DateTime.now()
-            val minutesRunning = Duration(podStateManager.tempBasalStartTime, now).standardMinutes
-            var text = rh.gs(
-                CommonR.string.omnipod_common_overview_temp_basal_concentration_value,
-                ch.basalRateString(PumpRate(podStateManager.tempBasalAmount), true),
-                dateUtil.timeString(podStateManager.tempBasalStartTime.millis),
-                minutesRunning,
-                podStateManager.tempBasalDuration.standardMinutes
+            var text = ch.basalTbrString(
+                rate = PumpRate(podStateManager.tempBasalAmount),
+                startTime = podStateManager.tempBasalStartTime.millis,
+                durationInMin = podStateManager.tempBasalDuration.standardMinutes.toInt()
             )
             if (!podStateManager.isTempBasalCertain) {
                 text += " (${rh.gs(CommonR.string.omnipod_common_uncertain)})"

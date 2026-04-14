@@ -171,8 +171,7 @@ class MedtronicOverviewViewModel @Inject constructor(
         }
 
         // Base basal rate
-        val basalText = "(" + medtronicPumpStatus.activeProfileName + ")  " +
-            ch.basalRateString(medtronicPumpPlugin.baseBasalRate, true)
+        val basalText = "${ch.basalRateString(medtronicPumpPlugin.baseBasalRate, true)} (${medtronicPumpStatus.activeProfileName})"
         add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = basalText))
 
         // Temp basal
@@ -264,9 +263,10 @@ class MedtronicOverviewViewModel @Inject constructor(
     }
 
     private fun buildTempBasal(): String {
-        val tbrRemainingTime = medtronicPumpStatus.tbrRemainingTime ?: return ""
         val tempBasalAmount = medtronicPumpStatus.tempBasalAmount?.let { PumpRate(it) } ?: return ""
-        return rh.gs(R.string.medtronic_tbr_remaining, ch.basalRateString(tempBasalAmount, true), tbrRemainingTime)
+        val startTime = medtronicPumpStatus.tempBasalStart ?: return ""
+        val duration = medtronicPumpStatus.tempBasalDuration ?: return ""
+        return ch.basalTbrString( rate = tempBasalAmount, startTime = startTime, durationInMin = duration)
     }
 
     private fun buildBattery(): Pair<String, StatusLevel> {
@@ -288,7 +288,6 @@ class MedtronicOverviewViewModel @Inject constructor(
 
     private fun buildReservoir(): Pair<String, StatusLevel> {
         val remaining = PumpInsulin(medtronicPumpStatus.reservoirRemainingUnits)
-        //val full = ch.fromPump(PumpInsulin(medtronicPumpStatus.reservoirFullUnits.toDouble())).toInt()
         val text = ch.insulinAmountString(remaining) // "/ $full U" removed
         val level = when {
             ch.fromPump(remaining) <= 20.0 -> StatusLevel.CRITICAL

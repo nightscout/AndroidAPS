@@ -285,6 +285,10 @@ class MedtrumPump @Inject constructor(
     val lastBasalStartTime: Long
         get() = _lastBasalStartTime
 
+    private var _lastBasalDuration = 0
+    val lastBasalDuration: Int
+        get() = _lastBasalDuration
+
     val baseBasalRate: Double
         get() = getHourlyBasalFromMedtrumProfileArray(actualBasalProfile, dateUtil.now())
 
@@ -430,6 +434,7 @@ class MedtrumPump @Inject constructor(
         )
         @Suppress("UNNECESSARY_SAFE_CALL") // Safe call to allow mocks to return null
         val expectedTemporaryBasal = runBlocking { pumpSync.expectedPumpState() }?.temporaryBasal
+        var durationInMin = 0
         when {
             basalType.isTempBasal() && expectedTemporaryBasal?.pumpId != basalStartTime                                                                     -> {
                 // Note: temporaryBasalInfo will be removed from temporaryBasalStorage after this call
@@ -437,6 +442,7 @@ class MedtrumPump @Inject constructor(
 
                 // If duration is unknown, no way to get it now, set patch lifetime as duration
                 val duration = temporaryBasalInfo?.duration ?: T.mins(FAKE_TBR_LENGTH).msecs()
+                durationInMin = T.msecs(duration).mins().toInt()
                 val adjustedBasalRate = if (basalType == BasalType.ABSOLUTE_TEMP) {
                     basalRate
                 } else {
@@ -517,6 +523,7 @@ class MedtrumPump @Inject constructor(
             aapsLogger.error(LTag.PUMP, "handleBasalStatusUpdate: WTF? PatchId in status update does not match current patchId!")
         }
         _lastBasalStartTime = basalStartTime
+        _lastBasalDuration = durationInMin
     }
 
     fun handleStopStatusUpdate(stopSequence: Int, stopPatchId: Long) {
@@ -537,6 +544,7 @@ class MedtrumPump @Inject constructor(
             setFakeTBR()
             _lastBasalType.value = BasalType.NONE
             _lastBasalRate.value = 0.0
+            _lastBasalDuration = FAKE_TBR_LENGTH.toInt()
         }
     }
 
