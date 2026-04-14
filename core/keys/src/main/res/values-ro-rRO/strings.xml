@@ -394,8 +394,21 @@
     <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valoare implicită: 0. Rata de livrare SMB în creștere liniară este cartografiată la intervalul de glicemie [target_bg, target_bg+bg_range].\\nLa target_bg rata SMB este smb_delivery_ratio_min, la target_bg+bg_range este smb_delivery_ratio_max\\nCu 0 rata SMB cu creștere liniară este dezactivată și se utilizează rata fixă smb_delivery_ratio.</string>
     <string name="pref_title_pp_weight">Greutatea post-prandială a ISF</string>
     <string name="openapsama_pp_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_dura_weight">Durată de greutate ISF</string>
+    <string name="openapsama_dura_ISF_weight_summary">Aceasta este ponderea aplicată în timpul perioadelor persistente de hiperglicemie și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită de 0,0 oprește acest efect.</string>
+    <string name="pref_title_smb_delivery_ratio">Raportul administrării SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Valoarea implicită: 0,5 Acesta este un alt plafon de siguranţă OpenAPS şi specifică ce procent din insulina totală necesară poate fi livrat sub formă de SMB. Acest lucru este menit să împiedice oamenii să intre pe un teritoriu periculos prin setarea în același timp a cererilor de SMB de la telefonul persoanelor care îi îngrijesc. Creșteți această valoare experimentală încet și cu precauție.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Minimul raportului de administrare SMB</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Valoare implicită: 0,5 Acesta este capătul mai mic al unui raport crescător liniar, mai degrabă decât valoarea fixă de mai sus.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Maximul raportului de administrare SMB</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valoare implicită: 0,5 Acesta este capătul superior al unui raport crescător liniar, mai degrabă decât valoarea fixă de mai sus.</string>
+    <string name="pref_title_smb_max_range_extension">Extensia maximă a intervalului SMB</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valoare implicită: 1 Aceasta este o altă limită cheie de siguranță OpenAPS și specifică cu ce factor puteți depăși uzualul 120 maxSMB/maxUAM minute. Creșteți această valoare experimentală încet și cu precauție.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Marcaj glicemie scăzută</string>
+    <string name="pref_title_high_mark">Marcaj glicemie mare</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">Pragul LGS (Suspendare la Hipoglicemie)</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
