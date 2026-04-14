@@ -386,6 +386,10 @@
     <string name="openapsama_bgAccel_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="pref_title_bg_brake_weight">Ponderea frânei glicemiei în ISF</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în scădere și care determină slăbirea ISF și, prin urmare, reducerea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_low_bg_weight">Greutate interval glicemic scăzut</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este sub țintă, ceea ce determină slăbirea ISF și, prin urmare, reducerea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_high_bg_weight">Greutate interval glicemic ridicat</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este peste țintă și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
     <!-- IntentKey preferences -->
