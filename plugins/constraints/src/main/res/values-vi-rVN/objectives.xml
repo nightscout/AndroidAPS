@@ -39,8 +39,12 @@
     <string name="objectives_usage_objective">Học cách kiểm soát AAPS</string>
     <string name="objectives_usage_gate">Thực hiện các thao tác khác nhau trong AAPS</string>
     <string name="objectives_usage_learned">Bạn đã học cách sử dụng các thao tác cơ bản của AAPS. Các điều khiển chính nằm trên màn hình Tổng quan (Overview), có thể truy cập bằng nhấp hoặc nhấn giữ; nhiều điều khiển khác nằm ở màn hình Các thao tác (Action). Bạn cũng nên biết cách đưa màn hình của plugin vào menu cuộn trên cùng hoặc hiển thị trong danh sách plugin đã bật ở góc trên bên trái.</string>
+    <string name="objectives_useprofileswitch">Đặt hồ sơ 90% trong 10 phút</string>
+    <string name="objectives_usedisconnectpump">Mô phỏng khi tắm. Ngắt kết nối bơm trong 1 giờ</string>
     <string name="objectives_usereconnectpump">… và kết nối lại theo cách tương tự</string>
+    <string name="objectives_usetemptarget">Tạo mục tiêu tạm thời với thời gian 10 phút</string>
     <string name="objectives_useloop">Hiển thị nội dung của plugin Loop</string>
+    <string name="objectives_usescale">Sử dụng cuộn hoặc zoom trên biểu đồ đường huyết</string>
     <string name="objectives_exam_objective">Kiểm chứng kiến thức của bạn</string>
     <string name="objectives_exam_gate">Nghiên cứu các câu hỏi. Bạn sẽ được đưa ra bốn câu trả lời có thể cho mỗi câu hỏi. Có thể có nhiều hơn một đáp án đúng. Vui lòng kiểm tra tất cả những đáp án đúng và chọn XÁC MINH (VERIFY).</string>
     <string name="objectives_exam_learned_prerequisites">Bạn không cần phải là nhà phát triển, nhưng bạn cần Nightscout để hoàn thành các Mục tiêu, một bơm tương thích và một máy tính để xây dựng AAPS lần đầu tiên cũng như cho mỗi lần cập nhật.</string>
@@ -81,4 +85,14 @@
     <string name="requirementnotmet">Chưa đáp ứng yêu cầu của Mục tiêu (Objective)</string>
     <string name="what_i_ve_learned">Những gì tôi đã học được:</string>
     <string name="verify_master_password">Xác minh bạn biết mật khẩu chính</string>
+    <string name="objectives_collapse">Ẩn bớt</string>
+    <string name="objectives_expand">Khác</string>
+    <string name="objectives_no_learned">Chưa có bài học nào được ghi nhận cho mục tiêu này.</string>
+    <string name="objectives_open_exam">Mở bài kiểm tra</string>
+    <string name="objectives_exam_question_progress">Câu hỏi %1$d trong %2$d</string>
+    <string name="objectives_exam_reset">Đặt lại</string>
+    <string name="objectives_exam_previous">Trước</string>
+    <string name="objectives_exam_next">Tiếp theo</string>
+    <string name="objectives_exam_next_unanswered">Câu chưa trả lời tiếp theo</string>
+    <string name="objectives_show_hint">Gợi ý</string>
 </resources>
