@@ -390,6 +390,10 @@
     <string name="openapsama_lower_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este sub țintă, ceea ce determină slăbirea ISF și, prin urmare, reducerea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="pref_title_high_bg_weight">Greutate interval glicemic ridicat</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este peste țintă și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">Raportul de livrare SMB în funcție de intervalul glicemic</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valoare implicită: 0. Rata de livrare SMB în creștere liniară este cartografiată la intervalul de glicemie [target_bg, target_bg+bg_range].\\nLa target_bg rata SMB este smb_delivery_ratio_min, la target_bg+bg_range este smb_delivery_ratio_max\\nCu 0 rata SMB cu creștere liniară este dezactivată și se utilizează rata fixă smb_delivery_ratio.</string>
+    <string name="pref_title_pp_weight">Greutatea post-prandială a ISF</string>
+    <string name="openapsama_pp_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
     <!-- IntentKey preferences -->
