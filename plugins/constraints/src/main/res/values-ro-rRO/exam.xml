@@ -45,7 +45,7 @@
     <string name="exerciseprofile_switchprofilebelow100">Faceți o modificare a profilului la mai puțin de 100%.</string>
     <string name="exerciseprofile_switchprofileabove100">Faceți o modificare a profilului la mai mult de 100%.</string>
     <string name="exerciseprofile_leaveat100">Lăsați profilul setat la 100%.</string>
-    <string name="exerciseprofile_suspendloop">Suspendă bucla.</string>
+    <string name="exerciseprofile_suspendloop">Suspendați bucla.</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="exercise_label">Activitate fizică și Ținte Temporare</string>
     <string name="exercise_whattodo">Cum puteți utiliza Ținte Temporare pentru a ajuta sistemul să facă față exercițiilor aerobe?</string>
