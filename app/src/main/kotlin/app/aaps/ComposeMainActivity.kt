@@ -709,6 +709,10 @@ class ComposeMainActivity : AppCompatActivity() {
         }
     }
 
+    private val pluginScreenDefsCache: List<PreferenceSubScreenDef> by lazy {
+        activePlugin.getPluginsList().mapNotNull { it.getPreferenceScreenContent() as? PreferenceSubScreenDef }
+    }
+
     private fun findScreenDef(key: String): PreferenceSubScreenDef? {
         // Check built-in screens from BuiltInSearchables (including nested subscreens)
         builtInSearchables.getSearchableItems().forEach { item ->
@@ -718,14 +722,11 @@ class ComposeMainActivity : AppCompatActivity() {
                 if (nested != null) return nested
             }
         }
-        // Check plugin screens (including nested subscreens)
-        for (plugin in activePlugin.getPluginsList()) {
-            val content = plugin.getPreferenceScreenContent()
-            if (content is PreferenceSubScreenDef) {
-                if (content.key == key) return content
-                val nested = findNestedScreen(content, key)
-                if (nested != null) return nested
-            }
+        // Check plugin screens (including nested subscreens) — cached to avoid walking all plugins on every lookup
+        for (content in pluginScreenDefsCache) {
+            if (content.key == key) return content
+            val nested = findNestedScreen(content, key)
+            if (nested != null) return nested
         }
         return null
     }

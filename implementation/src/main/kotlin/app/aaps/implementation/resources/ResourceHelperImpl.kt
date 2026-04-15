@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.getThemeColor
 import app.aaps.core.ui.locale.LocaleHelper
@@ -32,7 +31,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import java.util.Locale
 import javax.inject.Inject
@@ -49,10 +47,9 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
     private var localizedContext: Context = buildLocalizedContext()
 
     init {
-        merge(
-            preferences.observe(StringKey.GeneralLanguage),
-            preferences.observe(BooleanKey.GeneralSimpleMode)
-        ).drop(1).onEach {
+        // GeneralLanguage changes trigger Activity.recreate() which rebuilds the context
+        // via attachBaseContext/LocaleHelper.wrap — no need to rebuild here and race on Main.
+        preferences.observe(BooleanKey.GeneralSimpleMode).drop(1).onEach {
             localizedContext = buildLocalizedContext()
         }.launchIn(scope)
     }
