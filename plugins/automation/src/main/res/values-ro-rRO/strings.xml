@@ -10,6 +10,19 @@
     <string name="automation_discard_title">Renunțați la modificări?</string>
     <string name="automation_discard_message">Regula este incompletă și nu poate fi salvată. Renunțați la modificări?</string>
     <string name="automation_discard_confirm">Renunțați</string>
+    <string name="automation_category_time">Timp &amp; orar</string>
+    <string name="automation_category_glucose">Glicemie &amp; tratament</string>
+    <string name="automation_category_device">Stare dispozitiv</string>
+    <string name="automation_category_sensors">Senzori &amp; conectivitate</string>
+    <string name="automation_category_other">Altul</string>
+    <string name="automation_choose_trigger">Adăugați declanșator</string>
+    <string name="automation_add_group">Grup</string>
+    <string name="automation_choose_action">Adăugați acțiune</string>
+    <string name="automation_category_targets">Ținte</string>
+    <string name="automation_category_profile">Profil</string>
+    <string name="automation_category_loop">Buclă &amp; insulină</string>
+    <string name="automation_category_alerts">Alerte</string>
+    <string name="automation_category_system">Sistem</string>
     <string name="automation_missing_task_name">Introduceți o denumire pentru această acțiune.</string>
     <string name="automation_missing_trigger">Vă rugăm să specificați cel puțin un factor declanșator.</string>
     <string name="automation_missing_action">Trebuie să specificați cel puțin o acțiune.</string>
@@ -61,7 +74,7 @@
     <string name="time_range">Interval de timp</string>
     <string name="timerange_value">Timpul este între %1$s și %2$s</string>
     <string name="between">Între </string>
-    <string name="add_short">ADAUGĂȚI</string>
+    <string name="add_short">ADĂUGAȚI</string>
     <string name="temptargetcompared">Țintă temporară %1$s</string>
     <string name="btdevicecompared">Conexiune Bluetooth cu dispozitivul %1$s %2$s</string>
     <string name="btdevice">Conexiune la dispozitivul Bluetooth </string>
@@ -79,9 +92,9 @@
     <string name="triggerHeartRate">Ritm cardiac</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="triggerSensorAgeLabel">Vârsta senzorului</string>
-    <string name="triggerSensorAgeDesc">Vârsta senzorului %1$s %2$.1f oră</string>
-    <string name="triggerCannulaAgeLabel">Vârsta canulei</string>
-    <string name="triggerCannulaAgeDesc">Vârsta canulei %1$s %2$.1f oră</string>
+    <string name="triggerSensorAgeDesc">Vechimea senzorului %1$s %2$.1f oră</string>
+    <string name="triggerCannulaAgeLabel">Vechimea canulei</string>
+    <string name="triggerCannulaAgeDesc">Vechimea canulei %1$s %2$.1f oră</string>
     <string name="triggerPodChangeLabel">Activarea pompei</string>
     <string name="triggerPodChangeDesc">Pompă activată</string>
     <string name="triggerInsulinAgeLabel">Vechime insulină</string>
@@ -109,7 +122,7 @@
     <string name="stop_processing">Oprire procesare</string>
     <!--    Reminders-->
     <string name="time_to_eat">E timpul pentru a mânca!\nRulează asistentul de bolusare și refă calculele.</string>
-    <string name="time_to_bolus">Timpul sa faci bolus!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
+    <string name="time_to_bolus">Timpul să bolusați!\nAcționați Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="error_setting_reminder">Eroare la setarea alarmei viitoare</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">Profil reglare automată (Autotune) %1$s</string>
