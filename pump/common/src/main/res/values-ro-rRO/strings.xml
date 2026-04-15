@@ -62,7 +62,7 @@
     <string name="ble_config_scan_scanning">Scanați</string>
     <string name="ble_config_scan_finished">Scanare terminată</string>
     <string name="ble_config_scan_error">Eroare la scanare: %1$d</string>
-    <string name="ble_config_remove">Șterge</string>
+    <string name="ble_config_remove">Ștergeți</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
 </resources>
