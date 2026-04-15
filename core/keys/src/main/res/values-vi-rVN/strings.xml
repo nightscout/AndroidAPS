@@ -42,25 +42,46 @@
     <string name="pref_title_aps_use_smb">Kích hoạt SMB</string>
     <string name="pref_summary_aps_use_smb">Bật Super Micro Bolus. SMB cung cấp insulin ngay lập tức để đáp ứng khi đường huyết tăng.</string>
     <string name="pref_title_aps_use_smb_with_high_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Cho phép SMB khi mục tiêu tạm thời cao đang hoạt động.</string>
     <string name="pref_title_aps_use_smb_always">Luôn bật SMB</string>
+    <string name="pref_summary_aps_use_smb_always">Bật SMB trong mọi điều kiện, bất kể bolus hoặc COB.</string>
     <string name="pref_title_aps_use_smb_with_cob">Kích hoạt SMB với COB</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Cho phép SMB khi đang có COB.</string>
     <string name="pref_title_aps_use_smb_with_low_tt">Bật SMB với mục tiêu tạm thời cao</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Cho phép SMB khi mục tiêu tạm thời thấp đang hoạt động.</string>
     <string name="pref_title_aps_use_smb_after_carbs">Kích hoạt SMB sau Carbs</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Cho phép SMB trong một khoảng thời gian sau khi nhập carbs.</string>
     <string name="pref_title_aps_use_uam">Kích hoạt UAM</string>
+    <string name="pref_summary_aps_use_uam">Bật phát hiện và xử lý bữa ăn chưa khai báo.</string>
     <string name="pref_title_aps_sensitivity_raises_target">Độ nhạy tăng mục tiêu</string>
     <string name="pref_summary_aps_sensitivity_raises_target">Khi phát hiện độ nhạy insulin, hãy tăng mức đường huyết mục tiêu.</string>
     <string name="pref_title_aps_resistance_lowers_target">Kháng insulin làm giảm mục tiêu</string>
     <string name="pref_summary_aps_resistance_lowers_target">Khi phát hiện kháng insulin, hãy hạ thấp mức đường huyết mục tiêu.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Luôn sử dụng delta trung bình ngắn</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Luôn sử dụng delta trung bình ngắn thay cho delta đơn giản khi tính toán thay đổi BG.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF điều chỉnh độ nhạy</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Điều chỉnh tính toán độ nhạy khi sử dụng DynamicISF.</string>
     <string name="pref_title_aps_autosens_adjust_targets">Autosens cũng điều chỉnh cả mục tiêu</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Cho phép Autosens điều chỉnh mục tiêu đường huyết, ngoài liều nền và ISF.</string>
     <string name="pref_title_aps_high_tt_raises_sensitivity">Mục tiêu tạm thời cao làm tăng độ nhạy</string>
     <string name="pref_summary_aps_high_tt_raises_sensitivity">Mục tiêu tạm thời cao sẽ làm tăng độ nhạy insulin.</string>
     <string name="pref_title_aps_low_tt_lowers_sensitivity">Mục tiêu tạm thời thấp làm giảm độ nhạy</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Mục tiêu tạm thời thấp sẽ làm giảm độ nhạy insulin.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Bật AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Bật AutoISF để điều chỉnh ISF dựa trên hệ số (weight).</string>
+    <string name="pref_title_aps_smb_on_even_target">Bật SMB khi ở mức mục tiêu</string>
+    <string name="pref_summary_aps_smb_on_even_target">Cách kích hoạt SMB thay thế, luôn dựa trên giá trị đường huyết mục tiêu.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Bật báo cáo lỗi Fabric</string>
     <!-- Autotune preferences -->
     <string name="pref_title_autotune_categorize_uam_as_basal">Phân loại UAM như liều nền</string>
     <!-- SMS preferences -->
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_notifications_from_announcements">Thông báo NS</string>
+    <string name="pref_title_ns_use_cellular">Sử dụng dữ liệu di động</string>
+    <string name="pref_title_ns_use_roaming">Sử dụng chuyển vùng</string>
+    <string name="pref_title_ns_use_wifi">Sử dụng WiFi</string>
     <!-- OpenHumans preferences -->
     <!-- xDrip preferences -->
     <!-- Wear preferences -->
@@ -154,11 +175,13 @@
     <string name="lang_pt_br">Tiếng Bồ Đào Nha, Brazil</string>
     <string name="lang_ro">Tiếng Ru-ma-ni</string>
     <string name="lang_ru">Tiếng Nga</string>
+    <string name="lang_sk">Tiếng Slovakia</string>
     <string name="lang_sv">Tiếng Thuỵ Điển</string>
     <string name="lang_tr">Tiếng Thổ Nhĩ Kỳ</string>
     <string name="lang_zh_tw">Tiếng Trung Phồn Thể</string>
     <string name="lang_zh_cn">Tiếng Trung, Giản thể</string>
     <string name="pref_title_skin">Giao diện</string>
+    <string name="pref_title_patient_name">Tên</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Thư mục AAPS</string>
     <!-- StringKey: Protection preferences -->
