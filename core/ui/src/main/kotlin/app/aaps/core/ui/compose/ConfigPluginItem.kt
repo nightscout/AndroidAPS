@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -73,6 +74,12 @@ fun ConfigPluginItem(
     val containerColor = if (plugin.isEnabled) MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)
     else MaterialTheme.colorScheme.surface
 
+    Box(
+        modifier = modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(enabled = plugin.isEnabled, onClick = onPluginClick)
+    ) {
     ListItem(
         headlineContent = {
             Text(
@@ -134,10 +141,18 @@ fun ConfigPluginItem(
                 )
             }
         },
-        colors = ListItemDefaults.colors(containerColor = containerColor),
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .clickable(enabled = plugin.isEnabled, onClick = onPluginClick)
+        colors = ListItemDefaults.colors(containerColor = containerColor)
     )
+        if (plugin.isEnabled) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(6.dp)
+                    .size(14.dp)
+            )
+        }
+    }
 }
