@@ -83,8 +83,14 @@
     <string name="pref_title_ns_use_roaming">Sử dụng chuyển vùng</string>
     <string name="pref_title_ns_use_wifi">Sử dụng WiFi</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">Chỉ dùng WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Chỉ sạc</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Gửi dữ liệu tới xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Gửi chi tiết IOB</string>
     <!-- Wear preferences -->
+    <string name="pref_summary_wear_notify_on_smb">Gửi thông báo đến đồng hồ khi SMB được thực hiện.</string>
+    <string name="pref_summary_wear_broadcast_data">Phát dữ liệu AAPS tới ứng dụng đồng hồ bên thứ ba qua intent.</string>
     <!-- Wizard preferences -->
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
@@ -100,15 +106,29 @@
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <!-- IntKey: Safety preferences -->
     <!-- IntKey: Loop preferences -->
+    <string name="loop_open_mode_min_change_summary" formatted="false">Mở vòng lặp sẽ chỉ hiển thị yêu cầu thay đổi mới nếu thay đổi lớn hơn giá trị này theo %. Giá trị mặc định là 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="carbs_req_threshold_summary">Số gram carbs tối thiểu để hiển thị cảnh báo gợi ý carbs. Gợi ý carbs dưới mức này sẽ không kích hoạt thông báo.</string>
+    <string name="half_basal_exercise_target_summary">Đặt thành một số, ví dụ 160, có nghĩa là khi mục tiêu tạm thời là 160 mg/dL và tùy chọn \'High temptarget raises sensitivity=true\' được bật, Aaps sẽ chạy 50%% liều nền ở mức này (120 = 75%%; 140 = 60%%).</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Phần trăm của maxIOB mà trên mức đó SMB sẽ bị tắt.\nGiá trị mặc định: 100%\nVới 100%, tính năng này sẽ bị tắt hoàn toàn.</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Hệ số điều chỉnh cho DynamicISF. Đặt lớn hơn 100% để có liều hiệu chỉnh mạnh hơn, và nhỏ hơn 100% để có liều hiệu chỉnh nhẹ hơn.</string>
+    <string name="openapsama_autosens_period_summary">Số giờ trong quá khứ được dùng để phát hiện độ nhạy (không tính thời gian hấp thụ carb)</string>
     <!-- IntKey: Maintenance preferences -->
     <!-- IntKey: Alert preferences -->
     <!-- IntKey: Insulin preferences -->
+    <string name="pref_title_insulin_oref_peak">Thời gian đỉnh</string>
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Ngày điều chỉnh mặc định</string>
+    <string name="autotune_default_tune_days_summary">Số ngày dữ liệu mặc định được Autotune xử lý (tối đa 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Khoảng cách tối thiểu bolus từ xa</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Khoảng thời gian BG ngẫu nhiên</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Ngưỡng báo động dữ liệu lỗi thời</string>
+    <string name="pref_title_urgent_alarm_stale_data">Ngưỡng báo động khẩn cấp cho dữ liệu lỗi thời</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Hồ sơ luân phiên vị trí tiêm</string>
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Đơn vị</string>
     <string name="units_mgdl">mg/dl</string>
@@ -182,6 +202,7 @@
     <string name="lang_zh_cn">Tiếng Trung, Giản thể</string>
     <string name="pref_title_skin">Giao diện</string>
     <string name="pref_title_patient_name">Tên</string>
+    <string name="pref_summary_patient_name">Tên để nhận diện phiên bản AAPS này (hiển thị trong báo cáo và đồng bộ)</string>
     <!-- StringKey: Directory preferences -->
     <string name="pref_title_aaps_directory">Thư mục AAPS</string>
     <!-- StringKey: Protection preferences -->
@@ -202,6 +223,7 @@
     <string name="pref_title_patient_age">Tuổi người dùng</string>
     <!-- StringKey: Maintenance preferences -->
     <string name="maintenance_email">Người nhận email</string>
+    <string name="pref_title_identification">Nhận diện báo cáo lỗi</string>
     <!-- StringKey: Automation preferences -->
     <string name="pref_title_automation_location">Dịch vụ vị trí</string>
     <string name="automation_location_passive">Sử dụng vị trí thụ động</string>
@@ -218,22 +240,41 @@
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_summary">Nhập đường dẫn Nightscout của bạn (ví dụ: https://yoursitename.yourplatform.dom)</string>
     <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_summary">Nhập API secret Nightscout (≥12 ký tự)</string>
     <string name="nsclient_token_title">Nightscout access token</string>
+    <string name="nsclient_token_summary">Nhập access token Nightscout (≥17 ký tự)</string>
     <string name="ns_wifi_ssids">Tên Wi-Fi</string>
     <string name="ns_wifi_ssids_summary">SSID được phép (ngăn cách bằng dấu chấm phẩy)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Bước tăng nút insulin 1</string>
+    <string name="pref_title_insulin_button_increment_2">Bước tăng nút insulin 2</string>
+    <string name="pref_title_insulin_button_increment_3">Bước tăng nút insulin 3</string>
+    <string name="insulin_increment_button_message">Lượng insulin được thêm khi nhấn nút</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Nút làm đầy 1</string>
+    <string name="pref_title_fill_button_2">Nút làm đầy 2</string>
+    <string name="pref_title_fill_button_3">Nút làm đầy 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Liều Bolus tối đa</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Tỷ lệ liều nền tối đa</string>
+    <string name="openapsma_max_basal_summary">Giá trị này được gọi là liều nền tối đa trong ngữ cảnh OpenAPS</string>
+    <string name="pref_title_smb_max_iob">IOB tối đa cho SMB</string>
     <string name="openapssmb_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB. \nOpenAPS sẽ không đưa thêm insulin nếu IOB hiện tại lớn hơn giá trị này</string>
+    <string name="pref_title_ama_max_iob">IOB tối đa cho AMA</string>
     <string name="openapsma_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB.\n Đây là lượng insulin tối đa [U] mà APS có thể đưa vào cùng một lúc.</string>
+    <string name="pref_title_max_daily_multiplier">Hệ số an toàn tối đa hằng ngày</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Mặc định: 3. Đây là một giới hạn an toàn quan trọng của OpenAPS. Nó giới hạn liều liều nền tối đa của bạn bằng 3 lần liều liều nền lớn nhất của bạn (áp dụng cho người này). Thông thường bạn không cần thay đổi, nhưng bạn nên biết rằng đây là những gì được nói đến khi nhắc đến ‘3x max daily; 4x current’ cho giới hạn an toàn.</string>
     <string name="pref_title_current_basal_multiplier">Hệ số an toàn của liều nền hiện tại</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Giá trị mặc định: 4. Đây là nửa còn lại của các giới hạn an toàn chính của OpenAPS, và là nửa còn lại của ‘3x max daily; 4x current’ trong các giới hạn an toàn. Điều này có nghĩa là liều liều nền của bạn, bất kể liều liều nền tối đa được thiết lập trên bơm, không thể cao hơn con số này nhân với mức liều nền hiện tại. Điều này nhằm ngăn người dùng rơi vào tình huống nguy hiểm khi thiết lập liều liều nền tối đa quá cao trước khi hiểu cách thuật toán hoạt động. Giá trị mặc định là 4x; hầu hết người dùng sẽ không cần điều chỉnh, và thay vào đó có thể cần điều chỉnh các cài đặt khác nếu cảm thấy “đang chạm” vào giới hạn an toàn này.</string>
     <string name="pref_title_bolus_snooze_divisor">Hệ số chia DIA khi hoãn bolus</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Giá trị mặc định: 2\nHoãn liều Bolus được kích hoạt sau khi bạn thực hiện một bolus bữa ăn, để vòng lặp không điều chỉnh bằng các temp thấp khi bạn vừa ăn. Ví dụ ở đây và giá trị mặc định là 2; nghĩa là với DIA 3 giờ, bolus snooze sẽ được loại bỏ dần trong 1,5 giờ (3DIA/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA: ảnh hưởng carbs tối thiểu 5 phút</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB: ảnh hưởng carbs tối thiểu 5 phút</string>
     <string name="openapsama_min_5m_carb_impact_summary">Giá trị mặc định: 3,0 (AMA) hoặc 8,0 (SMB). Đây là cài đặt cho mức ảnh hưởng hấp thụ carb mặc định trong mỗi 5 phút. Giá trị mặc định là 3mg/dl/5 phút. Thông số này ảnh hưởng đến tốc độ giảm của COB, và lượng hấp thụ carb được giả định khi tính toán dự đoán đường huyết trong dự kiến, trong trường hợp đường huyết giảm nhiều hơn dự kiến hoặc không tăng như mong đợi.</string>
+    <string name="pref_title_absorption_cutoff">Ngưỡng hấp thu</string>
     <string name="absorption_cutoff_summary">Thời điểm mà mọi bữa ăn được coi là đã hấp thụ xong. Lượng carb còn lại sẽ bị cắt bỏ.</string>
+    <string name="pref_title_absorption_maxtime">Thời gian hấp thu tối đa</string>
     <string name="absorption_max_time_summary">Thời gian (giờ) mà dự kiến toàn bộ carb từ bữa ăn sẽ được hấp thụ</string>
     <string name="pref_title_autosens_min">Autosens tối thiểu</string>
     <string name="openapsama_autosens_min_summary">Giá trị mặc định: 0,7\nĐây là giới hạn an toàn phía ngược lại của autosens, đặt mức trần cho việc autosens có thể điều chỉnh liều nền xuống thấp nhất bao nhiêu, cũng như điều chỉnh ISF và mục tiêu BG lên cao nhất bao nhiêu.</string>
