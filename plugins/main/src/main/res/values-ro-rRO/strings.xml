@@ -10,7 +10,7 @@
     <string name="pb_label">Baterie pompă</string>
     <string name="cannula">Canula</string>
     <string name="statuslights_cannula_age">vechime canulă</string>
-    <string name="statuslights_patch_pump_age">vârstă pompă</string>
+    <string name="statuslights_patch_pump_age">vechime pompă</string>
     <string name="patch_pump">Pompă</string>
     <!-- Overview -->
     <string name="graph_scale_6h">6h</string>
