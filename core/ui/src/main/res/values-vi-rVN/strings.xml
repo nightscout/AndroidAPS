@@ -1019,6 +1019,8 @@
     <string name="graph_edit">Sửa biểu đồ</string>
     <string name="graph_number">Biểu đồ %1$d</string>
     <string name="graph_bg">Biểu đồ BG</string>
+    <string name="graph_height">Chiều cao biểu đồ</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
