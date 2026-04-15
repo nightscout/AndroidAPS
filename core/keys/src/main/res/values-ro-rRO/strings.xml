@@ -409,7 +409,12 @@
     <string name="pref_title_high_mark">Marcaj glicemie mare</string>
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">Pragul LGS (Suspendare la Hipoglicemie)</string>
+    <string name="lgs_threshold_summary">Valoarea glicemiei sub care administrarea insulinei este suspendată. Valoarea implicită folosește modelul standard de țintă. Utilizatorul poate seta valoarea între 60mg/dl (3,3mmol/l) și 100 mg/dl (5,5mmol/l). Valorile sub 65/3,6 determină utilizarea modelului standard</string>
     <!-- IntentKey preferences -->
+    <string name="pref_title_link_to_docs">Documentație algoritm</string>
+    <string name="pref_title_otp_setup">Setare Authenticator</string>
+    <string name="pref_title_quick_wizard_settings">Setări AsistentRapid</string>
+    <string name="pref_title_xdrip_info">Informații xDrip+</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
 </resources>
