@@ -19,7 +19,7 @@
     <string name="description_smb_dynamic_isf">Cel mai recent algoritm pentru utilizatorii avansați cu ISF dinamic/automat</string>
     <string name="description_auto_isf">Cel mai recent algoritm pentru utilizatori avansați cu extensii AutoISF</string>
     <string name="openapsma_last_run_label">Ultima execuție</string>
-    <string name="openapsma_input_parameters_label">Parametri de intrare</string>
+    <string name="openapsma_input_parameters_label">Parametrii de intrare</string>
     <string name="openapsma_glucose_status_label">Stare glicemie</string>
     <string name="openapsma_current_temp_label">Bazală temporară curentă</string>
     <string name="openapsma_iob_data_label">Date IOB</string>
