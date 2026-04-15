@@ -3,7 +3,7 @@
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
     <string name="combov2_plugin_description">Integrare nativă a pompelor Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Nu se poate conecta la pompă</string>
-    <string name="combov2_not_paired">Nu este împerecheat cu pompa</string>
+    <string name="combov2_not_paired">Nu este asociat cu pompa</string>
     <string name="combov2_warning">Avertizare Combo</string>
     <string name="combov2_error">Eroare Combo</string>
     <string name="combov2_warning_4">Apelați linia telefonică pentru actualizare</string>
