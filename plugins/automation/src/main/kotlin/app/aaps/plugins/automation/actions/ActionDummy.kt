@@ -19,8 +19,4 @@ class ActionDummy(injector: HasAndroidInjector) : Action(injector) {
     }
 
     override fun isValid(): Boolean = false
-
-    override fun icon(): Int {
-        throw NotImplementedError("An operation is not implemented")
-    }
 }

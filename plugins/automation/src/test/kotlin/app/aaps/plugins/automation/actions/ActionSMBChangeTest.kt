@@ -62,8 +62,4 @@ class ActionSMBChangeTest : ActionsTestBase() {
         sut.fromJSON("""{"smbState":"false"}""")
         assertThat(sut.smbState.value).isEqualTo(false)
     }
-
-    @Test fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_running_mode)
-    }
 }

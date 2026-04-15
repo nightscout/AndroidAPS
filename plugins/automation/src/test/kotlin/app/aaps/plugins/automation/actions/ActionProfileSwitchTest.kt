@@ -113,8 +113,4 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         sut.fromJSON("""{"profileToSwitchTo":"Test"}""")
         assertThat(sut.inputProfileName.value).isEqualTo("Test")
     }
-
-    @Test fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp)
-    }
 }

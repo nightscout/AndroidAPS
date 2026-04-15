@@ -15,13 +15,8 @@
     <application>
         <service
             android:name=".services.LocationService"
-            android:foregroundServiceType="location"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.MapPickerActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:foregroundServiceType="location" />
 
     </application>
 </manifest>

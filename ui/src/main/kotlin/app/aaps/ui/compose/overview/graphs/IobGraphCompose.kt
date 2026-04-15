@@ -374,9 +374,7 @@ fun IobGraphCompose(
             getXStep = { 1.0 }
         ),
         modelProducer = modelProducer,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(100.dp),
+        modifier = modifier.fillMaxWidth(),
         scrollState = scrollState,
         zoomState = zoomState
     )

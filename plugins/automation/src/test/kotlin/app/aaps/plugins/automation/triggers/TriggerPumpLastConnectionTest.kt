@@ -53,10 +53,6 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
         assertThat(t2.minutesAgo.value).isEqualTo(410)
     }
 
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerPumpLastConnection(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_remove)
-    }
-
     @Test fun friendlyNameTest() = runTest {
         assertThat(TriggerPumpLastConnection(injector).friendlyName()).isEqualTo(R.string.automation_trigger_pump_last_connection_label)
     }

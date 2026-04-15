@@ -1,19 +1,17 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import androidx.annotation.VisibleForTesting
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MonitorHeart
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.Optional
 
 class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -60,7 +58,8 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.triggerHeartRateDesc, rh.gs(comparator.value.stringRes), heartRate.value)
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_heart_rate)
+    override fun composeIcon() = Icons.Filled.MonitorHeart
+    override fun composeIconTint() = IconTint.Heart
 
     override fun duplicate(): Trigger {
         return TriggerHeartRate(injector).also { o ->
@@ -69,11 +68,4 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
         }
     }
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.triggerHeartRate, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.triggerHeartRate) + ": ", "", heartRate))
-            .build(root)
-    }
 }

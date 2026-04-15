@@ -142,6 +142,7 @@ fun SecondaryGraphCompose(
         SeriesType.HEART_RATE      -> viewModel.heartRateGraphFlow.collectAsStateWithLifecycle().value.heartRates
         SeriesType.STEPS           -> viewModel.stepsGraphFlow.collectAsStateWithLifecycle().value.steps
         SeriesType.ACTIVITY        -> viewModel.activityGraphFlow.collectAsStateWithLifecycle().value.activity
+        SeriesType.PREDICTIONS     -> emptyList() // UI-only overlay flag, not a secondary series
         null                       -> emptyList()
     }
 
@@ -599,9 +600,7 @@ fun SecondaryGraphCompose(
                 bottomAxis = bottomAxis, decorations = decorations, getXStep = { 1.0 }
             ),
             modelProducer = modelProducer,
-            modifier = modifier
-                .fillMaxWidth()
-                .height(100.dp),
+            modifier = modifier.fillMaxWidth(),
             scrollState = scrollState, zoomState = zoomState
         )
     } else if (isDualAxis) {
@@ -617,9 +616,7 @@ fun SecondaryGraphCompose(
                 bottomAxis = bottomAxis, decorations = decorations, getXStep = { 1.0 }
             ),
             modelProducer = modelProducer,
-            modifier = modifier
-                .fillMaxWidth()
-                .height(100.dp),
+            modifier = modifier.fillMaxWidth(),
             scrollState = scrollState, zoomState = zoomState
         )
     } else {
@@ -630,9 +627,7 @@ fun SecondaryGraphCompose(
                 bottomAxis = bottomAxis, decorations = decorations, getXStep = { 1.0 }
             ),
             modelProducer = modelProducer,
-            modifier = modifier
-                .fillMaxWidth()
-                .height(100.dp),
+            modifier = modifier.fillMaxWidth(),
             scrollState = scrollState, zoomState = zoomState
         )
     }
@@ -773,6 +768,7 @@ data class SeriesColors(
         SeriesType.HEART_RATE      -> heartRate
         SeriesType.STEPS           -> steps
         SeriesType.ACTIVITY        -> activity
+        SeriesType.PREDICTIONS     -> activity // unused — PREDICTIONS is a BG overlay flag, not a secondary series
     }
 }
 

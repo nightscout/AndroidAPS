@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -50,9 +51,10 @@ import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
+import app.aaps.plugins.automation.compose.AutomationComposeContent
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
-import app.aaps.plugins.automation.events.EventAutomationDataChanged
+import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventLocationChange
 import app.aaps.plugins.automation.keys.AutomationStringKey
@@ -84,7 +86,7 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
-import app.aaps.plugins.automation.ui.TimerUtil
+import app.aaps.plugins.automation.TimerUtil
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -124,11 +126,24 @@ class AutomationPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val timerUtil: TimerUtil,
-    private val receiverStatusStore: ReceiverStatusStore
+    private val receiverStatusStore: ReceiverStatusStore,
+    private val uel: UserEntryLogger,
+    private val localProfileManager: app.aaps.core.interfaces.profile.LocalProfileManager
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
-        .fragmentClass(AutomationFragment::class.qualifiedName)
+        .composeContent { plugin ->
+            AutomationComposeContent(
+                plugin = plugin as AutomationPlugin,
+                rxBus = rxBus,
+                aapsSchedulers = aapsSchedulers,
+                fabricPrivacy = fabricPrivacy,
+                injector = injector,
+                uel = uel,
+                rh = rh,
+                localProfileManager = localProfileManager
+            )
+        }
         .icon(IcPluginAutomation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
@@ -512,7 +527,7 @@ class AutomationPlugin @Inject constructor(
     }
 
     /**
-     * Generate reminder via [app.aaps.plugins.automation.ui.TimerUtil]
+     * Generate reminder via [TimerUtil]
      *
      * @param seconds seconds to the future
      */

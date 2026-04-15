@@ -1,18 +1,15 @@
 package app.aaps.plugins.automation.triggers
 
-import android.widget.LinearLayout
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.compose.icons.IcTtManual
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputBg
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.util.Optional
 import kotlin.math.roundToInt
 
 class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
@@ -82,15 +79,9 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
             rh.gs(if (ttValue.units == GlucoseUnit.MGDL) R.string.temptargetcomparedmgdl else R.string.temptargetcomparedmmol, rh.gs(comparator.value.stringRes), ttValue.value, ttValue.units)
     }
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_keyboard_tab)
+    override fun composeIcon() = IcTtManual
+    override fun composeIconTint() = IconTint.TempTarget
 
     override fun duplicate(): Trigger = TriggerTempTargetValue(injector, this)
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(StaticLabel(rh, app.aaps.core.ui.R.string.careportal_temporarytargetvalue, this))
-            .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.target_u, ttValue.units), "", ttValue))
-            .build(root)
-    }
 }

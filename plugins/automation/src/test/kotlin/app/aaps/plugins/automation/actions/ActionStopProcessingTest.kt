@@ -30,11 +30,6 @@ class ActionStopProcessingTest : ActionsTestBase() {
     }
 
     @Test
-    fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(R.drawable.ic_stop_24dp)
-    }
-
-    @Test
     fun doActionTest() = runTest {
         sut.doAction(object : Callback() {
             override fun run() {

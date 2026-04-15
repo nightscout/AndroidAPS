@@ -1,17 +1,18 @@
 package app.aaps.ui.compose.automationSheet
 
-import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.automation.AutomationIconData
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ExternalOptions
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,11 +27,10 @@ import javax.inject.Inject
 data class AutomationActionItem(
     val eventId: String,
     val title: String,
-    @Deprecated("replace by compose icons")
-    @DrawableRes val iconResId: Int?,
+    val firstActionIcon: AutomationIconData?,
     val actionsDescription: List<String> = emptyList(),
-    val triggerIconResIds: List<Int> = emptyList(),
-    val actionIconResIds: List<Int> = emptyList()
+    val triggerIcons: List<AutomationIconData> = emptyList(),
+    val actionIcons: List<AutomationIconData> = emptyList()
 )
 
 @Immutable
@@ -60,6 +60,8 @@ class AutomationViewModel @Inject constructor(
     private fun setupEventListeners() {
         rxBus.toFlow(EventRefreshOverview::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
+        rxBus.toFlow(EventAutomationDataChanged::class.java)
+            .onEach { refreshState() }.launchIn(viewModelScope)
     }
 
     fun refreshState() {
@@ -76,14 +78,13 @@ class AutomationViewModel @Inject constructor(
             val events = automation.userEvents().filter { it.isEnabled && it.canRun() }
 
             val items = events.map { event ->
-                @Suppress("DEPRECATION")
                 AutomationActionItem(
                     eventId = event.id,
                     title = event.title,
-                    iconResId = event.firstActionIcon(),
+                    firstActionIcon = event.firstActionIcon(),
                     actionsDescription = event.actionsDescription(),
-                    triggerIconResIds = event.triggerIcons().toList(),
-                    actionIconResIds = event.actionIcons().toList()
+                    triggerIcons = event.triggerIcons().toList(),
+                    actionIcons = event.actionIcons().toList()
                 )
             }
             uiState.update { it.copy(items = items) }

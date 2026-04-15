@@ -43,10 +43,6 @@ class ActionCarePortalEventTest : ActionsTestBase() {
         assertThat(sut.shortDescription()).isEqualTo("Note : Asd")
     }
 
-    @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_note_24dp)
-    }
-
     @Test fun doActionTest() = runTest {
         sut.doAction(object : Callback() {
             override fun run() {

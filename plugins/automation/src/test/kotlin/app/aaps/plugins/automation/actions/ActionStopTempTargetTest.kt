@@ -3,7 +3,6 @@ package app.aaps.plugins.automation.actions
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.queue.Callback
-import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -31,10 +30,6 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
     @Test fun shortDescriptionTest() {
         assertThat(sut.shortDescription()).isEqualTo("Stop temp target")
-    }
-
-    @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(R.drawable.ic_stop_24dp)
     }
 
     @Test fun doActionTest() = runTest {

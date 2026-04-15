@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.keys.DoubleKey
 import app.aaps.implementation.iob.AutosensDataObject
-import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -98,10 +97,6 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerAutosensValue
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.autosens.value).isWithin(0.01).of(410.0)
-    }
-
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerAutosensValue(injector).icon().get()).isEqualTo(R.drawable.ic_as)
     }
 
     private fun generateAutosensData() = AutosensDataObject(aapsLogger, preferences, dateUtil)

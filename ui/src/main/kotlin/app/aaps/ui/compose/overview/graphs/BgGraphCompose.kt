@@ -86,7 +86,9 @@ fun BgGraphCompose(
     // Collect flows independently - each triggers recomposition only when it changes
     val bgReadings by viewModel.bgReadingsFlow.collectAsStateWithLifecycle()
     val bucketedData by viewModel.bucketedDataFlow.collectAsStateWithLifecycle()
-    val predictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
+    val showPredictions = SeriesType.PREDICTIONS in bgOverlays
+    val rawPredictions by viewModel.predictionsFlow.collectAsStateWithLifecycle()
+    val predictions = if (showPredictions) rawPredictions else emptyList()
     val rawBasalData by viewModel.basalGraphFlow.collectAsStateWithLifecycle()
     val targetData by viewModel.targetLineFlow.collectAsStateWithLifecycle()
 
@@ -544,9 +546,7 @@ fun BgGraphCompose(
             getXStep = { 1.0 }
         ),
         modelProducer = modelProducer,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(100.dp),
+        modifier = modifier.fillMaxWidth(),
         scrollState = scrollState,
         zoomState = zoomState
     )

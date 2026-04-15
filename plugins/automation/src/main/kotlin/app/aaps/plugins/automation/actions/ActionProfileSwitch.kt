@@ -1,7 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import android.widget.LinearLayout
-import androidx.annotation.DrawableRes
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -11,11 +9,11 @@ import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputProfileName
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
@@ -33,7 +31,8 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp
+    override fun composeIcon() = IcProfile
+    override fun composeIconTint() = IconTint.Profile
 
     override suspend fun doAction(callback: Callback) {
         val activeProfileName = profileFunction.getProfileName()
@@ -75,12 +74,6 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             iCfg = iCfg
         )
         callback.result(pumpEnactResultProvider.get().success(result != null).comment(app.aaps.core.ui.R.string.ok)).run()
-    }
-
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.profilename), "", inputProfileName))
-            .build(root)
     }
 
     override fun hasDialog(): Boolean = true

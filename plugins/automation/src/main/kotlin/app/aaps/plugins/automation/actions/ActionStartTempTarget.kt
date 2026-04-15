@@ -1,7 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import android.widget.LinearLayout
-import androidx.annotation.DrawableRes
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TT
@@ -15,14 +13,13 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.friendlyDescription
+import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputTempTarget
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +46,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.starttemptarget
     override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
-    @DrawableRes override fun icon(): Int = app.aaps.core.objects.R.drawable.ic_temptarget_high_24dp
+    override fun composeIcon() = IcTtHigh
 
     override suspend fun doAction(callback: Callback) {
         appScope.launch {
@@ -70,14 +67,6 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                 callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.error)).run()
             }
         }
-    }
-
-    override fun generateDialog(root: LinearLayout) {
-        val unitResId = if (value.units == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.mgdl else app.aaps.core.ui.R.string.mmol
-        LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.temporary_target) + "\n[" + rh.gs(unitResId) + "]", "", value))
-            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.duration_min_label), "", duration))
-            .build(root)
     }
 
     override fun hasDialog(): Boolean {

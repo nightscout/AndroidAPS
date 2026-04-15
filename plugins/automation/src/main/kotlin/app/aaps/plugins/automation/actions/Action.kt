@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.actions
 
-import android.widget.LinearLayout
-import androidx.annotation.DrawableRes
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
@@ -24,7 +24,15 @@ abstract class Action(val injector: HasAndroidInjector) {
     abstract fun shortDescription(): String
     abstract suspend fun doAction(callback: Callback)
     abstract fun isValid(): Boolean
-    @DrawableRes abstract fun icon(): Int
+
+    /**
+     * Compose-native icon. Override in leaf actions to return a Material-Icons
+     * [ImageVector] or a project `Ic*`.
+     */
+    open fun composeIcon(): ImageVector? = null
+
+    /** Semantic tint for [composeIcon]. Null means caller uses a theme default. */
+    open fun composeIconTint(): Color? = null
 
     var title = ""
 
@@ -32,8 +40,6 @@ abstract class Action(val injector: HasAndroidInjector) {
         @Suppress("LeakingThis")
         injector.androidInjector().inject(this)
     }
-
-    open fun generateDialog(root: LinearLayout) {}
 
     open fun hasDialog(): Boolean = false
 

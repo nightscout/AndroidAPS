@@ -1,35 +1,20 @@
 package app.aaps.plugins.automation.triggers
 
-import android.content.Context
 import android.location.Location
-import android.widget.LinearLayout
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
-import app.aaps.plugins.automation.elements.InputButton
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputDouble
 import app.aaps.plugins.automation.elements.InputLocationMode
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.elements.StaticLabel
-import app.aaps.plugins.automation.events.EventPlaceSelected
-import app.aaps.plugins.automation.ui.MapPickerActivity
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.Disposable
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.Optional
-import javax.inject.Inject
 
 class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
-
-    @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
-
-    var context: Context? = null
 
     var latitude = InputDouble(0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
     var longitude = InputDouble(0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
@@ -38,38 +23,6 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     var name: InputString = InputString()
 
     var lastMode = InputLocationMode.Mode.INSIDE
-
-    private var placeSelectedDisposable: Disposable? = null
-
-    private val buttonAction = Runnable {
-        locationDataContainer.lastLocation?.let {
-            latitude.setValue(it.latitude)
-            longitude.setValue(it.longitude)
-        }
-    }
-
-    private val mapAction = Runnable {
-        val ctx = context ?: return@Runnable
-
-        // Subscribe to place selection events before starting the activity
-        placeSelectedDisposable?.dispose()
-        placeSelectedDisposable = rxBus
-            .toObservable(EventPlaceSelected::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ event ->
-                           latitude.setValue(event.latitude)
-                           longitude.setValue(event.longitude)
-                           aapsLogger.debug(LTag.AUTOMATION, "Location picked from map: ${event.latitude}, ${event.longitude}")
-                       }, fabricPrivacy::logException)
-
-        // Start the map picker activity
-        val intent = MapPickerActivity.createIntent(
-            ctx,
-            latitude = if (latitude.value != 0.0) latitude.value else null,
-            longitude = if (longitude.value != 0.0) longitude.value else null
-        )
-        ctx.startActivity(intent)
-    }
 
     private constructor(injector: HasAndroidInjector, triggerLocation: TriggerLocation) : this(injector) {
         latitude = InputDouble(triggerLocation.latitude)
@@ -125,21 +78,10 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.locationis, rh.gs(modeSelected.value.stringRes), " " + name.value)
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_location_on)
+    override fun composeIcon() = Icons.Filled.LocationOn
+    override fun composeIconTint() = IconTint.Location
 
     override fun duplicate(): Trigger = TriggerLocation(injector, this)
-
-    override fun generateDialog(root: LinearLayout) {
-        context = root.context
-        LayoutBuilder()
-            .add(StaticLabel(rh, R.string.location, this))
-            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.name_short), "", name))
-            .maybeAdd(InputButton(rh.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
-            .add(InputButton(rh.gs(R.string.pick_from_map), mapAction))
-            .add(LabelWithElement(rh, rh.gs(R.string.distance_short), "", distance))
-            .add(LabelWithElement(rh, rh.gs(R.string.location_mode), "", modeSelected))
-            .build(root)
-    }
 
     // Method to return the actual mode based on the current distance
     fun currentMode(currentDistance: Double): InputLocationMode.Mode {

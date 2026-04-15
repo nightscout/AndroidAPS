@@ -1,7 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import android.widget.LinearLayout
-import androidx.annotation.DrawableRes
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
@@ -12,12 +10,15 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.icons.IcActivity
+import app.aaps.core.ui.compose.icons.IcAnnouncement
+import app.aaps.core.ui.compose.icons.IcNote
+import app.aaps.core.ui.compose.icons.IcQuestion
 import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -40,7 +41,14 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.careportal
     override fun shortDescription(): String = rh.gs(cpEvent.value.stringResWithValue, note.value)
 
-    @DrawableRes override fun icon(): Int = cpEvent.value.drawableRes
+    override fun composeIcon() = when (cpEvent.value) {
+        InputCarePortalMenu.EventType.NOTE         -> IcNote
+        InputCarePortalMenu.EventType.EXERCISE     -> IcActivity
+        InputCarePortalMenu.EventType.QUESTION     -> IcQuestion
+        InputCarePortalMenu.EventType.ANNOUNCEMENT -> IcAnnouncement
+    }
+
+    override fun composeIconTint() = IconTint.CarePortal
 
     override suspend fun doAction(callback: Callback) {
         val enteredBy = "AAPS"
@@ -98,14 +106,6 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     }
 
     override fun hasDialog(): Boolean = true
-
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(cpEvent)
-            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.duration_min_label), "", duration))
-            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.notes_label), "", note))
-            .build(root)
-    }
 
     override fun isValid(): Boolean = true
 }

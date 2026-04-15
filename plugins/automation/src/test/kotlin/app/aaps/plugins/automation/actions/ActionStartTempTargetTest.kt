@@ -41,10 +41,6 @@ class ActionStartTempTargetTest : ActionsTestBase() {
         assertThat(sut.shortDescription()).isEqualTo("Start temp target: 100mg/dl@null(Automation)")
     }
 
-    @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_temptarget_high_24dp)
-    }
-
     @Test fun doActionTest() = runTest {
 
         val expectedTarget = TT(

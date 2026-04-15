@@ -1,18 +1,17 @@
 package app.aaps.plugins.automation.actions
 
 import android.content.Context
-import android.widget.LinearLayout
-import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Alarm
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
+import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.elements.LabelWithElement
-import app.aaps.plugins.automation.elements.LayoutBuilder
-import app.aaps.plugins.automation.ui.TimerUtil
+import app.aaps.plugins.automation.TimerUtil
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
@@ -33,7 +32,8 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.alarm
     override fun shortDescription(): String = rh.gs(R.string.alarm_message, text.value)
-    @DrawableRes override fun icon(): Int = app.aaps.core.objects.R.drawable.ic_access_alarm_24dp
+    override fun composeIcon() = Icons.Filled.Alarm
+    override fun composeIconTint() = IconTint.Alarm
 
     override fun isValid(): Boolean = true // empty alarm will show app name
 
@@ -59,9 +59,4 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     override fun hasDialog(): Boolean = true
 
-    override fun generateDialog(root: LinearLayout) {
-        LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.alarm_short), "", text))
-            .build(root)
-    }
 }
