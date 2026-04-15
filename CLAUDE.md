@@ -81,10 +81,21 @@
     - After each batch, state how many remain and continue until zero remain
     - Do NOT stop early or claim "done" until truly everything is processed
     - User WILL verify results - assume accountability
-- **Always use explicit imports:**
-    - Never use fully qualified names (e.g., `kotlin.math.abs`)
-    - Always add proper import statements at the top of the file
-    - Example: Add `import kotlin.math.abs` instead of using `kotlin.math.abs()`
+- **Always use explicit imports (no exceptions):**
+    - Never use fully qualified names inline (e.g., `kotlin.math.abs`,
+      `app.aaps.core.ui.compose.icons.IcFoo`, `androidx.compose.ui.graphics.vector.ImageVector`)
+    - Always add proper `import` statements at the top of the file and use short names in code
+    - Applies to type parameters, parameter types, return types, constructor calls, property
+      delegates, `remember { mutableStateOf<Type>() }`, etc.
+    - Applies when adding new code to existing files — add the import even if only referenced once
+    - ❌ BAD: `fun composeIcon() = app.aaps.core.ui.compose.icons.IcProfile`
+    - ✅ GOOD: `import app.aaps.core.ui.compose.icons.IcProfile` at top, then
+      `fun composeIcon() = IcProfile`
+    - ❌ BAD: `mutableListOf<androidx.compose.ui.graphics.vector.ImageVector>()`
+    - ✅ GOOD: `import androidx.compose.ui.graphics.vector.ImageVector` then
+      `mutableListOf<ImageVector>()`
+    - Only exception: when two different classes with the same simple name would collide — then one
+      can stay fully qualified at use site (rare)
 - **Use centralized theme/styling:**
     - For Compose UI: Always use theme values instead of hardcoded dp/padding/colors. If proper
       setting doesn't exist, discuss it before creating hardcoded values.

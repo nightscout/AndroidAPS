@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.actions
 
-import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Stop
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import com.google.gson.JsonObject
@@ -11,7 +12,7 @@ class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.stop_processing
     override fun shortDescription(): String = rh.gs(R.string.stop_processing)
-    @DrawableRes override fun icon(): Int = R.drawable.ic_stop_24dp
+    override fun composeIcon() = Icons.Filled.Stop
 
     override fun isValid(): Boolean = true
 

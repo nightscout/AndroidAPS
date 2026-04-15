@@ -51,8 +51,4 @@ class TriggerCOBTest : TriggerTestBase() {
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.cob.value).isWithin(0.01).of(4.0)
     }
-
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerCOB(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_bolus_carbs)
-    }
 }

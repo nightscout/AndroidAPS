@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.TonalIcon
@@ -76,22 +75,22 @@ fun AutomationBottomSheet(
                             color = automationColor
                         )
                     },
-                    supportingContent = if (item.triggerIconResIds.isNotEmpty() || item.actionIconResIds.isNotEmpty()) {
+                    supportingContent = if (item.triggerIcons.isNotEmpty() || item.actionIcons.isNotEmpty()) {
                         {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                                 modifier = Modifier.padding(top = 4.dp)
                             ) {
-                                item.triggerIconResIds.forEach { resId ->
+                                item.triggerIcons.forEach { data ->
                                     Icon(
-                                        painter = painterResource(resId),
+                                        imageVector = data.icon,
                                         contentDescription = null,
                                         modifier = Modifier.size(20.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        tint = data.tint ?: MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
-                                if (item.triggerIconResIds.isNotEmpty() && item.actionIconResIds.isNotEmpty()) {
+                                if (item.triggerIcons.isNotEmpty() && item.actionIcons.isNotEmpty()) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                         contentDescription = null,
@@ -101,23 +100,23 @@ fun AutomationBottomSheet(
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
-                                item.actionIconResIds.forEach { resId ->
+                                item.actionIcons.forEach { data ->
                                     Icon(
-                                        painter = painterResource(resId),
+                                        imageVector = data.icon,
                                         contentDescription = null,
                                         modifier = Modifier.size(20.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        tint = data.tint ?: MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
                         }
                     } else null,
                     leadingContent = {
-                        val iconResId = item.iconResId
-                        if (iconResId != null) {
+                        val firstIcon = item.firstActionIcon
+                        if (firstIcon != null) {
                             TonalIcon(
-                                painter = painterResource(iconResId),
-                                color = automationColor
+                                painter = rememberVectorPainter(firstIcon.icon),
+                                color = firstIcon.tint ?: automationColor
                             )
                         } else {
                             TonalIcon(

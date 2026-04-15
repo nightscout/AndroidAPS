@@ -40,10 +40,6 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
         assertThat(sut.shortDescription()).isEqualTo("Start profile 100% for 30 min")
     }
 
-    @Test fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp)
-    }
-
     @Test fun doActionTest() = runTest {
         whenever(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(mock<PS>())
         sut.pct = InputPercent(110.0)

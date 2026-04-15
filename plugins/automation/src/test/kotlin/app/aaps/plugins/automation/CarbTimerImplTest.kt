@@ -5,7 +5,9 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -14,7 +16,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.services.LocationServiceHelper
 import app.aaps.plugins.automation.triggers.Trigger
-import app.aaps.plugins.automation.ui.TimerUtil
+import app.aaps.plugins.automation.TimerUtil
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -42,6 +44,8 @@ class CarbTimerImplTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
+    @Mock lateinit var uel: UserEntryLogger
+    @Mock lateinit var localProfileManager: LocalProfileManager
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
@@ -62,7 +66,7 @@ class CarbTimerImplTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         timerUtil = TimerUtil(context)
         automationPlugin = AutomationPlugin(
-            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore
+            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore, uel, localProfileManager
         )
     }
 

@@ -2,8 +2,10 @@ package app.aaps.plugins.automation
 
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.automation.AutomationEvent
+import app.aaps.core.interfaces.automation.AutomationIconData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.ui.compose.icons.IcUserOptions
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionDummy
 import app.aaps.plugins.automation.actions.ActionStopProcessing
@@ -39,27 +41,31 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
 
     override suspend fun canRun(): Boolean = trigger.shouldRun()
     override suspend fun preconditionCanRun(): Boolean = getPreconditions().shouldRun()
-    override fun firstActionIcon(): Int? = actions.firstOrNull()?.icon()
+    override fun firstActionIcon(): AutomationIconData? =
+        actions.firstOrNull()?.let { action ->
+            action.composeIcon()?.let { AutomationIconData(it, action.composeIconTint()) }
+        }
+
     override fun actionsDescription(): List<String> = actions.map { it.shortDescription() }
 
-    override fun triggerIcons(): Set<Int> {
-        val icons = mutableSetOf<Int>()
-        if (userAction) icons.add(app.aaps.core.ui.R.drawable.ic_user_options)
+    override fun triggerIcons(): Set<AutomationIconData> {
+        val icons = mutableSetOf<AutomationIconData>()
+        if (userAction) icons.add(AutomationIconData(IcUserOptions))
         fillTriggerIconSet(trigger, icons)
         return icons
     }
 
-    override fun actionIcons(): Set<Int> = actions.mapTo(mutableSetOf()) { it.icon() }
+    override fun actionIcons(): Set<AutomationIconData> =
+        actions.mapNotNullTo(mutableSetOf()) { action ->
+            action.composeIcon()?.let { AutomationIconData(it, action.composeIconTint()) }
+        }
 
-    private fun fillTriggerIconSet(connector: TriggerConnector, set: MutableSet<Int>) {
+    private fun fillTriggerIconSet(connector: TriggerConnector, set: MutableSet<AutomationIconData>) {
         for (t in connector.list) {
             if (t is TriggerConnector) {
                 fillTriggerIconSet(t, set)
             } else {
-                val icon = t.icon()
-                if (icon.isPresent) {
-                    set.add(icon.get())
-                }
+                t.composeIcon()?.let { set.add(AutomationIconData(it, t.composeIconTint())) }
             }
         }
     }

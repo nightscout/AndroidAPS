@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.di
 
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.plugins.automation.AutomationEventObject
-import app.aaps.plugins.automation.AutomationFragment
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
@@ -18,12 +17,6 @@ import app.aaps.plugins.automation.actions.ActionSettingsExport
 import app.aaps.plugins.automation.actions.ActionStartTempTarget
 import app.aaps.plugins.automation.actions.ActionStopProcessing
 import app.aaps.plugins.automation.actions.ActionStopTempTarget
-import app.aaps.plugins.automation.dialogs.ChooseActionDialog
-import app.aaps.plugins.automation.dialogs.ChooseOperationDialog
-import app.aaps.plugins.automation.dialogs.ChooseTriggerDialog
-import app.aaps.plugins.automation.dialogs.EditActionDialog
-import app.aaps.plugins.automation.dialogs.EditEventDialog
-import app.aaps.plugins.automation.dialogs.EditTriggerDialog
 import app.aaps.plugins.automation.services.LocationService
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
@@ -53,7 +46,6 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
-import app.aaps.plugins.automation.ui.MapPickerActivity
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -69,14 +61,6 @@ import dagger.hilt.components.SingletonComponent
 @Suppress("unused")
 abstract class AutomationModule {
 
-    @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
-    @ContributesAndroidInjector abstract fun contributesChooseActionDialog(): ChooseActionDialog
-    @ContributesAndroidInjector abstract fun contributesChooseTriggerDialog(): ChooseTriggerDialog
-    @ContributesAndroidInjector abstract fun contributesChooseOperationDialog(): ChooseOperationDialog
-    @ContributesAndroidInjector abstract fun contributesEditActionDialog(): EditActionDialog
-    @ContributesAndroidInjector abstract fun contributesEditEventDialog(): EditEventDialog
-    @ContributesAndroidInjector abstract fun contributesEditTriggerDialog(): EditTriggerDialog
-    @ContributesAndroidInjector abstract fun contributesMapPickerActivity(): MapPickerActivity
     @ContributesAndroidInjector abstract fun automationEventInjector(): AutomationEventObject
 
     @ContributesAndroidInjector abstract fun triggerInjector(): Trigger

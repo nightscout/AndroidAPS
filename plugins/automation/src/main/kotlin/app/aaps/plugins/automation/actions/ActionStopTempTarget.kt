@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.automation.R
+import app.aaps.core.ui.compose.icons.IcTtCancel
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.stoptemptarget
     override fun shortDescription(): String = rh.gs(app.aaps.core.ui.R.string.stoptemptarget)
-    override fun icon(): Int = R.drawable.ic_stop_24dp
+    override fun composeIcon() = IcTtCancel
 
     override suspend fun doAction(callback: Callback) {
         appScope.launch {

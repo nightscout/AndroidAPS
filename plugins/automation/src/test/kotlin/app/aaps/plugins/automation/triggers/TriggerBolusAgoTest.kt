@@ -77,8 +77,4 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
         assertThat(t2.minutesAgo.value).isEqualTo(410)
     }
-
-    @Test fun iconTest() {
-        assertThat(TriggerBolusAgo(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_bolus)
-    }
 }

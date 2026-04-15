@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.actions
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
-import app.aaps.plugins.automation.ui.TimerUtil
+import app.aaps.plugins.automation.TimerUtil
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
@@ -48,10 +48,6 @@ class ActionAlarmTest : TestBaseWithProfile() {
     @Test fun shortDescriptionTest() = runTest {
         sut.text = InputString("Asd")
         assertThat(sut.shortDescription()).isEqualTo("Alarm: %s")
-    }
-
-    @Test fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_access_alarm_24dp)
     }
 
     @Test fun doActionTest() = runTest {

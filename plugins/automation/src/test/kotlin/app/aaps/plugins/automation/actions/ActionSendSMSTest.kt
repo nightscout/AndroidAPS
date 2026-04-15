@@ -32,10 +32,6 @@ class ActionSendSMSTest : ActionsTestBase() {
         assertThat(sut.shortDescription()).isEqualTo("Send SMS: ")
     }
 
-    @Test fun iconTest() = runTest {
-        assertThat(sut.icon()).isEqualTo(R.drawable.ic_notifications)
-    }
-
     @Test fun doActionTest() = runTest {
         whenever(smsCommunicator.sendNotificationToAllNumbers(anyString())).thenReturn(true)
         sut.text = InputString("Asd")

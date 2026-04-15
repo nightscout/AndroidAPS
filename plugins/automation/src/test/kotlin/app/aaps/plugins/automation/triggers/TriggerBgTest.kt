@@ -74,11 +74,6 @@ class TriggerBgTest : TriggerTestBase() {
         assertThat(t2.bg.units).isEqualTo(GlucoseUnit.MMOL)
     }
 
-    @Test
-    fun iconTest() = runTest {
-        assertThat(TriggerBg(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_bgcheck)
-    }
-
     private fun generateOneCurrentRecordBgData(): MutableList<InMemoryGlucoseValue> {
         val list: MutableList<InMemoryGlucoseValue> = ArrayList()
         list.add(InMemoryGlucoseValue(value = 214.0, timestamp = now - 1, trendArrow = TrendArrow.FLAT, sourceSensor = SourceSensor.UNKNOWN))

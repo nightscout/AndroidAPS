@@ -65,8 +65,4 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     @Test fun friendlyDescriptionTest() = runTest {
         assertThat(TriggerTimeRange(injector).friendlyDescription()).isEqualTo("Time is between 12:34 PM and 12:34 PM")
     }
-
-    @Test fun iconTest() = runTest {
-        assertThat(TriggerTimeRange(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_access_alarm_24dp)
-    }
 }
