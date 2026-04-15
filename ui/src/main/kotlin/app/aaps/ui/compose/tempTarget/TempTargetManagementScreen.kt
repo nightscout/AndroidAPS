@@ -315,7 +315,8 @@ fun TempTargetManagementScreen(
                                 null // Standalone active TT card selected
                             }
 
-                            presetIndex?.let { viewModel.selectPreset(it) }
+                            if (presetIndex != null) viewModel.selectPreset(presetIndex)
+                            else viewModel.selectActiveTT()
                         }
                         currentPage = pagerState.currentPage
                     }

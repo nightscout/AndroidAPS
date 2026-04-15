@@ -243,6 +243,7 @@ class NSClientV3Plugin @Inject constructor(
             setClient()
             nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
         }
+        nsClientRepository.updateUrl(preferences.get(StringKey.NsClientUrl))
         preferences.observe(StringKey.NsClientAccessToken).drop(1).onEach(restartOnChange).launchIn(scope)
         preferences.observe(StringKey.NsClientUrl).drop(1).onEach(restartOnChange).launchIn(scope)
         preferences.observe(BooleanKey.NsClient3UseWs).drop(1).onEach(restartOnChange).launchIn(scope)

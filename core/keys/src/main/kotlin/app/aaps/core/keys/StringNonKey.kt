@@ -25,6 +25,7 @@ enum class StringNonKey(
     ComposeGraphConfig("compose_graphconfig", ""),
 
     NotificationReaderPackages(key = "notification_reader_packages", defaultValue = ""),
+    NotificationReaderDedupState(key = "notification_reader_dedup_state", defaultValue = ""),
 
     // Google Drive settings (internal, no preferences UI)
     GoogleDriveStorageType(key = "google_drive_storage_type", defaultValue = "local"),

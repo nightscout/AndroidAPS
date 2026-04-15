@@ -121,14 +121,19 @@ class TempTargetManagementViewModel @Inject constructor(
                     }.takeIf { it >= 0 }
                 }
 
-                // Default to first preset (or matched active preset)
-                val initialPreset = activePresetIndex?.let { presets.getOrNull(it) }
-                    ?: presets.firstOrNull()
+                // Standalone active TT (no matching preset) -> selectedPreset = null, editor mirrors active TT
+                val hasStandaloneActiveTT = activeTT != null && activePresetIndex == null
+                val initialPreset = when {
+                    hasStandaloneActiveTT -> null
+                    else                  -> activePresetIndex?.let { presets.getOrNull(it) } ?: presets.firstOrNull()
+                }
+
+                // If active TT shown (standalone or matched preset), mirror its values; else use preset values
+                val initialTargetMgdl = activeTT?.lowTarget ?: initialPreset?.targetValue ?: 100.0
+                val initialDurationMs = activeTT?.duration ?: initialPreset?.duration ?: (60L * 60L * 1000L)
 
                 // Convert target from mg/dL (storage) to user units (display) with proper rounding
-                val targetInUserUnits = initialPreset?.targetValue?.let {
-                    roundForDisplay(profileUtil.fromMgdlToUnits(it, units), units)
-                } ?: roundForDisplay(profileUtil.fromMgdlToUnits(100.0, units), units)
+                val targetInUserUnits = roundForDisplay(profileUtil.fromMgdlToUnits(initialTargetMgdl, units), units)
 
                 uiState.update {
                     it.copy(
@@ -140,7 +145,7 @@ class TempTargetManagementViewModel @Inject constructor(
                         selectedPreset = initialPreset,
                         editorName = initialPreset?.name ?: "",
                         editorTarget = targetInUserUnits,
-                        editorDuration = initialPreset?.duration ?: (60L * 60L * 1000L),
+                        editorDuration = initialDurationMs,
                         showNotesField = showNotes,
                         isLoading = false,
                         snackbarMessage = null
@@ -228,18 +233,41 @@ class TempTargetManagementViewModel @Inject constructor(
         // Skip if same preset is already selected (rotation re-fires LaunchedEffect)
         if (preset != null && preset.id == uiState.value.selectedPreset?.id) return
 
-        // Convert target from mg/dL (storage) to user units (display) with proper rounding
-        val targetInUserUnits = preset?.targetValue?.let {
-            roundForDisplay(profileUtil.fromMgdlToUnits(it, units), units)
-        } ?: roundForDisplay(profileUtil.fromMgdlToUnits(100.0, units), units)
+        // If this card is the active preset, mirror the running TT's values
+        val activeTT = uiState.value.activeTT
+        val isActive = activeTT != null && index == uiState.value.activePresetIndex
+        val targetMgdl = if (isActive) activeTT.lowTarget else preset?.targetValue ?: 100.0
+        val durationMs = if (isActive) activeTT.duration else preset?.duration ?: (60L * 60L * 1000L)
+        val targetInUserUnits = roundForDisplay(profileUtil.fromMgdlToUnits(targetMgdl, units), units)
 
         uiState.update {
             it.copy(
                 selectedPreset = preset,
                 editorName = preset?.name ?: "",
                 editorTarget = targetInUserUnits,
-                editorDuration = preset?.duration ?: (60L * 60L * 1000L),
+                editorDuration = durationMs,
                 // Reset activation fields when switching presets
+                eventTime = dateUtil.now(),
+                eventTimeChanged = false,
+                notes = ""
+            )
+        }
+    }
+
+    /**
+     * Populate editor fields from the currently active TT (for the standalone active card
+     * that has no matching preset). No-op when no active TT or already showing it.
+     */
+    fun selectActiveTT() {
+        val tt = uiState.value.activeTT ?: return
+        if (uiState.value.selectedPreset == null) return // already on active card
+        val targetInUserUnits = roundForDisplay(profileUtil.fromMgdlToUnits(tt.lowTarget, units), units)
+        uiState.update {
+            it.copy(
+                selectedPreset = null,
+                editorName = "",
+                editorTarget = targetInUserUnits,
+                editorDuration = tt.duration,
                 eventTime = dateUtil.now(),
                 eventTimeChanged = false,
                 notes = ""

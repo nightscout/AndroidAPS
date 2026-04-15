@@ -14,6 +14,8 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.source.NotificationReaderPlugin
 import dagger.android.AndroidInjection
 import kotlinx.coroutines.CoroutineScope
@@ -29,15 +31,27 @@ class NotificationCollectorService : NotificationListenerService() {
     @Inject lateinit var notificationReaderPlugin: NotificationReaderPlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var preferences: Preferences
 
     private var parser: NotificationParser? = null
+    private var deduplicator: GlucoseDeduplicator? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private var lastInsertTimestamp = 0L
 
     override fun onCreate() {
         super.onCreate()
         AndroidInjection.inject(this)
         parser = NotificationParser(notificationReaderPlugin.packageConfig)
+        deduplicator = GlucoseDeduplicator(
+            packageConfig = notificationReaderPlugin.packageConfig,
+            store = object : GlucoseDeduplicator.StateStore {
+                override fun load(): String? =
+                    preferences.get(StringNonKey.NotificationReaderDedupState).takeIf { it.isNotBlank() }
+
+                override fun save(json: String) {
+                    preferences.put(StringNonKey.NotificationReaderDedupState, json)
+                }
+            }
+        )
         aapsLogger.debug(LTag.BGSOURCE, "NotificationCollectorService created")
     }
 
@@ -75,11 +89,10 @@ class NotificationCollectorService : NotificationListenerService() {
         aapsLogger.debug(LTag.BGSOURCE, "Glucose: ${result.glucoseMgdl} mg/dL from $packageName (${result.sourceSensor})")
 
         val now = System.currentTimeMillis()
-        if (now - lastInsertTimestamp < MIN_INSERT_INTERVAL_MS) {
-            aapsLogger.debug(LTag.BGSOURCE, "Skipping duplicate notification (${now - lastInsertTimestamp}ms since last insert)")
+        if (deduplicator?.process(packageName, result.glucoseMgdl, now) != true) {
+            aapsLogger.debug(LTag.BGSOURCE, "Skipping duplicate notification from $packageName")
             return
         }
-        lastInsertTimestamp = now
 
         val gv = GV(
             timestamp = now,
@@ -131,8 +144,6 @@ class NotificationCollectorService : NotificationListenerService() {
     }
 }
 
-private const val MIN_INSERT_INTERVAL_MS = 30_000L
-
 /**
  * Recursively collect text from all visible TextViews in a ViewGroup hierarchy.
  */
@@ -141,7 +152,7 @@ private fun ViewGroup.collectVisibleText(): List<String> = buildList {
         val child = getChildAt(i)
         if (child.visibility != View.VISIBLE) continue
         when (child) {
-            is TextView  -> child.text?.toString()?.takeIf { it.isNotBlank() }?.let(::add)
+            is TextView -> child.text?.toString()?.takeIf { it.isNotBlank() }?.let(::add)
             is ViewGroup -> addAll(child.collectVisibleText())
         }
     }

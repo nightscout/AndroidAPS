@@ -19,8 +19,10 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +41,9 @@ fun InputTimeEditor(
     modifier: Modifier = Modifier
 ) {
     var showPicker by remember { mutableStateOf(false) }
-    val hour = minutesSinceMidnight / 60
-    val minute = minutesSinceMidnight % 60
+    var current by rememberSaveable(minutesSinceMidnight) { mutableIntStateOf(minutesSinceMidnight) }
+    val hour = current / 60
+    val minute = current % 60
     OutlinedButton(onClick = { showPicker = true }, modifier = modifier) {
         Text(formatHHmm(hour, minute))
     }
@@ -50,7 +53,8 @@ fun InputTimeEditor(
             state = state,
             onDismiss = { showPicker = false },
             onConfirm = {
-                onChange(state.hour * 60 + state.minute)
+                current = state.hour * 60 + state.minute
+                onChange(current)
                 showPicker = false
             }
         )
