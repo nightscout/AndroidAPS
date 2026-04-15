@@ -73,7 +73,7 @@ class NotificationReaderPlugin @Inject constructor(
             PackageConfig.fromJson(json)
         } catch (e: Exception) {
             aapsLogger.error(LTag.BGSOURCE, "Failed to load package config", e)
-            PackageConfig(0, emptySet(), emptyMap())
+            PackageConfig(0, emptySet(), emptyMap(), emptyMap())
         }
     }
 
