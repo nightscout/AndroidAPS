@@ -36,7 +36,7 @@
     <string name="cwf_comment_rig_battery">Baterie globală a buclei (%)</string>
     <string name="cwf_comment_basalRate">Rată bazală</string>
     <string name="cwf_comment_bgi">Valoare BGI</string>
-    <string name="cwf_comment_status">Sinteza statusului</string>
+    <string name="cwf_comment_status">Sinteza stării</string>
     <string name="cwf_comment_time">Ora (HH:MM sau HH:MM:SS)</string>
     <string name="cwf_comment_hour">Oră (HH)</string>
     <string name="cwf_comment_minute">Minut (MM)</string>
