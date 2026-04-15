@@ -73,11 +73,23 @@
     <string name="pref_summary_aps_smb_on_even_target">Cách kích hoạt SMB thay thế, luôn dựa trên giá trị đường huyết mục tiêu.</string>
     <!-- Maintenance preferences -->
     <string name="pref_title_maintenance_enable_fabric">Bật báo cáo lỗi Fabric</string>
+    <string name="pref_title_maintenance_enable_export_automation">Chấp nhận cập nhật hồ sơ từ Nightscout</string>
     <!-- Autotune preferences -->
+    <string name="pref_summary_autotune_auto_switch_profile">Tự động chuyển sang hồ sơ do Autotune tạo sau khi tính toán.</string>
     <string name="pref_title_autotune_categorize_uam_as_basal">Phân loại UAM như liều nền</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Coi các bữa ăn không khai báo là nhu cầu insulin nền trong tính toán Autotune.</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Áp dụng biến thiên theo nhịp sinh học cho IC và ISF trong tính toán Autotune.</string>
     <!-- SMS preferences -->
+    <string name="pref_summary_sms_report_pump_unreachable">Gửi thông báo SMS khi không thể kết nối với bơm.</string>
     <!-- Virtual pump preferences -->
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Tải dữ liệu lên NS</string>
+    <string name="pref_summary_ns_upload_data">Tải lên các dữ liệu điều trị, liều nền tạm thời và dữ liệu khác lên Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Chấp nhận dữ liệu CGM từ NS</string>
+    <string name="pref_summary_ns_receive_cgm">Chấp nhận dữ liệu CGM từ Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Nhận dữ liệu Hồ sơ đã lưu</string>
+    <string name="pref_summary_ns_receive_profile_store">Chấp nhận cập nhật kho hồ sơ từ Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Nhận chuyển đổi Hồ sơ từ NS</string>
     <string name="pref_title_ns_notifications_from_announcements">Thông báo NS</string>
     <string name="pref_title_ns_use_cellular">Sử dụng dữ liệu di động</string>
     <string name="pref_title_ns_use_roaming">Sử dụng chuyển vùng</string>
@@ -94,6 +106,10 @@
     <!-- Wizard preferences -->
     <!-- Site rotation preferences -->
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Nút carb tăng lần 1</string>
+    <string name="pref_title_carbs_button_increment_2">Nút carb tăng lần 2</string>
+    <string name="pref_title_carbs_button_increment_3">Nút carb tăng lần 3</string>
+    <string name="carb_increment_button_message">Số lượng carb sẽ được thêm khi nhấn nút</string>
     <string name="pref_title_sbat_warning">Ngưỡng cảnh báo mức pin cảm biến</string>
     <string name="pref_title_sbat_critical">Ngưỡng pin cảm biến mức nguy cấp</string>
     <string name="pref_title_bage_warning">Ngưỡng cảnh báo pin bơm</string>
