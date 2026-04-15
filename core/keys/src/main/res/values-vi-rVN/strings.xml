@@ -75,13 +75,20 @@
     <string name="pref_title_maintenance_enable_fabric">Bật báo cáo lỗi Fabric</string>
     <string name="pref_title_maintenance_enable_export_automation">Chấp nhận cập nhật hồ sơ từ Nightscout</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Tự động chuyển hồ sơ</string>
     <string name="pref_summary_autotune_auto_switch_profile">Tự động chuyển sang hồ sơ do Autotune tạo sau khi tính toán.</string>
     <string name="pref_title_autotune_categorize_uam_as_basal">Phân loại UAM như liều nền</string>
     <string name="pref_summary_autotune_categorize_uam_as_basal">Coi các bữa ăn không khai báo là nhu cầu insulin nền trong tính toán Autotune.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Điều chỉnh đường cong insulin</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Sử dụng IC/ISF theo nhịp sinh học</string>
     <string name="pref_summary_autotune_circadian_ic_isf">Áp dụng biến thiên theo nhịp sinh học cho IC và ISF trong tính toán Autotune.</string>
+    <string name="pref_title_autotune_additional_log">Ghi nhật ký bổ sung</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Cho phép lệnh điều khiển từ xa qua SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Báo mất kết nối với bơm qua SMS</string>
     <string name="pref_summary_sms_report_pump_unreachable">Gửi thông báo SMS khi không thể kết nối với bơm.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Tải trạng thái bơm lên Nightscout</string>
     <!-- NS Client preferences -->
     <string name="pref_title_ns_upload_data">Tải dữ liệu lên NS</string>
     <string name="pref_summary_ns_upload_data">Tải lên các dữ liệu điều trị, liều nền tạm thời và dữ liệu khác lên Nightscout.</string>
@@ -89,18 +96,42 @@
     <string name="pref_summary_ns_receive_cgm">Chấp nhận dữ liệu CGM từ Nightscout.</string>
     <string name="pref_title_ns_receive_profile_store">Nhận dữ liệu Hồ sơ đã lưu</string>
     <string name="pref_summary_ns_receive_profile_store">Chấp nhận cập nhật kho hồ sơ từ Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Nhận mục tiêu tạm thời từ NS</string>
     <string name="pref_title_ns_receive_profile_switch">Nhận chuyển đổi Hồ sơ từ NS</string>
+    <string name="pref_title_ns_receive_insulin">Nhận insulin từ NS</string>
+    <string name="pref_title_ns_receive_carbs">Nhận carbs từ NS</string>
+    <string name="pref_summary_ns_receive_carbs">Chấp nhận các mục nhập carb từ Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Nhận các sự kiện điều trị từ NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Chấp nhận các sự kiện điều trị từ Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Nhận chế độ hoạt động từ NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Chấp nhận thay đổi chế độ hoạt động từ Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Nhận TBR/EB từ NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Chấp nhận liều nền tạm thời và liều bolus kéo dài từ Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">Cảnh báo NS</string>
     <string name="pref_title_ns_notifications_from_announcements">Thông báo NS</string>
     <string name="pref_title_ns_use_cellular">Sử dụng dữ liệu di động</string>
     <string name="pref_title_ns_use_roaming">Sử dụng chuyển vùng</string>
     <string name="pref_title_ns_use_wifi">Sử dụng WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Đồng bộ pin</string>
+    <string name="pref_title_ns_use_on_charging">Đồng bộ khi đang sạc</string>
+    <string name="pref_title_ns_log_app_start">Ghi nhật ký khởi động sự kiện</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Tạo thông báo từ lỗi</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Tạo thông báo khi cần carb</string>
+    <string name="pref_title_ns_slow_sync">Sử dụng đồng bộ chậm</string>
+    <string name="pref_title_ns_use_ws">Sử dụng websockets</string>
+    <string name="pref_summary_ns_use_ws">Sử dụng WebSocket để giao tiếp thời gian thực với Nightscout.</string>
     <!-- OpenHumans preferences -->
     <string name="pref_title_openhumans_wifi_only">Chỉ dùng WiFi</string>
     <string name="pref_title_openhumans_charging_only">Chỉ sạc</string>
     <!-- xDrip preferences -->
     <string name="pref_title_xdrip_send_status">Gửi dữ liệu tới xDrip+</string>
     <string name="pref_title_xdrip_send_detailed_iob">Gửi chi tiết IOB</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Gửi thông tin IOB chi tiết tới xDrip+ để hiển thị trên mặt đồng hồ.</string>
+    <string name="pref_title_xdrip_send_bgi">Hiển thị BGI</string>
+    <string name="pref_summary_xdrip_send_bgi">Hiển thị tác động đường huyết trong dòng trạng thái xDrip+.</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Điều khiển Wear OS</string>
+    <string name="pref_summary_wear_control">Điều khiển AAPS từ đồng hồ Wear OS.</string>
     <string name="pref_summary_wear_notify_on_smb">Gửi thông báo đến đồng hồ khi SMB được thực hiện.</string>
     <string name="pref_summary_wear_broadcast_data">Phát dữ liệu AAPS tới ứng dụng đồng hồ bên thứ ba qua intent.</string>
     <!-- Wizard preferences -->
