@@ -628,15 +628,13 @@ class MainApp : Application(), HasAndroidInjector {
         // Check if old preferences exist (existing installation vs new installation)
         val hasOldPreferences = sp.contains("eatingsoon_target")
 
-        val units = profileFunction.getUnits()
-
         // Create 3 default presets - values always stored in mg/dL
         val presets = listOf(
             TTPreset(
                 id = "eatingsoon",
                 reason = TT.Reason.EATING_SOON,
                 targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdl(sp.getDouble("eatingsoon_target", 90.0), units)
+                    profileUtil.convertToMgdlDetect(sp.getDouble("eatingsoon_target", 90.0))
                 } else {
                     Constants.DEFAULT_TT_EATING_SOON_TARGET
                 },
@@ -651,7 +649,7 @@ class MainApp : Application(), HasAndroidInjector {
                 id = "activity",
                 reason = TT.Reason.ACTIVITY,
                 targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdl(sp.getDouble("activity_target", 140.0), units)
+                    profileUtil.convertToMgdlDetect(sp.getDouble("activity_target", 140.0))
                 } else {
                     Constants.DEFAULT_TT_ACTIVITY_TARGET
                 },
@@ -666,7 +664,7 @@ class MainApp : Application(), HasAndroidInjector {
                 id = "hypo",
                 reason = TT.Reason.HYPOGLYCEMIA,
                 targetValue = if (hasOldPreferences) {
-                    profileUtil.convertToMgdl(sp.getDouble("hypo_target", 160.0), units)
+                    profileUtil.convertToMgdlDetect(sp.getDouble("hypo_target", 160.0))
                 } else {
                     Constants.DEFAULT_TT_HYPO_TARGET
                 },
