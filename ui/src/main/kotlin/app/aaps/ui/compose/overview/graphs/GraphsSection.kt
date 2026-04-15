@@ -44,7 +44,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.overview.graph.GraphConfig
+import app.aaps.core.interfaces.overview.graph.SecondaryGraph
 import app.aaps.core.interfaces.overview.graph.SeriesType
+import app.aaps.core.ui.compose.NumberInputRow
 import com.patrykandpatrick.vico.compose.cartesian.Scroll
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
@@ -76,11 +78,16 @@ import kotlin.math.abs
 private val SIMPLE_MODE_CONFIG = GraphConfig(
     bgOverlays = emptyList(),
     iobOverlays = emptyList(),
-    secondaryGraphs = listOf(listOf(SeriesType.COB))
+    secondaryGraphs = listOf(SecondaryGraph(listOf(SeriesType.COB)))
 )
 
-/** Series types available for user-configurable secondary graphs (IOB excluded — has dedicated fixed slot) */
-private val CONFIGURABLE_SERIES = SeriesType.entries.filter { it != SeriesType.IOB }
+/** Series types available as BG graph overlays */
+private val BG_OVERLAY_SERIES = listOf(SeriesType.ACTIVITY, SeriesType.PREDICTIONS)
+
+/** Series types available for user-configurable secondary graphs (IOB + UI-only overlays excluded) */
+private val CONFIGURABLE_SERIES = SeriesType.entries.filter {
+    it != SeriesType.IOB && it != SeriesType.PREDICTIONS
+}
 
 @OptIn(FlowPreview::class)
 @Composable
@@ -192,9 +199,10 @@ fun GraphsSection(
 
     LaunchedEffect(bgInfoState.bgInfo?.timestamp) {
         val newTimestamp = bgInfoState.bgInfo?.timestamp ?: return@LaunchedEffect
+        val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
         if (lastBgTimestamp != 0L && newTimestamp > lastBgTimestamp) {
             val timeRange = derivedTimeRange
-            if (predictions.isNotEmpty() && timeRange != null) {
+            if (showPredictions && predictions.isNotEmpty() && timeRange != null) {
                 // Scroll so "now + 2h" is at the right edge of viewport
                 val (minTimestamp, _) = timeRange
                 val nowX = timestampToX(System.currentTimeMillis(), minTimestamp)
@@ -269,7 +277,9 @@ fun GraphsSection(
                 zoomState = bgZoomState,
                 derivedTimeRange = derivedTimeRange,
                 nowTimestamp = nowTimestamp,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(graphConfig.bgHeight.dp)
             )
             if (!isSimpleMode) {
                 GraphEditButton(
@@ -284,7 +294,11 @@ fun GraphsSection(
             GraphSeriesBottomSheet(
                 title = stringResource(app.aaps.core.ui.R.string.graph_bg),
                 selectedSeries = graphConfig.bgOverlays,
-                availableSeries = listOf(SeriesType.ACTIVITY),
+                availableSeries = BG_OVERLAY_SERIES,
+                height = graphConfig.bgHeight,
+                onHeightChange = { h ->
+                    graphViewModel.updateGraphConfig(graphConfig.copy(bgHeight = h))
+                },
                 onToggle = { type ->
                     val current = graphConfig.bgOverlays.toMutableList()
                     if (type in current) current.remove(type) else current.add(type)
@@ -304,7 +318,9 @@ fun GraphsSection(
                 derivedTimeRange = derivedTimeRange,
                 nowTimestamp = nowTimestamp,
                 activityOverlay = SeriesType.ACTIVITY in graphConfig.iobOverlays,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(graphConfig.iobHeight.dp)
             )
             Text(
                 text = stringResource(app.aaps.core.ui.R.string.iob) + " / " + stringResource(app.aaps.core.ui.R.string.basal_shortname),
@@ -328,6 +344,10 @@ fun GraphsSection(
                 title = stringResource(app.aaps.core.ui.R.string.iob) + " / " + stringResource(app.aaps.core.ui.R.string.basal_shortname),
                 selectedSeries = graphConfig.iobOverlays,
                 availableSeries = listOf(SeriesType.ACTIVITY),
+                height = graphConfig.iobHeight,
+                onHeightChange = { h ->
+                    graphViewModel.updateGraphConfig(graphConfig.copy(iobHeight = h))
+                },
                 onToggle = { type ->
                     val current = graphConfig.iobOverlays.toMutableList()
                     if (type in current) current.remove(type) else current.add(type)
@@ -340,19 +360,21 @@ fun GraphsSection(
         // Secondary graphs — config-driven (labels start at "Graph 2")
         var editingGraphIndex by remember { mutableIntStateOf(-1) }
         for (i in 0 until activeCount) {
-            val seriesList = graphConfig.secondaryGraphs[i]
+            val secondary = graphConfig.secondaryGraphs[i]
             Box(modifier = Modifier.offset(y = (-8).dp)) {
                 SecondaryGraphCompose(
                     viewModel = graphViewModel,
-                    seriesTypes = seriesList,
+                    seriesTypes = secondary.series,
                     scrollState = secScrollStates[i],
                     zoomState = secZoomStates[i],
                     derivedTimeRange = derivedTimeRange,
                     nowTimestamp = nowTimestamp,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(secondary.height.dp)
                 )
                 Text(
-                    text = seriesListLabel(seriesList),
+                    text = seriesListLabel(secondary.series),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     modifier = Modifier
@@ -370,13 +392,20 @@ fun GraphsSection(
             }
         }
         if (editingGraphIndex >= 0 && editingGraphIndex < activeCount) {
+            val editing = graphConfig.secondaryGraphs[editingGraphIndex]
             GraphSeriesBottomSheet(
                 title = stringResource(app.aaps.core.ui.R.string.graph_number, editingGraphIndex + 2),
-                selectedSeries = graphConfig.secondaryGraphs[editingGraphIndex],
-                availableSeries = SeriesType.entries.filter { it != SeriesType.IOB },
+                selectedSeries = editing.series,
+                availableSeries = CONFIGURABLE_SERIES,
+                height = editing.height,
+                onHeightChange = { h ->
+                    val graphs = graphConfig.secondaryGraphs.toMutableList()
+                    graphs[editingGraphIndex] = graphs[editingGraphIndex].copy(height = h)
+                    graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
+                },
                 onToggle = { type ->
                     val graphs = graphConfig.secondaryGraphs.toMutableList()
-                    val current = graphs[editingGraphIndex].toMutableList()
+                    val current = graphs[editingGraphIndex].series.toMutableList()
                     if (type in current) {
                         current.remove(type)
                     } else {
@@ -388,7 +417,7 @@ fun GraphsSection(
                         graphs.removeAt(editingGraphIndex)
                         editingGraphIndex = -1
                     } else {
-                        graphs[editingGraphIndex] = current
+                        graphs[editingGraphIndex] = graphs[editingGraphIndex].copy(series = current)
                     }
                     graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
                 },
@@ -414,10 +443,13 @@ fun GraphsSection(
             }
             if (showAddSheet) {
                 var newGraphSeries by remember { mutableStateOf(emptyList<SeriesType>()) }
+                var newGraphHeight by remember { mutableIntStateOf(GraphConfig.DEFAULT_GRAPH_HEIGHT_DP) }
                 GraphSeriesBottomSheet(
                     title = stringResource(app.aaps.core.ui.R.string.graph_new),
                     selectedSeries = newGraphSeries,
                     availableSeries = CONFIGURABLE_SERIES,
+                    height = newGraphHeight,
+                    onHeightChange = { newGraphHeight = it },
                     onToggle = { type ->
                         val current = newGraphSeries.toMutableList()
                         if (type in current) {
@@ -431,10 +463,11 @@ fun GraphsSection(
                     onDismiss = {
                         if (newGraphSeries.isNotEmpty()) {
                             val graphs = graphConfig.secondaryGraphs.toMutableList()
-                            graphs.add(newGraphSeries)
+                            graphs.add(SecondaryGraph(newGraphSeries, newGraphHeight))
                             graphViewModel.updateGraphConfig(graphConfig.copy(secondaryGraphs = graphs))
                         }
                         newGraphSeries = emptyList()
+                        newGraphHeight = GraphConfig.DEFAULT_GRAPH_HEIGHT_DP
                         showAddSheet = false
                     }
                 )
@@ -469,6 +502,7 @@ private fun seriesShortNameId(type: SeriesType): Int = when (type) {
     SeriesType.HEART_RATE      -> app.aaps.core.ui.R.string.heartRate_shortname
     SeriesType.STEPS           -> app.aaps.core.ui.R.string.steps_shortname
     SeriesType.ACTIVITY        -> app.aaps.core.ui.R.string.activity_shortname
+    SeriesType.PREDICTIONS     -> app.aaps.core.ui.R.string.predictions_shortname
 }
 
 // =========================================================================
@@ -503,6 +537,8 @@ private fun GraphSeriesBottomSheet(
     title: String,
     selectedSeries: List<SeriesType>,
     availableSeries: List<SeriesType>,
+    height: Int,
+    onHeightChange: (Int) -> Unit,
     onToggle: (SeriesType) -> Unit,
     onDismiss: () -> Unit,
     onRemoveGraph: (() -> Unit)? = null
@@ -535,6 +571,15 @@ private fun GraphSeriesBottomSheet(
                 }
             }
             Spacer(Modifier.height(12.dp))
+            NumberInputRow(
+                labelResId = app.aaps.core.ui.R.string.graph_height,
+                value = height.toDouble(),
+                onValueChange = { onHeightChange(it.toInt()) },
+                valueRange = GraphConfig.DEFAULT_GRAPH_HEIGHT_DP.toDouble()..GraphConfig.MAX_GRAPH_HEIGHT_DP.toDouble(),
+                step = 10.0,
+                formatAsInt = true
+            )
+            Spacer(Modifier.height(8.dp))
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
