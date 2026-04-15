@@ -3,6 +3,13 @@
     <string name="automation_short">Auto</string>
     <string name="automation">Automatizare</string>
     <string name="automation_description">Activități automate definite de utilizator</string>
+    <string name="automation_enabled">Activat</string>
+    <string name="automation_read_only">Doar citire</string>
+    <string name="automation_new_rule">Regulă nouă</string>
+    <string name="automation_edit_rule">Editați regula</string>
+    <string name="automation_discard_title">Renunțați la modificări?</string>
+    <string name="automation_discard_message">Regula este incompletă și nu poate fi salvată. Renunțați la modificări?</string>
+    <string name="automation_discard_confirm">Renunțați</string>
     <string name="automation_missing_task_name">Introduceți o denumire pentru această acțiune.</string>
     <string name="automation_missing_trigger">Vă rugăm să specificați cel puțin un factor declanșator.</string>
     <string name="automation_missing_action">Trebuie să specificați cel puțin o acțiune.</string>
