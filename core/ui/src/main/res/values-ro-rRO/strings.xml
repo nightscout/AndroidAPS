@@ -418,6 +418,7 @@
     <string name="arrow_center">Centru</string>
     <!--    Command-->
     <string name="connectiontimedout">Conexiunea a expirat</string>
+    <string name="pump_not_configured">Pompa nu este configurată</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Executat</string>
     <string name="comment">Comentariu</string>
@@ -1025,6 +1026,7 @@
     <string name="graph_edit">Editați grafic</string>
     <string name="graph_number">Graficul %1$d</string>
     <string name="graph_bg">Grafic glicemie</string>
+    <string name="graph_height">Înălțimea graficului [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAZ</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
