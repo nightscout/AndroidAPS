@@ -85,6 +85,10 @@ class CmdHistoryGet(
         parm = data[23].toInt() and 0xff
         if (currentIndex != 0) equilManager.decodeHistory(data)
         resultIndex = index
+        // Update lastDataTime from command response (not just BLE advertisements)
+        // This ensures lastDataTime stays fresh even when BLE scan
+        // doesn't return advertisement packets (phone-specific BLE behavior)
+        equilManager.setLastDataTime(System.currentTimeMillis())
         aapsLogger.debug(LTag.PUMPCOMM, this.toString())
         synchronized(this) {
             cmdSuccess = true

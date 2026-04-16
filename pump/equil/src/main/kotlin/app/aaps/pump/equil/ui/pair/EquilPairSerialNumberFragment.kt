@@ -154,10 +154,14 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         }
     }
 
-    private fun validatePassword(email: String): Boolean {
-        val emailPattern = rh.gs(app.aaps.core.validators.R.string.fourhexanumber)
-        val pattern = Pattern.compile(emailPattern)
-        val matcher = pattern.matcher(email)
+    private fun validatePassword(password: String): Boolean {
+        if (password.isEmpty()) {
+            equilPasswordText?.error = null
+            equilTextInputLayout?.isErrorEnabled = false
+            return true
+        }
+        val pattern = Pattern.compile(rh.gs(app.aaps.core.validators.R.string.fourhexanumber))
+        val matcher = pattern.matcher(password)
         if (matcher.matches()) {
             equilPasswordText?.error = null
             equilTextInputLayout?.isErrorEnabled = false

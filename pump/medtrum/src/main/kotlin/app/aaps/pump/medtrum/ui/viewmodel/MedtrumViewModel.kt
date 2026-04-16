@@ -90,32 +90,36 @@ class MedtrumViewModel @Inject constructor(
             medtrumPump.pumpStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
                 if (patchStep.value != null) {
-                    when (state) {
-                        MedtrumPumpState.NONE, MedtrumPumpState.IDLE         -> {
+                    when {
+                        state == MedtrumPumpState.NONE                                           -> {
                             updateSetupStep(SetupStep.INITIAL)
                         }
 
-                        MedtrumPumpState.FILLED                              -> {
+                        state == MedtrumPumpState.IDLE && !medtrumPump.patchPrimed               -> {
+                            updateSetupStep(SetupStep.INITIAL)
+                        }
+
+                        state == MedtrumPumpState.FILLED && !medtrumPump.patchPrimed             -> {
                             updateSetupStep(SetupStep.FILLED)
                         }
 
-                        MedtrumPumpState.PRIMING                             -> {
+                        state == MedtrumPumpState.PRIMING                                        -> {
                             updateSetupStep(SetupStep.PRIMING)
                         }
 
-                        MedtrumPumpState.PRIMED, MedtrumPumpState.EJECTED    -> {
+                        state == MedtrumPumpState.PRIMED || state == MedtrumPumpState.EJECTED    -> {
                             updateSetupStep(SetupStep.PRIMED)
                         }
 
-                        MedtrumPumpState.ACTIVE, MedtrumPumpState.ACTIVE_ALT -> {
+                        state == MedtrumPumpState.ACTIVE || state == MedtrumPumpState.ACTIVE_ALT -> {
                             updateSetupStep(SetupStep.ACTIVATED)
                         }
 
-                        MedtrumPumpState.STOPPED                             -> {
+                        state == MedtrumPumpState.STOPPED                                        -> {
                             updateSetupStep(SetupStep.STOPPED)
                         }
 
-                        else                                                 -> {
+                        else                                                                     -> {
                             updateSetupStep(SetupStep.ERROR)
                         }
                     }
@@ -196,8 +200,15 @@ class MedtrumViewModel @Inject constructor(
             while (medtrumService?.isConnecting == true || medtrumService?.isConnected == true) {
                 SystemClock.sleep(100)
             }
-            // Set pump state to FILLED, so user will be able to retry activation again
-            medtrumPump.pumpState = MedtrumPumpState.FILLED
+            // Set pump state to to a proper state, (at beginning of retry state is reset to NONE)
+            // This is to ensure user can retry activation again
+            if (medtrumPump.pumpState == MedtrumPumpState.NONE) {
+                if (medtrumPump.patchPrimed) {
+                    medtrumPump.pumpState = MedtrumPumpState.PRIMING
+                } else {
+                    medtrumPump.pumpState = MedtrumPumpState.FILLED
+                }
+            }
         }
     }
 
@@ -256,24 +267,28 @@ class MedtrumViewModel @Inject constructor(
     }
 
     fun deactivatePatch() {
-        commandQueue.deactivate(object : Callback() {
-            override fun run() {
-                if (this.result.success) {
-                    // Do nothing, state change will handle this
-                } else {
-                    if (medtrumPump.pumpState >= MedtrumPumpState.OCCLUSION && medtrumPump.pumpState <= MedtrumPumpState.NO_CALIBRATION) {
-                        // We are in a fault state, we need to force deactivation
-                        aapsLogger.info(LTag.PUMP, "deactivatePatch: force deactivation")
-                        medtrumService?.disconnect("ForceDeactivation")
-                        SystemClock.sleep(1000)
-                        medtrumPump.pumpState = MedtrumPumpState.STOPPED
+        if ((medtrumPump.pumpState >= MedtrumPumpState.OCCLUSION && medtrumPump.pumpState <= MedtrumPumpState.NO_CALIBRATION)
+            || medtrumPump.pumpState <= MedtrumPumpState.FILLED
+        ) {
+            // We are in a fault state, we need to force deactivation 
+            // Connection can be skipped as its useless anyways
+            // (deactivation command will not work in fault state)
+            aapsLogger.info(LTag.PUMP, "deactivatePatch: force deactivation")
+            medtrumService?.disconnect("ForceDeactivation")
+            SystemClock.sleep(1000)
+            medtrumPump.pumpState = MedtrumPumpState.STOPPED
+        } else {
+            commandQueue.deactivate(object : Callback() {
+                override fun run() {
+                    if (this.result.success) {
+                        // Do nothing, state change will handle this
                     } else {
                         aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
                         updateSetupStep(SetupStep.ERROR)
                     }
                 }
-            }
-        })
+            })
+        }
     }
 
     fun retryActivationConnect() {
@@ -322,8 +337,7 @@ class MedtrumViewModel @Inject constructor(
         return newStep
     }
 
-    enum class SetupStep { INITIAL, FILLED, PRIMING, PRIMED, ACTIVATED, ERROR, START_DEACTIVATION, STOPPED
-    }
+    enum class SetupStep { INITIAL, FILLED, PRIMING, PRIMED, ACTIVATED, ERROR, START_DEACTIVATION, STOPPED }
 
     val setupStep = MutableLiveData<SetupStep>()
 

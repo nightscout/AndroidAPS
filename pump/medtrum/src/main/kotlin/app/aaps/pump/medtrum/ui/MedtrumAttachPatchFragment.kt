@@ -38,8 +38,15 @@ class MedtrumAttachPatchFragment : MedtrumBaseFragment<FragmentMedtrumAttachPatc
                         MedtrumViewModel.SetupStep.PRIMED -> Unit // Nothing to do here, previous state
 
                         else                              -> {
-                            ToastUtils.errorToast(requireContext(), rh.gs(R.string.unexpected_state, it.toString()))
                             aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
+                            OKDialog.show(
+                                requireActivity(),
+                                rh.gs(app.aaps.core.ui.R.string.error),
+                                rh.gs(R.string.unexpected_state, it.toString()),
+                                runOnDismiss = true
+                            ) {
+                                viewModel?.moveStep(PatchStep.CANCEL)
+                            }
                         }
                     }
                 }

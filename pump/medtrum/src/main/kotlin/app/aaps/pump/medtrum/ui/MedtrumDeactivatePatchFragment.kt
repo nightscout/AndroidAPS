@@ -33,18 +33,32 @@ class MedtrumDeactivatePatchFragment : MedtrumBaseFragment<FragmentMedtrumDeacti
             viewModel?.apply {
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {
-                        MedtrumViewModel.SetupStep.STOPPED -> {
+                        MedtrumViewModel.SetupStep.INITIAL,
+                        MedtrumViewModel.SetupStep.START_DEACTIVATION -> Unit // Nothing to do here, previous state
+                        MedtrumViewModel.SetupStep.STOPPED            -> {
                             moveStep(PatchStep.DEACTIVATION_COMPLETE)
                         }
 
-                        MedtrumViewModel.SetupStep.ERROR   -> {
+                        // Error is handled by showing force activate button
+                        MedtrumViewModel.SetupStep.ERROR              -> {
                             updateSetupStep(MedtrumViewModel.SetupStep.START_DEACTIVATION) // Reset setup step
                             binding.textDeactivatingPump.text = rh.gs(R.string.deactivating_error)
                             binding.btnNegative.visibility = View.VISIBLE
                             binding.btnPositive.visibility = View.VISIBLE
                         }
 
-                        else                               -> Unit // Nothing to do here
+                        // Catch other unexpected states
+                        else                                          -> {
+                            aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
+                            OKDialog.show(
+                                requireActivity(),
+                                rh.gs(app.aaps.core.ui.R.string.error),
+                                rh.gs(R.string.unexpected_state, it.toString()),
+                                runOnDismiss = true
+                            ) {
+                                viewModel?.moveStep(PatchStep.CANCEL)
+                            }
+                        }
                     }
                 }
                 deactivatePatch()

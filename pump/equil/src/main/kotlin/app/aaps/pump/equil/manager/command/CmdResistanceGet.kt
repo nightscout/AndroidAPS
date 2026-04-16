@@ -37,12 +37,11 @@ class CmdResistanceGet(
 
     override fun decodeConfirmData(data: ByteArray) {
         val value = Utils.bytesToInt(data[7], data[6])
-        val resistanceThreshold = equilManager.getResistanceThreshold()
         cmdSuccess = true
-        enacted = value >= resistanceThreshold
+        enacted = value >= 500
         aapsLogger.debug(
             LTag.PUMPCOMM,
-            "CmdResistanceGet: resistance=$value, threshold=$resistanceThreshold, enacted=$enacted (pin ${if (enacted) "REACHED" else "NOT reached"} piston)"
+            "CmdResistanceGet: resistance=$value, threshold=500, enacted=$enacted (pin ${if (enacted) "REACHED" else "NOT reached"} piston)"
         )
         synchronized(this) {
             (this as Object).notify()

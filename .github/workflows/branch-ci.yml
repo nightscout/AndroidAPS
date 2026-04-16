@@ -1,17 +1,8 @@
-name: Cherry Pick CI (Pre-release Feature Backport)
+name: Branch CI
 
 on:
   workflow_dispatch:
     inputs:
-      upstream_repo:
-        description: 'Upstream repository (format: owner/repo)'
-        required: true
-        default: 'nightscout/AndroidAPS'
-
-      cherry_pick:
-        description: 'Commit hash(es) to cherry-pick (e.g. abc123 def456)'
-        required: true
-
       buildVariant:
         description: 'Select Build Variant'
         required: true
@@ -32,77 +23,6 @@ jobs:
     name: Build AAPS
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout current branch
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Load jdk versions
-        run: |
-          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
-          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
-
-      - name: Fetch upstream and verify commits
-        run: |
-          git remote add upstream "https://github.com/${{ github.event.inputs.upstream_repo }}.git"
-          git fetch upstream
-          echo "✅ Upstream branches fetched."
-
-          ALL_FOUND=true
-          for HASH in ${{ github.event.inputs.cherry_pick }}; do
-            TYPE=$(git cat-file -t "$HASH" 2>/dev/null || true)
-            if [ "$TYPE" = "commit" ]; then
-              echo "✅ $HASH is reachable from a branch"
-              continue
-            fi
-
-            # Commit not on any branch — may be from a squash-merged PR.
-            # Use the GitHub API to find which PR contains this commit, then
-            # fetch that PR's preserved ref (refs/pull/<n>/head).
-            echo "ℹ️ $HASH not on any branch — looking up PR via GitHub API..."
-            PR_NUMBER=$(curl -s \
-              -H "Authorization: Bearer ${{ github.token }}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.event.inputs.upstream_repo }}/commits/$HASH/pulls" \
-              | jq -r '.[0].number // empty')
-
-            if [ -n "$PR_NUMBER" ]; then
-              echo "🔗 Found in PR #$PR_NUMBER — fetching PR ref..."
-              git fetch upstream "refs/pull/$PR_NUMBER/head:refs/remotes/upstream/pr/$PR_NUMBER"
-              TYPE2=$(git cat-file -t "$HASH" 2>/dev/null || true)
-              if [ "$TYPE2" = "commit" ]; then
-                echo "✅ $HASH now available via PR #$PR_NUMBER"
-              else
-                echo "❌ $HASH still not found after fetching PR #$PR_NUMBER"
-                ALL_FOUND=false
-              fi
-            else
-              echo "❌ $HASH is not reachable from any branch or PR in upstream."
-              echo "   Possible cause: squash-merged and PR ref no longer preserved."
-              echo "   Tip: use the merge commit SHA that landed on the target branch instead."
-              ALL_FOUND=false
-            fi
-          done
-
-          if [ "$ALL_FOUND" = "false" ]; then
-            echo "🛑 One or more commits could not be resolved. Aborting."
-            exit 1
-          fi
-          echo "✅ All commits verified and reachable."
-
-      - name: Cherry-pick commits
-        run: |
-          echo "➡️ Cherry-picking commits: ${{ github.event.inputs.cherry_pick }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          if ! git cherry-pick ${{ github.event.inputs.cherry_pick }}; then
-            echo "❌ Cherry-pick failed. Exiting."
-            exit 1
-          fi
-          
-          echo "✅ All commits cherry-picked."
-
       - name: Decode Secrets Keystore Set and Oauth2 to Env
         run: |
           if [ -n "${{ secrets.KEYSTORE_SET }}" ]; then
@@ -228,6 +148,14 @@ jobs:
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
           echo "✅ Access token obtained."
 
+      - name: Checkout source code
+        uses: actions/checkout@v5
+
+      - name: Load jdk versions
+        run: |
+          JAVA_VERSION=$(jq -r '.default' .github/jdk-map.json)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+
       - name: Set BUILD_VARIANT
         run: |
           BUILD_VARIANT="${{ github.event.inputs.buildVariant }}"
@@ -265,17 +193,17 @@ jobs:
 
       - name: Build APKs
         run: |
-          ./gradlew :app:assemble${{ env.BUILD_VARIANT }} :wear:assemble${{ env.BUILD_VARIANT }} \
-            -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
-            -Dkotlin.daemon.jvm.options="-Xmx2g" \
-            -Dkotlin.compiler.execution.strategy="in-process" \
-            -Dorg.gradle.daemon=true \
-            -Dorg.gradle.workers.max=8 \
-            -Dorg.gradle.caching=true \
-            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/keystore/keystore.jks" \
-            -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
-            -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
-            -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+              ./gradlew :app:assemble${{ env.BUILD_VARIANT }} :wear:assemble${{ env.BUILD_VARIANT }} \
+              -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m" \
+              -Dkotlin.daemon.jvm.options="-Xmx2g" \
+              -Dkotlin.compiler.execution.strategy="in-process" \
+              -Dorg.gradle.daemon=true \
+              -Dorg.gradle.workers.max=8 \
+              -Dorg.gradle.caching=true \
+              -Pandroid.injected.signing.store.file="$RUNNER_TEMP/keystore/keystore.jks" \
+              -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+              -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+              -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
 
       - name: Rename APKs with version
         run: |
@@ -361,17 +289,8 @@ jobs:
 
             echo "✅ Uploaded: $NAME"
           }
-          
-          # Sanitize cherry-pick input to create a safe filename suffix.
-          # Reason: ${{ github.event.inputs.cherry_pick }} may contain special characters,
-          # spaces, or symbols that are invalid or risky in filenames.
-          # This ensures the final name only includes letters, numbers, dash (-), and underscore (_).               
-          CHERRY_PICK_RAW="${{ github.event.inputs.cherry_pick }}"
-          CHERRY_PICK_SAFE=$(echo "$CHERRY_PICK_RAW" | sed 's/ /_/g')
-          CHERRY_PICK_SAFE=$(echo "$CHERRY_PICK_SAFE" | sed 's/[^a-zA-Z0-9_-]/_/g')
-          echo "CHERRY_PICK_SAFE=$CHERRY_PICK_SAFE" >> $GITHUB_ENV
 
-          upload_to_gdrive "aaps-${VERSION}${VERSION_SUFFIX}.apk" "aaps-${VERSION}${VERSION_SUFFIX}_CP-${CHERRY_PICK_SAFE}.apk"
-          upload_to_gdrive "aaps-wear-${VERSION}${VERSION_SUFFIX}.apk" "aaps-wear-${VERSION}${VERSION_SUFFIX}_CP-${CHERRY_PICK_SAFE}.apk"
+          upload_to_gdrive "aaps-${VERSION}${VERSION_SUFFIX}.apk" "aaps-${VERSION}${VERSION_SUFFIX}.apk"
+          upload_to_gdrive "aaps-wear-${VERSION}${VERSION_SUFFIX}.apk" "aaps-wear-${VERSION}${VERSION_SUFFIX}.apk"
 
           echo "🎉 APKs successfully uploaded to Google Drive!"

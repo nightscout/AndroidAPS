@@ -10,8 +10,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.medtrum.R
+import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.databinding.FragmentMedtrumActivateCompleteBinding
 import app.aaps.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import javax.inject.Inject
@@ -42,8 +44,15 @@ class MedtrumActivateCompleteFragment : MedtrumBaseFragment<FragmentMedtrumActiv
                         MedtrumViewModel.SetupStep.ACTIVATED -> btnPositive.visibility = View.VISIBLE
 
                         else                                 -> {
-                            ToastUtils.errorToast(requireContext(), rh.gs(R.string.unexpected_state, it.toString()))
                             aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
+                            OKDialog.show(
+                                requireActivity(),
+                                rh.gs(app.aaps.core.ui.R.string.error),
+                                rh.gs(R.string.unexpected_state, it.toString()),
+                                runOnDismiss = true
+                            ) {
+                                viewModel?.moveStep(PatchStep.CANCEL)
+                            }
                         }
                     }
                 }
