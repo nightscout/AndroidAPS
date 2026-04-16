@@ -97,8 +97,11 @@
     <string name="pref_title_ns_receive_profile_store">Nhận dữ liệu Hồ sơ đã lưu</string>
     <string name="pref_summary_ns_receive_profile_store">Chấp nhận cập nhật kho hồ sơ từ Nightscout.</string>
     <string name="pref_title_ns_receive_temp_target">Nhận mục tiêu tạm thời từ NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Chấp nhận thay đổi mục tiêu tạm thời từ Nightscout.</string>
     <string name="pref_title_ns_receive_profile_switch">Nhận chuyển đổi Hồ sơ từ NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Chấp nhận sự kiện chuyển hồ sơ từ Nightscout.</string>
     <string name="pref_title_ns_receive_insulin">Nhận insulin từ NS</string>
+    <string name="pref_summary_ns_receive_insulin">Chấp nhận dữ liệu tiêm insulin từ Nightscout.</string>
     <string name="pref_title_ns_receive_carbs">Nhận carbs từ NS</string>
     <string name="pref_summary_ns_receive_carbs">Chấp nhận các mục nhập carb từ Nightscout.</string>
     <string name="pref_title_ns_receive_therapy_event">Nhận các sự kiện điều trị từ NS</string>
@@ -186,16 +189,30 @@
     <string name="custom_password">Mật khẩu tùy chọn</string>
     <string name="custom_pin">Mã PIN tùy chọn</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Lượng carb tối đa cho phép</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Mức thay đổi tối thiểu trong chế độ mở</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Mở vòng lặp sẽ chỉ hiển thị yêu cầu thay đổi mới nếu thay đổi lớn hơn giá trị này theo %. Giá trị mặc định là 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Khoảng thời gian SMB</string>
+    <string name="pref_title_smb_max_minutes">Số phút liều nền tối đa để giới hạn cho SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">Số phút liều nền tối đa của UAM để giới hạn SMB</string>
+    <string name="uam_smb_max_minutes">Số phút tối đa SMB cho UAM</string>
+    <string name="pref_title_carbs_request_threshold">Ngưỡng cần nạp Carbs</string>
     <string name="carbs_req_threshold_summary">Số gram carbs tối thiểu để hiển thị cảnh báo gợi ý carbs. Gợi ý carbs dưới mức này sẽ không kích hoạt thông báo.</string>
+    <string name="pref_title_half_basal_exercise_target">Mục tiêu tập luyện với 50% liều nền</string>
     <string name="half_basal_exercise_target_summary">Đặt thành một số, ví dụ 160, có nghĩa là khi mục tiêu tạm thời là 160 mg/dL và tùy chọn \'High temptarget raises sensitivity=true\' được bật, Aaps sẽ chạy 50%% liều nền ở mức này (120 = 75%%; 140 = 60%%).</string>
+    <string name="pref_title_iob_threshold_percent">Ngưỡng phần trăm IOB</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Phần trăm của maxIOB mà trên mức đó SMB sẽ bị tắt.\nGiá trị mặc định: 100%\nVới 100%, tính năng này sẽ bị tắt hoàn toàn.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Hệ số điều chỉnh DynamicISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Hệ số điều chỉnh cho DynamicISF. Đặt lớn hơn 100% để có liều hiệu chỉnh mạnh hơn, và nhỏ hơn 100% để có liều hiệu chỉnh nhẹ hơn.</string>
+    <string name="pref_title_autosens_period">Khoảng thời gian Autosens</string>
     <string name="openapsama_autosens_period_summary">Số giờ trong quá khứ được dùng để phát hiện độ nhạy (không tính thời gian hấp thụ carb)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Số lượng log cần gửi</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Ngưỡng dữ liệu lỗi thời</string>
+    <string name="pref_title_pump_unreachable_threshold">Ngưỡng mất kết nối với bơm</string>
     <!-- IntKey: Insulin preferences -->
     <string name="pref_title_insulin_oref_peak">Thời gian đỉnh</string>
     <!-- IntKey: Autotune preferences -->
@@ -369,16 +386,29 @@
     <string name="openapsama_bgBrake_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết giảm tốc, giúp làm yếu ISF và do đó có thể làm giảm lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
     <string name="openapsama_lower_ISFrange_weight_summary">Đây là thệ số được áp dụng khi đường huyết thấp hơn mục tiêu, giúp làm yếu ISF và do đó có thể làm giảm lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Đây là hệ số được áp dụng khi đường huyết cao hơn mục tiêu, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">Phạm vi BG cho tỷ lệ SMB</string>
     <string name="openapsama_smb_delivery_ratio_bg_range_summary">Giá trị mặc định: 0. Tỷ lệ phân phối SMB tăng tuyến tính được ánh xạ theo khoảng đường huyết [target_bg, target_bg + bg_range].\nTại mức target_bg, tỷ lệ SMB là smb_delivery_ratio_min, và tại target_bg + bg_range, tỷ lệ SMB là smb_delivery_ratio_max.\nKhi đặt 0, tỷ lệ SMB tăng tuyến tính sẽ bị tắt và thay vào đó dùng tỷ lệ SMB cố định (smb_delivery_ratio).</string>
     <string name="openapsama_pp_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết đang tăng, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
     <string name="openapsama_dura_ISF_weight_summary">Đây là trọng số được áp dụng trong các giai đoạn đường huyết cao kéo dài, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
+    <string name="pref_title_smb_delivery_ratio">Tỷ lệ phân phối SMB</string>
     <string name="openapsama_smb_delivery_ratio_summary">Giá trị mặc định: 0,5. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định tỷ lệ insulin cần thiết có thể được bơm dưới dạng SMB. Mục đích là để ngăn tình trạng nguy hiểm khi có yêu cầu SMB được gửi đồng thời từ điện thoại của người chăm sóc. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Tỷ lệ SMB tối thiểu</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Giá trị mặc định: 0,5. Đây là giới hạn thấp của một tỷ lệ tăng tuyến tính, thay vì giá trị cố định ở bên trên.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Tỷ lệ SMB tối đa</string>
     <string name="openapsama_smb_delivery_ratio_max_summary">Giá trị mặc định: 0.5. Đây là giá trị giới hạn trên của một tỷ lệ tăng tuyến tính, thay vì là giá trị cố định như bên trên.</string>
+    <string name="pref_title_smb_max_range_extension">Mở rộng phạm vi SMB tối đa</string>
     <string name="openapsama_smb_max_range_extension_summary">Giá trị mặc định: 1. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định hệ số cho phép bạn vượt quá giới hạn thông thường 120 phút maxSMB/maxUAM. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Dấu hiệu đường huyết thấp</string>
+    <string name="pref_title_high_mark">Dấu hiệu đường huyết cao</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">Ngưỡng LGS</string>
     <string name="lgs_threshold_summary">Đường huyết dưới mức này sẽ tạm dừng việc tiêm insulin. Mức mặc định sử dụng mô hình mục tiêu chuẩn. Người dùng có thể đặt giá trị trong khoảng 60 mg/dL (3,3 mmol/L) đến 100 mg/dL (5,5 mmol/L). Các giá trị dưới 65 mg/dL (3,6 mmol/L) sẽ sử dụng mô hình mặc định</string>
     <!-- IntentKey preferences -->
+    <string name="pref_title_link_to_docs">Tài liệu thuật toán</string>
+    <string name="pref_title_otp_setup">Cài đặt xác thực</string>
+    <string name="pref_title_quick_wizard_settings">Cài đặt QuickWizard</string>
+    <string name="pref_title_xdrip_info">Thông tin Xdrip+</string>
     <!--    Appearance preferences-->
+    <string name="prefs_range_title">Phạm vi để hiển thị</string>
 </resources>
