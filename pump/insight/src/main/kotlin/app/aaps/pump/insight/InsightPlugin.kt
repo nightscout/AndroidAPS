@@ -190,6 +190,8 @@ class InsightPlugin @Inject constructor(
             field = value
             _lastBolusTime.value = value.takeIf { it > 0 }
         }
+
+    var lastTempBasalTimestamp = 0L
     var lastBolusType: BS.Type? = null
         private set
     private var alertService: InsightAlertService? = null
@@ -251,6 +253,7 @@ class InsightPlugin @Inject constructor(
         createNotificationChannel()
         lastBolusTimestamp = preferences.get(InsightLongNonKey.LastBolusTimestamp)
         _lastBolusAmount.value = PumpInsulin(preferences.get(InsightDoubleNonKey.LastBolusAmount))
+        lastTempBasalTimestamp = preferences.get(InsightLongNonKey.LastTempBasalTimestamp)
     }
 
     private fun createNotificationChannel() {
@@ -1259,6 +1262,8 @@ class InsightPlugin @Inject constructor(
                 pumpId = event.eventPosition
             )
         )
+        lastTempBasalTimestamp = timestamp
+        preferences.put(InsightLongNonKey.LastTempBasalTimestamp, lastTempBasalTimestamp)
     }
 
     private fun processEndOfTBREvent(serial: String, temporaryBasals: MutableList<TemporaryBasal>, event: EndOfTBREvent) {

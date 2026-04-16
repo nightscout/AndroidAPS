@@ -368,7 +368,12 @@ internal class InsightOverviewState(
                 add(
                     PumpInfoRow(
                         label = rh.gs(CoreUiR.string.tempbasal_label),
-                        value = rh.gs(R.string.tbr_formatter, tbr.percentage, tbr.initialDuration - tbr.remainingDuration, tbr.initialDuration)
+                        value = ch.basalTbrString(
+                            rate = PumpRate(tbr.percentage.toDouble()),
+                            startTime = insightPlugin.lastTempBasalTimestamp,
+                            durationInMin = tbr.initialDuration,
+                            isAbsolute = false
+                        )
                     )
                 )
             }
