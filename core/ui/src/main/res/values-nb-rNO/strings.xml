@@ -1022,7 +1022,6 @@
     <string name="graph_edit">Rediger graf</string>
     <string name="graph_number">Graf %1$d</string>
     <string name="graph_bg">BS-graf</string>
-    <string name="graph_height">Grafhøyde</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
