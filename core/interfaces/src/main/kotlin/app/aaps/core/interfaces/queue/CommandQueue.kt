@@ -13,6 +13,7 @@ interface CommandQueue {
     fun isRunning(type: Command.CommandType): Boolean
     fun pickup()
     fun clear()
+    fun completeAllAsNoOp(commentResId: Int)
     fun size(): Int
     fun performing(): Command?
     fun resetPerforming()

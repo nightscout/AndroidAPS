@@ -231,6 +231,19 @@ class CommandQueueImplementation @Inject constructor(
         }
     }
 
+    @Synchronized
+    override fun completeAllAsNoOp(commentResId: Int) {
+        performing = null
+        synchronized(queue) {
+            for (i in queue.indices) {
+                queue[i].callback?.result(
+                    pumpEnactResultProvider.get().success(true).enacted(false).comment(commentResId)
+                )?.run()
+            }
+            queue.clear()
+        }
+    }
+
     override fun size(): Int = queue.size
 
     override fun performing(): Command? = performing

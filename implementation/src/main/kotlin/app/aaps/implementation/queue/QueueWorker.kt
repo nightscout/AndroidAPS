@@ -61,8 +61,8 @@ class QueueWorker internal constructor(
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 if (!pump.isConfigured()) {
-                    aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - clearing queue")
-                    queue.clear()
+                    aapsLogger.debug(LTag.PUMPQUEUE, "pump not configured - completing queue as no-op")
+                    queue.completeAllAsNoOp(R.string.pump_not_configured)
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                     return Result.success()
                 }

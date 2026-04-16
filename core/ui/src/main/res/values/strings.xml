@@ -429,6 +429,7 @@
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
+    <string name="pump_not_configured">Pump not configured</string>
 
     <!--    PumpEnactResult-->
     <string name="enacted">Enacted</string>
@@ -1087,7 +1088,7 @@
     <string name="graph_edit">Edit graph</string>
     <string name="graph_number">Graph %1$d</string>
     <string name="graph_bg">BG graph</string>
-    <string name="graph_height">Graph height</string>
+    <string name="graph_height">Graph height [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
