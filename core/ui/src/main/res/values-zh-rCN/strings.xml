@@ -1019,7 +1019,6 @@
     <string name="graph_edit">编辑图表</string>
     <string name="graph_number">图表 %1$d</string>
     <string name="graph_bg">血糖图表</string>
-    <string name="graph_height">图表高度</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">预测</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
