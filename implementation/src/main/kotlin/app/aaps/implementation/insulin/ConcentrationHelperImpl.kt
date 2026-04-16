@@ -55,21 +55,44 @@ override fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int,
 }
 
     override fun insulinAmountString(amount: PumpInsulin): String {
+        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         if (isU100())
-            return decimalFormatter.toPumpSupportedBolusWithUnits(amount.cU, activePlugin.activePump.pumpDescription.bolusStep)
+            return decimalFormatter.toPumpSupportedBolusWithUnits(amount.cU, bolusStep)
         else { // app.aaps.core.ui.R.string.format_insulin_units
-            val iUString = decimalFormatter.toPumpSupportedBolusWithUnits(amount.iU(concentration), activePlugin.activePump.pumpDescription.bolusStep)
-            val cUString = decimalFormatter.toPumpSupportedBolusWithUnits(amount, activePlugin.activePump.pumpDescription.bolusStep / concentration)
+            val iUString = decimalFormatter.toPumpSupportedBolusWithUnits(amount.iU(concentration), bolusStep)
+            val cUString = decimalFormatter.toPumpSupportedBolusWithUnits(amount, bolusStep / concentration)
             return rh.gs(R.string.concentration_format, iUString, cUString)
         }
     }
 
-    override fun insulinAmountAgoString(amount: PumpInsulin, ago: String): String = "${insulinAmountString(amount)} $ago"
     override fun insulinAmountAgoString(amount: PumpInsulin, lastBolusTime: Long): String? {
         val agoHours = (System.currentTimeMillis() - lastBolusTime).toDouble() / 3_600_000.0
         return if (agoHours < 6.0) {
             "${insulinAmountString(amount)} ${dateUtil.sinceString(lastBolusTime, rh)}"
         } else null
+    }
+
+    override fun insulinDeliveryAgoString(amount: PumpInsulin, totalAmount: PumpInsulin, startTime: Long, durationInMin: Int?): String {
+        val startTimeString = dateUtil.timeString(startTime)
+        val passedMinutes = durationInMin?.let {
+            min(T.msecs(max(0, dateUtil.now() - startTime)).mins().toInt(), it)
+        } ?: T.msecs(dateUtil.now() - startTime).mins().toInt()
+        val format = durationInMin?.let {R.string.concentration_tbr_format } ?: R.string.concentration_tbr_format
+        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
+        if (isU100()) {
+            val amountString = decimalFormatter.toPumpSupportedBolusWithUnits(amount.cU, bolusStep)
+            val totalAmountString = decimalFormatter.toPumpSupportedBolusWithUnits(totalAmount.cU, bolusStep)
+            val deliveredString = rh.gs(R.string.concentration_delivered_format, amountString, totalAmountString)
+            return rh.gs(format, deliveredString, startTimeString, passedMinutes, durationInMin)
+        }
+        val amountIuString = decimalFormatter.toPumpSupportedBolusWithUnits(amount.iU(concentration), bolusStep)
+        val totalAmountIuString = decimalFormatter.toPumpSupportedBolusWithUnits(totalAmount.iU(concentration), bolusStep)
+        val deliveredIuString = rh.gs(R.string.concentration_delivered_format, amountIuString, totalAmountIuString)
+        val amountCuString = decimalFormatter.toPumpSupportedBolusWithUnits(amount, bolusStep / concentration)
+        val totalAmountCuString = decimalFormatter.toPumpSupportedBolusWithUnits(totalAmount, bolusStep / concentration)
+        val deliveredCuString = rh.gs(R.string.concentration_delivered_format, amountCuString, totalAmountCuString)
+        val deliveredString = rh.gs(R.string.concentration_format, deliveredIuString, deliveredCuString) + "\n"
+        return rh.gs(format, deliveredString, startTimeString, passedMinutes, durationInMin)
     }
 
     override fun insulinConcentrationString(): String = rh.gs(R.string.insulin_concentration, (concentration * 100).toInt())

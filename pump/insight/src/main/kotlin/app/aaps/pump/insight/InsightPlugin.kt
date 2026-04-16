@@ -387,7 +387,7 @@ class InsightPlugin @Inject constructor(
                     if (operatingMode == OperatingMode.STARTED) {
                         if (isActiveBasalRateChanged) activeBasalRate = service.requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
                         if (isActiveTBRChanged) activeTBR = service.requestMessage(GetActiveTBRMessage()).await().activeTBR
-                        if (isActiveBolusesChanged) activeBoluses = service.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
+                        if (isActiveBolusesChanged) activeBoluses = service.requestMessage(GetActiveBolusesMessage()).await().activeBoluses?.also { updateTimestamp(it) }
                     } else {
                         activeBasalRate = null
                         activeTBR = null
@@ -414,7 +414,7 @@ class InsightPlugin @Inject constructor(
                 if (operatingMode == OperatingMode.STARTED) {
                     activeBasalRate = service.requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
                     activeTBR = service.requestMessage(GetActiveTBRMessage()).await().activeTBR
-                    activeBoluses = service.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
+                    activeBoluses = service.requestMessage(GetActiveBolusesMessage()).await().activeBoluses?.also { updateTimestamp(it) }
                 } else {
                     activeBasalRate = null
                     activeTBR = null
@@ -1536,6 +1536,12 @@ class InsightPlugin @Inject constructor(
 
     private fun uploadCareportalEvent(date: Long, event: TE.Type) {
         runBlocking { pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber()) }
+    }
+
+    private fun updateTimestamp(boluses: MutableList<ActiveBolus>) {
+        boluses.forEach { bolus ->
+            insightDbHelper.getInsightBolusID(serialNumber(), bolus.bolusID, dateUtil.now())?.let { bolus.startTime = it.timestamp }
+        }
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {

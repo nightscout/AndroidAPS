@@ -206,10 +206,11 @@ class MedtrumOverviewViewModel @Inject constructor(
 
         // Active bolus
         val activeBolusText = if (!medtrumPump.bolusDone && medtrumPlugin.isInitialized() && bolusDelivered > 0.0) {
-            dateUtil.timeString(medtrumPump.bolusStartTime) + " " +
-                dateUtil.sinceString(medtrumPump.bolusStartTime, rh) + " " +
-                ch.bolusProgressString(PumpInsulin(bolusDelivered), ch.fromPump(PumpInsulin(medtrumPump.bolusAmountToBeDelivered))) +
-                " (" + rh.gs(CoreUiR.string.bolus_delivered_CU, bolusDelivered, medtrumPump.bolusAmountToBeDelivered) + ")"
+            ch.insulinDeliveryAgoString(
+                amount = PumpInsulin(bolusDelivered),
+                totalAmount = PumpInsulin(medtrumPump.bolusAmountToBeDelivered),
+                startTime = medtrumPump.bolusStartTime
+            )
         } else null
 
         // Battery voltage

@@ -365,17 +365,18 @@ internal class InsightOverviewState(
             }
 
             insightPlugin.activeTBR?.let { tbr ->
-                add(
-                    PumpInfoRow(
-                        label = rh.gs(CoreUiR.string.tempbasal_label),
-                        value = ch.basalTbrString(
-                            rate = PumpRate(tbr.percentage.toDouble()),
-                            startTime = insightPlugin.lastTempBasalTimestamp,
-                            durationInMin = tbr.initialDuration,
-                            isAbsolute = false
+                if (insightPlugin.lastTempBasalTimestamp > 0L)
+                    add(
+                        PumpInfoRow(
+                            label = rh.gs(CoreUiR.string.tempbasal_label),
+                            value = ch.basalTbrString(
+                                rate = PumpRate(tbr.percentage.toDouble()),
+                                startTime = insightPlugin.lastTempBasalTimestamp,
+                                durationInMin = tbr.initialDuration,
+                                isAbsolute = false
+                            )
                         )
                     )
-                )
             }
 
             insightPlugin.lastBolusAmount.value?.let { lastBolus ->
@@ -406,7 +407,12 @@ internal class InsightOverviewState(
                         add(
                             PumpInfoRow(
                                 label = label,
-                                value = rh.gs(R.string.eb_formatter, bolus.remainingAmount, bolus.initialAmount, bolus.remainingDuration)
+                                value = ch.insulinDeliveryAgoString(
+                                    amount = PumpInsulin(bolus.initialAmount - bolus.remainingAmount),
+                                    totalAmount = PumpInsulin(bolus.initialAmount),
+                                    startTime = bolus.startTime,
+                                    durationInMin = bolus.remainingDuration
+                                )
                             )
                         )
                     }
