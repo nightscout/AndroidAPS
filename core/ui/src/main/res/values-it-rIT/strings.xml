@@ -418,6 +418,7 @@
     <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
+    <string name="pump_not_configured">Micro non configurato</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Emanato</string>
     <string name="comment">Commento</string>
@@ -1022,6 +1023,7 @@
     <string name="graph_edit">Modifica grafico</string>
     <string name="graph_number">%1$d Grafico</string>
     <string name="graph_bg">Grafico glicemia</string>
+    <string name="graph_height">Altezza grafico [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
