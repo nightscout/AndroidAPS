@@ -58,14 +58,14 @@
     <string name="equil_common_history_tbr_value">Rată: %1$.2f U/H, durată: %2$d minute</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
-    <string name="equil_common_cmd_set_bolus">Setare bolus</string>
-    <string name="equil_common_cmd_cancel_bolus">Anulare bolus</string>
-    <string name="equil_common_cmd_set_tbr">Setare rată bazală temporară</string>
-    <string name="equil_common_cmd_cancel_tbr">Anulare rată bazală temporară</string>
-    <string name="equil_common_cmd_set_basal_schedule">Setare program rată bazală</string>
-    <string name="equil_common_cmd_set_time">Setare oră</string>
-    <string name="equil_common_cmd_suspend_delivery">Suspendare administrare</string>
-    <string name="equil_common_cmd_resume_delivery">Reluare administrare</string>
+    <string name="equil_common_cmd_set_bolus">Setați bolus</string>
+    <string name="equil_common_cmd_cancel_bolus">Anulați bolus</string>
+    <string name="equil_common_cmd_set_tbr">Setați rată bazală temporară</string>
+    <string name="equil_common_cmd_cancel_tbr">Anulați rată bazală temporară</string>
+    <string name="equil_common_cmd_set_basal_schedule">Setați program rată bazală</string>
+    <string name="equil_common_cmd_set_time">Setați oră</string>
+    <string name="equil_common_cmd_suspend_delivery">Suspendați administrarea</string>
+    <string name="equil_common_cmd_resume_delivery">Reluați administrarea</string>
     <string name="equil_common_cmd_pair">Asociați Equil</string>
     <string name="equil_common_cmd_insert_cannula">Inserați canula</string>
     <string name="equil_common_cmd_unpair">Dezasociați Equil</string>
@@ -75,7 +75,7 @@
     <string name="equil_common_change_insulin">Retragere tijă de împingere</string>
     <string name="equil_common_set_alarm_tone">Configurare doar pentru notificare audio</string>
     <string name="equil_common_set_alarm_shake">Configurare doar pentru vibrații</string>
-    <string name="equil_common_set_alarm_mute">Confiugrați pentru silențios</string>
+    <string name="equil_common_set_alarm_mute">Configurați pentru silențios</string>
     <string name="equil_common_set_alarm_tone_and_shake">Configurare pentru notificare sunet și vibrații</string>
     <string name="equil_common_read_devices">Citiți informații dispozitiv</string>
     <string name="equil_common_cmd_fill">Umplere</string>
