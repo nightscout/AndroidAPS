@@ -82,7 +82,7 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Semnal sonor pentru bazală activat</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Semnal sonor pentru SMB activat</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">Semnal sonor pentru TBR activat</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Afișare buton de Suspendare Administrare în secțiunea Omnipod</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Afișați buton de Suspendare Administrare în secțiunea Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detectare oră de vară/fus orar activată</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Notificare de expirare activată</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Când este activat, pompa va emite un semnal sonor când timpul specificat va fi atins</string>
@@ -128,9 +128,9 @@
     <string name="omnipod_common_cmd_cancel_tbr_by_driver">Anulați RBT</string>
     <string name="omnipod_common_cmd_discard_pod">Renunțați la pompă</string>
     <string name="omnipod_common_cmd_get_pod_status">Citiți Stare Pompă</string>
-    <string name="omnipod_common_cmd_set_time">Setare timp</string>
-    <string name="omnipod_common_cmd_configure_alerts">Configurare Alerte</string>
-    <string name="omnipod_common_cmd_silence_alerts">Confirmare Alerte</string>
+    <string name="omnipod_common_cmd_set_time">Setați timpul</string>
+    <string name="omnipod_common_cmd_configure_alerts">Configurați Alerte</string>
+    <string name="omnipod_common_cmd_silence_alerts">Opriți Alarmele</string>
     <string name="omnipod_common_cmd_read_pulse_log">Citiți Jurnal Puls</string>
     <string name="omnipod_common_cmd_suspend_delivery">Suspendați administrarea</string>
     <string name="omnipod_common_cmd_resume_delivery">Reluați administrarea</string>
