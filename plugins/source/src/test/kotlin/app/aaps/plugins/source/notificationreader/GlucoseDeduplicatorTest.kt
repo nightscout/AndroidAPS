@@ -32,87 +32,99 @@ class GlucoseDeduplicatorTest {
     @Test
     fun `first reading is always accepted`() {
         val d = GlucoseDeduplicator(configWith("p" to 5), MemStore())
-        assertThat(d.process("p", 100, 0L)).isTrue()
+        assertThat(d.process("p", 0L)).isTrue()
     }
 
     @Test
     fun `seed from package metadata`() {
         val d = GlucoseDeduplicator(configWith("p" to 1), MemStore())
-        d.process("p", 100, 0L)
+        d.process("p", 0L)
         assertThat(d.currentIntervalMs("p")).isEqualTo(min1)
     }
 
     @Test
     fun `seed default when package has no metadata`() {
         val d = GlucoseDeduplicator(configWith("p" to null), MemStore())
-        d.process("p", 100, 0L)
+        d.process("p", 0L)
         assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
     }
 
     @Test
     fun `unknown package uses default seed`() {
         val d = GlucoseDeduplicator(configWith(), MemStore())
-        assertThat(d.process("unknown", 100, 0L)).isTrue()
+        assertThat(d.process("unknown", 0L)).isTrue()
         assertThat(d.currentIntervalMs("unknown")).isEqualTo(min5)
     }
 
-    // ----- duplicate window (same value) -----
+    // ----- duplicate window -----
 
     @Test
-    fun `same value within window is rejected`() {
+    fun `reading within window is rejected`() {
         val d = GlucoseDeduplicator(configWith("p" to 5), MemStore())
-        d.process("p", 100, 0L)
-        // window = 5min - 1min margin = 4min. At 30s and 3min: rejected.
-        assertThat(d.process("p", 100, 30_000L)).isFalse()
-        assertThat(d.process("p", 100, 3 * min1)).isFalse()
+        d.process("p", 0L)
+        // threshold = 5min - 1min margin = 4min
+        assertThat(d.process("p", 30_000L)).isFalse()
+        assertThat(d.process("p", 3 * min1)).isFalse()
     }
 
     @Test
-    fun `same value at or after window is accepted`() {
+    fun `reading at or after window is accepted`() {
         val d = GlucoseDeduplicator(configWith("p" to 5), MemStore())
-        d.process("p", 100, 0L)
-        // threshold = 4min; gap exactly 4min → accepted (gap < threshold is false)
-        assertThat(d.process("p", 100, 4 * min1)).isTrue()
+        d.process("p", 0L)
+        // gap exactly 4min → accepted (gap < threshold is false)
+        assertThat(d.process("p", 4 * min1)).isTrue()
     }
 
     @Test
-    fun `same value well after window accepted (stable BG)`() {
+    fun `reading well after window accepted (stable BG)`() {
         val d = GlucoseDeduplicator(configWith("p" to 5), MemStore())
-        d.process("p", 100, 0L)
-        assertThat(d.process("p", 100, min5)).isTrue()
-        assertThat(d.process("p", 100, 2 * min5)).isTrue()
+        d.process("p", 0L)
+        assertThat(d.process("p", min5)).isTrue()
+        assertThat(d.process("p", 2 * min5)).isTrue()
     }
 
-    // ----- value-aware snap-down (over-seeding recovery) -----
+    // ----- Dexcom transition glitch regression (the field bug) -----
 
     @Test
-    fun `different value within window snaps down and accepts`() {
-        // Seeded 15min, real sensor 5min → first 5min reading would normally be rejected by
-        // timestamp alone (gap=5 < 12 threshold), but value differs → snap down to 5.
-        val d = GlucoseDeduplicator(configWith("p" to 15), MemStore())
-        d.process("p", 100, 0L)
-        assertThat(d.process("p", 110, min5)).isTrue()
+    fun `short-gap reading is rejected - Dexcom transition glitch does not drop interval`() {
+        // Dexcom posts the old value and the new 5-min reading within seconds at the boundary.
+        // The second notification must be rejected as a duplicate and the interval must not decay.
+        val d = GlucoseDeduplicator(configWith("p" to 5), MemStore())
+        d.process("p", 0L)
+        assertThat(d.process("p", 1_000L)).isFalse()   // same-second repost
+        assertThat(d.process("p", min1)).isFalse()     // 1min repost
         assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
     }
 
     @Test
-    fun `different value within window with very short gap snaps to 1min`() {
+    fun `seed is a hard floor - interval never drops below configured cadence`() {
         val d = GlucoseDeduplicator(configWith("p" to 5), MemStore())
-        d.process("p", 100, 0L)
-        assertThat(d.process("p", 105, min1)).isTrue()
-        assertThat(d.currentIntervalMs("p")).isEqualTo(min1)
+        // Hammer with many short-gap readings across many cycles.
+        repeat(100) { i ->
+            d.process("p", i * 1_000L)
+        }
+        assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
     }
 
-    // ----- snap down via gap (after window) -----
-
     @Test
-    fun `gap-based snap down on accepted reading`() {
-        // Wait long enough for current threshold to pass with same value, then snap down.
-        // Seeded 5min. Same value at gap=4min accepted, gap snaps to 3min interval.
+    fun `dexcom-like stream accepts exactly one reading per five-minute cycle`() {
+        // Simulate the screenshot pattern: 5 notification reposts spaced ~1 minute apart within
+        // each true 5-minute cycle (last repost ~3.5 min after cycle start, well inside the
+        // 4-minute threshold). Expect exactly one accept per cycle.
         val d = GlucoseDeduplicator(configWith("p" to 5), MemStore())
-        d.process("p", 100, 0L)
-        d.process("p", 100, 4 * min1)
-        assertThat(d.currentIntervalMs("p")).isEqualTo(min3)
+        val repostOffsets = listOf(0L, 30_000L, 90_000L, 150_000L, 210_000L)
+        val acceptTimes = mutableListOf<Long>()
+        repeat(6) { cycle ->
+            val cycleStart = cycle * min5
+            for (offset in repostOffsets) {
+                val t = cycleStart + offset
+                if (d.process("p", t)) acceptTimes += t
+            }
+        }
+        assertThat(acceptTimes).hasSize(6)
+        acceptTimes.forEachIndexed { i, time ->
+            assertThat(time).isEqualTo(i * min5)
+        }
     }
 
     // ----- snap up requires N consecutive -----
@@ -120,20 +132,20 @@ class GlucoseDeduplicatorTest {
     @Test
     fun `snap up requires three consecutive long gaps`() {
         val d = GlucoseDeduplicator(configWith("p" to 1), MemStore())
-        d.process("p", 100, 0L)
+        d.process("p", 0L)
         // Gaps of 5min each → all accepted (gap >> threshold). Snap up after 3.
-        d.process("p", 110, min5); assertThat(d.currentIntervalMs("p")).isEqualTo(min1)
-        d.process("p", 120, 2 * min5); assertThat(d.currentIntervalMs("p")).isEqualTo(min1)
-        d.process("p", 130, 3 * min5); assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
+        d.process("p", min5); assertThat(d.currentIntervalMs("p")).isEqualTo(min1)
+        d.process("p", 2 * min5); assertThat(d.currentIntervalMs("p")).isEqualTo(min1)
+        d.process("p", 3 * min5); assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
     }
 
     @Test
     fun `snap up to 15min after three consecutive 15min gaps`() {
         val d = GlucoseDeduplicator(configWith("p" to 1), MemStore())
-        d.process("p", 100, 0L)
-        d.process("p", 110, min15)
-        d.process("p", 120, 2 * min15)
-        d.process("p", 130, 3 * min15)
+        d.process("p", 0L)
+        d.process("p", min15)
+        d.process("p", 2 * min15)
+        d.process("p", 3 * min15)
         assertThat(d.currentIntervalMs("p")).isEqualTo(min15)
     }
 
@@ -141,25 +153,26 @@ class GlucoseDeduplicatorTest {
     fun `single missed reading does not change interval`() {
         // 5min sensor with one 10min gap (missed reading). 10min snaps to 5min interval → no change.
         val d = GlucoseDeduplicator(configWith("p" to 5), MemStore())
-        d.process("p", 100, 0L)
-        d.process("p", 110, 10 * min1)
+        d.process("p", 0L)
+        d.process("p", 10 * min1)
         assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
     }
 
     @Test
-    fun `snap up counter reset by short gap`() {
-        // Counting up from 1min toward 5min; an interrupting short gap resets.
+    fun `snap up counter reset by matching-interval gap`() {
+        // Counting up from 1min toward 5min; an interrupting gap that snaps to the current
+        // interval resets the counter.
         val d = GlucoseDeduplicator(configWith("p" to 1), MemStore())
-        d.process("p", 100, 0L)
-        d.process("p", 110, min5)              // count=1 toward 5
-        d.process("p", 120, 2 * min5)          // count=2 toward 5
-        d.process("p", 130, 2 * min5 + min1)   // gap=1min snaps to 1 (same as current) → reset
-        d.process("p", 140, 2 * min5 + 2 * min1) // gap=1min, same value as 130? different → snaps down to 1 anyway
+        d.process("p", 0L)
+        d.process("p", min5)              // count=1 toward 5
+        d.process("p", 2 * min5)          // count=2 toward 5
+        d.process("p", 2 * min5 + min1)   // gap=1min snaps to 1 (same as current) → reset
+        d.process("p", 2 * min5 + 2 * min1) // gap=1min → still reset
         // Now restart count toward 5.
-        d.process("p", 150, 2 * min5 + 2 * min1 + min5)   // count=1
-        d.process("p", 160, 2 * min5 + 2 * min1 + 2 * min5) // count=2
+        d.process("p", 2 * min5 + 2 * min1 + min5)   // count=1
+        d.process("p", 2 * min5 + 2 * min1 + 2 * min5) // count=2
         assertThat(d.currentIntervalMs("p")).isEqualTo(min1)
-        d.process("p", 170, 2 * min5 + 2 * min1 + 3 * min5) // count=3 → snap
+        d.process("p", 2 * min5 + 2 * min1 + 3 * min5) // count=3 → snap
         assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
     }
 
@@ -168,13 +181,13 @@ class GlucoseDeduplicatorTest {
         // Counting toward 5min, then a 15min gap → counter restarts for 15.
         val d = GlucoseDeduplicator(configWith("p" to 1), MemStore())
         var t = 0L
-        d.process("p", 100, t)
-        t += min5; d.process("p", 110, t)   // count=1 for 5
-        t += min5; d.process("p", 120, t)   // count=2 for 5
-        t += min15; d.process("p", 130, t)  // count restarts → count=1 for 15
+        d.process("p", t)
+        t += min5; d.process("p", t)   // count=1 for 5
+        t += min5; d.process("p", t)   // count=2 for 5
+        t += min15; d.process("p", t)  // count restarts → count=1 for 15
         assertThat(d.currentIntervalMs("p")).isEqualTo(min1)
-        t += min15; d.process("p", 140, t)  // count=2 for 15
-        t += min15; d.process("p", 150, t)  // count=3 for 15 → snap
+        t += min15; d.process("p", t)  // count=2 for 15
+        t += min15; d.process("p", t)  // count=3 for 15 → snap
         assertThat(d.currentIntervalMs("p")).isEqualTo(min15)
     }
 
@@ -183,12 +196,12 @@ class GlucoseDeduplicatorTest {
     @Test
     fun `two packages have independent state`() {
         val d = GlucoseDeduplicator(configWith("a" to 5, "b" to 1), MemStore())
-        d.process("a", 100, 0L)
-        d.process("b", 200, 0L)
-        // a is on 5min: same value at 1min rejected.
-        assertThat(d.process("a", 100, min1)).isFalse()
-        // b is on 1min: same value at 1min accepted (1min gap, threshold ~48s).
-        assertThat(d.process("b", 200, min1)).isTrue()
+        d.process("a", 0L)
+        d.process("b", 0L)
+        // a is on 5min: reading at 1min rejected.
+        assertThat(d.process("a", min1)).isFalse()
+        // b is on 1min: reading at 1min accepted (1min gap, threshold ~48s).
+        assertThat(d.process("b", min1)).isTrue()
     }
 
     // ----- persistence -----
@@ -198,55 +211,41 @@ class GlucoseDeduplicatorTest {
         val store = MemStore()
         val cfg = configWith("p" to 5)
         val d1 = GlucoseDeduplicator(cfg, store)
-        d1.process("p", 100, 0L)
-        d1.process("p", 100, min5)
+        d1.process("p", 0L)
+        d1.process("p", min5)
         val intervalBefore = d1.currentIntervalMs("p")
 
         val d2 = GlucoseDeduplicator(cfg, store)
         assertThat(d2.currentIntervalMs("p")).isEqualTo(intervalBefore)
-        // Same value at 30s after the last accepted (which was at min5) → rejected as duplicate.
-        assertThat(d2.process("p", 100, min5 + 30_000L)).isFalse()
+        // 30s after the last accepted (which was at min5) → rejected as duplicate.
+        assertThat(d2.process("p", min5 + 30_000L)).isFalse()
     }
 
-    // ----- adaptation to wrong seed (the user's explicit ask) -----
-
-    @Test
-    fun `wrong-high seed converges to true short interval via value-aware snap-down`() {
-        // Seeded 15min, real 5min, distinct values each cycle.
-        val d = GlucoseDeduplicator(configWith("p" to 15), MemStore())
-        var t = 0L
-        var v = 100
-        d.process("p", v, t)
-        repeat(3) {
-            t += min5; v += 2
-            d.process("p", v, t)
-        }
-        assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
-    }
+    // ----- adaptation to wrong seed -----
 
     @Test
     fun `wrong-low seed converges upward after three consistent long gaps`() {
         // Seeded 1min, real 5min.
         val d = GlucoseDeduplicator(configWith("p" to 1), MemStore())
         var t = 0L
-        var v = 100
-        d.process("p", v, t)
+        d.process("p", t)
         repeat(3) {
-            t += min5; v += 2
-            d.process("p", v, t)
+            t += min5
+            d.process("p", t)
         }
         assertThat(d.currentIntervalMs("p")).isEqualTo(min5)
     }
 
     @Test
-    fun `notification spam at same value with wrong-high seed is still rejected`() {
-        // Even with seed=15 wrong for a 5min sensor, identical-value reposts within window
-        // must still be deduped (this is the original bug).
+    fun `notification spam with wrong-high seed is still rejected`() {
+        // Even with seed=15 wrong for a 5min sensor, reposts within window must still be deduped.
+        // Wrong-high seed is a conservative over-estimate; snap-up does not apply and the seed
+        // stays. (Packages with wrong-high seeds must be corrected in the JSON.)
         val d = GlucoseDeduplicator(configWith("p" to 15), MemStore())
-        d.process("p", 100, 0L)
-        assertThat(d.process("p", 100, 30_000L)).isFalse()
-        assertThat(d.process("p", 100, min1)).isFalse()
-        assertThat(d.process("p", 100, min3)).isFalse()
+        d.process("p", 0L)
+        assertThat(d.process("p", 30_000L)).isFalse()
+        assertThat(d.process("p", min1)).isFalse()
+        assertThat(d.process("p", min3)).isFalse()
     }
 
     @Test

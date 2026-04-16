@@ -9,16 +9,20 @@ import org.json.JSONObject
  * Per-package deduplication for glucose readings extracted from CGM notifications.
  *
  * The same CGM notification is often re-posted multiple times during a single sensor cycle,
- * producing duplicate readings. This class enforces a per-package interval window and, when a
- * notification arrives early but carries a *different* value, treats it as evidence that the
- * effective sensor cadence is shorter than currently assumed (snap-down).
+ * producing duplicate readings. This class enforces a per-package interval window: any reading
+ * arriving within that window is rejected as a duplicate, regardless of value. Short-gap
+ * value changes (e.g. Dexcom posting the old value and the new 5-min reading within seconds
+ * during a transition) are notification noise, not evidence of a shorter sensor cadence.
  *
- * Adaptation rules:
- *  - **Snap down** (shorter interval) — single sample is enough. Triggered either by a within-window
- *    notification with a new value, or by a gap that snaps to a known interval shorter than current.
+ * Adaptation:
  *  - **Snap up** (longer interval) — requires [SNAP_UP_CONSECUTIVE] consecutive gaps that snap to the
- *    same larger known interval, with no shorter gaps interrupting. This avoids treating one missed
- *    reading as a sensor-cadence change.
+ *    same larger known interval, with no shorter gaps interrupting. This covers seed-too-low
+ *    cases (e.g. default 5 min for an actual 15-min sensor).
+ *  - **No snap down.** The configured seed (or default) is a hard floor. All production packages
+ *    are seeded with their true cadence in `notification_reader_packages.json`; unknown packages
+ *    default to 5 min, which is the shortest real CGM cadence we expect. Allowing the interval to
+ *    decay below the seed was the source of the Dexcom field bug where a single transition glitch
+ *    permanently dropped dedup to 1-min mode.
  *
  * Known intervals: 1, 3, 5, 15 minutes (mapped via [snapGapToKnownIntervalMs]).
  */
@@ -36,7 +40,6 @@ class GlucoseDeduplicator(
 
     private data class State(
         var lastAcceptedTimestamp: Long,
-        var lastValueMgdl: Int,
         var intervalMs: Long,
         var pendingLongerIntervalMs: Long,
         var consecutiveLongGapCount: Int
@@ -49,60 +52,43 @@ class GlucoseDeduplicator(
      * a detected duplicate. Caller must only invoke this after parsing a valid glucose value.
      */
     @Synchronized
-    fun process(packageName: String, valueMgdl: Int, now: Long): Boolean {
+    fun process(packageName: String, now: Long): Boolean {
         val state = states[packageName]
         if (state == null) {
             val seed = packageConfig.intervalForPackage(packageName, defaultIntervalMs)
-            states[packageName] = State(now, valueMgdl, seed, 0L, 0)
+            states[packageName] = State(now, seed, 0L, 0)
             persist()
             return true
         }
 
         val gap = now - state.lastAcceptedTimestamp
         val threshold = state.intervalMs - state.intervalMs / 5
-        val sameValue = valueMgdl == state.lastValueMgdl
 
-        if (gap < threshold) {
-            if (sameValue) return false
-            // Different value despite short gap → real reading, snap down to the observed gap.
-            val snapped = snapGapToKnownIntervalMs(gap)
-            if (snapped < state.intervalMs) {
-                state.intervalMs = snapped
-            }
-            state.pendingLongerIntervalMs = 0L
-            state.consecutiveLongGapCount = 0
-        } else {
-            val snapped = snapGapToKnownIntervalMs(gap)
-            when {
-                snapped < state.intervalMs -> {
-                    state.intervalMs = snapped
-                    state.pendingLongerIntervalMs = 0L
-                    state.consecutiveLongGapCount = 0
-                }
+        if (gap < threshold) return false
 
-                snapped > state.intervalMs -> {
-                    if (snapped == state.pendingLongerIntervalMs) {
-                        state.consecutiveLongGapCount++
-                        if (state.consecutiveLongGapCount >= SNAP_UP_CONSECUTIVE) {
-                            state.intervalMs = snapped
-                            state.pendingLongerIntervalMs = 0L
-                            state.consecutiveLongGapCount = 0
-                        }
-                    } else {
-                        state.pendingLongerIntervalMs = snapped
-                        state.consecutiveLongGapCount = 1
+        val snapped = snapGapToKnownIntervalMs(gap)
+        when {
+            snapped > state.intervalMs -> {
+                if (snapped == state.pendingLongerIntervalMs) {
+                    state.consecutiveLongGapCount++
+                    if (state.consecutiveLongGapCount >= SNAP_UP_CONSECUTIVE) {
+                        state.intervalMs = snapped
+                        state.pendingLongerIntervalMs = 0L
+                        state.consecutiveLongGapCount = 0
                     }
+                } else {
+                    state.pendingLongerIntervalMs = snapped
+                    state.consecutiveLongGapCount = 1
                 }
+            }
 
-                else                       -> {
-                    state.pendingLongerIntervalMs = 0L
-                    state.consecutiveLongGapCount = 0
-                }
+            else                       -> {
+                state.pendingLongerIntervalMs = 0L
+                state.consecutiveLongGapCount = 0
             }
         }
 
         state.lastAcceptedTimestamp = now
-        state.lastValueMgdl = valueMgdl
         persist()
         return true
     }
@@ -119,7 +105,6 @@ class GlucoseDeduplicator(
                 JSONObject()
                     .put("p", pkg)
                     .put("t", s.lastAcceptedTimestamp)
-                    .put("v", s.lastValueMgdl)
                     .put("i", s.intervalMs)
                     .put("pi", s.pendingLongerIntervalMs)
                     .put("c", s.consecutiveLongGapCount)
@@ -138,7 +123,6 @@ class GlucoseDeduplicator(
                 val o = arr.getJSONObject(i)
                 map[o.getString("p")] = State(
                     lastAcceptedTimestamp = o.getLong("t"),
-                    lastValueMgdl = o.getInt("v"),
                     intervalMs = o.getLong("i"),
                     pendingLongerIntervalMs = o.optLong("pi", 0L),
                     consecutiveLongGapCount = o.optInt("c", 0)
@@ -157,8 +141,8 @@ class GlucoseDeduplicator(
 
         /**
          * Snap a measured gap to the nearest known sensor interval using fixed thresholds.
-         * Boundaries chosen between known values so jitter (a few seconds either way of the true
-         * interval) stays within the correct band.
+         * Used for snap-up detection only (seed is a hard floor, so shorter bands are only
+         * reached when a package is seeded with a low interval).
          */
         fun snapGapToKnownIntervalMs(gapMs: Long): Long = when {
             gapMs <= 2 * 60_000L  -> 1 * 60_000L

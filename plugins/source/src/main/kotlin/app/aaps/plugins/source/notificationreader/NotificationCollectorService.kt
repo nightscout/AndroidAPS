@@ -89,7 +89,7 @@ class NotificationCollectorService : NotificationListenerService() {
         aapsLogger.debug(LTag.BGSOURCE, "Glucose: ${result.glucoseMgdl} mg/dL from $packageName (${result.sourceSensor})")
 
         val now = System.currentTimeMillis()
-        if (deduplicator?.process(packageName, result.glucoseMgdl, now) != true) {
+        if (deduplicator?.process(packageName, now) != true) {
             aapsLogger.debug(LTag.BGSOURCE, "Skipping duplicate notification from $packageName")
             return
         }
