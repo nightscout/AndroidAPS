@@ -21,6 +21,7 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcPatchPump
@@ -67,6 +68,8 @@ class StatusViewModel @Inject constructor(
         persistenceLayer.observeChanges(TE::class.java)
             .onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventPumpStatusChanged::class.java)
+            .onEach { refreshState() }.launchIn(viewModelScope)
+        tickerFlow(60_000L)
             .onEach { refreshState() }.launchIn(viewModelScope)
     }
 
