@@ -91,7 +91,7 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Ritm cardiac</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
-    <string name="triggerSensorAgeLabel">Vârsta senzorului</string>
+    <string name="triggerSensorAgeLabel">Vechimea senzorului</string>
     <string name="triggerSensorAgeDesc">Vechimea senzorului %1$s %2$.1f oră</string>
     <string name="triggerCannulaAgeLabel">Vechimea canulei</string>
     <string name="triggerCannulaAgeDesc">Vechimea canulei %1$s %2$.1f oră</string>
@@ -121,7 +121,7 @@
     <string name="add_automation">Adăugați regulă</string>
     <string name="stop_processing">Oprire procesare</string>
     <!--    Reminders-->
-    <string name="time_to_eat">E timpul pentru a mânca!\nRulează asistentul de bolusare și refă calculele.</string>
+    <string name="time_to_eat">E timpul pentru a mânca!\nRulați asistentul de bolusare și refaceți calculele.</string>
     <string name="time_to_bolus">Timpul să bolusați!\nAcționați Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="error_setting_reminder">Eroare la setarea alarmei viitoare</string>
     <!--    Autotune-->
