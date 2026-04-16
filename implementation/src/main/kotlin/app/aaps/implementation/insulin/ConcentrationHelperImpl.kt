@@ -77,7 +77,7 @@ override fun basalTbrString(rate: PumpRate, startTime: Long, durationInMin: Int,
         val passedMinutes = durationInMin?.let {
             min(T.msecs(max(0, dateUtil.now() - startTime)).mins().toInt(), it)
         } ?: T.msecs(dateUtil.now() - startTime).mins().toInt()
-        val format = durationInMin?.let {R.string.concentration_tbr_format } ?: R.string.concentration_tbr_format
+        val format = durationInMin?.let {R.string.concentration_tbr_format } ?: R.string.concentration_ago_format
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         if (isU100()) {
             val amountString = decimalFormatter.toPumpSupportedBolusWithUnits(amount.cU, bolusStep)
