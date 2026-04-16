@@ -132,15 +132,33 @@
     <!-- Wear preferences -->
     <string name="pref_title_wear_control">Điều khiển Wear OS</string>
     <string name="pref_summary_wear_control">Điều khiển AAPS từ đồng hồ Wear OS.</string>
+    <string name="pref_title_wear_wizard_bg">Bao gồm đường huyết trong wizard</string>
+    <string name="pref_title_wear_wizard_tt">Bao gồm mục tiêu tạm thời trong wizard</string>
+    <string name="pref_title_wear_wizard_trend">Bao gồm xu hướng trong wizard</string>
+    <string name="pref_title_wear_wizard_cob">Bao gồm COB trong wizard</string>
+    <string name="pref_title_wear_wizard_iob">Bao gồm IOB trong wizard</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Cho phép mặt đồng hồ tùy chỉnh</string>
+    <string name="pref_title_wear_notify_on_smb">Thông báo khi có SMB</string>
     <string name="pref_summary_wear_notify_on_smb">Gửi thông báo đến đồng hồ khi SMB được thực hiện.</string>
+    <string name="pref_title_wear_broadcast_data">Gửi dữ liệu tới đồng hồ</string>
     <string name="pref_summary_wear_broadcast_data">Phát dữ liệu AAPS tới ứng dụng đồng hồ bên thứ ba qua intent.</string>
     <!-- Wizard preferences -->
+    <string name="pref_title_wizard_calculation_visible">Hiển thị trình hướng dẫn tính toán</string>
+    <string name="pref_title_wizard_correction_percent">Sử dụng phần trăm hiệu chỉnh</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Quản lý luân chuyển vị trí bơm</string>
+    <string name="pref_title_site_rotation_manage_cgm">Quản lý luân chuyển vị trí CGM</string>
     <!-- IntKey: Overview preferences -->
     <string name="pref_title_carbs_button_increment_1">Nút carb tăng lần 1</string>
     <string name="pref_title_carbs_button_increment_2">Nút carb tăng lần 2</string>
     <string name="pref_title_carbs_button_increment_3">Nút carb tăng lần 3</string>
     <string name="carb_increment_button_message">Số lượng carb sẽ được thêm khi nhấn nút</string>
+    <string name="pref_title_cage_warning">Ngưỡng cảnh báo tuổi của kim luồn</string>
+    <string name="pref_title_cage_critical">Ngưỡng nguy hiểm tuổi của cannula</string>
+    <string name="pref_title_iage_warning">Ngưỡng nguy hiểm tuổi của insulin</string>
+    <string name="pref_title_iage_critical">Ngưỡng nguy hiểm tuổi của insulin</string>
+    <string name="pref_title_sage_warning">Ngưỡng cảnh báo tuổi của cảm biến</string>
+    <string name="pref_title_sage_critical">Ngưỡng nguy hiểm tuổi của cảm biến</string>
     <string name="pref_title_sbat_warning">Ngưỡng cảnh báo mức pin cảm biến</string>
     <string name="pref_title_sbat_critical">Ngưỡng pin cảm biến mức nguy cấp</string>
     <string name="pref_title_bage_warning">Ngưỡng cảnh báo pin bơm</string>
@@ -149,8 +167,24 @@
     <string name="pref_title_res_critical">Ngưỡng bình insulin nguy cấp</string>
     <string name="pref_title_batt_warning">Ngưỡng cảnh báo mức pin bơm</string>
     <string name="pref_title_batt_critical">Ngưỡng pin bơm mức nguy cấp</string>
+    <string name="pref_title_bolus_percentage">Phần trăm liều bolus</string>
+    <string name="deliverpartofboluswizard">Áp dụng giá trị này cho hiệu chỉnh đường huyết và carb trong kết quả của bolus wizard\'s</string>
+    <string name="pref_title_reset_bolus_percentage_time">Đặt lại thời gian áp dụng phần trăm bolus</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Cung cấp bolus đầy đủ (100%) nếu dữ liệu đường huyết đã cũ hơn</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Thời gian chờ bảo vệ</string>
+    <string name="pref_title_protection_type_application">Mức 0: Bảo vệ ứng dụng</string>
+    <string name="pref_summary_protection_type_application">Khi khởi động ứng dụng. Độc lập với các mức khác</string>
+    <string name="pref_title_protection_type_bolus">Mức 1: Bảo vệ liều bolus</string>
+    <string name="pref_summary_protection_type_bolus">Điều trị, kích hoạt hồ sơ. Yêu cầu Mức 2</string>
+    <string name="pref_title_protection_type_settings">Mức 2: Bảo vệ cài đặt</string>
+    <string name="pref_summary_protection_type_settings">Chỉnh sửa hồ sơ, cài đặt</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Không bảo mật</string>
+    <string name="biometric">Sinh trắc học</string>
+    <string name="master_password">Mật khẩu chính</string>
+    <string name="custom_password">Mật khẩu tùy chọn</string>
+    <string name="custom_pin">Mã PIN tùy chọn</string>
     <!-- IntKey: Safety preferences -->
     <!-- IntKey: Loop preferences -->
     <string name="loop_open_mode_min_change_summary" formatted="false">Mở vòng lặp sẽ chỉ hiển thị yêu cầu thay đổi mới nếu thay đổi lớn hơn giá trị này theo %. Giá trị mặc định là 20%</string>
