@@ -298,7 +298,6 @@
     <string name="lang_tr">土耳其语</string>
     <string name="lang_zh_tw">繁体中文</string>
     <string name="lang_zh_cn">简体中文</string>
-    <string name="pref_title_skin">皮肤</string>
     <string name="pref_title_patient_name">名字</string>
     <string name="pref_summary_patient_name">用于标识此AAPS实例的名称（显示在报告和同步中）</string>
     <!-- StringKey: Directory preferences -->
