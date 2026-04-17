@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">ZACHOWAJ</string>
-    <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
-    <string name="invalid">NIEPRAWIDŁOWY</string>
     <string name="close_navigation">Zamknij menu</string>
-    <string name="remove_items">Usuń elementy</string>
-    <string name="sort_items">Sortuj elementy</string>
     <string name="authorizationfailed">Autoryzacja nie powiodła się</string>
-    <string name="cannula">Kaniula</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Usuń wybrane pozycje</string>
-    <string name="count_selected">Wybrany %1$d</string>
-    <string name="sort_label">Sortuj</string>
-    <string name="search">Szukaj</string>
     <string name="select">Wybierz</string>
     <string name="set">Ustaw</string>
 </resources>
