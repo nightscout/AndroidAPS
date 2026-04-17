@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">Save</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">INVALID</string>
     <string name="close_navigation">Close navigation</string>
-    <string name="remove_items">Remove items</string>
-    <string name="sort_items">Sort items</string>
     <string name="authorizationfailed">Authorization failed</string>
-    <string name="cannula">Cannula</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Remove selected items</string>
-    <string name="count_selected">%1$d selected</string>
-    <string name="sort_label">Sort</string>
-    <string name="search">Search</string>
     <string name="use_compose_main_screen">Use Compose main screen (experimental)</string>
     <string name="switch_to_compose_ui">Switch to Compose UI</string>
     <string name="switch_to_classic_ui">Switch to classic UI</string>
