@@ -285,10 +285,6 @@
     <string name="current_insulin">Aktiv for øyeblikket</string>
     <string name="change_insulin">Endre</string>
     <string name="select_insulin_description">Velg insulinet du fyller pumpen med. Et profilbytte vil bli brukt etter aktivering/priming.</string>
-    <string name="bolus_delivered">%1$.2f E / %2$.2f E</string>
-    <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
-    <string name="pump_insulin_cu">%1$.2f CU</string>
-    <string name="pump_insulin_cu1">%1$.1f CU</string>
     <string name="selected_insulin">Valgt insulin: %1$s</string>
     <string name="record_insulin_hint">Hvis du registrerer insulin som gis med penn, velg riktig insulintype nedenfor. Dosen er alltid i internasjonale enheter.</string>
     <!--    ProfileSwitch-->
