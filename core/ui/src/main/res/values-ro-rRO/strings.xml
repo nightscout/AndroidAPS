@@ -285,6 +285,10 @@
     <string name="current_insulin">Activ în prezent</string>
     <string name="change_insulin">Schimbați</string>
     <string name="select_insulin_description">Selectați insulina cu care umpleți pompa. După activare/amorsare, va fi aplicată o modificare de profil.</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina selectată: %1$s</string>
     <string name="record_insulin_hint">Dacă introduceți insulina administrată prin stiloul injector (pen), selectați tipul corect de insulină de mai jos. Doza este întotdeauna în Unități Internaționale.</string>
     <!--    ProfileSwitch-->
