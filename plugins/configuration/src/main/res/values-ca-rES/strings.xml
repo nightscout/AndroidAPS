@@ -33,14 +33,11 @@
     <string name="request">Petició</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Configurador</string>
     <string name="configbuilder_aps_description">Quin algoritme APS ha d\'anar fent ajustos de teràpia?</string>
     <string name="configbuilder_general_description">Plugins diversos que us poden ser útils.</string>
     <string name="configbuilder_constraints_description">Quines restriccions s\'estan aplicant?</string>
     <string name="configbuilder_insulin_description">Quin tipus d\'insulina feu servir?</string>
     <string name="configbuilder_sensitivity_description">Quin algoritme de sensibilitat voleu utilitzar?</string>
-    <string name="config_builder_shortname">CONF</string>
-    <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
