@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.ECarbActivity
+import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
@@ -146,6 +147,7 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
             ComplicationAction.WIZARD -> intentOpen = Intent(this, WizardActivity::class.java)
             ComplicationAction.BOLUS -> intentOpen = Intent(this, TreatmentActivity::class.java)
             ComplicationAction.E_CARB -> intentOpen = Intent(this, ECarbActivity::class.java)
+            ComplicationAction.TEMP_TARGET -> intentOpen = Intent(this, TempTargetActivity::class.java)
             ComplicationAction.STATUS -> intentOpen = Intent(this, StatusMenuActivity::class.java)
 
             ComplicationAction.WARNING_OLD, ComplicationAction.WARNING_SYNC -> {

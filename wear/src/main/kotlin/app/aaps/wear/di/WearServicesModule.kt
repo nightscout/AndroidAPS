@@ -7,6 +7,7 @@ import app.aaps.wear.complications.BrCobIobComplicationExt2
 import app.aaps.wear.complications.BrComplication
 import app.aaps.wear.complications.BrIobComplication
 import app.aaps.wear.complications.BrTtComplication
+import app.aaps.wear.complications.TargetComplication
 import app.aaps.wear.complications.CobDetailedComplication
 import app.aaps.wear.complications.CobIconComplication
 import app.aaps.wear.complications.CobIobComplication
@@ -46,6 +47,7 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplicationExt2(): BrCobIobComplicationExt2
     @ContributesAndroidInjector abstract fun contributesBrIobComplication(): BrIobComplication
     @ContributesAndroidInjector abstract fun contributesBrTtComplication(): BrTtComplication
+    @ContributesAndroidInjector abstract fun contributesTargetComplication(): TargetComplication
     @ContributesAndroidInjector abstract fun contributesBrComplication(): BrComplication
     @ContributesAndroidInjector abstract fun contributesCobDetailedComplication(): CobDetailedComplication
     @ContributesAndroidInjector abstract fun contributesCobIconComplication(): CobIconComplication

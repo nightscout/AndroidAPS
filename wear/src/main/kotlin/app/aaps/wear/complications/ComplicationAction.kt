@@ -47,6 +47,11 @@ enum class ComplicationAction {
     STATUS,
 
     /**
+     * Opens the temp target entry dialog.
+     */
+    TEMP_TARGET,
+
+    /**
      * Opens warning dialog about watch-phone sync issues.
      * Displayed when data hasn't updated from phone recently.
      */
