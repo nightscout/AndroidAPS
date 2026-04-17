@@ -10,8 +10,7 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.workflow.LoggingWorker
@@ -32,11 +31,11 @@ class PrepareTemporaryTargetDataWorker(
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var loop: Loop
-    @Inject lateinit var rxBus: RxBus
     private var ctx: Context = rh.getThemedCtx(context)
 
     class PrepareTemporaryTargetData(
-        val overviewData: OverviewData
+        val overviewData: OverviewData,
+        val signals: CalculationSignalsEmitter
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -44,7 +43,7 @@ class PrepareTemporaryTargetDataWorker(
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareTemporaryTargetData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0, false))
+        data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0)
         val profile = profileFunction.getProfile() ?: return Result.success(workDataOf("Error" to "missing profile"))
         var endTime = data.overviewData.endTime
         val fromTime = data.overviewData.fromTime
@@ -55,7 +54,7 @@ class PrepareTemporaryTargetDataWorker(
         while (time < endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
-            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt(), false))
+            data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt())
             val tt = persistenceLayer.getTemporaryTargetActiveAt(time)
             val value: Double = if (tt != null) {
                 profileUtil.fromMgdlToUnits(tt.target())
@@ -77,7 +76,7 @@ class PrepareTemporaryTargetDataWorker(
             it.color = rh.gac(ctx, app.aaps.core.ui.R.attr.tempTargetBackgroundColor)
             it.thickness = 2
         }
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 100, false))
+        data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 100)
         return Result.success()
     }
 }

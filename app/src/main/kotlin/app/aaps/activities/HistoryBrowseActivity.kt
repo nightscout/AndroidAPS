@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.coroutines.FlowPreview::class)
+
 package app.aaps.activities
 
 import android.annotation.SuppressLint
@@ -17,10 +19,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
-import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
-import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
@@ -34,6 +34,13 @@ import app.aaps.plugins.main.general.overview.graphData.GraphData
 import com.google.android.material.datepicker.MaterialDatePicker
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -57,6 +64,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var graphDataProvider: Provider<GraphData>
 
     private val disposable = CompositeDisposable()
+    private var signalsScope: CoroutineScope? = null
 
     private val secondaryGraphs = ArrayList<GraphViewWithCleanup>()
     private val secondaryGraphsLabel = ArrayList<TextView>()
@@ -149,6 +157,8 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        signalsScope?.cancel()
+        signalsScope = null
         calculationWorkflow.stopCalculation(CalculationWorkflow.HISTORY_CALCULATION, "onPause")
     }
 
@@ -174,14 +184,6 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             .observeOn(aapsSchedulers.io)
             .subscribe({ refreshLoop("EventAutosensCalculationFinished") }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventIobCalculationProgress::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateCalcProgress(it.finalPercent) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventUpdateOverviewGraph::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
-        disposable += rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
@@ -193,6 +195,14 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
                            setTime(historyBrowserData.overviewData.fromTime)
                            loadAll("rangeChange")
                        }, fabricPrivacy::logException)
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main).also { signalsScope = it }
+        historyBrowserData.signals.progress
+            .onEach { updateCalcProgress(it) }
+            .launchIn(scope)
+        historyBrowserData.signals.graphUpdates
+            .debounce(1000)
+            .onEach { updateGUI("HistoryGraphUpdate") }
+            .launchIn(scope)
         updateCalcProgress(100)
         if (historyBrowserData.overviewData.fromTime == 0L) {
             // set start of current day
@@ -275,6 +285,8 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             job = CalculationWorkflow.HISTORY_CALCULATION,
             iobCobCalculator = historyBrowserData.iobCobCalculator,
             overviewData = historyBrowserData.overviewData,
+            cache = historyBrowserData.cache,
+            signals = historyBrowserData.signals,
             reason = from,
             end = historyBrowserData.overviewData.toTime,
             bgDataReload = true,

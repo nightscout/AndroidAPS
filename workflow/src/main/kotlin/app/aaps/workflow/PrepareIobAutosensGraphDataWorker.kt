@@ -40,10 +40,9 @@ import app.aaps.core.interfaces.overview.graph.VarSensGraphData
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.workflow.LoggingWorker
@@ -67,11 +66,7 @@ class PrepareIobAutosensGraphDataWorker(
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var decimalFormatter: DecimalFormatter
-
-    // MIGRATION: KEEP - New cache for Compose graphs
-    @Inject lateinit var overviewDataCache: OverviewDataCache
 
     private var ctx: Context
 
@@ -81,7 +76,9 @@ class PrepareIobAutosensGraphDataWorker(
 
     class PrepareIobAutosensData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
-        val overviewData: OverviewData
+        val overviewData: OverviewData,
+        val cache: OverviewDataCache,
+        val signals: CalculationSignalsEmitter
     )
 
     class IobTotalDataPoint(val i: IobTotal) : DataPointWithLabelInterface {
@@ -132,7 +129,7 @@ class PrepareIobAutosensGraphDataWorker(
         val fromTimeOld = data.overviewData.fromTime
 
         // MIGRATION: KEEP - Get 24h time range from cache for Compose
-        val cacheTimeRange = overviewDataCache.timeRangeFlow.value
+        val cacheTimeRange = data.cache.timeRangeFlow.value
         val fromTimeNew = cacheTimeRange?.fromTime ?: fromTimeOld
         val endTimeNew = cacheTimeRange?.endTime ?: endTimeOld
 
@@ -140,7 +137,7 @@ class PrepareIobAutosensGraphDataWorker(
         val endTime = max(endTimeOld, endTimeNew)
         val fromTime = min(fromTimeOld, fromTimeNew)
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0, false))
+        data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0)
 
         // ========== MIGRATION: DELETE - Start GraphView arrays ==========
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -197,7 +194,7 @@ class PrepareIobAutosensGraphDataWorker(
         while (time <= endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
-            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, progress.toInt(), false))
+            data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, progress.toInt())
             val profile = profileFunction.getProfile(time)
             if (profile == null) {
                 time += 5 * 60 * 1000L
@@ -439,60 +436,60 @@ class PrepareIobAutosensGraphDataWorker(
         // ========== MIGRATION: DELETE - End VAR_SENS GraphView ==========
 
         // ========== MIGRATION: KEEP - Start Compose cache updates ==========
-        overviewDataCache.updateIobGraph(
+        data.cache.updateIobGraph(
             IobGraphData(
                 iob = iobListCompose,
                 predictions = iobPredictionsListCompose
             )
         )
-        overviewDataCache.updateAbsIobGraph(
+        data.cache.updateAbsIobGraph(
             AbsIobGraphData(
                 absIob = absIobListCompose
             )
         )
-        overviewDataCache.updateCobGraph(
+        data.cache.updateCobGraph(
             CobGraphData(
                 cob = cobListCompose,
                 failOverPoints = cobFailOverListCompose
             )
         )
-        overviewDataCache.updateActivityGraph(
+        data.cache.updateActivityGraph(
             ActivityGraphData(
                 activity = activityListCompose,
                 activityPrediction = activityPredictionListCompose,
                 maxActivity = data.overviewData.maxIAValue
             )
         )
-        overviewDataCache.updateBgiGraph(
+        data.cache.updateBgiGraph(
             BgiGraphData(
                 bgi = bgiListCompose,
                 bgiPrediction = bgiPredictionListCompose
             )
         )
-        overviewDataCache.updateDeviationsGraph(
+        data.cache.updateDeviationsGraph(
             DeviationsGraphData(
                 deviations = deviationsListCompose
             )
         )
-        overviewDataCache.updateRatioGraph(
+        data.cache.updateRatioGraph(
             RatioGraphData(
                 ratio = ratioListCompose
             )
         )
-        overviewDataCache.updateDevSlopeGraph(
+        data.cache.updateDevSlopeGraph(
             DevSlopeGraphData(
                 dsMax = dsMaxListCompose,
                 dsMin = dsMinListCompose
             )
         )
-        overviewDataCache.updateVarSensGraph(
+        data.cache.updateVarSensGraph(
             VarSensGraphData(
                 varSens = varSensListCompose
             )
         )
         // ========== MIGRATION: KEEP - End Compose cache updates ==========
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100, false))
+        data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100)
         return Result.success()
     }
 }

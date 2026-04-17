@@ -20,11 +20,10 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
@@ -41,7 +40,6 @@ class PrepareTreatmentsDataWorker(
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var translator: Translator
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
@@ -50,7 +48,8 @@ class PrepareTreatmentsDataWorker(
 
     // MIGRATION: DELETE - Remove after OverviewFragment converted to Compose
     class PrepareTreatmentsData(
-        val overviewData: OverviewData // DELETE: This parameter goes away
+        val overviewData: OverviewData, // DELETE: This parameter goes away
+        val signals: CalculationSignalsEmitter
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -61,7 +60,7 @@ class PrepareTreatmentsDataWorker(
         val endTime = data.overviewData.endTime
         val fromTime = data.overviewData.fromTime
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, false))
+        data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0)
 
         // ========== MIGRATION: DELETE - Start GraphView-specific code ==========
         data.overviewData.maxTreatmentsValue = 0.0
@@ -136,7 +135,7 @@ class PrepareTreatmentsDataWorker(
                 .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.stepsColor) }
         // ========== MIGRATION: DELETE - End GraphView-specific code ==========
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, false))
+        data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100)
         return Result.success()
     }
 

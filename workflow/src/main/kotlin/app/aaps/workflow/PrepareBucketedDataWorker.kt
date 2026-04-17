@@ -39,13 +39,11 @@ class PrepareBucketedDataWorker(
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
 
-    // MIGRATION: KEEP - New cache for Compose graphs
-    @Inject lateinit var overviewDataCache: OverviewDataCache
-
     // MIGRATION: DELETE - Remove after OverviewFragment converted to Compose
     class PrepareBucketedData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
-        val overviewData: OverviewData // DELETE: This parameter goes away
+        val overviewData: OverviewData, // DELETE: This parameter goes away
+        val cache: OverviewDataCache
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -58,8 +56,8 @@ class PrepareBucketedDataWorker(
         val toTime = data.overviewData.toTime
         val fromTime = data.overviewData.fromTime
         // MIGRATION: KEEP (replace with) - After cleanup, get from new cache:
-        // val toTime = overviewDataCache.timeRange?.toTime ?: return Result.failure()
-        // val fromTime = overviewDataCache.timeRange?.fromTime ?: return Result.failure()
+        // val toTime = data.cache.timeRange?.toTime ?: return Result.failure()
+        // val fromTime = data.cache.timeRange?.fromTime ?: return Result.failure()
 
         // MIGRATION: KEEP - Get bucketed data from IobCobCalculator
         val bucketedData = data.iobCobCalculator.ads.getBucketedDataTableCopy() ?: return Result.success()
@@ -80,10 +78,10 @@ class PrepareBucketedDataWorker(
 
         // ========== MIGRATION: KEEP - Start Compose/Vico code ==========
         // Set 24h time range in cache if not already set (this worker runs first in chain)
-        if (overviewDataCache.timeRangeFlow.value == null) {
+        if (data.cache.timeRangeFlow.value == null) {
             val toTimeNew = toTime
             val fromTimeNew = toTimeNew - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
-            overviewDataCache.updateTimeRange(
+            data.cache.updateTimeRange(
                 TimeRange(
                     fromTime = fromTimeNew,
                     toTime = toTimeNew,
@@ -91,7 +89,7 @@ class PrepareBucketedDataWorker(
                 )
             )
         }
-        val currentTimeRange = overviewDataCache.timeRangeFlow.value!!
+        val currentTimeRange = data.cache.timeRangeFlow.value!!
         val newFromTime = currentTimeRange.fromTime
         val newToTime = currentTimeRange.toTime
 
@@ -119,7 +117,7 @@ class PrepareBucketedDataWorker(
                 )
             }
 
-        overviewDataCache.updateBucketedData(bucketedDataPoints)
+        data.cache.updateBucketedData(bucketedDataPoints)
         // ========== MIGRATION: KEEP - End Compose/Vico code ==========
 
         return Result.success()

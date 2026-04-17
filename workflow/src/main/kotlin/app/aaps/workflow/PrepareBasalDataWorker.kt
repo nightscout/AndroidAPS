@@ -11,8 +11,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
@@ -27,12 +26,12 @@ class PrepareBasalDataWorker(
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var rxBus: RxBus
     private var ctx: Context = rh.getThemedCtx(context)
 
     class PrepareBasalData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
-        val overviewData: OverviewData
+        val overviewData: OverviewData,
+        val signals: CalculationSignalsEmitter
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -40,7 +39,7 @@ class PrepareBasalDataWorker(
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareBasalData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 0, false))
+        data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 0)
         val baseBasalArray: MutableList<ScaledDataPoint> = ArrayList()
         val tempBasalArray: MutableList<ScaledDataPoint> = ArrayList()
         val basalLineArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -55,7 +54,7 @@ class PrepareBasalDataWorker(
         while (time < endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
-            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, progress.toInt(), false))
+            data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, progress.toInt())
             val profile = profileFunction.getProfile(time)
             if (profile == null) {
                 time += 60 * 1000L
@@ -138,7 +137,7 @@ class PrepareBasalDataWorker(
                 absolutePaint.color = rh.gac(ctx, app.aaps.core.ui.R.attr.basal)
             })
         }
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 100, false))
+        data.signals.emitProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 100)
         return Result.success()
     }
 }

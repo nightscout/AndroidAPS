@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.workflow
 
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.HISTORY_CALCULATION
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 
@@ -43,11 +44,18 @@ interface CalculationWorkflow {
      * @param job [MAIN_CALCULATION] or [HISTORY_CALCULATION]
      * @param iobCobCalculator different instance for [HistoryBrowseActivity]
      * @param overviewData different instance for [HistoryBrowseActivity]
+     * @param cache per-scope Compose data cache — workers write graph data
+     *   into this instance (the owning scope reads from it).
+     * @param signals per-scope signals emitter — workers emit progress and
+     *   graph-update events into it so the owning scope (main/history) gets them
+     *   without any job-name filtering.
      */
     fun runCalculation(
         job: String,
         iobCobCalculator: IobCobCalculator,
         overviewData: OverviewData,
+        cache: OverviewDataCache,
+        signals: CalculationSignalsEmitter,
         reason: String,
         end: Long,
         bgDataReload: Boolean,

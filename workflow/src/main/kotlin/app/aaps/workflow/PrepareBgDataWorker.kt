@@ -42,13 +42,11 @@ class PrepareBgDataWorker(
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
 
-    // MIGRATION: KEEP - New cache for Compose graphs
-    @Inject lateinit var overviewDataCache: OverviewDataCache
-
     // MIGRATION: DELETE - Remove after OverviewFragment converted to Compose
     class PrepareBgData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
-        val overviewData: OverviewData // DELETE: This parameter goes away
+        val overviewData: OverviewData, // DELETE: This parameter goes away
+        val cache: OverviewDataCache
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -119,7 +117,7 @@ class PrepareBgDataWorker(
             }
 
         // Store time range in cache (observable by UI)
-        overviewDataCache.updateTimeRange(
+        data.cache.updateTimeRange(
             TimeRange(
                 fromTime = fromTimeNew,
                 toTime = toTimeNew,
@@ -128,7 +126,7 @@ class PrepareBgDataWorker(
         )
 
         // Update BG readings series independently
-        overviewDataCache.updateBgReadings(bgDataPoints)
+        data.cache.updateBgReadings(bgDataPoints)
         // ========== MIGRATION: KEEP - End Compose/Vico code ==========
 
         // NOTE: BgInfo is now updated reactively by OverviewDataCacheImpl

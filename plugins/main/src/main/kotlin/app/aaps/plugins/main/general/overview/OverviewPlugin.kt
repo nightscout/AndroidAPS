@@ -21,11 +21,11 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongComposedKey
@@ -40,6 +40,13 @@ import app.aaps.plugins.main.general.overview.keys.OverviewStringKey
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -62,6 +69,7 @@ class OverviewPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val notificationManager: NotificationManager,
+    private val signals: CalculationSignals,
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -77,6 +85,7 @@ class OverviewPlugin @Inject constructor(
 ), Overview {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
+    private var scope: CoroutineScope? = null
 
     override val overviewBus = RxBusImpl(aapsSchedulers, aapsLogger)
 
@@ -87,13 +96,17 @@ class OverviewPlugin @Inject constructor(
 
         notificationManager.createNotificationChannel()
 
-        disposable += rxBus
-            .toObservable(EventIobCalculationProgress::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           overviewData.calcProgressPct = it.finalPercent
-                           overviewBus.send(EventUpdateOverviewCalcProgress("EventIobCalculationProgress"))
-                       }, fabricPrivacy::logException)
+        val newScope = CoroutineScope(SupervisorJob() + Dispatchers.IO).also { scope = it }
+        // drop(1) skips the StateFlow's initial replay of 100 so we don't fire
+        // a spurious EventUpdateOverviewCalcProgress on every onStart.
+        signals.progress
+            .drop(1)
+            .onEach {
+                overviewData.calcProgressPct = it
+                overviewBus.send(EventUpdateOverviewCalcProgress("CalculationSignals"))
+            }
+            .launchIn(newScope)
+
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.io)
@@ -105,6 +118,8 @@ class OverviewPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
+        scope?.cancel()
+        scope = null
         super.onStop()
     }
 

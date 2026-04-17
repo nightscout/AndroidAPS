@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
-import app.aaps.core.interfaces.overview.graph.TimeRange
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -48,11 +47,11 @@ class PreparePredictionsWorker(
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var overviewDataCache: OverviewDataCache
     @Inject lateinit var preferences: Preferences
 
     class PreparePredictionsData(
-        val overviewData: OverviewData
+        val overviewData: OverviewData,
+        val cache: OverviewDataCache
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -123,12 +122,12 @@ class PreparePredictionsWorker(
             ?.sortedBy { it.timestamp }
             ?: emptyList()
 
-        overviewDataCache.updatePredictions(predictionDataPoints)
+        data.cache.updatePredictions(predictionDataPoints)
 
         // Update time range with endTime that includes predictions
-        val currentTimeRange = overviewDataCache.timeRangeFlow.value
+        val currentTimeRange = data.cache.timeRangeFlow.value
         if (currentTimeRange != null) {
-            overviewDataCache.updateTimeRange(
+            data.cache.updateTimeRange(
                 currentTimeRange.copy(endTime = data.overviewData.endTime)
             )
         }

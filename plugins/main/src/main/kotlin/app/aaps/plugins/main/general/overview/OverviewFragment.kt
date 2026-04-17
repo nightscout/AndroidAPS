@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.coroutines.FlowPreview::class)
+
 package app.aaps.plugins.main.general.overview
 
 import android.annotation.SuppressLint
@@ -69,7 +71,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
-import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewIobCob
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewSensitivity
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
@@ -79,6 +80,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
@@ -108,6 +110,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -157,6 +160,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var graphDataProvider: Provider<GraphData>
+    @Inject lateinit var signals: CalculationSignals
     @Inject lateinit var commandQueue: CommandQueue
 
     private val disposable = CompositeDisposable()
@@ -278,11 +282,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             .debounce(1L, TimeUnit.SECONDS)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateSensitivity() }, fabricPrivacy::logException)
-        disposable += activePlugin.activeOverview.overviewBus
-            .toObservable(EventUpdateOverviewGraph::class.java)
-            .debounce(1L, TimeUnit.SECONDS)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGraph() }, fabricPrivacy::logException)
+        signals.graphUpdates
+            .debounce(1000)
+            .onEach { updateGraph() }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
         viewLifecycleOwner.lifecycleScope.launch {
             notificationManager.notifications.collectLatest { updateNotification() }
         }
