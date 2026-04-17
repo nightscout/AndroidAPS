@@ -285,10 +285,6 @@
     <string name="current_insulin">Práve aktívny</string>
     <string name="change_insulin">Vymeň inzulín</string>
     <string name="select_insulin_description">Zvoľ inzulín, ktorým plníš pumpu. Po aktivácii/plnení bude vykonané prepnutie profilu.</string>
-    <string name="bolus_delivered">%1$.2fU / %2$.2fU</string>
-    <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
-    <string name="pump_insulin_cu">%1$.2f CU</string>
-    <string name="pump_insulin_cu1">%1$.1f CU</string>
     <string name="selected_insulin">Zvolený inzulín: %1$s</string>
     <string name="record_insulin_hint">Ak zadávaš inzulín aplikovaný perom, zvoľ nižšie ten správny typ inzulínu.</string>
     <!--    ProfileSwitch-->
