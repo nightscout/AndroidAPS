@@ -645,6 +645,10 @@
             android:exported="false"
             android:theme="@style/WearAppCompatDark" />
         <activity
+            android:name=".interaction.activities.BgGraphActivity"
+            android:exported="false"
+            android:theme="@style/WearAppCompatDark" />
+        <activity
             android:name=".interaction.menus.PreferenceMenuActivity"
             android:exported="true"
             android:label="@string/menu_settings"

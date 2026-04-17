@@ -12,6 +12,7 @@ import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
+import app.aaps.wear.interaction.activities.BgGraphActivity
 import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
 
@@ -35,6 +36,7 @@ class MainMenuActivity : MenuListActivity() {
                 add(MenuItem(R.drawable.ic_sync, getString(R.string.menu_resync)))
             } else {
                 add(MenuItem(R.drawable.ic_loop_closed, getString(R.string.loop_status)))
+                add(MenuItem(R.drawable.ic_graph, getString(R.string.menu_bg_graph)))
                 if (sp.getBoolean(R.string.key_show_wizard, true))
                     add(MenuItem(R.drawable.ic_calculator, getString(R.string.menu_wizard)))
                 add(MenuItem(R.drawable.ic_carbs_orange, getString(R.string.menu_ecarb)))
@@ -51,6 +53,7 @@ class MainMenuActivity : MenuListActivity() {
     override fun doAction(position: String) {
         when (position) {
             getString(R.string.loop_status)             -> startActivity(Intent(this, LoopStatusActivity::class.java))
+            getString(R.string.menu_bg_graph)           -> startActivity(Intent(this, BgGraphActivity::class.java))
             getString(R.string.menu_wizard)             -> startActivity(Intent(this, WizardActivity::class.java))
             getString(R.string.menu_ecarb)              -> startActivity(Intent(this, ECarbActivity::class.java))
             getString(R.string.menu_treatment)          -> startActivity(Intent(this, TreatmentActivity::class.java))
