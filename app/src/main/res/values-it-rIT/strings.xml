@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">Salva</string>
-    <string name="wear">Smartwatch</string>
-    <string name="invalid">NON VALIDO</string>
     <string name="close_navigation">Chiudi navigazione</string>
-    <string name="remove_items">Rimuovi elementi</string>
-    <string name="sort_items">Ordina elementi</string>
     <string name="authorizationfailed">Autorizzazione fallita</string>
-    <string name="cannula">Cannula</string>
     <string name="identification_not_set">Identificazione non impostata in modalità dev</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Rimuovi elementi selezionati</string>
-    <string name="count_selected">%1$d selezionati</string>
-    <string name="sort_label">Ordina</string>
-    <string name="search">Cerca</string>
     <string name="use_compose_main_screen">Usa la schermata principale di composizione (sperimentale)</string>
     <string name="switch_to_compose_ui">Passa alla composizione UI</string>
     <string name="switch_to_classic_ui">Passa all\'IU classica</string>
