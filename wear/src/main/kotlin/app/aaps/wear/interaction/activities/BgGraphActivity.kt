@@ -74,13 +74,13 @@ private fun bgColor(sgvLevel: Long): Color = when (sgvLevel.toInt()) {
     else -> BgInRangeColor
 }
 
-private fun formatTtDuration(durationMs: Long): String {
+private fun formatTtDuration(durationMs: Long, hourUnit: String): String {
     val totalMinutes = (durationMs / 60_000).toInt().coerceAtLeast(0)
     val hours = totalMinutes / 60
     val minutes = totalMinutes % 60
     return when {
-        hours > 0 && minutes > 0 -> "${hours}h ${minutes}'"
-        hours > 0                -> "${hours}h"
+        hours > 0 && minutes > 0 -> "${hours}$hourUnit ${minutes}'"
+        hours > 0                -> "${hours}$hourUnit"
         else                     -> "${minutes}'"
     }
 }
@@ -125,6 +125,8 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
     val now = System.currentTimeMillis()
     val ageMs = now - bgData.timeStamp
     val ageMin = ageMs / 60_000
+    val hourUnit = stringResource(R.string.hour_short)
+    val minUnit = stringResource(R.string.minute_short)
 
     Box(
         modifier = Modifier
@@ -133,7 +135,7 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
     ) {
         CurvedLayout(anchor = 270f, anchorType = AnchorType.Center) {
             curvedText(
-                text = "${historyHours}h",
+                text = "${historyHours}$hourUnit",
                 color = SecondaryText,
                 fontSize = 11.sp
             )
@@ -155,7 +157,7 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
                         detectTapGestures(onDoubleTap = {
                             context.startActivity(
                                 Intent(context, MainMenuActivity::class.java).apply {
-                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                    flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 }
                             )
                         })
@@ -180,7 +182,7 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
                             color = SecondaryText
                         )
                         Text(
-                            text = "${ageMin}m",
+                            text = "${ageMin}$minUnit",
                             fontSize = 12.sp,
                             color = ageColor(ageMs)
                         )
@@ -190,7 +192,7 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
                 // IOB / COB / Basal / Target
                 val hasTT = statusData.tempTargetDuration >= 0
                 val targetText = if (hasTT) {
-                    "${statusData.tempTarget} (${formatTtDuration(statusData.tempTargetDuration)})"
+                    "${statusData.tempTarget} (${formatTtDuration(statusData.tempTargetDuration, hourUnit)})"
                 } else {
                     statusData.tempTarget
                 }
@@ -199,14 +201,14 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 2.dp),
+                        .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "${statusData.iobSum}$insulinUnit", fontSize = 11.sp, color = IobColor)
-                    Text(text = statusData.cob, fontSize = 11.sp, color = CarbsColor)
-                    Text(text = basalText, fontSize = 11.sp, color = BasalColor)
-                    Text(text = targetText, fontSize = 11.sp, color = if (hasTT) TempTargetColor else SecondaryText)
+                    Text(text = "${statusData.iobSum}$insulinUnit", fontSize = 12.sp, color = IobColor)
+                    Text(text = statusData.cob, fontSize = 12.sp, color = CarbsColor)
+                    Text(text = basalText, fontSize = 12.sp, color = BasalColor)
+                    Text(text = targetText, fontSize = 12.sp, color = if (hasTT) TempTargetColor else SecondaryText)
                 }
             }
 
@@ -303,7 +305,10 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
+        val labelStep = if (historyHours >= 18) 2 else 1
         for (hourMs in hourMarks) {
+            val hour = Calendar.getInstance().apply { timeInMillis = hourMs }.get(Calendar.HOUR_OF_DAY)
+            if (hour % labelStep != 0) continue
             canvas.nativeCanvas.drawText(
                 hourFormat.format(Date(hourMs)),
                 timeToX(hourMs),
