@@ -18,6 +18,7 @@ import app.aaps.core.ui.compose.ConfigPluginUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,8 +47,8 @@ class ConfigurationViewModel @Inject constructor(
     private val preferences: Preferences
 ) : ViewModel() {
 
-    val uiState: StateFlow<ConfigurationUiState>
-        field = MutableStateFlow(ConfigurationUiState())
+    private val _uiState = MutableStateFlow(ConfigurationUiState())
+    val uiState: StateFlow<ConfigurationUiState> = _uiState.asStateFlow()
 
     // Keep plugin references for toggle callbacks (UI only sees IDs)
     private var pluginLookup: Map<String, PluginBase> = emptyMap()
@@ -66,7 +67,7 @@ class ConfigurationViewModel @Inject constructor(
         val plugin = pluginLookup[pluginId] ?: return
         val confirmationMessage = configBuilder.requestPluginSwitch(plugin, enabled, type)
         if (confirmationMessage != null) {
-            uiState.update { state ->
+            _uiState.update { state ->
                 state.copy(
                     hardwarePumpConfirmation = HardwarePumpConfirmation(
                         message = confirmationMessage,
@@ -85,19 +86,19 @@ class ConfigurationViewModel @Inject constructor(
         val confirmation = uiState.value.hardwarePumpConfirmation ?: return
         val plugin = pluginLookup[confirmation.pluginId] ?: return
         configBuilder.confirmPumpPluginSwitch(plugin, confirmation.enabled, confirmation.type)
-        uiState.update { it.copy(hardwarePumpConfirmation = null) }
+        _uiState.update { it.copy(hardwarePumpConfirmation = null) }
         refreshCategories()
     }
 
     fun dismissHardwarePumpDialog() {
-        uiState.update { it.copy(hardwarePumpConfirmation = null) }
+        _uiState.update { it.copy(hardwarePumpConfirmation = null) }
         refreshCategories()
     }
 
     private fun refreshCategories() {
         val isSimple = preferences.simpleMode
         val categories = buildCategories(isSimple)
-        uiState.update { state ->
+        _uiState.update { state ->
             state.copy(
                 categories = categories,
                 isSimpleMode = isSimple

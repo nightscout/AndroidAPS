@@ -14,6 +14,7 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientBooleanKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,40 +40,40 @@ class NSClientViewModel @Inject constructor(
     private val nsClientPlugin get() = activePlugin.activeNsClient
 
     // UI state
-    val uiState: StateFlow<NSClientUiState>
-        field = MutableStateFlow(NSClientUiState())
+    private val _uiState = MutableStateFlow(NSClientUiState())
+    val uiState: StateFlow<NSClientUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             nsClientRepository.queueSize.collect { size ->
                 val queueText = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
-                uiState.update { it.copy(queue = queueText) }
+                _uiState.update { it.copy(queue = queueText) }
             }
         }
         viewModelScope.launch {
             nsClientRepository.statusUpdate.collect { status ->
-                uiState.update { it.copy(status = status) }
+                _uiState.update { it.copy(status = status) }
             }
         }
         viewModelScope.launch {
             nsClientRepository.logList.collect { logList ->
-                uiState.update { it.copy(logList = logList) }
+                _uiState.update { it.copy(logList = logList) }
             }
         }
         viewModelScope.launch {
             nsClientRepository.urlUpdate.collect { url ->
-                uiState.update { it.copy(url = url) }
+                _uiState.update { it.copy(url = url) }
             }
         }
     }
 
     fun loadInitialData() {
-        uiState.update {
+        _uiState.update {
             it.copy(paused = preferences.get(NsclientBooleanKey.NsPaused))
         }
     }
 
     fun updatePaused(paused: Boolean) {
-        uiState.update { it.copy(paused = paused) }
+        _uiState.update { it.copy(paused = paused) }
     }
 }

@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -49,8 +50,8 @@ class AutomationViewModel @Inject constructor(
     private val rxBus: RxBus
 ) : ViewModel() {
 
-    val uiState: StateFlow<AutomationUiState>
-        field = MutableStateFlow(AutomationUiState())
+    private val _uiState = MutableStateFlow(AutomationUiState())
+    val uiState: StateFlow<AutomationUiState> = _uiState.asStateFlow()
 
     init {
         setupEventListeners()
@@ -71,7 +72,7 @@ class AutomationViewModel @Inject constructor(
 
             val isSuspended = loop.runningMode.isSuspended()
             if (isSuspended || !pump.isInitialized() || profile == null || config.isEnabled(ExternalOptions.SHOW_USER_ACTIONS_ON_WATCH_ONLY)) {
-                uiState.update { it.copy(items = emptyList()) }
+                _uiState.update { it.copy(items = emptyList()) }
                 return@launch
             }
 
@@ -87,7 +88,7 @@ class AutomationViewModel @Inject constructor(
                     actionIcons = event.actionIcons().toList()
                 )
             }
-            uiState.update { it.copy(items = items) }
+            _uiState.update { it.copy(items = items) }
         }
     }
 

@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -30,7 +31,8 @@ class FoodManagementViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
 ) : ViewModel() {
 
-    val uiState: StateFlow<FoodManagementUiState> field = MutableStateFlow(FoodManagementUiState())
+    private val _uiState = MutableStateFlow(FoodManagementUiState())
+    val uiState: StateFlow<FoodManagementUiState> = _uiState.asStateFlow()
 
     /** Derived: foods filtered by current search query and category/subcategory filters */
     val filteredFoods: StateFlow<List<FD>> = uiState
@@ -71,7 +73,7 @@ class FoodManagementViewModel @Inject constructor(
                 val foods = persistenceLayer.getFoods()
                 val categories = foods.mapNotNull { it.category }.filter { it.isNotBlank() }.distinct().sorted()
                 val subCategories = foods.mapNotNull { it.subCategory }.filter { it.isNotBlank() }.distinct().sorted()
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         foods = foods,
                         allCategories = categories,
@@ -81,26 +83,26 @@ class FoodManagementViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load foods", e)
-                uiState.update { it.copy(isLoading = false) }
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
 
     fun setSearchQuery(query: String) {
-        uiState.update { it.copy(searchQuery = query) }
+        _uiState.update { it.copy(searchQuery = query) }
     }
 
     fun setFilterCategory(category: String?) {
-        uiState.update { it.copy(filterCategory = category, filterSubCategory = null) }
+        _uiState.update { it.copy(filterCategory = category, filterSubCategory = null) }
     }
 
     fun setFilterSubCategory(subCategory: String?) {
-        uiState.update { it.copy(filterSubCategory = subCategory) }
+        _uiState.update { it.copy(filterSubCategory = subCategory) }
     }
 
     fun openEditor(food: FD? = null) {
         if (food != null) {
-            uiState.update {
+            _uiState.update {
                 it.copy(
                     editorFood = food,
                     editorName = food.name,
@@ -117,7 +119,7 @@ class FoodManagementViewModel @Inject constructor(
                 )
             }
         } else {
-            uiState.update {
+            _uiState.update {
                 it.copy(
                     editorFood = null,
                     editorName = "",
@@ -137,21 +139,21 @@ class FoodManagementViewModel @Inject constructor(
     }
 
     fun closeEditor() {
-        uiState.update { it.copy(showEditor = false) }
+        _uiState.update { it.copy(showEditor = false) }
     }
 
-    fun updateEditorName(v: String) = uiState.update { it.copy(editorName = v) }
-    fun updateEditorCategory(v: String) = uiState.update { it.copy(editorCategory = v) }
-    fun updateEditorSubCategory(v: String) = uiState.update { it.copy(editorSubCategory = v) }
-    fun updateEditorPortion(v: String) = uiState.update { it.copy(editorPortion = v) }
-    fun updateEditorUnit(v: String) = uiState.update { it.copy(editorUnit = v) }
-    fun updateEditorCarbs(v: String) = uiState.update { it.copy(editorCarbs = v) }
-    fun updateEditorFat(v: String) = uiState.update { it.copy(editorFat = v) }
-    fun updateEditorProtein(v: String) = uiState.update { it.copy(editorProtein = v) }
-    fun updateEditorEnergy(v: String) = uiState.update { it.copy(editorEnergy = v) }
+    fun updateEditorName(v: String) = _uiState.update { it.copy(editorName = v) }
+    fun updateEditorCategory(v: String) = _uiState.update { it.copy(editorCategory = v) }
+    fun updateEditorSubCategory(v: String) = _uiState.update { it.copy(editorSubCategory = v) }
+    fun updateEditorPortion(v: String) = _uiState.update { it.copy(editorPortion = v) }
+    fun updateEditorUnit(v: String) = _uiState.update { it.copy(editorUnit = v) }
+    fun updateEditorCarbs(v: String) = _uiState.update { it.copy(editorCarbs = v) }
+    fun updateEditorFat(v: String) = _uiState.update { it.copy(editorFat = v) }
+    fun updateEditorProtein(v: String) = _uiState.update { it.copy(editorProtein = v) }
+    fun updateEditorEnergy(v: String) = _uiState.update { it.copy(editorEnergy = v) }
 
     fun saveFood() {
-        uiState.update { it.copy(editorSaveAttempted = true) }
+        _uiState.update { it.copy(editorSaveAttempted = true) }
         val state = uiState.value
         val name = state.editorName.trim()
         if (name.isBlank()) return
@@ -177,7 +179,7 @@ class FoodManagementViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 persistenceLayer.insertOrUpdateFood(food)
-                uiState.update { it.copy(showEditor = false) }
+                _uiState.update { it.copy(showEditor = false) }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to save food", e)
             }
@@ -188,7 +190,7 @@ class FoodManagementViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 persistenceLayer.invalidateFood(food.id, Action.FOOD_REMOVED, Sources.Food)
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         foods = it.foods.filter { f -> f.id != food.id },
                         undoFood = food
@@ -214,13 +216,13 @@ class FoodManagementViewModel @Inject constructor(
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to undo food delete", e)
             } finally {
-                uiState.update { it.copy(undoFood = null) }
+                _uiState.update { it.copy(undoFood = null) }
             }
         }
     }
 
     fun clearUndo() {
-        uiState.update { it.copy(undoFood = null) }
+        _uiState.update { it.copy(undoFood = null) }
     }
 }
 

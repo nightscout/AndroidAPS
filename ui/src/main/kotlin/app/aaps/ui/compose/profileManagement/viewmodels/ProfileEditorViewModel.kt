@@ -22,6 +22,7 @@ import app.aaps.core.objects.profile.ProfileSealed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -86,8 +87,8 @@ class ProfileEditorViewModel @Inject constructor(
     private val protectionCheck: ProtectionCheck
 ) : ViewModel() {
 
-    val uiState: StateFlow<ProfileUiState>
-        field = MutableStateFlow(ProfileUiState())
+    private val _uiState = MutableStateFlow(ProfileUiState())
+    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     init {
         loadState()
@@ -119,7 +120,7 @@ class ProfileEditorViewModel @Inject constructor(
             .filter { it.type != ProfileErrorType.NAME || it.message != rh.gs(app.aaps.core.ui.R.string.profile_name_contains_dot) }
             .associateBy({ it.type }, { it.message })
 
-        uiState.update { state ->
+        _uiState.update { state ->
             state.copy(
                 profiles = profiles,
                 currentProfileIndex = localProfileManager.currentProfileIndex,
@@ -144,7 +145,7 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     fun selectTab(index: Int) {
-        uiState.update { it.copy(selectedTab = index) }
+        _uiState.update { it.copy(selectedTab = index) }
     }
 
     /**

@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -51,8 +52,8 @@ class TempBasalViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<TempBasalUiState>
-        field = MutableStateFlow(TempBasalUiState())
+    private val _uiState = MutableStateFlow(TempBasalUiState())
+    val uiState: StateFlow<TempBasalUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
@@ -67,7 +68,7 @@ class TempBasalViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.tempBasals.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -99,7 +100,7 @@ class TempBasalViewModel @Inject constructor(
                     tempBasalsList.sortedByDescending { it.timestamp }
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         tempBasals = tempBasals,
                         isLoading = false,
@@ -108,7 +109,7 @@ class TempBasalViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load temp basals", e)
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         isLoading = false,
                         snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading temp basals")
@@ -134,14 +135,14 @@ class TempBasalViewModel @Inject constructor(
      * Clear error state
      */
     fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
      * Toggle show/hide invalidated items
      */
     fun toggleInvalidated() {
-        uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
+        _uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
         loadData()
     }
 
@@ -149,7 +150,7 @@ class TempBasalViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: TB) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -161,7 +162,7 @@ class TempBasalViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -173,7 +174,7 @@ class TempBasalViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: TB) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -251,7 +252,7 @@ class TempBasalViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete temp basals", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting temp basals")) }
+                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting temp basals")) }
             }
         }
     }

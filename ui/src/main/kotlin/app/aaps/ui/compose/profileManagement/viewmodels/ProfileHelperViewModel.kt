@@ -28,6 +28,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -53,8 +54,8 @@ class ProfileHelperViewModel @Inject constructor(
     private val fabricPrivacy: FabricPrivacy
 ) : ViewModel() {
 
-    val uiState: StateFlow<ProfileHelperUiState>
-        field = MutableStateFlow(ProfileHelperUiState())
+    private val _uiState = MutableStateFlow(ProfileHelperUiState())
+    val uiState: StateFlow<ProfileHelperUiState> = _uiState.asStateFlow()
 
     private var cachedCurrentProfile: PureProfile? = null
 
@@ -75,7 +76,7 @@ class ProfileHelperViewModel @Inject constructor(
                 )
             }
 
-            uiState.update {
+            _uiState.update {
                 it.copy(
                     currentProfileName = currentProfileName,
                     availableProfiles = availableProfiles,
@@ -89,7 +90,7 @@ class ProfileHelperViewModel @Inject constructor(
 
     private fun loadTddStats() {
         viewModelScope.launch {
-            uiState.update { it.copy(isLoadingStats = true) }
+            _uiState.update { it.copy(isLoadingStats = true) }
             try {
                 val data = withContext(Dispatchers.IO) {
                     val tdds = tddCalculator.calculate(7, allowMissingDays = true)
@@ -97,10 +98,10 @@ class ProfileHelperViewModel @Inject constructor(
                     val todayTdd = tddCalculator.calculateToday()
                     TddStatsData(tdds = tdds, averageTdd = averageTdd, todayTdd = todayTdd)
                 }
-                uiState.update { it.copy(tddStatsData = data, isLoadingStats = false) }
+                _uiState.update { it.copy(tddStatsData = data, isLoadingStats = false) }
             } catch (e: Exception) {
                 fabricPrivacy.logException(e)
-                uiState.update { it.copy(isLoadingStats = false) }
+                _uiState.update { it.copy(isLoadingStats = false) }
             }
         }
     }

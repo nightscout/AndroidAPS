@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -74,11 +75,11 @@ class MaintenanceViewModel @Inject constructor(
     val events: SharedFlow<MaintenanceEvent> = _events
 
     // Export configuration (cloud awareness)
-    val exportConfig: StateFlow<ExportConfig?>
-        field = MutableStateFlow<ExportConfig?>(null)
+    private val _exportConfig = MutableStateFlow<ExportConfig?>(null)
+    val exportConfig: StateFlow<ExportConfig?> = _exportConfig.asStateFlow()
 
-    val isDirectoryAccessGranted: StateFlow<Boolean>
-        field = MutableStateFlow(false)
+    private val _isDirectoryAccessGranted = MutableStateFlow(false)
+    val isDirectoryAccessGranted: StateFlow<Boolean> = _isDirectoryAccessGranted.asStateFlow()
 
     init {
         refreshExportConfig()
@@ -86,8 +87,8 @@ class MaintenanceViewModel @Inject constructor(
 
     fun refreshExportConfig() {
         viewModelScope.launch(Dispatchers.IO) {
-            exportConfig.value = importExportPrefs.getExportConfig()
-            isDirectoryAccessGranted.value = fileListProvider.isDirectoryAccessGranted()
+            _exportConfig.value = importExportPrefs.getExportConfig()
+            _isDirectoryAccessGranted.value = fileListProvider.isDirectoryAccessGranted()
         }
     }
 
@@ -256,16 +257,16 @@ class MaintenanceViewModel @Inject constructor(
         data object Reauthorize : CloudDirectoryState
     }
 
-    val cloudDirectoryState: StateFlow<CloudDirectoryState>
-        field = MutableStateFlow<CloudDirectoryState>(CloudDirectoryState.Hidden)
+    private val _cloudDirectoryState = MutableStateFlow<CloudDirectoryState>(CloudDirectoryState.Hidden)
+    val cloudDirectoryState: StateFlow<CloudDirectoryState> = _cloudDirectoryState.asStateFlow()
 
     fun showCloudDirectory() {
         val info = cloudDirectoryManager.getCloudDirectoryInfo()
-        cloudDirectoryState.value = CloudDirectoryState.Shown(info)
+        _cloudDirectoryState.value = CloudDirectoryState.Shown(info)
     }
 
     fun dismissCloudDirectory() {
-        cloudDirectoryState.value = CloudDirectoryState.Hidden
+        _cloudDirectoryState.value = CloudDirectoryState.Hidden
     }
 
     fun connectGoogleDrive() {
@@ -276,9 +277,9 @@ class MaintenanceViewModel @Inject constructor(
                     if (cloudDirectoryManager.testConnection()) {
                         cloudDirectoryManager.setupCloudStorage()
                         refreshExportConfig()
-                        cloudDirectoryState.value = CloudDirectoryState.Hidden
+                        _cloudDirectoryState.value = CloudDirectoryState.Hidden
                     } else {
-                        cloudDirectoryState.value = CloudDirectoryState.Reauthorize
+                        _cloudDirectoryState.value = CloudDirectoryState.Reauthorize
                     }
                 } else {
                     startAuthAndComplete()
@@ -286,7 +287,7 @@ class MaintenanceViewModel @Inject constructor(
             } catch (e: Exception) {
                 aapsLogger.error("Cloud directory connection error", e)
                 _events.emit(MaintenanceEvent.Error(e.message ?: rh.gs(CoreUiR.string.error)))
-                cloudDirectoryState.value = CloudDirectoryState.Hidden
+                _cloudDirectoryState.value = CloudDirectoryState.Hidden
             }
         }
     }
@@ -294,18 +295,18 @@ class MaintenanceViewModel @Inject constructor(
     fun requestClearCloud() {
         val info = cloudDirectoryManager.getCloudDirectoryInfo()
         if (info.isCloudActive) {
-            cloudDirectoryState.value = CloudDirectoryState.ConfirmClear
+            _cloudDirectoryState.value = CloudDirectoryState.ConfirmClear
         } else {
             cloudDirectoryManager.clearCloudSettings()
             refreshExportConfig()
-            cloudDirectoryState.value = CloudDirectoryState.Hidden
+            _cloudDirectoryState.value = CloudDirectoryState.Hidden
         }
     }
 
     fun confirmClearCloud() {
         cloudDirectoryManager.clearCloudSettings()
         refreshExportConfig()
-        cloudDirectoryState.value = CloudDirectoryState.Hidden
+        _cloudDirectoryState.value = CloudDirectoryState.Hidden
     }
 
     fun cancelClearCloud() {
@@ -323,7 +324,7 @@ class MaintenanceViewModel @Inject constructor(
         try {
             val authUrl = cloudDirectoryManager.startAuth()
             if (authUrl != null) {
-                cloudDirectoryState.value = CloudDirectoryState.Hidden
+                _cloudDirectoryState.value = CloudDirectoryState.Hidden
                 _events.emit(MaintenanceEvent.LaunchBrowser(authUrl))
                 val authCode = cloudDirectoryManager.waitForAuthCode()
                 if (authCode != null && cloudDirectoryManager.completeAuth(authCode)) {
@@ -332,11 +333,11 @@ class MaintenanceViewModel @Inject constructor(
                     refreshExportConfig()
                     _events.emit(MaintenanceEvent.BringToForeground)
                     _events.emit(MaintenanceEvent.Snackbar(rh.gs(CoreUiR.string.cloud_auth_success)))
-                    cloudDirectoryState.value = CloudDirectoryState.Hidden
+                    _cloudDirectoryState.value = CloudDirectoryState.Hidden
                 } else {
                     _events.emit(MaintenanceEvent.BringToForeground)
                     _events.emit(MaintenanceEvent.Error(rh.gs(CoreUiR.string.error)))
-                    cloudDirectoryState.value = CloudDirectoryState.Hidden
+                    _cloudDirectoryState.value = CloudDirectoryState.Hidden
                 }
             } else {
                 _events.emit(MaintenanceEvent.Error(rh.gs(CoreUiR.string.error)))
@@ -345,7 +346,7 @@ class MaintenanceViewModel @Inject constructor(
             aapsLogger.error("Auth flow error", e)
             _events.emit(MaintenanceEvent.BringToForeground)
             _events.emit(MaintenanceEvent.Error(e.message ?: rh.gs(CoreUiR.string.error)))
-            cloudDirectoryState.value = CloudDirectoryState.Hidden
+            _cloudDirectoryState.value = CloudDirectoryState.Hidden
         }
     }
 
@@ -363,14 +364,14 @@ class MaintenanceViewModel @Inject constructor(
         data object AskPassword : ExportState
     }
 
-    val exportState: StateFlow<ExportState>
-        field = MutableStateFlow<ExportState>(ExportState.Idle)
+    private val _exportState = MutableStateFlow<ExportState>(ExportState.Idle)
+    val exportState: StateFlow<ExportState> = _exportState.asStateFlow()
 
     fun startExport() {
         uel.log(Action.EXPORT_SETTINGS, Sources.Maintenance)
 
         if (!importExportPrefs.isMasterPasswordSet()) {
-            exportState.value = ExportState.MasterPasswordMissing
+            _exportState.value = ExportState.MasterPasswordMissing
             return
         }
 
@@ -386,7 +387,7 @@ class MaintenanceViewModel @Inject constructor(
             doExport(cached)
         } else {
             // Need to show confirm + password dialogs
-            exportState.value = ExportState.ConfirmExport(
+            _exportState.value = ExportState.ConfirmExport(
                 fileName = preparation.fileName,
                 destination = preparation.destination,
                 cloudDisplayName = preparation.cloudDisplayName
@@ -395,17 +396,17 @@ class MaintenanceViewModel @Inject constructor(
     }
 
     fun onExportConfirmed() {
-        exportState.value = ExportState.AskPassword
+        _exportState.value = ExportState.AskPassword
     }
 
     fun onExportPasswordEntered(password: String) {
-        exportState.value = ExportState.Idle
+        _exportState.value = ExportState.Idle
         val cached = importExportPrefs.cacheExportPassword(password)
         doExport(cached)
     }
 
     fun cancelExport() {
-        exportState.value = ExportState.Idle
+        _exportState.value = ExportState.Idle
     }
 
     private fun doExport(password: String) {

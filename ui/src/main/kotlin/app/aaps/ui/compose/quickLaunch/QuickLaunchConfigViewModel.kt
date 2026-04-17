@@ -14,6 +14,7 @@ import app.aaps.core.objects.wizard.QuickWizard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -46,8 +47,8 @@ class QuickLaunchConfigViewModel @Inject constructor(
     private val resolver: QuickLaunchResolver
 ) : ViewModel() {
 
-    val uiState: StateFlow<QuickLaunchConfigUiState>
-        field = MutableStateFlow(QuickLaunchConfigUiState())
+    private val _uiState = MutableStateFlow(QuickLaunchConfigUiState())
+    val uiState: StateFlow<QuickLaunchConfigUiState> = _uiState.asStateFlow()
 
     fun loadState() {
         val json = preferences.get(StringNonKey.QuickLaunchActions)
@@ -92,7 +93,7 @@ class QuickLaunchConfigViewModel @Inject constructor(
         // Available Plugins — enabled with compose content, grouped by PluginType
         val pluginGroups = buildPluginGroups(selectedSet)
 
-        uiState.update {
+        _uiState.update {
             QuickLaunchConfigUiState(
                 selectedItems = selectedResolved,
                 availableStaticItems = availableStatic,

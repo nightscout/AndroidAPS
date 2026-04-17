@@ -54,6 +54,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
@@ -91,16 +92,16 @@ class MainViewModel @Inject constructor(
     private val protectionCheck: ProtectionCheck
 ) : ViewModel() {
 
-    val uiState: StateFlow<MainUiState>
-        field = MutableStateFlow(MainUiState())
+    private val _uiState = MutableStateFlow(MainUiState())
+    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
     /** Toolbar items as a separate StateFlow to avoid unnecessary recompositions of the main UI */
-    val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>>
-        field = MutableStateFlow(emptyList())
+    private val _quickLaunchItems = MutableStateFlow<List<ResolvedQuickLaunchItem>>(emptyList())
+    val quickLaunchItems: StateFlow<List<ResolvedQuickLaunchItem>> = _quickLaunchItems.asStateFlow()
 
     /** Pending confirmation dialog (automation/TT preset actions) */
-    val actionConfirmation: StateFlow<ActionConfirmation?>
-        field = MutableStateFlow(null)
+    private val _actionConfirmation = MutableStateFlow<ActionConfirmation?>(null)
+    val actionConfirmation: StateFlow<ActionConfirmation?> = _actionConfirmation.asStateFlow()
 
     val versionName: String get() = config.VERSION_NAME
     val appIcon: Int get() = iconsProvider.getIcon()
@@ -116,7 +117,7 @@ class MainViewModel @Inject constructor(
 
     init {
         preferences.observe(BooleanKey.GeneralSimpleMode)
-            .onEach { simple -> uiState.update { it.copy(isSimpleMode = simple) } }
+            .onEach { simple -> _uiState.update { it.copy(isSimpleMode = simple) } }
             .launchIn(viewModelScope)
         observeTempTargetAndProfile()
         observeQuickLaunch()
@@ -188,7 +189,7 @@ class MainViewModel @Inject constructor(
             // QuickWizard state
             val qwItems = computeQuickWizardItems(rmData?.mode)
 
-            uiState.update {
+            _uiState.update {
                 it.copy(
                     // TempTarget state
                     tempTargetText = ttText,
@@ -434,24 +435,24 @@ class MainViewModel @Inject constructor(
 
     // Drawer state
     fun openDrawer() {
-        uiState.update { it.copy(isDrawerOpen = true) }
+        _uiState.update { it.copy(isDrawerOpen = true) }
     }
 
     fun closeDrawer() {
-        uiState.update { it.copy(isDrawerOpen = false) }
+        _uiState.update { it.copy(isDrawerOpen = false) }
     }
 
     // About dialog state
     fun setShowAboutDialog(show: Boolean) {
-        uiState.update { it.copy(showAboutDialog = show) }
+        _uiState.update { it.copy(showAboutDialog = show) }
     }
 
     fun setShowMaintenanceSheet(show: Boolean) {
-        uiState.update { it.copy(showMaintenanceSheet = show) }
+        _uiState.update { it.copy(showMaintenanceSheet = show) }
     }
 
     fun setShowAuthFailedDialog(show: Boolean) {
-        uiState.update { it.copy(showAuthFailedDialog = show) }
+        _uiState.update { it.copy(showAuthFailedDialog = show) }
     }
 
     // Build about dialog data
@@ -495,13 +496,13 @@ class MainViewModel @Inject constructor(
         }
 
         // Resolve display properties
-        quickLaunchItems.update { validated.map { quickLaunchResolver.resolveItem(it) } }
+        _quickLaunchItems.update { validated.map { quickLaunchResolver.resolveItem(it) } }
     }
 
     fun requestAutomationConfirmation(automationId: String) {
         val event = automation.findEventById(automationId) ?: return
         val message = event.actionsDescription().joinToString("\n") { "• $it" }
-        actionConfirmation.update {
+        _actionConfirmation.update {
             ActionConfirmation(
                 title = event.title,
                 message = message,
@@ -516,7 +517,7 @@ class MainViewModel @Inject constructor(
         val name = preset.name ?: preset.nameRes?.let { rh.gs(it) } ?: "?"
         val durationMin = (preset.duration / 60000L).toInt()
         val message = "$name\n${rh.gs(app.aaps.core.ui.R.string.format_mins, durationMin)}"
-        actionConfirmation.update {
+        _actionConfirmation.update {
             ActionConfirmation(
                 title = rh.gs(app.aaps.core.ui.R.string.temp_target_management),
                 message = message,
@@ -532,7 +533,7 @@ class MainViewModel @Inject constructor(
             if (durationMinutes > 0) append("\n${rh.gs(app.aaps.ui.R.string.quick_launch_profile_confirm_dur, durationMinutes)}")
             else append("\n${rh.gs(app.aaps.ui.R.string.quick_launch_profile_permanent)}")
         }
-        actionConfirmation.update {
+        _actionConfirmation.update {
             ActionConfirmation(
                 title = rh.gs(app.aaps.ui.R.string.activate_profile),
                 message = details,
@@ -557,11 +558,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun dismissActionConfirmation() {
-        actionConfirmation.update { null }
+        _actionConfirmation.update { null }
     }
 
     fun executeConfirmableAction(action: ConfirmableAction) = viewModelScope.launch {
-        actionConfirmation.update { null }
+        _actionConfirmation.update { null }
         when (action) {
             is ConfirmableAction.ExecuteAutomation        -> {
                 val event = automation.findEventById(action.automationId) ?: return@launch

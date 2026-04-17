@@ -40,7 +40,6 @@ allprojects {
             freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
             freeCompilerArgs.add("-opt-in=kotlin.ExperimentalUnsignedTypes")
             freeCompilerArgs.add("-Xannotation-default-target=param-property")
-            freeCompilerArgs.add("-XXLanguage:+ExplicitBackingFields")
             jvmTarget.set(Versions.jvmTarget)
         }
     }

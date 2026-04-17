@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +23,8 @@ class PermissionsViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
 ) : ViewModel() {
 
-    val uiState: StateFlow<PermissionsUiState> field = MutableStateFlow(PermissionsUiState())
+    private val _uiState = MutableStateFlow(PermissionsUiState())
+    val uiState: StateFlow<PermissionsUiState> = _uiState.asStateFlow()
     private val _sideEffect = MutableSharedFlow<PermissionsSideEffect>()
     val sideEffect: SharedFlow<PermissionsSideEffect> = _sideEffect
 
@@ -37,7 +39,7 @@ class PermissionsViewModel @Inject constructor(
                 granted = group.permissions.toSet() !in missingPermSets
             )
         }
-        uiState.value = PermissionsUiState(
+        _uiState.value = PermissionsUiState(
             items = items,
             hasAnyMissing = items.any { !it.granted },
             showSheet = items.any { !it.granted }
@@ -45,11 +47,11 @@ class PermissionsViewModel @Inject constructor(
     }
 
     fun showSheet() {
-        uiState.value = uiState.value.copy(showSheet = true)
+        _uiState.value = uiState.value.copy(showSheet = true)
     }
 
     fun dismissSheet() {
-        uiState.value = uiState.value.copy(showSheet = false)
+        _uiState.value = uiState.value.copy(showSheet = false)
     }
 
     fun requestPermission(group: PermissionGroup) {

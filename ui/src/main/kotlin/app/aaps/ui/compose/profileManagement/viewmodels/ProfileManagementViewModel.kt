@@ -45,6 +45,7 @@ import app.aaps.core.ui.compose.ScreenMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -77,11 +78,11 @@ class ProfileManagementViewModel @Inject constructor(
     private val preferences: Preferences
 ) : ViewModel() {
 
-    val uiState: StateFlow<ProfileManagementUiState>
-        field = MutableStateFlow(ProfileManagementUiState())
+    private val _uiState = MutableStateFlow(ProfileManagementUiState())
+    val uiState: StateFlow<ProfileManagementUiState> = _uiState.asStateFlow()
 
     fun setScreenMode(mode: ScreenMode) {
-        uiState.update { it.copy(screenMode = mode) }
+        _uiState.update { it.copy(screenMode = mode) }
     }
 
     init {
@@ -242,7 +243,7 @@ class ProfileManagementViewModel @Inject constructor(
                     }
                 } else null
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         profileNames = profileNames,
                         currentProfileIndex = currentIndex,
@@ -259,7 +260,7 @@ class ProfileManagementViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load profiles", e)
-                uiState.update {
+                _uiState.update {
                     it.copy(isLoading = false)
                 }
             }

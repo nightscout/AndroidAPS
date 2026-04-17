@@ -31,6 +31,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -54,8 +55,8 @@ class StatusViewModel @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) : ViewModel() {
 
-    val uiState: StateFlow<StatusUiState>
-        field = MutableStateFlow(StatusUiState())
+    private val _uiState = MutableStateFlow(StatusUiState())
+    val uiState: StateFlow<StatusUiState> = _uiState.asStateFlow()
 
     init {
         setupEventListeners()
@@ -88,7 +89,7 @@ class StatusViewModel @Inject constructor(
                 buildBatteryStatus()
             } else null
 
-            uiState.update { state ->
+            _uiState.update { state ->
                 state.copy(
                     sensorStatus = sensorStatus,
                     insulinStatus = insulinStatus,
@@ -110,7 +111,7 @@ class StatusViewModel @Inject constructor(
             // Calculate cannula usage in background (expensive operation)
             viewModelScope.launch {
                 val cannulaStatusWithUsage = buildCannulaStatus(isPatchPump, includeTddCalculation = true)
-                uiState.update { state ->
+                _uiState.update { state ->
                     state.copy(cannulaStatus = cannulaStatusWithUsage)
                 }
             }

@@ -31,6 +31,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -54,8 +55,8 @@ class ManageViewModel @Inject constructor(
     private val dateUtil: DateUtil
 ) : ViewModel() {
 
-    val uiState: StateFlow<ManageUiState>
-        field = MutableStateFlow(ManageUiState(pumpPlugin = activePlugin.activePumpInternal as PluginBase))
+    private val _uiState = MutableStateFlow(ManageUiState(pumpPlugin = activePlugin.activePumpInternal as PluginBase))
+    val uiState: StateFlow<ManageUiState> = _uiState.asStateFlow()
 
     init {
         setupEventListeners()
@@ -138,7 +139,7 @@ class ManageViewModel @Inject constructor(
             // Custom actions
             val customActions = pump.getCustomActions()?.filter { it.isEnabled } ?: emptyList()
 
-            uiState.update { state ->
+            _uiState.update { state ->
                 state.copy(
                     showTempTarget = true,
                     showTempBasal = showTempBasal,

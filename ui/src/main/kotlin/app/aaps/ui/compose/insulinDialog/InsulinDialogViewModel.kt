@@ -44,6 +44,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -74,20 +76,20 @@ class InsulinDialogViewModel @Inject constructor(
     private val hardLimits: HardLimits
 ) : ViewModel() {
 
-    val uiState: StateFlow<InsulinDialogUiState>
-        field = MutableStateFlow(InsulinDialogUiState())
+    private val _uiState = MutableStateFlow(InsulinDialogUiState())
+    val uiState: StateFlow<InsulinDialogUiState> = _uiState.asStateFlow()
 
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
     }
 
-    val sideEffect: SharedFlow<SideEffect>
-        field = MutableSharedFlow(
-            replay = 0,
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
+    private val _sideEffect = MutableSharedFlow<SideEffect>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
     init {
         val now = dateUtil.now()
@@ -100,7 +102,7 @@ class InsulinDialogViewModel @Inject constructor(
         val forcedRecordOnly = loop.runningMode.isSuspended() || !pump.isInitialized()
         val isAapsClient = config.AAPSCLIENT
 
-        uiState.update {
+        _uiState.update {
             InsulinDialogUiState(
                 insulin = 0.0,
                 timeOffsetMinutes = 0,
@@ -126,14 +128,14 @@ class InsulinDialogViewModel @Inject constructor(
         }
         viewModelScope.launch {
             val runningIcfg = getRunningIcfg()
-            uiState.update { it.copy(selectedIcfg = runningIcfg) }
+            _uiState.update { it.copy(selectedIcfg = runningIcfg) }
         }
     }
 
     private suspend fun getRunningIcfg() = profileFunction.getProfile()?.iCfg ?: activeInsulin.iCfg
 
     fun refreshInsulinButtons() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 insulinButtonIncrement1 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
                 insulinButtonIncrement2 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
@@ -144,20 +146,20 @@ class InsulinDialogViewModel @Inject constructor(
 
     fun updateInsulin(value: Double) {
         val clamped = value.coerceIn(0.0, uiState.value.maxInsulin)
-        uiState.update { it.copy(insulin = clamped) }
+        _uiState.update { it.copy(insulin = clamped) }
     }
 
     fun addInsulin(increment: Double) {
         val state = uiState.value
         val newValue = max(0.0, state.insulin + increment).coerceAtMost(state.maxInsulin)
-        uiState.update { it.copy(insulin = newValue) }
+        _uiState.update { it.copy(insulin = newValue) }
     }
 
     fun updateTimeOffset(minutes: Int) {
         val clamped = minutes.coerceIn(-12 * 60, 12 * 60)
         val state = uiState.value
         val newEventTime = state.eventTimeOriginal + clamped.toLong() * 60 * 1000
-        uiState.update {
+        _uiState.update {
             it.copy(
                 timeOffsetMinutes = clamped,
                 eventTime = newEventTime
@@ -166,30 +168,30 @@ class InsulinDialogViewModel @Inject constructor(
     }
 
     fun updateEatingSoonTt(checked: Boolean) {
-        uiState.update { it.copy(eatingSoonTtChecked = checked) }
+        _uiState.update { it.copy(eatingSoonTtChecked = checked) }
     }
 
     fun updateRecordOnly(checked: Boolean) {
-        uiState.update { it.copy(recordOnlyChecked = checked) }
+        _uiState.update { it.copy(recordOnlyChecked = checked) }
         if (!checked)
             viewModelScope.launch {
                 val runningIcfg = getRunningIcfg()
-                uiState.update { it.copy(selectedIcfg = runningIcfg) }
+                _uiState.update { it.copy(selectedIcfg = runningIcfg) }
             }
     }
 
     fun selectInsulinType(iCfg: ICfg) {
-        uiState.update { it.copy(selectedIcfg = iCfg) }
+        _uiState.update { it.copy(selectedIcfg = iCfg) }
     }
 
     fun updateNotes(value: String) {
-        uiState.update { it.copy(notes = value) }
+        _uiState.update { it.copy(notes = value) }
     }
 
     fun updateEventTime(timeMillis: Long) {
         val state = uiState.value
         val newOffset = ((timeMillis - state.eventTimeOriginal) / (1000 * 60)).toInt()
-        uiState.update {
+        _uiState.update {
             it.copy(
                 eventTime = timeMillis,
                 timeOffsetMinutes = newOffset
@@ -346,7 +348,7 @@ class InsulinDialogViewModel @Inject constructor(
                 commandQueue.bolus(detailedBolusInfo, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+                            _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
                         } else {
                             automation.removeAutomationEventBolusReminder()
                         }

@@ -8,6 +8,7 @@ import app.aaps.plugins.sync.tidepool.auth.AuthFlowOut
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,18 +26,18 @@ class TidepoolViewModel @Inject constructor(
     private val authFlowOut: AuthFlowOut
 ) : ViewModel() {
 
-    val uiState: StateFlow<TidepoolUiState>
-        field = MutableStateFlow(TidepoolUiState())
+    private val _uiState = MutableStateFlow(TidepoolUiState())
+    val uiState: StateFlow<TidepoolUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             tidepoolRepository.connectionStatus.collect { status ->
-                uiState.update { it.copy(connectionStatus = status.name) }
+                _uiState.update { it.copy(connectionStatus = status.name) }
             }
         }
         viewModelScope.launch {
             tidepoolRepository.logList.collect { logList ->
-                uiState.update { it.copy(logList = logList) }
+                _uiState.update { it.copy(logList = logList) }
             }
         }
     }

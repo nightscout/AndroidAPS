@@ -28,6 +28,7 @@ import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,8 +48,8 @@ class CareDialogViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<CareDialogUiState>
-        field = MutableStateFlow(CareDialogUiState())
+    private val _uiState = MutableStateFlow(CareDialogUiState())
+    val uiState: StateFlow<CareDialogUiState> = _uiState.asStateFlow()
 
     init {
         val eventType = UiInteraction.EventType.entries[savedStateHandle.get<Int>("eventTypeOrdinal") ?: 0]
@@ -59,7 +60,7 @@ class CareDialogViewModel @Inject constructor(
         val showNotes = preferences.get(BooleanKey.OverviewShowNotesInDialogs)
         val siteRotation = preferences.get(BooleanKey.SiteRotationManageCgm)
 
-        uiState.update {
+        _uiState.update {
             CareDialogUiState(
                 eventType = eventType,
                 meterType = TE.MeterType.SENSOR,
@@ -91,7 +92,7 @@ class CareDialogViewModel @Inject constructor(
                     .filter { it.type == TE.Type.SENSOR_CHANGE && it.location != null && it.location != TE.Location.NONE }
                     .maxByOrNull { it.timestamp }
                 if (lastEntry != null) {
-                    uiState.update {
+                    _uiState.update {
                         it.copy(lastSiteLocationString = translator.translate(lastEntry.location))
                     }
                 }
@@ -102,7 +103,7 @@ class CareDialogViewModel @Inject constructor(
     }
 
     fun updateSiteLocation(location: TE.Location) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 siteLocation = location,
                 selectedSiteLocationString = if (location != TE.Location.NONE) translator.translate(location) else null
@@ -111,7 +112,7 @@ class CareDialogViewModel @Inject constructor(
     }
 
     fun updateSiteArrow(arrow: TE.Arrow) {
-        uiState.update { it.copy(siteArrow = arrow) }
+        _uiState.update { it.copy(siteArrow = arrow) }
     }
 
     fun bodyType(): BodyType = BodyType.fromPref(preferences.get(IntKey.SiteRotationUserProfile))
@@ -119,26 +120,26 @@ class CareDialogViewModel @Inject constructor(
     fun siteRotationEntries(): List<TE> = siteRotationEntriesCache
 
     fun updateMeterType(meterType: TE.MeterType) {
-        uiState.update { it.copy(meterType = meterType) }
+        _uiState.update { it.copy(meterType = meterType) }
     }
 
     fun updateBgValue(value: Double) {
         // When user changes BG value, auto-switch from Sensor to Finger (matches old bgTextWatcher)
         val state = uiState.value
         val newMeterType = if (state.meterType == TE.MeterType.SENSOR) TE.MeterType.FINGER else state.meterType
-        uiState.update { it.copy(bgValue = value, meterType = newMeterType) }
+        _uiState.update { it.copy(bgValue = value, meterType = newMeterType) }
     }
 
     fun updateDuration(value: Double) {
-        uiState.update { it.copy(duration = value) }
+        _uiState.update { it.copy(duration = value) }
     }
 
     fun updateNotes(value: String) {
-        uiState.update { it.copy(notes = value) }
+        _uiState.update { it.copy(notes = value) }
     }
 
     fun updateEventTime(timeMillis: Long) {
-        uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
+        _uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
     }
 
     private var confirmedState: CareDialogUiState? = null

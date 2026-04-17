@@ -39,6 +39,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
@@ -66,20 +68,20 @@ class FillDialogViewModel @Inject constructor(
     private val profileFunction: ProfileFunction
 ) : ViewModel() {
 
-    val uiState: StateFlow<FillDialogUiState>
-        field = MutableStateFlow(FillDialogUiState())
+    private val _uiState = MutableStateFlow(FillDialogUiState())
+    val uiState: StateFlow<FillDialogUiState> = _uiState.asStateFlow()
 
     sealed class SideEffect {
         data object ShowNoActionDialog : SideEffect()
         data class ShowDeliveryError(val comment: String) : SideEffect()
     }
 
-    val sideEffect: SharedFlow<SideEffect>
-        field = MutableSharedFlow(
-            replay = 0,
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
+    private val _sideEffect = MutableSharedFlow<SideEffect>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
     init {
         val preselect = FillPreselect.entries[savedStateHandle.get<Int>("preselect") ?: 0]
@@ -88,7 +90,7 @@ class FillDialogViewModel @Inject constructor(
 
         val availableInsulins = insulinManager.insulins.map { it.deepClone() }
 
-        uiState.update {
+        _uiState.update {
             FillDialogUiState(
                 insulin = 0.0,
                 siteChange = preselect == FillPreselect.SITE_CHANGE,
@@ -117,7 +119,7 @@ class FillDialogViewModel @Inject constructor(
         viewModelScope.launch {
             val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
             val currentInsulin = availableInsulins.find { it.insulinLabel == activeLabel } ?: availableInsulins.firstOrNull()
-            uiState.update {
+            _uiState.update {
                 it.copy(
                     selectedInsulin = currentInsulin,
                     activeInsulinLabel = activeLabel,
@@ -139,7 +141,7 @@ class FillDialogViewModel @Inject constructor(
                     .filter { it.type == TE.Type.CANNULA_CHANGE && it.location != null && it.location != TE.Location.NONE }
                     .maxByOrNull { it.timestamp }
                 if (lastEntry != null) {
-                    uiState.update {
+                    _uiState.update {
                         it.copy(lastSiteLocationString = translator.translate(lastEntry.location))
                     }
                 }
@@ -150,7 +152,7 @@ class FillDialogViewModel @Inject constructor(
     }
 
     fun refreshPresetButtons() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 presetButton1 = preferences.get(DoubleKey.ActionsFillButton1),
                 presetButton2 = preferences.get(DoubleKey.ActionsFillButton2),
@@ -163,7 +165,7 @@ class FillDialogViewModel @Inject constructor(
         val constrained = constraintChecker.applyBolusConstraints(
             ConstraintObject(value, aapsLogger)
         ).value()
-        uiState.update {
+        _uiState.update {
             it.copy(
                 insulin = value,
                 insulinAfterConstraints = constrained,
@@ -173,23 +175,23 @@ class FillDialogViewModel @Inject constructor(
     }
 
     fun updateSiteChange(checked: Boolean) {
-        uiState.update { it.copy(siteChange = checked) }
+        _uiState.update { it.copy(siteChange = checked) }
     }
 
     fun updateCartridgeChange(checked: Boolean) {
-        uiState.update { it.copy(insulinCartridgeChange = checked) }
+        _uiState.update { it.copy(insulinCartridgeChange = checked) }
     }
 
     fun selectInsulin(iCfg: ICfg) {
-        uiState.update { it.copy(selectedInsulin = iCfg, pumpUnitsWarning = pumpUnitsWarningFor(iCfg)) }
+        _uiState.update { it.copy(selectedInsulin = iCfg, pumpUnitsWarning = pumpUnitsWarningFor(iCfg)) }
     }
 
     fun updateNotes(value: String) {
-        uiState.update { it.copy(notes = value) }
+        _uiState.update { it.copy(notes = value) }
     }
 
     fun updateEventTime(timeMillis: Long) {
-        uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
+        _uiState.update { it.copy(eventTime = timeMillis, eventTimeChanged = true) }
     }
 
     private fun pumpUnitsWarningFor(iCfg: ICfg?): String? {
@@ -199,7 +201,7 @@ class FillDialogViewModel @Inject constructor(
     }
 
     fun updateSiteLocation(location: TE.Location) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 siteLocation = location,
                 selectedSiteLocationString = if (location != TE.Location.NONE) translator.translate(location) else null
@@ -208,7 +210,7 @@ class FillDialogViewModel @Inject constructor(
     }
 
     fun updateSiteArrow(arrow: TE.Arrow) {
-        uiState.update { it.copy(siteArrow = arrow) }
+        _uiState.update { it.copy(siteArrow = arrow) }
     }
 
     private var siteRotationEntriesCache: List<TE> = emptyList()
@@ -293,7 +295,7 @@ class FillDialogViewModel @Inject constructor(
         val notes = state.notes
 
         if (!state.hasAction) {
-            sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
+            _sideEffect.tryEmit(SideEffect.ShowNoActionDialog)
             return
         }
 
@@ -392,7 +394,7 @@ class FillDialogViewModel @Inject constructor(
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
                 } else {
                     onSuccess?.invoke()
                 }

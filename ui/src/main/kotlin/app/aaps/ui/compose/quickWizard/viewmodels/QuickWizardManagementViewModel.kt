@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,8 +49,8 @@ class QuickWizardManagementViewModel @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    val uiState: StateFlow<QuickWizardManagementUiState>
-        field = MutableStateFlow(QuickWizardManagementUiState())
+    private val _uiState = MutableStateFlow(QuickWizardManagementUiState())
+    val uiState: StateFlow<QuickWizardManagementUiState> = _uiState.asStateFlow()
 
     /**
      * Get max carbs allowed from constraints
@@ -69,7 +70,7 @@ class QuickWizardManagementViewModel @Inject constructor(
     }
 
     fun setScreenMode(mode: ScreenMode) {
-        uiState.update { it.copy(screenMode = mode) }
+        _uiState.update { it.copy(screenMode = mode) }
     }
 
     init {
@@ -95,7 +96,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 // Select first entry if exists
                 val firstEntry = entries.firstOrNull()
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         entries = entries,
                         selectedIndex = if (entries.isNotEmpty()) 0 else -1,
@@ -116,7 +117,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load QuickWizard entries", e)
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         isLoading = false,
                         snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to load entries")
@@ -179,7 +180,7 @@ class QuickWizardManagementViewModel @Inject constructor(
         if (index < 0 || index >= currentState.entries.size) return
 
         val entry = currentState.entries[index]
-        uiState.update {
+        _uiState.update {
             loadEntryIntoEditor(it.copy(selectedIndex = index, selectedGuid = entry.guid()), entry)
         }
     }
@@ -188,7 +189,7 @@ class QuickWizardManagementViewModel @Inject constructor(
      * Update current card index (for carousel state persistence)
      */
     fun updateCurrentCardIndex(index: Int) {
-        uiState.update { it.copy(currentCardIndex = index) }
+        _uiState.update { it.copy(currentCardIndex = index) }
     }
 
     /**
@@ -213,14 +214,14 @@ class QuickWizardManagementViewModel @Inject constructor(
                 when (mode) {
                     QuickWizardMode.WIZARD, QuickWizardMode.CARBS -> {
                         if (currentState.editorCarbs <= 0 && (!currentState.editorUseEcarbs || currentState.editorCarbs2 <= 0)) {
-                            uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error("Carbs must be greater than 0")) }
+                            _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error("Carbs must be greater than 0")) }
                             return@launch
                         }
                     }
 
                     QuickWizardMode.INSULIN                       -> {
                         if (currentState.editorInsulin <= 0.0) {
-                            uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error("Insulin must be greater than 0")) }
+                            _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error("Insulin must be greater than 0")) }
                             return@launch
                         }
                     }
@@ -262,10 +263,10 @@ class QuickWizardManagementViewModel @Inject constructor(
                 quickWizard.addOrUpdate(entry)
                 rxBus.send(EventQuickWizardChange())
 
-                uiState.update { it.copy(hasUnsavedChanges = false) }
+                _uiState.update { it.copy(hasUnsavedChanges = false) }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to save QuickWizard entry", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to save entry")) }
+                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to save entry")) }
             }
         }
     }
@@ -290,7 +291,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 _sideEffect.emit(SideEffect.ScrollToEntry(newIndex))
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to add QuickWizard entry", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to add entry")) }
+                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to add entry")) }
             }
         }
     }
@@ -339,7 +340,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 _sideEffect.emit(SideEffect.ScrollToEntry(newIndex))
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to clone QuickWizard entry", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to clone entry")) }
+                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to clone entry")) }
             }
         }
     }
@@ -358,7 +359,7 @@ class QuickWizardManagementViewModel @Inject constructor(
                 rxBus.send(EventQuickWizardChange())
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete QuickWizard entry", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to delete entry")) }
+                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to delete entry")) }
             }
         }
     }
@@ -367,28 +368,28 @@ class QuickWizardManagementViewModel @Inject constructor(
      * Clear snackbar message
      */
     fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     // Editor field update functions
     fun updateMode(value: QuickWizardMode) {
-        uiState.update { it.copy(editorMode = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorMode = value, hasUnsavedChanges = true) }
     }
 
     fun updateButtonText(value: String) {
-        uiState.update { it.copy(editorButtonText = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorButtonText = value, hasUnsavedChanges = true) }
     }
 
     fun updateInsulin(value: Double) {
-        uiState.update { it.copy(editorInsulin = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorInsulin = value, hasUnsavedChanges = true) }
     }
 
     fun updateCarbs(value: Int) {
-        uiState.update { it.copy(editorCarbs = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorCarbs = value, hasUnsavedChanges = true) }
     }
 
     fun updateCarbTime(value: Int) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 editorCarbTime = value,
                 editorUseAlarm = value > 0,  // Auto-enable alarm if carb time > 0
@@ -398,19 +399,19 @@ class QuickWizardManagementViewModel @Inject constructor(
     }
 
     fun updateValidFrom(value: Int) {
-        uiState.update { it.copy(editorValidFrom = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorValidFrom = value, hasUnsavedChanges = true) }
     }
 
     fun updateValidTo(value: Int) {
-        uiState.update { it.copy(editorValidTo = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorValidTo = value, hasUnsavedChanges = true) }
     }
 
     fun updateUseBG(value: Boolean) {
-        uiState.update { it.copy(editorUseBG = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorUseBG = value, hasUnsavedChanges = true) }
     }
 
     fun updateUseCOB(value: Boolean) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 editorUseCOB = value,
                 editorUseIOB = if (value) true else it.editorUseIOB,  // Auto-enable IOB if COB enabled
@@ -420,7 +421,7 @@ class QuickWizardManagementViewModel @Inject constructor(
     }
 
     fun updateUseIOB(value: Boolean) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 editorUseIOB = value,
                 editorUseCOB = if (!value) false else it.editorUseCOB,  // Auto-disable COB if IOB disabled
@@ -431,51 +432,51 @@ class QuickWizardManagementViewModel @Inject constructor(
     }
 
     fun updateUsePositiveIOBOnly(value: Boolean) {
-        uiState.update { it.copy(editorUsePositiveIOBOnly = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorUsePositiveIOBOnly = value, hasUnsavedChanges = true) }
     }
 
     fun updateUseTrend(value: TrendOption) {
-        uiState.update { it.copy(editorUseTrend = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorUseTrend = value, hasUnsavedChanges = true) }
     }
 
     fun updateUseSuperBolus(value: Boolean) {
-        uiState.update { it.copy(editorUseSuperBolus = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorUseSuperBolus = value, hasUnsavedChanges = true) }
     }
 
     fun updateUseTempTarget(value: Boolean) {
-        uiState.update { it.copy(editorUseTempTarget = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorUseTempTarget = value, hasUnsavedChanges = true) }
     }
 
     fun updateUseAlarm(value: Boolean) {
-        uiState.update { it.copy(editorUseAlarm = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorUseAlarm = value, hasUnsavedChanges = true) }
     }
 
     fun updatePercentage(value: Int) {
-        uiState.update { it.copy(editorPercentage = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorPercentage = value, hasUnsavedChanges = true) }
     }
 
     fun updateDevicePhone(value: Boolean) {
-        uiState.update { it.copy(editorDevicePhone = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorDevicePhone = value, hasUnsavedChanges = true) }
     }
 
     fun updateDeviceWatch(value: Boolean) {
-        uiState.update { it.copy(editorDeviceWatch = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorDeviceWatch = value, hasUnsavedChanges = true) }
     }
 
     fun updateUseEcarbs(value: Boolean) {
-        uiState.update { it.copy(editorUseEcarbs = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorUseEcarbs = value, hasUnsavedChanges = true) }
     }
 
     fun updateTime(value: Int) {
-        uiState.update { it.copy(editorTime = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorTime = value, hasUnsavedChanges = true) }
     }
 
     fun updateDuration(value: Int) {
-        uiState.update { it.copy(editorDuration = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorDuration = value, hasUnsavedChanges = true) }
     }
 
     fun updateCarbs2(value: Int) {
-        uiState.update { it.copy(editorCarbs2 = value, hasUnsavedChanges = true) }
+        _uiState.update { it.copy(editorCarbs2 = value, hasUnsavedChanges = true) }
     }
 
     /**

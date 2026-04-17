@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -105,8 +106,8 @@ class WearViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<WearUiState>
-        field = MutableStateFlow(WearUiState())
+    private val _uiState = MutableStateFlow(WearUiState())
+    val uiState: StateFlow<WearUiState> = _uiState.asStateFlow()
 
     private var currentCwfData: CwfData? = null
 
@@ -116,7 +117,7 @@ class WearViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             wearPlugin.connectedDevice.collect { device ->
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         connectedDevice = device ?: rh.gs(R.string.no_watch_connected),
                         isDeviceConnected = device != null
@@ -127,7 +128,7 @@ class WearViewModel @Inject constructor(
         viewModelScope.launch {
             wearPlugin.savedCustomWatchface.collect { cwfData ->
                 currentCwfData = cwfData
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         hasCustomWatchface = cwfData != null,
                         watchfaceName = cwfData?.metadata?.get(CwfMetadataKey.CWF_NAME) ?: "",
@@ -205,11 +206,11 @@ class WearViewModel @Inject constructor(
             watchfaceImage = decodeWatchfaceImage(cwfData)
         )
 
-        uiState.update { it.copy(showInfos = true, cwfInfosState = infosState) }
+        _uiState.update { it.copy(showInfos = true, cwfInfosState = infosState) }
     }
 
     fun hideCwfInfos() {
-        uiState.update { it.copy(showInfos = false) }
+        _uiState.update { it.copy(showInfos = false) }
     }
 
     private fun decodeWatchfaceImage(cwfData: CwfData): ImageBitmap? {
@@ -277,7 +278,7 @@ class WearViewModel @Inject constructor(
                     watchfaceImage = decodeWatchfaceImage(cwfFile.cwfData)
                 )
             }
-            uiState.update { it.copy(showImportList = true, importItems = items) }
+            _uiState.update { it.copy(showImportList = true, importItems = items) }
         }
     }
 
@@ -287,10 +288,10 @@ class WearViewModel @Inject constructor(
         preferences.put(StringNonKey.WearCwfAuthorVersion, metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
         preferences.put(StringNonKey.WearCwfFileName, metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
         rxBus.send(EventMobileToWearWatchface(cwfFile.zipByteArray))
-        uiState.update { it.copy(showImportList = false, importItems = emptyList()) }
+        _uiState.update { it.copy(showImportList = false, importItems = emptyList()) }
     }
 
     fun hideImportList() {
-        uiState.update { it.copy(showImportList = false, importItems = emptyList()) }
+        _uiState.update { it.copy(showImportList = false, importItems = emptyList()) }
     }
 }

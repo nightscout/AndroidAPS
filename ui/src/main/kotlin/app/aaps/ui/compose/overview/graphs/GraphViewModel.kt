@@ -34,6 +34,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flow
@@ -128,24 +129,24 @@ class GraphViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Chart config - updates when high/low mark preferences change
-    val chartConfigFlow: StateFlow<ChartConfig>
-        field = MutableStateFlow(
-            ChartConfig(
-                highMark = preferences.get(UnitDoubleKey.OverviewHighMark),
-                lowMark = preferences.get(UnitDoubleKey.OverviewLowMark)
-            )
+    private val _chartConfigFlow = MutableStateFlow(
+        ChartConfig(
+            highMark = preferences.get(UnitDoubleKey.OverviewHighMark),
+            lowMark = preferences.get(UnitDoubleKey.OverviewLowMark)
         )
+    )
+    val chartConfigFlow: StateFlow<ChartConfig> = _chartConfigFlow.asStateFlow()
 
     init {
         // Update chart config when high/low mark preferences change
         // drop(1) skips the initial emission (already set in field initializer)
         preferences.observe(UnitDoubleKey.OverviewHighMark)
             .drop(1)
-            .onEach { highMark -> chartConfigFlow.update { it.copy(highMark = highMark) } }
+            .onEach { highMark -> _chartConfigFlow.update { it.copy(highMark = highMark) } }
             .launchIn(viewModelScope)
         preferences.observe(UnitDoubleKey.OverviewLowMark)
             .drop(1)
-            .onEach { lowMark -> chartConfigFlow.update { it.copy(lowMark = lowMark) } }
+            .onEach { lowMark -> _chartConfigFlow.update { it.copy(lowMark = lowMark) } }
             .launchIn(viewModelScope)
     }
 

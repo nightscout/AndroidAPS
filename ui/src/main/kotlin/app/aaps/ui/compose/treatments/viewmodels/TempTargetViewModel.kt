@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -47,8 +48,8 @@ class TempTargetViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<TempTargetUiState>
-        field = MutableStateFlow(TempTargetUiState())
+    private val _uiState = MutableStateFlow(TempTargetUiState())
+    val uiState: StateFlow<TempTargetUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
@@ -63,7 +64,7 @@ class TempTargetViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.tempTargets.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -76,7 +77,7 @@ class TempTargetViewModel @Inject constructor(
                     persistenceLayer.getTemporaryTargetDataFromTime(now - millsToThePast, false)
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         tempTargets = tempTargets,
                         isLoading = false,
@@ -85,7 +86,7 @@ class TempTargetViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load temp targets", e)
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         isLoading = false,
                         snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading temp targets")
@@ -111,14 +112,14 @@ class TempTargetViewModel @Inject constructor(
      * Clear error state
      */
     fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
      * Toggle show/hide invalidated items
      */
     fun toggleInvalidated() {
-        uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
+        _uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
         loadData()
     }
 
@@ -126,7 +127,7 @@ class TempTargetViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: TT) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -138,7 +139,7 @@ class TempTargetViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -150,7 +151,7 @@ class TempTargetViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: TT) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -210,7 +211,7 @@ class TempTargetViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete temp targets", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting temp targets")) }
+                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting temp targets")) }
             }
         }
     }

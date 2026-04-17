@@ -24,6 +24,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -48,8 +49,8 @@ class RunningModeManagementViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<RunningModeManagementUiState>
-        field = MutableStateFlow(RunningModeManagementUiState())
+    private val _uiState = MutableStateFlow(RunningModeManagementUiState())
+    val uiState: StateFlow<RunningModeManagementUiState> = _uiState.asStateFlow()
 
     init {
         loadState()
@@ -67,7 +68,7 @@ class RunningModeManagementViewModel @Inject constructor(
                 val allowedModes = loop.allowedNextModes()
                 val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         currentMode = currentMode,
                         currentModeText = translator.translate(currentMode),
@@ -81,7 +82,7 @@ class RunningModeManagementViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load running mode state", e)
-                uiState.update { it.copy(isLoading = false, snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to load running mode state")) }
+                _uiState.update { it.copy(isLoading = false, snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to load running mode state")) }
             }
         }
     }
@@ -146,7 +147,7 @@ class RunningModeManagementViewModel @Inject constructor(
      * Clear error state
      */
     fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 }
 

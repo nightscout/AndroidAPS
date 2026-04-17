@@ -32,6 +32,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -52,20 +54,20 @@ class InsulinManagementViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer
 ) : ViewModel() {
 
-    val uiState: StateFlow<InsulinManagementUiState>
-        field = MutableStateFlow(InsulinManagementUiState())
-
-    val sideEffect: SharedFlow<SideEffect>
-        field = MutableSharedFlow(
-            replay = 0,
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
+    private val _uiState = MutableStateFlow(InsulinManagementUiState())
+    val uiState: StateFlow<InsulinManagementUiState> = _uiState.asStateFlow()
 
     sealed class SideEffect {
         data class ScrollToInsulin(val index: Int) : SideEffect()
         data object NavigateBack : SideEffect()
     }
+
+    private val _sideEffect = MutableSharedFlow<SideEffect>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
     init {
         loadData()
@@ -73,7 +75,7 @@ class InsulinManagementViewModel @Inject constructor(
     }
 
     fun setScreenMode(mode: ScreenMode) {
-        uiState.update { it.copy(screenMode = mode) }
+        _uiState.update { it.copy(screenMode = mode) }
         loadData(reload = true)
     }
 
@@ -92,7 +94,7 @@ class InsulinManagementViewModel @Inject constructor(
             val editorNickname = currentICfg?.insulinNickname?.takeIf { it.isNotBlank() } ?: defaultNickname
             val autoNameEnabled = editorNickname == defaultNickname || autoName
 
-            uiState.update {
+            _uiState.update {
                 it.copy(
                     insulins = insulins,
                     currentCardIndex = currentIndex,
@@ -112,7 +114,7 @@ class InsulinManagementViewModel @Inject constructor(
                 autoGenerateName()
                 if (saveAfterAutoName) saveCurrentInsulin()
             }
-            targetIndex?.let { sideEffect.emit(SideEffect.ScrollToInsulin(it)) }
+            targetIndex?.let { _sideEffect.emit(SideEffect.ScrollToInsulin(it)) }
         }
     }
 
@@ -129,7 +131,7 @@ class InsulinManagementViewModel @Inject constructor(
     private suspend fun updateRunningInsulin() {
         val now = dateUtil.now()
         val activeIcfg = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)?.iCfg
-        uiState.update { it.copy(activeInsulinLabel = activeIcfg?.insulinLabel) }
+        _uiState.update { it.copy(activeInsulinLabel = activeIcfg?.insulinLabel) }
     }
 
     fun refreshData() {
@@ -137,7 +139,7 @@ class InsulinManagementViewModel @Inject constructor(
             insulinManager.loadSettings()
             val insulins = insulinManager.insulins.map { it.deepClone() }
             val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
-            uiState.update {
+            _uiState.update {
                 it.copy(
                     insulins = insulins,
                     activeInsulinLabel = activeLabel
@@ -149,7 +151,7 @@ class InsulinManagementViewModel @Inject constructor(
     fun updateCurrentCardIndex(index: Int) {
         if (index == uiState.value.currentCardIndex) return
         if (hasUnsavedChanges()) {
-            uiState.update { it.copy(pendingNavigation = PendingNavigation.CardSwitch(index)) }
+            _uiState.update { it.copy(pendingNavigation = PendingNavigation.CardSwitch(index)) }
             return
         }
         applyCardSwitch(index)
@@ -163,7 +165,7 @@ class InsulinManagementViewModel @Inject constructor(
         val defaultNickname = rh.gs(editorTemplate.label)
         val autoNameEnabled = editorNickname == defaultNickname
 
-        uiState.update {
+        _uiState.update {
             it.copy(
                 currentCardIndex = index,
                 pendingNavigation = null,
@@ -179,10 +181,10 @@ class InsulinManagementViewModel @Inject constructor(
 
     fun requestBack() {
         if (hasUnsavedChanges()) {
-            uiState.update { it.copy(pendingNavigation = PendingNavigation.Back) }
+            _uiState.update { it.copy(pendingNavigation = PendingNavigation.Back) }
         } else {
-            uiState.update { it.copy(pendingNavigation = null) }
-            viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
+            _uiState.update { it.copy(pendingNavigation = null) }
+            viewModelScope.launch { _sideEffect.emit(SideEffect.NavigateBack) }
         }
     }
 
@@ -193,8 +195,8 @@ class InsulinManagementViewModel @Inject constructor(
                 is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
 
                 is PendingNavigation.Back       -> {
-                    uiState.update { it.copy(pendingNavigation = null) }
-                    viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
+                    _uiState.update { it.copy(pendingNavigation = null) }
+                    viewModelScope.launch { _sideEffect.emit(SideEffect.NavigateBack) }
                 }
 
                 null                            -> Unit
@@ -208,8 +210,8 @@ class InsulinManagementViewModel @Inject constructor(
             is PendingNavigation.CardSwitch -> applyCardSwitch(pending.targetIndex)
 
             is PendingNavigation.Back       -> {
-                uiState.update { it.copy(pendingNavigation = null) }
-                viewModelScope.launch { sideEffect.emit(SideEffect.NavigateBack) }
+                _uiState.update { it.copy(pendingNavigation = null) }
+                viewModelScope.launch { _sideEffect.emit(SideEffect.NavigateBack) }
             }
 
             null                            -> Unit
@@ -217,7 +219,7 @@ class InsulinManagementViewModel @Inject constructor(
     }
 
     fun dismissPendingNavigation() {
-        uiState.update { it.copy(pendingNavigation = null) }
+        _uiState.update { it.copy(pendingNavigation = null) }
     }
 
     fun hasUnsavedChanges(): Boolean {
@@ -235,7 +237,7 @@ class InsulinManagementViewModel @Inject constructor(
     // Editor field updates
 
     fun updateEditorNickname(nickname: String) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 autoNameEnabled = false,
                 editorNickname = nickname
@@ -244,12 +246,12 @@ class InsulinManagementViewModel @Inject constructor(
     }
 
     fun updateEditorConcentration(concentration: ConcentrationType) {
-        uiState.update { it.copy(editorConcentration = concentration) }
+        _uiState.update { it.copy(editorConcentration = concentration) }
     }
 
     fun updateEditorPeak(peakMinutes: Int) {
         val editorTemplate = InsulinType.fromPeak(peakMinutes.toLong() * 60_000L)
-        uiState.update {
+        _uiState.update {
             it.copy(
                 editorTemplate = editorTemplate,
                 editorPeakMinutes = peakMinutes
@@ -260,12 +262,12 @@ class InsulinManagementViewModel @Inject constructor(
     }
 
     fun updateEditorDia(diaHours: Double) {
-        uiState.update { it.copy(editorDiaHours = diaHours) }
+        _uiState.update { it.copy(editorDiaHours = diaHours) }
     }
 
     /** Load peak from a preset template (chips UI). Only sets peak, not DIA. */
     fun loadPeakFromPreset(preset: InsulinType) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 editorTemplate = preset,
                 editorPeakMinutes = preset.iCfg.peak,
@@ -277,7 +279,7 @@ class InsulinManagementViewModel @Inject constructor(
 
     fun autoGenerateName() {
         val newDefaultNickname = rh.gs((uiState.value.editorTemplate ?: InsulinType.fromPeak(uiState.value.editorPeakMinutes.toLong() * 60_000L)).label)
-        uiState.update { it.copy(editorNickname = newDefaultNickname) }
+        _uiState.update { it.copy(editorNickname = newDefaultNickname) }
     }
 
     // CRUD operations
@@ -397,16 +399,16 @@ class InsulinManagementViewModel @Inject constructor(
             val message = rh.gs(R.string.activate_insulin_new_insulin, iCfg.insulinLabel) +
                 "\n\n" + rh.gs(R.string.activate_insulin_profile_switch, details.joinToString(", "))
 
-            uiState.update { it.copy(activationMessage = message) }
+            _uiState.update { it.copy(activationMessage = message) }
         }
     }
 
     fun dismissActivation() {
-        uiState.update { it.copy(activationMessage = null) }
+        _uiState.update { it.copy(activationMessage = null) }
     }
 
     fun executeActivation() {
-        uiState.update { it.copy(activationMessage = null) }
+        _uiState.update { it.copy(activationMessage = null) }
         viewModelScope.launch {
             val state = uiState.value
             val iCfg = state.insulins.getOrNull(state.currentCardIndex) ?: return@launch
@@ -433,11 +435,11 @@ class InsulinManagementViewModel @Inject constructor(
     }
 
     fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     private fun showSnackbar(message: String) {
-        uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(message)) }
+        _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(message)) }
     }
 
     /** Preset list for "Load peak from" chips — excludes FreePeak (not a real preset) */

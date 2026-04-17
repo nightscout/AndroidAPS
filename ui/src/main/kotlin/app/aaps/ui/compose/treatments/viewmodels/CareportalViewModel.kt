@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -45,8 +46,8 @@ class CareportalViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<CareportalUiState>
-        field = MutableStateFlow(CareportalUiState())
+    private val _uiState = MutableStateFlow(CareportalUiState())
+    val uiState: StateFlow<CareportalUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
@@ -61,7 +62,7 @@ class CareportalViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.therapyEvents.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -74,7 +75,7 @@ class CareportalViewModel @Inject constructor(
                     persistenceLayer.getTherapyEventDataFromTime(now - millsToThePast, false)
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         therapyEvents = therapyEvents,
                         isLoading = false,
@@ -83,7 +84,7 @@ class CareportalViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load therapy events", e)
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         isLoading = false,
                         snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading therapy events")
@@ -109,14 +110,14 @@ class CareportalViewModel @Inject constructor(
      * Clear error state
      */
     fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
      * Toggle show/hide invalidated items
      */
     fun toggleInvalidated() {
-        uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
+        _uiState.update { it.copy(showInvalidated = !it.showInvalidated) }
         loadData()
     }
 
@@ -124,7 +125,7 @@ class CareportalViewModel @Inject constructor(
      * Enter selection mode with initial item selected
      */
     fun enterSelectionMode(item: TE) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = true,
                 selectedItems = setOf(item)
@@ -136,7 +137,7 @@ class CareportalViewModel @Inject constructor(
      * Exit selection mode and clear selection
      */
     fun exitSelectionMode() {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 isRemovingMode = false,
                 selectedItems = emptySet()
@@ -148,7 +149,7 @@ class CareportalViewModel @Inject constructor(
      * Toggle selection of an item
      */
     fun toggleSelection(item: TE) {
-        uiState.update { state ->
+        _uiState.update { state ->
             val newSelection = if (item in state.selectedItems) {
                 state.selectedItems - item
             } else {
@@ -200,7 +201,7 @@ class CareportalViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete therapy events", e)
-                uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting therapy events")) }
+                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting therapy events")) }
             }
         }
     }

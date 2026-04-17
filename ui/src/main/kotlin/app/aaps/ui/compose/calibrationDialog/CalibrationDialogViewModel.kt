@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -29,15 +30,15 @@ class CalibrationDialogViewModel @Inject constructor(
     val rh: ResourceHelper
 ) : ViewModel() {
 
-    val uiState: StateFlow<CalibrationDialogUiState>
-        field = MutableStateFlow(CalibrationDialogUiState())
+    private val _uiState = MutableStateFlow(CalibrationDialogUiState())
+    val uiState: StateFlow<CalibrationDialogUiState> = _uiState.asStateFlow()
 
     init {
         val units = profileUtil.units
         val currentBg = profileUtil.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0)
         val isMmol = units == GlucoseUnit.MMOL
 
-        uiState.update {
+        _uiState.update {
             CalibrationDialogUiState(
                 bg = currentBg,
                 units = units,
@@ -49,7 +50,7 @@ class CalibrationDialogViewModel @Inject constructor(
     }
 
     fun updateBg(value: Double) {
-        uiState.update { it.copy(bg = value) }
+        _uiState.update { it.copy(bg = value) }
     }
 
     fun hasAction(): Boolean = uiState.value.bg > 0.0

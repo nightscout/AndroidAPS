@@ -17,6 +17,7 @@ import app.aaps.pump.dana.keys.DanaIntNonKey
 import app.aaps.pump.dana.keys.DanaStringNonKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONArray
@@ -59,12 +60,12 @@ class DanaPump @Inject constructor(
         }
     }
 
-    val lastConnectionFlow: StateFlow<Long>
-        field = MutableStateFlow(0L)
+    private val _lastConnectionFlow = MutableStateFlow(0L)
+    val lastConnectionFlow: StateFlow<Long> = _lastConnectionFlow.asStateFlow()
     var lastConnection: Long
         get() = lastConnectionFlow.value
         set(value) {
-            lastConnectionFlow.value = value
+            _lastConnectionFlow.value = value
         }
     var lastSettingsRead: Long = 0
     var readHistoryFrom: Long = 0 // start next history read from this timestamp
@@ -118,38 +119,38 @@ class DanaPump @Inject constructor(
     var bolusStep = 0.1
     var basalStep = 0.1
     var iob = 0.0
-    val reservoirRemainingUnitsFlow: StateFlow<Double>
-        field = MutableStateFlow(0.0)
+    private val _reservoirRemainingUnitsFlow = MutableStateFlow(0.0)
+    val reservoirRemainingUnitsFlow: StateFlow<Double> = _reservoirRemainingUnitsFlow.asStateFlow()
     var reservoirRemainingUnits: Double
         get() = reservoirRemainingUnitsFlow.value
         set(value) {
-            reservoirRemainingUnitsFlow.value = value
+            _reservoirRemainingUnitsFlow.value = value
         }
 
-    val batteryRemainingFlow: StateFlow<Int?>
-        field = MutableStateFlow(null)
+    private val _batteryRemainingFlow = MutableStateFlow<Int?>(null)
+    val batteryRemainingFlow: StateFlow<Int?> = _batteryRemainingFlow.asStateFlow()
     var batteryRemaining: Int?
         get() = batteryRemainingFlow.value
         set(value) {
-            batteryRemainingFlow.value = value
+            _batteryRemainingFlow.value = value
         }
 
     var bolusBlocked = false
 
-    val lastBolusTimeFlow: StateFlow<Long?>
-        field = MutableStateFlow(null)
+    private val _lastBolusTimeFlow = MutableStateFlow<Long?>(null)
+    val lastBolusTimeFlow: StateFlow<Long?> = _lastBolusTimeFlow.asStateFlow()
     var lastBolusTime: Long?
         get() = lastBolusTimeFlow.value
         set(value) {
-            lastBolusTimeFlow.value = value
+            _lastBolusTimeFlow.value = value
         }
 
-    val lastBolusAmountFlow: StateFlow<Double?>
-        field = MutableStateFlow(null)
+    private val _lastBolusAmountFlow = MutableStateFlow<Double?>(null)
+    val lastBolusAmountFlow: StateFlow<Double?> = _lastBolusAmountFlow.asStateFlow()
     var lastBolusAmount: Double?
         get() = lastBolusAmountFlow.value
         set(value) {
-            lastBolusAmountFlow.value = value
+            _lastBolusAmountFlow.value = value
         }
     var currentBasal = 0.0
 

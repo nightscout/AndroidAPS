@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import kotlin.math.abs
@@ -34,26 +36,26 @@ class ExtendedBolusDialogViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<ExtendedBolusDialogUiState>
-        field = MutableStateFlow(ExtendedBolusDialogUiState())
+    private val _uiState = MutableStateFlow(ExtendedBolusDialogUiState())
+    val uiState: StateFlow<ExtendedBolusDialogUiState> = _uiState.asStateFlow()
 
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
     }
 
-    val sideEffect: SharedFlow<SideEffect>
-        field = MutableSharedFlow(
-            replay = 0,
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
+    private val _sideEffect = MutableSharedFlow<SideEffect>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
     init {
         val pumpDescription = activePlugin.activePump.pumpDescription
         val maxInsulin = constraintChecker.getMaxExtendedBolusAllowed().value()
         val isClosedLoop = constraintChecker.isClosedLoopAllowed().value()
 
-        uiState.update {
+        _uiState.update {
             ExtendedBolusDialogUiState(
                 insulin = pumpDescription.extendedBolusStep,
                 durationMinutes = pumpDescription.extendedBolusDurationStep,
@@ -68,17 +70,17 @@ class ExtendedBolusDialogViewModel @Inject constructor(
     }
 
     fun acceptLoopStopWarning() {
-        uiState.update { it.copy(loopStopWarningAccepted = true) }
+        _uiState.update { it.copy(loopStopWarningAccepted = true) }
     }
 
     fun updateInsulin(value: Double) {
         val clamped = value.coerceIn(uiState.value.extendedStep, uiState.value.maxInsulin)
-        uiState.update { it.copy(insulin = clamped) }
+        _uiState.update { it.copy(insulin = clamped) }
     }
 
     fun updateDuration(value: Double) {
         val clamped = value.coerceIn(uiState.value.extendedDurationStep, uiState.value.extendedMaxDuration)
-        uiState.update { it.copy(durationMinutes = clamped) }
+        _uiState.update { it.copy(durationMinutes = clamped) }
     }
 
     fun hasAction(): Boolean {
@@ -127,7 +129,7 @@ class ExtendedBolusDialogViewModel @Inject constructor(
         commandQueue.extendedBolus(insulinAfterConstraints, durationInMinutes, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+                    _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
                 }
             }
         })

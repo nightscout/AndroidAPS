@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -62,8 +63,8 @@ class ImportViewModel @Inject constructor(
     private val uel: UserEntryLogger
 ) : ViewModel() {
 
-    val importStep: StateFlow<ImportStep>
-        field = MutableStateFlow<ImportStep>(ImportStep.Idle)
+    private val _importStep = MutableStateFlow<ImportStep>(ImportStep.Idle)
+    val importStep: StateFlow<ImportStep> = _importStep.asStateFlow()
 
     // Cache for loaded files (preserved when navigating back from Review)
     private var cachedFiles: List<ImportFileItem> = emptyList()
@@ -87,13 +88,13 @@ class ImportViewModel @Inject constructor(
 
         if (needsLocal) {
             // Show loading briefly, then local files immediately
-            importStep.value = ImportStep.Loading
+            _importStep.value = ImportStep.Loading
             viewModelScope.launch {
                 try {
                     val localFiles = importExportPrefs.getLocalImportFiles()
                     cachedFiles = localFiles.map { ImportFileItem(it, ImportSource.LOCAL) }
 
-                    importStep.value = ImportStep.FilePicker(
+                    _importStep.value = ImportStep.FilePicker(
                         files = cachedFiles,
                         hasMoreCloud = false,
                         isLoadingMore = false,
@@ -108,12 +109,12 @@ class ImportViewModel @Inject constructor(
                     }
                 } catch (e: Exception) {
                     aapsLogger.error(LTag.CORE, "Failed to load local files", e)
-                    importStep.value = ImportStep.Error(e.message ?: "Failed to load files")
+                    _importStep.value = ImportStep.Error(e.message ?: "Failed to load files")
                 }
             }
         } else {
             // Cloud only — show loading with progress
-            importStep.value = ImportStep.FilePicker(
+            _importStep.value = ImportStep.FilePicker(
                 files = emptyList(),
                 hasMoreCloud = false,
                 isLoadingMore = false,
@@ -133,7 +134,7 @@ class ImportViewModel @Inject constructor(
             cloudPageToken = nextToken
             cachedHasMoreCloud = nextToken != null
 
-            importStep.value = ImportStep.FilePicker(
+            _importStep.value = ImportStep.FilePicker(
                 files = cachedFiles,
                 hasMoreCloud = cachedHasMoreCloud,
                 isLoadingMore = false,
@@ -145,7 +146,7 @@ class ImportViewModel @Inject constructor(
             // Keep local files visible, just stop cloud loading
             val current = importStep.value
             if (current is ImportStep.FilePicker) {
-                importStep.value = current.copy(
+                _importStep.value = current.copy(
                     isLoadingCloud = false,
                     cloudLoadingProgress = null
                 )
@@ -157,7 +158,7 @@ class ImportViewModel @Inject constructor(
         val current = importStep.value
         if (current !is ImportStep.FilePicker || current.isLoadingMore || !current.hasMoreCloud) return
 
-        importStep.value = current.copy(isLoadingMore = true)
+        _importStep.value = current.copy(isLoadingMore = true)
 
         viewModelScope.launch {
             try {
@@ -167,7 +168,7 @@ class ImportViewModel @Inject constructor(
                 cloudPageToken = nextToken
                 cachedHasMoreCloud = nextToken != null
 
-                importStep.value = ImportStep.FilePicker(
+                _importStep.value = ImportStep.FilePicker(
                     files = cachedFiles,
                     hasMoreCloud = cachedHasMoreCloud,
                     isLoadingMore = false,
@@ -176,7 +177,7 @@ class ImportViewModel @Inject constructor(
             } catch (e: Exception) {
                 aapsLogger.error(LTag.CORE, "Failed to load more cloud files", e)
                 // Restore non-loading state
-                importStep.value = ImportStep.FilePicker(
+                _importStep.value = ImportStep.FilePicker(
                     files = cachedFiles,
                     hasMoreCloud = cachedHasMoreCloud,
                     isLoadingMore = false,
@@ -187,7 +188,7 @@ class ImportViewModel @Inject constructor(
     }
 
     fun selectFile(item: ImportFileItem) {
-        importStep.value = ImportStep.Review(
+        _importStep.value = ImportStep.Review(
             file = item.prefsFile,
             fileSource = item.source,
             // No local master password → skip the "try master password first" optimization
@@ -199,7 +200,7 @@ class ImportViewModel @Inject constructor(
     fun onMasterPasswordChanged(pw: String) {
         val current = importStep.value
         if (current is ImportStep.Review) {
-            importStep.value = current.copy(
+            _importStep.value = current.copy(
                 masterPassword = pw,
                 passwordFieldError = false
             )
@@ -209,7 +210,7 @@ class ImportViewModel @Inject constructor(
     fun onDecryptionPasswordChanged(pw: String) {
         val current = importStep.value
         if (current is ImportStep.Review) {
-            importStep.value = current.copy(decryptionPassword = pw)
+            _importStep.value = current.copy(decryptionPassword = pw)
         }
     }
 
@@ -222,14 +223,14 @@ class ImportViewModel @Inject constructor(
             // Symmetric guard: surface the blank-password error on whichever field is currently active.
             // Fresh-install path uses decryptResult=WrongPassword (which the decryption password field reads for its error);
             // master-password path uses passwordFieldError.
-            importStep.value = if (current.needsDecryptionPassword)
+            _importStep.value = if (current.needsDecryptionPassword)
                 current.copy(decryptResult = ImportDecryptResult.WrongPassword)
             else
                 current.copy(passwordFieldError = true)
             return
         }
 
-        importStep.value = current.copy(isProcessing = true)
+        _importStep.value = current.copy(isProcessing = true)
 
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
@@ -242,14 +243,14 @@ class ImportViewModel @Inject constructor(
                 is ImportDecryptResult.WrongPassword -> {
                     if (!prev.needsDecryptionPassword) {
                         // Master password didn't decrypt → show decryption password field
-                        importStep.value = prev.copy(
+                        _importStep.value = prev.copy(
                             isProcessing = false,
                             needsDecryptionPassword = true,
                             decryptResult = null
                         )
                     } else {
                         // Second attempt also failed
-                        importStep.value = prev.copy(
+                        _importStep.value = prev.copy(
                             isProcessing = false,
                             decryptResult = result
                         )
@@ -258,7 +259,7 @@ class ImportViewModel @Inject constructor(
 
                 is ImportDecryptResult.Success,
                 is ImportDecryptResult.Error         -> {
-                    importStep.value = prev.copy(
+                    _importStep.value = prev.copy(
                         isProcessing = false,
                         decryptResult = result
                     )
@@ -273,14 +274,14 @@ class ImportViewModel @Inject constructor(
         val result = current.decryptResult
         if (result !is ImportDecryptResult.Success || !result.importPossible) return
 
-        importStep.value = current.copy(isProcessing = true)
+        _importStep.value = current.copy(isProcessing = true)
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 importExportPrefs.executeImport(result.prefs)
                 importExportPrefs.prepareImportRestart()
             }
-            importStep.value = ImportStep.RestartConfirm
+            _importStep.value = ImportStep.RestartConfirm
         }
     }
 
@@ -289,7 +290,7 @@ class ImportViewModel @Inject constructor(
     }
 
     fun goBackToFilePicker() {
-        importStep.value = ImportStep.FilePicker(
+        _importStep.value = ImportStep.FilePicker(
             files = cachedFiles,
             hasMoreCloud = cachedHasMoreCloud,
             isLoadingMore = false,
@@ -298,10 +299,10 @@ class ImportViewModel @Inject constructor(
     }
 
     fun dismissError() {
-        importStep.value = ImportStep.Idle
+        _importStep.value = ImportStep.Idle
     }
 
     fun cancelImport() {
-        importStep.value = ImportStep.Idle
+        _importStep.value = ImportStep.Idle
     }
 }

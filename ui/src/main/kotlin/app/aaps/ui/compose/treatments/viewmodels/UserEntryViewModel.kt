@@ -21,6 +21,7 @@ import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.USER_ENTRY_U
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -39,8 +40,8 @@ class UserEntryViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
 ) : ViewModel() {
 
-    val uiState: StateFlow<UserEntryUiState>
-        field = MutableStateFlow(UserEntryUiState())
+    private val _uiState = MutableStateFlow(UserEntryUiState())
+    val uiState: StateFlow<UserEntryUiState> = _uiState.asStateFlow()
 
     private val millsToThePastFiltered = T.days(USER_ENTRY_FILTERED_DAYS).msecs()
     private val millsToThePastUnFiltered = T.days(USER_ENTRY_UNFILTERED_DAYS).msecs()
@@ -58,7 +59,7 @@ class UserEntryViewModel @Inject constructor(
             // Only show loading on initial load, not on refreshes
             val currentState = uiState.value
             if (currentState.userEntries.isEmpty()) {
-                uiState.update { it.copy(isLoading = true) }
+                _uiState.update { it.copy(isLoading = true) }
             }
 
             try {
@@ -69,7 +70,7 @@ class UserEntryViewModel @Inject constructor(
                     persistenceLayer.getUserEntryFilteredDataFromTime(now - millsToThePastFiltered)
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         userEntries = userEntries,
                         isLoading = false,
@@ -78,7 +79,7 @@ class UserEntryViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load user entries", e)
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         isLoading = false,
                         snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading user entries")
@@ -104,14 +105,14 @@ class UserEntryViewModel @Inject constructor(
      * Clear error state
      */
     fun clearSnackbar() {
-        uiState.update { it.copy(snackbarMessage = null) }
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
      * Toggle show/hide loop records
      */
     fun toggleLoop() {
-        uiState.update { it.copy(showLoop = !it.showLoop) }
+        _uiState.update { it.copy(showLoop = !it.showLoop) }
         loadData()
     }
 

@@ -31,6 +31,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -68,22 +70,22 @@ class TempTargetManagementViewModel @Inject constructor(
         }
     }
 
-    val uiState: StateFlow<TempTargetManagementUiState>
-        field = MutableStateFlow(TempTargetManagementUiState())
-
-    val sideEffect: SharedFlow<SideEffect>
-        field = MutableSharedFlow(
-            replay = 0,                          // Don't replay to new collectors
-            extraBufferCapacity = 1,             // Buffer one event if no collector
-            onBufferOverflow = BufferOverflow.DROP_OLDEST  // Drop old events
-        )
+    private val _uiState = MutableStateFlow(TempTargetManagementUiState())
+    val uiState: StateFlow<TempTargetManagementUiState> = _uiState.asStateFlow()
 
     sealed class SideEffect {
         data class ScrollToPreset(val index: Int) : SideEffect()
     }
 
+    private val _sideEffect = MutableSharedFlow<SideEffect>(
+        replay = 0,                          // Don't replay to new collectors
+        extraBufferCapacity = 1,             // Buffer one event if no collector
+        onBufferOverflow = BufferOverflow.DROP_OLDEST  // Drop old events
+    )
+    val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
+
     fun setScreenMode(mode: ScreenMode) {
-        uiState.update { it.copy(screenMode = mode) }
+        _uiState.update { it.copy(screenMode = mode) }
     }
 
     init {
@@ -135,7 +137,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 // Convert target from mg/dL (storage) to user units (display) with proper rounding
                 val targetInUserUnits = roundForDisplay(profileUtil.fromMgdlToUnits(initialTargetMgdl, units), units)
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         activeTT = activeTT,
                         activePresetIndex = activePresetIndex,
@@ -153,7 +155,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load temp target presets", e)
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         isLoading = false,
                         snackbarMessage = SnackbarMessage.Error(e.message ?: "Failed to load presets")
@@ -188,7 +190,7 @@ class TempTargetManagementViewModel @Inject constructor(
                     }.takeIf { it >= 0 }
                 }
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         activeTT = activeTT,
                         activePresetIndex = activePresetIndex,
@@ -221,7 +223,7 @@ class TempTargetManagementViewModel @Inject constructor(
      * Used to preserve pager position across rotation.
      */
     fun updateCurrentCardIndex(index: Int) {
-        uiState.update { it.copy(currentCardIndex = index) }
+        _uiState.update { it.copy(currentCardIndex = index) }
     }
 
     /**
@@ -240,7 +242,7 @@ class TempTargetManagementViewModel @Inject constructor(
         val durationMs = if (isActive) activeTT.duration else preset?.duration ?: (60L * 60L * 1000L)
         val targetInUserUnits = roundForDisplay(profileUtil.fromMgdlToUnits(targetMgdl, units), units)
 
-        uiState.update {
+        _uiState.update {
             it.copy(
                 selectedPreset = preset,
                 editorName = preset?.name ?: "",
@@ -262,7 +264,7 @@ class TempTargetManagementViewModel @Inject constructor(
         val tt = uiState.value.activeTT ?: return
         if (uiState.value.selectedPreset == null) return // already on active card
         val targetInUserUnits = roundForDisplay(profileUtil.fromMgdlToUnits(tt.lowTarget, units), units)
-        uiState.update {
+        _uiState.update {
             it.copy(
                 selectedPreset = null,
                 editorName = "",
@@ -279,28 +281,28 @@ class TempTargetManagementViewModel @Inject constructor(
      * Update editor name
      */
     fun updateEditorName(name: String) {
-        uiState.update { it.copy(editorName = name) }
+        _uiState.update { it.copy(editorName = name) }
     }
 
     /**
      * Update editor target value (in mg/dL)
      */
     fun updateEditorTarget(target: Double) {
-        uiState.update { it.copy(editorTarget = target) }
+        _uiState.update { it.copy(editorTarget = target) }
     }
 
     /**
      * Update editor duration (in milliseconds)
      */
     fun updateEditorDuration(duration: Long) {
-        uiState.update { it.copy(editorDuration = duration) }
+        _uiState.update { it.copy(editorDuration = duration) }
     }
 
     /**
      * Update event time for activation
      */
     fun updateEventTime(time: Long) {
-        uiState.update {
+        _uiState.update {
             it.copy(
                 eventTime = time,
                 eventTimeChanged = true
@@ -312,7 +314,7 @@ class TempTargetManagementViewModel @Inject constructor(
      * Update notes for activation
      */
     fun updateNotes(notes: String) {
-        uiState.update { it.copy(notes = notes) }
+        _uiState.update { it.copy(notes = notes) }
     }
 
     /**
@@ -345,7 +347,7 @@ class TempTargetManagementViewModel @Inject constructor(
 
                 // Update presets list and selected preset reference
                 val reselectedPreset = updatedPresets.find { it.id == selectedPresetId }
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         presets = updatedPresets,
                         selectedPreset = reselectedPreset
@@ -467,7 +469,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 val reselectedPreset = updatedPresets.find { it.id == selectedPreset.id }
                 val targetInUserUnits = roundForDisplay(profileUtil.fromMgdlToUnits(defaultTargetMgdl, units), units)
 
-                uiState.update {
+                _uiState.update {
                     it.copy(
                         presets = updatedPresets,
                         selectedPreset = reselectedPreset,
@@ -510,7 +512,7 @@ class TempTargetManagementViewModel @Inject constructor(
                 // Scroll to new preset (account for standalone active TT card at position 0)
                 val hasStandaloneActiveTT = uiState.value.activeTT != null && uiState.value.activePresetIndex == null
                 val pageIndex = if (hasStandaloneActiveTT) presetIndex + 1 else presetIndex
-                sideEffect.emit(SideEffect.ScrollToPreset(pageIndex))
+                _sideEffect.emit(SideEffect.ScrollToPreset(pageIndex))
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to add preset", e)
             }

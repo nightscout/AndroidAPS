@@ -29,6 +29,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -51,20 +53,20 @@ class TreatmentDialogViewModel @Inject constructor(
     private val hardLimits: HardLimits
 ) : ViewModel() {
 
-    val uiState: StateFlow<TreatmentDialogUiState>
-        field = MutableStateFlow(TreatmentDialogUiState())
+    private val _uiState = MutableStateFlow(TreatmentDialogUiState())
+    val uiState: StateFlow<TreatmentDialogUiState> = _uiState.asStateFlow()
 
     sealed class SideEffect {
         data class ShowDeliveryError(val comment: String) : SideEffect()
         data object ShowNoActionDialog : SideEffect()
     }
 
-    val sideEffect: SharedFlow<SideEffect>
-        field = MutableSharedFlow(
-            replay = 0,
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
+    private val _sideEffect = MutableSharedFlow<SideEffect>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val sideEffect: SharedFlow<SideEffect> = _sideEffect.asSharedFlow()
 
     init {
         val pump = activePlugin.activePump
@@ -74,7 +76,7 @@ class TreatmentDialogViewModel @Inject constructor(
         val bolusStep = pump.pumpDescription.bolusStep
         val isAapsClient = config.AAPSCLIENT
 
-        uiState.update {
+        _uiState.update {
             TreatmentDialogUiState(
                 insulin = 0.0,
                 carbs = 0,
@@ -88,12 +90,12 @@ class TreatmentDialogViewModel @Inject constructor(
 
     fun updateInsulin(value: Double) {
         val clamped = value.coerceIn(0.0, uiState.value.maxInsulin)
-        uiState.update { it.copy(insulin = clamped) }
+        _uiState.update { it.copy(insulin = clamped) }
     }
 
     fun updateCarbs(value: Int) {
         val clamped = value.coerceIn(0, uiState.value.maxCarbs)
-        uiState.update { it.copy(carbs = clamped) }
+        _uiState.update { it.copy(carbs = clamped) }
     }
 
     fun hasAction(): Boolean {
@@ -217,7 +219,7 @@ class TreatmentDialogViewModel @Inject constructor(
                 commandQueue.bolus(detailedBolusInfo, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
+                            _sideEffect.tryEmit(SideEffect.ShowDeliveryError(result.comment))
                         }
                     }
                 })
