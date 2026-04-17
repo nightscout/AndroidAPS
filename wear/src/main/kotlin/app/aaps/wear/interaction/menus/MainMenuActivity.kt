@@ -36,7 +36,7 @@ class MainMenuActivity : MenuListActivity() {
                 add(MenuItem(R.drawable.ic_sync, getString(R.string.menu_resync)))
             } else {
                 add(MenuItem(R.drawable.ic_loop_closed, getString(R.string.loop_status)))
-                add(MenuItem(R.drawable.ic_graph, getString(R.string.menu_bg_graph)))
+                add(MenuItem(R.drawable.ic_bg_graph, getString(R.string.menu_bg_graph)))
                 if (sp.getBoolean(R.string.key_show_wizard, true))
                     add(MenuItem(R.drawable.ic_calculator, getString(R.string.menu_wizard)))
                 add(MenuItem(R.drawable.ic_carbs_orange, getString(R.string.menu_ecarb)))
