@@ -42,11 +42,6 @@
     <string name="treatments_shortname">BEH</string>
     <string name="graph_scale">Diagrammskala</string>
     <string name="graph_menu_divider_header">Diagramm</string>
-    <!-- Skins -->
-    <string name="classic_description">Ursprüngliches Erscheinungsbild</string>
-    <string name="lowres_description">Darstellung niedrige Auflösung</string>
-    <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
-    <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
