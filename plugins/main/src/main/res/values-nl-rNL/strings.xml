@@ -58,11 +58,6 @@
     <string name="graph_scale">Grafiek schaal</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">Klassiek weergave thema</string>
-    <string name="lowres_description">Lage resolutie skin</string>
-    <string name="buttonson_description">Knoppen worden altijd weergegeven aan de onderkant van het scherm</string>
-    <string name="largedisplay_description">Groot scherm</string>
     <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
