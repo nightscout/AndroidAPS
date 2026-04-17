@@ -197,7 +197,7 @@ private fun BgGraphScreen(repository: ComplicationDataRepository) {
 private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
     val now = System.currentTimeMillis()
     val historyMs = historyHours * 60 * 60 * 1000L
-    val predictionMs = 30 * 60 * 1000L
+    val predictionMs = 90 * 60 * 1000L
     val startTime = now - historyMs
     val endTime = now + predictionMs
     val timeSpan = (endTime - startTime).toFloat()
@@ -208,18 +208,25 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
     val drawW = w - 2 * pad
     val drawH = h - 2 * pad
 
+    val bgData      = data.bgData
+    val entries     = data.graphData.entries
+    val predictions = data.treatmentData.predictions
+
+    // Dynamic Y range: top adapts to data, bottom fixed at 40
+    val visibleSgvValues = buildList {
+        entries.forEach { if (it.timeStamp in startTime..now) add(it.sgv.toFloat()) }
+        predictions.forEach { if (it.timeStamp in (now + 1)..endTime) add(it.sgv.toFloat()) }
+    }.filter { it > 0 }
+    val dataMax = visibleSgvValues.maxOrNull() ?: 200f
     val yMin = 40f
-    val yMax = 360f
+    val yMax = maxOf(dataMax, bgData.high.toFloat()) + 30f
     val ySpan = yMax - yMin
 
     fun timeToX(t: Long) = pad + drawW * ((t - startTime).toFloat() / timeSpan)
     fun sgvToY(sgv: Float) = pad + drawH * (1f - (sgv.coerceIn(yMin, yMax) - yMin) / ySpan)
 
-    val bgData      = data.bgData
-    val entries     = data.graphData.entries
-    val predictions = data.treatmentData.predictions
-
-    // Hour grid lines (subtle)
+    // Collect hour marks for grid lines and labels
+    val hourMarks = mutableListOf<Long>()
     val cal = Calendar.getInstance().apply {
         timeInMillis = startTime
         set(Calendar.MINUTE, 0)
@@ -228,17 +235,21 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
         add(Calendar.HOUR_OF_DAY, 1)
     }
     while (cal.timeInMillis <= endTime) {
-        val x = timeToX(cal.timeInMillis)
-        drawLine(
-            color = Color.White.copy(alpha = 0.12f),
-            start = Offset(x, pad),
-            end = Offset(x, pad + drawH),
-            strokeWidth = 0.5.dp.toPx()
-        )
+        hourMarks.add(cal.timeInMillis)
         cal.add(Calendar.HOUR_OF_DAY, 1)
     }
 
-    // "Now" line with current time label
+    // Hour grid lines
+    for (hourMs in hourMarks) {
+        drawLine(
+            color = Color.White.copy(alpha = 0.12f),
+            start = Offset(timeToX(hourMs), pad),
+            end = Offset(timeToX(hourMs), pad + drawH),
+            strokeWidth = 0.5.dp.toPx()
+        )
+    }
+
+    // "Now" line
     val nowX = timeToX(now)
     drawLine(
         color = Color.White.copy(alpha = 0.35f),
@@ -246,15 +257,32 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
         end = Offset(nowX, pad + drawH),
         strokeWidth = 1.dp.toPx()
     )
+
+    // Text labels: hour numbers at bottom, current time at top of "now" line
     val nowLabel = SimpleDateFormat("H:mm", Locale.getDefault()).format(Date(now))
+    val hourFormat = SimpleDateFormat("H", Locale.getDefault())
     drawIntoCanvas { canvas ->
-        val textPaint = Paint().apply {
+        val hourPaint = Paint().apply {
+            color = android.graphics.Color.argb(140, 170, 170, 170)
+            textSize = 8.dp.toPx()
+            textAlign = Paint.Align.CENTER
+            isAntiAlias = true
+        }
+        val nowPaint = Paint().apply {
             color = android.graphics.Color.argb(178, 255, 255, 255)
             textSize = 8.dp.toPx()
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
-        canvas.nativeCanvas.drawText(nowLabel, nowX, pad + textPaint.textSize + 2f, textPaint)
+        for (hourMs in hourMarks) {
+            canvas.nativeCanvas.drawText(
+                hourFormat.format(Date(hourMs)),
+                timeToX(hourMs),
+                pad + drawH - 4f,
+                hourPaint
+            )
+        }
+        canvas.nativeCanvas.drawText(nowLabel, nowX, pad + nowPaint.textSize + 2f, nowPaint)
     }
 
     // High/low threshold lines
