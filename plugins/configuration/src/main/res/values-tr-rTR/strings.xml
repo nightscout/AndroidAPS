@@ -37,7 +37,6 @@
     <string name="error_asking_for_permissions">İzin istenirken hata</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Konfigürasyon ayarları</string>
     <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
     <string name="configbuilder_aps_description">Hangi APS algoritması terapi ayarlamalarını yapsın?</string>
     <string name="configbuilder_general_description">Kullanışlı bulabileceğiniz bazı genel eklentiler.</string>
@@ -47,12 +46,8 @@
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
     <string name="configbuilder_smoothing_description">Yumuşatma algoritmasını seçin</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
-    <string name="config_builder_shortname">KONF</string>
-    <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelle.</string>
-    <string name="expand_category">Kategoriyi genişlet</string>
-    <string name="collapse_category">Kategoriyi daralt</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
