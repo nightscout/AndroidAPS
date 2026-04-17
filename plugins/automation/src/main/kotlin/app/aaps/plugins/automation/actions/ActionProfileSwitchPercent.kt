@@ -4,7 +4,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
@@ -36,24 +36,24 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
         precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
     }
 
-    override suspend fun doAction(callback: Callback) {
-        if (profileFunction.createProfileSwitch(
-                durationInMinutes = duration.value,
-                percentage = pct.value.toInt(),
-                timeShiftInHours = 0,
-                action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
-                source = Sources.Automation,
-                note = title + ": " + rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value),
-                listValues = listOf(
-                    ValueWithUnit.Percent(pct.value.toInt()),
-                    ValueWithUnit.Minute(duration.value)
-                )
-            ) != null
-        ) {
-            callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+    override suspend fun doAction(): PumpEnactResult {
+        val switched = profileFunction.createProfileSwitch(
+            durationInMinutes = duration.value,
+            percentage = pct.value.toInt(),
+            timeShiftInHours = 0,
+            action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
+            source = Sources.Automation,
+            note = title + ": " + rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value),
+            listValues = listOf(
+                ValueWithUnit.Percent(pct.value.toInt()),
+                ValueWithUnit.Minute(duration.value)
+            )
+        ) != null
+        return if (switched) {
+            pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.ok)).run()
+            pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.ok)
         }
     }
 

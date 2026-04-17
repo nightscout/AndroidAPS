@@ -6,11 +6,10 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.friendlyDescription
 import app.aaps.core.ui.compose.icons.IcTtHigh
@@ -22,8 +21,6 @@ import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -35,7 +32,6 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     var value = InputTempTarget(profileFunction)
     var duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
@@ -48,26 +44,23 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
     override fun composeIcon() = IcTtHigh
 
-    override suspend fun doAction(callback: Callback) {
-        appScope.launch {
-            try {
-                persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                    temporaryTarget = tt(), action = app.aaps.core.data.ue.Action.TT,
-                    source = Sources.Automation,
-                    note = title,
-                    listValues = listOfNotNull(
-                        ValueWithUnit.TETTReason(TT.Reason.AUTOMATION),
-                        ValueWithUnit.Mgdl(tt().lowTarget),
-                        ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
-                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
-                    )
+    override suspend fun doAction(): PumpEnactResult =
+        try {
+            persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                temporaryTarget = tt(), action = app.aaps.core.data.ue.Action.TT,
+                source = Sources.Automation,
+                note = title,
+                listValues = listOfNotNull(
+                    ValueWithUnit.TETTReason(TT.Reason.AUTOMATION),
+                    ValueWithUnit.Mgdl(tt().lowTarget),
+                    ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
+                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
                 )
-                callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
-            } catch (_: Exception) {
-                callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.error)).run()
-            }
+            )
+            pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
+        } catch (_: Exception) {
+            pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.error)
         }
-    }
 
     override fun hasDialog(): Boolean {
         return true

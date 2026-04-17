@@ -4,7 +4,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.automation.triggers.Trigger
 import dagger.android.HasAndroidInjector
@@ -22,7 +21,7 @@ abstract class Action(val injector: HasAndroidInjector) {
 
     abstract fun friendlyName(): Int
     abstract fun shortDescription(): String
-    abstract suspend fun doAction(callback: Callback)
+    abstract suspend fun doAction(): PumpEnactResult
     abstract fun isValid(): Boolean
 
     /**

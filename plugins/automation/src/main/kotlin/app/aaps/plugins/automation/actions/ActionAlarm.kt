@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
@@ -37,10 +37,10 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     override fun isValid(): Boolean = true // empty alarm will show app name
 
-    override suspend fun doAction(callback: Callback) {
+    override suspend fun doAction(): PumpEnactResult {
         timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(config.appName))
-        callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+        return pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
     }
 
     override fun toJSON(): String {

@@ -5,10 +5,9 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
@@ -20,8 +19,6 @@ import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -31,7 +28,6 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     var note = InputString()
     var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)
@@ -50,7 +46,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
 
     override fun composeIconTint() = IconTint.CarePortal
 
-    override suspend fun doAction(callback: Callback) {
+    override suspend fun doAction(): PumpEnactResult {
         val enteredBy = "AAPS"
         val eventTime = dateUtil.now()
         val therapyEvent = TE(
@@ -75,15 +71,14 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
         }
         therapyEvent.note = note.value
         valuesWithUnit.addAll(listOfNotNull(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() }))
-        appScope.launch {
-            persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                therapyEvent = therapyEvent,
-                action = app.aaps.core.data.ue.Action.CAREPORTAL,
-                source = Sources.Automation,
-                note = title,
-                listValues = valuesWithUnit
-            )
-        }
+        persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+            therapyEvent = therapyEvent,
+            action = app.aaps.core.data.ue.Action.CAREPORTAL,
+            source = Sources.Automation,
+            note = title,
+            listValues = valuesWithUnit
+        )
+        return pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
     }
 
     override fun toJSON(): String {

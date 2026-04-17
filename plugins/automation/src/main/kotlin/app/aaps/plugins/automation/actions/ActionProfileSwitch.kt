@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.utils.JsonHelper
@@ -34,29 +34,26 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
     override fun composeIcon() = IcProfile
     override fun composeIconTint() = IconTint.Profile
 
-    override suspend fun doAction(callback: Callback) {
+    override suspend fun doAction(): PumpEnactResult {
         val activeProfileName = profileFunction.getProfileName()
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile not initialized")
-            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.error_field_must_not_be_empty)).run()
-            return
+            return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.error_field_must_not_be_empty)
         }
         if (profileFunction.getProfile() == null) {
             aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.noprofile)).run()
-            return
+            return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.noprofile)
         }
         if (inputProfileName.value == activeProfileName) {
             aapsLogger.debug(LTag.AUTOMATION, "Profile is already switched")
-            callback.result(pumpEnactResultProvider.get().success(true).comment(R.string.alreadyset)).run()
-            return
+            return pumpEnactResultProvider.get().success(true).comment(R.string.alreadyset)
         }
-        val profileStore = localProfileManager.profile ?: return
+        val profileStore = localProfileManager.profile
+            ?: return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.noprofile)
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
-            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.notexists)).run()
-            return
+            return pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.notexists)
         }
         val result = profileFunction.createProfileSwitch(
             profileStore = profileStore,
@@ -73,7 +70,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             ),
             iCfg = iCfg
         )
-        callback.result(pumpEnactResultProvider.get().success(result != null).comment(app.aaps.core.ui.R.string.ok)).run()
+        return pumpEnactResultProvider.get().success(result != null).comment(app.aaps.core.ui.R.string.ok)
     }
 
     override fun hasDialog(): Boolean = true

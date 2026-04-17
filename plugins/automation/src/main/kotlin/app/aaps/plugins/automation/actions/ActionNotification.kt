@@ -5,10 +5,9 @@ import androidx.compose.material.icons.filled.Notifications
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
@@ -18,8 +17,6 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.InputString
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -29,7 +26,6 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var notificationManager: NotificationManager
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
-    @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     var text = InputString()
 
@@ -38,20 +34,18 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     override fun composeIcon() = Icons.Filled.Notifications
     override fun composeIconTint() = IconTint.Announce
 
-    override suspend fun doAction(callback: Callback) {
+    override suspend fun doAction(): PumpEnactResult {
         notificationManager.post(NotificationId.AUTOMATION_MESSAGE, text.value)
-        appScope.launch {
-            persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                therapyEvent = TE.asAnnouncement(text.value),
-                timestamp = dateUtil.now(),
-                action = app.aaps.core.data.ue.Action.TREATMENT,
-                source = Sources.Automation,
-                note = text.value,
-                listValues = listOf()
-            )
-        }
+        persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+            therapyEvent = TE.asAnnouncement(text.value),
+            timestamp = dateUtil.now(),
+            action = app.aaps.core.data.ue.Action.TREATMENT,
+            source = Sources.Automation,
+            note = text.value,
+            listValues = listOf()
+        )
         rxBus.send(EventRefreshOverview("ActionNotification"))
-        callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+        return pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
     }
 
     override fun toJSON(): String {

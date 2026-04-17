@@ -29,7 +29,6 @@ class TddCalculatorImplTest : TestBase() {
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
-    private val testScope = CoroutineScope(Dispatchers.Unconfined)
     private lateinit var tddCalculator: TddCalculatorImpl
 
     private val now = 1000000000L
@@ -37,7 +36,7 @@ class TddCalculatorImplTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        tddCalculator = TddCalculatorImpl(aapsLogger, activePlugin, profileFunction, dateUtil, iobCobCalculator, persistenceLayer, testScope)
+        tddCalculator = TddCalculatorImpl(aapsLogger, activePlugin, profileFunction, dateUtil, iobCobCalculator, persistenceLayer)
         whenever(dateUtil.now()).thenReturn(now)
     }
 

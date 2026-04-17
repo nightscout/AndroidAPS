@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import dagger.android.HasAndroidInjector
 
 // Used for instantiation of other actions only
@@ -14,7 +14,7 @@ class ActionDummy(injector: HasAndroidInjector) : Action(injector) {
         throw NotImplementedError("An operation is not implemented")
     }
 
-    override suspend fun doAction(callback: Callback) {
+    override suspend fun doAction(): PumpEnactResult {
         throw NotImplementedError("An operation is not implemented")
     }
 

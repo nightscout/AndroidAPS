@@ -91,7 +91,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
@@ -512,9 +511,7 @@ class LoopPlugin @Inject constructor(
             }
 
             // Store calculations to DB
-            appScope.launch {
-                persistenceLayer.insertOrUpdateApsResult(apsResult)
-            }
+            persistenceLayer.insertOrUpdateApsResult(apsResult)
 
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
@@ -568,16 +565,14 @@ class LoopPlugin @Inject constructor(
                                 notificationManager.post(NotificationId.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText)
                             }
                             if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromCarbsReq) && config.APS) {
-                                appScope.launch {
-                                    persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                                        therapyEvent = TE.asAnnouncement(resultAfterConstraints.carbsRequiredText),
-                                        timestamp = dateUtil.now(),
-                                        action = Action.TREATMENT,
-                                        source = Sources.Loop,
-                                        note = resultAfterConstraints.carbsRequiredText,
-                                        listValues = listOf()
-                                    )
-                                }
+                                persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                                    therapyEvent = TE.asAnnouncement(resultAfterConstraints.carbsRequiredText),
+                                    timestamp = dateUtil.now(),
+                                    action = Action.TREATMENT,
+                                    source = Sources.Loop,
+                                    note = resultAfterConstraints.carbsRequiredText,
+                                    listValues = listOf()
+                                )
                             }
                             if (preferences.get(BooleanKey.AlertCarbsRequired) && preferences.get(BooleanKey.AlertUrgentAsAndroidNotification)
                             ) {
@@ -645,7 +640,7 @@ class LoopPlugin @Inject constructor(
                         rxBus.send(EventLoopUpdateGui())
                         fabricPrivacy.logCustom("APSRequest")
                         // TBR request must be applied first to prevent situation where
-                        // SMB was executed and zero TBR afterwards failed
+                        // SMB was executed and zero TBR afterward failed
                         applyTBRRequest(resultAfterConstraints, profile, object : Callback() {
                             override fun run() {
                                 if (result.enacted || result.success) {

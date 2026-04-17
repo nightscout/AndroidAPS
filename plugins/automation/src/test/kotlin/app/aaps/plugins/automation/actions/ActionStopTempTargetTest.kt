@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.queue.Callback
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -46,11 +45,8 @@ class ActionStopTempTargetTest : ActionsTestBase() {
                 updated.addAll(updated)
             })
 
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
         verify(persistenceLayer, times(1)).cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any())
     }
 

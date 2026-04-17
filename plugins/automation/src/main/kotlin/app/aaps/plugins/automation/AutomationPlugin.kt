@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -26,7 +25,6 @@ import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -373,31 +371,26 @@ class AutomationPlugin @Inject constructor(
             for (action in actions) {
                 action.title = event.title
                 if (action.isValid()) {
-                    action.doAction(object : Callback() {
-                        override fun run() {
-                            val sb = StringBuilder()
-                                .append(dateUtil.timeString(dateUtil.now()))
-                                .append(" ")
-                                .append(if (result.success) "☺" else "▼")
-                                .append(" <b>")
-                                .append(event.title)
-                                .append(":</b> ")
-                                .append(action.shortDescription())
-                                .append(": ")
-                                .append(result.comment)
-                            executionLog.add(sb.toString())
-                            aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
-                            rxBus.send(EventAutomationUpdateGui())
-                        }
-                    })
-                    SystemClock.sleep(3000)
+                    val result = action.doAction()
+                    val sb = StringBuilder()
+                        .append(dateUtil.timeString(dateUtil.now()))
+                        .append(" ")
+                        .append(if (result.success) "☺" else "▼")
+                        .append(" <b>")
+                        .append(event.title)
+                        .append(":</b> ")
+                        .append(action.shortDescription())
+                        .append(": ")
+                        .append(result.comment)
+                    executionLog.add(sb.toString())
+                    aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
+                    rxBus.send(EventAutomationUpdateGui())
                 } else {
                     executionLog.add("Invalid action: ${action.shortDescription()}")
                     aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
                     rxBus.send(EventAutomationUpdateGui())
                 }
             }
-            SystemClock.sleep(1100)
             event.lastRun = dateUtil.now()
             if (event.autoRemove) remove(event)
         }

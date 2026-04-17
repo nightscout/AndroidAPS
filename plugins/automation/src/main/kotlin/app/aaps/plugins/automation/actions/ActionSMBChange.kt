@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -25,9 +25,9 @@ class ActionSMBChange(injector: HasAndroidInjector) : Action(injector) {
     override fun composeIcon() = IcSmb
     override fun composeIconTint() = IconTint.Smb
 
-    override suspend fun doAction(callback: Callback) {
+    override suspend fun doAction(): PumpEnactResult {
         preferences.put(BooleanKey.ApsUseSmb, smbState.value)
-        callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+        return pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)
     }
 
     override fun hasDialog(): Boolean = true

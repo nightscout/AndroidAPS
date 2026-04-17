@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.TimerUtil
@@ -52,11 +51,8 @@ class ActionAlarmTest : TestBaseWithProfile() {
 
     @Test fun doActionTest() = runTest {
         sut.text = InputString("Asd")
-        sut.doAction(object : Callback() {
-            override fun run() {
-                assertThat(result.success).isTrue()
-            }
-        })
+        val result = sut.doAction()
+        assertThat(result.success).isTrue()
     }
 
     @Test fun hasDialogTest() = runTest {

@@ -7,7 +7,6 @@ import app.aaps.core.data.model.TDD
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -17,8 +16,6 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import dagger.Reusable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
@@ -72,8 +69,7 @@ class TddCalculatorImpl @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val iobCobCalculator: IobCobCalculator,
-    private val persistenceLayer: PersistenceLayer,
-    @ApplicationScope private val appScope: CoroutineScope
+    private val persistenceLayer: PersistenceLayer
 ) : TddCalculator {
 
     override suspend fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? =
@@ -111,7 +107,7 @@ class TddCalculatorImpl @Inject constructor(
             val tdd = result.valueAt(i)
             if (tdd.ids.pumpType != PumpType.CACHE) {
                 tdd.ids.pumpType = PumpType.CACHE
-                appScope.launch { persistenceLayer.insertOrUpdateCachedTotalDailyDose(tdd) }
+                persistenceLayer.insertOrUpdateCachedTotalDailyDose(tdd)
             } else {
                 aapsLogger.debug(LTag.APS, "Skipping storing TotalDailyDose for ${dateUtil.dateString(tdd.timestamp)}")
             }
