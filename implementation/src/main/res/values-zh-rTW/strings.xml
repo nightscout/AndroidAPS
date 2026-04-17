@@ -33,11 +33,8 @@
     <string name="permission_notifications_title">通知</string>
     <string name="permission_notifications_description">需要以顯示警示、警報與幫浦狀態更新</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
-    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
-    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">設定已成功匯出至雲端儲存空間</string>
     <string name="export_to_cloud_failed">匯出至雲端儲存空間失敗</string>
