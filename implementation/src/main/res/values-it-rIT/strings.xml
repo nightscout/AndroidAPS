@@ -33,11 +33,8 @@
     <string name="permission_notifications_title">Notifiche</string>
     <string name="permission_notifications_description">Richiesto per mostrare gli aggiornamenti, avvisi, allarmi e stato del micro</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
-    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
-    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Impostazioni esportate con successo su cloud storage</string>
     <string name="export_to_cloud_failed">Esportazione nell\'archivio cloud non riuscita</string>
