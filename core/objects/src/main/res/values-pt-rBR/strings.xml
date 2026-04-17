@@ -4,6 +4,4 @@
     <string name="count_selected">Selecionado %1$d</string>
     <string name="remove_items">Remover itens</string>
     <string name="sort_items">Ordenar Itens</string>
-    <string name="remove_selected_items">Remover itens selecionados</string>
-    <string name="sort_label">Ordenar</string>
 </resources>
