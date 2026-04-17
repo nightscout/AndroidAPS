@@ -33,11 +33,8 @@
     <string name="permission_notifications_title">Notifications</string>
     <string name="permission_notifications_description">Requis pour afficher les alertes, les alarmes et les mises à jour des états de la pompe</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
-    <string name="bolus_with_volume">%1$s U (%2$.1f µl)</string>
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
-    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Les paramètres ont été exportés avec succès vers le stockage cloud</string>
     <string name="export_to_cloud_failed">Échec de l\'exportation vers le stockage cloud</string>
