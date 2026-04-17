@@ -58,11 +58,6 @@
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="temp_basal_overview_short_name">M:</string>
-    <!-- Skins -->
-    <string name="classic_description">Opprinnelig visningstema</string>
-    <string name="lowres_description">Tema for lav oppløsning</string>
-    <string name="buttonson_description">Knapper vises alltid på bunnen av skjermen</string>
-    <string name="largedisplay_description">Stor skjerm</string>
     <string name="cannula_usage">bruk:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
