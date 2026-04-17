@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">Gem</string>
-    <string name="wear">Ur</string>
-    <string name="invalid">UGYLDIG</string>
     <string name="close_navigation">Luk navigation</string>
-    <string name="remove_items">Fjern elementer</string>
-    <string name="sort_items">Sortér elementer</string>
     <string name="authorizationfailed">Godkendelse mislykkedes</string>
-    <string name="cannula">Kanyle</string>
     <string name="identification_not_set">Identifikation ikke indstillet i udvikler-tilstand</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Fjern valgte elementer</string>
-    <string name="count_selected">%1$d valgt</string>
-    <string name="sort_label">Sortér</string>
-    <string name="search">Søg</string>
 </resources>
