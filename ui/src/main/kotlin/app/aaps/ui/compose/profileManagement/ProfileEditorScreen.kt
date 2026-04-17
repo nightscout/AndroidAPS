@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -143,7 +144,7 @@ fun ProfileEditorScreen(
                             enabled = state.isValid
                         ) {
                             Icon(
-                                Icons.Default.Check,
+                                Icons.Default.Save,
                                 contentDescription = stringResource(R.string.save),
                                 tint = if (state.isValid) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
