@@ -285,6 +285,10 @@
     <string name="current_insulin">目前生效中</string>
     <string name="change_insulin">變更</string>
     <string name="select_insulin_description">請選擇你要填入幫浦的胰島素。啟用/預充後將套用設定檔切換。</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">已選擇的胰島素：%1$s</string>
     <string name="record_insulin_hint">若要輸入以胰島素筆施打的胰島素，請在下方選擇正確的胰島素種類。劑量一律以國際單位表示。</string>
     <!--    ProfileSwitch-->
@@ -414,6 +418,7 @@
     <string name="arrow_center">中心</string>
     <!--    Command-->
     <string name="connectiontimedout">連線逾時</string>
+    <string name="pump_not_configured">幫浦未設定</string>
     <!--    PumpEnactResult-->
     <string name="enacted">已執行</string>
     <string name="comment">備註</string>
@@ -1015,6 +1020,8 @@
     <string name="graph_edit">編輯圖表</string>
     <string name="graph_number">圖表 %1$d</string>
     <string name="graph_bg">血糖圖表</string>
+    <string name="graph_height">圖表高度 [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">預測</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
