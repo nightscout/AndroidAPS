@@ -33,11 +33,8 @@
     <string name="permission_notifications_title">Notifikácie</string>
     <string name="permission_notifications_description">Požadované pre zobrazovanie upozornení, alarmov a zmien stavov pumpy</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
-    <string name="bolus_with_volume">%1$sU (%2$.1fµl)</string>
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f CU/h</string>
-    <string name="pump_base_basal_rate_cu_dynamic">%1$s CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Nastavenie úspešne exportované do cloudového úložiska</string>
     <string name="export_to_cloud_failed">Export do cloudového úložiska zlyhal</string>
