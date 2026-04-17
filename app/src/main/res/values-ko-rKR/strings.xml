@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">증분</string>
-    <string name="save">저장</string>
-    <string name="wear">워치</string>
-    <string name="invalid">유효하지 않음</string>
     <string name="close_navigation">메뉴 닫기</string>
-    <string name="remove_items">항목 제거하기</string>
-    <string name="sort_items">항목 분류하기</string>
     <string name="authorizationfailed">인증 실패</string>
-    <string name="cannula">캐뉼라</string>
     <string name="identification_not_set">개발 모드에서 신원 확인이 설정되지 않았습니다.</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">선택된 항목 제거하기</string>
-    <string name="count_selected">%1$d 선택됨</string>
-    <string name="sort_label">분류</string>
-    <string name="search">검색</string>
 </resources>
