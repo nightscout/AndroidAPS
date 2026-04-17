@@ -42,11 +42,6 @@
     <string name="treatments_shortname">TREAT</string>
     <string name="graph_scale">그래프 범위</string>
     <string name="graph_menu_divider_header">그래프</string>
-    <!-- Skins -->
-    <string name="classic_description">기본 스킨</string>
-    <string name="lowres_description">저해상도 스킨</string>
-    <string name="buttonson_description">버튼을 화면 아래 고정하여 보여주기</string>
-    <string name="largedisplay_description">큰 화면</string>
     <string name="cannula_usage">사용:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
