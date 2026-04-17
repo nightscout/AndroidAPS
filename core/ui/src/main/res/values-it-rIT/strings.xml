@@ -285,6 +285,10 @@
     <string name="current_insulin">Attualmente attivo</string>
     <string name="change_insulin">Cambiare</string>
     <string name="select_insulin_description">Selezionare l\'insulina con cui si sta riempiendo la pompa. Dopo l\'attivazione/prime, verrà applicato un interruttore del profilo.</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina Selezionata: %1$s</string>
     <string name="record_insulin_hint">Se si entra in insulina applicata dalla penna, selezionare di seguito il tipo di insulina corretto. La dose è sempre nelle Unità Internazionali.</string>
     <!--    ProfileSwitch-->
