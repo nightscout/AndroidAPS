@@ -169,7 +169,7 @@ private fun TempBasalDialogContent(
                 if (uiState.isPercentPump && uiState.basalPercent != 100.0) {
                     Text("${DecimalFormat("0").format(uiState.basalPercent)}%")
                 } else if (!uiState.isPercentPump && uiState.basalAbsolute > 0.0) {
-                    Text("${DecimalFormat("0.00").format(uiState.basalAbsolute)} ${stringResource(CoreUiR.string.insulin_unit_shortname)}/h")
+                    Text("${DecimalFormat("0.00").format(uiState.basalAbsolute)} ${stringResource(CoreUiR.string.profile_ins_units_per_hour)}")
                 } else {
                     Text(stringResource(CoreUiR.string.ok))
                 }
@@ -216,7 +216,7 @@ private fun TempBasalDialogContent(
                             valueRange = 0.0..uiState.maxTempAbsolute,
                             step = uiState.tempAbsoluteStep,
                             valueFormat = DecimalFormat("0.00"),
-                            unitLabel = stringResource(CoreUiR.string.insulin_unit_shortname) + "/h",
+                            unitLabel = stringResource(CoreUiR.string.profile_ins_units_per_hour),
                             modifier = itemModifier
                         )
                     }
