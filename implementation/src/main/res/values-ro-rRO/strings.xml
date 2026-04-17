@@ -33,8 +33,15 @@
     <string name="permission_notifications_title">Notificări</string>
     <string name="permission_notifications_description">Necesar pentru a afișa alerte, alarme și actualizări ale stării pompei</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0μl)</string>
     <string name="insulin_concentration">U%1$d</string>
     <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f\u00a0CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Setări exportate cu succes către stocarea în cloud</string>
     <string name="export_to_cloud_failed">Nu s-a reușit exportarea în stocarea din cloud</string>
