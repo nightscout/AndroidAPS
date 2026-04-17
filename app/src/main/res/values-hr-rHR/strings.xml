@@ -1,8 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="delta">Delta</string>
-    <string name="save">Spremi</string>
-    <string name="invalid">GREŠKA</string>
-    <!-- WEAR OS-->
-    <string name="search">Pretraga</string>
-</resources>
+<resources></resources>
