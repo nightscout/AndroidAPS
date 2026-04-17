@@ -1,5 +1,6 @@
 package app.aaps.wear.interaction.activities
 
+import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,9 +32,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.foundation.AnchorType
@@ -44,6 +47,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.wear.interaction.menus.MainMenuActivity
+import app.aaps.wear.interaction.utils.DisplayFormat
 import dagger.android.AndroidInjection
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -57,15 +62,27 @@ private val BgHighColor    = Color(0xFFFFFF00)
 private val BgLowColor     = Color(0xFFFF0000)
 private val IobColor       = Color(0xFF1E88E5)
 private val CarbsColor     = Color(0xFFFF6D00)
-private val BasalColor     = Color(0xFF90CAF9)
-private val SecondaryText  = Color(0xFFAAAAAA)
+private val BasalColor      = Color(0xFF90CAF9)
+private val SecondaryText   = Color(0xFFAAAAAA)
+private val TempTargetColor = Color(0xFFFDD835)
 
-private val historyHoursCycle = listOf(3, 4, 5, 6, 7, 8)
+private val historyHoursCycle = listOf(3, 6, 9, 12, 24, 1)
 
 private fun bgColor(sgvLevel: Long): Color = when (sgvLevel.toInt()) {
     -1   -> BgLowColor
     1    -> BgHighColor
     else -> BgInRangeColor
+}
+
+private fun formatTtDuration(durationMs: Long): String {
+    val totalMinutes = (durationMs / 60_000).toInt().coerceAtLeast(0)
+    val hours = totalMinutes / 60
+    val minutes = totalMinutes % 60
+    return when {
+        hours > 0 && minutes > 0 -> "${hours}h ${minutes}'"
+        hours > 0                -> "${hours}h"
+        else                     -> "${minutes}'"
+    }
 }
 
 private fun ageColor(ageMs: Long): Color {
@@ -80,6 +97,7 @@ private fun ageColor(ageMs: Long): Color {
 class BgGraphActivity : AppCompatActivity() {
 
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
+    @Inject lateinit var displayFormat: DisplayFormat
     @Inject lateinit var aapsLogger: AAPSLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,14 +105,17 @@ class BgGraphActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                BgGraphScreen(repository = complicationDataRepository)
+                BgGraphScreen(
+                    repository = complicationDataRepository,
+                    displayFormat = displayFormat
+                )
             }
         }
     }
 }
 
 @Composable
-private fun BgGraphScreen(repository: ComplicationDataRepository) {
+private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat: DisplayFormat) {
     val data by repository.complicationData.collectAsState(initial = ComplicationData())
     var windowIdx by remember { mutableIntStateOf(0) }
     val historyHours = historyHoursCycle[windowIdx]
@@ -124,61 +145,69 @@ private fun BgGraphScreen(repository: ComplicationDataRepository) {
                 .padding(horizontal = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(20.dp))
+            val context = LocalContext.current
 
-            // BG value + trend + delta + age
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "${bgData.sgvString}${bgData.slopeArrow}\uFE0E",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = bgColor(bgData.sgvLevel)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Column(horizontalAlignment = Alignment.Start) {
-                    Text(
-                        text = bgData.delta,
-                        fontSize = 12.sp,
-                        color = SecondaryText
-                    )
-                    Text(
-                        text = "${ageMin}m",
-                        fontSize = 12.sp,
-                        color = ageColor(ageMs)
-                    )
-                }
-            }
-
-            // IOB / COB / Basal above graph so they aren't clipped by circular bezel
-            val insulinUnit = stringResource(R.string.insulin_unit_short)
-            Row(
+            // Top area: BG + stats — double-tap opens main menu
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 2.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                    .pointerInput(Unit) {
+                        detectTapGestures(onDoubleTap = {
+                            context.startActivity(
+                                Intent(context, MainMenuActivity::class.java).apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                }
+                            )
+                        })
+                    },
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = "IOB ${statusData.iobSum}$insulinUnit",
-                    fontSize = 11.sp,
-                    color = IobColor,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = "COB ${statusData.cob}",
-                    fontSize = 11.sp,
-                    color = CarbsColor,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = statusData.currentBasal,
-                    fontSize = 11.sp,
-                    color = BasalColor,
-                    textAlign = TextAlign.Center
-                )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // BG value + trend + delta + age
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "${bgData.sgvString}${bgData.slopeArrow}\uFE0E",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = bgColor(bgData.sgvLevel)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Column(horizontalAlignment = Alignment.Start) {
+                        Text(
+                            text = bgData.delta,
+                            fontSize = 12.sp,
+                            color = SecondaryText
+                        )
+                        Text(
+                            text = "${ageMin}m",
+                            fontSize = 12.sp,
+                            color = ageColor(ageMs)
+                        )
+                    }
+                }
+
+                // IOB / COB / Basal / Target
+                val hasTT = statusData.tempTargetDuration >= 0
+                val targetText = if (hasTT) {
+                    "${statusData.tempTarget} (${formatTtDuration(statusData.tempTargetDuration)})"
+                } else {
+                    statusData.tempTarget
+                }
+                val insulinUnit = stringResource(R.string.insulin_unit_short)
+                val basalText = displayFormat.basalRateSymbol().trimEnd() + statusData.currentBasal.replaceFirst(" ", "")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "${statusData.iobSum}$insulinUnit", fontSize = 11.sp, color = IobColor)
+                    Text(text = statusData.cob, fontSize = 11.sp, color = CarbsColor)
+                    Text(text = basalText, fontSize = 11.sp, color = BasalColor)
+                    Text(text = targetText, fontSize = 11.sp, color = if (hasTT) TempTargetColor else SecondaryText)
+                }
             }
 
             // Graph — tap cycles history window
