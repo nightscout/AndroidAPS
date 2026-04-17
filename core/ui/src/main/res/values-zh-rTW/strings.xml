@@ -285,10 +285,6 @@
     <string name="current_insulin">目前生效中</string>
     <string name="change_insulin">變更</string>
     <string name="select_insulin_description">請選擇你要填入幫浦的胰島素。啟用/預充後將套用設定檔切換。</string>
-    <string name="bolus_delivered">%1$.2fU / %2$.2fU</string>
-    <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
-    <string name="pump_insulin_cu">%1$.2f CU</string>
-    <string name="pump_insulin_cu1">%1$.1f CU</string>
     <string name="selected_insulin">已選擇的胰島素：%1$s</string>
     <string name="record_insulin_hint">若要輸入以胰島素筆施打的胰島素，請在下方選擇正確的胰島素種類。劑量一律以國際單位表示。</string>
     <!--    ProfileSwitch-->
