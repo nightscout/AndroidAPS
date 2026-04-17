@@ -198,6 +198,11 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
                 }
                 val insulinUnit = stringResource(R.string.insulin_unit_short)
                 val basalText = displayFormat.basalRateSymbol().trimEnd() + statusData.currentBasal.replaceFirst(" ", "")
+                val combinedLen = "${statusData.iobSum}$insulinUnit".length +
+                    statusData.cob.length +
+                    basalText.length +
+                    targetText.length
+                val statsFontSize = if (combinedLen > 30) 11.sp else 12.sp
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -205,10 +210,10 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "${statusData.iobSum}$insulinUnit", fontSize = 12.sp, color = IobColor)
-                    Text(text = statusData.cob, fontSize = 12.sp, color = CarbsColor)
-                    Text(text = basalText, fontSize = 12.sp, color = BasalColor)
-                    Text(text = targetText, fontSize = 12.sp, color = if (hasTT) TempTargetColor else SecondaryText)
+                    Text(text = "${statusData.iobSum}$insulinUnit", fontSize = statsFontSize, color = IobColor)
+                    Text(text = statusData.cob, fontSize = statsFontSize, color = CarbsColor)
+                    Text(text = basalText, fontSize = statsFontSize, color = BasalColor)
+                    Text(text = targetText, fontSize = statsFontSize, color = if (hasTT) TempTargetColor else SecondaryText)
                 }
             }
 
