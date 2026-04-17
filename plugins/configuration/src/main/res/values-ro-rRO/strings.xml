@@ -41,7 +41,6 @@
     <string name="error_asking_for_permissions">Eroare în solicitarea permisiunilor</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Configurator</string>
     <string name="configbuilder_pump_description">Ce pompă dorești să folosești cu AAPS?</string>
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
     <string name="configbuilder_general_description">Există pluginuri generale pe care le-ați putea găsi utile.</string>
@@ -52,12 +51,8 @@
     <string name="configbuilder_bgsource_description">De unde ar trebui AAPS să primească datele?</string>
     <string name="configbuilder_smoothing_description">Alege algoritmul de uniformizare</string>
     <string name="configbuilder_sensitivity_description">Ce algoritm de detecție a sensibilității doriți să folosiți?</string>
-    <string name="config_builder_shortname">CONF</string>
-    <string name="description_config_builder">Folosit pentru configurarea facilităților active</string>
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AAPS va copia setările ratei bazale din profilul din aplicație în pompă. Profilul existent în pompă va fi suprascris cu cel din AAPS. Asigurați-vă că sunt corecte setările ratei bazale în profilul din AAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
     <string name="nsclient_version_does_not_match">Versiunea AAPSClient nu se potrivește cu versiunea AAPS. Vă rugăm să actualizați.</string>
-    <string name="expand_category">Extindere categorie</string>
-    <string name="collapse_category">Restrângere categorie</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->
