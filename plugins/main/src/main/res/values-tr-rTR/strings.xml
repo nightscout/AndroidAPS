@@ -58,11 +58,6 @@
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="graph_menu_divider_header">Grafik</string>
     <string name="temp_basal_overview_short_name">GB:</string>
-    <!-- Skins -->
-    <string name="classic_description">Orjinal görünüm</string>
-    <string name="lowres_description">Düşük çözünürlüklü görünüm</string>
-    <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
-    <string name="largedisplay_description">Büyük ekran</string>
     <string name="cannula_usage">kullanım:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
