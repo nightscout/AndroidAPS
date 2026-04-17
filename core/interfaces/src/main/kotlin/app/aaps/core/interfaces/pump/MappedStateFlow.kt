@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.pump
 
+import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
  * The [transform] runs synchronously on every [value] access and during collection,
  * so keep it cheap (e.g. wrapping a Double in PumpInsulin).
  */
+@OptIn(ExperimentalForInheritanceCoroutinesApi::class)
 class MappedStateFlow<T, R>(
     private val upstream: StateFlow<T>,
     private val transform: (T) -> R

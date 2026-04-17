@@ -2,6 +2,7 @@ package app.aaps.pump.omnipod.eros.ui.compose
 
 import android.content.Context
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.History
@@ -11,9 +12,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.snapshots.toInt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.configuration.Config
@@ -23,7 +22,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpInsulin
 import app.aaps.core.interfaces.pump.PumpRate
-import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -46,7 +44,6 @@ import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
-import app.aaps.pump.omnipod.common.bledriver.pod.definition.PodConstants
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import app.aaps.pump.omnipod.common.queue.command.CommandResumeDelivery
@@ -60,7 +57,6 @@ import app.aaps.pump.omnipod.eros.driver.definition.ActivationProgress
 import app.aaps.pump.omnipod.eros.driver.definition.OmnipodConstants
 import app.aaps.pump.omnipod.eros.driver.definition.PodProgressStatus
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager
-import app.aaps.pump.omnipod.eros.driver.util.TimeUtil
 import app.aaps.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import app.aaps.pump.omnipod.eros.queue.command.CommandGetPodStatus
@@ -85,9 +81,9 @@ import org.joda.time.Duration
 import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Provider
+import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.common.hw.rileylink.R as RileyLinkR
 import app.aaps.pump.omnipod.common.R as CommonR
-import app.aaps.core.ui.R as CoreUiR
 
 @Stable
 @HiltViewModel
@@ -335,7 +331,7 @@ class ErosOverviewViewModel @Inject constructor(
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_play_test_beep),
-                icon = Icons.Filled.VolumeUp,
+                icon = Icons.AutoMirrored.Filled.VolumeUp,
                 category = ActionCategory.MANAGEMENT,
                 enabled = rlReady && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java),
                 visible = podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED),

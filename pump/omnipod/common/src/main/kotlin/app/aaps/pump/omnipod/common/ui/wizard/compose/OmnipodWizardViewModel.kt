@@ -253,7 +253,7 @@ abstract class OmnipodWizardViewModel(
                         _actionState.value = ActionState.Success(result)
                     } else {
                         _actionState.value = ActionState.Error(
-                            result.comment ?: "Unknown error"
+                            result.comment
                         )
                     }
                 },

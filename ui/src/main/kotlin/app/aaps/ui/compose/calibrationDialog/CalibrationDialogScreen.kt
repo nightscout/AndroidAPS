@@ -28,9 +28,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import java.text.DecimalFormat
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,7 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
@@ -49,6 +48,7 @@ import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
+import java.text.DecimalFormat
 import app.aaps.core.ui.R as CoreUiR
 
 @Composable
@@ -160,7 +160,7 @@ private fun CalibrationDialogContent(
             }
         }
     ) { paddingValues ->
-        val itemModifier = Modifier
+        Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(4.dp))
             .background(MaterialTheme.colorScheme.surfaceContainer)

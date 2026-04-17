@@ -39,7 +39,7 @@ class LoopActionViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus
+    rxBus: RxBus
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoopActionUiState())
@@ -80,7 +80,7 @@ class LoopActionViewModel @Inject constructor(
             if (available) {
                 LoopActionUiState(
                     actionAvailable = true,
-                    request = lastRun?.constraintsProcessed?.resultAsString().orEmpty(),
+                    request = lastRun.constraintsProcessed?.resultAsString().orEmpty(),
                     reason = rh.gs(app.aaps.ui.R.string.loop_accept_set_basal_question)
                 )
             } else {

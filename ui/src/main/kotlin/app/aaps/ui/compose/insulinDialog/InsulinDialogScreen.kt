@@ -24,8 +24,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Switch
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalButton
@@ -35,10 +35,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,11 +48,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ICfg
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -287,7 +288,7 @@ private fun InsulinDialogContent(
             }
         }
     ) { paddingValues ->
-        val itemModifier = Modifier
+        Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(4.dp))
             .background(MaterialTheme.colorScheme.surfaceContainer)
@@ -411,7 +412,7 @@ private fun InsulinDialogContent(
                                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .menuAnchor()
+                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                             )
 
                             ExposedDropdownMenu(
@@ -499,11 +500,11 @@ private fun InsulinDialogScreenPreview() {
                 selectedIcfg = null,
                 insulins = ArrayList(),
                 maxInsulin = 10.0,
-            bolusStep = 0.1,
-            insulinButtonIncrement1 = 0.5,
-            insulinButtonIncrement2 = 1.0,
-            insulinButtonIncrement3 = 2.0,
-            showNotesFromPreferences = true
+                bolusStep = 0.1,
+                insulinButtonIncrement1 = 0.5,
+                insulinButtonIncrement2 = 1.0,
+                insulinButtonIncrement3 = 2.0,
+                showNotesFromPreferences = true
             ),
             bgInfo = BgInfoUiState(bgInfo = null, timeAgoText = ""),
             iob = IobUiState(),
@@ -527,7 +528,6 @@ private fun InsulinDialogScreenPreview() {
         )
     }
 }
-
 
 @Composable
 private fun InsulinQuickAddButtons(

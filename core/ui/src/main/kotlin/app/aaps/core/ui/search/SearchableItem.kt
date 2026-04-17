@@ -26,12 +26,6 @@ sealed class SearchableItem {
     abstract val titleResId: Int
 
     /**
-     * Optional resource ID for an icon to display with this item.
-     * @deprecated Use [icon] instead for Compose icons
-     */
-    abstract val iconResId: Int?
-
-    /**
      * Optional Compose ImageVector icon.
      * Preferred over iconResId when available.
      */
@@ -55,19 +49,16 @@ sealed class SearchableItem {
      *
      * @param preferenceKey The PreferenceKey enum value
      * @param parentScreenKey Optional key of the parent screen containing this preference
-     * @param parentIconResId Optional icon from parent screen (used if preference has no icon)
      * @param ownerPlugin Optional reference to the plugin that owns this preference
      */
     data class Preference(
         val preferenceKey: PreferenceKey,
         val parentScreenKey: String? = null,
-        val parentIconResId: Int? = null,
         val ownerPlugin: PluginBase? = null
     ) : SearchableItem() {
 
         override val key: String = preferenceKey.key
         override val titleResId: Int = preferenceKey.titleResId
-        override val iconResId: Int? = parentIconResId
         override val summaryResId: Int? = preferenceKey.summaryResId
         override val plugin: PluginBase? = ownerPlugin
     }
@@ -86,7 +77,6 @@ sealed class SearchableItem {
 
         override val key: String = screenDef.key
         override val titleResId: Int = screenDef.titleResId
-        override val iconResId: Int? = screenDef.iconResId
         override val summaryResId: Int? = screenDef.summaryResId
         override val plugin: PluginBase? = ownerPlugin
         override val icon: ImageVector? = screenDef.icon
@@ -106,7 +96,6 @@ sealed class SearchableItem {
         override val titleResId: Int = elementType.labelResId()
 
         @Deprecated("use icon")
-        override val iconResId: Int? = null
         override val icon: ImageVector = elementType.icon()
         override val summaryResId: Int? = elementType.descriptionResId().takeIf { it != 0 }
     }
@@ -123,7 +112,6 @@ sealed class SearchableItem {
 
         override val key: String = pluginRef.javaClass.simpleName
         override val titleResId: Int = pluginRef.pluginDescription.pluginName
-        override val iconResId: Int? = pluginRef.pluginDescription.pluginIcon.takeIf { it != -1 }
         override val summaryResId: Int? = pluginRef.pluginDescription.description.takeIf { it != -1 }
         override val plugin: PluginBase = pluginRef
     }
@@ -144,6 +132,5 @@ sealed class SearchableItem {
 
         override val key: String = url
         override val titleResId: Int = 0 // not used — title is dynamic
-        override val iconResId: Int? = null
     }
 }

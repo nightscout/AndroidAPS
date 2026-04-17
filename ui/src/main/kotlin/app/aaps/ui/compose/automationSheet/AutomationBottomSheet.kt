@@ -22,7 +22,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.TonalIcon
@@ -115,12 +114,12 @@ fun AutomationBottomSheet(
                         val firstIcon = item.firstActionIcon
                         if (firstIcon != null) {
                             TonalIcon(
-                                painter = rememberVectorPainter(firstIcon.icon),
+                                icon = firstIcon.icon,
                                 color = firstIcon.tint ?: automationColor
                             )
                         } else {
                             TonalIcon(
-                                painter = rememberVectorPainter(IcAutomation),
+                                icon = IcAutomation,
                                 color = automationColor
                             )
                         }

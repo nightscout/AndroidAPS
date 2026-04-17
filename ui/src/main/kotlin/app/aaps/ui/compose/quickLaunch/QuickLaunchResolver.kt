@@ -58,9 +58,9 @@ class QuickLaunchResolver @Inject constructor(
             when (entry.mode()) {
                 QuickWizardMode.INSULIN -> IcBolus
                 QuickWizardMode.CARBS   -> IcCarbs
-                QuickWizardMode.WIZARD  -> action.elementType?.icon()
+                QuickWizardMode.WIZARD  -> action.elementType.icon()
             }
-        } ?: action.elementType?.icon() ?: Icons.Default.Extension
+        } ?: action.elementType.icon()
 
         else                                   -> action.elementType?.icon() ?: Icons.Default.Extension
     }
@@ -115,7 +115,7 @@ class QuickLaunchResolver @Inject constructor(
             when (entry.mode()) {
                 QuickWizardMode.INSULIN -> {
                     val insulin = entry.insulin()
-                    if (insulin > 0.0) "${rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulin)}" else null
+                    if (insulin > 0.0) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulin) else null
                 }
 
                 QuickWizardMode.CARBS   -> {

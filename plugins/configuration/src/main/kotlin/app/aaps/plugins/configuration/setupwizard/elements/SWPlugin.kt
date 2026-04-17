@@ -66,7 +66,6 @@ class SWPlugin @Inject constructor(
                     id = plugin.javaClass.simpleName,
                     name = plugin.name,
                     description = plugin.description,
-                    menuIcon = plugin.menuIcon,
                     composeIcon = plugin.pluginDescription.icon,
                     isEnabled = pluginEnabled,
                     canToggle = !plugin.pluginDescription.alwaysEnabled && (!pluginEnabled || isMultiSelect(pType)),

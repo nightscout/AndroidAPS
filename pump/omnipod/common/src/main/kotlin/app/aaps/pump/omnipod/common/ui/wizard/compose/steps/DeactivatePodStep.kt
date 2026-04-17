@@ -17,9 +17,9 @@ import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.omnipod.common.R
 import app.aaps.pump.omnipod.common.ui.wizard.compose.ActionState
-import app.aaps.core.ui.R as CoreUiR
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardStep
 import app.aaps.pump.omnipod.common.ui.wizard.compose.OmnipodWizardViewModel
+import app.aaps.core.ui.R as CoreUiR
 
 /**
  * DeactivatePod action step with discard-pod branching on failure.
@@ -113,7 +113,7 @@ internal fun DeactivatePodStepContent(
             }
 
             is ActionState.Error     -> {
-                WizardErrorBanner(message = (actionState as ActionState.Error).message)
+                WizardErrorBanner(message = actionState.message)
             }
         }
     }

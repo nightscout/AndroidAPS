@@ -81,7 +81,6 @@ enum class StringKey(
         summaryResId = R.string.pref_summary_patient_name,
         validator = StringValidator.personName()
     ),
-    GeneralSkin(key = "skin", defaultValue = "", titleResId = R.string.pref_title_skin, preferenceType = PreferenceType.LIST),
     GeneralDarkMode(
         key = "use_dark_mode",
         defaultValue = "dark",

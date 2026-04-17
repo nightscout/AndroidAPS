@@ -73,7 +73,7 @@ class InsulinDialogViewModel @Inject constructor(
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val hardLimits: HardLimits
+    hardLimits: HardLimits
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsulinDialogUiState())
@@ -288,7 +288,7 @@ class InsulinDialogViewModel @Inject constructor(
         val iCfg = if (state.recordOnlyChecked)
             state.selectedIcfg ?: activeInsulin.iCfg
         else
-            getRunningIcfg() ?: activeInsulin.iCfg
+            getRunningIcfg()
         // Insert temp target if eating soon checked
         if (state.eatingSoonTtChecked) {
             val eatingSoonTT = state.eatingSoonTtTarget

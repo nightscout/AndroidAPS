@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.manageSheet
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -35,16 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.actions.CustomAction
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.CircleShape
 import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcCancelExtendedBolus
 import app.aaps.core.ui.compose.icons.IcTbrCancel
@@ -195,12 +193,9 @@ internal fun ManageBottomSheetContent(
             }
             if (pumpPlugin != null) {
                 add { modifier ->
-                    @Suppress("DEPRECATION")
                     ManageGridItem(
                         text = stringResource(CoreUiR.string.pump_management),
-                        iconPainter = pumpPlugin.pluginDescription.icon?.let { rememberVectorPainter(it) }
-                            ?: if (pumpPlugin.menuIcon != -1) painterResource(pumpPlugin.menuIcon)
-                            else rememberVectorPainter(ElementType.PUMP.icon()),
+                        icon = pumpPlugin.pluginDescription.icon ?: ElementType.PUMP.icon(),
                         color = ElementType.PUMP.color(),
                         onDismiss = onDismiss,
                         onClick = { onNavigate(NavigationRequest.Element(ElementType.PUMP)) },
@@ -250,7 +245,7 @@ internal fun ManageBottomSheetContent(
                         add { modifier ->
                             ManageGridItem(
                                 text = cancelTempBasalText,
-                                iconPainter = rememberVectorPainter(IcTbrCancel),
+                                icon = IcTbrCancel,
                                 color = ElementType.TEMP_BASAL.color(),
                                 onDismiss = onDismiss,
                                 onClick = onCancelTempBasalClick,
@@ -272,7 +267,7 @@ internal fun ManageBottomSheetContent(
                         add { modifier ->
                             ManageGridItem(
                                 text = cancelExtendedBolusText,
-                                iconPainter = rememberVectorPainter(IcCancelExtendedBolus),
+                                icon = IcCancelExtendedBolus,
                                 color = ElementType.EXTENDED_BOLUS.color(),
                                 onDismiss = onDismiss,
                                 onClick = onCancelExtendedBolusClick,
@@ -366,7 +361,7 @@ internal fun ManageBottomSheetContent(
                     add { modifier ->
                         ManageGridItem(
                             text = stringResource(action.name),
-                            iconPainter = painterResource(action.iconResourceId),
+                            icon = action.icon,
                             color = pumpColor,
                             onDismiss = onDismiss,
                             onClick = { onCustomActionClick(action) },
@@ -400,7 +395,9 @@ private fun GridSection(
                     .height(IntrinsicSize.Max)
             ) {
                 rowItems.forEach { item ->
-                    item(Modifier.weight(1f).fillMaxHeight())
+                    item(Modifier
+                             .weight(1f)
+                             .fillMaxHeight())
                 }
                 if (rowItems.size == 1) {
                     Spacer(modifier = Modifier.weight(1f))
@@ -411,6 +408,7 @@ private fun GridSection(
 }
 
 private class GridSectionScope {
+
     val items = mutableListOf<@Composable (Modifier) -> Unit>()
     fun add(item: @Composable (Modifier) -> Unit) {
         items.add(item)
@@ -469,7 +467,7 @@ private fun ManageGridItem(
     val description = if (descResId != 0) stringResource(descResId) else null
     ManageGridItem(
         text = label,
-        iconPainter = rememberVectorPainter(elementType.icon()),
+        icon = elementType.icon(),
         color = color,
         onDismiss = onDismiss,
         onClick = { onNavigate(NavigationRequest.Element(elementType)) },
@@ -482,7 +480,7 @@ private fun ManageGridItem(
 @Composable
 private fun ManageGridItem(
     text: String,
-    iconPainter: Painter,
+    icon: ImageVector,
     color: Color,
     onDismiss: () -> Unit,
     onClick: () -> Unit,
@@ -499,7 +497,7 @@ private fun ManageGridItem(
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                SmallTonalIcon(painter = iconPainter, color = color)
+                SmallTonalIcon(icon = icon, color = color)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = text,
@@ -520,7 +518,7 @@ private fun ManageGridItem(
 }
 
 @Composable
-private fun SmallTonalIcon(painter: Painter, color: Color) {
+private fun SmallTonalIcon(icon: ImageVector, color: Color) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -528,7 +526,7 @@ private fun SmallTonalIcon(painter: Painter, color: Color) {
             .background(color = color.copy(alpha = 0.12f), shape = CircleShape)
     ) {
         Icon(
-            painter = painter,
+            imageVector = icon,
             contentDescription = null,
             tint = color,
             modifier = Modifier.size(12.dp)

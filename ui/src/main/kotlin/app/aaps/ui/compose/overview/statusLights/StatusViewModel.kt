@@ -219,7 +219,7 @@ class StatusViewModel @Inject constructor(
         // AAPSCLIENT: handler never calls handleLevel, so level value is suppressed
         val showLevel = !config.AAPSCLIENT && hasLevel
         val level = if (showLevel) {
-            "${batteryLevelValue!!.toInt()}%"
+            "${batteryLevelValue.toInt()}%"
         } else {
             rh.gs(R.string.value_unavailable_short)
         }
@@ -234,8 +234,8 @@ class StatusViewModel @Inject constructor(
             ageStatus = event?.let { getAgeStatus(it.timestamp, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical) } ?: StatusLevel.UNSPECIFIED,
             agePercent = event?.let { getAgePercent(it.timestamp, IntKey.OverviewBageCritical) } ?: 0f,
             level = level,
-            levelStatus = if (showLevel) getLevelStatus(batteryLevelValue!!, IntKey.OverviewBattWarning, IntKey.OverviewBattCritical) else StatusLevel.UNSPECIFIED,
-            levelPercent = if (showLevel) 1f - (batteryLevelValue!!.toFloat() / 100f) else -1f,
+            levelStatus = if (showLevel) getLevelStatus(batteryLevelValue, IntKey.OverviewBattWarning, IntKey.OverviewBattCritical) else StatusLevel.UNSPECIFIED,
+            levelPercent = if (showLevel) 1f - (batteryLevelValue.toFloat() / 100f) else -1f,
             icon = IcPumpBattery,
             compactAge = hasAge, // Overview: pbAge shown only if replaceable/logging
             compactLevel = useBatteryLevel, // Overview: pbLevel visibility based on pump model only

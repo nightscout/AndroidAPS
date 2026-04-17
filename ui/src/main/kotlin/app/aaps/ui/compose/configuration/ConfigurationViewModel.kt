@@ -124,7 +124,6 @@ class ConfigurationViewModel @Inject constructor(
                     id = id,
                     name = plugin.name,
                     description = plugin.description,
-                    menuIcon = plugin.menuIcon,
                     composeIcon = plugin.pluginDescription.icon,
                     isEnabled = pluginEnabled,
                     canToggle = !plugin.pluginDescription.alwaysEnabled && (isMultiSelect || !pluginEnabled),
@@ -153,8 +152,7 @@ class ConfigurationViewModel @Inject constructor(
                     plugins = pluginModels,
                     isMultiSelect = isMultiSelect,
                     subtitle = subtitle,
-                    categoryIcon = singleEnabled?.composeIcon ?: defaultIcon,
-                    categoryIconRes = singleEnabled?.let { if (it.menuIcon != -1) it.menuIcon else null }
+                    categoryIcon = singleEnabled?.composeIcon ?: defaultIcon
                 )
             )
         }

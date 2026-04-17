@@ -163,18 +163,6 @@ fun InputBgEditor(
 }
 
 @Composable
-fun InputDeltaEditor(
-    value: Double,
-    units: GlucoseUnit,
-    onValueChange: (Double) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val (range, step, format) = if (units == GlucoseUnit.MMOL)
-        Triple(-5.0..5.0, 0.1, DecimalFormat("0.0")) else Triple(-100.0..100.0, 1.0, DecimalFormat("0"))
-    AutomationNumberInput(value, onValueChange, range, step, modifier, format, units.asText)
-}
-
-@Composable
 fun InputDurationEditor(
     duration: InputDuration,
     onChange: (Int) -> Unit,
@@ -223,9 +211,6 @@ fun InputTempTargetEditor(
         Triple(Constants.MIN_TT_MGDL..Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"))
     AutomationNumberInput(value, onValueChange, range, step, modifier, format, units.asText)
 }
-
-private val GlucoseUnit.asText: String
-    get() = if (this == GlucoseUnit.MMOL) "mmol/L" else "mg/dL"
 
 // ---------- Previews ----------
 

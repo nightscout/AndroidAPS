@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -60,6 +61,7 @@ class FoodManagementViewModel @Inject constructor(
         observeChanges()
     }
 
+    @OptIn(FlowPreview::class)
     private fun observeChanges() {
         persistenceLayer.observeChanges<FD>()
             .debounce(1000L)

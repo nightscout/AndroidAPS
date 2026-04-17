@@ -1,7 +1,7 @@
 package app.aaps.plugins.source.compose
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
 

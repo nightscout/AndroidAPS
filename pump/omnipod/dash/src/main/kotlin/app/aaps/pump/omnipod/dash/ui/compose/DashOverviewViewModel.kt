@@ -1,8 +1,8 @@
 package app.aaps.pump.omnipod.dash.ui.compose
 
 import android.content.Context
-import android.os.SystemClock
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.NotificationsOff
@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -71,8 +70,8 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Inject
-import app.aaps.pump.omnipod.common.R as CommonR
 import app.aaps.core.ui.R as CoreUiR
+import app.aaps.pump.omnipod.common.R as CommonR
 
 @Stable
 @HiltViewModel
@@ -362,7 +361,7 @@ class DashOverviewViewModel @Inject constructor(
             ),
             PumpAction(
                 label = rh.gs(CommonR.string.omnipod_common_pod_management_button_play_test_beep),
-                icon = Icons.Filled.VolumeUp,
+                icon = Icons.AutoMirrored.Filled.VolumeUp,
                 category = ActionCategory.MANAGEMENT,
                 enabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && !commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java),
                 visible = podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED),
@@ -502,7 +501,7 @@ class DashOverviewViewModel @Inject constructor(
             val text = ch.insulinAmountString(it)
             val level = if (ch.fromPump(it) < lowThreshold) StatusLevel.CRITICAL else StatusLevel.NORMAL
             text to level
-        } ?: rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL
+        } ?: (rh.gs(CoreUiR.string.overview_reservoir_concentration_value_over, ch.insulinAmountString(PumpInsulin(50.0))) to StatusLevel.NORMAL)
     }
 
     private fun translatedActiveAlert(alert: AlertType): String {

@@ -38,7 +38,7 @@ import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
-import app.aaps.core.ui.compose.icons.IcPluginDana
+import app.aaps.core.ui.compose.icons.IcPluginDanaI
 import app.aaps.core.ui.compose.icons.IcPluginDiaconn
 import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.icons.IcPluginFood
@@ -128,12 +128,12 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.NSClient            -> IcPluginNsClient
         Sources.NSProfile           -> IcPluginNsClient
         Sources.Objectives          -> IcPluginObjectives
-        Sources.Dana                -> IcPluginDana
-        Sources.DanaR               -> IcPluginDana
-        Sources.DanaRC              -> IcPluginDana
-        Sources.DanaRv2             -> IcPluginDana
-        Sources.DanaRS              -> IcPluginDana
-        Sources.DanaI               -> IcPluginDana
+        Sources.Dana                -> IcPluginDanaI
+        Sources.DanaR               -> IcPluginDanaI
+        Sources.DanaRC              -> IcPluginDanaI
+        Sources.DanaRv2             -> IcPluginDanaI
+        Sources.DanaRS              -> IcPluginDanaI
+        Sources.DanaI               -> IcPluginDanaI
         Sources.DiaconnG8           -> IcPluginDiaconn
         Sources.Insight             -> IcPluginInsight
         Sources.Combo               -> IcPluginCombo

@@ -1,7 +1,6 @@
 package app.aaps.ui.compose.careDialog
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,21 +20,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,14 +38,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
@@ -325,56 +319,56 @@ private fun BgSection(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-    val meterOptions = listOf(
-        TE.MeterType.FINGER to stringResource(R.string.bg_meter),
-        TE.MeterType.SENSOR to stringResource(R.string.bg_sensor),
-        TE.MeterType.MANUAL to stringResource(R.string.bg_other)
-    )
+        val meterOptions = listOf(
+            TE.MeterType.FINGER to stringResource(R.string.bg_meter),
+            TE.MeterType.SENSOR to stringResource(R.string.bg_sensor),
+            TE.MeterType.MANUAL to stringResource(R.string.bg_other)
+        )
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .selectableGroup(),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        meterOptions.forEach { (type, label) ->
-            Row(
-                modifier = Modifier
-                    .selectable(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .selectableGroup(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            meterOptions.forEach { (type, label) ->
+                Row(
+                    modifier = Modifier
+                        .selectable(
+                            selected = meterType == type,
+                            onClick = { onMeterTypeChange(type) },
+                            role = Role.RadioButton
+                        )
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
                         selected = meterType == type,
-                        onClick = { onMeterTypeChange(type) },
-                        role = Role.RadioButton
+                        onClick = null
                     )
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = meterType == type,
-                    onClick = null
-                )
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 2.dp)
-                )
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(start = 2.dp)
+                    )
+                }
             }
         }
-    }
 
-    val (minBg, maxBg, step, format) = when (glucoseUnits) {
-        GlucoseUnit.MMOL -> BgParams(2.0, 30.0, 0.1, DecimalFormat("0.0"))
-        GlucoseUnit.MGDL -> BgParams(36.0, 500.0, 1.0, DecimalFormat("0"))
-    }
+        val (minBg, maxBg, step, format) = when (glucoseUnits) {
+            GlucoseUnit.MMOL -> BgParams(2.0, 30.0, 0.1, DecimalFormat("0.0"))
+            GlucoseUnit.MGDL -> BgParams(36.0, 500.0, 1.0, DecimalFormat("0"))
+        }
 
-    NumberInputRow(
-        labelResId = CoreUiR.string.bg_label,
-        value = bgValue,
-        onValueChange = onBgValueChange,
-        valueRange = minBg..maxBg,
-        step = step,
-        valueFormat = format,
-        unitLabel = glucoseUnits.asText
-    )
+        NumberInputRow(
+            labelResId = CoreUiR.string.bg_label,
+            value = bgValue,
+            onValueChange = onBgValueChange,
+            valueRange = minBg..maxBg,
+            step = step,
+            valueFormat = format,
+            unitLabel = glucoseUnits.asText
+        )
     }
 }
 

@@ -242,7 +242,7 @@ private fun SiteRotationManagementContent(
                     MultiChoiceSegmentedButtonRow(
                         modifier = Modifier.weight(1f)
                     ) {
-                        val isEditingPump = isEditing && uiState.editedTe?.type == TE.Type.CANNULA_CHANGE
+                        val isEditingPump = isEditing && uiState.editedTe.type == TE.Type.CANNULA_CHANGE
                         SegmentedButton(
                             checked = if (isEditingPump) true else uiState.showPumpSites,
                             onCheckedChange = { onShowPumpSites(!uiState.showPumpSites) },
@@ -256,7 +256,7 @@ private fun SiteRotationManagementContent(
                                 modifier = Modifier.size(24.dp)
                             )
                         }
-                        val isEditingCgm = isEditing && uiState.editedTe?.type == TE.Type.SENSOR_CHANGE
+                        val isEditingCgm = isEditing && uiState.editedTe.type == TE.Type.SENSOR_CHANGE
                         SegmentedButton(
                             checked = if (isEditingCgm) true else uiState.showCgmSites,
                             onCheckedChange = { onShowCgmSites(!uiState.showCgmSites) },

@@ -37,7 +37,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -343,7 +342,7 @@ private fun DirectoryStatusIcon(
         }
     ) {
         TonalIcon(
-            painter = rememberVectorPainter(Icons.Default.Folder),
+            icon = Icons.Default.Folder,
             color = color
         )
     }
@@ -371,7 +370,7 @@ private fun CloudStatusIcon(
         }
     ) {
         TonalIcon(
-            painter = rememberVectorPainter(Icons.Default.Cloud),
+            icon = Icons.Default.Cloud,
             color = color
         )
     }
@@ -416,7 +415,7 @@ private fun MaintenanceItem(
             }
         },
         leadingContent = leadingContent ?: {
-            TonalIcon(painter = rememberVectorPainter(icon), color = contentColor)
+            TonalIcon(icon = icon, color = contentColor)
         },
         trailingContent = trailingContent,
         colors = ListItemDefaults.colors(containerColor = containerColor),

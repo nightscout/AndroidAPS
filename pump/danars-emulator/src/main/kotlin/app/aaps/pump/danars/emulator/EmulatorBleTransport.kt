@@ -2,8 +2,6 @@ package app.aaps.pump.danars.emulator
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.pump.danars.encryption.BleEncryption
-import app.aaps.pump.danars.encryption.EncryptionType
 import app.aaps.core.interfaces.pump.ble.BleAdapter
 import app.aaps.core.interfaces.pump.ble.BleGatt
 import app.aaps.core.interfaces.pump.ble.BleScanner
@@ -11,11 +9,14 @@ import app.aaps.core.interfaces.pump.ble.BleTransport
 import app.aaps.core.interfaces.pump.ble.BleTransportListener
 import app.aaps.core.interfaces.pump.ble.PairingState
 import app.aaps.core.interfaces.pump.ble.ScannedDevice
+import app.aaps.pump.danars.encryption.BleEncryption
+import app.aaps.pump.danars.encryption.EncryptionType
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 
@@ -57,6 +58,7 @@ class EmulatorBleTransport(
 
     /** Delay before onCharacteristicWritten callback (simulates BLE write latency). Tests can set to 0. */
     var writeLatencyMs: Long = 1L
+
     /** Delay before sending deferred PASSKEY_RETURN during v1 pairing. Tests can set to 0. */
     var pairingDelayMs: Long = 100L
 
@@ -449,8 +451,8 @@ class EmulatorBleTransport(
 
                 pumpEncryption.connectionState = 2
                 for (i in 0..5) pumpEncryption.timeInfo[i] = timeBytes[i].toUByte()
-                pumpEncryption.password[0] = (passLow.toUByte() xor 0x87u).toUByte()
-                pumpEncryption.password[1] = (passHigh.toUByte() xor 0x0Du).toUByte()
+                pumpEncryption.password[0] = (passLow.toUByte() xor 0x87u)
+                pumpEncryption.password[1] = (passHigh.toUByte() xor 0x0Du)
 
                 buildEncryptionResponse(opCode, responseData)
             }
@@ -573,7 +575,7 @@ class EmulatorBleTransport(
         val now = Instant.fromEpochMilliseconds(pumpState.pumpTimeMillis)
         val ldt = now.toLocalDateTime(TimeZone.currentSystemDefault())
         return byteArrayOf(
-            (ldt.year - 2000).toByte(), ldt.monthNumber.toByte(), ldt.dayOfMonth.toByte(),
+            (ldt.year - 2000).toByte(), ldt.month.number.toByte(), ldt.day.toByte(),
             ldt.hour.toByte(), ldt.minute.toByte(), ldt.second.toByte()
         )
     }

@@ -16,6 +16,5 @@ data class ConfigCategoryUiModel(
     val plugins: List<ConfigPluginUiModel>,
     val isMultiSelect: Boolean,
     val subtitle: String,
-    val categoryIcon: ImageVector?,
-    val categoryIconRes: Int?
+    val categoryIcon: ImageVector?
 )

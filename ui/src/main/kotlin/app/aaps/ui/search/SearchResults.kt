@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -63,7 +62,7 @@ fun SearchResults(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             when {
-                isSearching                                  -> {
+                isSearching                              -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -80,7 +79,7 @@ fun SearchResults(
                     )
                 }
 
-                else                                         -> {
+                else                                     -> {
                     // Group results by category
                     val groupedResults = allResults.groupBy { it.category }
 
@@ -189,18 +188,9 @@ private fun SearchResultItem(
         // Icon: wiki items get book icon, others prefer ImageVector over drawable resource
         val isWiki = entry.item is SearchableItem.Wiki
         val icon = if (isWiki) Icons.AutoMirrored.Filled.MenuBook else entry.item.icon
-        val iconResId = entry.item.iconResId
         if (icon != null) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-        } else if (iconResId != null) {
-            Icon(
-                painter = painterResource(id = iconResId),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(24.dp)

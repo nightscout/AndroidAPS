@@ -57,6 +57,9 @@
 
 ## User Preferences
 
+- **Use CRLF line endings, not LF** — This is a Windows repo. When writing or editing files,
+  preserve/produce CRLF (`\r\n`) line endings to avoid `git` warnings like
+  `LF will be replaced by CRLF the next time Git touches it`. Do NOT convert files to LF-only.
 - **NEVER make code changes without user confirmation** — When the user describes a problem or
   preference, propose the change first and wait for approval before editing code. Do NOT immediately
   edit files based on user feedback. The only exception is when the user explicitly says "do it",

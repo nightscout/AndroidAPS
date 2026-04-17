@@ -14,7 +14,6 @@ import dagger.hilt.components.SingletonComponent
 @Module(
     includes = [
         PluginsModule.Bindings::class,
-        SkinsModule::class,
         OverviewModule::class,
     ]
 )

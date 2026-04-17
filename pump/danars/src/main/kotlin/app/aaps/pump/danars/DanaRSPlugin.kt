@@ -48,7 +48,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.ui.compose.icons.IcPluginDana
+import app.aaps.core.ui.compose.icons.IcPluginDanaI
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.dana.DanaPump
@@ -104,7 +104,7 @@ class DanaRSPlugin @Inject constructor(
                 blePreCheck = blePreCheck
             )
         }
-        .icon(IcPluginDana)
+        .icon(IcPluginDanaI)
         .pluginName(app.aaps.pump.dana.R.string.danarspump)
         .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),

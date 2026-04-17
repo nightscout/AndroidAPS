@@ -518,8 +518,6 @@ private fun TaskRow(
                 when (task.type) {
                     TaskType.EXAM    -> onOpenExam()
                     TaskType.UI_TASK -> onInvokeUITask()
-
-                    else             -> {}
                 }
             }
     } else {

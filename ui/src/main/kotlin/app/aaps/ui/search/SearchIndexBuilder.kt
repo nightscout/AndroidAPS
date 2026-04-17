@@ -214,7 +214,7 @@ class SearchIndexBuilder @Inject constructor(
             if (prefKey.titleResId == 0) return@forEach
 
             val parentInfo = parentScreenMap[prefKey.key]
-            val item = SearchableItem.Preference(prefKey, parentInfo?.key, parentInfo?.iconResId, parentInfo?.plugin)
+            val item = SearchableItem.Preference(prefKey, parentInfo?.key, parentInfo?.plugin)
             val entry = createIndexEntry(item)
             val uniqueKey = "${entry.category.name}_${entry.item.key}"
             if (seenKeys.add(uniqueKey)) {
@@ -256,6 +256,7 @@ class SearchIndexBuilder @Inject constructor(
         screen.items.forEach { item ->
             when (item) {
                 is PreferenceKey          -> map[item.key] = ParentScreenInfo(screenKey, screenIconResId, plugin)
+
                 is PreferenceSubScreenDef -> {
                     // Use subscreen's icon if available, otherwise inherit from parent
                     val iconToUse = item.iconResId ?: screenIconResId
@@ -295,7 +296,7 @@ class SearchIndexBuilder @Inject constructor(
     private fun safeGetString(resId: Int): String {
         return try {
             if (resId != 0) rh.gs(resId) else ""
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             ""
         }
     }
@@ -303,7 +304,7 @@ class SearchIndexBuilder @Inject constructor(
     private fun safeGetStringNotLocalised(resId: Int): String {
         return try {
             if (resId != 0) rh.gsNotLocalised(resId) else ""
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             ""
         }
     }

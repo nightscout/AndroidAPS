@@ -28,8 +28,8 @@ class CloudDirectoryManagerImpl @Inject constructor(
 
         val authorizedStatusText = when {
             !hasCredentials    -> ""
-            hasConnectionError -> provider?.let { rh.gs(it.reAuthRequiredTextResId) } ?: ""
-            else               -> provider?.let { rh.gs(it.authorizedTextResId) } ?: ""
+            hasConnectionError -> provider.let { rh.gs(it.reAuthRequiredTextResId) }
+            else               -> provider.let { rh.gs(it.authorizedTextResId) }
         }
 
         return CloudDirectoryInfo(

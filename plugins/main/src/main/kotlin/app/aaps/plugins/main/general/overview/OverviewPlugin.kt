@@ -69,7 +69,6 @@ class OverviewPlugin @Inject constructor(
         .alwaysVisible(true)
         .alwaysEnabled(true)
         .simpleModePosition(PluginDescription.Position.TAB)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_home)
         .pluginName(app.aaps.core.ui.R.string.overview)
         .shortName(R.string.overview_shortname)
         .description(R.string.description_overview),

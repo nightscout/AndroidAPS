@@ -25,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -485,7 +486,7 @@ fun NavGraphBuilder.appNavGraph(
     }
 
     composable(AppRoute.QuickLaunchConfig.route) {
-        val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+        val quickLaunchConfigViewModel: QuickLaunchConfigViewModel = hiltViewModel()
         QuickLauchConfigScreen(
             viewModel = quickLaunchConfigViewModel,
             onNavigateBack = { navController.safePopBackStack() }
@@ -567,7 +568,7 @@ fun NavGraphBuilder.appNavGraph(
     }
 
     composable(AppRoute.FoodManagement.route) {
-        val foodManagementViewModel: app.aaps.ui.compose.foodManagement.FoodManagementViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+        val foodManagementViewModel: app.aaps.ui.compose.foodManagement.FoodManagementViewModel = hiltViewModel()
         app.aaps.ui.compose.foodManagement.FoodManagementScreen(
             viewModel = foodManagementViewModel,
             onNavigateBack = { navController.safePopBackStack() },

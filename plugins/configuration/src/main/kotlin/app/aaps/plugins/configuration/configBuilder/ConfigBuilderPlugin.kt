@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.plugin.PluginType
@@ -387,18 +386,7 @@ class ConfigBuilderPlugin @Inject constructor(
             layout.pluginEnabledInclusive.isChecked = plugin.isEnabled(pluginType)
             layout.pluginEnabledInclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
             layout.pluginEnabledExclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
-            if (plugin.menuIcon != -1) {
-                layout.pluginIcon.visibility = View.VISIBLE
-                layout.pluginIcon.setImageDrawable(ContextCompat.getDrawable(context, plugin.menuIcon))
-                if (plugin.menuIcon2 != -1) {
-                    layout.pluginIcon2.visibility = View.VISIBLE
-                    layout.pluginIcon2.setImageDrawable(ContextCompat.getDrawable(context, plugin.menuIcon2))
-                } else {
-                    layout.pluginIcon2.visibility = View.GONE
-                }
-            } else {
-                layout.pluginIcon.visibility = View.GONE
-            }
+            layout.pluginIcon.visibility = View.GONE
             layout.pluginName.text = plugin.name
             if (plugin.description == null)
                 layout.pluginDescription.visibility = View.GONE

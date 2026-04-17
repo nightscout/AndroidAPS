@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.compose.EquilComposeContent
@@ -94,7 +95,7 @@ class EquilPumpPlugin @Inject constructor(
                 blePreCheck = blePreCheck
             )
         }
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_equil_128)
+        .icon(IcPatchPump)
         .pluginName(R.string.equil_name)
         .shortName(R.string.equil_name_short)
         .description(R.string.equil_pump_description),

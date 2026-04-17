@@ -47,7 +47,6 @@ interface NSClientRepository {
     }
 
     /** Add a new log entry with JSONObject payload */
-    @Deprecated("Migrate to kotlin's JsonObject")
     fun addLog(action: String, logText: String?, json: JSONObject) {
         val jsonObject = json.let { Json.parseToJsonElement(it.toString()) as JsonObject }
         addLog(action, logText, jsonObject)

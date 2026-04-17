@@ -5,6 +5,7 @@ import app.aaps.pump.dana.emulator.HistoryEvent
 import app.aaps.pump.danars.encryption.BleEncryption
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
@@ -358,8 +359,8 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             .toLocalDateTime(TimeZone.currentSystemDefault())
         return byteArrayOf(
             (ldt.year - 2000).toByte(),
-            ldt.monthNumber.toByte(),
-            ldt.dayOfMonth.toByte(),
+            ldt.month.number.toByte(),
+            ldt.day.toByte(),
             ldt.hour.toByte(),
             ldt.minute.toByte(),
             ldt.second.toByte()
@@ -371,8 +372,8 @@ class PumpEmulator(val state: PumpState = PumpState()) {
             .toLocalDateTime(TimeZone.UTC)
         return byteArrayOf(
             (ldt.year - 2000).toByte(),
-            ldt.monthNumber.toByte(),
-            ldt.dayOfMonth.toByte(),
+            ldt.month.number.toByte(),
+            ldt.day.toByte(),
             ldt.hour.toByte(),
             ldt.minute.toByte(),
             ldt.second.toByte(),
@@ -496,7 +497,7 @@ class PumpEmulator(val state: PumpState = PumpState()) {
         state.historyStore.addEvent(code, timestamp, param1, param2)
     }
 
-    private fun processApsSetEventHistory(params: ByteArray): ByteArray = byteArrayOf(0x00) // OK
+    private fun processApsSetEventHistory(@Suppress("unused") params: ByteArray): ByteArray = byteArrayOf(0x00) // OK
 
     // --- Helpers ---
 

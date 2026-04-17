@@ -1,11 +1,6 @@
 package app.aaps.ui.compose.quickLaunch
 
 import androidx.compose.foundation.background
-import androidx.compose.ui.graphics.Color
-import app.aaps.core.ui.compose.icons.IcBolus
-import app.aaps.core.ui.compose.icons.IcCarbs
-import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,14 +39,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.TonalIcon
+import app.aaps.core.ui.compose.icons.IcBolus
+import app.aaps.core.ui.compose.icons.IcCarbs
 import app.aaps.core.ui.compose.navigation.ElementCategory
+import app.aaps.core.ui.compose.navigation.ElementType
+import app.aaps.core.ui.compose.navigation.color
 import app.aaps.ui.R
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
@@ -340,7 +339,7 @@ private fun SelectedActionItem(
                     )
                 }
                 Spacer(modifier = Modifier.width(4.dp))
-                TonalIcon(painter = rememberVectorPainter(item.icon), color = color)
+                TonalIcon(icon = item.icon, color = color)
             }
         },
         trailingContent = {
@@ -391,7 +390,7 @@ private fun AvailableActionItem(
             { Text(text = desc, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         },
         leadingContent = {
-            TonalIcon(painter = rememberVectorPainter(item.icon), color = color)
+            TonalIcon(icon = item.icon, color = color)
         },
         trailingContent = {
             OutlinedIconButton(

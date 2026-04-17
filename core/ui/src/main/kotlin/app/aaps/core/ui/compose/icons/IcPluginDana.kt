@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
  *
  * Bounding box: (viewport: 24x24, ~90% width)
  */
-val IcPluginDana: ImageVector by lazy {
+val IcPluginDanaI: ImageVector by lazy {
     ImageVector.Builder(
         name = "IcPluginDana",
         defaultWidth = 48.dp,
@@ -383,7 +383,7 @@ val IcPluginDana: ImageVector by lazy {
 @Composable
 private fun IcPluginDanaPreview() {
     Icon(
-        imageVector = IcPluginDana,
+        imageVector = IcPluginDanaI,
         contentDescription = "Dana Plugin Icon",
         modifier = Modifier
             .padding(0.dp)
