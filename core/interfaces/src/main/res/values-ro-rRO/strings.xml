@@ -54,7 +54,7 @@
     <string name="yesterday">Ieri</string>
     <!-- Rx -->
     <string name="connecting_for">Conectat de %1$d s</string>
-    <string name="handshaking">Împerechere</string>
+    <string name="handshaking">Asociere</string>
     <string name="connected">Conectat</string>
     <string name="authorized">Autorizat</string>
     <string name="disconnecting">Se deconectează</string>

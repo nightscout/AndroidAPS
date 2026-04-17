@@ -42,7 +42,7 @@
     <string name="pref_show_grid">Afișați grilă</string>
     <string name="pref_dark" comment="Enables dark visual theme">Întunecat</string>
     <string name="pref_highlight_basals">Evidențiere rate bazale</string>
-    <string name="pref_prediction_lines">Arată predicții</string>
+    <string name="pref_prediction_lines">Arătați predicții</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Separator</string>
     <string name="pref_chart_timeframe">Grafic Timp</string>
     <string name="pref_1_hour">1 oră</string>
@@ -122,7 +122,7 @@
     <string name="action_confirm">CONFIRMARE</string>
     <string name="action_timeshift_hours">Decalaj\n[ore]</string>
     <string name="bolus_progress">Progres bolus</string>
-    <string name="press_to_cancel">apasă pentru a anula</string>
+    <string name="press_to_cancel">apăsați pentru a anula</string>
     <string name="cancel_bolus">ANULARE BOLUS</string>
     <string name="status_pump">Pompă</string>
     <string name="status_loop">Buclă</string>
@@ -153,8 +153,8 @@
     <string name="color_name_white">alb</string>
     <string name="color_name_black">negru</string>
     <string name="color_name_multicolor">multicolor</string>
-    <string name="pref_simplify_ui">Simplificare UI</string>
-    <string name="pref_vibrate_hourly">Vibrează la fiecare ora</string>
+    <string name="pref_simplify_ui">Simplificare interfață</string>
+    <string name="pref_vibrate_hourly">Vibrați la fiecare oră</string>
     <string name="pref_show_weeknumber">Afișați număr săptămână</string>
     <string name="pref_include_external">Includeți vizualizări externe în șablon</string>
     <string name="pref_switch_external">Comutare date externe în cadranul ceasului</string>
@@ -164,7 +164,7 @@
     <string name="digitalstyle_style_minimal">stil minimal</string>
     <string name="digitalstyle_style_shape">stil de formă</string>
     <string name="digitalstyle_style_full">stil complet</string>
-    <string name="digitalstyle_pref_your_color">Culoarea ta</string>
+    <string name="digitalstyle_pref_your_color">Culoarea dumneavoastră</string>
     <string name="digitalstyle_pref_your_color_saturation">Saturația culorii dumneavoastră</string>
     <string name="digitalstyle_pref_your_color_opacity">Opacitatea culorii dumneavoastră</string>
     <string name="bolus_progress_channel_name">Progres bolus AAPS</string>
@@ -228,6 +228,7 @@
     <string name="complication_br_cob_iob_ext2">RB, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">RB &amp; IoB</string>
     <string name="complication_br">Rată bazală</string>
+    <string name="complication_br_tt">RB &amp; Țintă</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">Pictogramă CoB</string>
     <string name="complication_cob_detailed">CoB Detaliat</string>
@@ -290,8 +291,8 @@
     <string name="loop_status_target_range">Interval</string>
     <string name="loop_status_target">Țintă</string>
     <string name="loop_status">Stare buclă</string>
-    <string name="loop_status_refresh">Reîncarcă</string>
-    <string name="confirm">Confirmă</string>
+    <string name="loop_status_refresh">Reîncărcați</string>
+    <string name="confirm">Confirmați</string>
     <string name="request">Cerință</string>
     <string name="constraint_applied">Constrângere aplicată!</string>
 </resources>

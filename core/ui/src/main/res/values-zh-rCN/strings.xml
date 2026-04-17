@@ -418,6 +418,7 @@
     <string name="arrow_center">中心</string>
     <!--    Command-->
     <string name="connectiontimedout">连接超时</string>
+    <string name="pump_not_configured">泵没有配置</string>
     <!--    PumpEnactResult-->
     <string name="enacted">设定</string>
     <string name="comment">评论</string>
@@ -1019,6 +1020,8 @@
     <string name="graph_edit">编辑图表</string>
     <string name="graph_number">图表 %1$d</string>
     <string name="graph_bg">血糖图表</string>
+    <string name="graph_height">图表高度 [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">预测</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>

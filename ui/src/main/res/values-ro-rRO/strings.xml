@@ -8,7 +8,7 @@
     <string name="start_hypo_tt">Start Țintă Temporară hipoglicemie</string>
     <string name="time_offset">Decalaj</string>
     <string name="remind_to_bolus_later">Amintește-mi să fac bolus mai târziu</string>
-    <string name="a11y_carb_reminder">Setează memento pentru timpul carbohidraților</string>
+    <string name="a11y_carb_reminder">Setați memento pentru timpul carbohidraților</string>
     <!--    Widget-->
     <string name="configure">Configurați opacitatea</string>
     <string name="widget_description">Widget AAPS</string>
@@ -35,7 +35,7 @@
     <string name="calculation_in_progress">Calcul în desfășurare</string>
     <string name="invalid_age">Valoare vârstă invalidă</string>
     <string name="invalid_weight">Valoare greutate invalidă</string>
-    <string name="age">Vârstă</string>
+    <string name="age">Vechime</string>
     <string name="weight_label">Greutate</string>
     <string name="glucose_type">Tip glicemie</string>
     <string name="bg_other">Altul</string>
@@ -122,7 +122,7 @@
     <string name="wizard_bg_age">Vârsta glicemiei: %1$d min</string>
     <string name="a11y_current_bg">valoarea actuală a glicemiei</string>
     <string name="carb_time_label">Oră carbohidrați</string>
-    <string name="a11y_set_carb_timer">stabilește alarma pentru timpul carbohidraților</string>
+    <string name="a11y_set_carb_timer">stabiliți alarma pentru timpul carbohidraților</string>
     <string name="show_calculation">Afișați calculul</string>
     <!-- Treatments -->
     <string name="no_records_available">Nicio înregistrare disponibilă</string>

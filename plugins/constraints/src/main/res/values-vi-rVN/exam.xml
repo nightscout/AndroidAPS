@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">Điều gì đúng về thời gian hoạt động của Insulin (DIA)?</string>
     <string name="dia_label_exam">Thời gian tác dụng của Insulin (DIA)</string>
+    <string name="dia_profile">Bạn nên thiết lập giá trị DIA trong cấu hình insulin.</string>
     <string name="dia_minimumis5h">Giá trị nhỏ nhất được phép là 5 giờ.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Nếu bạn thấy giá trị DIA mà bạn đã sử dụng trên Bơm trước khi dùng AAPS hoạt động tốt, thì không cần thay đổi giá trị này khi bắt đầu chạy vòng kín.</string>
@@ -75,7 +76,9 @@
     <string name="prerequisites2_supportedcgm">Một CGM được hỗ trợ và ứng dụng phù hợp để nhận giá trị đường huyết trên điện thoại/thiết bị.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Đang cập nhật AAPS</string>
+    <string name="update_git">Bạn cần cài đặt và cấu hình Git trên máy tính hoặc sử dụng bản build trên trình duyệt.</string>
     <string name="update_asap">Khi các phiên bản AAPS mới được phát hành, những phiên bản cũ hơn có thể sẽ bị giới hạn từ xa sau một khoảng thời gian nhất định.</string>
+    <string name="update_keys">Nếu bạn build bằng Android Studio, bạn nên lưu và ghi lại vị trí của keystore, đồng thời sử dụng cùng một khóa ký cho các bản cập nhật như lần cài đặt trước.</string>
     <string name="update_askfriend">Nếu bạn gặp khó khăn khi tự build file apk, bạn có thể cài đặt apk đã được build sẵn bởi một người bạn.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Khắc phục sự cố</string>

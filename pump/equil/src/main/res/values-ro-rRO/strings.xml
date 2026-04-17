@@ -16,7 +16,7 @@
     <string name="equil_serialnumber">Numărul dispozitivului</string>
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Succes</string>
-    <string name="equil_title_dressing">Schimbă cartușul</string>
+    <string name="equil_title_dressing">Schimbați cartușul</string>
     <string name="equil_title_assemble">Asamblați pompa</string>
     <string name="equil_title_serial">Asociați dispozitivul</string>
     <string name="equil_title_fill">Amorsare / Umplere</string>
@@ -24,7 +24,7 @@
     <string name="equil_title_air">Amorsați canula</string>
     <string name="equil_title_unpair_detach">Îndepărtați pompa</string>
     <string name="equil_title_unpair_confirm">Confirmați dezasocierea</string>
-    <string name="equil_title_history_events">Istoric evenimente</string>
+    <string name="equil_title_history_events">Evenimente din istoric</string>
     <string name="equil_tone">Sunet alertă</string>
     <string name="equil_tone_mode_mute">Silențios</string>
     <string name="equil_tone_mode_shake">Doar vibrare</string>
@@ -58,14 +58,14 @@
     <string name="equil_common_history_tbr_value">Rată: %1$.2f U/H, durată: %2$d minute</string>
     <string name="equil_common_history_bolus_value">%1$.2f U</string>
     <!-- equil - Commands -->
-    <string name="equil_common_cmd_set_bolus">Setare bolus</string>
-    <string name="equil_common_cmd_cancel_bolus">Anulare bolus</string>
-    <string name="equil_common_cmd_set_tbr">Setare rată bazală temporară</string>
-    <string name="equil_common_cmd_cancel_tbr">Anulare rată bazală temporară</string>
-    <string name="equil_common_cmd_set_basal_schedule">Setare program rată bazală</string>
-    <string name="equil_common_cmd_set_time">Setare oră</string>
-    <string name="equil_common_cmd_suspend_delivery">Suspendare administrare</string>
-    <string name="equil_common_cmd_resume_delivery">Reluare administrare</string>
+    <string name="equil_common_cmd_set_bolus">Setați bolus</string>
+    <string name="equil_common_cmd_cancel_bolus">Anulați bolus</string>
+    <string name="equil_common_cmd_set_tbr">Setați rată bazală temporară</string>
+    <string name="equil_common_cmd_cancel_tbr">Anulați rată bazală temporară</string>
+    <string name="equil_common_cmd_set_basal_schedule">Setați program rată bazală</string>
+    <string name="equil_common_cmd_set_time">Setați oră</string>
+    <string name="equil_common_cmd_suspend_delivery">Suspendați administrarea</string>
+    <string name="equil_common_cmd_resume_delivery">Reluați administrarea</string>
     <string name="equil_common_cmd_pair">Asociați Equil</string>
     <string name="equil_common_cmd_insert_cannula">Inserați canula</string>
     <string name="equil_common_cmd_unpair">Dezasociați Equil</string>
@@ -75,7 +75,7 @@
     <string name="equil_common_change_insulin">Retragere tijă de împingere</string>
     <string name="equil_common_set_alarm_tone">Configurare doar pentru notificare audio</string>
     <string name="equil_common_set_alarm_shake">Configurare doar pentru vibrații</string>
-    <string name="equil_common_set_alarm_mute">Configurează pentru silențios</string>
+    <string name="equil_common_set_alarm_mute">Configurați pentru silențios</string>
     <string name="equil_common_set_alarm_tone_and_shake">Configurare pentru notificare sunet și vibrații</string>
     <string name="equil_common_read_devices">Citiți informații dispozitiv</string>
     <string name="equil_common_cmd_fill">Umplere</string>
@@ -106,7 +106,7 @@
     <string name="equil_history_item7">Injecția a fost deja întreruptă</string>
     <string name="equil_history_item8">Oprire automată iminentă</string>
     <string name="equil_history_item9">Oprire automată!</string>
-    <string name="equil_history_item10">Amorsare rezervor</string>
+    <string name="equil_history_item10">Amorsați rezervor</string>
     <string name="equil_history_item11">Retractare pompă</string>
     <string name="equil_history_item12">Bolus rapid pornit</string>
     <string name="equil_history_item13">Rată bazală temporară pornită</string>
@@ -141,7 +141,7 @@
     </plurals>
     <string name="equil_support_error">Versiunea firmware este prea veche. Nu este acceptată</string>
     <string name="equil_password_tips">Opțional setați o parolă pentru asocierea cu pompa Equil v5.3. Această parolă va fi folosită și pentru dezasocierea în viitor, așa că vă rugăm să vă amintiți de ea. Regulă parolă: trebuie să aibă 4 caractere, aleasă din ABCDEF0123456789.</string>
-    <string name="equil_set_pair_password">Setează parolă împerechere</string>
+    <string name="equil_set_pair_password">Setați parolă asociere</string>
     <string name="equil_hint1">După instalarea pompei pe placa de bază, selectați dacă doriți să purjați aerul din acul fix.</string>
     <string name="equil_unbind">Dezasociere dispozitiv</string>
     <string name="equil_device_unpaired">Dispozitiv dezasociat</string>

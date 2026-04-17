@@ -27,9 +27,13 @@
     <string name="exitwizard">Bỏ qua cài đặt nhanh</string>
     <string name="setupwizard_sensitivity_description">Plugin Sensitivity được sử dụng để phát hiện độ nhạy và tính toán COB. Để biết thêm thông tin, hãy truy cập:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Chọn một trong các thuật toán có sẵn. Chúng được sắp xếp từ cũ đến mới. Thuật toán mới hơn thường mạnh hơn. Đừng quên đọc tài liệu OpenAPS và cấu hình trước khi sử dụng.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vui lòng cấu hình RileyLink của bạn bên dưới. Sau khi chọn RileyLink, bạn có thể tiếp tục cài đặt khi trạng thái RileyLink hiển thị \'Đã kết nối\'. Việc này có thể mất khoảng một phút.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Lưu ý:</b> Tiếp tục cài đặt sau khi bơm được thiết lập.\n</string>
     <string name="startobjective">Bắt đầu mục tiêu đầu tiên của bạn</string>
+    <string name="setupwizard_permissions">Quyền truy cập</string>
+    <string name="setupwizard_profile_info">Tạo hồ sơ với các tỷ lệ basal, IC, ISF và giá trị mục tiêu của bạn. Bạn có thể thêm nhiều hồ sơ sau.</string>
+    <string name="setupwizard_permissions_info">AAPS cần quyền truy cập bộ nhớ để hoạt động đúng cách. Vui lòng cấp các quyền cần thiết bên dưới.</string>
     <string name="setupwizard_pump_riley_link_status">Trạng thái RileyLink:</string>
     <string name="readstatus">Đọc trạng thái</string>
     <!-- Provider-agnostic cloud export/import strings -->

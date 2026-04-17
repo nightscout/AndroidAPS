@@ -228,6 +228,7 @@
     <string name="complication_br_cob_iob_ext2">BR, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">基础率</string>
+    <string name="complication_br_tt">基础率 &amp; 目标</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">CoB 图标</string>
     <string name="complication_cob_detailed">CoB 详情</string>

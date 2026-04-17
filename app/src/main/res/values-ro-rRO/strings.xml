@@ -18,7 +18,7 @@
     <string name="use_compose_main_screen">Utilizare ecran principal compunere (experimental)</string>
     <string name="switch_to_compose_ui">Comutare la Compose UI</string>
     <string name="switch_to_classic_ui">Comutare la interfața clasică</string>
-    <string name="select">Seletați</string>
+    <string name="select">Selectați</string>
     <string name="set">Setați</string>
     <string name="migrating_preferences">Se migrează preferințele…</string>
     <string name="initializing_plugins">Se inițializează modulele…</string>

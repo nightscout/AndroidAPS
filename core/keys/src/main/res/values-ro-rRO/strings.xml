@@ -16,7 +16,7 @@
     <string name="pref_title_show_calibration_button">Afișați butonul de calibrare</string>
     <string name="pref_summary_show_calibration_button">Trimiteți o calibrare la xDrip+ (asigurați-vă că \'Acceptați calibrări\' este activat în xDrip+ în setările între aplicații).</string>
     <string name="pref_title_show_notes_in_dialogs">Afișați notele în dialoguri</string>
-    <string name="pref_title_use_bolus_advisor">Utilizați consilierul în bolus</string>
+    <string name="pref_title_use_bolus_advisor"></string>
     <string name="pref_summary_use_bolus_advisor">Activați consilierul în bolus care asistă la calcularea bolusului în timpul glicemiilor mai mari.</string>
     <string name="pref_title_use_bolus_reminder">Utilizați memento pentru bolus</string>
     <string name="pref_summary_use_bolus_reminder">Activați notificările de reamintire a bolusului pentru a ajuta la urmărirea administrării insulinei.</string>
@@ -248,7 +248,57 @@
     <string name="units_format_hours">%1$d h</string>
     <string name="units_format_hours_double">%1$.0f h</string>
     <string name="units_format_days">%1$d zile</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_mmol">%1$s mmol/L</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_min_range">%1$d min (%2$d - %3$d)</string>
+    <string name="units_format_sec_range">%1$d sec (%2$d - %3$d)</string>
+    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
+    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
+    <string name="units_format_days_range">%1$d zile (%2$d - %3$d)</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/o (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_mmol_range">%1$s mmol/l (%2$s - %3$s)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="pref_title_language">Limba</string>
+    <string name="lang_default">Implicit sistem</string>
+    <string name="lang_en">Engleză</string>
+    <string name="lang_af">Afrikaans</string>
+    <string name="lang_bg">Bulgară</string>
+    <string name="lang_cs">Cehă</string>
+    <string name="lang_de">Germană</string>
+    <string name="lang_dk">Daneză</string>
+    <string name="lang_fr">Franceză</string>
+    <string name="lang_nl">Olandeză</string>
+    <string name="lang_es">Spaniolă</string>
+    <string name="lang_el">Greacă</string>
+    <string name="lang_ga">Irlandeză</string>
+    <string name="lang_it">Italiană</string>
+    <string name="lang_ko">Coreeană</string>
+    <string name="lang_lt">Lituaniană</string>
+    <string name="lang_nb">Norvegiană</string>
+    <string name="lang_pl">Poloneză</string>
+    <string name="lang_pt">Portugheză</string>
+    <string name="lang_pt_br">Portugheză, braziliană</string>
+    <string name="lang_ro">Română</string>
+    <string name="lang_ru">Rusă</string>
+    <string name="lang_sk">Slovacă</string>
+    <string name="lang_sv">Suedeză</string>
+    <string name="lang_tr">Turcă</string>
+    <string name="lang_zh_tw">Chineză tradițională</string>
+    <string name="lang_zh_cn">Chineză simplificată</string>
+    <string name="pref_title_skin">Temă</string>
     <string name="pref_title_patient_name">Nume</string>
     <string name="pref_summary_patient_name">Numele pentru a identifica această instanță AAPS (afișată în rapoarte și sincronizare)</string>
     <!-- StringKey: Directory preferences -->
@@ -336,9 +386,35 @@
     <string name="openapsama_bgAccel_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="pref_title_bg_brake_weight">Ponderea frânei glicemiei în ISF</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în scădere și care determină slăbirea ISF și, prin urmare, reducerea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_low_bg_weight">Greutate interval glicemic scăzut</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este sub țintă, ceea ce determină slăbirea ISF și, prin urmare, reducerea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_high_bg_weight">Greutate interval glicemic ridicat</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este peste țintă și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">Raportul de livrare SMB în funcție de intervalul glicemic</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valoare implicită: 0. Rata de livrare SMB în creștere liniară este cartografiată la intervalul de glicemie [target_bg, target_bg+bg_range].\\nLa target_bg rata SMB este smb_delivery_ratio_min, la target_bg+bg_range este smb_delivery_ratio_max\\nCu 0 rata SMB cu creștere liniară este dezactivată și se utilizează rata fixă smb_delivery_ratio.</string>
+    <string name="pref_title_pp_weight">Greutatea post-prandială a ISF</string>
+    <string name="openapsama_pp_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
+    <string name="pref_title_dura_weight">Durată de greutate ISF</string>
+    <string name="openapsama_dura_ISF_weight_summary">Aceasta este ponderea aplicată în timpul perioadelor persistente de hiperglicemie și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită de 0,0 oprește acest efect.</string>
+    <string name="pref_title_smb_delivery_ratio">Raportul administrării SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Valoarea implicită: 0,5 Acesta este un alt plafon de siguranţă OpenAPS şi specifică ce procent din insulina totală necesară poate fi livrat sub formă de SMB. Acest lucru este menit să împiedice oamenii să intre pe un teritoriu periculos prin setarea în același timp a cererilor de SMB de la telefonul persoanelor care îi îngrijesc. Creșteți această valoare experimentală încet și cu precauție.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Minimul raportului de administrare SMB</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Valoare implicită: 0,5 Acesta este capătul mai mic al unui raport crescător liniar, mai degrabă decât valoarea fixă de mai sus.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Maximul raportului de administrare SMB</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valoare implicită: 0,5 Acesta este capătul superior al unui raport crescător liniar, mai degrabă decât valoarea fixă de mai sus.</string>
+    <string name="pref_title_smb_max_range_extension">Extensia maximă a intervalului SMB</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valoare implicită: 1 Aceasta este o altă limită cheie de siguranță OpenAPS și specifică cu ce factor puteți depăși uzualul 120 maxSMB/maxUAM minute. Creșteți această valoare experimentală încet și cu precauție.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Marcaj glicemie scăzută</string>
+    <string name="pref_title_high_mark">Marcaj glicemie mare</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">Pragul LGS (Suspendare la Hipoglicemie)</string>
+    <string name="lgs_threshold_summary">Valoarea glicemiei sub care administrarea insulinei este suspendată. Valoarea implicită folosește modelul standard de țintă. Utilizatorul poate seta valoarea între 60mg/dl (3,3mmol/l) și 100 mg/dl (5,5mmol/l). Valorile sub 65/3,6 determină utilizarea modelului standard</string>
     <!-- IntentKey preferences -->
+    <string name="pref_title_link_to_docs">Documentație algoritm</string>
+    <string name="pref_title_otp_setup">Setare Authenticator</string>
+    <string name="pref_title_quick_wizard_settings">Setări AsistentRapid</string>
+    <string name="pref_title_xdrip_info">Informații xDrip+</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
 </resources>

@@ -91,6 +91,7 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Thiết lập liều nền tạm thời trung tính</string>
     <string name="set_neutral_temps_summary">Nếu được bật, tính năng này sẽ hủy liều nền tạm thời trước khi kết thúc mỗi giờ. Phương pháp này có thể giúp ngăn một số bơm phát tiếng bíp hoặc rung vào đầu giờ.</string>
+    <string name="medtronic_tbr_remaining">%1$s (%2$d phút còn lại)</string>
     <string name="mdt_tbr_remaining">%1$.1f U/giờ (%2$d phút còn lại)</string>
     <string name="invalid_history_data">Phát hiện dữ liệu lịch sử bơm không hợp lệ. Hãy tạo báo cáo mới và cung cấp nhật ký.</string>
     <string name="riley_statistics">Thống kê RL</string>

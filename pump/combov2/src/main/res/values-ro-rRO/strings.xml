@@ -3,7 +3,7 @@
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
     <string name="combov2_plugin_description">Integrare nativă a pompelor Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Nu se poate conecta la pompă</string>
-    <string name="combov2_not_paired">Nu este împerecheat cu pompa</string>
+    <string name="combov2_not_paired">Nu este asociat cu pompa</string>
     <string name="combov2_warning">Avertizare Combo</string>
     <string name="combov2_error">Eroare Combo</string>
     <string name="combov2_warning_4">Apelați linia telefonică pentru actualizare</string>
@@ -109,7 +109,7 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_connection_error">Eroare conexiune: %1$s</string>
     <string name="combov2_short_status_alert">Alertă: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetectați și introduceți automat schimbarea rezervorului de insulină</string>
-    <string name="combov2_automatic_battery_entry">Autodetectează și introdu automat schimbarea bateriei</string>
+    <string name="combov2_automatic_battery_entry">Autodetectați și introduceți automat schimbarea bateriei</string>
     <string name="combov2_timezone_changed">Fus orar schimbat</string>
     <string name="combov2_datetime_changed">Data și/sau ora schimbate</string>
     <string name="combov2_dst_started">Început ora de vară (DST)</string>
@@ -118,6 +118,6 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_refresh_pump_status_after_error">Reîmprospătarea stării pompei după ce pompa a raportat o eroare</string>
     <string name="combov2_go_back">Înapoi</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Nu se poate efectua asocierea deoarece driverul nu este inițializat. Acest lucru se întâmplă de obicei deoarece permisiunile Bluetooth necesare nu au fost acordate. Mergeți înapoi, acordați permisiunile Bluetooth, apoi încercați din nou împerecherea.</string>
-    <string name="combov2_bluetooth_disabled">Nu se poate porni driver-ul - Bluetooth este dezactivat</string>
+    <string name="combov2_bluetooth_disabled">Nu se poate porni driverul - Bluetooth este dezactivat</string>
     <string name="combov2_bluetooth_not_supported">Driverul nu poate rula - acest dispozitiv nu acceptă Bluetooth</string>
 </resources>
