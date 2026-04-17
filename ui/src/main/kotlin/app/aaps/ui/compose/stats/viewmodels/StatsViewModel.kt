@@ -66,7 +66,7 @@ class StatsViewModel @Inject constructor(
         loadAllStats()
     }
 
-    private fun loadAllStats() {
+    fun loadAllStats() {
         loadTddStats()
         loadTirStats()
         loadDexcomTirStats()
