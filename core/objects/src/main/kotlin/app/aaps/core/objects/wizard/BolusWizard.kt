@@ -392,7 +392,7 @@ class BolusWizard @Inject constructor(
         return actions.joinToString("<br/>")
     }
 
-    suspend fun confirmAndExecute(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
+    fun confirmAndExecute(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
             if (accepted) {
                 aapsLogger.debug(LTag.UI, "guarding: already accepted")
@@ -560,12 +560,12 @@ class BolusWizard @Inject constructor(
                 }
             }
             if (quickWizardEntry != null) {
-                scheduleECarbsFromQuickWizard(ctx, quickWizardEntry)
+                scheduleECarbsFromQuickWizard(quickWizardEntry)
             }
         })
     }
 
-    private fun scheduleECarbsFromQuickWizard(ctx: Context, quickWizardEntry: QuickWizardEntry) {
+    private fun scheduleECarbsFromQuickWizard(quickWizardEntry: QuickWizardEntry) {
         val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
         if (eCarbsYesNo == QuickWizardEntry.YES) {
             val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage, "time", 0)
