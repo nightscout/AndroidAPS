@@ -58,11 +58,6 @@
     <string name="graph_scale">Escala gráfica</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">Tema original</string>
-    <string name="lowres_description">Tema baja resolución</string>
-    <string name="buttonson_description">Los botones siempre se muestran en la parte inferior de la pantalla</string>
-    <string name="largedisplay_description">Pantalla grande</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
