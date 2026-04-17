@@ -34,11 +34,6 @@
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TRACT</string>
     <string name="graph_menu_divider_header">Gràfica</string>
-    <!-- Skins -->
-    <string name="classic_description">Tema original</string>
-    <string name="lowres_description">Tema baixa resolució</string>
-    <string name="buttonson_description">Els botons sempre es mostren a la part inferior de la pantalla</string>
-    <string name="largedisplay_description">Pantalla grossa</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
