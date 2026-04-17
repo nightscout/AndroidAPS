@@ -486,13 +486,10 @@ class DashOverviewViewModel @Inject constructor(
     private fun buildTempBasalText(): String {
         val tempBasal = podStateManager.tempBasal
         if (podStateManager.isActivationCompleted && podStateManager.tempBasalActive && tempBasal != null) {
-            val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - tempBasal.startTime).toMinutes()
-            return rh.gs(
-                CommonR.string.omnipod_common_overview_temp_basal_concentration_value,
-                ch.basalRateString(PumpRate(tempBasal.rate), true),
-                dateUtil.timeString(tempBasal.startTime),
-                minutesRunning,
-                tempBasal.durationInMinutes
+            return ch.basalTbrString(
+                rate = PumpRate(tempBasal.rate),
+                startTime = tempBasal.startTime,
+                durationInMin = tempBasal.durationInMinutes.toInt()
             )
         }
         return PLACEHOLDER

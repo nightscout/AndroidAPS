@@ -173,13 +173,11 @@ class EquilOverviewViewModel @Inject constructor(
 
         // Temp basal
         val tempBasal = state.tempBasal
-        val tempBasalText = if (tempBasal != null && equilManager.isTempBasalRunning()) {
+        if (tempBasal != null && equilManager.isTempBasalRunning()) {
             val startTime = tempBasal.startTime
             val duration = tempBasal.duration / 60 / 1000
-            val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - startTime).toMinutes()
-            rh.gs(R.string.equil_common_overview_tbr_value, ch.basalRateString(PumpRate(tempBasal.rate), true), dateUtil.timeString(startTime), minutesRunning, duration)
-        } else "-"
-        add(PumpInfoRow(label = rh.gs(R.string.equil_temp_basal_rate), value = tempBasalText))
+            add(PumpInfoRow(label = rh.gs(R.string.equil_temp_basal_rate), value = ch.basalTbrString( rate = PumpRate(tempBasal.rate),startTime = startTime, durationInMin = duration)))
+        }
 
         // Total delivered
         val totalDelivered = if (state.startInsulin == -1) "-"

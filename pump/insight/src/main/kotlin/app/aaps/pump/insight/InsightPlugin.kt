@@ -190,6 +190,8 @@ class InsightPlugin @Inject constructor(
             field = value
             _lastBolusTime.value = value.takeIf { it > 0 }
         }
+
+    var lastTempBasalTimestamp = 0L
     var lastBolusType: BS.Type? = null
         private set
     private var alertService: InsightAlertService? = null
@@ -251,6 +253,7 @@ class InsightPlugin @Inject constructor(
         createNotificationChannel()
         lastBolusTimestamp = preferences.get(InsightLongNonKey.LastBolusTimestamp)
         _lastBolusAmount.value = PumpInsulin(preferences.get(InsightDoubleNonKey.LastBolusAmount))
+        lastTempBasalTimestamp = preferences.get(InsightLongNonKey.LastTempBasalTimestamp)
     }
 
     private fun createNotificationChannel() {
@@ -384,7 +387,7 @@ class InsightPlugin @Inject constructor(
                     if (operatingMode == OperatingMode.STARTED) {
                         if (isActiveBasalRateChanged) activeBasalRate = service.requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
                         if (isActiveTBRChanged) activeTBR = service.requestMessage(GetActiveTBRMessage()).await().activeTBR
-                        if (isActiveBolusesChanged) activeBoluses = service.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
+                        if (isActiveBolusesChanged) activeBoluses = service.requestMessage(GetActiveBolusesMessage()).await().activeBoluses?.also { updateTimestamp(it) }
                     } else {
                         activeBasalRate = null
                         activeTBR = null
@@ -411,7 +414,7 @@ class InsightPlugin @Inject constructor(
                 if (operatingMode == OperatingMode.STARTED) {
                     activeBasalRate = service.requestMessage(GetActiveBasalRateMessage()).await().activeBasalRate
                     activeTBR = service.requestMessage(GetActiveTBRMessage()).await().activeTBR
-                    activeBoluses = service.requestMessage(GetActiveBolusesMessage()).await().activeBoluses
+                    activeBoluses = service.requestMessage(GetActiveBolusesMessage()).await().activeBoluses?.also { updateTimestamp(it) }
                 } else {
                     activeBasalRate = null
                     activeTBR = null
@@ -1259,6 +1262,8 @@ class InsightPlugin @Inject constructor(
                 pumpId = event.eventPosition
             )
         )
+        lastTempBasalTimestamp = timestamp
+        preferences.put(InsightLongNonKey.LastTempBasalTimestamp, lastTempBasalTimestamp)
     }
 
     private fun processEndOfTBREvent(serial: String, temporaryBasals: MutableList<TemporaryBasal>, event: EndOfTBREvent) {
@@ -1531,6 +1536,12 @@ class InsightPlugin @Inject constructor(
 
     private fun uploadCareportalEvent(date: Long, event: TE.Type) {
         runBlocking { pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber()) }
+    }
+
+    private fun updateTimestamp(boluses: MutableList<ActiveBolus>) {
+        boluses.forEach { bolus ->
+            insightDbHelper.getInsightBolusID(serialNumber(), bolus.bolusID, dateUtil.now())?.let { bolus.startTime = it.timestamp }
+        }
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
