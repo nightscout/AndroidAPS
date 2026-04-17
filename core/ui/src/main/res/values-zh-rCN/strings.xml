@@ -285,10 +285,6 @@
     <string name="current_insulin">当前已激活</string>
     <string name="change_insulin">更改</string>
     <string name="select_insulin_description">选择您要注入泵中的胰岛素。激活/启动后，将应用配置切换。</string>
-    <string name="bolus_delivered">%1$.2fU / %2$.2fU</string>
-    <string name="bolus_delivered_CU">%1$.2fCU / %2$.2fCU</string>
-    <string name="pump_insulin_cu">%1$.2f CU</string>
-    <string name="pump_insulin_cu1">%1$.1f CU</string>
     <string name="selected_insulin">已选择的胰岛素：%1$s</string>
     <string name="record_insulin_hint">如果使用笔注射胰岛素，请从下方选择正确的胰岛素类型。剂量始终以国际单位表示。</string>
     <!--    ProfileSwitch-->

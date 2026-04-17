@@ -36,7 +36,6 @@
     <string name="error_asking_for_permissions">Σφάλμα στην ερώτηση για δικαιώματα</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Διαμόρφωση</string>
     <string name="configbuilder_pump_description">Ποια αντλία θα θέλατε να χρησιμοποιήσετε με το AndroidAPS;</string>
     <string name="configbuilder_aps_description">Ποιος APS αλγόριθμος πρέπει να κάνει θεραπείες;</string>
     <string name="configbuilder_general_description">Αυτά είναι μερικά πρόσθετα που μπορεί να βρείτε χρήσιμα.</string>
@@ -46,8 +45,6 @@
     <string name="configbuilder_bgsource_description">Από πού πρέπει το AndroidAPS να πάρει τα δεδομένα του;</string>
     <string name="configbuilder_smoothing_description">Επιλέξτε αλγόριθμο εξομάλυνσης</string>
     <string name="configbuilder_sensitivity_description">Ποιος αλγόριθμος ευαισθησίας να χρησιμοποιηθεί;</string>
-    <string name="config_builder_shortname">Διαμόρφωση</string>
-    <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
     <string name="allow_hardware_pump_text">Προσοχή: Εάν ενεργοποιήσετε και συνδεθείτε με μια αντλία, το AndroidAPS θα αντιγράψει τις ρυθμίσεις βασικού από το προφίλ στην αντλία, αντικαθιστώντας τον υπάρχων βασικό ρυθμό της αντλίας. Βεβαιωθείτε ότι έχετε τον σωστό βασικό ρυθμό στο AndroidAPS. Εάν δεν είστε βέβαιοι ή δεν θέλετε να αντικαταστήσετε τον βασικό ρυθμό στην αντλία σας, πατήστε Άκυρο και επαναλάβετε εναλλαγή προς την αντλία σε μεταγενέστερο χρόνο.</string>
     <string name="nsclient_version_does_not_match">Η έκδοση AAPSClient δεν ταιριάζει με την έκδοση AAPS. Παρακαλούμε ενημερώστε την υπάρχουσα έκδοση.</string>
     <!--ImportExport-->

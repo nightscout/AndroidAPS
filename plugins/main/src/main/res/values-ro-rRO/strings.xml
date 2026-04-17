@@ -58,11 +58,6 @@
     <string name="graph_scale">Scară grafică</string>
     <string name="graph_menu_divider_header">Grafic</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">Tema originală</string>
-    <string name="lowres_description">Temă de rezoluție redusă</string>
-    <string name="buttonson_description">Butoanele sunt afișate întotdeauna în partea de jos a ecranului</string>
-    <string name="largedisplay_description">Display mare</string>
     <string name="cannula_usage">folosire:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

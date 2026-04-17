@@ -41,7 +41,6 @@
     <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Konfigurácia</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
     <string name="configbuilder_aps_description">Aký APS algoritmus má byť použitý pre prispôsobenie liečby?</string>
     <string name="configbuilder_general_description">Toto sú všeobecné moduly, ktoré môžu byť užitočné.</string>
@@ -52,12 +51,8 @@
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
     <string name="configbuilder_smoothing_description">Vyberte algoritmus pre vyhladzovanie</string>
     <string name="configbuilder_sensitivity_description">Aký druh algoritmu pre detekciu citlivosti má byť použitý?</string>
-    <string name="config_builder_shortname">KONF</string>
-    <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje nastavenie bazálu z aktívneho profilu do pumpy. Overte si, že máte v AAPS korektný bazálny profil. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
     <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
-    <string name="expand_category">Rozbaliť kategóriu</string>
-    <string name="collapse_category">Zbaliť kategóriu</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

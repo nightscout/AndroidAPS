@@ -9,11 +9,9 @@
     <string name="error_asking_for_permissions">Pogreška pri traženju dopuštenja</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na popis dopuštenih za optimizaciju baterije - mogli biste imati problema s performansama.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Config Builder</string>
     <string name="configbuilder_pump_description">Koju pumpu želite koristiti s AndroidAPS-om?</string>
     <string name="configbuilder_loop_description">Koristite ovo za aktiviranje integracije AAPS-ove petlje.</string>
     <string name="configbuilder_bgsource_description">Odakle bi AAPS trebao dobiti svoje podatke?</string>
-    <string name="description_config_builder">Koristi se za konfiguriranje aktivnih softverskih dodataka</string>
     <string name="allow_hardware_pump_text">Pažnja: ako aktivirate i povežete se s hardverskom pumpom, AAPS će kopirati bazalne postavke iz profila na pumpu, prebrišući postojeću bazalnu dozu pohranjenu na pumpi. Provjerite imate li ispravnu bazalnu postavku u AAPS-u. Ako niste sigurni ili ne želite prebrisati bazalne postavke na pumpi, pritisnite Odustani i ponovite prebacivanje na pumpu kasnije.</string>
     <string name="nsclient_version_does_not_match">Verzija AAPS klijenta ne odgovara verziji AAPS. Molimo ažurirajte.</string>
     <!--ImportExport-->

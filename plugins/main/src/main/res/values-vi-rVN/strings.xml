@@ -58,11 +58,6 @@
     <string name="graph_scale">Tỷ lệ hiển thị đồ thị</string>
     <string name="graph_menu_divider_header">Đồ thị</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">Giao diện gốc</string>
-    <string name="lowres_description">Giao diện phân giải thấp</string>
-    <string name="buttonson_description">Các nút luôn được hiển thị ở phía dưới màn hình</string>
-    <string name="largedisplay_description">Màn hình lớn</string>
     <string name="cannula_usage">đã sử dụng:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

@@ -4,6 +4,4 @@
     <string name="count_selected">%1$d נבחרו</string>
     <string name="remove_items">פריטים שהוסרו</string>
     <string name="sort_items">מיין פריטים</string>
-    <string name="remove_selected_items">הסר פריטים נבחרים</string>
-    <string name="sort_label">מיין</string>
 </resources>

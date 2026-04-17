@@ -58,11 +58,6 @@
     <string name="graph_scale">Масштаб графика</string>
     <string name="graph_menu_divider_header">График</string>
     <string name="temp_basal_overview_short_name">ВРЕМ:</string>
-    <!-- Skins -->
-    <string name="classic_description">Исходная тема оформления</string>
-    <string name="lowres_description">Тема для низкого разрешения</string>
-    <string name="buttonson_description">Кнопки всегда отображаются в нижней части экрана</string>
-    <string name="largedisplay_description">Большой экран</string>
     <string name="cannula_usage">применение:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

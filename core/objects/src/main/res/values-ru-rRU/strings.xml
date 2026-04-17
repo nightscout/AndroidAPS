@@ -4,6 +4,4 @@
     <string name="count_selected">Выбрано: %1$d</string>
     <string name="remove_items">Удалить элементы</string>
     <string name="sort_items">Сортировать элементы</string>
-    <string name="remove_selected_items">Удалить выбранные элементы</string>
-    <string name="sort_label">Сортировать</string>
 </resources>

@@ -41,7 +41,6 @@
     <string name="error_asking_for_permissions">Feil under spørring etter tillatelser</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Det ser ikke ut som mobilen støtter registrering av apper som unntas fra batterioptimalisering - du kan oppleve ytelsesproblemer.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Konfigurasjonsverktøy</string>
     <string name="configbuilder_pump_description">Hvilken pumpe ønsker du å bruke med AAPS?</string>
     <string name="configbuilder_aps_description">Hvilken algoritme skal APS benytte for behandlinger?</string>
     <string name="configbuilder_general_description">Det er noen generelle plugins som kan være nyttige.</string>
@@ -52,12 +51,8 @@
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
     <string name="configbuilder_smoothing_description">Velg algoritme for utjevning</string>
     <string name="configbuilder_sensitivity_description">Hvilken sensitivitetsalgoritme skal benyttes?</string>
-    <string name="config_builder_shortname">KONF</string>
-    <string name="description_config_builder">Brukes for innstilling av aktive plugins</string>
     <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basalinnstillinger fra din profil over til pumpen og overskrive verdiene som er lagret i pumpen. Sjekk at du har riktige basalverdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basalverdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
     <string name="nsclient_version_does_not_match">AAPSClient-versjonen samsvarer ikke med AAPS-versjonen. Vennligst oppdater.</string>
-    <string name="expand_category">Utvid kategori</string>
-    <string name="collapse_category">Kollaps kategori</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

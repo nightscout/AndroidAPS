@@ -58,11 +58,6 @@
     <string name="graph_scale">圖表比例</string>
     <string name="graph_menu_divider_header">圖表</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">原始外觀</string>
-    <string name="lowres_description">低解析度外觀</string>
-    <string name="buttonson_description">按鈕總是顯示在螢幕底部</string>
-    <string name="largedisplay_description">大顯示</string>
     <string name="cannula_usage">使用量：</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

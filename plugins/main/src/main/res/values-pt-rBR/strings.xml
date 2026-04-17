@@ -42,11 +42,6 @@
     <string name="treatments_shortname">TRATA</string>
     <string name="graph_scale">Escala do gráfico</string>
     <string name="graph_menu_divider_header">Gráfico</string>
-    <!-- Skins -->
-    <string name="classic_description">Tema original</string>
-    <string name="lowres_description">Design de baixa resolução</string>
-    <string name="buttonson_description">Botões são sempre exibidos na parte inferior da tela</string>
-    <string name="largedisplay_description">Mostrador Grande</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

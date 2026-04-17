@@ -4,6 +4,4 @@
     <string name="count_selected">%1$d pasirinkta</string>
     <string name="remove_items">Pašalinti elementus</string>
     <string name="sort_items">Rūšiuoti elementus</string>
-    <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
-    <string name="sort_label">Rūšiuoti</string>
 </resources>

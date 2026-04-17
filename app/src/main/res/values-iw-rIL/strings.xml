@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">דלתא</string>
-    <string name="save">שמירה</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">לא חוקי</string>
     <string name="close_navigation">סגור ניווט</string>
-    <string name="remove_items">הסר פריטים</string>
-    <string name="sort_items">מיין פריטים</string>
     <string name="authorizationfailed">ההרשאה נכשלה</string>
-    <string name="cannula">צינורית</string>
     <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">הסר פריטים נבחרים</string>
-    <string name="count_selected">%1$d נבחרו</string>
-    <string name="sort_label">מיין</string>
-    <string name="search">חיפוש</string>
     <string name="select">בחר</string>
     <string name="set">הגדר</string>
 </resources>

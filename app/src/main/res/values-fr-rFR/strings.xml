@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">Enregistrer</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">INVALIDE</string>
     <string name="close_navigation">Fermer navigation</string>
-    <string name="remove_items">Supprimer des entrées</string>
-    <string name="sort_items">Trier les objets</string>
     <string name="authorizationfailed">Echec de l\'authentification</string>
-    <string name="cannula">Canule</string>
     <string name="identification_not_set">Identification non définie en mode dev</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
-    <string name="count_selected">%1$d sélectionnée(s)</string>
-    <string name="sort_label">Trier</string>
-    <string name="search">Chercher</string>
     <string name="use_compose_main_screen">Utiliser l\'écran principal de Compose (expérimental)</string>
     <string name="switch_to_compose_ui">Basculer vers l\'interface de Compose</string>
     <string name="switch_to_classic_ui">Basculer vers l\'interface classique</string>

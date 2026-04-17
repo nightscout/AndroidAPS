@@ -298,7 +298,6 @@
     <string name="lang_tr">Turcă</string>
     <string name="lang_zh_tw">Chineză tradițională</string>
     <string name="lang_zh_cn">Chineză simplificată</string>
-    <string name="pref_title_skin">Temă</string>
     <string name="pref_title_patient_name">Nume</string>
     <string name="pref_summary_patient_name">Numele pentru a identifica această instanță AAPS (afișată în rapoarte și sincronizare)</string>
     <!-- StringKey: Directory preferences -->

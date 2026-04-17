@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">Speichern</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">Ungültig</string>
     <string name="close_navigation">Menü schließen</string>
-    <string name="remove_items">Objekte entfernen</string>
-    <string name="sort_items">Einträge sortieren</string>
     <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
-    <string name="cannula">Kanüle</string>
     <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
-    <string name="count_selected">%1$d ausgewählt</string>
-    <string name="sort_label">Sortieren</string>
-    <string name="search">Suche</string>
 </resources>

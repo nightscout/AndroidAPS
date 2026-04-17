@@ -298,7 +298,6 @@
     <string name="lang_tr">Tykrisk</string>
     <string name="lang_zh_tw">Kinesisk, tradisjonell</string>
     <string name="lang_zh_cn">Kinesisk, forenklet</string>
-    <string name="pref_title_skin">Tema</string>
     <string name="pref_title_patient_name">Navn</string>
     <string name="pref_summary_patient_name">Navn for å identifisere denne AAPS-instansen (vist i rapporter og synkronisering)</string>
     <!-- StringKey: Directory preferences -->

@@ -4,6 +4,4 @@
     <string name="count_selected">Επιλέχθηκαν %1$d</string>
     <string name="remove_items">Αφαίρεση Στοιχείων</string>
     <string name="sort_items">Ταξινόμηση Στοιχείων</string>
-    <string name="remove_selected_items">Αφαίρεση Επιλεγμένων Στοιχείων</string>
-    <string name="sort_label">Ταξινόμηση</string>
 </resources>

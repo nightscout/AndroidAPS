@@ -42,11 +42,6 @@
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="graph_scale">Κλίμακα γραφήματος</string>
     <string name="graph_menu_divider_header">Γράφημα</string>
-    <!-- Skins -->
-    <string name="classic_description">Αρχικό δέρμα</string>
-    <string name="lowres_description">Θέμα χαμηλής ανάλυσης</string>
-    <string name="buttonson_description">Τα κουμπιά εμφανίζονται πάντα στο κάτω μέρος της οθόνης</string>
-    <string name="largedisplay_description">Μεγάλη προβολή</string>
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

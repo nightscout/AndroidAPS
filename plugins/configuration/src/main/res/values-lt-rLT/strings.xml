@@ -37,7 +37,6 @@
     <string name="error_asking_for_permissions">Leidimo užklausos klaida</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Konfigūracija</string>
     <string name="configbuilder_pump_description">Kokią pompą naudosite su AAPS?</string>
     <string name="configbuilder_aps_description">Kuris DKS algoritmas turėtų koreguoti terapiją?</string>
     <string name="configbuilder_general_description">Bendrieji įskiepiai, kurie gali praversti.</string>
@@ -47,12 +46,8 @@
     <string name="configbuilder_bgsource_description">Iš kur AAPS gaus duomenis?</string>
     <string name="configbuilder_smoothing_description">Pasirinkite glodinimo algoritmą</string>
     <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudosite?</string>
-    <string name="config_builder_shortname">KONF</string>
-    <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite realią pompą, AAPS nukopijuos bazės nustatymus iš profilio į pompą, todėl nustatymai pompoje gali pasikeisti. Įsitikinkite, kad bazės nustatymai AAPS yra teisingi. Jei nesate tikri arba nenorite keisti bazės nustatymų jūsų pompoje, paspauskite Atšaukti ir atlikite prijungimą prie pompos vėliau.</string>
     <string name="nsclient_version_does_not_match">AAPSClient ir AAPS versijos nesutampa. Atnaujinkite.</string>
-    <string name="expand_category">Išplėsti kategoriją</string>
-    <string name="collapse_category">Sutraukti kategoriją</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

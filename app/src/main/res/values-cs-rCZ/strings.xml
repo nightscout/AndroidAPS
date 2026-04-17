@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Rozdíl</string>
-    <string name="save">Uložit</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">NEPLATNÝ</string>
     <string name="close_navigation">Zavřít menu</string>
-    <string name="remove_items">Odstranit položky</string>
-    <string name="sort_items">Seřadit položky</string>
     <string name="authorizationfailed">Autorizace selhala</string>
-    <string name="cannula">Kanyla</string>
     <string name="identification_not_set">Identifikace není nastavena ve vývojářském režimu</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Odstranit zvolené položky</string>
-    <string name="count_selected">Vybráno: %1$d</string>
-    <string name="sort_label">Seřadit</string>
-    <string name="search">Hledat</string>
     <string name="select">Vybrat</string>
     <string name="set">Nastavit</string>
 </resources>

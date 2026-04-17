@@ -42,11 +42,6 @@
     <string name="treatments_shortname">BEHANDL</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
-    <!-- Skins -->
-    <string name="classic_description">Original udseende</string>
-    <string name="lowres_description">Lav kvalitets udseende</string>
-    <string name="buttonson_description">Knapper vises altid nederst på skærmen</string>
-    <string name="largedisplay_description">Stort display</string>
     <string name="cannula_usage">brug:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

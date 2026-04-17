@@ -298,7 +298,6 @@
     <string name="lang_tr">Tiếng Thổ Nhĩ Kỳ</string>
     <string name="lang_zh_tw">Tiếng Trung Phồn Thể</string>
     <string name="lang_zh_cn">Tiếng Trung, Giản thể</string>
-    <string name="pref_title_skin">Giao diện</string>
     <string name="pref_title_patient_name">Tên</string>
     <string name="pref_summary_patient_name">Tên để nhận diện phiên bản AAPS này (hiển thị trong báo cáo và đồng bộ)</string>
     <!-- StringKey: Directory preferences -->
