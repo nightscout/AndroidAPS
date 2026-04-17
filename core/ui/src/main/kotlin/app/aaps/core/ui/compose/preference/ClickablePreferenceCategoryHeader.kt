@@ -36,10 +36,9 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
@@ -65,7 +64,7 @@ internal fun ClickablePreferenceCategoryHeader(
     icon: ImageVector? = null
 ) {
     val theme = LocalPreferenceTheme.current
-    val rotationAngle by animateFloatAsState(
+    val rotationAngle = animateFloatAsState(
         targetValue = if (expanded) 180f else 0f,
         label = "expandIconRotation"
     )
@@ -135,7 +134,7 @@ internal fun ClickablePreferenceCategoryHeader(
                 contentDescription = stringResource(if (expanded) app.aaps.core.ui.R.string.collapse else app.aaps.core.ui.R.string.expand),
                 modifier = Modifier
                     .size(theme.expandIconSize)
-                    .rotate(rotationAngle)
+                    .graphicsLayer { rotationZ = rotationAngle.value }
             )
         }
     }

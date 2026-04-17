@@ -33,7 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -155,7 +155,7 @@ private fun CategoryRow(
 
     val iconPainter = rememberVectorPainter(category.categoryIcon ?: Icons.Default.Settings)
 
-    val chevronRotation by animateFloatAsState(
+    val chevronRotation = animateFloatAsState(
         targetValue = if (isExpanded) 90f else 0f,
         label = "chevron"
     )
@@ -196,7 +196,7 @@ private fun CategoryRow(
                 contentDescription = if (isExpanded) stringResource(app.aaps.core.ui.R.string.collapse)
                 else stringResource(app.aaps.core.ui.R.string.expand),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.rotate(chevronRotation)
+                modifier = Modifier.graphicsLayer { rotationZ = chevronRotation.value }
             )
         }
     }
