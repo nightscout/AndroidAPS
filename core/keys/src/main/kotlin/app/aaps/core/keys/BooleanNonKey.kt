@@ -33,4 +33,6 @@ enum class BooleanNonKey(
     ExportSettingsCloudEnabled("export_settings_cloud_enabled", false),
     ExportCsvLocalEnabled("export_csv_local_enabled", true),
     ExportCsvCloudEnabled("export_csv_cloud_enabled", false),
+
+    AllowHardwarePump("allow_hardware_pump", false),
 }

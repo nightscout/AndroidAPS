@@ -53,6 +53,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
@@ -71,7 +72,6 @@ import app.aaps.database.AppRepository
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
-import app.aaps.plugins.configuration.keys.ConfigurationBooleanComposedKey
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.receivers.BTReceiver
@@ -456,12 +456,12 @@ class MainApp : Application(), HasAndroidInjector {
         for ((key, value) in keys) {
             if (key.startsWith("ConfigBuilder_") && key.endsWith("_Enabled")) {
                 val plugin = key.split("_")[1] + "_" + key.split("_")[2]
-                preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderEnabled, plugin, value = value as Boolean)
+                preferences.put(BooleanComposedKey.ConfigBuilderEnabled, plugin, value = value as Boolean)
                 sp.remove(key)
             }
             if (key.startsWith("ConfigBuilder_") && key.endsWith("_Visible")) {
                 val plugin = key.split("_")[1] + "_" + key.split("_")[2]
-                preferences.put(ConfigurationBooleanComposedKey.ConfigBuilderVisible, plugin, value = value as Boolean)
+                preferences.put(BooleanComposedKey.ConfigBuilderVisible, plugin, value = value as Boolean)
                 sp.remove(key)
             }
         }

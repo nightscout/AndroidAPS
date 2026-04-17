@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventSWRLStatus
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
@@ -29,7 +30,6 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.plugins.configuration.R
-import app.aaps.plugins.configuration.configBuilder.events.EventConfigBuilderUpdateGui
 import app.aaps.plugins.configuration.setupwizard.elements.SWBreak
 import app.aaps.plugins.configuration.setupwizard.elements.SWButton
 import app.aaps.plugins.configuration.setupwizard.elements.SWEditEncryptedPassword
@@ -106,7 +106,7 @@ class SWDefinition @Inject constructor(
                 config.AAPSCLIENT -> swDefinitionNSClient()
             }
             disposable += rxBus
-                .toObservable(EventConfigBuilderUpdateGui::class.java)
+                .toObservable(EventConfigBuilderChange::class.java)
                 .observeOn(aapsSchedulers.main)
                 .subscribe { rxBus.send(EventSWUpdate(true)) }
         }

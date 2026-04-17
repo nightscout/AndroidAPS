@@ -43,7 +43,6 @@
     <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
 
     <!--    ConfigBuilder-->
-    <string name="config_builder">Config Builder</string>
     <string name="configbuilder_pump_description">Which pump would you like to use with AAPS?</string>
     <string name="configbuilder_aps_description">Which APS algorithm should make therapy adjustments?</string>
     <string name="configbuilder_general_description">These are some general plugins you might find useful.</string>
@@ -54,12 +53,8 @@
     <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
     <string name="configbuilder_smoothing_description">Choose smoothing algorithm</string>
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
-    <string name="config_builder_shortname">CONF</string>
-    <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="nsclient_version_does_not_match">AAPSClient version doesn\'t match AAPS version. Please update.</string>
-    <string name="expand_category">Expand category</string>
-    <string name="collapse_category">Collapse category</string>
 
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
