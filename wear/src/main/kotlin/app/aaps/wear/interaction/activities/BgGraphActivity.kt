@@ -295,8 +295,8 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
     )
 
     // Text labels: hour numbers at bottom, current time at top of "now" line
-    val nowLabel = SimpleDateFormat("H:mm", Locale.getDefault()).format(Date(now))
-    val hourFormat = SimpleDateFormat("H", Locale.getDefault())
+    val nowLabel = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(now))
+    val hourFormat = SimpleDateFormat("HH", Locale.getDefault())
     drawIntoCanvas { canvas ->
         val hourPaint = Paint().apply {
             color = android.graphics.Color.argb(140, 170, 170, 170)
