@@ -56,17 +56,16 @@ fun PrepareStep(
 
     var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
 
-    // Trigger preparePatch and load insulins on initial display
     LaunchedEffect(Unit) {
-        viewModel.preparePatch()
-        viewModel.loadInsulins()
-        viewModel.initSnText()
-    }
-
-    // When step becomes PREPARE_PATCH_CONNECT, trigger connect
-    LaunchedEffect(patchStep) {
+        // When step becomes PREPARE_PATCH_CONNECT, trigger connect
         if (patchStep == PatchStep.PREPARE_PATCH_CONNECT) {
             viewModel.preparePatchConnect()
+        }
+        else {
+            // Trigger preparePatch and load insulins on initial display
+            viewModel.preparePatch()
+            viewModel.loadInsulins()
+            viewModel.initSnText()
         }
     }
 

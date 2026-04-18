@@ -36,7 +36,9 @@ fun ActivateStep(
     var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
 
     // Trigger activation when entering ACTIVATE step
-    LaunchedEffect(patchStep) {
+    // Note: use Unit as key to only trigger once when entering the step, not on every patchStep change
+    // To avoid sending repeated commands and triggering errors and other unintended consequences
+    LaunchedEffect(Unit) {
         if (patchStep == PatchStep.ACTIVATE) {
             viewModel.startActivate()
         }

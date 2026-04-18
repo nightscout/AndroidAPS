@@ -35,14 +35,11 @@ fun RetryActivationStep(
     var showDiscardDialog by remember { mutableStateOf(false) }
     var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(patchStep) {
+    LaunchedEffect(Unit) {
         if (patchStep == PatchStep.RETRY_ACTIVATION) {
             viewModel.preparePatch()
         }
-    }
-
-    LaunchedEffect(patchStep) {
-        if (patchStep == PatchStep.RETRY_ACTIVATION_CONNECT) {
+        else if (patchStep == PatchStep.RETRY_ACTIVATION_CONNECT) {
             viewModel.retryActivationConnect()
         }
     }
