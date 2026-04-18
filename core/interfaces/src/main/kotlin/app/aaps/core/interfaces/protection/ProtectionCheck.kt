@@ -1,8 +1,6 @@
 package app.aaps.core.interfaces.protection
 
 import androidx.annotation.StringRes
-import androidx.annotation.UiThread
-import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -90,12 +88,6 @@ interface ProtectionCheck {
 
     fun isLocked(protection: Protection): Boolean
     fun resetAuthorization()
-
-    /**
-     * Legacy method for Fragment-based UI. Requires activity parameter.
-     */
-    @UiThread
-    fun queryProtection(activity: FragmentActivity, protection: Protection, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null)
 
     /**
      * Compose-friendly protection query (legacy single-level).

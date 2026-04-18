@@ -1,6 +1,7 @@
 package app.aaps.ui.compose.history
 
 import androidx.lifecycle.ViewModel
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
@@ -120,6 +121,6 @@ class HistoryViewModel @Inject constructor(
 
     companion object {
 
-        private val WINDOW_MS = T.hours(24).msecs()
+        private val WINDOW_MS = T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
     }
 }

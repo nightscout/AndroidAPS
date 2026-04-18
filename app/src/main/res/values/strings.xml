@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Close navigation</string>
     <string name="authorizationfailed">Authorization failed</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
-    <string name="use_compose_main_screen">Use Compose main screen (experimental)</string>
-    <string name="switch_to_compose_ui">Switch to Compose UI</string>
-    <string name="switch_to_classic_ui">Switch to classic UI</string>
     <string name="select">Select</string>
     <string name="set">Set</string>
     <string name="migrating_preferences">Migrating preferences…</string>

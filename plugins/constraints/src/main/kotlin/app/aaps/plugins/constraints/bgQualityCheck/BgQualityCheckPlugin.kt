@@ -42,7 +42,6 @@ class BgQualityCheckPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.bg_quality),
@@ -68,7 +67,9 @@ class BgQualityCheckPlugin @Inject constructor(
     override val stateFlow: StateFlow<BgQualityCheck.State> = _stateFlow.asStateFlow()
     override var state: BgQualityCheck.State
         get() = _stateFlow.value
-        set(value) { _stateFlow.value = value }
+        set(value) {
+            _stateFlow.value = value
+        }
     override var message: String = ""
 
     // Fallback to LGS if BG values are doubled
@@ -132,11 +133,11 @@ class BgQualityCheckPlugin @Inject constructor(
 
     @DrawableRes override fun icon(): Int =
         when (state) {
-            BgQualityCheck.State.UNKNOWN       -> 0
+            BgQualityCheck.State.UNKNOWN -> 0
             BgQualityCheck.State.FIVE_MIN_DATA -> 0
-            BgQualityCheck.State.RECALCULATED  -> R.drawable.ic_baseline_warning_24_yellow
-            BgQualityCheck.State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
-            BgQualityCheck.State.FLAT          -> R.drawable.ic_baseline_trending_flat_24
+            BgQualityCheck.State.RECALCULATED -> R.drawable.ic_baseline_warning_24_yellow
+            BgQualityCheck.State.DOUBLED -> R.drawable.ic_baseline_warning_24_red
+            BgQualityCheck.State.FLAT -> R.drawable.ic_baseline_trending_flat_24
         }
 
     override fun stateDescription(): String =

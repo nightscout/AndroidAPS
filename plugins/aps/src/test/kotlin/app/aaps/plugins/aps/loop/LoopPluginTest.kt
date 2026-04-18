@@ -86,11 +86,6 @@ class LoopPluginTest : TestBaseWithProfile() {
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = false
         assertThat(loopPlugin.specialEnableCondition()).isFalse()
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = true
-
-        // Fragment is hidden by default
-        assertThat(loopPlugin.isFragmentVisible()).isFalse()
-        loopPlugin.setFragmentVisible(PluginType.LOOP, true)
-        assertThat(loopPlugin.isFragmentVisible()).isTrue()
     }
 
     @Test

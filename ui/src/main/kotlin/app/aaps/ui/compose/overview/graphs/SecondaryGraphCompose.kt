@@ -1,7 +1,6 @@
 package app.aaps.ui.compose.overview.graphs
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -17,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.graph.vico.AdaptiveStep
 import app.aaps.core.graph.vico.Square
 import app.aaps.core.interfaces.overview.graph.BolusType
@@ -80,7 +80,7 @@ fun SecondaryGraphCompose(
     val hasRealTimeRange = derivedTimeRange != null
     val (minTimestamp, maxTimestamp) = derivedTimeRange ?: run {
         val now = System.currentTimeMillis()
-        val dayAgo = now - 24 * 60 * 60 * 1000L
+        val dayAgo = now - Constants.GRAPH_TIME_RANGE_HOURS * 60 * 60 * 1000L
         dayAgo to now
     }
 
@@ -303,7 +303,20 @@ fun SecondaryGraphCompose(
         processPoints(secondaryLineData, minTimestamp, minX, maxX)
     }
 
-    LaunchedEffect(processedSimpleSeries, processedDevSlopeMin, processedDeviationLines, processedIob, processedIobTreatments, processedCob, processedCarbs, processedBasalProfile, processedBasalActual, processedSecondary, processedActivityOverlay, maxX) {
+    LaunchedEffect(
+        processedSimpleSeries,
+        processedDevSlopeMin,
+        processedDeviationLines,
+        processedIob,
+        processedIobTreatments,
+        processedCob,
+        processedCarbs,
+        processedBasalProfile,
+        processedBasalActual,
+        processedSecondary,
+        processedActivityOverlay,
+        maxX
+    ) {
         if (!hasRealTimeRange) return@LaunchedEffect
 
         val slots = mutableListOf<SeriesSlot>()
@@ -550,7 +563,8 @@ fun SecondaryGraphCompose(
     val secondaryAxisLine = remember(secondaryAxisColor) {
         LineCartesianLayer.Line(
             fill = LineCartesianLayer.LineFill.single(Fill(secondaryAxisColor)),
-            areaFill = LineCartesianLayer.AreaFill.single(fill = Fill(Color.Transparent)
+            areaFill = LineCartesianLayer.AreaFill.single(
+                fill = Fill(Color.Transparent)
             )
         )
     }
@@ -1054,7 +1068,7 @@ private fun alignZeros(aMin: Double, aMax: Double, bMin: Double, bMax: Double): 
         // Degenerate case: if one side is all zeros (half=0) we still symmetrize it using the
         // other side's half (or 1.0 if both are all zero) so Vico gets a non-empty range and the
         // zero line still lands at mid.
-        aCrosses || bCrosses       -> {
+        aCrosses || bCrosses -> {
             val aHalfRaw = maxOf(-aMin, aMax)
             val bHalfRaw = maxOf(-bMin, bMax)
             if (aHalfRaw <= 0 && bHalfRaw <= 0) return null // both completely flat at zero
@@ -1064,11 +1078,11 @@ private fun alignZeros(aMin: Double, aMax: Double, bMin: Double, bMax: Double): 
             AlignedRanges(-aHalf, aHalf, -bHalf, bHalf)
         }
         // Both strictly positive → pin zeros to bottom (use 0 as shared floor).
-        aMin > 0 && bMin > 0       -> AlignedRanges(0.0, aMax, 0.0, bMax)
+        aMin > 0 && bMin > 0 -> AlignedRanges(0.0, aMax, 0.0, bMax)
         // Both strictly negative → pin zeros to top (use 0 as shared ceiling).
-        aMax < 0 && bMax < 0       -> AlignedRanges(aMin, 0.0, bMin, 0.0)
+        aMax < 0 && bMax < 0 -> AlignedRanges(aMin, 0.0, bMin, 0.0)
         // One all-positive, one all-negative (neither touches zero) → no useful shared alignment.
-        else                       -> null
+        else                 -> null
     }
 }
 

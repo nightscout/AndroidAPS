@@ -99,7 +99,7 @@ open class VirtualPumpPlugin @Inject constructor(
         .shortName(R.string.virtual_pump_shortname)
         .description(R.string.description_pump_virtual)
         .setDefault()
-        .neverVisible(config.AAPSCLIENT),
+        .showInList { !config.AAPSCLIENT },
     ownPreferences = listOf(VirtualBooleanNonPreferenceKey::class.java),
     aapsLogger, rh, preferences, commandQueue
 ), Pump, VirtualPump {

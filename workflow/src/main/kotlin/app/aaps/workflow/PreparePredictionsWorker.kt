@@ -3,6 +3,7 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
@@ -60,13 +61,13 @@ class PreparePredictionsWorker(
             var predictionHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
             predictionHours = min(2, predictionHours)
             predictionHours = max(0, predictionHours)
-            val hoursToFetch = data.overviewData.rangeToDisplay - predictionHours
+            val hoursToFetch = Constants.GRAPH_TIME_RANGE_HOURS - predictionHours
             data.overviewData.toTime = calendar.timeInMillis + 100000 // GraphView-era nudge, retained while workers still consume this shape
             data.overviewData.fromTime = data.overviewData.toTime - T.hours(hoursToFetch.toLong()).msecs()
             data.overviewData.endTime = data.overviewData.toTime + T.hours(predictionHours.toLong()).msecs()
         } else {
             data.overviewData.toTime = calendar.timeInMillis + 100000
-            data.overviewData.fromTime = data.overviewData.toTime - T.hours(data.overviewData.rangeToDisplay.toLong()).msecs()
+            data.overviewData.fromTime = data.overviewData.toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
             data.overviewData.endTime = data.overviewData.toTime
         }
 

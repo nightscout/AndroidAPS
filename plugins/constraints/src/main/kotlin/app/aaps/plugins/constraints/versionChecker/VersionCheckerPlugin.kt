@@ -28,7 +28,6 @@ class VersionCheckerPlugin @Inject constructor(
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.version_checker),

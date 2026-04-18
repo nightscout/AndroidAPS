@@ -10,10 +10,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -38,7 +35,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.BolusProgressState
-import app.aaps.core.ui.compose.AapsFab
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
@@ -90,7 +86,6 @@ fun MainScreen(
     onMenuClick: () -> Unit,
     onNavigate: (NavigationRequest) -> Unit,
     onDrawerClosed: () -> Unit,
-    onSwitchToClassicUi: () -> Unit,
     onAboutDialogDismiss: () -> Unit,
     onMaintenanceSheetDismiss: () -> Unit,
     onDirectoryClick: () -> Unit,
@@ -343,19 +338,6 @@ fun MainScreen(
                             )
                         }
 
-                        // FABs
-                        if (showChrome) {
-                            val fabBottomPadding = scaffoldPadding.calculateBottomPadding() +
-                                with(density) { bottomBarHeightPx.toDp() } +
-                                if (hasToolbar) 64.dp else 16.dp
-                            SwitchUiFab(
-                                onClick = onSwitchToClassicUi,
-                                modifier = Modifier
-                                    .align(Alignment.BottomEnd)
-                                    .padding(bottom = fabBottomPadding, end = 16.dp)
-                            )
-                        }
-
                         // Tap overlay to restore chrome in preview mode (only when hidden)
                         if (previewMode && !chromeVisible) {
                             Box(
@@ -447,19 +429,3 @@ fun MainScreen(
 
 private val PREVIEW_MODE_MIN_HEIGHT: Dp = 500.dp
 private const val AUTO_HIDE_DELAY_MS = 3000L
-
-@Composable
-private fun SwitchUiFab(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    AapsFab(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = Icons.Filled.SwapHoriz,
-            contentDescription = "Switch to classic UI"
-        )
-    }
-}

@@ -94,9 +94,6 @@ fun AllPreferencesScreen(
     }
 
     val pluginContents = buildList {
-        // 1. Overview plugin (always enabled)
-        getPreferenceContentIfEnabled(activePlugin.activeOverview as PluginBase)?.let { add(it) }
-
         // 2. Safety plugin (always enabled)
         getPreferenceContentIfEnabled(activePlugin.activeSafety as PluginBase)?.let { add(it) }
 

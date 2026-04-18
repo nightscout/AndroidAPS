@@ -62,7 +62,6 @@ class PersistentNotificationPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
-        .neverVisible(true)
         .pluginName(R.string.ongoingnotificaction)
         .enableByDefault(true)
         .alwaysEnabled(true)

@@ -3,7 +3,6 @@ package app.aaps.pump.danarv2.comm
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.danar.comm.MessageBase
 import dagger.android.HasAndroidInjector
@@ -28,14 +27,11 @@ class MsgCheckValueV2(
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)
-            danaRKoreanPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaRPlugin.setPluginEnabled(PluginType.PUMP, false)
-            danaRPlugin.setFragmentVisible(PluginType.PUMP, false)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
-            rxBus.send(EventRebuildTabs())
             commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
             return
         }
@@ -44,14 +40,11 @@ class MsgCheckValueV2(
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to non APS DanaR")
             danaRv2Plugin.setPluginEnabled(PluginType.PUMP, false)
-            danaRv2Plugin.setFragmentVisible(PluginType.PUMP, false)
             danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
-            danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
-            rxBus.send(EventRebuildTabs())
             commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
             return
         }

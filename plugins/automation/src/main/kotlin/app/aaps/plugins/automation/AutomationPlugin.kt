@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -52,7 +53,6 @@ import app.aaps.plugins.automation.actions.ActionStopTempTarget
 import app.aaps.plugins.automation.compose.AutomationComposeContent
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
-import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventLocationChange
 import app.aaps.plugins.automation.keys.AutomationStringKey
@@ -84,7 +84,6 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
-import app.aaps.plugins.automation.TimerUtil
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -146,7 +145,6 @@ class AutomationPlugin @Inject constructor(
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
         .showInList { config.APS }
-        .neverVisible(!config.APS)
         .description(R.string.automation_description),
     ownPreferences = listOf(AutomationStringKey::class.java),
     aapsLogger, rh, preferences

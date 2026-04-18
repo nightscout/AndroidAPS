@@ -1,7 +1,6 @@
 package app.aaps.implementation.protection
 
 import androidx.annotation.UiThread
-import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.protection.AuthMethod
 import app.aaps.core.interfaces.protection.AuthorizationResult
 import app.aaps.core.interfaces.protection.HierarchicalProtectionRequest
@@ -310,78 +309,4 @@ class ProtectionCheckImpl @Inject constructor(
         }
     }
 
-    // --- Legacy Fragment-based API (keeps old per-type dialog behavior) ---
-
-    @UiThread
-    override fun queryProtection(
-        activity: FragmentActivity,
-        protection: ProtectionCheck.Protection,
-        ok: Runnable?,
-        cancel: Runnable?,
-        fail: Runnable?
-    ) {
-        if (preferences.get(StringKey.ProtectionMasterPassword).isEmpty()) {
-            ok?.run()
-            return
-        }
-        if (protection == ProtectionCheck.Protection.NONE) {
-            ok?.run()
-            return
-        }
-        if (activeSession(protection) != null) {
-            onGranted(protection)
-            ok?.run()
-            return
-        }
-
-        val typeKey = protectionTypeKeys[protection]
-        if (typeKey == null) {
-            ok?.run()
-            return
-        }
-
-        when (protectionTypeFor(typeKey)) {
-            ProtectionType.NONE            ->
-                ok?.run()
-
-            ProtectionType.BIOMETRIC       ->
-                BiometricCheck.biometricPrompt(
-                    activity,
-                    titlePassKeys[protection] ?: app.aaps.core.ui.R.string.settings_password,
-                    { onGranted(protection); ok?.run() },
-                    cancel,
-                    fail,
-                    passwordCheck
-                )
-
-            ProtectionType.MASTER_PASSWORD ->
-                passwordCheck.queryPassword(
-                    activity,
-                    app.aaps.core.keys.R.string.master_password,
-                    StringKey.ProtectionMasterPassword,
-                    { onGranted(protection); ok?.run() },
-                    { cancel?.run() },
-                    { fail?.run() })
-
-            ProtectionType.CUSTOM_PASSWORD ->
-                passwordCheck.queryPassword(
-                    activity,
-                    titlePassKeys[protection] ?: app.aaps.core.ui.R.string.settings_password,
-                    passwordKeys[protection]!!,
-                    { onGranted(protection); ok?.run() },
-                    { cancel?.run() },
-                    { fail?.run() })
-
-            ProtectionType.CUSTOM_PIN      ->
-                passwordCheck.queryPassword(
-                    activity,
-                    titlePinKeys[protection] ?: app.aaps.core.ui.R.string.settings_pin,
-                    pinKeys[protection]!!,
-                    { onGranted(protection); ok?.run() },
-                    { cancel?.run() },
-                    { fail?.run() },
-                    true
-                )
-        }
-    }
 }
