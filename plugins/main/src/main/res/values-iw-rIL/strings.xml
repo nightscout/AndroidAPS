@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">בית</string>
-    <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="data_status">מצב נתוני הסוכר</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">חיזוי</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">חיזוי</string>
     <string name="basal_shortname">בזאל\'</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
