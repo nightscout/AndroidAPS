@@ -36,7 +36,6 @@ import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.IntComposedKey
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.objects.extensions.displayText
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
@@ -159,7 +158,7 @@ class Widget : AppWidgetProvider() {
             }
         )
         trendCalculator.getTrendArrow(iobCobCalculator.ads)?.let {
-            views.setImageViewResource(R.id.arrow, it.directionToIcon())
+            views.setImageViewResource(R.id.arrow, it.directionToDrawableRes())
         }
         views.setViewVisibility(R.id.arrow, (trendCalculator.getTrendArrow(iobCobCalculator.ads) != null).toVisibilityKeepSpace())
         views.setInt(

@@ -65,7 +65,6 @@ enum class ActionCategory {
 @Immutable
 data class PumpAction(
     val label: String,
-    val iconRes: Int = 0,
     val icon: ImageVector? = null,
     val category: ActionCategory = ActionCategory.PRIMARY,
     val enabled: Boolean = true,

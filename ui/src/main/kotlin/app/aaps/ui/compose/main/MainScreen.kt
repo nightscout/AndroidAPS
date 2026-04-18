@@ -27,6 +27,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -103,7 +105,8 @@ fun MainScreen(
     pumpSetupPlugin: PluginBase? = null,
     // BG source shortcut
     bgSetupPlugin: PluginBase? = null,
-    bgQualityBadgeIconRes: Int = 0,
+    bgQualityBadgeIcon: ImageVector? = null,
+    bgQualityBadgeTint: Color = Color.Unspecified,
     bgQualityBadgeDescription: String? = null,
     // Permissions
     permissionsMissing: Boolean = false,
@@ -309,7 +312,8 @@ fun MainScreen(
                                 automationCount = automationViewModel.uiState.collectAsStateWithLifecycle().value.items.size,
                                 pumpSetupPlugin = pumpSetupPlugin,
                                 bgSetupPlugin = bgSetupPlugin,
-                                bgQualityBadgeIconRes = bgQualityBadgeIconRes,
+                                bgQualityBadgeIcon = bgQualityBadgeIcon,
+                                bgQualityBadgeTint = bgQualityBadgeTint,
                                 bgQualityBadgeDescription = bgQualityBadgeDescription,
                                 onNavigate = onNavigate,
                                 permissionsMissing = permissionsMissing,

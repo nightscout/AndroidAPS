@@ -15,6 +15,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.StatusLevel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.SwapHoriz
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
@@ -276,14 +280,14 @@ class MedtrumOverviewViewModel @Inject constructor(
         val primaryActions = listOf(
             PumpAction(
                 label = rh.gs(CoreUiR.string.refresh),
-                iconRes = CoreUiR.drawable.ic_refresh,
+                icon = Icons.Filled.Refresh,
                 category = ActionCategory.PRIMARY,
                 enabled = canRefresh,
                 onClick = { onClickRefresh() }
             ),
             PumpAction(
                 label = rh.gs(R.string.reset_alarms_label),
-                iconRes = CoreUiR.drawable.ic_loop_resume,
+                icon = Icons.Filled.PlayArrow,
                 category = ActionCategory.PRIMARY,
                 enabled = pumpState.isSuspendedByPump(),
                 visible = pumpState.isSuspendedByPump(),
@@ -295,7 +299,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         val managementActions = listOf(
             PumpAction(
                 label = rh.gs(R.string.change_patch_label),
-                iconRes = CoreUiR.drawable.ic_swap_horiz,
+                icon = Icons.Filled.SwapHoriz,
                 category = ActionCategory.MANAGEMENT,
                 onClick = { onClickChangePatch() }
             )

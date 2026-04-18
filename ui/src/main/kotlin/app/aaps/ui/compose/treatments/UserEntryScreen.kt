@@ -1,6 +1,5 @@
 package app.aaps.ui.compose.treatments
 
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,8 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -41,7 +38,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.UE
 import app.aaps.core.data.ue.Action
@@ -247,18 +243,8 @@ private fun UserEntryItem(
                 )
 
                 // Source Icon
-                val composeIcon = userEntryPresentationHelper.icon(userEntry.source)
-                val context = LocalContext.current
-                val iconPainter = if (composeIcon != null) rememberVectorPainter(composeIcon)
-                else {
-                    val resId = userEntryPresentationHelper.iconId(userEntry.source)
-                    remember(resId) {
-                        val drawable = AppCompatResources.getDrawable(context, resId)!!
-                        BitmapPainter(drawable.toBitmap().asImageBitmap())
-                    }
-                }
                 Image(
-                    painter = iconPainter,
+                    painter = rememberVectorPainter(userEntryPresentationHelper.icon(userEntry.source)),
                     contentDescription = "${stringResource(app.aaps.core.ui.R.string.ue_source)}: ${userEntry.source}",
                     modifier = Modifier
                         .size(20.dp)

@@ -26,7 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,7 +43,7 @@ import app.aaps.core.ui.compose.AapsTheme
  * @param profileName2 Display name for the second profile (comparison mode only)
  * @param date Formatted date/time string to display when showDate is true
  * @param showDate Whether to show the date card
- * @param headerIcon Drawable resource ID for the header icon
+ * @param headerIcon ImageVector for the header icon
  * @param isCompare Whether this is a comparison view (true) or single profile view (false)
  * @param validationError Error message to display if profile validation fails
  */
@@ -54,7 +54,7 @@ data class ProfileViewerData(
     val profileName2: String? = null,
     val date: String? = null,
     val showDate: Boolean = false,
-    val headerIcon: Int,
+    val headerIcon: ImageVector,
     val isCompare: Boolean = false,
     val validationError: String? = null
 )
@@ -116,7 +116,7 @@ fun ProfileViewerScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(data.headerIcon),
+                            imageVector = data.headerIcon,
                             contentDescription = null,
                             modifier = Modifier.size(32.dp),
                             tint = Color.Unspecified

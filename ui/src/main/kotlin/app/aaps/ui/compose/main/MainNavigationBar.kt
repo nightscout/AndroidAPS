@@ -17,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -38,7 +38,8 @@ fun MainNavigationBar(
     automationCount: Int = 0,
     pumpSetupPlugin: PluginBase? = null,
     bgSetupPlugin: PluginBase? = null,
-    bgQualityBadgeIconRes: Int = 0,
+    bgQualityBadgeIcon: ImageVector? = null,
+    bgQualityBadgeTint: Color = Color.Unspecified,
     bgQualityBadgeDescription: String? = null,
     onNavigate: (NavigationRequest) -> Unit = {},
     permissionsMissing: Boolean = false,
@@ -155,12 +156,12 @@ fun MainNavigationBar(
                 icon = {
                     BadgedBox(
                         badge = {
-                            if (bgQualityBadgeIconRes != 0) {
+                            if (bgQualityBadgeIcon != null) {
                                 Badge(containerColor = Color.Transparent) {
                                     Icon(
-                                        painter = painterResource(id = bgQualityBadgeIconRes),
+                                        imageVector = bgQualityBadgeIcon,
                                         contentDescription = bgQualityBadgeDescription,
-                                        tint = Color.Unspecified,
+                                        tint = bgQualityBadgeTint,
                                         modifier = Modifier.size(16.dp)
                                     )
                                 }

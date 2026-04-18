@@ -20,6 +20,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.toStringFull
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
@@ -169,14 +172,14 @@ class VirtualPumpViewModel(
         val managementActions = listOf(
             PumpAction(
                 label = rh.gs(CoreUiR.string.pump_suspend),
-                iconRes = CoreUiR.drawable.ic_loop_paused,
+                icon = IcLoopPaused,
                 category = ActionCategory.MANAGEMENT,
                 visible = !isSuspended,
                 onClick = { onSuspendToggle(true) }
             ),
             PumpAction(
                 label = rh.gs(CoreUiR.string.pump_resume),
-                iconRes = CoreUiR.drawable.ic_loop_resume,
+                icon = Icons.Filled.PlayArrow,
                 category = ActionCategory.MANAGEMENT,
                 visible = isSuspended,
                 onClick = { onSuspendToggle(false) }
