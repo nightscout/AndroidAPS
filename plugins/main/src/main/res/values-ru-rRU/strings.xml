@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">уровень глюкозы в крови ГК</string>
     <string name="a11y_bg_outdated">устаревшие данные</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">НАЧАЛО</string>
-    <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="data_status">Состояние данных ГК</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Прогнозирование</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">ОЖИД</string>
     <string name="basal_shortname">БАЗ</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
-    <string name="temp_basal_overview_short_name">ВРЕМ:</string>
     <string name="cannula_usage">применение:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
