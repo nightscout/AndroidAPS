@@ -106,6 +106,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Yalnızca pozitif AİNS</string>
     <string name="overview_edit_quickwizard_superbolus">Süperbolus</string>
     <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">yKarb ekle</string>
     <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
     <string name="recalculate">Tekrar Hesapla</string>
