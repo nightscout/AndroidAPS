@@ -121,6 +121,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Alleen positieve IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">sleep-modus</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Voeg eCarbs toe</string>
     <string name="confirm_treatment">Bevestig alstublieft de behandeling</string>
     <string name="recalculate">Herberekenen</string>
