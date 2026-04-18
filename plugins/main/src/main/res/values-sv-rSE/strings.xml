@@ -19,7 +19,6 @@
     <string name="overview_shortname">Hem</string>
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
     <string name="data_status">BG datastatus</string>
-    <string name="run_question">Kör %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">BG-prognos</string>
     <string name="overview_show_treatments">Behandlingar</string>
