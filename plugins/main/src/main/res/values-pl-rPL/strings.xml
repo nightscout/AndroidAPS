@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">stężenie glukozy we krwi</string>
     <string name="a11y_bg_outdated">nieaktualna</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">HOME</string>
-    <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="data_status">Stan danych glikemii</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozy poziomu</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
