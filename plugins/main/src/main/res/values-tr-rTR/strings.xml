@@ -19,7 +19,6 @@
     <string name="overview_shortname">GİRİŞ</string>
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="data_status">KŞ veri durumu</string>
-    <string name="run_question">Yürüt %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Tahminler</string>
     <string name="overview_show_treatments">Tedaviler</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
     <string name="overview_show_steps">Adımlar</string>
-    <string name="simple_mode_enabled">Basit Modu Etkinleştir</string>
 </resources>
