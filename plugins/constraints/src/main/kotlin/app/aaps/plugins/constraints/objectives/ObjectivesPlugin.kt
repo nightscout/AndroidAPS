@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTOSENS_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTO_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.CLOSED_LOOP_OBJECTIVE
+import app.aaps.core.interfaces.constraints.Objectives.Companion.EXAM_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.FIRST_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.LGS_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
@@ -119,6 +120,14 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives.isEmpty()) return value
         if (!objectives[AUTO_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
+        return value
+    }
+
+    override fun isConcentrationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (objectives.isEmpty()) return value
+        if (!objectives[EXAM_OBJECTIVE].isAccomplished) {
+            value.set(false, rh.gs(R.string.objectivenotfinished, EXAM_OBJECTIVE + 1), this)
+        }
         return value
     }
 

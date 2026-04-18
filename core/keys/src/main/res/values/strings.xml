@@ -3,7 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Simple mode</string>
     <string name="pref_title_insulin_concentration">Insulin concentration support</string>
-    <string name="pref_summary_insulin_concentration">Enable support for different insulin concentrations (U200, U300, etc.)</string>
+    <string name="pref_summary_insulin_concentration">Enable support for different insulin concentrations (U50, U200, etc.)</string>
 
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Keep screen on</string>
