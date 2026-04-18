@@ -2,10 +2,8 @@ package app.aaps.plugins.main.di
 
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.plugins.main.general.overview.OverviewDataImpl
-import app.aaps.plugins.main.general.overview.OverviewFragment
 import dagger.Binds
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
@@ -17,8 +15,6 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 @Suppress("unused")
 abstract class OverviewModule {
-
-    @ContributesAndroidInjector abstract fun contributesOverviewFragment(): OverviewFragment
 
     @Module
     @InstallIn(SingletonComponent::class)

@@ -46,8 +46,6 @@ class OverviewDataImpl @Inject constructor(
     override var endTime: Long = 0
 
     override fun reset() {
-        pumpStatus = ""
-        calcProgressPct = 100
     }
 
     override fun initRange() {
@@ -63,9 +61,6 @@ class OverviewDataImpl @Inject constructor(
         fromTime = toTime - T.hours(rangeToDisplay.toLong()).msecs()
         endTime = toTime
     }
-
-    override var pumpStatus: String = ""
-    override var calcProgressPct: Int = 100
 
     override fun temporaryBasalText(): String =
         runBlocking { profileFunction.getProfile() }?.let { profile ->

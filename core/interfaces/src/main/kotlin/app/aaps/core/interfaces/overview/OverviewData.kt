@@ -14,9 +14,6 @@ interface OverviewData {
     fun reset()
     fun initRange()
 
-    var pumpStatus: String
-    var calcProgressPct: Int
-
     fun temporaryBasalText(): String
     fun temporaryBasalDialogText(): String
     @DrawableRes fun temporaryBasalIcon(): Int

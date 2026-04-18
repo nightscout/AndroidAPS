@@ -19,12 +19,7 @@ import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongComposedKey
@@ -37,15 +32,6 @@ import app.aaps.core.objects.extensions.store
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.keys.OverviewStringKey
 import app.aaps.shared.impl.rx.bus.RxBusImpl
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.serialization.json.JsonObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -55,9 +41,7 @@ class OverviewPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     preferences: Preferences,
-    private val fabricPrivacy: FabricPrivacy,
-    private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
+    aapsSchedulers: AapsSchedulers,
     private val overviewData: OverviewData,
     private val context: Context,
     private val constraintsChecker: ConstraintsChecker,
@@ -67,11 +51,9 @@ class OverviewPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val notificationManager: NotificationManager,
-    private val signals: CalculationSignals,
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
-        .fragmentClass(OverviewFragment::class.qualifiedName)
         .alwaysVisible(true)
         .alwaysEnabled(true)
         .simpleModePosition(PluginDescription.Position.TAB)
@@ -82,9 +64,6 @@ class OverviewPlugin @Inject constructor(
     aapsLogger, rh, preferences
 ), Overview {
 
-    private var disposable: CompositeDisposable = CompositeDisposable()
-    private var scope: CoroutineScope? = null
-
     override val overviewBus = RxBusImpl(aapsSchedulers, aapsLogger)
 
     override fun onStart() {
@@ -92,32 +71,6 @@ class OverviewPlugin @Inject constructor(
         overviewData.initRange()
 
         notificationManager.createNotificationChannel()
-
-        val newScope = CoroutineScope(SupervisorJob() + Dispatchers.IO).also { scope = it }
-        // drop(1) skips the StateFlow's initial replay of 100 so we don't fire
-        // a spurious EventUpdateOverviewCalcProgress on every onStart.
-        signals.progress
-            .drop(1)
-            .onEach {
-                overviewData.calcProgressPct = it
-                overviewBus.send(EventUpdateOverviewCalcProgress("CalculationSignals"))
-            }
-            .launchIn(newScope)
-
-        disposable += rxBus
-            .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           overviewData.pumpStatus = it.getStatus(context)
-                       }, fabricPrivacy::logException)
-
-    }
-
-    override fun onStop() {
-        disposable.clear()
-        scope?.cancel()
-        scope = null
-        super.onStop()
     }
 
     override fun configuration(): JsonObject =

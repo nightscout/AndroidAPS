@@ -172,7 +172,6 @@
     <attr name="announcementColor" format="reference|color" />
     <attr name="questionColor" format="reference|color" />
     <attr name="pumpHistoryColor" format="reference|color" />
-    <attr name="userOptionColor" format="reference|color" />
     <attr name="sensColor" format="reference|color" />
     <!---Glucose Value Color-->
     <attr name="cobColor" format="reference|color" />
@@ -222,6 +221,4 @@
     <!---Icons in Loop area -->
     <attr name="profileColor" format="reference|color" />
     <attr name="crossTargetColor" format="reference|color" />
-    <!---Custom button -->
-    <attr name="customBtnStyle" format="reference" />
 </resources>

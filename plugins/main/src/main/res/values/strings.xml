@@ -24,7 +24,6 @@
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
 
     <string name="data_status">BG data status</string>
-    <string name="run_question">Run %s?</string>
 
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predictions</string>
@@ -55,6 +54,5 @@
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="old_data">OLD DATA</string>
     <string name="overview_show_steps">Steps</string>
-    <string name="simple_mode_enabled">Simple mode enabled</string>
 
 </resources>
