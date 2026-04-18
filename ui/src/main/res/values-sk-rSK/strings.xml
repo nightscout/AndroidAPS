@@ -187,6 +187,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Iba kladný IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">Režim \"Potiahni a pusť\"</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Pridať eSacharidy</string>
     <string name="calculator_options">Nastavenia Kalkulačky</string>
     <string name="use_bg">Použi Glykémiu</string>
