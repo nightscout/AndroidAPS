@@ -19,7 +19,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Hiển thị trạng thái hiện tại của vòng lặp và các nút cho những thao tác thường dùng nhất</string>
     <string name="data_status">Trạng thái dữ liệu đường huyết</string>
-    <string name="run_question">Chạy %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Dự đoán</string>
     <string name="overview_show_treatments">Lịch sử điều trị</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Hiển thị thông báo liên tục với tóm tắt ngắn gọn về hoạt động của vòng lặp</string>
     <string name="old_data">DỮ LIỆU CŨ</string>
     <string name="overview_show_steps">Các Bước</string>
-    <string name="simple_mode_enabled">Chế độ đơn giản đã được bật</string>
 </resources>
