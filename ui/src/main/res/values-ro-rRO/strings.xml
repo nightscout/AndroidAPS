@@ -187,6 +187,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Doar IOB pozitiv</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Adaugă carbohidrați extinși</string>
     <string name="calculator_options">Opţiuni calculator</string>
     <string name="use_bg">Utilizați glicemia</string>
