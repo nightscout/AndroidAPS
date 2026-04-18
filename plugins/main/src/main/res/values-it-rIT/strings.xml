@@ -19,7 +19,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i tasti per le azioni più comuni</string>
     <string name="data_status">Stato dati BG</string>
-    <string name="run_question">Eseguire %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predizioni</string>
     <string name="overview_show_treatments">Trattamenti</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>
     <string name="overview_show_steps">Passi</string>
-    <string name="simple_mode_enabled">Modalità semplice abilitata</string>
 </resources>
