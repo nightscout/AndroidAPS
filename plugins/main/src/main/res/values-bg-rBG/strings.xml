@@ -9,17 +9,12 @@
     <string name="insulin_label">Инсулин</string>
     <string name="pb_label">Батерия на помпата</string>
     <string name="cannula">Канюла</string>
-    <string name="statuslights_cannula_age">възраст на канюла</string>
-    <string name="statuslights_patch_pump_age">възраст на помпата</string>
     <string name="patch_pump">Пач помпа</string>
     <!-- Overview -->
-    <string name="a11y_graph">графика</string>
     <string name="a11y_insulin_label">инсулин</string>
-    <string name="chart_menu">Меню на графиката</string>
     <string name="a11y_bg_quality">качество на КЗ</string>
     <string name="a11y_blood_glucose">кръвна захар</string>
     <string name="a11y_bg_outdated">остаряло</string>
-    <string name="set_basal_question">Приложи нов временен базал:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ОСН</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
@@ -40,8 +35,6 @@
     <string name="prediction_shortname">Предв</string>
     <string name="basal_shortname">БАЗА</string>
     <string name="treatments_shortname">Леч</string>
-    <string name="graph_scale">Мащаб на графиката</string>
-    <string name="graph_menu_divider_header">Графика</string>
     <string name="cannula_usage">употреба:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
