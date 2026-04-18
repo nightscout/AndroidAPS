@@ -19,7 +19,6 @@
     <string name="overview_shortname">主頁</string>
     <string name="description_overview">顯示目前循環狀態和最常用操作的按鈕</string>
     <string name="data_status">血糖資料狀態</string>
-    <string name="run_question">運行 %s？</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">預測</string>
     <string name="overview_show_treatments">治療</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">顯示持續通知，簡要概述您的循環正在執行的操作</string>
     <string name="old_data">舊資料</string>
     <string name="overview_show_steps">步數</string>
-    <string name="simple_mode_enabled">簡易模式已啟用</string>
 </resources>
