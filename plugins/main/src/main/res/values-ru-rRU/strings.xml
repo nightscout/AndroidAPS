@@ -19,7 +19,6 @@
     <string name="overview_shortname">НАЧАЛО</string>
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="data_status">Состояние данных ГК</string>
-    <string name="run_question">Запустить %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Прогнозирование</string>
     <string name="overview_show_treatments">Терапия</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="old_data">старые данные</string>
     <string name="overview_show_steps">Действия</string>
-    <string name="simple_mode_enabled">Простой режим включен</string>
 </resources>
