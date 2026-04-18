@@ -7,7 +7,6 @@
     <!-- Overview -->
     <string name="a11y_insulin_label">inzulin</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">KEZD</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Előrejelzések</string>
     <string name="overview_show_basals">Bázis</string>
