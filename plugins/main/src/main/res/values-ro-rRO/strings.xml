@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">glicemie din sânge</string>
     <string name="a11y_bg_outdated">învechită</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">ACASĂ</string>
-    <string name="description_overview">Afișați starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
     <string name="data_status">Stare date glicemie</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicții</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="treatments_shortname">TRAT</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">folosire:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
