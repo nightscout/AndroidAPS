@@ -41,6 +41,7 @@ sealed class AppRoute(val route: String) {
 
     data object Stats : AppRoute("stats")
     data object ProfileHelper : AppRoute("profile_helper")
+    data object HistoryBrowser : AppRoute("history_browser")
     data object Preferences : AppRoute("preferences")
     data object PluginPreferences : AppRoute("plugin_preferences/{pluginKey}") {
 

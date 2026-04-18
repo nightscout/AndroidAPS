@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.RawRes
 import app.aaps.MainActivity
-import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
@@ -29,7 +28,6 @@ class UiInteractionImpl @Inject constructor(
     private val alertDialogs: AlertDialogs = AlertDialogs(preferences, rxBus)
 
     override val mainActivity: Class<*> = MainActivity::class.java
-    override val historyBrowseActivity: Class<*> = HistoryBrowseActivity::class.java
     override val errorHelperActivity: Class<*> = ErrorActivity::class.java
     override val singleFragmentActivity: Class<*> = SingleFragmentActivity::class.java
 

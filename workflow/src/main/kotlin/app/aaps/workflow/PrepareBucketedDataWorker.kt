@@ -77,21 +77,16 @@ class PrepareBucketedDataWorker(
         // ========== MIGRATION: DELETE - End GraphView-specific code ==========
 
         // ========== MIGRATION: KEEP - Start Compose/Vico code ==========
-        // Set 24h time range in cache if not already set (this worker runs first in chain)
-        if (data.cache.timeRangeFlow.value == null) {
-            val toTimeNew = toTime
-            val fromTimeNew = toTimeNew - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
-            data.cache.updateTimeRange(
-                TimeRange(
-                    fromTime = fromTimeNew,
-                    toTime = toTimeNew,
-                    endTime = toTimeNew
-                )
+        // Always refresh the 24h window so history navigation doesn't inherit a stale range.
+        val newToTime = toTime
+        val newFromTime = newToTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
+        data.cache.updateTimeRange(
+            TimeRange(
+                fromTime = newFromTime,
+                toTime = newToTime,
+                endTime = newToTime
             )
-        }
-        val currentTimeRange = data.cache.timeRangeFlow.value!!
-        val newFromTime = currentTimeRange.fromTime
-        val newToTime = currentTimeRange.toTime
+        )
 
         // Pre-compute thresholds once (not per-point)
         val highMark = preferences.get(UnitDoubleKey.OverviewHighMark)

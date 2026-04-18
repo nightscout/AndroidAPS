@@ -67,10 +67,6 @@
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="app.aaps.activities.HistoryBrowseActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name="app.aaps.ComposeMainActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">

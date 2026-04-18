@@ -42,8 +42,8 @@ interface CalculationWorkflow {
      * Start calculation of data needed for displaying graphs
      *
      * @param job [MAIN_CALCULATION] or [HISTORY_CALCULATION]
-     * @param iobCobCalculator different instance for [HistoryBrowseActivity]
-     * @param overviewData different instance for [HistoryBrowseActivity]
+     * @param iobCobCalculator different instance for the history browser
+     * @param overviewData different instance for the history browser
      * @param cache per-scope Compose data cache — workers write graph data
      *   into this instance (the owning scope reads from it).
      * @param signals per-scope signals emitter — workers emit progress and
