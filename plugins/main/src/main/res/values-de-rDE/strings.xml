@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">HOME</string>
-    <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="data_status">Status BZ-Daten</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
