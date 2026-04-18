@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">glucosa en sangre</string>
     <string name="a11y_bg_outdated">obsoleto</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">INICIO</string>
-    <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
     <string name="data_status">Estado de datos de glucosa</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicciones</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TRAT</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
