@@ -479,10 +479,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">μείωση %1$s κατά %2$s</string>
-    <string name="a11y_plus_button_description">αύξηση %1$s κατά %2$s</string>
-    <string name="you_are_on_allowed_limit">Συμπληρώθηκε το επιτρεπόμενο όριο</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ώρα Συμβάντος</string>
@@ -531,14 +527,6 @@
     <string name="weekday_wednesday_short">Τετ</string>
     <string name="weekday_tuesday_short">Τρ</string>
     <string name="weekday_monday_short">Δευτ</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Δ</string>
-    <string name="tuesday_short">Τρ</string>
-    <string name="wednesday_short">Τε</string>
-    <string name="thursday_short">Πε</string>
-    <string name="friday_short">Πα</string>
-    <string name="saturday_short">Σ</string>
-    <string name="sunday_short">Κ</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
