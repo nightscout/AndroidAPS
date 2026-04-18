@@ -41,8 +41,6 @@ open class DanaRTestBase : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, decimalFormatter, profileStoreProvider)
         doNothing().whenever(danaRKoreanPlugin).setPluginEnabledBlocking(anyOrNull(), anyBoolean())
         doNothing().whenever(danaRPlugin).setPluginEnabledBlocking(anyOrNull(), anyBoolean())
-        doNothing().whenever(danaRKoreanPlugin).setFragmentVisible(anyOrNull(), anyBoolean())
-        doNothing().whenever(danaRPlugin).setFragmentVisible(anyOrNull(), anyBoolean())
         whenever(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
     }
 

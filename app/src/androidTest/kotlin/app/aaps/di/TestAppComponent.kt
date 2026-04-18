@@ -34,7 +34,6 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
 
         PluginsListModule::class,
-        ActivitiesModule::class,
         ReceiversModule::class,
         PersistenceModule::class,
 

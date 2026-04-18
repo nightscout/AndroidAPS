@@ -27,9 +27,7 @@ class MsgCheckValueV2(
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)
-            danaRKoreanPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaRPlugin.setPluginEnabled(PluginType.PUMP, false)
-            danaRPlugin.setFragmentVisible(PluginType.PUMP, false)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
@@ -42,9 +40,7 @@ class MsgCheckValueV2(
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to non APS DanaR")
             danaRv2Plugin.setPluginEnabled(PluginType.PUMP, false)
-            danaRv2Plugin.setFragmentVisible(PluginType.PUMP, false)
             danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
-            danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well

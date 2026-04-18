@@ -21,9 +21,7 @@ class MsgInitConnStatusTimeK(
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to export DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, false)
-            danaRKoreanPlugin.setFragmentVisible(PluginType.PUMP, false)
             danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
-            danaRPlugin.setFragmentVisible(PluginType.PUMP, true)
             danaPump.reset() // mark not initialized
             pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well

@@ -157,7 +157,6 @@ class PluginStore @Inject constructor(
             (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
         }
-        setFragmentVisibilities((activeAPSStore as PluginBase).name, pluginsInCategory, PluginType.APS)
 
         // PluginType.SENSITIVITY
         pluginsInCategory = getSpecificPluginsList(PluginType.SENSITIVITY)
@@ -168,7 +167,6 @@ class PluginStore @Inject constructor(
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SensitivityInterface")
         }
         activeSensitivityStore = fallbackIfNotVisible(activeSensitivityStore as PluginBase, PluginType.SENSITIVITY) as Sensitivity
-        setFragmentVisibilities((activeSensitivityStore as PluginBase).name, pluginsInCategory, PluginType.SENSITIVITY)
 
         // PluginType.SMOOTHING
         pluginsInCategory = getSpecificPluginsList(PluginType.SMOOTHING)
@@ -178,7 +176,6 @@ class PluginStore @Inject constructor(
             (activeSmoothingStore as PluginBase).setPluginEnabled(PluginType.SMOOTHING, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SmoothingInterface")
         }
-        setFragmentVisibilities((activeSmoothingStore as PluginBase).name, pluginsInCategory, PluginType.SMOOTHING)
 
         // PluginType.BGSOURCE
         pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
@@ -188,7 +185,6 @@ class PluginStore @Inject constructor(
             (activeBgSourceStore as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting BgInterface")
         }
-        setFragmentVisibilities((activeBgSourceStore as PluginBase).name, pluginsInCategory, PluginType.BGSOURCE)
 
         // PluginType.PUMP
         pluginsInCategory = getSpecificPluginsList(PluginType.PUMP)
@@ -198,17 +194,6 @@ class PluginStore @Inject constructor(
             (activePumpStore as PluginBase).setPluginEnabled(PluginType.PUMP, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting PumpInterface")
         }
-        setFragmentVisibilities((activePumpStore as PluginBase).name, pluginsInCategory, PluginType.PUMP)
-    }
-
-    private fun setFragmentVisibilities(
-        activePluginName: String, pluginsInCategory: ArrayList<PluginBase>,
-        pluginType: PluginType
-    ) {
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Selected interface: $activePluginName")
-        for (p in pluginsInCategory)
-            if (p.name != activePluginName)
-                p.setFragmentVisible(pluginType, false)
     }
 
     /**

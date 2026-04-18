@@ -512,14 +512,14 @@ class ComposeMainActivity : AppCompatActivity() {
                 // Pump setup button in bottom bar
                 val pumpPlugin = activePlugin.activePumpInternal as PluginBase
                 val showPumpSetup = (!activePlugin.activePump.isInitialized() || activePlugin.activePump.isSuspended()) &&
-                    (pumpPlugin.hasComposeContent() || pumpPlugin.hasFragment())
+                    pumpPlugin.hasComposeContent()
                 val pumpSetupPlugin = if (showPumpSetup) pumpPlugin else null
 
                 // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED
                 val bgQualityState by bgQualityCheck.stateFlow.collectAsStateWithLifecycle()
                 val bgSourcePlugin = activePlugin.activeBgSource as PluginBase
                 val showBgSetup = (bgQualityState == BgQualityCheck.State.FLAT || bgQualityState == BgQualityCheck.State.DOUBLED) &&
-                    (bgSourcePlugin.hasComposeContent() || bgSourcePlugin.hasFragment())
+                    bgSourcePlugin.hasComposeContent()
                 val bgSetupPlugin = if (showBgSetup) bgSourcePlugin else null
                 val bgQualityBadgeIconRes = if (showBgSetup) bgQualityCheck.icon() else 0
                 val bgQualityBadgeDescription = if (showBgSetup) bgQualityCheck.stateDescription() else null

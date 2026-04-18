@@ -460,8 +460,7 @@ class MainApp : Application(), HasAndroidInjector {
                 sp.remove(key)
             }
             if (key.startsWith("ConfigBuilder_") && key.endsWith("_Visible")) {
-                val plugin = key.split("_")[1] + "_" + key.split("_")[2]
-                preferences.put(BooleanComposedKey.ConfigBuilderVisible, plugin, value = value as Boolean)
+                // Legacy fragment-visibility pref — no longer tracked; drop during migration.
                 sp.remove(key)
             }
         }

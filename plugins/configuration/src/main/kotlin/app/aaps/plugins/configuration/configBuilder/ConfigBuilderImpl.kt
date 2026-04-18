@@ -69,8 +69,7 @@ class ConfigBuilderImpl @Inject constructor(
         activePlugin.verifySelectionInCategories()
         for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
-            if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible) continue
-            if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
+            if (p.pluginDescription.alwaysEnabled) continue
             savePref(p, type)
         }
     }
@@ -79,8 +78,6 @@ class ConfigBuilderImpl @Inject constructor(
         val composed = type.name + "_" + p.javaClass.simpleName
         preferences.put(BooleanComposedKey.ConfigBuilderEnabled, composed, value = p.isEnabled())
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + BooleanComposedKey.ConfigBuilderEnabled.composeKey(composed) + ":" + p.isEnabled())
-        preferences.put(BooleanComposedKey.ConfigBuilderVisible, composed, value = p.isFragmentVisible())
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + BooleanComposedKey.ConfigBuilderVisible.composeKey(composed) + ":" + p.isFragmentVisible())
     }
 
     private fun loadSettings() {
@@ -100,12 +97,6 @@ class ConfigBuilderImpl @Inject constructor(
             p.setPluginEnabled(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + BooleanComposedKey.ConfigBuilderEnabled.composeKey(composed) + ":" + p.isEnabled(type))
-        val existingVisible = preferences.getIfExists(BooleanComposedKey.ConfigBuilderVisible, composed)
-        if (existingVisible != null) p.setFragmentVisible(type, existingVisible)
-        else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
-            p.setFragmentVisible(type, true)
-        }
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + BooleanComposedKey.ConfigBuilderVisible.composeKey(composed) + ":" + p.isFragmentVisible())
     }
 
     private fun logPluginStatus() {
@@ -185,7 +176,6 @@ class ConfigBuilderImpl @Inject constructor(
             }
         }
         changedPlugin.setPluginEnabled(type, enabled)
-        changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
         storeSettings("RemoteConfiguration")
         rxBus.send(EventConfigBuilderChange())
@@ -214,7 +204,6 @@ class ConfigBuilderImpl @Inject constructor(
                         // this is new selected
                     } else {
                         p.setPluginEnabled(type, false)
-                        p.setFragmentVisible(type, false)
                     }
                 }
             } else if (type != PluginType.SYNC) {
