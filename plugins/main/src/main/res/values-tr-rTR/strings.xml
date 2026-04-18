@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">kan şekeri</string>
     <string name="a11y_bg_outdated">güncel değil</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">GİRİŞ</string>
-    <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="data_status">KŞ veri durumu</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Tahminler</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">TAHMİN</string>
     <string name="basal_shortname">BAZAL</string>
     <string name="treatments_shortname">TEDAVİ</string>
-    <string name="temp_basal_overview_short_name">GB:</string>
     <string name="cannula_usage">kullanım:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
