@@ -19,7 +19,6 @@
     <string name="overview_shortname">ACCUEIL</string>
     <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
     <string name="data_status">État des données Gly</string>
-    <string name="run_question">Exécuter %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prédictions</string>
     <string name="overview_show_treatments">Traitements</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
     <string name="overview_show_steps">Pas</string>
-    <string name="simple_mode_enabled">Mode simple activé</string>
 </resources>
