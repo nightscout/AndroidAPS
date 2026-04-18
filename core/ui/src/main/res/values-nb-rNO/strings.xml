@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">Nettadressen er ikke gyldig</string>
     <string name="error_mustbe4hexadidits">Må være 4 tegn fra ABCDEF0123456789</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">M:</string>
     <string name="treatments">Behandlinger</string>
     <string name="treatments_desc">Vis og administrer behandlingshistorikk</string>
     <string name="nav_configuration">Konfigurasjon</string>
