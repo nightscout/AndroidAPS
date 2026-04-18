@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">La URL web no es válida</string>
     <string name="error_mustbe4hexadidits">Debe tener 4 caracteres de ABCDEF0123456789</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Tratamientos</string>
     <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
     <string name="nav_configuration">Configuración</string>
@@ -808,10 +809,6 @@
     <string name="reauthorize">Volver a autenticar</string>
     <string name="cloud_auth_success">Autenticación en la nube completada con éxito</string>
     <string name="authorization_status">Estado de la autorización</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">decremento %1$s por %2$s</string>
-    <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
-    <string name="you_are_on_allowed_limit">Límite permitido alcanzado</string>
     <string name="format_hour_minute">%1$dhoras %2$dmin</string>
     <!-- datetime layout -->
     <string name="event_time_label">Hora del evento</string>
@@ -904,14 +901,6 @@
     <string name="weekday_wednesday_short">Mie</string>
     <string name="weekday_tuesday_short">Mar</string>
     <string name="weekday_monday_short">Lun</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">L</string>
-    <string name="tuesday_short">M</string>
-    <string name="wednesday_short">X</string>
-    <string name="thursday_short">J</string>
-    <string name="friday_short">V</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">D</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
@@ -1024,6 +1013,7 @@
     <string name="graph_number">Gráfico %1$d</string>
     <string name="graph_bg">Gráfica de BG</string>
     <string name="graph_height">Altura del gráfico [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
