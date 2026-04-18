@@ -121,6 +121,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Tylko dodatnie wartości IoB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">tryb \"Przeciągnij i upuść\"</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Dodaj eCarbs</string>
     <string name="confirm_treatment">Proszę potwierdzić leczenie</string>
     <string name="recalculate">Przelicz</string>
