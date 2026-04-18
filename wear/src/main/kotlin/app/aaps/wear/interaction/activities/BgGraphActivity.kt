@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.foundation.AnchorType
 import androidx.wear.compose.foundation.CurvedLayout
+import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.curvedText
@@ -130,11 +131,18 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
     val hourUnit = stringResource(R.string.hour_short)
     val minUnit = stringResource(R.string.minute_short)
 
+    val isLoading = bgData.timeStamp == 0L
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
+        if (isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            return@Box
+        }
+
         CurvedLayout(anchor = 270f, anchorType = AnchorType.Center) {
             curvedText(
                 text = "${historyHours}$hourUnit",
