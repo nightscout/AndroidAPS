@@ -9,30 +9,12 @@
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Bateria pompy</string>
     <string name="cannula">Kaniula</string>
-    <string name="statuslights_cannula_age">wiek wkłucia</string>
-    <string name="statuslights_patch_pump_age">wiek pompy bezdrenowej</string>
     <string name="patch_pump">Pompa bezdrenowa</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 godzin</string>
-    <string name="graph_long_scale_12h">12 godzin</string>
-    <string name="graph_long_scale_18h">18 godzin</string>
-    <string name="graph_long_scale_24h">24 godziny</string>
-    <string name="a11y_graph">wykres</string>
-    <string name="a11y_graph_scale">wybierz skalę wykresu</string>
-    <string name="a11y_graph_scale_6h">skala wykresu 6 godzin</string>
-    <string name="a11y_graph_scale_12h">skala wykresu 12 godzin</string>
-    <string name="a11y_graph_scale_18h">skala wykresu 18 godzin</string>
-    <string name="a11y_graph_scale_24h">skala wykresu 24 godziny</string>
     <string name="a11y_insulin_label">insulina</string>
-    <string name="chart_menu">Menu wykresu</string>
     <string name="a11y_bg_quality">jakość pomiaru glikemi</string>
     <string name="a11y_blood_glucose">stężenie glukozy we krwi</string>
     <string name="a11y_bg_outdated">nieaktualna</string>
-    <string name="set_basal_question">Akceptuj nową bazę tymczasową:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
@@ -55,8 +37,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="graph_scale">Skala wykresu</string>
-    <string name="graph_menu_divider_header">Wykres</string>
     <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
