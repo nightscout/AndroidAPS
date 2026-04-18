@@ -1,6 +1,5 @@
 package app.aaps.core.ui.elements
 
-import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import app.aaps.core.ui.R
 import java.util.Calendar
@@ -49,7 +48,6 @@ open class WeekDay {
     }
 
     val weekdays = BooleanArray(DayOfWeek.entries.size)
-    var view: WeekdayPicker? = null
     init {
         for (day in DayOfWeek.entries) set(day, false)
     }
@@ -78,15 +76,5 @@ open class WeekDay {
             if (selected) selectedDays.add(day.toCalendarInt())
         }
         return selectedDays
-    }
-
-    fun addToLayout(root: LinearLayout) {
-        view = WeekdayPicker(root.context).apply {
-            setSelectedDays(getSelectedDays())
-            setOnWeekdaysChangeListener { i: Int, selected: Boolean -> set(DayOfWeek.fromCalendarInt(i), selected) }
-        }
-        root.addView(
-            view
-        )
     }
 }

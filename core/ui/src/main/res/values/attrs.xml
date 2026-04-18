@@ -65,9 +65,6 @@
     <!---Toast  -->
     <attr name="toastBaseTextColor" format="reference|color" />
     <attr name="toastBackgroundColor" format="reference|color" />
-    <declare-styleable name="NumberPicker">
-        <attr name="customContentDescription" format="string" />
-    </declare-styleable>
     <!---Notification -->
     <attr name="notificationUrgent" format="reference|color" />
     <attr name="notificationNormal" format="reference|color" />
