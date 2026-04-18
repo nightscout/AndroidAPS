@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">glicemia</string>
     <string name="a11y_bg_outdated">desatualizado</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">Início</string>
-    <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
     <string name="data_status">Estado dos dados de glicemia</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
