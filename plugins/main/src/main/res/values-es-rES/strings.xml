@@ -9,30 +9,12 @@
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Batería de bomba</string>
     <string name="cannula">Cánula</string>
-    <string name="statuslights_cannula_age">Edad de la cánula</string>
-    <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
     <string name="patch_pump">Bomba parche</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 horas</string>
-    <string name="graph_long_scale_12h">12 horas</string>
-    <string name="graph_long_scale_18h">18 horas</string>
-    <string name="graph_long_scale_24h">24 horas</string>
-    <string name="a11y_graph">gráfico</string>
-    <string name="a11y_graph_scale">selecciona ecala del gráfico</string>
-    <string name="a11y_graph_scale_6h">6 horas de escala de gráfico</string>
-    <string name="a11y_graph_scale_12h">12 horas de escala de gráfico</string>
-    <string name="a11y_graph_scale_18h">18 horas de escala de gráfico</string>
-    <string name="a11y_graph_scale_24h">24 horas de escala de gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
-    <string name="chart_menu">Menú gráfico</string>
     <string name="a11y_bg_quality">calidad de glucosa en sangre</string>
     <string name="a11y_blood_glucose">glucosa en sangre</string>
     <string name="a11y_bg_outdated">obsoleto</string>
-    <string name="set_basal_question">Aceptar nueva basal temporal:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">INICIO</string>
     <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
@@ -55,8 +37,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TRAT</string>
-    <string name="graph_scale">Escala gráfica</string>
-    <string name="graph_menu_divider_header">Gráfico</string>
     <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
