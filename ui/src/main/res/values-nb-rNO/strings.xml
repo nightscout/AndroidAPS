@@ -187,6 +187,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Legg til eKarbo</string>
     <string name="calculator_options">Kalkulatoralternativer</string>
     <string name="use_bg">Bruk BS</string>
