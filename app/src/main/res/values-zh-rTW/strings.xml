@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">關閉導覽</string>
     <string name="authorizationfailed">授權失敗</string>
     <string name="identification_not_set">開發模式下未設置識別</string>
-    <string name="use_compose_main_screen">使用 Compose 主畫面（實驗性）</string>
-    <string name="switch_to_compose_ui">切換至 Compose 使用者介面</string>
-    <string name="switch_to_classic_ui">切換至傳統使用者介面</string>
     <string name="select">選擇</string>
     <string name="set">設定</string>
     <string name="migrating_preferences">正在移轉偏好設定…</string>
