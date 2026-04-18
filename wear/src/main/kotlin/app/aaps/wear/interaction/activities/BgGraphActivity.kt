@@ -251,11 +251,14 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
     val predictions = data.treatmentData.predictions
 
     // Dynamic Y range: top adapts to data, bottom fixed at 40
-    val visibleSgvValues = buildList {
-        entries.forEach { if (it.timeStamp in startTime..now) add(it.sgv.toFloat()) }
-        predictions.forEach { if (it.timeStamp in (now + 1)..endTime) add(it.sgv.toFloat()) }
-    }.filter { it > 0 }
-    val dataMax = visibleSgvValues.maxOrNull() ?: 200f
+    // Predictions are capped at actualMax + 50 mg/dL to avoid compressing the BG history
+    val actualMax = entries
+        .filter { it.timeStamp in startTime..now && it.sgv > 0 }
+        .maxOfOrNull { it.sgv.toFloat() } ?: 200f
+    val predMax = predictions
+        .filter { it.timeStamp in (now + 1)..endTime && it.sgv > 0 }
+        .maxOfOrNull { it.sgv.toFloat() } ?: 0f
+    val dataMax = predMax.coerceAtMost(actualMax + 50f).coerceAtLeast(actualMax)
     val yMin = 40f
     val yMax = maxOf(dataMax, bgData.high.toFloat()) + 30f
     val ySpan = yMax - yMin
@@ -347,11 +350,11 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
         )
     }
 
-    val dotRadius = w * 0.016f
+    val dotRadius = w * 0.013f
 
     // BG history dots
     for (entry in entries) {
-        if (entry.timeStamp < startTime || entry.timeStamp > now) continue
+        if (entry.timeStamp !in startTime..now) continue
         drawCircle(
             color = bgColor(entry.sgvLevel),
             radius = dotRadius,
@@ -360,9 +363,9 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
     }
 
     // Prediction dots (slightly smaller)
-    val predRadius = dotRadius * 0.8f
+    val predRadius = dotRadius * 0.6f
     for (pred in predictions) {
-        if (pred.timeStamp <= now || pred.timeStamp > endTime) continue
+        if (pred.timeStamp !in (now + 1)..endTime) continue
         val color = if (pred.color != 0) {
             Color(pred.color).copy(alpha = 0.7f)
         } else {
