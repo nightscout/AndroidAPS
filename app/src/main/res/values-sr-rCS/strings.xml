@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Zatvori navigaciju</string>
     <string name="authorizationfailed">Ovlašćenje nije uspelo</string>
     <string name="identification_not_set">Identifikacija nije podešena u razvojnom režimu</string>
     <string name="select">Izaberi</string>
