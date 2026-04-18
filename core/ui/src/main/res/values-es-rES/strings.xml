@@ -8,7 +8,7 @@
     <string name="treatments">Tratamientos</string>
     <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
     <string name="nav_configuration">Configuración</string>
-    <string name="nav_configuration_desc">Configura tu ajustes (MCG, Bomba, ...) y activa las funciones</string>
+    <string name="nav_configuration_desc">Configura tus ajustes (MCG, Bomba, ...) y activa las funciones</string>
     <string name="count_selected">%1$d seleccionado</string>
     <string name="delete">Borrar</string>
     <string name="show_invalidated">Mostrar invalidados</string>
