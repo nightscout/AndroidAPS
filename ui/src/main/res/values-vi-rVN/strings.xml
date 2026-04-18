@@ -187,6 +187,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB > 0</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">nút kéo–thả</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Thêm eCarbs</string>
     <string name="calculator_options">Tùy chọn tính toán</string>
     <string name="use_bg">Sử dụng BG</string>
