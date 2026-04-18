@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">blodsukker</string>
     <string name="a11y_bg_outdated">utdatert</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">HJEM</string>
-    <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="data_status">Status BS-data</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prediksjoner</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">BEH</string>
-    <string name="temp_basal_overview_short_name">M:</string>
     <string name="cannula_usage">bruk:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
