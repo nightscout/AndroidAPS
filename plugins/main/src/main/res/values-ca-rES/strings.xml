@@ -12,8 +12,6 @@
     <!-- Overview -->
     <string name="a11y_insulin_label">insulina</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">INICI</string>
-    <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="data_status">Estat de dades de glucèmia</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prediccions</string>
