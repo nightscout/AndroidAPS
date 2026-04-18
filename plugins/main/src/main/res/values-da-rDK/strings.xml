@@ -9,17 +9,12 @@
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpe batteri</string>
     <string name="cannula">Kanyle</string>
-    <string name="statuslights_cannula_age">Indstik alder</string>
-    <string name="statuslights_patch_pump_age">patch pumpe alder</string>
     <string name="patch_pump">Patch pumpe</string>
     <!-- Overview -->
-    <string name="a11y_graph">graf</string>
     <string name="a11y_insulin_label">insulin</string>
-    <string name="chart_menu">Diagrammenu</string>
     <string name="a11y_bg_quality">blodglukose kvalitet</string>
     <string name="a11y_blood_glucose">blodglucose</string>
     <string name="a11y_bg_outdated">forældet</string>
-    <string name="set_basal_question">Acceptér ny midlertidig basal:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
@@ -40,8 +35,6 @@
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">BEHANDL</string>
-    <string name="graph_scale">Graf skala</string>
-    <string name="graph_menu_divider_header">Graf</string>
     <string name="cannula_usage">brug:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
