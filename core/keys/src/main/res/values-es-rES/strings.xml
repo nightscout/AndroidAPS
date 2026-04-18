@@ -179,21 +179,71 @@
     <string name="pref_title_protection_type_application">Nivel 0: Protección de la aplicación</string>
     <string name="pref_summary_protection_type_application">Inicio de la aplicación. Independiente de otros niveles</string>
     <string name="pref_title_protection_type_bolus">Nivel 1: Protección de bolo</string>
+    <string name="pref_summary_protection_type_bolus">Tratamientos, activación de perfil. Requiere Nivel 2</string>
+    <string name="pref_title_protection_type_settings">Nivel 2: Protección de ajustes</string>
+    <string name="pref_summary_protection_type_settings">Edición de perfiles, preferencias</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Sin protección</string>
+    <string name="biometric">Biométrico</string>
+    <string name="master_password">Contraseña maestra</string>
+    <string name="custom_password">Contraseña personalizada</string>
+    <string name="custom_pin">PIN personalizado</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Carbohidratos máximos permitidos</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Cambio mínimo en modo abierto</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">El modo abierto mostrará una nueva solicitud de cambio solo si el cambio es superior a este valor en %. El valor predeterminado es 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Intervalo de SMB</string>
+    <string name="pref_title_smb_max_minutes">Minutos máximos de basal para limitar el SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">Minutos máximos de basal para limitar los SMB ante UAM</string>
+    <string name="uam_smb_max_minutes">Minutos máximos de basal para SMB ante UAM</string>
+    <string name="pref_title_carbs_request_threshold">Umbral de carbohidratos requeridos</string>
+    <string name="carbs_req_threshold_summary">Umbral mínimo de carbohidratos para mostrar una alerta de sugerencia. Las sugerencias de carbohidratos por debajo de este valor no activarán una notificación</string>
+    <string name="pref_title_half_basal_exercise_target">Objetivo de ejercicio con mitad de basal</string>
+    <string name="half_basal_exercise_target_summary">Establezca un valor numérico, por ejemplo 160, que significa que cuando el objetivo temporal sea 160 mg/dL y la opción de sensibilidad ante objetivos altos esté activada, se administrará el 50% de la basal en este nivel (120 = 75%; 140 = 60%).</string>
+    <string name="pref_title_iob_threshold_percent">Porcentaje de umbral de IOB</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Porcentaje del IOB máximo por encima del cual se desactivan los SMB\\nEl valor predeterminado es 100%\\nCon un valor del 100%, esta función queda efectivamente desactivada</string>
+    <string name="pref_title_dynisf_adjustment_factor">Factor de ajuste de ISF dinámico</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Factor de ajuste para el ISF dinámico. Establezca un valor superior al 100% para dosis de corrección más agresivas, e inferior al 100% para correcciones menos agresivas</string>
+    <string name="pref_title_autosens_period">Periodo de Autosens</string>
+    <string name="openapsama_autosens_period_summary">Cantidad de horas en el pasado para la detección de sensibilidad (se excluye el tiempo de absorción de carbohidratos)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Cantidad de registros a enviar</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Umbral de datos desactualizados</string>
     <string name="pref_title_pump_unreachable_threshold">Umbral de bomba no alcanzable</string>
     <!-- IntKey: Insulin preferences -->
+    <string name="pref_title_insulin_oref_peak">Tiempo de pico</string>
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Días predeterminados de ajuste</string>
+    <string name="autotune_default_tune_days_summary">Cantidad predeterminada de días de datos que serán procesados por Autotune (hasta un máximo de 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Distancia mínima para bolo remoto</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Intervalo de glucemia aleatorio</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Umbral de alarma por datos desactualizados</string>
+    <string name="pref_title_urgent_alarm_stale_data">Umbral de alarma urgente por datos desactualizados</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Perfil de usuario para rotación de sitios</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Unidades</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_min">min</string>
+    <string name="units_sec">seg</string>
+    <string name="units_hours">h</string>
+    <string name="units_days">días</string>
+    <string name="units_grams">g</string>
+    <string name="units_kg">kg</string>
+    <string name="units_years">a</string>
+    <string name="units_percent">%</string>
     <!-- Formatted unit strings with value only -->
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_min">%1$d min</string>
     <string name="units_format_sec">%1$d seg</string>
     <string name="units_format_hours">%1$d h</string>
     <string name="units_format_hours_double">%1$.0f h</string>
@@ -286,10 +336,27 @@
     <!-- StringKey: NS Client preferences -->
     <string name="ns_client_url_title">URL de Nightscout</string>
     <string name="ns_client_url_summary">Introduce tu URL de Nightscout (p. ej. https://nombretusitio.tuplataforma.dom)</string>
+    <string name="ns_client_secret_title">API secret de Nightscout</string>
+    <string name="ns_client_secret_summary">Introduzca su API secret de Nightscout (mínimo 12 caracteres)</string>
+    <string name="nsclient_token_title">Token de acceso de Nightscout</string>
+    <string name="nsclient_token_summary">Introduzca su token de acceso de Nightscout (mínimo 17 caracteres)</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_ssids_summary">SSIDs permitidos (separados por punto y coma)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Incremento del botón de insulina 1</string>
+    <string name="pref_title_insulin_button_increment_2">Incremento del botón de insulina 2</string>
+    <string name="pref_title_insulin_button_increment_3">Incremento del botón de insulina 3</string>
+    <string name="insulin_increment_button_message">Cantidad de insulina a añadir al presionar el botón</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Botón de llenado 1</string>
+    <string name="pref_title_fill_button_2">Botón de llenado 2</string>
+    <string name="pref_title_fill_button_3">Botón de llenado 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Bolo máximo</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Tasa basal máxima</string>
+    <string name="openapsma_max_basal_summary">Este valor se conoce comúnmente como max-basal dentro del ecosistema de OpenAPS</string>
+    <string name="pref_title_smb_max_iob">IOB Máximo para SMB</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los límites de seguridad clave de OpenAPS, y la otra parte de la regla de seguridad \"3x máximo diario; 4x actual\". Esto significa que tu basal, independientemente del basal máximo configurado en tu bomba, no puede ser superior a este número multiplicado por tu nivel de basal actual. El objetivo es evitar que los usuarios entren en terreno peligroso al configurar basales máximos excesivamente altos antes de comprender cómo funciona el algoritmo. De nuevo, el valor predeterminado es 4x; la mayoría de las personas nunca necesitarán ajustar esto y, en su lugar, es más probable que deban ajustar otros parámetros si sienten que están \"chocando\" con este límite de seguridad.</string>
     <string name="pref_title_pp_weight">Peso del ISF posprandial</string>
     <string name="openapsama_pp_ISF_weight_summary">Este es el peso aplicado mientras la glucosa está subiendo y que refuerza el ISF, aumentando así potencialmente el suministro de insulina.\\n\\nEl valor predeterminado 0.0 desactiva eficazmente este efecto.</string>
