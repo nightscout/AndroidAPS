@@ -285,6 +285,10 @@
     <string name="current_insulin">Activo actualmente</string>
     <string name="change_insulin">Cambiar</string>
     <string name="select_insulin_description">Seleccione la insulina con la que está llenando la bomba. Se aplicará un cambio de perfil después de la activación/cebado.</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina seleccionada: %1$s</string>
     <string name="record_insulin_hint">Si va a introducir insulina administrada con bolígrafo, seleccione el tipo de insulina correcto a continuación. La dosis es siempre en Unidades Internacionales.</string>
     <!--    ProfileSwitch-->
@@ -414,6 +418,7 @@
     <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Tiempo de conexión agotado</string>
+    <string name="pump_not_configured">Bomba no configurada</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Ejecutado</string>
     <string name="comment">Comentario</string>
@@ -1018,6 +1023,7 @@
     <string name="graph_edit">Editar gráfico</string>
     <string name="graph_number">Gráfico %1$d</string>
     <string name="graph_bg">Gráfica de BG</string>
+    <string name="graph_height">Altura del gráfico [dp]</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
