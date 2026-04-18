@@ -39,8 +39,12 @@
     <string name="objectives_usage_objective">Aprenda cómo controlar AAPS</string>
     <string name="objectives_usage_gate">Ejecutar diferentes acciones en AAPS</string>
     <string name="objectives_usage_learned">Aprendiste a manejar los conceptos básicos de AAPS. Los controles principales se encuentran en la pantalla de Inicio, accesible al hacer clic o hacer clic largo, más controles están en la pantalla de Acciones Deberías saber cómo poner una pantalla de plugin en la parte superior del menú desplegable o dejar que se muestre en la parte superior izquierda de la lista de plugins habilitados.</string>
+    <string name="objectives_useprofileswitch">Perfil establecido al 90% durante 10 minutos</string>
+    <string name="objectives_usedisconnectpump">Simulación de ducha: Bomba desconectada durante 1 h</string>
     <string name="objectives_usereconnectpump">... y volver a conectar de la misma manera</string>
+    <string name="objectives_usetemptarget">Crear objetivo temporal personalizado con una duración de 10 min</string>
     <string name="objectives_useloop">Mostrar contenido del plugin Bucle</string>
+    <string name="objectives_usescale">Desplázate o haz zoom en el gráfico de glucosa en sangre</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>
     <string name="objectives_exam_gate">Estudia las preguntas. Se te dan cuatro respuestas posibles para cada pregunta. Puede haber más de una respuesta correcta. Por favor, marca todas las que son correctas y seleccione VERIFICAR.</string>
     <string name="objectives_exam_learned_prerequisites">No necesitas ser desarrollador, pero necesitas Nightscout para pasar los objetivos, una bomba compatible y un ordenador para construir AAPS por primera vez y para futuras actualizaciones</string>
@@ -81,4 +85,14 @@
     <string name="requirementnotmet">No se cumplen los requisitos de objetivo</string>
     <string name="what_i_ve_learned">Lo que he aprendido:</string>
     <string name="verify_master_password">Verifica que conoces la contraseña maestra</string>
+    <string name="objectives_collapse">Menos</string>
+    <string name="objectives_expand">Más</string>
+    <string name="objectives_no_learned">No hay lecciones registradas para este objetivo</string>
+    <string name="objectives_open_exam">Abrir examen</string>
+    <string name="objectives_exam_question_progress">Pregunta %1$d de %2$d</string>
+    <string name="objectives_exam_reset">Restablecer</string>
+    <string name="objectives_exam_previous">Anterior</string>
+    <string name="objectives_exam_next">Siguiente</string>
+    <string name="objectives_exam_next_unanswered">Siguiente sin responder</string>
+    <string name="objectives_show_hint">Pista</string>
 </resources>
