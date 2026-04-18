@@ -809,10 +809,6 @@
     <string name="reauthorize">Autentiser på nytt</string>
     <string name="cloud_auth_success">Autentisering av skylagring vellykket</string>
     <string name="authorization_status">Autorisasjonsstatus</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
-    <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
-    <string name="you_are_on_allowed_limit">Tillatt grense nådd</string>
     <string name="format_hour_minute">%1$dt %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Tidspunkt for hendelse</string>
@@ -905,14 +901,6 @@
     <string name="weekday_wednesday_short">Ons</string>
     <string name="weekday_tuesday_short">Tir</string>
     <string name="weekday_monday_short">Man</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">M</string>
-    <string name="tuesday_short">Ti</string>
-    <string name="wednesday_short">O</string>
-    <string name="thursday_short">To</string>
-    <string name="friday_short">F</string>
-    <string name="saturday_short">L</string>
-    <string name="sunday_short">S</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f E</string>
     <string name="format_insulin_units">%1$.2f E</string>
