@@ -11,7 +11,6 @@
     <string name="description_overview">Prikazuje trenutno stanje tvog loop-a i tipke za najčešće radnje</string>
     <!--    OverviewMenu-->
     <string name="overview_show_treatments">Tretmani</string>
-    <!-- Skins -->
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Prikazuje tekuće obaveštenje sa kratkim pregledom onoga što vaša petlja radi</string>

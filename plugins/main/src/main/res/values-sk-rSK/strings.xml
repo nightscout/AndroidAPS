@@ -58,11 +58,6 @@
     <string name="graph_scale">Mierka grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">Pôvodný vzhľad</string>
-    <string name="lowres_description">Vzhľad pre nízke rozlišenie</string>
-    <string name="buttonson_description">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
-    <string name="largedisplay_description">Veľký displej</string>
     <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

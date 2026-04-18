@@ -58,11 +58,6 @@
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">Thème d\'origine</string>
-    <string name="lowres_description">Basse résolution</string>
-    <string name="buttonson_description">Boutons toujours en bas</string>
-    <string name="largedisplay_description">Grand écran</string>
     <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

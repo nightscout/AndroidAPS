@@ -41,7 +41,6 @@
     <string name="error_asking_for_permissions">請求權限時出錯</string>
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">組態建置工具</string>
     <string name="configbuilder_pump_description">您想用AAPS使用哪個幫浦？</string>
     <string name="configbuilder_aps_description">哪個APS算法應進行療法調整？</string>
     <string name="configbuilder_general_description">這些是一些您可能覺得有用的一般外掛。</string>
@@ -52,12 +51,8 @@
     <string name="configbuilder_bgsource_description">AAPS應從哪裡獲取資料？</string>
     <string name="configbuilder_smoothing_description">選擇平滑算法</string>
     <string name="configbuilder_sensitivity_description">應使用哪個敏感度算法？</string>
-    <string name="config_builder_shortname">組態</string>
-    <string name="description_config_builder">用於配置活動外掛</string>
     <string name="allow_hardware_pump_text">注意：如果您啟用並連線到硬體幫浦，AAPS將從檔案中複製基礎設置到幫浦，覆蓋幫浦上存儲的現有基礎率。請確保您在AAPS中具有正確的基礎設置。如果您不確定或不想覆蓋幫浦上的基礎設置，請按取消並在稍後重複切換到幫浦。</string>
     <string name="nsclient_version_does_not_match">AAPSClient 版本與 AAPS 版本不一致，請更新為一致版本。</string>
-    <string name="expand_category">展開分類</string>
-    <string name="collapse_category">隱藏分類</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

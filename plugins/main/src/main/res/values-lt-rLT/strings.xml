@@ -58,11 +58,6 @@
     <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">Originali išvaizda</string>
-    <string name="lowres_description">Žemos rezoliucijos išvaizda</string>
-    <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
-    <string name="largedisplay_description">Didelis ekranas</string>
     <string name="cannula_usage">naud:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

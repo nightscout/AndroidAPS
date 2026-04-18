@@ -4,6 +4,4 @@
     <string name="count_selected">%1$d selectat(e)</string>
     <string name="remove_items">Eliminați elementele</string>
     <string name="sort_items">Sortați elementele</string>
-    <string name="remove_selected_items">Eliminați elementele selectate</string>
-    <string name="sort_label">Sortați</string>
 </resources>

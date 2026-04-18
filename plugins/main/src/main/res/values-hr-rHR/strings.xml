@@ -13,7 +13,6 @@
     <string name="overview_show_treatments">Tretmani</string>
     <string name="basal_shortname">BAZAL</string>
     <string name="graph_scale">Skala grafikona</string>
-    <!-- Skins -->
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Prikazuje tekuće obavijesti sa kratkim pregledom što loop radi</string>

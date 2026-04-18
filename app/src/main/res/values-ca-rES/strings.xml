@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">Desar</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">NO VÀLID</string>
     <string name="close_navigation">Tancar navegació</string>
     <string name="authorizationfailed">L\'autorització ha fallat</string>
-    <string name="cannula">Cànula</string>
     <string name="identification_not_set">Identificació no establerta al mode de desenvolupament</string>
-    <!-- WEAR OS-->
 </resources>

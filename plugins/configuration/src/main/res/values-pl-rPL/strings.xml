@@ -37,7 +37,6 @@
     <string name="error_asking_for_permissions">Wystąpił błąd podczas żądania uprawnień</string>
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Konfiguracja</string>
     <string name="configbuilder_pump_description">Którą pompę chcesz użyć do AAPS?</string>
     <string name="configbuilder_aps_description">Który algorytm APS powinien dokonywać korekcji terapii?</string>
     <string name="configbuilder_general_description">To są główne wtyczki, które mogą okazać się użyteczne.</string>
@@ -47,12 +46,8 @@
     <string name="configbuilder_bgsource_description">Skąd AAPS powinien czerpać dane?</string>
     <string name="configbuilder_smoothing_description">Wybierz algorytm wygładzania</string>
     <string name="configbuilder_sensitivity_description">Który algorytm wrażliwości powinien być używany?</string>
-    <string name="config_builder_shortname">CONF</string>
-    <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>
     <string name="nsclient_version_does_not_match">Wersja AAPSClient nie jest zgodna z wersją AAPS. Proszę zaktualizować.</string>
-    <string name="expand_category">Rozwiń kategorię</string>
-    <string name="collapse_category">Zwiń kategorię</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

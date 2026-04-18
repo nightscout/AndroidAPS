@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">Guardar</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">INVÁLIDO</string>
     <string name="close_navigation">Fechar a navegação</string>
-    <string name="remove_items">Remover items</string>
-    <string name="sort_items">Ordenar itens</string>
     <string name="authorizationfailed">Falha na autorização</string>
-    <string name="cannula">Cânula</string>
     <string name="identification_not_set">Identificação não definida no modo desenvolvimento</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Remover itens selecionados</string>
-    <string name="count_selected">%1$d selecionados</string>
-    <string name="sort_label">Ordenar</string>
-    <string name="search">Procurar</string>
 </resources>

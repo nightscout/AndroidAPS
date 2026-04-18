@@ -4,6 +4,4 @@
     <string name="count_selected">%1$d kiválasztva</string>
     <string name="remove_items">Elem eltávolítása</string>
     <string name="sort_items">Elemek rendezése</string>
-    <string name="remove_selected_items">Kiválasztott elemek törlése</string>
-    <string name="sort_label">Rendezés</string>
 </resources>

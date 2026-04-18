@@ -41,7 +41,6 @@
     <string name="error_asking_for_permissions">Errore nel richiedere le autorizzazioni</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Configuratore strutturale</string>
     <string name="configbuilder_pump_description">Quale micro vorresti usare con AAPS?</string>
     <string name="configbuilder_aps_description">Quale algoritmo APS dovrebbe apportare aggiustamenti terapeutici?</string>
     <string name="configbuilder_general_description">Questi sono alcuni plugin generali che potresti trovare utili.</string>
@@ -52,12 +51,8 @@
     <string name="configbuilder_bgsource_description">Da dove AAPS dovrebbe ottenere i suoi dati?</string>
     <string name="configbuilder_smoothing_description">Scegli algoritmo di smoothing</string>
     <string name="configbuilder_sensitivity_description">Quale algoritmo di sensibilità dovrebbe essere usato?</string>
-    <string name="config_builder_shortname">CONF</string>
-    <string name="description_config_builder">Usato per configurare i plugin attivi</string>
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
     <string name="nsclient_version_does_not_match">La versione di AAPSClient non corrisponde alla versione di AAPS. Aggiorna.</string>
-    <string name="expand_category">Espandi categoria</string>
-    <string name="collapse_category">Comprimi categoria</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

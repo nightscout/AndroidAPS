@@ -37,7 +37,6 @@
     <string name="error_asking_for_permissions">Fout bij het vragen van toestemming</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Configurator</string>
     <string name="configbuilder_pump_description">Welke pomp wilt u gebruiken met AAPS?</string>
     <string name="configbuilder_aps_description">Welk APS algoritme moet therapie aanpassingen maken?</string>
     <string name="configbuilder_general_description">Dit zijn enkele algemene plugins die handig kunnen zijn.</string>
@@ -47,12 +46,8 @@
     <string name="configbuilder_bgsource_description">Waar moet de AAPS zijn gegevens vandaan halen?</string>
     <string name="configbuilder_smoothing_description">Kies het algorithme om vloeiend te maken</string>
     <string name="configbuilder_sensitivity_description">Welk gevoeligheid algoritme moet worden gebruikt?</string>
-    <string name="config_builder_shortname">CONF</string>
-    <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
     <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die in de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
     <string name="nsclient_version_does_not_match">NSClient versie en AndroidAPS versie komen niet overeen. Update alsjeblieft.</string>
-    <string name="expand_category">Categorie uitvouwen</string>
-    <string name="collapse_category">Categorie samenvouwen</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

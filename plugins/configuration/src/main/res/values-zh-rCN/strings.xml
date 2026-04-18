@@ -41,7 +41,6 @@
     <string name="error_asking_for_permissions">请求权限出错</string>
     <string name="alert_dialog_permission_battery_optimization_failed">此设备似乎不支持电池优化白名单 - 您可能会遇到性能问题。</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">配置生成器</string>
     <string name="configbuilder_pump_description">你想用 AAPS连接哪个胰岛素泵？</string>
     <string name="configbuilder_aps_description">哪个 APS 算法应该用于治疗调整？</string>
     <string name="configbuilder_general_description">这些是一些一般的插件, 你可能会觉得有用。</string>
@@ -52,12 +51,8 @@
     <string name="configbuilder_bgsource_description">AAPS 从何处获取数据？</string>
     <string name="configbuilder_smoothing_description">选择平滑算法</string>
     <string name="configbuilder_sensitivity_description">应使用哪一种灵敏度算法？</string>
-    <string name="config_builder_shortname">配置</string>
-    <string name="description_config_builder">用于配置活动插件</string>
     <string name="allow_hardware_pump_text">注意：如果你激活并且连接到了一个硬件泵，AAPS将会从配置文件复制基础率到泵上。覆盖泵上已有的基础率。请确定你已经在AAPS上设置了正确的基础率。如果你不确定或者不想覆盖泵上的基础率设置，按取消键，以后再切换激活配置文件。</string>
     <string name="nsclient_version_does_not_match">AAPSClient 版本与 AAPS 版本不匹配。请更新。</string>
-    <string name="expand_category">展开类别</string>
-    <string name="collapse_category">折叠类别</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

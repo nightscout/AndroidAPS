@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Delta</string>
-    <string name="save">Kaydet</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">GEÇERSİZ</string>
     <string name="close_navigation">Navigasyonu kapat</string>
-    <string name="remove_items">Öğeleri kaldır</string>
-    <string name="sort_items">Öğeleri sırala</string>
     <string name="authorizationfailed">Yetkilendirme başarısız oldu</string>
-    <string name="cannula">Kanül</string>
     <string name="identification_not_set">Tanımlama geliştirme modunda ayarlanmadı</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Seçili nesneleri kaldır</string>
-    <string name="count_selected">%1$d seçildi</string>
-    <string name="sort_label">Sırala</string>
-    <string name="search">Ara</string>
     <string name="select">Seçin</string>
     <string name="set">Uygula</string>
 </resources>

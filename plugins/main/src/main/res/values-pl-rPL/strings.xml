@@ -58,11 +58,6 @@
     <string name="graph_scale">Skala wykresu</string>
     <string name="graph_menu_divider_header">Wykres</string>
     <string name="temp_basal_overview_short_name">T:</string>
-    <!-- Skins -->
-    <string name="classic_description">Motyw oryginalny</string>
-    <string name="lowres_description">Mały ekran</string>
-    <string name="buttonson_description">Przyciski są zawsze wyświetlane na dole ekranu</string>
-    <string name="largedisplay_description">Duży ekran</string>
     <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

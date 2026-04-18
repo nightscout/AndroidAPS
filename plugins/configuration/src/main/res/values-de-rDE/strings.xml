@@ -36,7 +36,6 @@
     <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Konfiguration</string>
     <string name="configbuilder_pump_description">Welche Pumpe möchtest Du mit AndroidAPS nutzen?</string>
     <string name="configbuilder_aps_description">Welcher APS-Algorithmus soll Therapieanpassungen vornehmen?</string>
     <string name="configbuilder_general_description">Dies sind einige generelle Plugins, die Du vielleicht hilfreich findest.</string>
@@ -46,8 +45,6 @@
     <string name="configbuilder_bgsource_description">Woher soll AndroidAPS seine Blutzuckerwerte beziehen?</string>
     <string name="configbuilder_smoothing_description">Wähle Glättungsalgorithmus</string>
     <string name="configbuilder_sensitivity_description">Welcher Sensitivitäts-Algorithmus soll verwendet werden?</string>
-    <string name="config_builder_shortname">KONF</string>
-    <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
     <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
     <string name="nsclient_version_does_not_match">Die Versionen von NSClient und AndroidAPS passen nicht zueinander. Führe bitte ein Update durch.</string>
     <!--ImportExport-->

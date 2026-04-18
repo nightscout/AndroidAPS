@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Pokytis</string>
-    <string name="save">Išsaugoti</string>
-    <string name="wear">Išmanieji laikrodžiai</string>
-    <string name="invalid">KLAIDA</string>
     <string name="close_navigation">Uždaryti meniu</string>
-    <string name="remove_items">Pašalinti elementus</string>
-    <string name="sort_items">Rūšiuoti</string>
     <string name="authorizationfailed">Autorizacija nepavyko</string>
-    <string name="cannula">Kaniulė</string>
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
-    <string name="count_selected">%1$d pasirinkta</string>
-    <string name="sort_label">Rūšiuoti</string>
-    <string name="search">Ieškoti</string>
     <string name="select">Pasirinkti</string>
     <string name="set">Nustatyti</string>
 </resources>

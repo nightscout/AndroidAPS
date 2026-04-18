@@ -38,7 +38,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">Configuration</string>
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
     <string name="configbuilder_aps_description">Quel algorithme APS doit faire les ajustements de thérapie?</string>
     <string name="configbuilder_general_description">Quelques modules d\'extension que vous pourriez trouver utiles.</string>
@@ -48,12 +47,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
     <string name="configbuilder_smoothing_description">Choisissez l\'algorithme de lissage</string>
     <string name="configbuilder_sensitivity_description">Quel algorithme de Sensibilité doit être utilisé ?</string>
-    <string name="config_builder_shortname">CONF</string>
-    <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AAPS copiera les paramètres basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres basal dans AAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres basal sur votre pompe, appuyez sur Annuler et reporter la selection de la pompe à une date ultérieure.</string>
     <string name="nsclient_version_does_not_match">La version AAPSClient ne correspond pas à AAPS. Faites une mise à jour.</string>
-    <string name="expand_category">Développer la catégorie</string>
-    <string name="collapse_category">Replier la catégorie</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->
     <!-- preferences_export_canceled moved to core:ui -->

@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delta">Rozdiel</string>
-    <string name="save">Uložiť</string>
-    <string name="wear">Wear</string>
-    <string name="invalid">NEPLATNÝ</string>
     <string name="close_navigation">Zavrieť Menu</string>
-    <string name="remove_items">Odstrániť položky</string>
-    <string name="sort_items">Zoradiť položky</string>
     <string name="authorizationfailed">Autorizácia zlyhala</string>
-    <string name="cannula">Kanyla</string>
     <string name="identification_not_set">Identifikácia nie je nastavená vo vývojárskom móde</string>
-    <!-- WEAR OS-->
-    <string name="remove_selected_items">Odstrániť vybrané položky</string>
-    <string name="count_selected">Vybrané: %1$d</string>
-    <string name="sort_label">Zoradiť</string>
-    <string name="search">Hľadať</string>
     <string name="use_compose_main_screen">Prepni na hlavnú obrazovku Compose (experimentálne)</string>
     <string name="switch_to_compose_ui">Prepni na Compose UI</string>
     <string name="switch_to_classic_ui">Prepni na Classic UI</string>
