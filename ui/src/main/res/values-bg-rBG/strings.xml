@@ -106,6 +106,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Само при позитивен инсулин</string>
     <string name="overview_edit_quickwizard_superbolus">Суперболус</string>
     <string name="a11y_drag_and_drop_handle">опция \"плъзни и пусни\"</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Добави уд въглехидрати</string>
     <string name="confirm_treatment">Моля потвърдете</string>
     <string name="recalculate">Преизчисляване</string>
