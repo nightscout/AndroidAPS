@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">Web Url is not valid</string>
     <string name="error_mustbe4hexadidits">Must be 4 characters of ABCDEF0123456789</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Treatments</string>
     <string name="treatments_desc">View and manage treatment history</string>
     <string name="nav_configuration">Configuration</string>
