@@ -19,7 +19,6 @@
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="data_status">Glikemijos statusas</string>
-    <string name="run_question">Vykdyti %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozė</string>
     <string name="overview_show_treatments">Terapija</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>
     <string name="overview_show_steps">Žingsniai</string>
-    <string name="simple_mode_enabled">Paprastas režimas įjungtas</string>
 </resources>
