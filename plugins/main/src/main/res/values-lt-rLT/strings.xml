@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">kraujo glikemija</string>
     <string name="a11y_bg_outdated">nebegalioja</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">PRADŽIA</string>
-    <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="data_status">Glikemijos statusas</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozė</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">VB</string>
     <string name="treatments_shortname">ĮRAŠ</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">naud:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
