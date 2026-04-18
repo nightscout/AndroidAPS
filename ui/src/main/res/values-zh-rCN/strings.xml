@@ -187,6 +187,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">仅限正IOB</string>
     <string name="overview_edit_quickwizard_superbolus">超级大剂量Superbolus</string>
     <string name="a11y_drag_and_drop_handle">拖放操作</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">添加 eCarbs 扩展碳水</string>
     <string name="calculator_options">计算器选项</string>
     <string name="use_bg">使用 血糖</string>
