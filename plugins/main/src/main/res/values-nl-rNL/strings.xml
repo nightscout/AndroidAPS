@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">bloed glucose</string>
     <string name="a11y_bg_outdated">verouderd</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">OVZ</string>
-    <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="data_status">BG data status</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Voorspellingen</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">BEHAND</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
