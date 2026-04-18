@@ -55,7 +55,7 @@
     <string name="user_profile">Brukerprofil</string>
     <string name="user_profile_description">Brukerprofilbeskrivelsen brukes til å vise de mest brukte stedene for en mann, en kvinne eller et barn</string>
     <string name="site_management">Profil for stedsadministrasjon</string>
-    <string name="site_management_description">Her angir du om du vil håndtere pumpeområde, CGM-område eller begge deler. Denne innstillingen brukes til automatisk å vise dialogen for stedsadministrasjon hver gang en ny registrering oppdages</string>
+    <string name="site_management_description">Her angir du om du vil håndtere pumpeområde, sensorområde eller begge deler. Denne innstillingen brukes til automatisk å vise dialogen for stedsadministrasjon hver gang en ny registrering oppdages</string>
     <string name="record_site_change">Registrer sted</string>
     <string name="update_site_change">Oppdater stedplassering</string>
     <string name="edit_site">Rediger</string>
