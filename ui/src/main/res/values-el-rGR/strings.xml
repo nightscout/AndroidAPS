@@ -102,6 +102,7 @@
     <string name="a11y_only_on_watch">μόνο στο ρολόι</string>
     <string name="a11y_only_on_phone">μόνο στο τηλέφωνο</string>
     <string name="a11y_drag_and_drop_handle">διαχείριση μεταφοράς και απόθεσης</string>
+    <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
