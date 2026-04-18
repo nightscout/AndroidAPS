@@ -3,8 +3,6 @@
 package app.aaps.plugins.main.general.overview
 
 import android.annotation.SuppressLint
-import android.app.NotificationManager
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
@@ -28,9 +26,6 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TT
-import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.data.ue.Action
-import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -51,7 +46,6 @@ import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -59,18 +53,14 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventAcceptOpenLoopChange
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
-import app.aaps.core.interfaces.rx.events.EventMobileToWear
-import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewIobCob
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewSensitivity
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
-import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -85,7 +75,6 @@ import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.objects.extensions.displayText
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.profile.ProfileSealed
-import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.elements.SingleClickButton
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.extensions.toVisibility
@@ -93,7 +82,6 @@ import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewFragmentBinding
 import app.aaps.plugins.main.databinding.OverviewNotificationItemBinding
-import app.aaps.plugins.main.general.overview.ui.StatusLightHandler
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -102,7 +90,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -116,7 +103,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 import app.aaps.core.interfaces.notifications.NotificationManager as AapsNotificationManager
 
-class OverviewFragment : DaggerFragment(), View.OnClickListener {
+class OverviewFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -126,7 +113,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var constraintChecker: ConstraintsChecker
-    @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var loop: Loop
@@ -203,10 +189,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         carbAnimation?.setEnterFadeDuration(1200)
         carbAnimation?.setExitFadeDuration(1200)
 
-        binding.tempTarget.setOnClickListener(this)
-        binding.pumpStatusLayout.setOnClickListener(this)
-        binding.buttonsLayout.acceptTempButton.setOnClickListener(this)
-        binding.infoLayout.apsMode.setOnClickListener(this)
     }
 
     override fun onPause() {
@@ -256,10 +238,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
                            if (it.now) refreshAll()
                            else scheduleUpdateGUI()
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAcceptOpenLoopChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleUpdateGUI() }, fabricPrivacy::logException)
         merge(
             preferences.observe(BooleanKey.OverviewShowWizardButton).drop(1).map {},
             preferences.observe(UnitDoubleKey.OverviewLowMark).drop(1).map {},
@@ -268,10 +246,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             preferences.observe(DoubleKey.AutosensMax).drop(1).map {},
             preferences.observe(DoubleKey.AutosensMin).drop(1).map {},
         ).onEach { scheduleUpdateGUI() }.launchIn(newScope)
-        disposable += rxBus
-            .toObservable(EventNewOpenLoopNotification::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleUpdateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -338,39 +312,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         handler.looper.quitSafely()
     }
 
-    override fun onClick(v: View) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
-            // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
-            if (childFragmentManager.isStateSaved) return@launch
-            when (v.id) {
-                R.id.accept_temp_button -> {
-                    profileFunction.getProfile() ?: return@launch
-                    if ((loop as PluginBase).isEnabled()) {
-                        val lastRun = loop.lastRun
-                        loop.invoke("Accept temp button", false)
-                        if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
-                            protectionCheck.queryProtection(requireActivity(), ProtectionCheck.Protection.BOLUS, UIRunnable {
-                                if (isAdded)
-                                    uiInteraction.showOkCancelDialog(
-                                        context = requireActivity(),
-                                        title = rh.gs(app.aaps.core.ui.R.string.tempbasal_label),
-                                        message = lastRun.constraintsProcessed?.resultAsHtmlString() ?: "",
-                                        ok = {
-                                            uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
-                                            (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
-                                            rxBus.send(EventMobileToWear(EventData.CancelNotification(dateUtil.now())))
-                                            handler.post { loop.acceptChangeRequest() }
-                                            binding.buttonsLayout.acceptTempButton.visibility = View.GONE
-                                        })
-                            })
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @SuppressLint("SetTextI18n")
     private fun processButtonsVisibility() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -381,22 +322,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             iobCobCalculator.ads.actualBg()
             var list = ""
 
-            // **** Temp button ****
-            val lastRun = loop.lastRun
-            val resultAvailable =
-                lastRun != null &&
-                    (lastRun.lastOpenModeAccept == 0L || lastRun.lastOpenModeAccept < lastRun.lastAPSRun) &&// never accepted or before last result
-                    lastRun.constraintsProcessed?.isChangeRequested == true // change is requested
-
             runOnUiThread {
                 _binding ?: return@runOnUiThread
-                if (resultAvailable && pump.isInitialized() && loop.runningMode == RM.Mode.OPEN_LOOP && (loop as PluginBase).isEnabled()) {
-                    binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
-                    binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.set_basal_question)}\n${lastRun.constraintsProcessed?.resultAsString()}"
-                } else {
-                    binding.buttonsLayout.acceptTempButton.visibility = View.GONE
-                }
-
                 // Automation buttons
                 binding.buttonsLayout.userButtonsLayout.removeAllViews()
                 val events = automation.userEvents()
@@ -665,29 +592,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
     private fun updateTime() {
         _binding ?: return
         binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
-        // Status lights
-        val pump = activePlugin.activePump
-        val isPatchPump = pump.pumpDescription.isPatchPump
-        binding.statusLightsLayout.apply {
-            cannulaOrPatch.setImageResource(if (isPatchPump) app.aaps.core.objects.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
-            cannulaOrPatch.contentDescription = rh.gs(if (isPatchPump) R.string.statuslights_patch_pump_age else R.string.statuslights_cannula_age)
-            insulinAge.visibility = isPatchPump.not().toVisibility()
-            batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
-            pbAge.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
-            val useBatteryLevel = (pump.model() == PumpType.OMNIPOD_EROS)
-                || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
-            pbLevel.visibility = useBatteryLevel.toVisibility()
-        }
-        statusLightHandler.updateStatusLights(
-            binding.statusLightsLayout.cannulaAge,
-            null,
-            binding.statusLightsLayout.insulinAge,
-            binding.statusLightsLayout.reservoirLevel,
-            binding.statusLightsLayout.sensorAge,
-            null,
-            binding.statusLightsLayout.pbAge,
-            binding.statusLightsLayout.pbLevel
-        )
     }
 
     private fun bolusIob(): IobTotal = runBlocking { iobCobCalculator.calculateIobFromBolus() }.round()

@@ -11,31 +11,13 @@
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pump battery</string>
     <string name="cannula">Cannula</string>
-    <string name="statuslights_cannula_age">cannula age</string>
-    <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
 
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 hours</string>
-    <string name="graph_long_scale_12h">12 hours</string>
-    <string name="graph_long_scale_18h">18 hours</string>
-    <string name="graph_long_scale_24h">24 hours</string>
-    <string name="a11y_graph">graph</string>
-    <string name="a11y_graph_scale">select graph scale</string>
-    <string name="a11y_graph_scale_6h">graph scale 6 hours</string>
-    <string name="a11y_graph_scale_12h">graph scale 12 hours</string>
-    <string name="a11y_graph_scale_18h">graph scale 18 hours</string>
-    <string name="a11y_graph_scale_24h">graph scale 24 hours</string>
     <string name="a11y_insulin_label">insulin</string>
-    <string name="chart_menu">Chart menu</string>
     <string name="a11y_bg_quality">blood glucose quality</string>
     <string name="a11y_blood_glucose">blood glucose</string>
     <string name="a11y_bg_outdated">outdated</string>
-    <string name="set_basal_question">Accept new temp basal:</string>
 
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
@@ -61,8 +43,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="graph_scale">Graph scale</string>
-    <string name="graph_menu_divider_header">Graph</string>
     <string name="temp_basal_overview_short_name">T:</string>
 
     <string name="cannula_usage">usage:</string>

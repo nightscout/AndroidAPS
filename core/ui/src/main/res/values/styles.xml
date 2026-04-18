@@ -62,8 +62,6 @@
         <item name="scheduledColor">@color/colorScheduled</item>
         <!-- Carbs Button -->
         <item name="carbsButtonColor">@color/colorCarbsButton</item>
-        <!-- Temp Button Button -->
-        <item name="acceptTempButtonColor">@color/colorAcceptTempButton</item>
         <!-- Treatment Button -->
         <item name="treatmentButton">@color/colorTreatmentButton</item>
         <!-- Insulin Button -->

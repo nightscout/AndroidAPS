@@ -22,8 +22,6 @@
     <attr name="setExtendedButtonColor" format="reference|color" />
     <!-- Carbs Button -->
     <attr name="carbsButtonColor" format="reference|color" />
-    <!-- Temp Button Button -->
-    <attr name="acceptTempButtonColor" format="reference|color" />
     <!---Treatment -->
     <attr name="treatmentButton" format="reference|color" />
     <attr name="activeColor" format="reference|color" />
