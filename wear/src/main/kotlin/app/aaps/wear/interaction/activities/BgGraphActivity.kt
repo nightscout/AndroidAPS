@@ -243,6 +243,8 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
     val pad = w * 0.03f
     val drawW = w - 2 * pad
     val drawH = h - 2 * pad
+    val bottomReserve = 12.dp.toPx()
+    val graphH = drawH - bottomReserve
 
     val bgData      = data.bgData
     val entries     = data.graphData.entries
@@ -259,7 +261,7 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
     val ySpan = yMax - yMin
 
     fun timeToX(t: Long) = pad + drawW * ((t - startTime).toFloat() / timeSpan)
-    fun sgvToY(sgv: Float) = pad + drawH * (1f - (sgv.coerceIn(yMin, yMax) - yMin) / ySpan)
+    fun sgvToY(sgv: Float) = pad + graphH * (1f - (sgv.coerceIn(yMin, yMax) - yMin) / ySpan)
 
     // Collect hour marks for grid lines and labels
     val hourMarks = mutableListOf<Long>()
@@ -280,7 +282,7 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
         drawLine(
             color = Color.White.copy(alpha = 0.12f),
             start = Offset(timeToX(hourMs), pad),
-            end = Offset(timeToX(hourMs), pad + drawH),
+            end = Offset(timeToX(hourMs), pad + graphH),
             strokeWidth = 0.5.dp.toPx()
         )
     }
@@ -290,7 +292,7 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
     drawLine(
         color = Color.White.copy(alpha = 0.35f),
         start = Offset(nowX, pad),
-        end = Offset(nowX, pad + drawH),
+        end = Offset(nowX, pad + graphH),
         strokeWidth = 1.dp.toPx()
     )
 
