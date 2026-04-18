@@ -479,10 +479,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">diminuição de %1$s para %2$s</string>
-    <string name="a11y_plus_button_description">aumento de %1$s para %2$s</string>
-    <string name="you_are_on_allowed_limit">Limite máximo atingido</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Hora do Evento</string>
@@ -530,14 +526,6 @@
     <string name="weekday_wednesday_short">Qua</string>
     <string name="weekday_tuesday_short">Ter</string>
     <string name="weekday_monday_short">Seg</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">2a</string>
-    <string name="tuesday_short">3a</string>
-    <string name="wednesday_short">4a</string>
-    <string name="thursday_short">5a</string>
-    <string name="friday_short">6a</string>
-    <string name="saturday_short">Sáb</string>
-    <string name="sunday_short">Dom</string>
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
     <!-- ProfileEditor -->
