@@ -803,10 +803,6 @@
     <string name="reauthorize">Znovu overiť</string>
     <string name="cloud_auth_success">Overenie cloudového úložiska prebehlo úspešne</string>
     <string name="authorization_status">Stav autorizácie</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">zníženie %1$s o %2$s</string>
-    <string name="a11y_plus_button_description">zvýšenie %1$s o %2$s</string>
-    <string name="you_are_on_allowed_limit">Dosiahnutý povolený limit</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Čas udalosti</string>
@@ -905,14 +901,6 @@
     <string name="weekday_wednesday_short">Str</string>
     <string name="weekday_tuesday_short">Uto</string>
     <string name="weekday_monday_short">Pon</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Po</string>
-    <string name="tuesday_short">Ut</string>
-    <string name="wednesday_short">St</string>
-    <string name="thursday_short">Št</string>
-    <string name="friday_short">Pi</string>
-    <string name="saturday_short">So</string>
-    <string name="sunday_short">Ne</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
