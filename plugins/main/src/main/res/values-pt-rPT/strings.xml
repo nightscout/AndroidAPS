@@ -15,8 +15,6 @@
     <string name="a11y_blood_glucose">Glicose no Sangue</string>
     <string name="a11y_bg_outdated">desatualizado</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">Início</string>
-    <string name="description_overview">Exibe o estado actual do loop e botões para acções mais comuns</string>
     <string name="data_status">Estado dos dados da GLIC</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
