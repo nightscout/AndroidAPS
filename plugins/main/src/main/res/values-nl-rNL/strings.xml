@@ -19,7 +19,6 @@
     <string name="overview_shortname">OVZ</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="data_status">BG data status</string>
-    <string name="run_question">%s uitvoeren?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_treatments">Behandelingen</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>
     <string name="overview_show_steps">Stappen</string>
-    <string name="simple_mode_enabled">Eenvoudige modus ingeschakeld</string>
 </resources>
