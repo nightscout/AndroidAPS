@@ -19,7 +19,6 @@
     <string name="overview_shortname">בית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="data_status">מצב נתוני הסוכר</string>
-    <string name="run_question">להפעיל %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">חיזוי</string>
     <string name="overview_show_treatments">טיפולים</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
     <string name="overview_show_steps">צעדים</string>
-    <string name="simple_mode_enabled">נבחר המצב הפשוט</string>
 </resources>
