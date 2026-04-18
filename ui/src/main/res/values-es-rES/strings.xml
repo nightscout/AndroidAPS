@@ -187,6 +187,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Sólo IOB positiva</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
     <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Añadir eCarbs</string>
     <string name="calculator_options">Opciones de la calculadora</string>
     <string name="use_bg">Usar glucemia</string>
