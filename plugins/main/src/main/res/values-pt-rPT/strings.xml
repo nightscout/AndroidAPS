@@ -18,7 +18,6 @@
     <string name="overview_shortname">Início</string>
     <string name="description_overview">Exibe o estado actual do loop e botões para acções mais comuns</string>
     <string name="data_status">Estado dos dados da GLIC</string>
-    <string name="run_question">Executar %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
     <string name="overview_show_treatments">Tratamentos</string>
