@@ -188,6 +188,9 @@
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
     <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
     <!--    History browser-->
+    <string name="history_now">Adesso</string>
+    <string name="a11y_history_previous_window">Finestra precedente</string>
+    <string name="a11y_history_next_window">Finestra successiva</string>
     <string name="additional_ecarbs">Aggiungi eCarbs</string>
     <string name="calculator_options">Opzioni Calcolatore</string>
     <string name="use_bg">Usa Glicemia</string>
