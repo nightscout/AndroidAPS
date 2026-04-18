@@ -15,7 +15,6 @@
     <string name="overview_shortname">INICI</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="data_status">Estat de dades de glucèmia</string>
-    <string name="run_question">Executa %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prediccions</string>
     <string name="overview_show_treatments">Tractaments</string>
