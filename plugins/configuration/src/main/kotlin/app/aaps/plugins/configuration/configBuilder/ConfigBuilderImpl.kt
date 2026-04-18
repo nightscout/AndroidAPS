@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
-import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
@@ -189,7 +188,6 @@ class ConfigBuilderImpl @Inject constructor(
         changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
         storeSettings("RemoteConfiguration")
-        rxBus.send(EventRebuildTabs())
         rxBus.send(EventConfigBuilderChange())
         logPluginStatus()
     }

@@ -18,9 +18,6 @@ interface UiInteraction {
     /** The activity for displaying error information. */
     val errorHelperActivity: Class<*>
 
-    /** A generic activity that can host a single fragment. */
-    val singleFragmentActivity: Class<*>
-
     /**
      * Display names for units preferences.
      */

@@ -13,7 +13,6 @@ import app.aaps.workflow.PrepareBucketedDataWorker
 import app.aaps.workflow.PrepareIobAutosensGraphDataWorker
 import app.aaps.workflow.PreparePredictionsWorker
 import app.aaps.workflow.UpdateGraphWorker
-import app.aaps.workflow.UpdateIobCobSensWorker
 import app.aaps.workflow.UpdateWidgetWorker
 import app.aaps.workflow.iob.IobCobOref1Worker
 import app.aaps.workflow.iob.IobCobOrefWorker
@@ -51,7 +50,6 @@ abstract class WorkflowModule {
     @ContributesAndroidInjector abstract fun iobCobWorkerInjector(): IobCobOrefWorker
     @ContributesAndroidInjector abstract fun iobCobOref1WorkerInjector(): IobCobOref1Worker
     @ContributesAndroidInjector abstract fun prepareIobAutosensDataWorkerInjector(): PrepareIobAutosensGraphDataWorker
-    @ContributesAndroidInjector abstract fun loadIobCobResultsWorkerInjector(): UpdateIobCobSensWorker
     @ContributesAndroidInjector abstract fun preparePredictionsWorkerInjector(): PreparePredictionsWorker
     @ContributesAndroidInjector abstract fun updateGraphAndIobWorkerInjector(): UpdateGraphWorker
     @ContributesAndroidInjector abstract fun prepareBgDataWorkerInjector(): PrepareBgDataWorker

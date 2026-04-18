@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.overview.Overview
 
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
@@ -47,12 +46,6 @@ interface ActivePlugin {
      *  Default Oref1
      */
     val activeSensitivity: Sensitivity
-
-    /**
-     *  Currently selected Overview plugin
-     *  Always OverviewPlugin
-     */
-    val activeOverview: Overview
 
     /**
      *  Currently selected Safety plugin

@@ -3,7 +3,6 @@ package app.aaps.pump.danar.comm
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
-import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import dagger.android.HasAndroidInjector
 
 class MsgInitConnStatusTime(
@@ -28,7 +27,6 @@ class MsgInitConnStatusTime(
             pumpSync.connectNewPump()
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaDriver")
-            rxBus.send(EventRebuildTabs())
             commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
             failed = false
             return

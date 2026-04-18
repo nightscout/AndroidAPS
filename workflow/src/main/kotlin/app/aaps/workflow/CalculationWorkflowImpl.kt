@@ -100,7 +100,6 @@ class CalculationWorkflowImpl @Inject constructor(
                         .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(iobCobCalculator, signals, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
                         .build()
             )
-            .then(OneTimeWorkRequest.Builder(UpdateIobCobSensWorker::class.java).build())
             .then(
                 OneTimeWorkRequest.Builder(PrepareIobAutosensGraphDataWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(PrepareIobAutosensGraphDataWorker.PrepareIobAutosensData(iobCobCalculator, overviewData, cache, signals)))

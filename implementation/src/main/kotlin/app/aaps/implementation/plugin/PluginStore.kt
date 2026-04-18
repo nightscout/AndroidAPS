@@ -19,12 +19,10 @@ import app.aaps.core.interfaces.constraints.Safety
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
-
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.smoothing.Smoothing
@@ -216,8 +214,12 @@ class PluginStore @Inject constructor(
     /**
      * If the active plugin is no longer visible in its category (e.g., sensitivity plugin
      * incompatible with the current APS algorithm), disable it and fall back to the default.
+     *
+     * Framework plugins declared `alwaysEnabled` are exempt — they use `showInList { false }`
+     * to hide from the UI list but must stay functional regardless.
      */
     private fun fallbackIfNotVisible(active: PluginBase, type: PluginType): PluginBase {
+        if (active.pluginDescription.alwaysEnabled) return active
         if (!active.showInList(type)) {
             active.setPluginEnabled(type, false)
             val default = getDefaultPlugin(type)
@@ -267,9 +269,6 @@ class PluginStore @Inject constructor(
 
     override val activeSmoothing: Smoothing
         get() = activeSmoothingStore ?: checkNotNull(activeSmoothingStore) { "No smoothing selected" }
-
-    override val activeOverview: Overview
-        get() = getSpecificPluginsListByInterface(Overview::class.java).first() as Overview
 
     override val activeSafety: Safety
         get() = getSpecificPluginsListByInterface(Safety::class.java).first() as Safety

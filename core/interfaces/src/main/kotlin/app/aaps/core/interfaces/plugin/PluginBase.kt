@@ -60,6 +60,7 @@ abstract class PluginBase(
         return type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.APS && isEnabled(PluginType.APS)
     }
 
+    @Deprecated("remove")
     fun hasFragment(): Boolean {
         return pluginDescription.fragmentClass != null
     }
@@ -139,12 +140,14 @@ abstract class PluginBase(
         }
     }
 
+    @Deprecated("remove")
     open fun setFragmentVisible(type: PluginType, fragmentVisible: Boolean) {
         if (type == pluginDescription.mainType) {
             this.fragmentVisible = fragmentVisible && specialEnableCondition()
         }
     }
 
+    @Deprecated("remove")
     fun isFragmentVisible(): Boolean {
         if (pluginDescription.alwaysVisible) return true
         return if (pluginDescription.neverVisible) false else fragmentVisible

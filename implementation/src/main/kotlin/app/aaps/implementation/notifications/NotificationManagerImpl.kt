@@ -59,7 +59,16 @@ class NotificationManagerImpl @Inject constructor(
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    private val dismissReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val legacyId = intent?.getIntExtra("alertID", -1) ?: -1
+            NotificationId.fromLegacyId(legacyId)?.let { dismiss(it) }
+        }
+    }
+
     init {
+        createNotificationChannel()
+
         // Periodic cleanup for expiration when no new posts arrive
         scope.launch {
             while (true) {
@@ -75,7 +84,7 @@ class NotificationManagerImpl @Inject constructor(
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    override fun createNotificationChannel() {
+    private fun createNotificationChannel() {
         val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
         val channel = NotificationChannel(NotificationManager.CHANNEL_ID, NotificationManager.CHANNEL_ID, AndroidNotificationManager.IMPORTANCE_HIGH)
         mgr.createNotificationChannel(channel)
@@ -269,13 +278,6 @@ class NotificationManagerImpl @Inject constructor(
                 .setContentTitle(rh.gs(app.aaps.core.ui.R.string.info))
         }
         mgr.notify(n.id.legacyId, notificationBuilder.build())
-    }
-
-    private val dismissReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val legacyId = intent?.getIntExtra("alertID", -1) ?: -1
-            NotificationId.fromLegacyId(legacyId)?.let { dismiss(it) }
-        }
     }
 
     private fun deleteIntent(id: Int): PendingIntent {

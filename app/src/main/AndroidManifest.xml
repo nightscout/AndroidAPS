@@ -63,10 +63,6 @@
             android:resource="@xml/automotive_app_desc" />
 
         <activity
-            android:name="app.aaps.MainActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name="app.aaps.ComposeMainActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
