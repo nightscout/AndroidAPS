@@ -9,30 +9,12 @@
     <string name="insulin_label">Инсулин</string>
     <string name="pb_label">Батарея помпы</string>
     <string name="cannula">Катетер помпы</string>
-    <string name="statuslights_cannula_age">время, отработанное катетером помпы</string>
-    <string name="statuslights_patch_pump_age">время отработанное разовой помпой</string>
     <string name="patch_pump">Разовая помпа</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6ч</string>
-    <string name="graph_scale_12h">12 ч</string>
-    <string name="graph_scale_18h">18 ч</string>
-    <string name="graph_scale_24h">24 ч</string>
-    <string name="graph_long_scale_6h">6 часов</string>
-    <string name="graph_long_scale_12h">12 часов</string>
-    <string name="graph_long_scale_18h">18 часов</string>
-    <string name="graph_long_scale_24h">24 часа</string>
-    <string name="a11y_graph">график</string>
-    <string name="a11y_graph_scale">выберите масштаб графика</string>
-    <string name="a11y_graph_scale_6h">масштаб шкалы 6 часов</string>
-    <string name="a11y_graph_scale_12h">масштаб шкалы 12 часов</string>
-    <string name="a11y_graph_scale_18h">масштаб шкалы 18 часов</string>
-    <string name="a11y_graph_scale_24h">масштаб шкалы 24 часа</string>
     <string name="a11y_insulin_label">инсулин</string>
-    <string name="chart_menu">Меню графика</string>
     <string name="a11y_bg_quality">качество ГК</string>
     <string name="a11y_blood_glucose">уровень глюкозы в крови ГК</string>
     <string name="a11y_bg_outdated">устаревшие данные</string>
-    <string name="set_basal_question">Принять новый врем базал:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">НАЧАЛО</string>
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
@@ -55,8 +37,6 @@
     <string name="prediction_shortname">ОЖИД</string>
     <string name="basal_shortname">БАЗ</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
-    <string name="graph_scale">Масштаб графика</string>
-    <string name="graph_menu_divider_header">График</string>
     <string name="temp_basal_overview_short_name">ВРЕМ:</string>
     <string name="cannula_usage">применение:</string>
     <!--    Iob-->
