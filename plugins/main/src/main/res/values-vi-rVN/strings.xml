@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">đường máu</string>
     <string name="a11y_bg_outdated">quá hạn</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">HOME</string>
-    <string name="description_overview">Hiển thị trạng thái hiện tại của vòng lặp và các nút cho những thao tác thường dùng nhất</string>
     <string name="data_status">Trạng thái dữ liệu đường huyết</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Dự đoán</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">đã sử dụng:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
