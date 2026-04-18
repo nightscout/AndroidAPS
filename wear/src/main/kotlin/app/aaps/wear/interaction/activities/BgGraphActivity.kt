@@ -69,7 +69,7 @@ private val BasalColor      = Color(0xFF90CAF9)
 private val SecondaryText   = Color(0xFFAAAAAA)
 private val TempTargetColor = Color(0xFFFDD835)
 
-private val historyHoursCycle = listOf(3, 6, 9, 12, 24, 1)
+private val historyHoursCycle = listOf(3, 6, 1)
 
 private fun bgColor(sgvLevel: Long): Color = when (sgvLevel.toInt()) {
     -1   -> BgLowColor
@@ -325,10 +325,8 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
             textAlign = Paint.Align.CENTER
             isAntiAlias = true
         }
-        val labelStep = if (historyHours >= 18) 2 else 1
         for (hourMs in hourMarks) {
             val hour = Calendar.getInstance().apply { timeInMillis = hourMs }.get(Calendar.HOUR_OF_DAY)
-            if (hour % labelStep != 0) continue
             canvas.nativeCanvas.drawText(
                 hourFormat.format(Date(hourMs)),
                 timeToX(hourMs),
