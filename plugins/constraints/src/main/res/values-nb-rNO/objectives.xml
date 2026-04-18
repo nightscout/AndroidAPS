@@ -58,7 +58,7 @@
     <string name="objectives_exam_learned_profileswitch4">Redigering av profilen er ikke tilstrekkelig til å gjøre en endring. Du må fremdeles fysisk aktivere et profil bytte for å registrere endringene.</string>
     <string name="objectives_exam_learned_exercise">Du bør redusere mengden insulin i kroppen minst 1 time før du starter treningen ved å velge profil under 100 %.</string>
     <string name="objectives_exam_learned_exercise2">Ved å sette høyere midlertidig mål minst 1 time før trening så vil det bidra til å redusere mengden med insulin i kroppen.</string>
-    <string name="objectives_exam_learned_noisycgm">Hvis du ikke stoler på CGM-verdier bør du ikke bruke loop uten tilsyn.</string>
+    <string name="objectives_exam_learned_noisycgm">Hvis du ikke stoler på sensor-verdier bør du ikke bruke loop uten tilsyn.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS må vite at pumpen ikke er tilkoblet for å beregne IOB riktig.</string>
     <string name="objectives_exam_learned_insulin">Å vite hvilken type insulin som er i pumpen er nødvendig for å beregne IOB korrekt.</string>
     <string name="objectives_exam_learned_sensitivity">Sensitivitetsdeteksjon er en del av algoritmen som gir mulighet for å tilpasse insulindoseringen til ulike situasjoner.</string>
