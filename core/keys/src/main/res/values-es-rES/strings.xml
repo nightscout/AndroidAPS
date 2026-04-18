@@ -59,14 +59,64 @@
     <string name="pref_summary_aps_resistance_lowers_target">La resistencia detecta y baja el objetivo de glucosa</string>
     <string name="pref_title_aps_always_use_short_deltas">Usar siempre el delta promedio corto</string>
     <string name="pref_summary_aps_always_use_short_deltas">Usar siempre el delta promedio corto en lugar del delta simple</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">Ajustar sensibilidad de ISF dinámico</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Ajustar los cálculos de sensibilidad al usar ISF dinámico</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Ajustar objetivos con Autosens</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Autosens ajusta objetivo de glucosa, basal e ISF</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Objetivo temporal alto aumenta la sensibilidad</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">El uso de objetivos temporales altos aumenta la sensibilidad a la insulina</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Objetivo temporal bajo reduce la sensibilidad</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">El uso de objetivos temporales bajos reduce la sensibilidad a la insulina</string>
+    <string name="pref_title_aps_use_autoisf_weights">Habilitar AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Activar ajustes de ISF basados en peso (AutoISF)</string>
+    <string name="pref_title_aps_smb_on_even_target">Activar SMB con objetivo estable</string>
+    <string name="pref_summary_aps_smb_on_even_target">Activación alternativa de SMB siempre basada en el valor de glucosa objetivo</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Activar reportes de fallos (Fabric)</string>
+    <string name="pref_title_maintenance_enable_export_automation">Habilitar exportación automática de ajustes</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Cambio automático de perfil</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Cambiar automáticamente al perfil generado por Autotune después del cálculo</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Categorizar UAM como basal</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Tratar las comidas no anunciadas como necesidades de insulina basal para los cálculos de Autotune</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Ajustar la curva de insulina</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Usar ratios IC/ISF basados en el ritmo circadiano</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Aplicar la variación circadiana a IC e ISF en los cálculos de Autotune</string>
+    <string name="pref_title_autotune_additional_log">Registro adicional</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Permitir comandos remotos vía SMS</string>
     <string name="pref_title_sms_report_pump_unreachable">Informar de que la bomba no es alcanzable mediante SMS</string>
     <string name="pref_summary_sms_report_pump_unreachable">Enviar notificación por SMS cuando la bomba no sea alcanzable</string>
     <!-- Virtual pump preferences -->
     <string name="pref_title_virtual_pump_status_upload">Subir el estado de la bomba a NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Subir datos a NS</string>
+    <string name="pref_summary_ns_upload_data">Subir tratamientos, basales temporales y otros datos a Nightscout</string>
+    <string name="pref_title_ns_receive_cgm">Recibir datos de MCG desde NS</string>
+    <string name="pref_summary_ns_receive_cgm">Aceptar lecturas del MCG desde Nightscout</string>
+    <string name="pref_title_ns_receive_profile_store">Recibir perfiles almacenados desde NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Aceptar actualizaciones de perfiles almacenados desde Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Recibir objetivos temporales desde NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Aceptar cambios de objetivos temporales desde Nightscout</string>
+    <string name="pref_title_ns_receive_profile_switch">Recibir cambios de perfil desde NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Aceptar eventos de cambio de perfil desde Nightscout</string>
+    <string name="pref_title_ns_receive_insulin">Recibir insulina desde NS</string>
+    <string name="pref_summary_ns_receive_insulin">Aceptar tratamientos de insulina desde Nightscout</string>
+    <string name="pref_title_ns_receive_carbs">Recibir carbohidratos desde NS</string>
+    <string name="pref_summary_ns_receive_carbs">Aceptar entradas de carbohidratos desde Nightscout</string>
+    <string name="pref_title_ns_receive_therapy_event">Recibir eventos de terapia desde NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Aceptar eventos de terapia desde Nightscout</string>
+    <string name="pref_title_ns_receive_running_mode">Recibir modo de ejecución desde NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Aceptar cambios del modo de ejecución desde Nightscout</string>
+    <string name="pref_title_ns_receive_tbr_eb">Recibir TBR/EB desde NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Aceptar tasas basales temporales y bolos extendidos desde Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">Alarmas de NS</string>
+    <string name="pref_title_ns_notifications_from_announcements">Avisos de Nightscout</string>
+    <string name="pref_title_ns_use_cellular">Usar datos móviles</string>
+    <string name="pref_title_ns_use_roaming">Usar itinerancia de datos</string>
+    <string name="pref_title_ns_use_wifi">Usar WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Sincronizar usando la batería</string>
+    <string name="pref_title_ns_use_on_charging">Sincronizar durante la carga</string>
     <string name="pref_title_ns_log_app_start">Registrar evento de inicio de la aplicación</string>
     <string name="pref_title_ns_create_announcements_from_errors">Crear anuncios a partir de errores</string>
     <string name="pref_title_ns_create_announcements_from_carbs_req">Crear anuncios de carbohidratos necesarios</string>
@@ -174,25 +224,96 @@
     <string name="pref_title_language">Idioma</string>
     <string name="lang_default">Predeterminado del sistema</string>
     <string name="lang_en">Inglés</string>
+    <string name="lang_af">Afrikáans</string>
+    <string name="lang_bg">Búlgaro</string>
+    <string name="lang_cs">Checo</string>
+    <string name="lang_de">Alemán</string>
+    <string name="lang_dk">Danés</string>
+    <string name="lang_fr">Francés</string>
+    <string name="lang_nl">Neerlandés</string>
+    <string name="lang_es">Español</string>
+    <string name="lang_el">Griego</string>
+    <string name="lang_ga">Irlandés</string>
+    <string name="lang_it">Italiano</string>
+    <string name="lang_ko">Coreano</string>
+    <string name="lang_lt">Lituano</string>
+    <string name="lang_nb">Noruego</string>
+    <string name="lang_pl">Polaco</string>
+    <string name="lang_pt">Portugués</string>
+    <string name="lang_pt_br">Portugués Brasileño</string>
+    <string name="lang_ro">Rumano</string>
+    <string name="lang_ru">Ruso</string>
+    <string name="lang_sk">Eslovaco</string>
+    <string name="lang_sv">Sueco</string>
+    <string name="lang_tr">Turco</string>
+    <string name="lang_zh_tw">Chino tradicional</string>
+    <string name="lang_zh_cn">Chino simplificado</string>
     <string name="pref_title_patient_name">Nombre</string>
     <string name="pref_summary_patient_name">Nombre para identificar esta instancia de AAPS (se muestra en informes y sincronización)</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">Directorio de AAPS</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Contraseña maestra</string>
+    <string name="pref_title_settings_password">Contraseña de ajustes</string>
+    <string name="pref_title_settings_pin">PIN de ajustes</string>
+    <string name="pref_title_application_password">Contraseña de la aplicación</string>
+    <string name="pref_title_application_pin">PIN de la aplicación</string>
+    <string name="pref_title_bolus_password">Contraseña de bolo</string>
+    <string name="pref_title_bolus_pin">PIN de bolo</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Elige el tema oscuro, claro o el del sistema</string>
+    <string name="pref_title_app_color_scheme">Esquema de colores de la aplicación</string>
+    <string name="pref_dark_theme">Tema oscuro</string>
+    <string name="pref_light_theme">Tema claro</string>
+    <string name="pref_follow_system_theme">Usar tema del dispositivo</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Edad del paciente</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Destinatario del correo electrónico</string>
+    <string name="pref_title_identification">Identificación para informes de errores</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Servicio de ubicación</string>
+    <string name="automation_location_passive">Usar ubicación pasiva</string>
+    <string name="automation_location_network">Usar ubicación de red</string>
+    <string name="automation_location_gps">Usar ubicación GPS</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">PIN obligatorio adicional al finalizar el token</string>
+    <string name="smscommunicator_otp_pin_summary">Dígitos adicionales que deben memorizarse y añadirse al final de cada contraseña de un solo uso generada</string>
     <!-- StringKey: Virtual pump preferences -->
     <string name="pref_title_virtual_pump_type">Tipo de bomba</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">URL de Nightscout</string>
+    <string name="ns_client_url_summary">Introduce tu URL de Nightscout (p. ej. https://nombretusitio.tuplataforma.dom)</string>
     <!-- DoubleKey: Overview preferences -->
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los límites de seguridad clave de OpenAPS, y la otra parte de la regla de seguridad \"3x máximo diario; 4x actual\". Esto significa que tu basal, independientemente del basal máximo configurado en tu bomba, no puede ser superior a este número multiplicado por tu nivel de basal actual. El objetivo es evitar que los usuarios entren en terreno peligroso al configurar basales máximos excesivamente altos antes de comprender cómo funciona el algoritmo. De nuevo, el valor predeterminado es 4x; la mayoría de las personas nunca necesitarán ajustar esto y, en su lugar, es más probable que deban ajustar otros parámetros si sienten que están \"chocando\" con este límite de seguridad.</string>
+    <string name="pref_title_pp_weight">Peso del ISF posprandial</string>
+    <string name="openapsama_pp_ISF_weight_summary">Este es el peso aplicado mientras la glucosa está subiendo y que refuerza el ISF, aumentando así potencialmente el suministro de insulina.\\n\\nEl valor predeterminado 0.0 desactiva eficazmente este efecto.</string>
+    <string name="pref_title_dura_weight">Peso de la duración del ISF</string>
+    <string name="openapsama_dura_ISF_weight_summary">Este es el peso aplicado durante mesetas de glucosa elevadas y prolongadas, el cual refuerza el ISF, aumentando así potencialmente el suministro de insulina.\\n\\nEl valor predeterminado 0.0 desactiva eficazmente este efecto.</string>
+    <string name="pref_title_smb_delivery_ratio">Ratio de suministro de SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Valor predeterminado: 0.5. Este es otro límite de seguridad clave de OpenAPS y especifica qué proporción del total de insulina requerida se puede suministrar como SMB. Esto es para evitar que las personas entren en una situación peligrosa al configurar solicitudes de SMB desde el teléfono de los cuidadores al mismo tiempo. Aumente este valor experimental de forma lenta y con precaución.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Ratio mínimo de suministro de SMB</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Valor predeterminado: 0.5. Este es el extremo inferior de una proporción que aumenta linealmente, en lugar del valor fijo mencionado anteriormente.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Ratio máximo de suministro de SMB</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valor predeterminado: 0.5. Este es el extremo superior de una proporción que aumenta linealmente, en lugar del valor fijo mencionado anteriormente.</string>
+    <string name="pref_title_smb_max_range_extension">Extensión de rango máximo de SMB</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valor predeterminado: 1. Este es otro límite de seguridad clave de OpenAPS y especifica por qué factor se pueden exceder los 120 minutos regulares de maxSMB/maxUAM. Aumente este valor experimental de forma lenta y con precaución.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Marca de glucosa baja</string>
+    <string name="pref_title_high_mark">Marca de glucosa alta</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">Umbral de LGS</string>
+    <string name="lgs_threshold_summary">Valor de glucosa por debajo del cual se suspende la insulina. El valor predeterminado utiliza el modelo de objetivo estándar. El usuario puede establecer un valor entre 60 mg/dl (3.3 mmol/l) y 100 mg/dl (5.5 mmol/l). Los valores inferiores a 65/3.6 darán como resultado el uso del modelo predeterminado.</string>
     <!-- IntentKey preferences -->
+    <string name="pref_title_link_to_docs">Documentación del algoritmo</string>
+    <string name="pref_title_otp_setup">Configuración del autenticador</string>
+    <string name="pref_title_quick_wizard_settings">Configuración de QuickWizard</string>
+    <string name="pref_title_xdrip_info">Información de xDrip+</string>
     <!--    Appearance preferences-->
+    <string name="prefs_range_title">Rango para visualización</string>
 </resources>
