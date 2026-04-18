@@ -19,7 +19,6 @@
     <string name="overview_shortname">홈</string>
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
     <string name="data_status">BG 데이터 상태</string>
-    <string name="run_question">%s 실행?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">예측</string>
     <string name="overview_show_treatments">관리</string>
