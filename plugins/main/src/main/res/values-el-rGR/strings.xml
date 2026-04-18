@@ -9,17 +9,12 @@
     <string name="insulin_label">Ινσουλίνη</string>
     <string name="pb_label">Μπαταρία αντλίας</string>
     <string name="cannula">Καθετήρας</string>
-    <string name="statuslights_cannula_age">ηλικία καθετήρα</string>
-    <string name="statuslights_patch_pump_age">ηλικία αυτοκόλλητης αντλίας</string>
     <string name="patch_pump">Αυτοκόλλητη αντλία</string>
     <!-- Overview -->
-    <string name="a11y_graph">γράφημα</string>
     <string name="a11y_insulin_label">ινσουλίνη</string>
-    <string name="chart_menu">Μενού διαγράμματος</string>
     <string name="a11y_bg_quality">ποιότητα γλυκόζης αίματος</string>
     <string name="a11y_blood_glucose">γλυκόζη αίματος</string>
     <string name="a11y_bg_outdated">μη ενημερωμένα</string>
-    <string name="set_basal_question">Αποδοχή νέου Προσ Ρυθμού:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">ΑΡΧΙΚΗ</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
@@ -40,8 +35,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
-    <string name="graph_scale">Κλίμακα γραφήματος</string>
-    <string name="graph_menu_divider_header">Γράφημα</string>
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
