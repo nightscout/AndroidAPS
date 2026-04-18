@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.overview.OverviewData
-import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -60,7 +59,6 @@ class OverviewPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val overviewData: OverviewData,
-    private val overviewMenus: OverviewMenus,
     private val context: Context,
     private val constraintsChecker: ConstraintsChecker,
     private val uiInteraction: UiInteraction,
@@ -91,7 +89,6 @@ class OverviewPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        overviewMenus.loadGraphConfig()
         overviewData.initRange()
 
         notificationManager.createNotificationChannel()

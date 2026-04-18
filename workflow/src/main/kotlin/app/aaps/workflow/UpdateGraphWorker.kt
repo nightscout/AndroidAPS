@@ -25,7 +25,6 @@ class UpdateGraphWorker(
     override suspend fun doWorkAndLog(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as? UpdateGraphData
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
-        data.signals.emitGraphUpdate("UpdateGraphWorker")
         data.signals.emitProgress(data.pass, 100)
         return Result.success()
     }

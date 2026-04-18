@@ -221,6 +221,24 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             signals.progress.collect { _calcProgressFlow.value = it }
         }
 
+        // Scope-agnostic: rebuild graphs whenever the window shifts. For history this is
+        // the only trigger (navigation); for live it complements the DB-change listeners
+        // below. The rebuilders themselves read from the DB using the current range.
+        scope.launch {
+            timeRangeFlow
+                .filterNotNull()
+                .debounce(300)
+                .collect {
+                    rebuildTreatmentGraph()
+                    rebuildEpsGraph()
+                    rebuildRunningModeGraph()
+                    rebuildTargetLine()
+                    rebuildBasalGraph()
+                    rebuildHeartRateGraph()
+                    rebuildStepsGraph()
+                }
+        }
+
         if (observeDatabase) {
             // Load initial data from database
             scope.launch {
@@ -305,22 +323,6 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                         rebuildStepsGraph()
                     }
             }
-            // Rebuild all Category B graphs when time range changes
-            scope.launch {
-                timeRangeFlow
-                    .filterNotNull()
-                    .debounce(300)
-                    .collect {
-                        rebuildTreatmentGraph()
-                        rebuildEpsGraph()
-                        rebuildRunningModeGraph()
-                        rebuildTargetLine()
-                        rebuildBasalGraph()
-                        rebuildHeartRateGraph()
-                        rebuildStepsGraph()
-                    }
-            }
-
             // Observe running mode changes for graph + chip
             scope.launch {
                 persistenceLayer.observeChanges(RM::class.java)

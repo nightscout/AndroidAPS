@@ -18,7 +18,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,7 +31,6 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.graph.data.GraphViewWithCleanup
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -52,7 +50,6 @@ import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.overview.OverviewData
-import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -69,7 +66,6 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewIobCob
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewSensitivity
@@ -80,11 +76,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.interfaces.workflow.CalculationSignals
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.directionToIcon
@@ -99,9 +93,7 @@ import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewFragmentBinding
 import app.aaps.plugins.main.databinding.OverviewNotificationItemBinding
-import app.aaps.plugins.main.general.overview.graphData.GraphData
 import app.aaps.plugins.main.general.overview.ui.StatusLightHandler
-import com.jjoe64.graphview.GraphView
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -121,9 +113,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Provider
 import kotlin.math.abs
-import kotlin.math.min
 import app.aaps.core.interfaces.notifications.NotificationManager as AapsNotificationManager
 
 class OverviewFragment : DaggerFragment(), View.OnClickListener {
@@ -146,7 +136,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var config: Config
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var trendCalculator: TrendCalculator
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
@@ -159,8 +148,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var bgQualityCheck: BgQualityCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
-    @Inject lateinit var graphDataProvider: Provider<GraphData>
-    @Inject lateinit var signals: CalculationSignals
     @Inject lateinit var commandQueue: CommandQueue
 
     private val disposable = CompositeDisposable()
@@ -168,12 +155,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
     private var smallWidth = false
     private var smallHeight = false
-    private var axisWidth: Int = 0
     private lateinit var refreshLoop: Runnable
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-
-    private val secondaryGraphs = ArrayList<GraphView>()
-    private val secondaryGraphsLabel = ArrayList<TextView>()
 
     private var carbAnimation: AnimationDrawable? = null
     private var lastUserAction = ""
@@ -215,34 +198,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
-        axisWidth = when {
-            resources.displayMetrics.densityDpi <= 120 -> 3
-            resources.displayMetrics.densityDpi <= 160 -> 10
-            resources.displayMetrics.densityDpi <= 320 -> 35
-            resources.displayMetrics.densityDpi <= 420 -> 50
-            resources.displayMetrics.densityDpi <= 560 -> 70
-            else                                       -> 80
-        }
-        binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context, app.aaps.core.ui.R.attr.graphGrid)
-        binding.graphsLayout.bgGraph.gridLabelRenderer?.reloadStyles()
-        binding.graphsLayout.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
         carbAnimation = binding.infoLayout.carbsIcon.background as AnimationDrawable?
         carbAnimation?.setEnterFadeDuration(1200)
         carbAnimation?.setExitFadeDuration(1200)
-
-        binding.graphsLayout.bgGraph.setOnLongClickListener {
-            overviewData.rangeToDisplay += 6
-            overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
-            preferences.put(IntNonKey.RangeToDisplay, overviewData.rangeToDisplay)
-            preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
-            false
-        }
-        prepareGraphsIfNeeded(overviewMenus.setting.size)
-        overviewMenus.setupChartMenu(binding.graphsLayout.chartMenuButton, binding.graphsLayout.scaleButton)
-        binding.graphsLayout.scaleButton.text = overviewMenus.scaleString(overviewData.rangeToDisplay)
-
-        binding.graphsLayout.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
         binding.tempTarget.setOnClickListener(this)
         binding.pumpStatusLayout.setOnClickListener(this)
@@ -282,21 +241,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             .debounce(1L, TimeUnit.SECONDS)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateSensitivity() }, fabricPrivacy::logException)
-        signals.graphUpdates
-            .debounce(1000)
-            .onEach { updateGraph() }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
         viewLifecycleOwner.lifecycleScope.launch {
             notificationManager.notifications.collectLatest { updateNotification() }
         }
-        disposable += rxBus
-            .toObservable(EventScale::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           overviewData.rangeToDisplay = it.hours
-                           preferences.put(IntNonKey.RangeToDisplay, it.hours)
-                           preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
-                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventBucketedDataCreated::class.java)
             .debounce(1L, TimeUnit.SECONDS)
@@ -364,7 +311,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             _binding ?: return@runOnUiThread
             updateTime()
             updateSensitivity()
-            updateGraph()
             updateNotification()
         }
         updateBg()
@@ -382,20 +328,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         super.onDestroyView()
         // Remove handler callbacks before nulling view to prevent crashes
         handler.removeCallbacksAndMessages(null)
-        // Remove listeners and detach series to prevent memory leaks
-        _binding?.graphsLayout?.bgGraph?.let { graph ->
-            graph.setOnLongClickListener(null)
-            graph.removeAllSeries()
-        }
-        for (graph in secondaryGraphs) {
-            graph.setOnLongClickListener(null)
-            graph.removeAllSeries()
-        }
         _binding = null
         carbAnimation?.stop()
         carbAnimation = null
-        secondaryGraphs.clear()
-        secondaryGraphsLabel.clear()
     }
 
     override fun onDestroy() {
@@ -601,42 +536,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
         }
     }
 
-    private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
-        if (numOfGraphs != secondaryGraphs.size - 1) {
-            //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
-            // rebuild needed
-            secondaryGraphs.clear()
-            secondaryGraphsLabel.clear()
-            binding.graphsLayout.secondaryGraphs.removeAllViews()
-            (1 until numOfGraphs).forEach { _ ->
-                val relativeLayout = RelativeLayout(context)
-                relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-
-                val graph = GraphViewWithCleanup(requireContext())
-                graph.layoutParams =
-                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(100)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = rh.gac(context, app.aaps.core.ui.R.attr.graphGrid)
-                graph.gridLabelRenderer?.reloadStyles()
-                graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
-                graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
-                graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = rh.gac(context, app.aaps.core.ui.R.attr.viewPortBackgroundColor)
-                relativeLayout.addView(graph)
-
-                val label = TextView(context)
-                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(rh.dpToPx(30), rh.dpToPx(25), 0, 0) }
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                label.layoutParams = layoutParams
-                relativeLayout.addView(label)
-                secondaryGraphsLabel.add(label)
-
-                binding.graphsLayout.secondaryGraphs.addView(relativeLayout)
-                secondaryGraphs.add(graph)
-            }
-        }
-    }
-
     var task: Runnable? = null
 
     private fun scheduleUpdateGUI() {
@@ -765,7 +664,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
 
     private fun updateTime() {
         _binding ?: return
-        binding.graphsLayout.scaleButton.text = overviewMenus.scaleString(overviewData.rangeToDisplay)
         binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
         // Status lights
         val pump = activePlugin.activePump
@@ -882,106 +780,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener {
             setBackgroundColor(rh.gac(context, attrResBack))
             setTextColor(rh.gac(context, attrResText))
             compoundDrawables[0]?.setTint(rh.gac(context, attrResText))
-        }
-    }
-
-    private fun updateGraph() {
-        _binding ?: return
-        val pump = activePlugin.activePump
-        val graphData = graphDataProvider.get().with(binding.graphsLayout.bgGraph, overviewData)
-        val menuChartSettings = overviewMenus.setting
-        if (menuChartSettings.isEmpty()) return
-        graphData.addInRangeArea(
-            overviewData.fromTime, overviewData.endTime,
-            preferences.get(UnitDoubleKey.OverviewLowMark),
-            preferences.get(UnitDoubleKey.OverviewHighMark)
-        )
-        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
-        graphData.addBucketedData()
-        graphData.addTreatments(context)
-        graphData.addEps(context, 0.95)
-        if (menuChartSettings[0][OverviewMenus.CharType.TREAT.ordinal])
-            graphData.addTherapyEvents()
-        if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
-            graphData.addActivity(0.8)
-        if ((pump.pumpDescription.isTempBasalCapable || config.AAPSCLIENT) && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
-            graphData.addBasals()
-        graphData.addTargetLine()
-        graphData.addRunningModes()
-        graphData.addNowLine(dateUtil.now())
-
-        // set manual x bounds to have nice steps
-        graphData.setNumVerticalLabels()
-        graphData.formatAxis(overviewData.fromTime, overviewData.endTime)
-
-        graphData.performUpdate()
-
-        // 2nd graphs
-        prepareGraphsIfNeeded(menuChartSettings.size)
-        val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
-
-        val now = System.currentTimeMillis()
-        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size - 1)) {
-            val secondGraphData = graphDataProvider.get().with(secondaryGraphs[g], overviewData)
-            var useABSForScale = false
-            var useIobForScale = false
-            var useCobForScale = false
-            var useDevForScale = false
-            var useRatioForScale = false
-            var useVarSensForScale = false
-            var useDSForScale = false
-            var useBGIForScale = false
-            var useHRForScale = false
-            var useSTEPSForScale = false
-            when {
-                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]      -> useBGIForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal]  -> useVarSensForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]       -> useHRForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]    -> useSTEPSForScale = true
-            }
-            val alignDevBgiScale = menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]
-
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(useABSForScale, 1.0)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(useIobForScale, 1.0)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(useCobForScale, if (useCobForScale) 1.0 else 0.5)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(useDevForScale, 1.0)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal]) secondGraphData.addVarSens(useVarSensForScale, if (useVarSensForScale) 1.0 else 0.8)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && config.isDev()) secondGraphData.addDeviationSlope(
-                useDSForScale,
-                if (useDSForScale) 1.0 else 0.8,
-                useRatioForScale
-            )
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]) secondGraphData.addHeartRate(useHRForScale, if (useHRForScale) 1.0 else 0.8)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]) secondGraphData.addSteps(useSTEPSForScale, if (useSTEPSForScale) 1.0 else 0.8)
-
-            // set manual x bounds to have nice steps
-            secondGraphData.formatAxis(overviewData.fromTime, overviewData.endTime)
-            secondGraphData.addNowLine(now)
-            secondaryGraphsData.add(secondGraphData)
-        }
-        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size - 1)) {
-            secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
-            secondaryGraphs[g].visibility = (
-                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]
-                ).toVisibility()
-            secondaryGraphsData[g].performUpdate()
         }
     }
 

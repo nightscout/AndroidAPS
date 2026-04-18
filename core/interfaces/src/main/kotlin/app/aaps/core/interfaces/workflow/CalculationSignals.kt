@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.workflow
 
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -12,9 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
  */
 interface CalculationSignals {
 
-    /** Emitted when a graph-level redraw is needed. */
-    val graphUpdates: SharedFlow<GraphUpdateSignal>
-
     /** Final percent (0..100) of the current calculation. 100 = idle. */
     val progress: StateFlow<Int>
 }
@@ -25,9 +21,5 @@ interface CalculationSignals {
  */
 interface CalculationSignalsEmitter : CalculationSignals {
 
-    fun emitGraphUpdate(from: String)
-
     fun emitProgress(pass: CalculationWorkflow.ProgressData, pct: Int)
 }
-
-data class GraphUpdateSignal(val from: String)

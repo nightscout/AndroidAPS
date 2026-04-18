@@ -12,21 +12,14 @@ interface CalculationWorkflow {
         const val MAIN_CALCULATION = "calculation"
         const val HISTORY_CALCULATION = "history_calculation"
         const val UPDATE_PREDICTIONS = "update_predictions"
-        const val JOB = "job"
-        const val PASS = "pass"
     }
 
     enum class ProgressData(val pass: Int, val percentOfTotal: Int) {
         DRAW_BG(0, 1),
-        PREPARE_TREATMENTS_DATA(1, 2),
-        PREPARE_BASAL_DATA(2, 6),
-        PREPARE_TEMPORARY_TARGET_DATA(3, 5),
-        PREPARE_RUNNING_MODE_DATA(4, 1),
-        DRAW_TT(5, 1),
-        IOB_COB_OREF(6, 77),
-        PREPARE_IOB_AUTOSENS_DATA(7, 5),
-        DRAW_IOB(8, 1),
-        DRAW_FINAL(9, 1);
+        IOB_COB_OREF(1, 52),
+        PREPARE_IOB_AUTOSENS_DATA(2, 45),
+        DRAW_IOB(3, 1),
+        DRAW_FINAL(4, 1);
 
         fun finalPercent(progress: Int): Int {
             var total = 0
@@ -66,11 +59,6 @@ interface CalculationWorkflow {
      * Update predictions in graph ofter new data from device status
      */
     fun runOnReceivedPredictions(overviewData: OverviewData)
-
-    /**
-     * Update treatments in graph ofter new therapy event
-     */
-    fun runOnEventTherapyEventChange(overviewData: OverviewData)
 
     /**
      * Update graph ofter scale change

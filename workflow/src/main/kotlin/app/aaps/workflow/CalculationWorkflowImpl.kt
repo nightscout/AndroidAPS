@@ -91,31 +91,6 @@ class CalculationWorkflowImpl @Inject constructor(
                     .build()
             )
             .then(
-                OneTimeWorkRequest.Builder(PrepareTreatmentsDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareTreatmentsDataWorker.PrepareTreatmentsData(overviewData, signals)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareBasalDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBasalDataWorker.PrepareBasalData(iobCobCalculator, overviewData, signals)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareTemporaryTargetDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareTemporaryTargetDataWorker.PrepareTemporaryTargetData(overviewData, signals)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareRunningModeDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareRunningModeDataWorker.PrepareRunningModeData(overviewData, signals)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(signals, CalculationWorkflow.ProgressData.DRAW_TT)))
-                    .build()
-            )
-            .then(
                 if (activePlugin.activeSensitivity.isOref1)
                     OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
                         .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(iobCobCalculator, signals, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
@@ -179,23 +154,6 @@ class CalculationWorkflowImpl @Inject constructor(
                     .build()
             )
             .enqueue()
-    }
-
-    override fun runOnEventTherapyEventChange(overviewData: OverviewData) {
-        WorkManager.getInstance(context)
-            .beginUniqueWork(
-                MAIN_CALCULATION, ExistingWorkPolicy.APPEND,
-                OneTimeWorkRequest.Builder(PrepareTreatmentsDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareTreatmentsDataWorker.PrepareTreatmentsData(overviewData, mainSignals)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(mainSignals, CalculationWorkflow.ProgressData.DRAW_FINAL)))
-                    .build()
-            )
-            .enqueue()
-
     }
 
     override fun runOnScaleChanged(iobCobCalculator: IobCobCalculator, overviewData: OverviewData) {

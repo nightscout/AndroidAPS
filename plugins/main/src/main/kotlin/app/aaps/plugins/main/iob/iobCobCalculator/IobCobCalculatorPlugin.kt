@@ -175,14 +175,6 @@ class IobCobCalculatorPlugin @Inject constructor(
         persistenceLayer.observeChanges(EB::class.java)
             .onEach { list -> list.minOfOrNull { it.timestamp }?.let { scheduleHistoryDataChange(it, reloadBgData = false) } }
             .launchIn(newScope)
-        // TherapyEvent changes
-        persistenceLayer.observeChanges(TE::class.java)
-            .onEach { calculationWorkflow.runOnEventTherapyEventChange(overviewData) }
-            .launchIn(newScope)
-        // RunningMode changes
-        persistenceLayer.observeChanges(RM::class.java)
-            .onEach { calculationWorkflow.runOnEventTherapyEventChange(overviewData) }
-            .launchIn(newScope)
         // Units change
         preferences.observe(StringKey.GeneralUnits).drop(1)
             .onEach {
