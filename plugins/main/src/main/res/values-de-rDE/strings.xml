@@ -9,17 +9,12 @@
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpenbatterie</string>
     <string name="cannula">Kanüle</string>
-    <string name="statuslights_cannula_age">Kanülenalter</string>
-    <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
     <!-- Overview -->
-    <string name="a11y_graph">Diagramm</string>
     <string name="a11y_insulin_label">Insulin</string>
-    <string name="chart_menu">Diagrammmenü</string>
     <string name="a11y_bg_quality">BZ-Qualität</string>
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
-    <string name="set_basal_question">Akzeptiere neue TBR:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
@@ -40,8 +35,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">BEH</string>
-    <string name="graph_scale">Diagrammskala</string>
-    <string name="graph_menu_divider_header">Diagramm</string>
     <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
