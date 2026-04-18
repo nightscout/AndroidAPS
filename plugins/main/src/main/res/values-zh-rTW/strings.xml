@@ -9,30 +9,12 @@
     <string name="insulin_label">胰島素</string>
     <string name="pb_label">幫浦電池</string>
     <string name="cannula">套管</string>
-    <string name="statuslights_cannula_age">套管時間</string>
-    <string name="statuslights_patch_pump_age">貼片幫浦時間</string>
     <string name="patch_pump">貼片幫浦</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6小時</string>
-    <string name="graph_long_scale_12h">12小時</string>
-    <string name="graph_long_scale_18h">18小時</string>
-    <string name="graph_long_scale_24h">24小時</string>
-    <string name="a11y_graph">圖表</string>
-    <string name="a11y_graph_scale">選擇圖表比例</string>
-    <string name="a11y_graph_scale_6h">圖表刻度 6 小時</string>
-    <string name="a11y_graph_scale_12h">圖表刻度12小時</string>
-    <string name="a11y_graph_scale_18h">圖表刻度18小時</string>
-    <string name="a11y_graph_scale_24h">圖表刻度 24 小時</string>
     <string name="a11y_insulin_label">胰島素</string>
-    <string name="chart_menu">圖表選單</string>
     <string name="a11y_bg_quality">血糖質量</string>
     <string name="a11y_blood_glucose">血糖</string>
     <string name="a11y_bg_outdated">過期</string>
-    <string name="set_basal_question">接受新的臨時基礎速率：</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">主頁</string>
     <string name="description_overview">顯示目前循環狀態和最常用操作的按鈕</string>
@@ -55,8 +37,6 @@
     <string name="prediction_shortname">預測</string>
     <string name="basal_shortname">基礎</string>
     <string name="treatments_shortname">治療</string>
-    <string name="graph_scale">圖表比例</string>
-    <string name="graph_menu_divider_header">圖表</string>
     <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">使用量：</string>
     <!--    Iob-->
