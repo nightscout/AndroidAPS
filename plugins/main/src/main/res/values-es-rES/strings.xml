@@ -19,7 +19,6 @@
     <string name="overview_shortname">INICIO</string>
     <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
     <string name="data_status">Estado de datos de glucosa</string>
-    <string name="run_question">¿Ejecutar %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicciones</string>
     <string name="overview_show_treatments">Tratamientos</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
     <string name="old_data">DATOS CADUCADOS</string>
     <string name="overview_show_steps">Pasos</string>
-    <string name="simple_mode_enabled">Modo simple habilitado</string>
 </resources>
