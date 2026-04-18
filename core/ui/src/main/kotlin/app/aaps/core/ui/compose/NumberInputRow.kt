@@ -253,11 +253,12 @@ private fun DirectNumberInputRow(
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    // Sync text field when value changes externally (e.g., +/- buttons) and not focused
+    // Sync text field when value changes externally (e.g., +/- buttons), even when focused
     LaunchedEffect(value) {
-        if (!isFocused) {
+        val currentParsed = textFieldValue.text.trim().replace(",", ".").toDoubleOrNull() ?: 0.0
+        if (currentParsed != value) {
             val text = if (value == 0.0) "" else valueFormat.format(value)
-            textFieldValue = TextFieldValue(text)
+            textFieldValue = TextFieldValue(text, selection = TextRange(text.length))
             isError = false
         }
     }
@@ -319,6 +320,9 @@ private fun DirectNumberInputRow(
                     textFieldValue = newValue
                     if (isError) isError = false
                     onTextChange?.invoke(newValue.text)
+                    val cleaned = newValue.text.trim().replace(",", ".")
+                    val parsed = if (cleaned.isEmpty()) 0.0 else cleaned.toDoubleOrNull()
+                    if (parsed != null) onValueChange(parsed.coerceIn(valueRange))
                 },
                 label = { Text(label) },
                 singleLine = true,
