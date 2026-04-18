@@ -479,10 +479,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">minska %1$s med %2$s</string>
-    <string name="a11y_plus_button_description">öka %1$s med %2$s</string>
-    <string name="you_are_on_allowed_limit">Tillåten gräns nådd</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Tid</string>
@@ -524,7 +520,6 @@
     <string name="cleanup_db_confirm_sync">Vill du rensa databasen?\nDet kommer att ta bort spårade ändringar och historiska data äldre än 3 månader.\nAtt göra det kommer att påskynda full synkronisering dramatiskt.</string>
     <string name="cleared_entries">Rensade poster</string>
     <!--    Weekday-->
-    <!-- WeekdayPicker -->
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2fU</string>
     <!--    Playback-->
