@@ -19,7 +19,6 @@
     <string name="overview_shortname">ΑΡΧΙΚΗ</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
     <string name="data_status">Κατάσταση δεδομένων BG</string>
-    <string name="run_question">Εκτέλεση %s;</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Προβλέψεις</string>
     <string name="overview_show_treatments">Θεραπείες</string>
