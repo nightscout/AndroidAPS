@@ -55,7 +55,7 @@ class CloudDirectoryManagerImpl @Inject constructor(
 
     override fun enableAllCloudExport() {
         aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} ExportDestination: Enabling all cloud mode")
-        @Suppress("DEPRECATION") preferences.put(BooleanNonKey.ExportAllCloudEnabled, true)
+        preferences.put(BooleanNonKey.ExportAllCloudEnabled, true)
         preferences.put(BooleanNonKey.ExportLogEmailEnabled, false)
         preferences.put(BooleanNonKey.ExportLogCloudEnabled, true)
         preferences.put(BooleanNonKey.ExportSettingsLocalEnabled, true)
@@ -71,7 +71,7 @@ class CloudDirectoryManagerImpl @Inject constructor(
 
     private fun resetToLocalSettings() {
         aapsLogger.info(LTag.CORE, "${CloudConstants.LOG_PREFIX} ExportDestination: Resetting all settings to local/email mode")
-        @Suppress("DEPRECATION") preferences.put(BooleanNonKey.ExportAllCloudEnabled, false)
+        preferences.put(BooleanNonKey.ExportAllCloudEnabled, false)
         preferences.put(BooleanNonKey.ExportLogEmailEnabled, true)
         preferences.put(BooleanNonKey.ExportLogCloudEnabled, false)
         preferences.put(BooleanNonKey.ExportSettingsLocalEnabled, true)

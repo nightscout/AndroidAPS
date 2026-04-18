@@ -3,8 +3,6 @@ package app.aaps.implementation.maintenance
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.implementation.maintenance.MaintenanceImpl
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -19,13 +17,12 @@ class MaintenanceImplTest : TestBaseWithProfile() {
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var fileListProvider: FileListProvider
     @Mock lateinit var cloudStorageManager: CloudStorageManager
-    @Mock lateinit var sp: SP
 
     private lateinit var sut: MaintenanceImpl
 
     @BeforeEach
     fun mock() {
-        sut = MaintenanceImpl(context, rh, preferences, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils, cloudStorageManager, sp)
+        sut = MaintenanceImpl(context, rh, preferences, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils, cloudStorageManager)
         whenever(loggerUtils.suffix).thenReturn(".log.zip")
         whenever(loggerUtils.logDirectory).thenReturn("src/test/assets/logger")
     }
