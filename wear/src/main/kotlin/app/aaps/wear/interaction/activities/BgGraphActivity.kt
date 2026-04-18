@@ -45,7 +45,6 @@ import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.curvedText
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
@@ -101,7 +100,6 @@ class BgGraphActivity : AppCompatActivity() {
 
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
     @Inject lateinit var displayFormat: DisplayFormat
-    @Inject lateinit var aapsLogger: AAPSLogger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -326,7 +324,6 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
             isAntiAlias = true
         }
         for (hourMs in hourMarks) {
-            val hour = Calendar.getInstance().apply { timeInMillis = hourMs }.get(Calendar.HOUR_OF_DAY)
             canvas.nativeCanvas.drawText(
                 hourFormat.format(Date(hourMs)),
                 timeToX(hourMs),
