@@ -19,7 +19,6 @@
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
     <string name="data_status">BG data status</string>
-    <string name="run_question">Kør %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Forudsigelser</string>
     <string name="overview_show_treatments">Behandlinger</string>
