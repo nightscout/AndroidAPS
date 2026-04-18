@@ -19,7 +19,6 @@
     <string name="overview_shortname">PREH</string>
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="data_status">Stav dát glykémie</string>
-    <string name="run_question">Spustiť %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predikcie</string>
     <string name="overview_show_treatments">Ošetrenia</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
     <string name="overview_show_steps">Kroky</string>
-    <string name="simple_mode_enabled">Jednoduchý režim aktívny</string>
 </resources>
