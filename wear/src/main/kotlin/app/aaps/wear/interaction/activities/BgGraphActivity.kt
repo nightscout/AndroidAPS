@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
@@ -55,6 +56,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.abs
 
 // Colors matching CustomWatchFace defaults
 private val BgInRangeColor = Color(0xFF00FF00)
@@ -376,5 +378,63 @@ private fun DrawScope.renderBgGraph(data: ComplicationData, historyHours: Int) {
             radius = predRadius,
             center = Offset(timeToX(pred.timeStamp), sgvToY(pred.sgv.toFloat()))
         )
+    }
+
+    val boluses = data.treatmentData.boluses
+    val triSize   = dotRadius * 1.4f   // base half-width for bolus/carb triangles
+    val triHeight = dotRadius * 2.4f   // height for bolus/carb triangles
+    val smbTriSize = dotRadius * 1.2f  // smaller for SMB
+
+    val bottom = pad + graphH
+
+    // Pass 1: carb triangles (upward, orange) — drawn first so bolus covers them
+    for (treatment in boluses) {
+        if (!treatment.isValid || treatment.isSMB) continue
+        if (treatment.carbs <= 0 || treatment.date !in startTime..endTime) continue
+        val x = timeToX(treatment.date)
+        drawPath(
+            Path().apply {
+                moveTo(x, bottom - triHeight)
+                lineTo(x - triSize, bottom)
+                lineTo(x + triSize, bottom)
+                close()
+            },
+            CarbsColor
+        )
+    }
+
+    // Pass 2: bolus triangles (downward, blue) — drawn on top of carbs
+    for (treatment in boluses) {
+        if (!treatment.isValid) continue
+        if (treatment.bolus <= 0 || treatment.date !in startTime..endTime) continue
+        val x = timeToX(treatment.date)
+        if (treatment.isSMB) {
+            // Small downward triangle above the nearest BG entry
+            val nearestEntry = entries.filter { it.sgv > 0 }
+                .minByOrNull { abs(it.timeStamp - treatment.date) }
+            if (nearestEntry != null && abs(nearestEntry.timeStamp - treatment.date) < 10 * 60_000L) {
+                val bgY = sgvToY(nearestEntry.sgv.toFloat())
+                val tipY = bgY - dotRadius * 1.5f
+                drawPath(
+                    Path().apply {
+                        moveTo(x, tipY)
+                        lineTo(x - smbTriSize, tipY - smbTriSize * 1.8f)
+                        lineTo(x + smbTriSize, tipY - smbTriSize * 1.8f)
+                        close()
+                    },
+                    IobColor.copy(alpha = 0.85f)
+                )
+            }
+        } else {
+            drawPath(
+                Path().apply {
+                    moveTo(x, bottom)
+                    lineTo(x - triSize, bottom - triHeight)
+                    lineTo(x + triSize, bottom - triHeight)
+                    close()
+                },
+                IobColor
+            )
+        }
     }
 }
