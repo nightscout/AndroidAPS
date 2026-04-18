@@ -9,30 +9,12 @@
     <string name="insulin_label">Insulinas</string>
     <string name="pb_label">Pompos baterija</string>
     <string name="cannula">Kaniulė</string>
-    <string name="statuslights_cannula_age">kaniulė</string>
-    <string name="statuslights_patch_pump_age">rezervuaro laikas</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 val.</string>
-    <string name="graph_long_scale_12h">12 val.</string>
-    <string name="graph_long_scale_18h">18 val.</string>
-    <string name="graph_long_scale_24h">24 val.</string>
-    <string name="a11y_graph">grafikas</string>
-    <string name="a11y_graph_scale">parinkti grafiko mastelį</string>
-    <string name="a11y_graph_scale_6h">6 valandų grafiko mastelis</string>
-    <string name="a11y_graph_scale_12h">12 valandų grafiko mastelis</string>
-    <string name="a11y_graph_scale_18h">18 valandų grafiko mastelis</string>
-    <string name="a11y_graph_scale_24h">24 valandų grafiko mastelis</string>
     <string name="a11y_insulin_label">insulinas</string>
-    <string name="chart_menu">Grafiko meniu</string>
     <string name="a11y_bg_quality">glikemijos duomenų kokybė</string>
     <string name="a11y_blood_glucose">kraujo glikemija</string>
     <string name="a11y_bg_outdated">nebegalioja</string>
-    <string name="set_basal_question">Patvirtinti naują laikiną bazę:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
@@ -55,8 +37,6 @@
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">VB</string>
     <string name="treatments_shortname">ĮRAŠ</string>
-    <string name="graph_scale">Grafiko mastelis</string>
-    <string name="graph_menu_divider_header">Grafikas</string>
     <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">naud:</string>
     <!--    Iob-->
