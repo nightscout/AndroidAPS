@@ -19,7 +19,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="data_status">Stan danych glikemii</string>
-    <string name="run_question">Uruchomić %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozy poziomu</string>
     <string name="overview_show_treatments">Zabiegi</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
     <string name="overview_show_steps">Kroki</string>
-    <string name="simple_mode_enabled">Włączony tryb uproszczony</string>
 </resources>
