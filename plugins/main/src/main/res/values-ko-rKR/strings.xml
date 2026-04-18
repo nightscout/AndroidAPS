@@ -9,17 +9,12 @@
     <string name="insulin_label">인슐린</string>
     <string name="pb_label">펌프 배터리</string>
     <string name="cannula">캐뉼라</string>
-    <string name="statuslights_cannula_age">캐뉼라 사용기간</string>
-    <string name="statuslights_patch_pump_age">패치 펌프 사용기간</string>
     <string name="patch_pump">패치 펌프</string>
     <!-- Overview -->
-    <string name="a11y_graph">그래프</string>
     <string name="a11y_insulin_label">인슐린</string>
-    <string name="chart_menu">차트 메뉴</string>
     <string name="a11y_bg_quality">혈당의 질</string>
     <string name="a11y_blood_glucose">혈당</string>
     <string name="a11y_bg_outdated">만료됨</string>
-    <string name="set_basal_question">새 임시Basal 적용:</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">홈</string>
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
@@ -40,8 +35,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="graph_scale">그래프 범위</string>
-    <string name="graph_menu_divider_header">그래프</string>
     <string name="cannula_usage">사용:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
