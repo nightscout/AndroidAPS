@@ -187,6 +187,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">僅使用正 IOB</string>
     <string name="overview_edit_quickwizard_superbolus">超級注射</string>
     <string name="a11y_drag_and_drop_handle">拖放操作把手</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">新增 eCarbs</string>
     <string name="calculator_options">計算機選項</string>
     <string name="use_bg">使用 血糖</string>
