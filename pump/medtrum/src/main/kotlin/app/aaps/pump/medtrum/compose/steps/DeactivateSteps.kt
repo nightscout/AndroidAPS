@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -105,13 +106,21 @@ fun DeactivatingStep(
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
     val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
 
+    var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(Unit) {
         viewModel.deactivatePatch()
     }
 
     LaunchedEffect(setupStep) {
-        if (setupStep == MedtrumPatchViewModel.SetupStep.STOPPED) {
-            viewModel.moveStep(PatchStep.DEACTIVATION_COMPLETE)
+        when (setupStep) {
+            MedtrumPatchViewModel.SetupStep.INITIAL,
+            MedtrumPatchViewModel.SetupStep.START_DEACTIVATION -> Unit
+
+            MedtrumPatchViewModel.SetupStep.STOPPED            -> viewModel.moveStep(PatchStep.DEACTIVATION_COMPLETE)
+            MedtrumPatchViewModel.SetupStep.ERROR              -> Unit // Handled by inline UI
+
+            else                                               -> unexpectedStateMessage = setupStep.toString()
         }
     }
 
@@ -120,6 +129,17 @@ fun DeactivatingStep(
         onDiscard = { viewModel.moveStep(PatchStep.FORCE_DEACTIVATION) },
         onCancel = onCancel
     )
+
+    unexpectedStateMessage?.let { msg ->
+        OkDialog(
+            title = stringResource(app.aaps.core.ui.R.string.error),
+            message = stringResource(R.string.unexpected_state, msg),
+            onDismiss = {
+                unexpectedStateMessage = null
+                viewModel.moveStep(PatchStep.CANCEL)
+            }
+        )
+    }
 }
 
 @Composable
