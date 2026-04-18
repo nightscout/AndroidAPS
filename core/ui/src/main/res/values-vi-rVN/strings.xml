@@ -803,10 +803,6 @@
     <string name="reauthorize">Xác thực lại</string>
     <string name="cloud_auth_success">Xác thực lưu trữ đám mây thành công</string>
     <string name="authorization_status">Trạng thái xác thực</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">giảm %1$s bởi%2$s</string>
-    <string name="a11y_plus_button_description">tăng %1$s bởi %2$s</string>
-    <string name="you_are_on_allowed_limit">Đã đạt giới hạn cho phép</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Thời điểm</string>
@@ -896,14 +892,6 @@
     <string name="weekday_wednesday_short">Wed</string>
     <string name="weekday_tuesday_short">Tue</string>
     <string name="weekday_monday_short">Mon</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">M</string>
-    <string name="tuesday_short">T</string>
-    <string name="wednesday_short">W</string>
-    <string name="thursday_short">T</string>
-    <string name="friday_short">F</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">S</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
