@@ -19,7 +19,6 @@
     <string name="overview_shortname">ACASĂ</string>
     <string name="description_overview">Afișați starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
     <string name="data_status">Stare date glicemie</string>
-    <string name="run_question">Executați %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicții</string>
     <string name="overview_show_treatments">Tratamente</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Afișează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
     <string name="overview_show_steps">Pași</string>
-    <string name="simple_mode_enabled">Mod simplu activat</string>
 </resources>
