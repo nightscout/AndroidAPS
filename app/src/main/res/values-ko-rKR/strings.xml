@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">메뉴 닫기</string>
     <string name="authorizationfailed">인증 실패</string>
     <string name="identification_not_set">개발 모드에서 신원 확인이 설정되지 않았습니다.</string>
 </resources>
