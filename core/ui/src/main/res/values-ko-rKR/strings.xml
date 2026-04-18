@@ -484,10 +484,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">%1$s을 %2$s만큼 감소하였습니다</string>
-    <string name="a11y_plus_button_description">%1$s을 %2$s만큼 증가하였습니다</string>
-    <string name="you_are_on_allowed_limit">허용된 제한에 도달했습니다</string>
     <string name="format_hour_minute">%1$d시 %2$d분</string>
     <!-- datetime layout -->
     <string name="event_time_label">이벤트 시간</string>
@@ -533,14 +529,6 @@
     <string name="weekday_wednesday_short">수</string>
     <string name="weekday_tuesday_short">화</string>
     <string name="weekday_monday_short">월</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">월</string>
-    <string name="tuesday_short">화</string>
-    <string name="wednesday_short">수</string>
-    <string name="thursday_short">목</string>
-    <string name="friday_short">금</string>
-    <string name="saturday_short">토</string>
-    <string name="sunday_short">일</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
