@@ -19,7 +19,6 @@
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="data_status">Status BS-data</string>
-    <string name="run_question">Kjør %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prediksjoner</string>
     <string name="overview_show_treatments">Behandlinger</string>
@@ -44,5 +43,4 @@
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="old_data">GAMLE DATA</string>
     <string name="overview_show_steps">Skritt</string>
-    <string name="simple_mode_enabled">Enkel modus aktivert</string>
 </resources>
