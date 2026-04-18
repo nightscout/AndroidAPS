@@ -19,7 +19,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="data_status">Status BZ-Daten</string>
-    <string name="run_question">%s ausführen?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
     <string name="overview_show_treatments">Behandlungen</string>
