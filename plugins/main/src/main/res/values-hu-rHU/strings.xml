@@ -5,7 +5,6 @@
     <string name="insulin_label">Inzulin</string>
     <string name="cannula">Kanül</string>
     <!-- Overview -->
-    <string name="a11y_graph">grafikon</string>
     <string name="a11y_insulin_label">inzulin</string>
     <!-- overview moved to core:ui module -->
     <string name="overview_shortname">KEZD</string>
@@ -14,7 +13,6 @@
     <string name="overview_show_basals">Bázis</string>
     <string name="overview_show_abs_insulin">Inzulin összesen</string>
     <string name="basal_shortname">BÁZ</string>
-    <string name="graph_menu_divider_header">Grafikon</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="old_data">RÉGI ADAT</string>
