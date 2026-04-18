@@ -16,8 +16,6 @@
     <string name="a11y_blood_glucose">glykémia</string>
     <string name="a11y_bg_outdated">zastaralé</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">PREH</string>
-    <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="data_status">Stav dát glykémie</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predikcie</string>
@@ -36,7 +34,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="treatments_shortname">OŠET</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
