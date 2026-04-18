@@ -7,7 +7,6 @@
     <!-- Overview -->
     <string name="a11y_insulin_label">inzulin</string>
     <!-- overview moved to core:ui module -->
-    <string name="description_overview">Prikaži trenutno stanje tvog loop-a i izbore za najuobičajenije postupke</string>
     <!--    OverviewMenu-->
     <string name="overview_show_treatments">Tretmani</string>
     <string name="basal_shortname">BAZAL</string>
