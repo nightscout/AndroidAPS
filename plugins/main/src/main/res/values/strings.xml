@@ -20,8 +20,6 @@
     <string name="a11y_bg_outdated">outdated</string>
 
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">HOME</string>
-    <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
 
     <string name="data_status">BG data status</string>
 
@@ -42,7 +40,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="temp_basal_overview_short_name">T:</string>
 
     <string name="cannula_usage">usage:</string>
 
