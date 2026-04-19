@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">网址无效</string>
     <string name="error_mustbe4hexadidits">必须是4位字符，在ABCDEF0123456789中选用</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">治疗</string>
     <string name="treatments_desc">查看和管理治疗记录</string>
     <string name="nav_configuration">配置</string>
@@ -285,6 +286,10 @@
     <string name="current_insulin">当前已激活</string>
     <string name="change_insulin">更改</string>
     <string name="select_insulin_description">选择您要注入泵中的胰岛素。激活/启动后，将应用配置切换。</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">已选择的胰岛素：%1$s</string>
     <string name="record_insulin_hint">如果使用笔注射胰岛素，请从下方选择正确的胰岛素类型。剂量始终以国际单位表示。</string>
     <!--    ProfileSwitch-->
