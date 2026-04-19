@@ -7,18 +7,18 @@
     <string name="objectivenotfinished">Objetivo %1$d no finalizado</string>
     <string name="objectives_0_objective">Configurar la visualización y la monitorización, analizar los valores basales y los ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de glucosa están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
-    <string name="objectives_0_learned">Has realizado la configuración básica del ecosistema de AAPS. Nightscout no es necesario para que AAPS funcione, pero es muy útil para realizar informes o monitorizar a otros pacientes. No es necesario estar conectado a NS todo el tiempo si sólo utilizas NS para ti. Puedes configurarlo para que cargue, por ejemplo, sólo en el wifi de casa y ahorrar batería.</string>
-    <string name="objectives_openloop_objective">Comenzando en bucle abierto</string>
-    <string name="objectives_openloop_gate">Ejecutar en modo de bucle abierto durante unos días, y aceptar manualmente las basales temporales. Configure y use objetivos temporales y predeterminados (por ejemplo, para actividad o carbohidratos para hipoglucemia)</string>
-    <string name="objectives_openloop_learned">El bucle abierto se puede utilizar para recomendaciones si no tiene una bomba compatible o si no está listo para cerrar el bucle.</string>
-    <string name="objectives_maxbasal_objective">Entender el bucle abierto, incluidas las recomendaciones de basales temporales</string>
+    <string name="objectives_0_learned">Has realizado la configuración básica del ecosistema de AAPS. Nightscout no es necesario para que AAPS funcione, pero es muy útil para realizar informes o monitorizar a otros pacientes. No es necesario estar conectado a NS todo el tiempo si sólo utilizas NS para ti. Puedes configurarlo para que cargue, por ejemplo, sólo en el wifi de casa y ahorrar batería</string>
+    <string name="objectives_openloop_objective">Comenzando en lazo abierto</string>
+    <string name="objectives_openloop_gate">Ejecutar en modo de lazo abierto durante unos días, y aceptar manualmente las basales temporales. Configure y use objetivos temporales y predeterminados (por ejemplo, para actividad o carbohidratos para hipoglucemia)</string>
+    <string name="objectives_openloop_learned">El lazo abierto se puede utilizar para recomendaciones si no tiene una bomba compatible o si no está listo para cerrar el lazo</string>
+    <string name="objectives_maxbasal_objective">Entender el lazo abierto, incluidas las recomendaciones de basales temporales</string>
     <string name="objectives_maxbasal_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
     <string name="objectives_maxbasal">Realizar la acción para cumplir la recomendación</string>
     <string name="objectives_maxbasal_learned">Tenga cuidado con las características de seguridad y ajuste los parámetros de seguridad cuando sea necesario.</string>
-    <string name="objectives_maxiobzero_objective">Iniciando el bucle cerrado con suspensión con baja glucosa</string>
+    <string name="objectives_maxiobzero_objective">Iniciando el lazo cerrado con suspensión con baja glucosa</string>
     <string name="objectives_maxiobzero_gate">Ejecutar en Laco cerrado en modo LGS - Suspensión de glucosa baja (ej. se establece automáticamente max IOB = 0) para unos días sin demasiados eventos LGS.</string>
     <string name="objectives_maxiobzero_learned">Establecer MaxIOB a cero evita la hipo y no añadirá más insulina por encima de la tasa basal (excepto en situaciones con IOB negativo)</string>
-    <string name="objectives_maxiob_objective">Ajuste del bucle cerrado, aumentando máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
+    <string name="objectives_maxiob_objective">Ajuste del lazo cerrado, aumentando máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
     <string name="objectives_maxiob_gate">Usar unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
     <string name="objectives_maxiob_learned">Actualica MaxIOB a medida que el niño/a crezca. No permita que el sistema le de más insulina de la que puede cubrir con la comida = un valor realmente alto es una mala idea. Max IOB es calculado 
  automáticamente en el modo simple</string>
@@ -38,7 +38,7 @@
     <string name="accomplished">Completado: %1$s</string>
     <string name="objectives_usage_objective">Aprenda cómo controlar AAPS</string>
     <string name="objectives_usage_gate">Ejecutar diferentes acciones en AAPS</string>
-    <string name="objectives_usage_learned">Aprendiste a manejar los conceptos básicos de AAPS. Los controles principales se encuentran en la pantalla de Inicio, accesible al hacer clic o hacer clic largo, más controles están en la pantalla de Acciones Deberías saber cómo poner una pantalla de plugin en la parte superior del menú desplegable o dejar que se muestre en la parte superior izquierda de la lista de plugins habilitados.</string>
+    <string name="objectives_usage_learned">Aprendiste a manejar los conceptos básicos de AAPS. Los controles principales se encuentran en la pantalla de Inicio, accesible al hacer clic o hacer clic largo, más controles están en la pantalla de Acciones Deberías saber cómo poner una pantalla de plugin en la parte superior del menú desplegable o dejar que se muestre en la parte superior izquierda de la lista de plugins habilitados</string>
     <string name="objectives_useprofileswitch">Perfil establecido al 90% durante 10 minutos</string>
     <string name="objectives_usedisconnectpump">Simulación de ducha: Bomba desconectada durante 1 h</string>
     <string name="objectives_usereconnectpump">... y volver a conectar de la misma manera</string>
@@ -50,7 +50,7 @@
     <string name="objectives_exam_learned_prerequisites">No necesitas ser desarrollador, pero necesitas Nightscout para pasar los objetivos, una bomba compatible y un ordenador para construir AAPS por primera vez y para futuras actualizaciones</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS puede funcionar sin conexión a Internet</string>
     <string name="objectives_exam_learned_basaltest">El perfil debe ser revisado y actualizado. Un mejor perfil significa obtener mejores resultados</string>
-    <string name="objectives_exam_learned_dia">DIA en bucle cerrado, tiene un significado diferente (tiempo hasta que se absorbe toda la insulina), comparado con la terapia clásica con bomba (tiempo hasta que se absorbe la mayor parte de la insulina).</string>
+    <string name="objectives_exam_learned_dia">DIA en lazo cerrado, tiene un significado diferente (tiempo hasta que se absorbe toda la insulina), comparado con la terapia clásica con bomba (tiempo hasta que se absorbe la mayor parte de la insulina)</string>
     <string name="objectives_exam_learned_isf">Has aprendido el significado del valor ISF y cómo afecta a la cantidad de insulina utilizada para corregir la glucemia</string>
     <string name="objectives_exam_learned_ic">Has aprendido el significado del valor IC y cómo afecta a la cantidad de insulina necesaria para cubrir los carbohidratos</string>
     <string name="objectives_exam_learned_hypott">El objetivo temporal de hipoglucemia sólo se utiliza para evitar la sobrecorrección tras una hipo, cuando suele haber IOB negativa acumulada. Deben evaluarse acciones adicionales para evitar que esta situación se repita en el futuro.</string>
@@ -59,7 +59,7 @@
     <string name="objectives_exam_learned_profileswitch4">Editar perfil en sí mismo no es suficiente para hacer un cambio. Aún necesitas activar el perfil para aplicar los cambios</string>
     <string name="objectives_exam_learned_exercise">Debe reducir la cantidad de insulina en el cuerpo al menos 1 hora antes de comenzar el ejercicio, seleccionando el perfil por debajo del 100%</string>
     <string name="objectives_exam_learned_exercise2">Establecer un objetivo temporal más alto al menos 1 hora antes del ejercicio, también ayuda a reducir la cantidad de insulina en el cuerpo</string>
-    <string name="objectives_exam_learned_noisycgm">Cuando no puedas confiar en los valores del MCG, no debes utilizar el bucle sin supervisión.</string>
+    <string name="objectives_exam_learned_noisycgm">Cuando no puedas confiar en los valores del MCG, no debes utilizar el lazo sin supervisión</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS debe saber que la bomba no está conectada para contar correctamente la insulina activa (IOB)</string>
     <string name="objectives_exam_learned_insulin">Es necesario saber qué insulina hay en la bomba, porque afecta al cálculo de la insulina activa (IOB)</string>
     <string name="objectives_exam_learned_sensitivity">La detección de la sensibilidad forma parte del algoritmo, que permite adaptar la dosis de insulina a diferentes situaciones</string>
