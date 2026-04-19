@@ -5,7 +5,7 @@
     <string name="dia_profile">Debe establecer el valor de la DIA (duración de la acción de la insulina) en su configuración de insulina</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
     <string name="dia_hint1">https://wiki.aaps.app/es/latest/SettingUpAaps/YourAapsProfile.html</string>
-    <string name="dia_meaningisequaltodiapump">Si usted está satisfecho de que el valor para DIA que utilizó en su bomba antes de que AAPS funcionara bien, no hay necesidad de cambiar esto cuando comience usar el bucle cerrado.</string>
+    <string name="dia_meaningisequaltodiapump">Si estás satisfecho de que el valor para DIA que utilizó en su bomba antes de AAPS funcionaba bien, no hay necesidad de cambiarlo cuando empiece el lazo</string>
     <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
     <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
@@ -36,16 +36,16 @@
     <string name="noisycgm_label">Lecturas MCG con mucha variabilidad</string>
     <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de MCG tienen mucha variabilidad?</string>
     <string name="noisycgm_nothing">No hacer nada: AAPS se ocupará de ello.</string>
-    <string name="noisycgm_pause">Deshabilitar el bucle cerrado para evitar posibles sobredosis o subdosis.</string>
-    <string name="noisycgm_replacesensor">Sustituya el sensor con valores muy variables o inexactos.</string>
-    <string name="noisycgm_checksmoothing">Comprueba que tu aplicación del MCG proporciona datos suavizados.</string>
+    <string name="noisycgm_pause">Deshabilitar el lazo cerrado para evitar posibles sobredosis o subdosis</string>
+    <string name="noisycgm_replacesensor">Sustituya el sensor con valores muy variables o inexactos</string>
+    <string name="noisycgm_checksmoothing">Comprueba que tu aplicación del MCG proporciona datos suavizados</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/es/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Ejercicio y perfiles</string>
     <string name="exerciseprofile_whattodo">¿Cómo puede usar los perfiles para mejorar el sistema durante el ejercicio aeróbico?</string>
     <string name="exerciseprofile_switchprofilebelow100">Cambie el perfil por un valor menor a 100%.</string>
     <string name="exerciseprofile_switchprofileabove100">Cambie el perfil por un valor mayor a 100%.</string>
     <string name="exerciseprofile_leaveat100">Dejar el perfil configurado al 100%.</string>
-    <string name="exerciseprofile_suspendloop">Suspender el bucle.</string>
+    <string name="exerciseprofile_suspendloop">Suspender el lazo</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="exercise_label">Ejercicios y objetivos temporales</string>
     <string name="exercise_whattodo">¿Cómo se puede usar el objetivo temporal de glucosa para ayudar al sistema durante los ejercicios aeróbicos?</string>
@@ -56,7 +56,7 @@
     <string name="exercise_hint1">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="basaltest_label">Pruebas para basales, I:C y FSI</string>
     <string name="basaltest_when">¿Cada cuándo se deben validar estos valores?</string>
-    <string name="basaltest_beforeloop">Antes de empezar cualquier bucle.</string>
+    <string name="basaltest_beforeloop">Antes de empezar el lazo</string>
     <string name="basaltest_havingregularhighlow">Cuando los valores de glucosa son muy altos o bajos de manera frecuente.</string>
     <string name="basaltest_weekly">Al menos una vez a la semana.</string>
     <string name="basaltest_fixed">Una vez establecidos y validados, estos valores no deberían cambiar a lo largo del tiempo.</string>
@@ -64,7 +64,7 @@
     <string name="prerequisites_label">Requisitos previos</string>
     <string name="prerequisites_what">¿Qué es esencial para configurar y utilizar AAPS?</string>
     <string name="prerequisites_build">Una forma de construir AAPS. Ya sea a través de un navegador o un ordenador con Android Studio instalado.</string>
-    <string name="prerequisites_pump">Una bomba de insulina compatible, si planeas usar el sistema en modo bucle cerrado.</string>
+    <string name="prerequisites_pump">Una bomba de insulina compatible, si planeas usar el sistema en modo lazo cerrado</string>
     <string name="prerequisites_nightscout">Nightscout, para tener un registro de los datos y revisar los parámetros de configuración.</string>
     <string name="prerequisites_beanandroiddeveloper">Experiencia programando o editando código.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/es/latest/Getting-Started/ComponentOverview.html</string>
@@ -72,8 +72,8 @@
     <string name="prerequisites2_what">¿Qué es esencial para configurar y utilizar AAPS?</string>
     <string name="prerequisites2_profile">Parámetros validados para poder configurar un perfil (FSI, I:C, perfil basal, DAI etc.).</string>
     <string name="prerequisites2_device">Un dispositivo Android compatible (e.j. un móvil, un smartwatch Android compatible o una tablet).</string>
-    <string name="prerequisites2_internet">AAPS requiere una conexión a Internet para funcionar en bucle cerrado.</string>
-    <string name="prerequisites2_supportedcgm">Un medidor continuo de glucosa (MCG) y una aplicación capaz de recibir los valores proporcionados por el medidor en el móvil o tablet.</string>
+    <string name="prerequisites2_internet">AAPS requiere una conexión a Internet para funcionar en lazo cerrado</string>
+    <string name="prerequisites2_supportedcgm">Un medidor continuo de glucosa (MCG) y una aplicación capaz de recibir los valores proporcionados por el medidor en el móvil o tablet</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/es/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Actualizando AAPS</string>
     <string name="update_git">Debe tener Git instalado y configurado en su ordenador o utilizar la compilación a través del navegador</string>
@@ -154,7 +154,7 @@
     <string name="nsclient_nightscout">La aplicación AAPSClient, la aplicación Nightscout y la página web de Nightscout permiten seguir de forma remota a AAPS.</string>
     <string name="nsclient_dexcomfollow">Otras aplicaciones (por ejemplo, Dexcom follow, xDrip running en el modo de seguimiento) le permiten seguir algunos parámetros (por ejemplo, los valores de glucosa/sensor) de forma remota, pero utilizan diferentes algoritmos por lo que puede tener valores de IOB o COB inexactos.</string>
     <string name="nsclient_data">Para seguir a AAPS de forma remota, ambos dispositivos deben disponer de acceso a Internet (por ejemplo, vía WiFi o red de datos móviles)</string>
-    <string name="nsclient_fullcontrol">AAPSClient se usa como seguidor remoto y permite supervisar y proporcionar control total de AAPS.</string>
+    <string name="nsclient_fullcontrol">AAPSClient se usa como seguidor remoto y permite supervisar y proporcionar control total de AAPS</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/es/latest/RemoteFeatures/RemoteMonitoring.html</string>
     <string name="isf_label_exam">Factor Sensibilidad a la Insulina (ISF)</string>
     <string name="isf_increasingvalue">El aumento de los valores de ISF conducirá a un mayor suministro de insulina para cubrir una cantidad específica de carbonos.</string>
