@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingFlat
 import androidx.compose.material.icons.filled.TrendingFlat
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
@@ -540,7 +541,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 val bgQualityBadgeIcon: ImageVector? = if (showBgSetup) when (bgQualityState) {
                     BgQualityCheck.State.RECALCULATED -> Icons.Filled.Warning
                     BgQualityCheck.State.DOUBLED      -> Icons.Filled.Warning
-                    BgQualityCheck.State.FLAT         -> Icons.Filled.TrendingFlat
+                    BgQualityCheck.State.FLAT         -> Icons.AutoMirrored.Filled.TrendingFlat
                     else                              -> null
                 } else null
                 val bgQualityBadgeTint: Color = when (bgQualityState) {
