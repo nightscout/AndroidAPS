@@ -28,6 +28,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.ui.compose.icons.IcCompareProfiles
+import app.aaps.core.ui.compose.icons.IcProfile
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.AutotuneFS
@@ -345,7 +347,7 @@ class AutotuneViewModel(
                     ProfileViewerData(
                         profile = pumpProfile.profile,
                         profileName = pumpProfile.profileName,
-                        headerIcon = app.aaps.core.ui.R.drawable.ic_home_profile
+                        headerIcon = IcProfile
                     )
                 )
             )
@@ -363,7 +365,7 @@ class AutotuneViewModel(
                     profile2 = tunedProfile,
                     profileName = pumpProfile.profileName,
                     profileName2 = rh.gs(R.string.autotune_tunedprofile_name),
-                    headerIcon = app.aaps.core.objects.R.drawable.ic_compare_profiles,
+                    headerIcon = IcCompareProfiles,
                     isCompare = true
                 )
             )

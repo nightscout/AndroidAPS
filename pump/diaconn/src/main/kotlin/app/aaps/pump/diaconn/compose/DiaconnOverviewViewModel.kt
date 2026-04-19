@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -317,7 +318,7 @@ class DiaconnOverviewViewModel @Inject constructor(
         val primaryActions = listOf(
             PumpAction(
                 label = rh.gs(CoreUiR.string.refresh),
-                iconRes = CoreUiR.drawable.ic_refresh,
+                icon = Icons.Filled.Refresh,
                 category = ActionCategory.PRIMARY,
                 visible = isInitialized,
                 onClick = { onRefreshClick() }

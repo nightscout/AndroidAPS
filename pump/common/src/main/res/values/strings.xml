@@ -62,15 +62,6 @@
     <string name="time_last_week">Last week</string>
     <string name="time_last_month">Last month</string>
 
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Scan</string>
-    <string name="ble_config_scan_stop">Stop</string>
-    <string name="ble_config_scan_selected">Selected</string>
-    <string name="ble_config_scan_scanning">Scanning</string>
-    <string name="ble_config_scan_finished">Scanning finished</string>
-    <string name="ble_config_scan_error">Scanning error: %1$d</string>
-    <string name="ble_config_remove">Remove</string>
-
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
 

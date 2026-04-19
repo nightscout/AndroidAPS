@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.BluetoothDisabled
+import androidx.compose.material.icons.filled.Refresh
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
@@ -247,7 +248,7 @@ class ComboV2OverviewViewModel @Inject constructor(
         val primaryActions = listOf(
             PumpAction(
                 label = rh.gs(CoreUiR.string.refresh),
-                iconRes = CoreUiR.drawable.ic_refresh,
+                icon = Icons.Filled.Refresh,
                 category = ActionCategory.PRIMARY,
                 enabled = refreshEnabled,
                 onClick = { onRefreshClick() }

@@ -18,6 +18,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R as CoreUiR
 import app.aaps.core.ui.compose.StatusLevel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SwapHoriz
+import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpCommunicationStatus
@@ -326,7 +330,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 add(
                     PumpAction(
                         label = rh.gs(R.string.string_activate_patch),
-                        iconRes = CoreUiR.drawable.ic_swap_horiz,
+                        icon = Icons.Filled.SwapHoriz,
                         category = ActionCategory.PRIMARY,
                         onClick = { onClickActivation() }
                     )
@@ -336,7 +340,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 add(
                     PumpAction(
                         label = if (isPaused) rh.gs(CoreUiR.string.pump_resume) else rh.gs(CoreUiR.string.pump_suspend),
-                        iconRes = if (isPaused) CoreUiR.drawable.ic_loop_resume else CoreUiR.drawable.ic_loop_paused,
+                        icon = if (isPaused) Icons.Filled.PlayArrow else IcLoopPaused,
                         category = ActionCategory.PRIMARY,
                         onClick = { } // Click handled in screen composable (needs dialog)
                     )
@@ -349,7 +353,7 @@ class EopatchOverviewViewModel @Inject constructor(
                 add(
                     PumpAction(
                         label = rh.gs(R.string.string_discard_patch),
-                        iconRes = CoreUiR.drawable.ic_swap_horiz,
+                        icon = Icons.Filled.SwapHoriz,
                         category = ActionCategory.MANAGEMENT,
                         onClick = { onClickDeactivation() }
                     )

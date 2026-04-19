@@ -131,6 +131,9 @@ class ObjectivesPlugin @Inject constructor(
         return value
     }
 
+    override val size: Int get() = objectives.size
+    override val accomplishedCount: Int get() = objectives.count { it.isAccomplished }
+
     override fun isAccomplished(index: Int) = objectives[index].isAccomplished
     override fun isStarted(index: Int): Boolean = objectives[index].isStarted
 }

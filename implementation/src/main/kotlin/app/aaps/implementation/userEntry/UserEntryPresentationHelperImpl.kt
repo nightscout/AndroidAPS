@@ -2,6 +2,8 @@ package app.aaps.implementation.userEntry
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Watch
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,7 +19,8 @@ import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.objects.R
+import app.aaps.core.ui.compose.icons.IcAaps
+import app.aaps.core.ui.compose.icons.IcAction
 import app.aaps.core.ui.compose.icons.IcActivity
 import app.aaps.core.ui.compose.icons.IcAnnouncement
 import app.aaps.core.ui.compose.icons.IcAutomation
@@ -32,7 +35,9 @@ import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcClinicalNotes
 import app.aaps.core.ui.compose.icons.IcExtendedBolus
 import app.aaps.core.ui.compose.icons.IcGenericCgm
+import app.aaps.core.ui.compose.icons.IcGenericIcon
 import app.aaps.core.ui.compose.icons.IcLoopClosed
+import app.aaps.core.ui.compose.icons.IcMdi
 import app.aaps.core.ui.compose.icons.IcNote
 import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPluginAutotune
@@ -40,6 +45,8 @@ import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
 import app.aaps.core.ui.compose.icons.IcPluginDanaI
 import app.aaps.core.ui.compose.icons.IcPluginDiaconn
+import app.aaps.core.ui.compose.icons.IcPluginEopatch
+import app.aaps.core.ui.compose.icons.IcPluginEquil
 import app.aaps.core.ui.compose.icons.IcPluginEversense
 import app.aaps.core.ui.compose.icons.IcPluginFood
 import app.aaps.core.ui.compose.icons.IcPluginGarmin
@@ -82,149 +89,88 @@ class UserEntryPresentationHelperImpl @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) : UserEntryPresentationHelper {
 
-    override fun icon(source: Sources): ImageVector? = when (source) {
+    override fun icon(source: Sources): ImageVector = when (source) {
+        Sources.Aaps                -> IcAaps
+        Sources.Actions             -> IcAction
+        Sources.Aidex               -> IcXDrip
         Sources.Announcement        -> IcAnnouncement
-        Sources.BatteryChange       -> IcPumpBattery
-        Sources.BgCheck             -> IcBgCheck
-        Sources.CalibrationDialog   -> IcCalibration
-        Sources.CarbDialog          -> IcCarbs
-        Sources.Exercise            -> IcActivity
-        Sources.FillDialog          -> IcCannulaChange
-        Sources.InsulinDialog       -> IcBolus
-        Sources.Note                -> IcNote
-        Sources.Question            -> IcQuestion
-        Sources.QuickWizard         -> IcQuickwizard
-        Sources.SensorInsert        -> IcCgmInsert
-        Sources.SiteRotationDialog  -> IcSiteRotation
-        Sources.Treatments          -> IcClinicalNotes
-        Sources.WizardDialog        -> IcCalculator
-        Sources.ExtendedBolusDialog -> IcExtendedBolus
-        Sources.TTDialog            -> IcTtHigh
-        Sources.ProfileSwitchDialog -> IcProfile
-        Sources.LoopDialog          -> IcLoopClosed
-        Sources.TempBasalDialog     -> IcTbrHigh
-        Sources.ConcentrationDialog -> IcPluginInsulin
-        Sources.SettingsExport      -> IcAutomation
         Sources.Automation          -> IcAutomation
         Sources.Autotune            -> IcPluginAutotune
         Sources.BG                  -> IcGenericCgm
-        Sources.Aidex               -> IcXDrip
-        Sources.Eversense           -> IcPluginEversense
-        Sources.Glimp               -> IcPluginGlimp
-        Sources.MM640g              -> IcPluginMM640G
-        Sources.NSClientSource      -> IcPluginNsClientBg
-        Sources.PocTech             -> IcPluginPocTec
-        Sources.Tomato              -> IcPluginTomato
-        Sources.Glunovo             -> IcPluginGlunovo
-        Sources.Intelligo           -> IcPluginIntelligo
-        Sources.Xdrip               -> IcXDrip
-        Sources.Ottai               -> IcPluginSyai
-        Sources.SyaiTag             -> IcPluginSyai
-        Sources.SiBionic            -> IcGenericCgm
-        Sources.Sino                -> IcGenericCgm
-        Sources.LocalProfile        -> IcProfile
-        Sources.Loop                -> IcLoopClosed
-        Sources.Maintenance         -> IcPluginMaintenance
-        Sources.NSClient            -> IcPluginNsClient
-        Sources.NSProfile           -> IcPluginNsClient
-        Sources.Objectives          -> IcPluginObjectives
+        Sources.BatteryChange       -> IcPumpBattery
+        Sources.BgCheck             -> IcBgCheck
+        Sources.BgFragment          -> IcAaps
+        Sources.CalibrationDialog   -> IcCalibration
+        Sources.CarbDialog          -> IcCarbs
+        Sources.Combo               -> IcPluginCombo
+        Sources.ConcentrationDialog -> IcPluginInsulin
+        Sources.ConfigBuilder       -> IcPluginConfigBuilder
         Sources.Dana                -> IcPluginDanaI
+        Sources.DanaI               -> IcPluginDanaI
         Sources.DanaR               -> IcPluginDanaI
         Sources.DanaRC              -> IcPluginDanaI
-        Sources.DanaRv2             -> IcPluginDanaI
         Sources.DanaRS              -> IcPluginDanaI
-        Sources.DanaI               -> IcPluginDanaI
-        Sources.DiaconnG8           -> IcPluginDiaconn
-        Sources.Insight             -> IcPluginInsight
-        Sources.Combo               -> IcPluginCombo
-        Sources.Medtronic           -> IcPluginMedtronic
-        Sources.Omnipod             -> IcPatchPump
-        Sources.OmnipodEros         -> IcPatchPump
-        Sources.OmnipodDash         -> IcPatchPump
-        Sources.Medtrum             -> IcPluginMedtrum
-        Sources.VirtualPump         -> IcPluginVirtualPump
-        Sources.SMS                 -> IcPluginSms
-        Sources.Food                -> IcPluginFood
-        Sources.Stats               -> IcStats
-        Sources.ConfigBuilder       -> IcPluginConfigBuilder
-        Sources.Garmin              -> IcPluginGarmin
-        Sources.Random              -> IcPluginRandomBg
-        Sources.Insulin             -> IcPluginInsulin
+        Sources.DanaRv2             -> IcPluginDanaI
+        Sources.Database            -> Icons.Default.Delete
         Sources.Dexcom              -> IcByoda
-        Sources.Wear                -> Icons.Default.Watch
-        Sources.Unknown             -> Icons.Default.Settings
+        Sources.DiaconnG8           -> IcPluginDiaconn
+        Sources.EOPatch2            -> IcPluginEopatch
+        Sources.Equil               -> IcPluginEquil
+        Sources.Eversense           -> IcPluginEversense
+        Sources.Exercise            -> IcActivity
+        Sources.ExtendedBolusDialog -> IcExtendedBolus
+        Sources.FillDialog          -> IcCannulaChange
+        Sources.Food                -> IcPluginFood
+        Sources.Garmin              -> IcPluginGarmin
+        Sources.Glimp               -> IcPluginGlimp
+        Sources.Glunovo             -> IcPluginGlunovo
+        Sources.Insight             -> IcPluginInsight
+        Sources.Insulin             -> IcPluginInsulin
+        Sources.InsulinDialog       -> IcBolus
+        Sources.Intelligo           -> IcPluginIntelligo
+        Sources.LocalProfile        -> IcProfile
+        Sources.Loop                -> IcLoopClosed
+        Sources.LoopDialog          -> IcLoopClosed
+        Sources.MDI                 -> IcMdi
+        Sources.MM640g              -> IcPluginMM640G
+        Sources.Maintenance         -> IcPluginMaintenance
+        Sources.Medtronic           -> IcPluginMedtronic
+        Sources.Medtrum             -> IcPluginMedtrum
+        Sources.NSClient            -> IcPluginNsClient
+        Sources.NSClientSource      -> IcPluginNsClientBg
+        Sources.NSProfile           -> IcPluginNsClient
+        Sources.Note                -> IcNote
+        Sources.NotificationReader  -> IcGenericCgm
+        Sources.Objectives          -> IcPluginObjectives
+        Sources.Omnipod             -> IcPatchPump
+        Sources.OmnipodDash         -> IcPatchPump
+        Sources.OmnipodEros         -> IcPatchPump
+        Sources.Ottai               -> IcPluginSyai
+        Sources.Overview            -> Icons.Default.Home
+        Sources.PocTech             -> IcPluginPocTec
+        Sources.ProfileSwitchDialog -> IcProfile
+        Sources.Pump                -> IcGenericIcon
+        Sources.Question            -> IcQuestion
+        Sources.QuickWizard         -> IcQuickwizard
+        Sources.Random              -> IcPluginRandomBg
+        Sources.SMS                 -> IcPluginSms
+        Sources.SensorInsert        -> IcCgmInsert
+        Sources.SettingsExport      -> IcAutomation
+        Sources.SiBionic            -> IcGenericCgm
+        Sources.Sino                -> IcGenericCgm
+        Sources.SiteRotationDialog  -> IcSiteRotation
+        Sources.Stats               -> IcStats
+        Sources.SyaiTag             -> IcPluginSyai
+        Sources.TTDialog            -> IcTtHigh
+        Sources.TempBasalDialog     -> IcTbrHigh
+        Sources.Tomato              -> IcPluginTomato
         Sources.TreatmentDialog     -> Icons.Default.Add
-        else                        -> null
-    }
-
-    @Deprecated("use fun icon(source: Sources): ImageVector?")
-    override fun iconId(source: Sources): Int = when (source) {
-        //Sources.TreatmentDialog     -> R.drawable.icon_insulin_carbs
-        //Sources.ExtendedBolusDialog -> R.drawable.ic_actions_start_extended_bolus
-        //Sources.TTDialog            -> R.drawable.ic_temptarget_high
-        //Sources.ProfileSwitchDialog -> app.aaps.core.ui.R.drawable.ic_actions_profileswitch
-        //Sources.LoopDialog          -> R.drawable.ic_loop_closed
-        //Sources.TempBasalDialog     -> R.drawable.ic_actions_start_temp_basal
-        //Sources.ConcentrationDialog -> R.drawable.ic_insulin
-        //Sources.SettingsExport      -> R.drawable.ic_automation
-        Sources.Actions    -> R.drawable.ic_action
-        //Sources.Automation          -> R.drawable.ic_automation
-        //Sources.Autotune            -> R.drawable.ic_autotune
-        //Sources.BG                  -> R.drawable.ic_generic_cgm
-        //Sources.Aidex               -> R.drawable.ic_blooddrop_48
-        //Sources.Dexcom              -> R.drawable.ic_dexcom_g6
-        //Sources.Eversense           -> R.drawable.ic_eversense
-        //Sources.Glimp               -> R.drawable.ic_glimp
-        //Sources.MM640g              -> R.drawable.ic_generic_cgm
-        //Sources.NSClientSource      -> R.drawable.ic_nsclient_bg
-        //Sources.PocTech             -> R.drawable.ic_poctech
-        //Sources.Tomato              -> R.drawable.ic_sensor
-        //Sources.Glunovo             -> R.drawable.ic_glunovo
-        //Sources.Intelligo           -> app.aaps.core.ui.R.drawable.ic_intelligo
-        //Sources.Xdrip               -> R.drawable.ic_blooddrop_48
-        //Sources.Ottai               -> R.drawable.ic_syai_tag
-        //Sources.SyaiTag             -> R.drawable.ic_syai_tag
-        //Sources.SiBionic            -> R.drawable.ic_generic_cgm
-        //Sources.Sino                -> R.drawable.ic_generic_cgm
-        //Sources.LocalProfile        -> R.drawable.ic_local_profile
-        //Sources.Loop                -> R.drawable.ic_loop_closed_white
-        //Sources.Maintenance         -> app.aaps.core.ui.R.drawable.ic_maintenance
-        //Sources.NSClient            -> app.aaps.core.ui.R.drawable.ic_nightscout_syncs
-        //Sources.NSProfile           -> R.drawable.ic_nightscout_profile
-        //Sources.Objectives          -> app.aaps.core.ui.R.drawable.ic_graduation
-        Sources.Pump       -> app.aaps.core.ui.R.drawable.ic_generic_icon
-        //Sources.Dana                -> app.aaps.core.ui.R.drawable.ic_danars_128
-        //Sources.DanaR               -> app.aaps.core.ui.R.drawable.ic_danars_128
-        //Sources.DanaRC              -> app.aaps.core.ui.R.drawable.ic_danars_128
-        //Sources.DanaRv2             -> app.aaps.core.ui.R.drawable.ic_danars_128
-        //Sources.DanaRS              -> app.aaps.core.ui.R.drawable.ic_danars_128
-        //Sources.DanaI               -> app.aaps.core.ui.R.drawable.ic_danai_128
-        //Sources.DiaconnG8           -> app.aaps.core.ui.R.drawable.ic_diaconn_g8
-        //Sources.Insight             -> app.aaps.core.ui.R.drawable.ic_insight_128
-        //Sources.Combo               -> app.aaps.core.ui.R.drawable.ic_combo_128
-        //Sources.Medtronic           -> app.aaps.core.ui.R.drawable.ic_veo_128
-        //Sources.Omnipod             -> R.drawable.ic_patch_pump_outline
-        //Sources.OmnipodEros         -> R.drawable.ic_patch_pump_outline
-        //Sources.OmnipodDash         -> R.drawable.ic_patch_pump_outline
-        Sources.EOPatch2   -> app.aaps.core.ui.R.drawable.ic_eopatch2_128
-        Sources.Equil      -> app.aaps.core.ui.R.drawable.ic_equil_128
-        //Sources.Medtrum             -> app.aaps.core.ui.R.drawable.ic_medtrum_128
-        Sources.MDI        -> R.drawable.ic_ict
-        //Sources.VirtualPump         -> R.drawable.ic_virtual_pump
-        //Sources.SMS                 -> R.drawable.ic_sms
-        //Sources.Wear                -> R.drawable.ic_watch
-        //Sources.Food                -> R.drawable.ic_food
-        //Sources.Stats               -> R.drawable.ic_cp_stats
-        //Sources.ConfigBuilder       -> app.aaps.core.ui.R.drawable.ic_cogs
-        Sources.Overview   -> app.aaps.core.ui.R.drawable.ic_home
-        Sources.Aaps       -> R.drawable.ic_aaps
-        //Sources.Garmin              -> app.aaps.core.ui.R.drawable.ic_generic_icon
-        Sources.Database   -> app.aaps.core.ui.R.drawable.ic_database_cleanup
-        //Sources.Unknown             -> app.aaps.core.ui.R.drawable.ic_generic_icon
-        //Sources.Random              -> R.drawable.ic_aaps
-        Sources.BgFragment -> R.drawable.ic_aaps
-        //Sources.Insulin             -> R.drawable.ic_insulin
-        else               -> error("Missing resource")
+        Sources.Treatments          -> IcClinicalNotes
+        Sources.Unknown             -> Icons.Default.Settings
+        Sources.VirtualPump         -> IcPluginVirtualPump
+        Sources.Wear                -> Icons.Default.Watch
+        Sources.WizardDialog        -> IcCalculator
+        Sources.Xdrip               -> IcXDrip
     }
 
     override fun listToPresentationString(list: List<ValueWithUnit>) =

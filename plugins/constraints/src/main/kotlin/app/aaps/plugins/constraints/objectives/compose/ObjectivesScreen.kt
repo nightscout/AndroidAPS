@@ -481,15 +481,25 @@ private fun ActiveObjectiveContent(
                 // Action buttons
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    OutlinedButton(onClick = onRequestUnstart) {
+                    OutlinedButton(
+                        onClick = onRequestUnstart,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    ) {
                         Text(stringResource(R.string.objectives_button_unstart))
                     }
                     Button(
                         onClick = onVerify,
-                        enabled = objective.progress >= 1f || isFakeMode
+                        enabled = objective.progress >= 1f || isFakeMode,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
                     ) {
                         Text(stringResource(R.string.objectives_button_verify))
                     }

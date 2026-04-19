@@ -1,6 +1,5 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
-import androidx.annotation.DrawableRes
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -130,15 +129,6 @@ class BgQualityCheckPlugin @Inject constructor(
         }
         return true
     }
-
-    @DrawableRes override fun icon(): Int =
-        when (state) {
-            BgQualityCheck.State.UNKNOWN -> 0
-            BgQualityCheck.State.FIVE_MIN_DATA -> 0
-            BgQualityCheck.State.RECALCULATED -> R.drawable.ic_baseline_warning_24_yellow
-            BgQualityCheck.State.DOUBLED -> R.drawable.ic_baseline_warning_24_red
-            BgQualityCheck.State.FLAT -> R.drawable.ic_baseline_trending_flat_24
-        }
 
     override fun stateDescription(): String =
         when (state) {

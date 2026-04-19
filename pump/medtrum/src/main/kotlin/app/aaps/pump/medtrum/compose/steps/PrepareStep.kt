@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
@@ -52,25 +54,39 @@ fun PrepareStep(
     val isFilled = setupStep == MedtrumPatchViewModel.SetupStep.FILLED
     val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
 
-    // Trigger preparePatch and load insulins on initial display
-    LaunchedEffect(Unit) {
-        viewModel.preparePatch()
-        viewModel.loadInsulins()
-        viewModel.initSnText()
-    }
+    var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
 
-    // When step becomes PREPARE_PATCH_CONNECT, trigger connect
-    LaunchedEffect(patchStep) {
+    LaunchedEffect(Unit) {
+        // When step becomes PREPARE_PATCH_CONNECT, trigger connect
         if (patchStep == PatchStep.PREPARE_PATCH_CONNECT) {
             viewModel.preparePatchConnect()
+        }
+        else {
+            // Trigger preparePatch and load insulins on initial display
+            viewModel.preparePatch()
+            viewModel.loadInsulins()
+            viewModel.initSnText()
+        }
+    }
+
+    // During connect phase, unexpected states (including ERROR) trigger OkDialog + cancel
+    LaunchedEffect(setupStep) {
+        if (!isConnecting) return@LaunchedEffect
+
+        when (setupStep) {
+            MedtrumPatchViewModel.SetupStep.INITIAL,
+            MedtrumPatchViewModel.SetupStep.FILLED,
+            MedtrumPatchViewModel.SetupStep.STOPPED -> Unit
+
+            else                                    -> unexpectedStateMessage = setupStep.toString()
         }
     }
 
     val state = when {
         patchStep == PatchStep.PREPARE_PATCH -> PrepareState.INITIAL
         isFilled                             -> PrepareState.FILLED
-        isError                              -> PrepareState.ERROR
         isConnecting                         -> PrepareState.CONNECTING
+        isError                              -> PrepareState.ERROR
         else                                 -> PrepareState.INITIAL
     }
 
@@ -96,6 +112,17 @@ fun PrepareStep(
         },
         onCancel = onCancel
     )
+
+    unexpectedStateMessage?.let { msg ->
+        OkDialog(
+            title = stringResource(app.aaps.core.ui.R.string.error),
+            message = stringResource(R.string.unexpected_state, msg),
+            onDismiss = {
+                unexpectedStateMessage = null
+                viewModel.moveStep(PatchStep.CANCEL)
+            }
+        )
+    }
 }
 
 internal enum class PrepareState { INITIAL, CONNECTING, FILLED, ERROR }
@@ -116,10 +143,10 @@ internal fun PrepareStepContent(
 ) {
     WizardStepLayout(
         primaryButton = when (state) {
-            PrepareState.INITIAL    -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onNext, enabled = isSnValid)
+            PrepareState.INITIAL -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onNext, enabled = isSnValid)
             PrepareState.CONNECTING -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = {}, loading = true)
-            PrepareState.FILLED     -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onFilled)
-            PrepareState.ERROR      -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.retry), onClick = onRetry)
+            PrepareState.FILLED -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onFilled)
+            PrepareState.ERROR -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.retry), onClick = onRetry)
         },
         secondaryButton = WizardButton(
             text = stringResource(app.aaps.core.ui.R.string.cancel),

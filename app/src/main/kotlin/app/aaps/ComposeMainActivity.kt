@@ -1,6 +1,7 @@
 package app.aaps
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -27,6 +28,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingFlat
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +47,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -65,6 +71,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.InitProgress
+import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -115,7 +122,6 @@ import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.protection.BiometricCheck
-import app.aaps.plugins.configuration.activities.OptimizationPermissionContract
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
@@ -183,11 +189,11 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var bgQualityCheck: BgQualityCheck
+    @Inject lateinit var objectives: Objectives
     @Inject lateinit var graphViewModelFactory: GraphViewModel.Factory
     @Inject lateinit var overviewDataCache: OverviewDataCache
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
-    private var callForBatteryOptimization: ActivityResultLauncher<Void?>? = null
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
 
@@ -245,9 +251,6 @@ class ComposeMainActivity : AppCompatActivity() {
                 contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 preferences.put(StringKey.AapsDirectoryUri, uri.toString())
             }
-        }
-        callForBatteryOptimization = registerForActivityResult(OptimizationPermissionContract()) {
-            updateButtons()
         }
         requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val denied = mutableListOf<String>()
@@ -388,6 +391,7 @@ class ComposeMainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("BatteryLife")
     @Composable
     private fun AppContent(navController: NavHostController) {
         // Trigger initial refresh when app content first appears (after init completes)
@@ -432,11 +436,13 @@ class ComposeMainActivity : AppCompatActivity() {
                         when {
                             effect.group.permissions.contains(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) ->
                                 try {
-                                    callForBatteryOptimization?.launch(null)
+                                    startActivity(
+                                        Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                                            data = "package:$packageName".toUri()
+                                        }
+                                    )
                                 } catch (_: ActivityNotFoundException) {
                                     snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
-                                } catch (_: IllegalStateException) {
-                                    snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.error_asking_for_permissions))
                                 }
 
                             effect.group.permissions.contains(PluginStore.PERMISSION_SELECT_DIRECTORY)                  ->
@@ -515,13 +521,32 @@ class ComposeMainActivity : AppCompatActivity() {
                     pumpPlugin.hasComposeContent()
                 val pumpSetupPlugin = if (showPumpSetup) pumpPlugin else null
 
+                // Objectives progress badge (visible while objectives not all completed, in APS mode)
+                val objectivesPlugin = objectives as PluginBase
+                val objectivesTotal = objectives.size
+                val objectivesDone = objectives.accomplishedCount
+                val showObjectivesSetup = objectivesTotal > 0 && objectivesDone < objectivesTotal &&
+                    objectivesPlugin.isEnabled() && objectivesPlugin.hasComposeContent()
+                val objectivesSetupPlugin = if (showObjectivesSetup) objectivesPlugin else null
+                val objectivesProgressText = if (showObjectivesSetup) "$objectivesDone/$objectivesTotal" else null
+
                 // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED
                 val bgQualityState by bgQualityCheck.stateFlow.collectAsStateWithLifecycle()
                 val bgSourcePlugin = activePlugin.activeBgSource as PluginBase
                 val showBgSetup = (bgQualityState == BgQualityCheck.State.FLAT || bgQualityState == BgQualityCheck.State.DOUBLED) &&
                     bgSourcePlugin.hasComposeContent()
                 val bgSetupPlugin = if (showBgSetup) bgSourcePlugin else null
-                val bgQualityBadgeIconRes = if (showBgSetup) bgQualityCheck.icon() else 0
+                val bgQualityBadgeIcon: ImageVector? = if (showBgSetup) when (bgQualityState) {
+                    BgQualityCheck.State.RECALCULATED -> Icons.Filled.Warning
+                    BgQualityCheck.State.DOUBLED      -> Icons.Filled.Warning
+                    BgQualityCheck.State.FLAT         -> Icons.AutoMirrored.Filled.TrendingFlat
+                    else                              -> null
+                } else null
+                val bgQualityBadgeTint: Color = when (bgQualityState) {
+                    BgQualityCheck.State.RECALCULATED                       -> AapsTheme.generalColors.statusWarning
+                    BgQualityCheck.State.DOUBLED, BgQualityCheck.State.FLAT -> AapsTheme.generalColors.statusCritical
+                    else                                                    -> Color.Unspecified
+                }
                 val bgQualityBadgeDescription = if (showBgSetup) bgQualityCheck.stateDescription() else null
 
                 val manageSheetState = ManageSheetHost(
@@ -618,8 +643,11 @@ class ComposeMainActivity : AppCompatActivity() {
                     onAutoShowConsumed = { _autoShowNotifications.value = false },
                     pumpSetupPlugin = pumpSetupPlugin,
                     bgSetupPlugin = bgSetupPlugin,
-                    bgQualityBadgeIconRes = bgQualityBadgeIconRes,
+                    bgQualityBadgeIcon = bgQualityBadgeIcon,
+                    bgQualityBadgeTint = bgQualityBadgeTint,
                     bgQualityBadgeDescription = bgQualityBadgeDescription,
+                    objectivesSetupPlugin = objectivesSetupPlugin,
+                    objectivesProgressText = objectivesProgressText,
                     permissionsMissing = permState.hasAnyMissing,
                     onPermissionsClick = {
                         permissionsViewModel.showSheet()
@@ -771,7 +799,6 @@ class ComposeMainActivity : AppCompatActivity() {
     }
 
     private fun updateButtons() {
-        // Called by activity result callbacks (battery optimization, runtime permissions)
         permissionsViewModel.refresh()
     }
 
@@ -782,7 +809,6 @@ class ComposeMainActivity : AppCompatActivity() {
     override fun onDestroy() {
         disposable.clear()
         accessTree = null
-        callForBatteryOptimization = null
         requestMultiplePermissions = null
         onPermissionResultDenied = null
         super.onDestroy()

@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
-import app.aaps.plugins.constraints.R
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -51,15 +50,12 @@ class BgQualityCheckPluginTest : TestBase() {
         whenever(autosensDataStore.lastUsed5minCalculation).thenReturn(null)
         plugin.processBgData()
         assertThat(plugin.state).isEqualTo(BgQualityCheck.State.UNKNOWN)
-        assertThat(plugin.icon()).isEqualTo(0)
         whenever(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
         assertThat(plugin.state).isEqualTo(BgQualityCheck.State.FIVE_MIN_DATA)
-        assertThat(plugin.icon()).isEqualTo(0)
         whenever(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
         assertThat(plugin.state).isEqualTo(BgQualityCheck.State.RECALCULATED)
-        assertThat(plugin.icon()).isEqualTo(R.drawable.ic_baseline_warning_24_yellow)
 
         val superData: MutableList<GV> = ArrayList()
         superData.add(
@@ -167,7 +163,6 @@ class BgQualityCheckPluginTest : TestBase() {
         whenever(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
         assertThat(plugin.state).isEqualTo(BgQualityCheck.State.DOUBLED)
-        assertThat(plugin.icon()).isEqualTo(R.drawable.ic_baseline_warning_24_red)
 
         val identicalData: MutableList<GV> = ArrayList()
         identicalData.add(
@@ -333,7 +328,6 @@ class BgQualityCheckPluginTest : TestBase() {
 
         plugin.processBgData()
         assertThat(plugin.state).isEqualTo(BgQualityCheck.State.FLAT)
-        assertThat(plugin.icon()).isEqualTo(R.drawable.ic_baseline_trending_flat_24)
 
         // Flat data Libre
         val flatDataDexcom: MutableList<GV> = ArrayList()
@@ -442,7 +436,6 @@ class BgQualityCheckPluginTest : TestBase() {
 
         plugin.processBgData()
         assertThat(plugin.state).isNotEqualTo(BgQualityCheck.State.FLAT)
-        assertThat(plugin.icon()).isNotEqualTo(R.drawable.ic_baseline_trending_flat_24)
 
         // not enough data
         val incompleteData: MutableList<GV> = ArrayList()

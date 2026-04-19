@@ -27,8 +27,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SwapHoriz
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
@@ -203,10 +206,10 @@ private fun EopatchOverviewActivatedPreview() {
                     PumpInfoRow(label = "Serial", value = "EO00-AB12")
                 ),
                 primaryActions = listOf(
-                    PumpAction(label = "Suspend pump", iconRes = app.aaps.core.ui.R.drawable.ic_loop_paused, onClick = {})
+                    PumpAction(label = "Suspend pump", icon = IcLoopPaused, onClick = {})
                 ),
                 managementActions = listOf(
-                    PumpAction(label = "Discard Patch", iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz, category = ActionCategory.MANAGEMENT, onClick = {})
+                    PumpAction(label = "Discard Patch", icon = Icons.Filled.SwapHoriz, category = ActionCategory.MANAGEMENT, onClick = {})
                 )
             )
         )
@@ -221,7 +224,7 @@ private fun EopatchOverviewNotActivatedPreview() {
             state = PumpOverviewUiState(
                 statusBanner = StatusBanner(text = "Patch not activated", level = StatusLevel.WARNING),
                 primaryActions = listOf(
-                    PumpAction(label = "Activate Patch", iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz, onClick = {})
+                    PumpAction(label = "Activate Patch", icon = Icons.Filled.SwapHoriz, onClick = {})
                 )
             )
         )
