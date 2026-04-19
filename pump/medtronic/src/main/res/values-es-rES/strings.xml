@@ -50,7 +50,7 @@
     <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo de TBR configurado en la bomba incorrecto (debe ser Absoluto).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Bolo máximo configurado en la bomba incorrecto (debe ser %1$.2f).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">Basal máxima configurado en la bomba incorrecto (debe ser %1$.2f).</string>
-    <string name="medtronic_error_operation_not_possible_no_configuration">La operación no es posible.\n\n Primero debes configurar la bomba Medtronic antes de poder utilizar esta función.</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">La operación no es posible.\n\n Primero debes configurar la bomba Medtronic antes de poder utilizar esta función</string>
     <string name="medtronic_error_pump_24h_time_change_requested">Se ha solicitado un cambio de hora de más de 24h.</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
@@ -67,7 +67,7 @@
     <string name="medtronic_cmd_set_profile_pattern_overflow">El perfil no se pudo activar debido a que los siguientes patrones tienen una basal demasiado grande: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">No se pudo entregar el bolo.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">El bolo no pudo ser entregado porque la cantidad de insulina disponible (%1$.2f) es inferior al bolo solicitado (%2$.2f).</string>
-    <string name="medtronic_cmd_tbr_could_not_be_delivered">La basal temporal no se ha podido activar.</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">La basal temporal no se ha podido activar</string>
     <string name="medtronic_cmd_cant_cancel_tbr">No se pudo cancelar la basal temporal actual.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">No se pudo establecer el perfil de basal.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">El perfil basal es el mismo, por lo que no será establecido de nuevo.</string>
