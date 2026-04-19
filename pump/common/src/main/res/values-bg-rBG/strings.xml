@@ -36,14 +36,6 @@
     <string name="time_last_4_days">Последните 4 дни</string>
     <string name="time_last_week">Последната седмица</string>
     <string name="time_last_month">Последният месец</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Сканирай</string>
-    <string name="ble_config_scan_stop">Спри</string>
-    <string name="ble_config_scan_selected">Избрано</string>
-    <string name="ble_config_scan_scanning">Сканиране</string>
-    <string name="ble_config_scan_finished">Завършено сканиране</string>
-    <string name="ble_config_scan_error">Грешка при сканиране: %1$d</string>
-    <string name="ble_config_remove">Изтрий</string>
     <!-- Pump History -->
     <string name="pump_history_type">Тип:</string>
 </resources>
