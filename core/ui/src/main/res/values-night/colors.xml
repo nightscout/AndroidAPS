@@ -25,7 +25,6 @@
     <!--    Fragments-->
 
     <!--    Dialogs-->
-    <color name="dialog_title_background">#303030</color>
     <color name="examinedProfile">#FFFF5555</color>
     <color name="defaultText">#BBBBBB</color>
 

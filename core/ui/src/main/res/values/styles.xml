@@ -29,8 +29,6 @@
         <!---TextColor -->
         <item name="defaultTextColor">@color/black</item>
         <!---Disabled Text Color  -->
-        <!---Notification -->
-        <item name="actionModeCloseDrawable">@drawable/ic_close</item>
         <!---bolus color -->
         <item name="bolusColor">@color/bolus</item>
         <!---NS Client action text color -->
@@ -53,8 +51,6 @@
         <!-- Objectives -->
         <!---Import List -->
         <!---Delete selection -->
-        <!---Dialog  -->
-        <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <!---Automation  -->
         <!---Background  -->
         <!---Toast  -->
@@ -154,7 +150,6 @@
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeCloseDrawable">@drawable/ic_close</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

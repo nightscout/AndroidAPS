@@ -24,8 +24,6 @@
     <!-- Objectives -->
     <!---Import List -->
     <!---Delete selection -->
-    <!---Dialog  -->
-    <attr name="dialogTitleBackground" format="reference|color" />
     <!---Automation  -->
     <!---Background  -->
     <!---Toast  -->
