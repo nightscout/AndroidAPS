@@ -268,4 +268,9 @@
     <string name="loop_accept_nav_label">Loop</string>
     <string name="loop_accept_set_basal_question">Accetta nuova basale temporanea:</string>
     <string name="loop_accept_perform">Esegui</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Disabilitato</string>
+    <string name="widget_rm_suspended">Sospeso</string>
+    <string name="widget_rm_resume">Riprendi</string>
 </resources>
