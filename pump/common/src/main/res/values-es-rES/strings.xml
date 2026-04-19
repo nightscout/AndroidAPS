@@ -55,14 +55,6 @@
     <string name="time_last_4_days">Últimos 4 días</string>
     <string name="time_last_week">Última semana</string>
     <string name="time_last_month">Último mes</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Escanear</string>
-    <string name="ble_config_scan_stop">Parar</string>
-    <string name="ble_config_scan_selected">Seleccionado</string>
-    <string name="ble_config_scan_scanning">Escaneando</string>
-    <string name="ble_config_scan_finished">Escaneo finalizado</string>
-    <string name="ble_config_scan_error">Error escaneando: %1$d</string>
-    <string name="ble_config_remove">Eliminar</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipo:</string>
 </resources>
