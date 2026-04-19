@@ -36,7 +36,6 @@ dependencies {
     api(libs.org.osmdroid)
 
     // Compose dependencies
-    api(libs.androidx.activity.compose)
     api(platform(libs.androidx.compose.bom))
     api(libs.androidx.ui)
     api(libs.androidx.ui.graphics)

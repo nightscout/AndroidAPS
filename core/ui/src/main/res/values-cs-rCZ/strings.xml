@@ -652,4 +652,7 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
+    <string name="remove_items">Odebrat položky</string>
+    <string name="sort_items">Seřadit položky</string>
+
 </resources>

@@ -10,4 +10,3 @@ package app.aaps.ui.widget.glance
 
 /** Approximation of Material3 `onSurfaceVariant` in dark mode — widgets can't read MaterialTheme. */
 const val WidgetTextMuted: Int = 0xB3FFFFFF.toInt() // white @ 70%
-const val WidgetTextStrong: Int = 0xFFFFFFFF.toInt()

@@ -11,7 +11,6 @@ import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.dialogs.AlertDialogs
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
-import app.aaps.ui.widget.Widget
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -39,10 +38,6 @@ class UiInteractionImpl @Inject constructor(
         i.putExtra(AlarmSoundService.TITLE, title)
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(i)
-    }
-
-    override fun updateWidget(context: Context, from: String) {
-        Widget.updateWidget(context, from)
     }
 
     override fun startAlarm(@RawRes sound: Int, reason: String) {

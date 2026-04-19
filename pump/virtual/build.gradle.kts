@@ -31,7 +31,6 @@ dependencies {
     ksp(libs.com.google.dagger.android.processor)
 
     // compose dependencies
-    api(libs.androidx.activity.compose)
     api(platform(libs.androidx.compose.bom))
 
     api(libs.androidx.ui)

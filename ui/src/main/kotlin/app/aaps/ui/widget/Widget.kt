@@ -1,7 +1,5 @@
 package app.aaps.ui.widget
 
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.glance.appwidget.GlanceAppWidget
@@ -14,33 +12,22 @@ import app.aaps.ui.widget.glance.WidgetStateLoader
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
+/**
+ * [GlanceAppWidgetReceiver] registered in the manifest. Still needed so the OS can
+ * deliver system-triggered broadcasts (APPWIDGET_ENABLED, APPWIDGET_UPDATE on first placement,
+ * APPWIDGET_OPTIONS_CHANGED on resize, etc.). App-initiated refreshes go through [WidgetUpdater].
+ */
 class Widget : GlanceAppWidgetReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var stateLoader: WidgetStateLoader
     @Inject lateinit var config: Config
 
-    override val glanceAppWidget: GlanceAppWidget
-        get() = AapsGlanceWidget(stateLoader, config)
-
-    companion object {
-
-        fun updateWidget(context: Context, from: String) {
-            context.sendBroadcast(Intent().also {
-                it.component = ComponentName(context, Widget::class.java)
-                it.putExtra(
-                    AppWidgetManager.EXTRA_APPWIDGET_IDS,
-                    AppWidgetManager.getInstance(context)?.getAppWidgetIds(ComponentName(context, Widget::class.java))
-                )
-                it.putExtra("from", from)
-                it.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-            })
-        }
-    }
+    override val glanceAppWidget: GlanceAppWidget by lazy { AapsGlanceWidget(stateLoader, config) }
 
     override fun onReceive(context: Context, intent: Intent) {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        aapsLogger.debug(LTag.WIDGET, "onReceive ${intent.extras?.getString("from")}")
+        aapsLogger.debug(LTag.WIDGET, "onReceive ${intent.action}")
         super.onReceive(context, intent)
     }
 }

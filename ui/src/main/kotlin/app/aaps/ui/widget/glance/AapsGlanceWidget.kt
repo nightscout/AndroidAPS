@@ -41,6 +41,8 @@ import androidx.glance.unit.ColorProvider
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.ui.compose.DarkGeneralColors
 import app.aaps.core.ui.compose.navigation.DarkElementColors
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 
 class AapsGlanceWidget(
     private val stateLoader: WidgetStateLoader,
@@ -50,7 +52,14 @@ class AapsGlanceWidget(
     override val sizeMode: SizeMode = SizeMode.Single
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        if (!config.appInitialized) {
+        // When the OS delivers APPWIDGET_UPDATE while the app is still booting
+        // (typical on device reboot or cold-start via broadcast), wait briefly
+        // for the init flow to complete so the widget doesn't get stuck on
+        // LoadingContent until the next refresh tick.
+        val ready = config.appInitialized || withTimeoutOrNull(AWAIT_INIT_TIMEOUT_MS) {
+            config.initProgressFlow.first { it.done }
+        } != null
+        if (!ready) {
             provideContent { LoadingContent() }
             return
         }
@@ -59,6 +68,11 @@ class AapsGlanceWidget(
         provideContent {
             WidgetContent(state)
         }
+    }
+
+    private companion object {
+
+        const val AWAIT_INIT_TIMEOUT_MS = 5_000L
     }
 }
 

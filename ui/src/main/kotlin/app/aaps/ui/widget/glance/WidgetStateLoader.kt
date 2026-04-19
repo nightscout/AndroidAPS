@@ -153,19 +153,21 @@ class WidgetStateLoader @Inject constructor(
         } ?: "—"
 
         val mode = loop.runningMode
-        val runningModeText = when (mode) {
-            RM.Mode.OPEN_LOOP         -> "Open Loop"
-            RM.Mode.CLOSED_LOOP       -> "Closed Loop"
-            RM.Mode.CLOSED_LOOP_LGS   -> "LGS"
-            RM.Mode.DISABLED_LOOP     -> "Disabled"
-            RM.Mode.SUPER_BOLUS       -> "Superbolus"
-            RM.Mode.DISCONNECTED_PUMP -> "Disconnected"
-            RM.Mode.SUSPENDED_BY_PUMP,
-            RM.Mode.SUSPENDED_BY_USER,
-            RM.Mode.SUSPENDED_BY_DST  -> "Suspended"
+        val runningModeText = rh.gs(
+            when (mode) {
+                RM.Mode.OPEN_LOOP         -> app.aaps.core.ui.R.string.openloop
+                RM.Mode.CLOSED_LOOP       -> app.aaps.core.ui.R.string.closedloop
+                RM.Mode.CLOSED_LOOP_LGS   -> R.string.widget_rm_lgs
+                RM.Mode.DISABLED_LOOP     -> R.string.widget_rm_disabled
+                RM.Mode.SUPER_BOLUS       -> app.aaps.core.ui.R.string.superbolus
+                RM.Mode.DISCONNECTED_PUMP -> app.aaps.core.ui.R.string.disconnected
+                RM.Mode.SUSPENDED_BY_PUMP,
+                RM.Mode.SUSPENDED_BY_USER,
+                RM.Mode.SUSPENDED_BY_DST  -> R.string.widget_rm_suspended
 
-            RM.Mode.RESUME            -> "Resume"
-        }
+                RM.Mode.RESUME            -> R.string.widget_rm_resume
+            }
+        )
         val runningModeColor = mode.loopColor(DarkGeneralColors).toArgb()
         val runningModeIconResId = when (mode) {
             RM.Mode.OPEN_LOOP         -> R.drawable.ic_widget_loop_open

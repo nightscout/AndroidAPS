@@ -37,13 +37,6 @@ interface UiInteraction {
     fun runAlarm(status: String, title: String, @RawRes soundId: Int = 0)
 
     /**
-     * Triggers an update of the application widget.
-     * @param context The context.
-     * @param from A string indicating the source of the update request.
-     */
-    fun updateWidget(context: Context, from: String)
-
-    /**
      * Defines modes for the site rotation dialog.
      */
     enum class SiteMode(val i: Int) {

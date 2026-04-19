@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
+import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.core.keys.BooleanComposedKey
 import app.aaps.core.keys.IntComposedKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class WidgetConfigureActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var widgetUpdater: WidgetUpdater
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
@@ -46,11 +48,11 @@ class WidgetConfigureActivity : DaggerAppCompatActivity() {
                         initialUseBlack = initialUseBlack,
                         onOpacityChange = { value ->
                             preferences.put(IntComposedKey.WidgetOpacity, appWidgetId, value = value)
-                            Widget.updateWidget(this@WidgetConfigureActivity, "WidgetConfigure")
+                            widgetUpdater.update("WidgetConfigure")
                         },
                         onUseBlackChange = { value ->
                             preferences.put(BooleanComposedKey.WidgetUseBlack, appWidgetId, value = value)
-                            Widget.updateWidget(this@WidgetConfigureActivity, "WidgetConfigure")
+                            widgetUpdater.update("WidgetConfigure")
                         },
                         onClose = {
                             val resultValue = Intent().apply {

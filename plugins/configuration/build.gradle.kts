@@ -44,7 +44,6 @@ dependencies {
 
     // Compose
     api(platform(libs.androidx.compose.bom))
-    api(libs.androidx.activity.compose)
     api(libs.androidx.compose.material3)
     api(libs.androidx.compose.material.icons.extended)
     api(libs.androidx.compose.runtime)
