@@ -265,4 +265,5 @@
     <string name="loop_accept_nav_label">Buclă</string>
     <string name="loop_accept_set_basal_question">Acceptați noua bazală temporară:</string>
     <string name="loop_accept_perform">Efectuați</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>
