@@ -94,7 +94,6 @@
     <string name="press_next_or_OK">Appuyez sur <b>OK</b> pour revenir à l\'écran principal. Appuyez sur <b>Suivant</b> pour démarrer l\'activation du nouveau Patch.</string>
     <string name="activation_in_progress">Oups ! Quelque chose s\'est mal passé, il semble qu\'il y ait déjà une activation en cours.</string>
     <string name="press_retry_or_discard">Appuyez sur <b>Suivant</b> pour reprendre l\'activation ou <b>Supprimer</b> pour réinitialiser l\'état d\'activation.</string>
-    <string name="retry_activation_filled_error">L\'activation ne peut pas être reprise. L\'état de la pompe a été perdu. NE PAS réamorcer car le pod peut être déjà placé. Veuillez annuler le pod et démarrer une nouvelle activation.</string>
     <string name="reading_activation_status">Veuillez patienter, lecture de l\'état d\'activation de la pompe.</string>
     <!-- settings-->
     <string name="sn_input_title">Numéro de série</string>
