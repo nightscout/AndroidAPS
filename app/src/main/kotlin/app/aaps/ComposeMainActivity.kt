@@ -70,6 +70,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.configuration.InitProgress
+import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -188,6 +189,7 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var bolusProgressData: BolusProgressData
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var bgQualityCheck: BgQualityCheck
+    @Inject lateinit var objectives: Objectives
     @Inject lateinit var graphViewModelFactory: GraphViewModel.Factory
     @Inject lateinit var overviewDataCache: OverviewDataCache
 
@@ -520,6 +522,15 @@ class ComposeMainActivity : AppCompatActivity() {
                     pumpPlugin.hasComposeContent()
                 val pumpSetupPlugin = if (showPumpSetup) pumpPlugin else null
 
+                // Objectives progress badge (visible while objectives not all completed, in APS mode)
+                val objectivesPlugin = objectives as PluginBase
+                val objectivesTotal = objectives.size
+                val objectivesDone = objectives.accomplishedCount
+                val showObjectivesSetup = objectivesTotal > 0 && objectivesDone < objectivesTotal &&
+                    objectivesPlugin.isEnabled() && objectivesPlugin.hasComposeContent()
+                val objectivesSetupPlugin = if (showObjectivesSetup) objectivesPlugin else null
+                val objectivesProgressText = if (showObjectivesSetup) "$objectivesDone/$objectivesTotal" else null
+
                 // BG source shortcut: shown when BG quality check reports FLAT or DOUBLED
                 val bgQualityState by bgQualityCheck.stateFlow.collectAsStateWithLifecycle()
                 val bgSourcePlugin = activePlugin.activeBgSource as PluginBase
@@ -636,6 +647,8 @@ class ComposeMainActivity : AppCompatActivity() {
                     bgQualityBadgeIcon = bgQualityBadgeIcon,
                     bgQualityBadgeTint = bgQualityBadgeTint,
                     bgQualityBadgeDescription = bgQualityBadgeDescription,
+                    objectivesSetupPlugin = objectivesSetupPlugin,
+                    objectivesProgressText = objectivesProgressText,
                     permissionsMissing = permState.hasAnyMissing,
                     onPermissionsClick = {
                         permissionsViewModel.showSheet()

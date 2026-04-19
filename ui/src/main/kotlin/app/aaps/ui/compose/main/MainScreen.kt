@@ -108,6 +108,9 @@ fun MainScreen(
     bgQualityBadgeIcon: ImageVector? = null,
     bgQualityBadgeTint: Color = Color.Unspecified,
     bgQualityBadgeDescription: String? = null,
+    // Objectives progress
+    objectivesSetupPlugin: PluginBase? = null,
+    objectivesProgressText: String? = null,
     // Permissions
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
@@ -315,6 +318,8 @@ fun MainScreen(
                                 bgQualityBadgeIcon = bgQualityBadgeIcon,
                                 bgQualityBadgeTint = bgQualityBadgeTint,
                                 bgQualityBadgeDescription = bgQualityBadgeDescription,
+                                objectivesSetupPlugin = objectivesSetupPlugin,
+                                objectivesProgressText = objectivesProgressText,
                                 onNavigate = onNavigate,
                                 permissionsMissing = permissionsMissing,
                                 onPermissionsClick = onPermissionsClick,
