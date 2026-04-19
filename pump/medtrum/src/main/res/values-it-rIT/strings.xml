@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch non attivata</string>
     <string name="pump_setting_failed">Errore nella configurazione delle impostazioni utente sul micro!</string>
     <string name="pump_sync_error">Errore durante la sincronizzazione della cronologia del micro, un record è stato saltato. Controllare la scheda trattamenti per verificare se il bolo è stato sincronizzato correttamente. Posporre l\'allarme e se l\'errore continua a riproporsi cambiare patch o pompa.</string>
+    <string name="patch_reset_after_primed_error">Rilevato ripristino patch dopo il priming! Rimuovere il cerotto e avviare un nuova cerotto.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Ultima connessione</string>
     <string name="active_bolus_label">Bolo attivo</string>
