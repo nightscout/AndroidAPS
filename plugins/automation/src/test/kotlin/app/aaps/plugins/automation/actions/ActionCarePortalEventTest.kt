@@ -28,7 +28,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
                 .thenReturn(PersistenceLayer.TransactionResult())
         }
         sut = ActionCarePortalEvent(injector)
-        sut.cpEvent = InputCarePortalMenu(rh)
+        sut.cpEvent = InputCarePortalMenu()
         sut.cpEvent.value = InputCarePortalMenu.EventType.NOTE
         sut.note = InputString("Asd")
         sut.duration = InputDuration(5, InputDuration.TimeUnit.MINUTES)

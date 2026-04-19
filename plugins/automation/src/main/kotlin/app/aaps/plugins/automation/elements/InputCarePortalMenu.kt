@@ -1,11 +1,10 @@
 package app.aaps.plugins.automation.elements
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.resources.ResourceHelper
 
-class InputCarePortalMenu(private val rh: ResourceHelper) {
+class InputCarePortalMenu() {
 
     enum class EventType(val therapyEventType: TE.Type) {
         NOTE(TE.Type.NOTE),
@@ -28,13 +27,6 @@ class InputCarePortalMenu(private val rh: ResourceHelper) {
                 QUESTION     -> app.aaps.core.ui.R.string.careportal_question
                 ANNOUNCEMENT -> app.aaps.core.ui.R.string.careportal_announcement
             }
-        @get:DrawableRes val drawableRes: Int
-            get() = when (this) {
-                NOTE         -> app.aaps.core.objects.R.drawable.ic_cp_note_24dp
-                EXERCISE     -> app.aaps.core.objects.R.drawable.ic_cp_exercise_24dp
-                QUESTION     -> app.aaps.core.objects.R.drawable.ic_cp_question_24dp
-                ANNOUNCEMENT -> app.aaps.core.objects.R.drawable.ic_cp_announcement_24dp
-            }
 
         companion object {
 
@@ -48,7 +40,7 @@ class InputCarePortalMenu(private val rh: ResourceHelper) {
         }
     }
 
-    constructor(rh: ResourceHelper, value: EventType) : this(rh) {
+    constructor(value: EventType) : this() {
         this.value = value
     }
 

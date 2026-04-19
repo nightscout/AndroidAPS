@@ -25,6 +25,7 @@ navigationCompose = "2.9.7"
 lifecycleRuntimeKtx = "2.10.0"
 vico = "3.0.3"
 composeUi = "1.10.6"
+glance = "1.1.1"
 
 [plugins]
 android-library = { id = "com.android.library" }
@@ -206,4 +207,6 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
 sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "3.0.0" }
+androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
+androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glance" }
 
