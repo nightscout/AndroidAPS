@@ -17,6 +17,7 @@ import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
+import app.aaps.wear.interaction.activities.BgGraphActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.StatusMenuActivity
 import app.aaps.wear.interaction.utils.Constants
@@ -148,6 +149,7 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
             ComplicationAction.BOLUS -> intentOpen = Intent(this, TreatmentActivity::class.java)
             ComplicationAction.E_CARB -> intentOpen = Intent(this, ECarbActivity::class.java)
             ComplicationAction.TEMP_TARGET -> intentOpen = Intent(this, TempTargetActivity::class.java)
+            ComplicationAction.BG_GRAPH -> intentOpen = Intent(this, BgGraphActivity::class.java)
             ComplicationAction.STATUS -> intentOpen = Intent(this, StatusMenuActivity::class.java)
 
             ComplicationAction.WARNING_OLD, ComplicationAction.WARNING_SYNC -> {
@@ -181,6 +183,7 @@ class ComplicationTapActivity : DaggerAppCompatActivity() {
                 "bolus" -> ComplicationAction.BOLUS
                 "ecarb" -> ComplicationAction.E_CARB
                 "status" -> ComplicationAction.STATUS
+                "bg_graph" -> ComplicationAction.BG_GRAPH
                 "none" -> ComplicationAction.NONE
                 "default" -> originalAction
                 else -> originalAction
