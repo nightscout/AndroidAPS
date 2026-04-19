@@ -138,7 +138,7 @@
     <string name="loopisdisabled">Loop er deaktivert</string>
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Eksporter innstillinger</string>
-    <string name="disableloop">Stans loop</string>
+    <string name="disableloop">Deaktiver loop</string>
     <string name="disabled_loop">Deaktivert loop</string>
     <string name="resumeloop">Gjenoppta loop</string>
     <string name="suspendloop">Pause loop</string>
@@ -1025,4 +1025,6 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">DISF</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">SKRITT</string>
+    <string name="remove_items">Fjern elementer</string>
+    <string name="sort_items">Sorter elementer</string>
 </resources>
