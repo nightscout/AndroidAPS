@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.overview.graph.BgInfoData
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.GraphConfigRepository
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.overview.graph.SeriesType
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -343,24 +344,29 @@ class GraphViewModel @AssistedInject constructor(
     }
 
     // Derived time range from actual data (recalculates as series arrive)
-    // Includes prediction timestamps so the x-axis extends into the future
+    // When PREDICTIONS overlay is enabled, extends into the future to fit prediction points;
+    // otherwise clamps to toTime so the x-axis doesn't reserve empty future space.
     val derivedTimeRange: StateFlow<Pair<Long, Long>?> = combine(
         cache.bgReadingsFlow,
         cache.bucketedDataFlow,
         cache.predictionsFlow,
-        cache.timeRangeFlow
-    ) { bgReadings, bucketedData, predictions, cacheTimeRange ->
-        // Combine all timestamps from all series including predictions
-        val allTimestamps = (bgReadings + bucketedData + predictions).map { it.timestamp }
+        cache.timeRangeFlow,
+        graphConfigFlow
+    ) { bgReadings, bucketedData, predictions, cacheTimeRange, graphConfig ->
+        val showPredictions = SeriesType.PREDICTIONS in graphConfig.bgOverlays
+        val effectivePredictions = if (showPredictions) predictions else emptyList()
+        val allTimestamps = (bgReadings + bucketedData + effectivePredictions).map { it.timestamp }
 
         if (allTimestamps.isEmpty()) {
-            // Fall back to cache time range if no data yet (use endTime for predictions)
-            cacheTimeRange?.let { Pair(it.fromTime, it.endTime) }
+            cacheTimeRange?.let {
+                val upper = if (showPredictions) it.endTime else it.toTime
+                Pair(it.fromTime, upper)
+            }
         } else {
             val minTime = allTimestamps.minOrNull() ?: return@combine null
             val maxTime = allTimestamps.maxOrNull() ?: return@combine null
-            // Also consider endTime from cache (may extend beyond prediction points)
-            val effectiveMax = if (cacheTimeRange != null) maxOf(maxTime, cacheTimeRange.endTime) else maxTime
+            val cacheUpper = cacheTimeRange?.let { if (showPredictions) it.endTime else it.toTime }
+            val effectiveMax = if (cacheUpper != null) maxOf(maxTime, cacheUpper) else maxTime
             Pair(minTime, effectiveMax)
         }
     }.stateIn(
