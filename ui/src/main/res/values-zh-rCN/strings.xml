@@ -268,4 +268,5 @@
     <string name="loop_accept_nav_label">闭环</string>
     <string name="loop_accept_set_basal_question">接受新的临时基础率：</string>
     <string name="loop_accept_perform">执行</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>
