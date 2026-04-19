@@ -95,7 +95,6 @@
     <string name="press_next_or_OK">Apăsați <b>OK</b> pentru a reveni la ecranul principal. Apăsați <b>Înainte</b> pentru a începe activarea unui nou plasture.</string>
     <string name="activation_in_progress">Oops! Ceva nu a funcționat, se pare că există deja o activare în desfășurare.</string>
     <string name="press_retry_or_discard">Apăsați <b>Înainte</b> pentru a relua activarea sau <b>Renunțare</b> pentru a reseta statusul activării.</string>
-    <string name="retry_activation_filled_error">Activarea nu poate fi reluată. Starea pompei a fost pierdută. NU amorsați din nou, deoarece plasturele transdermic ar putea fi deja introdus. Vă rugăm să îndepărtați plasturele și să începeți o nouă activare.</string>
     <string name="reading_activation_status">Vă rog așteptați. Se citește starea de activare din pompă.</string>
     <!-- settings-->
     <string name="sn_input_title">Număr de serie</string>
