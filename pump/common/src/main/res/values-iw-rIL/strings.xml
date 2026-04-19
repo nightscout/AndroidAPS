@@ -36,14 +36,6 @@
     <string name="time_last_4_days">ב-4 הימים האחרונים</string>
     <string name="time_last_week">בשבוע שעבר</string>
     <string name="time_last_month">בחודש שעבר</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">סריקה</string>
-    <string name="ble_config_scan_stop">עצור</string>
-    <string name="ble_config_scan_selected">נבחר</string>
-    <string name="ble_config_scan_scanning">סורק</string>
-    <string name="ble_config_scan_finished">הסריקה הושלמה</string>
-    <string name="ble_config_scan_error">שגיאת סריקה: %1$d</string>
-    <string name="ble_config_remove">הסרה</string>
     <!-- Pump History -->
     <string name="pump_history_type">סוג:</string>
 </resources>
