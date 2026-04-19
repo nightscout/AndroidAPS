@@ -28,14 +28,6 @@
     <string name="time_last_4_days">Zadnja 4 dana</string>
     <string name="time_last_week">Prošli tjedan</string>
     <string name="time_last_month">Prošli mjesec</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Pretraži</string>
-    <string name="ble_config_scan_stop">Zaustavi</string>
-    <string name="ble_config_scan_selected">Odabrano</string>
-    <string name="ble_config_scan_scanning">Pretraživanje</string>
-    <string name="ble_config_scan_finished">Skeniranje završeno</string>
-    <string name="ble_config_scan_error">Pogreška skeniranja: %1$d</string>
-    <string name="ble_config_remove">Ukloniti</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
 </resources>
