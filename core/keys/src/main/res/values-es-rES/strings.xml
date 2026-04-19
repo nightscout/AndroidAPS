@@ -12,7 +12,7 @@
     <string name="pref_title_show_insulin_button">Mostrar botón de insulina</string>
     <string name="pref_title_show_carbs_button">Mostrar botón de carbohidratos</string>
     <string name="pref_title_show_cgm_button">Mostrar botón de MCG</string>
-    <string name="pref_summary_show_cgm_button">Abre xDrip+ o la aplicación de Dexcom (puedes usar el botón de retroceso para volver a AAPS).</string>
+    <string name="pref_summary_show_cgm_button">Abre xDrip+ o la aplicación de Dexcom (puedes usar el botón de retroceso para volver a AAPS)</string>
     <string name="pref_title_show_calibration_button">Mostrar botón de calibración</string>
     <string name="pref_summary_show_calibration_button">Envía una calibración a xDrip+ (asegúrese de que la opción \'Aceptar calibraciones\' esté activada en xDrip+ dentro de la configuración entre aplicaciones)</string>
     <string name="pref_title_show_notes_in_dialogs">Mostrar notas en los diálogos</string>
@@ -40,7 +40,7 @@
     <string name="pref_summary_aps_use_dynamic_sensitivity">Usa DynamicISF para el ajuste de la sensibilidad en lugar de Autosens.</string>
     <string name="pref_title_aps_use_autosens">Usar Autosens</string>
     <string name="pref_title_aps_use_smb">Habilitar SMB</string>
-    <string name="pref_summary_aps_use_smb">Habilita los SMB (Súper Micro Bolus). El SMB administra insulina de forma inmediata para responder a los aumentos de glucosa en sangre.</string>
+    <string name="pref_summary_aps_use_smb">Habilita los SMB. El SMB administra insulina de forma inmediata para responder a los aumentos de glucosa en sangre</string>
     <string name="pref_title_aps_use_smb_with_high_tt">Habilitar SMB con objetivo temporal elevado</string>
     <string name="pref_summary_aps_use_smb_with_high_tt">Permitir SMB cuando hay un objetivo temporal alto activo.</string>
     <string name="pref_title_aps_use_smb_always">Habilitar SMB siempre</string>
@@ -359,11 +359,11 @@
     <string name="pref_title_smb_max_iob">IOB Máximo para SMB</string>
     <string name="openapssmb_max_iob_summary">Este valor se denomina Max IOB en el contexto de OpenAPS\n.OpenAPS no añadirá más insulina si el IOB actual es mayor que este valor</string>
     <string name="pref_title_ama_max_iob">Max IOB para AMA</string>
-    <string name="openapsma_max_iob_summary">Este valor se denomina Max IOB en el contexto de OpenAPS\nRepresenta la cantidad máxima de insulina en unidades [U] que el sistema de lazo cerrado puede administrar de una sola vez.</string>
+    <string name="openapsma_max_iob_summary">Este valor se denomina Max IOB en el contexto de OpenAPS\nRepresenta la cantidad máxima de insulina en unidades [U] que el sistema de lazo cerrado puede administrar de una sola vez</string>
     <string name="pref_title_max_daily_multiplier">Multiplicador de seguridad diaria máxima</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor por defecto: 3. Este es un límite de seguridad clave de OpenAPS. Lo que hace es limitar tus basales a 3 veces (en este perfil) tu tasa basal más alta. Es probable que no necesites cambiar esto, pero debes ser consciente de que a esto se refiere la discusión sobre los límites de seguridad de \'3x máximo diario; 4x actual</string>
     <string name="pref_title_current_basal_multiplier">Multiplicador de seguridad basal actual</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los límites de seguridad clave de OpenAPS, y la otra parte de la regla de seguridad \"3x máximo diario; 4x actual\". Esto significa que tu basal, independientemente del basal máximo configurado en tu bomba, no puede ser superior a este número multiplicado por tu nivel de basal actual. El objetivo es evitar que los usuarios entren en terreno peligroso al configurar basales máximos excesivamente altos antes de comprender cómo funciona el algoritmo. De nuevo, el valor predeterminado es 4x; la mayoría de las personas nunca necesitarán ajustar esto y, en su lugar, es más probable que deban ajustar otros parámetros si sienten que están \"chocando\" con este límite de seguridad.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los límites de seguridad clave de OpenAPS, y la otra parte de la regla de seguridad \"3x máximo diario; 4x actual\". Esto significa que tu basal, independientemente del basal máximo configurado en tu bomba, no puede ser superior a este número multiplicado por tu nivel de basal actual. El objetivo es evitar que los usuarios entren en terreno peligroso al configurar basales máximos excesivamente altos antes de comprender cómo funciona el algoritmo. De nuevo, el valor predeterminado es 4x; la mayoría de las personas nunca necesitarán ajustar esto y, en su lugar, es más probable que deban ajustar otros parámetros si sienten que están \"chocando\" con este límite de seguridad</string>
     <string name="pref_title_bolus_snooze_divisor">Divisor de DIA para la espera del bolo</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Valor por defecto: 2\\nEl bolo snooze se activa después de realizar un bolo para una comida, de modo que el lazo cerrado (loop) no lo contrarreste con basales temporales bajas justo después de haber comido. En este ejemplo, el valor por defecto es 2; por tanto, una DIA de 3 horas significa que el bolo snooze se irá eliminando gradualmente a lo largo de 1.5 horas (3DIA/2)</string>
     <string name="pref_title_ama_min_5m_carbs_impact">Impacto mínimo de carbohidratos en 5m para AMA</string>
@@ -400,7 +400,7 @@
     <string name="pref_title_smb_delivery_ratio_min">Ratio mínimo de suministro de SMB</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Valor predeterminado: 0.5. Este es el extremo inferior de una proporción que aumenta linealmente, en lugar del valor fijo mencionado anteriormente.</string>
     <string name="pref_title_smb_delivery_ratio_max">Ratio máximo de suministro de SMB</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Valor predeterminado: 0.5. Este es el extremo superior de una proporción que aumenta linealmente, en lugar del valor fijo mencionado anteriormente.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valor predeterminado: 0.5. Este es el extremo superior de una proporción que aumenta linealmente, en lugar del valor fijo mencionado anteriormente</string>
     <string name="pref_title_smb_max_range_extension">Extensión de rango máximo de SMB</string>
     <string name="openapsama_smb_max_range_extension_summary">Valor predeterminado: 1. Este es otro límite de seguridad clave de OpenAPS y especifica por qué factor se pueden exceder los 120 minutos regulares de maxSMB/maxUAM. Aumente este valor experimental de forma lenta y con precaución.</string>
     <!-- UnitDoubleKey: Overview preferences -->
