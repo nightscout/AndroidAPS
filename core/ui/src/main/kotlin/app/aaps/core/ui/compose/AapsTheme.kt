@@ -51,8 +51,14 @@ val LocalProfileUtil = compositionLocalOf<ProfileUtil> { error("No ProfileUtil p
  * CompositionLocal providing access to SnackbarHostState for showing snackbars.
  * Provided by Scaffold hosts (MainScreen, PluginContent) so any descendant
  * composable can show snackbars without parameter threading.
+ *
+ * Throws if consumed outside a provider — this is intentional to prevent
+ * silent snackbar drops. If your screen is outside a Scaffold tree, prefer
+ * passing the state as a parameter or hoisting events via a ViewModel flow.
  */
-val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> { SnackbarHostState() }
+val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
+    error("No SnackbarHostState provided — wrap caller in a Scaffold that provides LocalSnackbarHostState, or pass the state as a parameter")
+}
 
 /**
  * AndroidAPS theme object providing access to custom theme colors and extensions.

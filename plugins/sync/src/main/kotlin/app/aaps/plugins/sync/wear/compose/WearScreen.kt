@@ -53,8 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.sync.R
 
 @Composable
@@ -67,11 +67,11 @@ internal fun WearScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val snackbarHostState = LocalSnackbarHostState.current
 
-    // Handle toast events
     LaunchedEffect(Unit) {
         viewModel.toastEvent.collect { message ->
-            ToastUtils.okToast(context, message)
+            snackbarHostState.showSnackbar(message)
         }
     }
 
