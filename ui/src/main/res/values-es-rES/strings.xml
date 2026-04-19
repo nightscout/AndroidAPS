@@ -268,4 +268,5 @@
     <string name="loop_accept_nav_label">Lazo</string>
     <string name="loop_accept_set_basal_question">Aceptar nueva basal temporal:</string>
     <string name="loop_accept_perform">Realizar</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>
