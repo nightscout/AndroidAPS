@@ -39,6 +39,8 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
 3. Zkuste znovu spárovat</string>
     <string name="combov2_enter_pin">Vložte PIN</string>
     <string name="combov2_cancel_pairing">Zrušit párování</string>
+    <string name="combov2_confirm_cancel_pairing_message">Opravdu chcete zrušit párování?</string>
+    <string name="combov2_confirm_unpair_message">Opravdu chcete odpárovat pumpu?</string>
     <string name="combov2_pin_hint">10místný PIN</string>
     <string name="combov2_pairing_finished_successfully">Úspěšně spárováno s Combo</string>
     <string name="combov2_pairing_cancelled">Párování s Combo zrušeno uživatelem</string>
@@ -89,6 +91,9 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (zbývá méně než 1 min)</string>
     <string name="combov2_load_tdds_cancelled">Načítání CDD zrušeno</string>
     <string name="combov2_retrieving_tdds_failed">Načítání CDD selhalo</string>
+    <string name="combov2_battery_empty">Zcela vybitá</string>
+    <string name="combov2_battery_low">Vybitá</string>
+    <string name="combov2_battery_full">Plně nabitá</string>
     <string name="combov2_battery_low_warning">Slabá baterie v pumpě</string>
     <string name="combov2_reservoir_low_warning">V zásobníku je málo inzulínu</string>
     <string name="combov2_setting_tbr_succeeded">Nastavení dočasného bazálu bylo úspěšné</string>
