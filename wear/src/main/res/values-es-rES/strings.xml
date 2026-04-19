@@ -77,6 +77,7 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
+    <string name="menu_bg_graph">Gráfico de glucosa</string>
     <string name="menu_resync">Re-sincronizar</string>
     <string name="menu_prime_fill">Cebar/Llenar</string>
     <string name="menu_none">Ninguno</string>
@@ -198,6 +199,7 @@
     <string name="week_short">s</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">antiguo</string>
