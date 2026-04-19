@@ -36,14 +36,6 @@
     <string name="time_last_4_days">Son 4 gün</string>
     <string name="time_last_week">Geçen hafta</string>
     <string name="time_last_month">Geçen ay</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Tara</string>
-    <string name="ble_config_scan_stop">Dur</string>
-    <string name="ble_config_scan_selected">Seçili</string>
-    <string name="ble_config_scan_scanning">Taranıyor</string>
-    <string name="ble_config_scan_finished">Tarama tamamlandı</string>
-    <string name="ble_config_scan_error">Tarama Hatası:%1$d</string>
-    <string name="ble_config_remove">Kaldır</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
 </resources>
