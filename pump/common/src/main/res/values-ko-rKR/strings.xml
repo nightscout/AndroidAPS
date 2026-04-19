@@ -35,14 +35,6 @@
     <string name="time_last_4_days">지난 4일</string>
     <string name="time_last_week">지난 주</string>
     <string name="time_last_month">지난 달</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">스캔하기</string>
-    <string name="ble_config_scan_stop">정지</string>
-    <string name="ble_config_scan_selected">선택됨</string>
-    <string name="ble_config_scan_scanning">스캔중</string>
-    <string name="ble_config_scan_finished">스캔 완료</string>
-    <string name="ble_config_scan_error">스캔 에러: %1$d</string>
-    <string name="ble_config_remove">삭제</string>
     <!-- Pump History -->
     <string name="pump_history_type">종류:</string>
 </resources>
