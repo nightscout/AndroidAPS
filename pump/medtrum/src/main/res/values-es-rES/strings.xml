@@ -13,6 +13,7 @@
     <string name="patch_not_active">Parche no activado</string>
     <string name="pump_setting_failed">Error al configurar los ajustes del usuario en la bomba</string>
     <string name="pump_sync_error">Error al sincronizar el historial de la bomba, se ha omitido un registro. Verifique la pestaña de tratamientos para asegurarse de que el bolo se haya sincronizado correctamente. Silencia y si el error sigue apareciendo, cambia el parche o la base de la bomba.</string>
+    <string name="patch_reset_after_primed_error">¡Se detectó reinicio del parche después del cebado! Retire el parche y comience con uno nuevo</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Última conexión</string>
     <string name="active_bolus_label">Bolo activo</string>
@@ -117,9 +118,9 @@
     <string name="patch_expiration_title">Caducidad del parche</string>
     <string name="patch_expiration_summary">Cuando está activado, el parche caducará a los 3 días, con un periodo de gracia de 8 horas adicionales</string>
     <string name="hourly_max_insulin_title">Insulina máxima por hora [Unidades]</string>
-    <string name="hourly_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por hora. Si se supera, la bomba se suspenderá.</string>
+    <string name="hourly_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por hora. Si se supera, la bomba se suspenderá</string>
     <string name="daily_max_insulin_title">Insulina máxima diaria [Unidades]</string>
-    <string name="daily_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por día. Si se superan, la bomba se suspenderá.</string>
+    <string name="daily_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por día. Si se superan, la bomba se suspenderá</string>
     <string name="scan_on_connection_error_title">Escanear por error de conexión</string>
     <string name="scan_on_connection_error_summary">ADVERTENCIA: Habilitar sólo si tienes problemas de conexión. Si se habilita, el controlador escanea la bomba de nuevo antes de intentar reconectarse con la bomba. Asegúrate de tener permiso de ubicación establecido en \"Permitir siempre\" </string>
     <!-- treatment state-->
