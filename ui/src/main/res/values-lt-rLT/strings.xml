@@ -119,4 +119,5 @@
         <item>Tik neigiamas</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>
