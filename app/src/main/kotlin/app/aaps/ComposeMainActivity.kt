@@ -1,6 +1,7 @@
 package app.aaps
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -29,7 +30,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingFlat
-import androidx.compose.material.icons.filled.TrendingFlat
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
@@ -122,7 +122,6 @@ import app.aaps.core.ui.search.SearchableItem
 import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.protection.BiometricCheck
-import app.aaps.plugins.configuration.activities.OptimizationPermissionContract
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
@@ -195,7 +194,6 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject lateinit var overviewDataCache: OverviewDataCache
 
     private var accessTree: ActivityResultLauncher<Uri?>? = null
-    private var callForBatteryOptimization: ActivityResultLauncher<Void?>? = null
     private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>? = null
     private var onPermissionResultDenied: ((List<String>) -> Unit)? = null
 
@@ -253,9 +251,6 @@ class ComposeMainActivity : AppCompatActivity() {
                 contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 preferences.put(StringKey.AapsDirectoryUri, uri.toString())
             }
-        }
-        callForBatteryOptimization = registerForActivityResult(OptimizationPermissionContract()) {
-            updateButtons()
         }
         requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val denied = mutableListOf<String>()
@@ -396,6 +391,7 @@ class ComposeMainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("BatteryLife")
     @Composable
     private fun AppContent(navController: NavHostController) {
         // Trigger initial refresh when app content first appears (after init completes)
@@ -440,11 +436,13 @@ class ComposeMainActivity : AppCompatActivity() {
                         when {
                             effect.group.permissions.contains(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) ->
                                 try {
-                                    callForBatteryOptimization?.launch(null)
+                                    startActivity(
+                                        Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                                            data = "package:$packageName".toUri()
+                                        }
+                                    )
                                 } catch (_: ActivityNotFoundException) {
                                     snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
-                                } catch (_: IllegalStateException) {
-                                    snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.error_asking_for_permissions))
                                 }
 
                             effect.group.permissions.contains(PluginStore.PERMISSION_SELECT_DIRECTORY)                  ->
@@ -545,9 +543,9 @@ class ComposeMainActivity : AppCompatActivity() {
                     else                              -> null
                 } else null
                 val bgQualityBadgeTint: Color = when (bgQualityState) {
-                    BgQualityCheck.State.RECALCULATED                                 -> AapsTheme.generalColors.statusWarning
-                    BgQualityCheck.State.DOUBLED, BgQualityCheck.State.FLAT           -> AapsTheme.generalColors.statusCritical
-                    else                                                              -> Color.Unspecified
+                    BgQualityCheck.State.RECALCULATED                       -> AapsTheme.generalColors.statusWarning
+                    BgQualityCheck.State.DOUBLED, BgQualityCheck.State.FLAT -> AapsTheme.generalColors.statusCritical
+                    else                                                    -> Color.Unspecified
                 }
                 val bgQualityBadgeDescription = if (showBgSetup) bgQualityCheck.stateDescription() else null
 
@@ -801,7 +799,6 @@ class ComposeMainActivity : AppCompatActivity() {
     }
 
     private fun updateButtons() {
-        // Called by activity result callbacks (battery optimization, runtime permissions)
         permissionsViewModel.refresh()
     }
 
@@ -812,7 +809,6 @@ class ComposeMainActivity : AppCompatActivity() {
     override fun onDestroy() {
         disposable.clear()
         accessTree = null
-        callForBatteryOptimization = null
         requestMultiplePermissions = null
         onPermissionResultDenied = null
         super.onDestroy()
