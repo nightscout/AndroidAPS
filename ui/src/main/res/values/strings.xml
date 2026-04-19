@@ -291,4 +291,10 @@
     <string name="loop_accept_set_basal_question">Accept new temp basal:</string>
     <string name="loop_accept_perform">Perform</string>
 
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Disabled</string>
+    <string name="widget_rm_suspended">Suspended</string>
+    <string name="widget_rm_resume">Resume</string>
+
 </resources>
