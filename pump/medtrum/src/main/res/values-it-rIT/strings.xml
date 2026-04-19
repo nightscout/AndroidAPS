@@ -95,7 +95,6 @@
     <string name="press_next_or_OK">Premi <b>OK</b> per tornare alla schermata principale. Premi <b>Avanti</b> per avviare l\'attivazione di una nuova patch.</string>
     <string name="activation_in_progress">Oops! Qualcosa è andato storto, sembra ci sia già un\'attivazione in corso.</string>
     <string name="press_retry_or_discard">Premi <b>Avanti</b> per riprendere l\'attivazione o <b>Scarta</b> per resettare lo stato di attivazione.</string>
-    <string name="retry_activation_filled_error">L\'attivazione non può essere ripresa. Lo stato del micro è stato perso. NON rifare il prime, poiché il cerotto può già essere inserito. Eliminare il cerotto e iniziare una nuova attivazione.</string>
     <string name="reading_activation_status">Attendere, lettura dello stato di attivazione dal micro.</string>
     <!-- settings-->
     <string name="sn_input_title">Numero seriale</string>
