@@ -32,7 +32,7 @@
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
     <string name="pref_show_temp_target">Mostrar Objetivo Temporal</string>
     <string name="pref_show_reservoir_level">Mostrar el nivel del reservorio</string>
-    <string name="pref_show_loop_status">Mostrar estado de bucle</string>
+    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
@@ -194,7 +194,7 @@
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
-    <string name="snooze_alert">Posponer Alertas de AAPS</string>
+    <string name="snooze_alert">Silenciar alertas de AAPS</string>
     <string name="sending_snooze">Enviando aplazamientos a AAPS</string>
     <string name="week_short">s</string>
     <string name="day_short">d</string>
