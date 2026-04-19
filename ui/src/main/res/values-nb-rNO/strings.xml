@@ -268,4 +268,9 @@
     <string name="loop_accept_nav_label">Loop</string>
     <string name="loop_accept_set_basal_question">Godta ny midlertidig basal:</string>
     <string name="loop_accept_perform">Utfør</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Deaktivert</string>
+    <string name="widget_rm_suspended">Pauset</string>
+    <string name="widget_rm_resume">Gjenoppta</string>
 </resources>
