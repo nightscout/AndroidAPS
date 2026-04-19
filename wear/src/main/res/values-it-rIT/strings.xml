@@ -77,6 +77,7 @@
     <string name="menu_ecarb">CHO estesi</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_status">Stato</string>
+    <string name="menu_bg_graph">Grafico BG</string>
     <string name="menu_resync">Re-Sincronizza</string>
     <string name="menu_prime_fill">Carica/Riempi</string>
     <string name="menu_none">Nessuno</string>
@@ -198,6 +199,7 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">vecchio</string>
