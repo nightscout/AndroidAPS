@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="disabled_loop">Bucle desactivado</string>
+    <string name="disabled_loop">Lazo desactivado</string>
     <string name="calculator_label">Calculadora</string>
     <string name="nav_history_browser">Historial</string>
     <string name="sensor_label">Sensor</string>
@@ -37,7 +37,7 @@
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
+    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="old_data">DATOS CADUCADOS</string>
     <string name="overview_show_steps">Pasos</string>
 </resources>
