@@ -33,43 +33,29 @@ fun RetryActivationStep(
 
     val isConnecting = patchStep == PatchStep.RETRY_ACTIVATION_CONNECT
     var showDiscardDialog by remember { mutableStateOf(false) }
+    var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(patchStep) {
+    LaunchedEffect(Unit) {
         if (patchStep == PatchStep.RETRY_ACTIVATION) {
             viewModel.preparePatch()
         }
-    }
-
-    LaunchedEffect(patchStep) {
-        if (patchStep == PatchStep.RETRY_ACTIVATION_CONNECT) {
+        else if (patchStep == PatchStep.RETRY_ACTIVATION_CONNECT) {
             viewModel.retryActivationConnect()
         }
     }
 
-    var showFilledErrorDialog by remember { mutableStateOf(false) }
-
     LaunchedEffect(setupStep) {
         if (patchStep == PatchStep.RETRY_ACTIVATION_CONNECT) {
             when (setupStep) {
-                MedtrumPatchViewModel.SetupStep.FILLED    -> showFilledErrorDialog = true
+                MedtrumPatchViewModel.SetupStep.INITIAL   -> Unit
+                MedtrumPatchViewModel.SetupStep.FILLED    -> viewModel.forceMoveStep(PatchStep.SELECT_INSULIN)
                 MedtrumPatchViewModel.SetupStep.PRIMING   -> viewModel.forceMoveStep(PatchStep.PRIMING)
                 MedtrumPatchViewModel.SetupStep.PRIMED    -> viewModel.forceMoveStep(PatchStep.PRIME_COMPLETE)
                 MedtrumPatchViewModel.SetupStep.ACTIVATED -> viewModel.forceMoveStep(PatchStep.ACTIVATE_COMPLETE)
 
-                else                                      -> {}
+                else                                      -> unexpectedStateMessage = setupStep.toString()
             }
         }
-    }
-
-    if (showFilledErrorDialog) {
-        OkDialog(
-            title = stringResource(app.aaps.core.ui.R.string.error),
-            message = stringResource(R.string.retry_activation_filled_error),
-            onDismiss = {
-                showFilledErrorDialog = false
-                viewModel.moveStep(PatchStep.FORCE_DEACTIVATION)
-            }
-        )
     }
 
     if (showDiscardDialog) {
@@ -81,6 +67,17 @@ fun RetryActivationStep(
                 viewModel.moveStep(PatchStep.FORCE_DEACTIVATION)
             },
             onDismiss = { showDiscardDialog = false }
+        )
+    }
+
+    unexpectedStateMessage?.let { msg ->
+        OkDialog(
+            title = stringResource(app.aaps.core.ui.R.string.error),
+            message = stringResource(R.string.unexpected_state, msg),
+            onDismiss = {
+                unexpectedStateMessage = null
+                viewModel.moveStep(PatchStep.CANCEL)
+            }
         )
     }
 
