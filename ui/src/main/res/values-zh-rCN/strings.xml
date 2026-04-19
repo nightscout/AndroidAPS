@@ -188,6 +188,9 @@
     <string name="overview_edit_quickwizard_superbolus">超级大剂量Superbolus</string>
     <string name="a11y_drag_and_drop_handle">拖放操作</string>
     <!--    History browser-->
+    <string name="history_now">当前</string>
+    <string name="a11y_history_previous_window">上一窗口</string>
+    <string name="a11y_history_next_window">下一窗口</string>
     <string name="additional_ecarbs">添加 eCarbs 扩展碳水</string>
     <string name="calculator_options">计算器选项</string>
     <string name="use_bg">使用 血糖</string>
