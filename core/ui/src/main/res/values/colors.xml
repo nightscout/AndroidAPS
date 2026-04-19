@@ -21,7 +21,6 @@
     <!--    Buttons-->
     <color name="buttonBackground">#BABABA</color>
     <color name="okButtonText">@color/colorAccent</color>
-    <color name="okButtonSelected">#33969696</color>
 
     <!--    Fragments-->
 
@@ -63,7 +62,6 @@
     <!-- Green Colors -->
 
     <!-- Black and White transparent - glass effect-->
-
 
 
     <!-- Import/Export -->
