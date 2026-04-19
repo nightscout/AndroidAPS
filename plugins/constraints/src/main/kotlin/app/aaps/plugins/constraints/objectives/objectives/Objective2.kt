@@ -292,7 +292,6 @@ class Objective2 @Inject constructor(
                 .option(Option(R.string.u200_with_profile_reports, true))
                 .option(Option(R.string.u200_with_profile_pens, false))
                 .option(Option(R.string.u200_with_profile_pens2, true))
-                .option(Option(R.string.u200_with_profile_mental, true))
                 .hint(Hint(R.string.concentration_hint1))
                 .learned(Learned(R.string.objectives_exam_learned_concentration1))
         )
