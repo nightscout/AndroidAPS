@@ -66,7 +66,8 @@ private val IobColor       = Color(0xFF1E88E5)
 private val CarbsColor     = Color(0xFFFF6D00)
 private val BasalColor      = Color(0xFF90CAF9)
 private val SecondaryText   = Color(0xFFAAAAAA)
-private val TempTargetColor = Color(0xFFFDD835)
+private val TempTargetColor     = Color(0xFFFDD835)
+private val AutosensTargetColor = Color(0xFF77DD77)
 
 private val historyHoursCycle = listOf(3, 6, 1)
 
@@ -221,7 +222,11 @@ private fun BgGraphScreen(repository: ComplicationDataRepository, displayFormat:
                     Text(text = "${statusData.iobSum}$insulinUnit", fontSize = statsFontSize, color = IobColor)
                     Text(text = statusData.cob, fontSize = statsFontSize, color = CarbsColor)
                     Text(text = basalText, fontSize = statsFontSize, color = BasalColor)
-                    Text(text = targetText, fontSize = statsFontSize, color = if (hasTT) TempTargetColor else SecondaryText)
+                    Text(text = targetText, fontSize = statsFontSize, color = when (statusData.tempTargetLevel) {
+                        1    -> AutosensTargetColor
+                        2    -> TempTargetColor
+                        else -> SecondaryText
+                    })
                 }
             }
 
