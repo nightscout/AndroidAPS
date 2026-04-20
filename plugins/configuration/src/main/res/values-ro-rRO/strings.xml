@@ -31,6 +31,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configurați RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuați setarea odată ce starea RieyLink este \"Conectată\". Acest lucru ar putea dura un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
     <string name="startobjective">Începeți primul obiectiv</string>
+    <string name="open_objectives">Deschideți obiectivele</string>
     <string name="setupwizard_permissions">Permisiuni</string>
     <string name="setupwizard_profile_info">Creați un profil cu ratele bazale, IC, ISF și valorile țintă. Puteți adăuga mai multe profiluri mai târziu.</string>
     <string name="setupwizard_permissions_info">AAPS are nevoie de acces și de permisiuni la stocare pentru a funcționa corect. Vă rugăm să acordați permisiunile necesare mai jos.</string>
