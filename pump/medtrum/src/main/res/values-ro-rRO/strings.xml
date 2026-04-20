@@ -13,6 +13,7 @@
     <string name="patch_not_active">Plasture neactivat</string>
     <string name="pump_setting_failed">Setarea setărilor utilizatorului pe pompă a eșuat!</string>
     <string name="pump_sync_error">Eroare la sincronizarea istoricului de la pompă, o înregistrare a fost omisă. Verifică fila de tratament pentru a vedea dacă bolusul este sincronizat corect. Amână alarma și, dacă eroarea reapare, schimbă plasturele sau baza pompei.</string>
+    <string name="patch_reset_after_primed_error">Resetarea plasturelui detectată după amorsare! Scoateți plasturele și începeți un nou plasture.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Ultima conexiune</string>
     <string name="active_bolus_label">Bolus activ</string>
