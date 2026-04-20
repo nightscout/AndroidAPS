@@ -223,6 +223,7 @@
     <string name="complication_full_status">Full status</string>
     <string name="complication_full_status_flipped">Full status (omvendt)</string>
     <string name="complication_blood_glucose">Blodsukker</string>
+    <string name="complication_blood_glucose_large">Blodsukker (stor)</string>
     <string name="complication_blood_glucose_ext1">BS Ekstern1</string>
     <string name="complication_blood_glucose_ext2">BS Ekstern2</string>
     <string name="complication_br_cob_iob">Basaldose, COB &amp; IOB</string>
@@ -293,6 +294,7 @@
     <string name="loop_status_temp_target">Midlertidig mål</string>
     <string name="loop_status_target_range">Målområde</string>
     <string name="loop_status_target">Målverdi</string>
+    <string name="loop_status_adjusted_target">Justert mål</string>
     <string name="loop_status">Loopstatus</string>
     <string name="loop_status_refresh">Oppdater</string>
     <string name="confirm">Bekreft</string>
