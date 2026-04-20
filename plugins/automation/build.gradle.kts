@@ -44,7 +44,6 @@ dependencies {
     api(libs.androidx.compose.material3)
     api(libs.androidx.compose.material.icons.extended)
     api(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.process)
     implementation(libs.sh.calvin.reorderable)
 
     ksp(libs.com.google.dagger.compiler)

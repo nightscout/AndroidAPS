@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.main.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -80,6 +81,7 @@ class PersistentNotificationPlugin @Inject constructor(
     // End Android auto
 
     private val disposable = CompositeDisposable()
+    private val deferredStart = DeferredForegroundStart()
 
     override fun onStart() {
         super.onStart()
@@ -100,13 +102,14 @@ class PersistentNotificationPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
+        deferredStart.cancel()
         dummyServiceHelper.stopService(context)
         super.onStop()
     }
 
     private fun triggerNotificationUpdate() {
         runBlocking { updateNotification() }
-        dummyServiceHelper.startService(context)
+        deferredStart.start { dummyServiceHelper.startService(context) }
     }
 
     private suspend fun updateNotification() {
