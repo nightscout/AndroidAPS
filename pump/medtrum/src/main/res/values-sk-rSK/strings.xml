@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch nie je aktivovaný</string>
     <string name="pump_setting_failed">Načítanie uživateľského nastavenia do pumpy zlyhalo!</string>
     <string name="pump_sync_error">Chyba pri synchronizácii histórie z pumpy, záznam bol preskočený. Skontrolujte zoznam ošetrení, či je bolus správne synchronizovaný. Potvrďte a pokiaľ sa znovu ukáže chyba, vymeňte patch, alebo základňu pumpy.</string>
+    <string name="patch_reset_after_primed_error">Po naplnení Patch bol zistený jeho reset! Odstráňte Patch a aktivujte nový.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Naposledy pripojené</string>
     <string name="active_bolus_label">Aktívny bolus</string>
