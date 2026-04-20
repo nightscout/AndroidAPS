@@ -518,13 +518,15 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     // Running mode computation
     // =========================================================================
 
-    private fun updateRunningModeFromDatabase() {
-        val mode = loop.runningMode
-        val rmRecord = loop.runningModeRecord
+    private suspend fun updateRunningModeFromDatabase() {
+        // Read directly from DB — loop.runningModeRecord routes through runningModePreCheck()
+        // which touches activePump and crashes at startup before the pump plugin is selected.
+        // Loop will correct mode itself when it next runs; the RM observer will pick it up.
+        val rmRecord = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
 
         // Store raw data only - ViewModel computes display text
         _runningModeFlow.value = RunningModeDisplayData(
-            mode = mode,
+            mode = rmRecord.mode,
             timestamp = rmRecord.timestamp,
             duration = rmRecord.duration
         )
