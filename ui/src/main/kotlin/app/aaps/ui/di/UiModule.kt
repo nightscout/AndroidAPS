@@ -12,6 +12,8 @@ import app.aaps.ui.compose.overview.graphs.GraphConfigRepositoryImpl
 import app.aaps.ui.search.BuiltInSearchables
 import app.aaps.ui.search.DialogSearchables
 import app.aaps.ui.services.AlarmSoundService
+import app.aaps.ui.widget.BgGraphWidget
+import app.aaps.ui.widget.CompactBgWidget
 import app.aaps.ui.widget.Widget
 import app.aaps.ui.widget.WidgetConfigureActivity
 import dagger.Binds
@@ -54,6 +56,8 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesAlarmSoundService(): AlarmSoundService
 
     @ContributesAndroidInjector abstract fun contributesWidget(): Widget
+    @ContributesAndroidInjector abstract fun contributesBgGraphWidget(): BgGraphWidget
+    @ContributesAndroidInjector abstract fun contributesCompactBgWidget(): CompactBgWidget
     @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
 
     @ContributesAndroidInjector abstract fun contributeErrorActivity(): ErrorActivity

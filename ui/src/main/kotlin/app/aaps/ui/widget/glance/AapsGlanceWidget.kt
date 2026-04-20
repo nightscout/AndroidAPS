@@ -78,7 +78,7 @@ class AapsGlanceWidget(
 
 private val ChipCorner = 8.dp
 private val ChipHeight = 40.dp
-private val ChipIconSize = 18.dp
+private val ChipIconSize = 20.dp
 private val ChipGap = 3.dp
 private val TextMuted = Color(WidgetTextMuted)
 
@@ -105,29 +105,28 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.BottomCenter
         ) {
             Text(
                 text = state.deltaText,
                 style = TextStyle(
                     color = ColorProvider(TextMuted),
-                    fontSize = 17.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
             )
         }
-        Spacer(modifier = GlanceModifier.height(ChipGap))
         Box(
             modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = state.bgText,
                     style = TextStyle(
                         color = ColorProvider(bgColor),
-                        fontSize = 36.sp,
+                        fontSize = 44.sp,
                         fontWeight = FontWeight.Bold,
                         textDecoration = if (state.strikeThrough) TextDecoration.LineThrough else TextDecoration.None
                     )
@@ -137,7 +136,7 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                     Image(
                         provider = ImageProvider(state.arrowResId),
                         contentDescription = null,
-                        modifier = GlanceModifier.size(26.dp),
+                        modifier = GlanceModifier.size(30.dp),
                         colorFilter = ColorFilter.tint(ColorProvider(bgColor))
                     )
                 }
@@ -152,7 +151,7 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                 text = state.timeAgoText,
                 style = TextStyle(
                     color = ColorProvider(TextMuted),
-                    fontSize = 17.sp,
+                    fontSize = 20.sp,
                     textAlign = TextAlign.Center
                 )
             )
@@ -254,7 +253,7 @@ private fun Chip(
                 text = text,
                 style = TextStyle(
                     color = ColorProvider(textColor),
-                    fontSize = 12.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Start
                 ),

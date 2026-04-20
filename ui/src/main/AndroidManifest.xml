@@ -26,6 +26,30 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".widget.BgGraphWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/bg_graph_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.CompactBgWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/compact_bg_widget_info" />
+        </receiver>
+
         <activity
             android:name=".activities.ErrorActivity"
             android:exported="false"
