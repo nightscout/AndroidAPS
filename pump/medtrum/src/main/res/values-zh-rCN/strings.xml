@@ -13,6 +13,7 @@
     <string name="patch_not_active">贴片未激活</string>
     <string name="pump_setting_failed">将用户设置同步到泵时失败！</string>
     <string name="pump_sync_error">同步泵历史记录时出错，一条记录被跳过。请检查“治疗”选项卡，确认推注剂量是否已正确同步。请暂停，如果错误持续出现，请更换贴片或泵底座。</string>
+    <string name="patch_reset_after_primed_error">启动后检测到贴片重置！移除该贴片并开始新的贴片。</string>
     <!-- overview fragment -->
     <string name="last_connection_label">上次连接</string>
     <string name="active_bolus_label">活性大剂量</string>
