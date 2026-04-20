@@ -269,4 +269,8 @@
     <string name="loop_accept_set_basal_question">接受新的临时基础率：</string>
     <string name="loop_accept_perform">执行</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">已禁用</string>
+    <string name="widget_rm_suspended">已暂停</string>
+    <string name="widget_rm_resume">恢复</string>
 </resources>
