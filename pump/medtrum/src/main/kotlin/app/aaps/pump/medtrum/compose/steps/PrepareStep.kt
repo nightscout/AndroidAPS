@@ -3,12 +3,14 @@ package app.aaps.pump.medtrum.compose.steps
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -144,7 +146,7 @@ internal fun PrepareStepContent(
     WizardStepLayout(
         primaryButton = when (state) {
             PrepareState.INITIAL -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onNext, enabled = isSnValid)
-            PrepareState.CONNECTING -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = {}, loading = true)
+            PrepareState.CONNECTING -> null
             PrepareState.FILLED -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onFilled)
             PrepareState.ERROR -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.retry), onClick = onRetry)
         },
@@ -204,6 +206,14 @@ internal fun PrepareStepContent(
                 if (state == PrepareState.ERROR) {
                     Spacer(Modifier.height(8.dp))
                     WizardErrorBanner(message = stringResource(R.string.unexpected_state, pumpState))
+                }
+                if (state == PrepareState.CONNECTING) {
+                    Spacer(Modifier.height(48.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
                 }
             }
         }
