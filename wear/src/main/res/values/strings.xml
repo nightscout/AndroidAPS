@@ -279,6 +279,7 @@
     <string name="complication_full_status">Full Status</string>
     <string name="complication_full_status_flipped">Full Status (flipped)</string>
     <string name="complication_blood_glucose">Blood Glucose</string>
+    <string name="complication_blood_glucose_large">Blood Glucose (large)</string>
     <string name="complication_blood_glucose_ext1">Blood Glucose Ext1</string>
     <string name="complication_blood_glucose_ext2">Blood Glucose Ext2</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
