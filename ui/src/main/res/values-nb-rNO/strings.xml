@@ -12,6 +12,8 @@
     <!--    Widget-->
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">AAPS BS-graf</string>
+    <string name="widget_compact_bg_description">AAPS BS + IOB + COB (kompakt)</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktivitetsmonitor</string>
     <string name="time_range">Tidsrom</string>
