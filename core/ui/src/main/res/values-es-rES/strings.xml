@@ -1025,4 +1025,6 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PASOS</string>
+    <string name="remove_items">Eliminar elementos</string>
+    <string name="sort_items">Ordenar elementos</string>
 </resources>
