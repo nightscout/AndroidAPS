@@ -12,6 +12,8 @@
     <!--    Widget-->
     <string name="configure">Configurar la opacidad</string>
     <string name="widget_description">Widget de AAPS</string>
+    <string name="widget_bg_graph_description">Gráfico de glucemia AAPS</string>
+    <string name="widget_compact_bg_description">AAPS Glucosa + IOB + COB (compacta)</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor de actividad</string>
     <string name="time_range">Rango de tiempo</string>
@@ -269,4 +271,8 @@
     <string name="loop_accept_set_basal_question">Aceptar nueva basal temporal:</string>
     <string name="loop_accept_perform">Realizar</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Desactivado</string>
+    <string name="widget_rm_suspended">Suspendido</string>
+    <string name="widget_rm_resume">Reanudar</string>
 </resources>
