@@ -31,6 +31,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Please configure your RileyLink below. After selecting a RileyLink, it will be possible to continue setup once the RileyLink status is \"Connected\". This might take a minute.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Note:</b> You can continue setup once the pump has been set up.\n</string>
     <string name="startobjective">Start your first objective</string>
+    <string name="open_objectives">Open Objectives</string>
     <string name="setupwizard_permissions">Permissions</string>
     <string name="setupwizard_profile_info">Create a profile with your basal rates, IC, ISF and target values. You can add multiple profiles later.</string>
     <string name="setupwizard_permissions_info">AAPS needs storage access and permissions to work properly. Please grant the required permissions below.</string>

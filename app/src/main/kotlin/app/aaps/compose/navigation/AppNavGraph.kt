@@ -35,6 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -620,6 +621,10 @@ fun NavGraphBuilder.appNavGraph(
             onManageInsulin = { navController.navigate(AppRoute.InsulinManagement.createRoute()) },
             onManageProfile = { navController.navigate(AppRoute.Profile.createRoute()) },
             onProfileSwitch = { navController.navigate(AppRoute.ProfileActivation.createRoute(0)) },
+            onRunObjectives = {
+                val index = activePlugin.getPluginsList().indexOfFirst { it is Objectives }
+                if (index >= 0) navController.navigate(AppRoute.PluginContent.createRoute(index))
+            },
             onRequestDirectoryAccess = onRequestDirectoryAccess,
             onRequestPermission = onRequestPermission,
             permissionItems = {
