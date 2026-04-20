@@ -188,6 +188,9 @@
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">Režim \"Potiahni a pusť\"</string>
     <!--    History browser-->
+    <string name="history_now">Teraz</string>
+    <string name="a11y_history_previous_window">Predchádzajúce okno</string>
+    <string name="a11y_history_next_window">Nasledujúce okno</string>
     <string name="additional_ecarbs">Pridať eSacharidy</string>
     <string name="calculator_options">Nastavenia Kalkulačky</string>
     <string name="use_bg">Použi Glykémiu</string>
@@ -266,4 +269,8 @@
     <string name="loop_accept_set_basal_question">Povoliť nový dočasný bazál:</string>
     <string name="loop_accept_perform">Vykonať</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Vypnutý</string>
+    <string name="widget_rm_suspended">Pozastavený</string>
+    <string name="widget_rm_resume">Obnoviť</string>
 </resources>
