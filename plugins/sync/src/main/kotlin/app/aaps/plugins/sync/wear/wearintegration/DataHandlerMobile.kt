@@ -517,6 +517,18 @@ class DataHandlerMobile @Inject constructor(
             )
         }
 
+        // Build autosens-adjusted target (only when no TT active)
+        val autosensTarget = if (tempTarget == null && profile != null) {
+            val targetUsed =
+                if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
+                else 0.0
+            if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
+                val units = if (profileUtil.units == GlucoseUnit.MGDL) "mg/dL" else "mmol/L"
+                "${profileUtil.fromMgdlToStringInUnits(targetUsed)} $units"
+            } else null
+        } else null
+
         // Build default range
         val defaultRange = if (profile != null) {
             val units = if (profileUtil.units == GlucoseUnit.MGDL) "mg/dL" else "mmol/L"
@@ -612,6 +624,7 @@ class DataHandlerMobile @Inject constructor(
             lastRun = lastRunTimestamp,
             lastEnact = lastEnactTimestamp,
             tempTarget = tempTargetInfo,
+            autosensTarget = autosensTarget,
             defaultRange = defaultRange,
             oapsResult = oapsResultInfo
         )

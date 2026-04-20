@@ -350,6 +350,7 @@
     <string name="loop_status_temp_target">Temp Target</string>
     <string name="loop_status_target_range">Range</string>
     <string name="loop_status_target">Target</string>
+    <string name="loop_status_adjusted_target">Adjusted target</string>
     <string name="loop_status">Loop status</string>
     <string name="loop_status_refresh">Refresh</string>
     <string name="confirm">Confirm</string>
