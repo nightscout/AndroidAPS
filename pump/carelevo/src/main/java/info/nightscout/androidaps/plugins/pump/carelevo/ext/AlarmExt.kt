@@ -12,7 +12,7 @@ fun AlarmType.transformToContentsResources(
             callback(
                 R.string.alarm_feat_label_warning,
                 app.aaps.core.ui.R.color.colorLightGray,
-                app.aaps.core.ui.R.color.errorAlertBackground,
+                app.aaps.core.ui.R.color.toastError,
                 app.aaps.core.ui.R.drawable.ic_toast_error
             )
         }
@@ -21,7 +21,7 @@ fun AlarmType.transformToContentsResources(
             callback(
                 R.string.alarm_feat_label_alert,
                 app.aaps.core.ui.R.color.colorLightGray,
-                app.aaps.core.ui.R.color.warningAlertBackground,
+                app.aaps.core.ui.R.color.toastWarn,
                 app.aaps.core.ui.R.drawable.ic_toast_warn
             )
         }
@@ -39,7 +39,7 @@ fun AlarmType.transformToContentsResources(
             callback(
                 R.string.alarm_feat_label_unknown,
                 app.aaps.core.ui.R.color.colorLightGray,
-                app.aaps.core.ui.R.color.errorAlertBackground,
+                app.aaps.core.ui.R.color.toastError,
                 app.aaps.core.ui.R.drawable.ic_toast_error
             )
         }

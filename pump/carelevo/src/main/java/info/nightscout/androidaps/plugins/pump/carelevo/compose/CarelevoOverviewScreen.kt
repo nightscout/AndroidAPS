@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
@@ -264,18 +267,11 @@ private fun CarelevoOverviewScreenConnectedPreview() {
                         value = stringResource(R.string.common_label_unit_value_dose_with_space, "12.50")
                     )
                 ),
-                primaryActions = listOf(
-                    PumpAction(
-                        label = stringResource(R.string.carelevo_overview_connect_btn_label),
-                        iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
-                        enabled = false,
-                        onClick = {}
-                    )
-                ),
+                primaryActions = emptyList(),
                 managementActions = listOf(
                     PumpAction(
                         label = stringResource(R.string.carelevo_overview_pump_discard_btn_label),
-                        iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                        icon = Icons.Filled.SwapHoriz,
                         category = ActionCategory.MANAGEMENT,
                         enabled = true,
                         visible = true,
@@ -283,7 +279,7 @@ private fun CarelevoOverviewScreenConnectedPreview() {
                     ),
                     PumpAction(
                         label = stringResource(R.string.carelevo_overview_pump_stop_btn_label),
-                        iconRes = app.aaps.core.ui.R.drawable.ic_loop_paused,
+                        icon = IcLoopPaused,
                         category = ActionCategory.MANAGEMENT,
                         enabled = true,
                         visible = true,
@@ -324,7 +320,7 @@ private fun CarelevoOverviewScreenDisconnectedPreview() {
                 primaryActions = listOf(
                     PumpAction(
                         label = stringResource(R.string.carelevo_overview_connect_btn_label),
-                        iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                        icon = Icons.Filled.SwapHoriz,
                         enabled = true,
                         onClick = {}
                     )

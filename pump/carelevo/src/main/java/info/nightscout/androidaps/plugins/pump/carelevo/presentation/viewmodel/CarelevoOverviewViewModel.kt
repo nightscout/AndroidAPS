@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SwapHoriz
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -15,6 +18,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.compose.StatusLevel
+import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.pump.ActionCategory
 import app.aaps.core.ui.compose.pump.PumpAction
 import app.aaps.core.ui.compose.pump.PumpInfoRow
@@ -853,7 +857,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             PatchState.NotConnectedNotBooting -> listOf(
                 PumpAction(
                     label = rh.gs(info.nightscout.androidaps.plugins.pump.carelevo.R.string.carelevo_overview_connect_btn_label),
-                    iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                    icon = Icons.Filled.SwapHoriz,
                     category = ActionCategory.PRIMARY,
                     onClick = {}
                 )
@@ -862,7 +866,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             PatchState.NotConnectedBooted     -> listOf(
                 PumpAction(
                     label = rh.gs(info.nightscout.androidaps.plugins.pump.carelevo.R.string.carelevo_overview_communication_btn_label),
-                    iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                    icon = Icons.Filled.SwapHoriz,
                     category = ActionCategory.PRIMARY,
                     onClick = {}
                 )
@@ -875,7 +879,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             listOf(
                 PumpAction(
                     label = rh.gs(info.nightscout.androidaps.plugins.pump.carelevo.R.string.carelevo_overview_pump_discard_btn_label),
-                    iconRes = app.aaps.core.ui.R.drawable.ic_swap_horiz,
+                    icon = Icons.Filled.SwapHoriz,
                     category = ActionCategory.MANAGEMENT,
                     onClick = {}
                 ),
@@ -885,7 +889,7 @@ class CarelevoOverviewViewModel @Inject constructor(
                     } else {
                         rh.gs(info.nightscout.androidaps.plugins.pump.carelevo.R.string.carelevo_overview_pump_stop_btn_label)
                     },
-                    iconRes = app.aaps.core.ui.R.drawable.ic_loop_paused,
+                    icon = if (overviewData.isPumpStopped) Icons.Filled.PlayArrow else IcLoopPaused,
                     category = ActionCategory.MANAGEMENT,
                     onClick = {}
                 )
