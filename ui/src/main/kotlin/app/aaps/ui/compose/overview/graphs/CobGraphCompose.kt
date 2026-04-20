@@ -179,7 +179,7 @@ fun CobGraphCompose(
                     )
                 )
             ),
-            pointConnector = AdaptiveStep  // Adaptive: step for steep angles (>45°), line for gradual
+            interpolator = AdaptiveStep  // Adaptive: step for steep angles (>45°), line for gradual
         )
     }
 

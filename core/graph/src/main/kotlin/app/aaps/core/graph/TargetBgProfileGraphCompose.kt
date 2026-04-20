@@ -114,26 +114,26 @@ fun TargetBgProfileGraphCompose(
                     LineCartesianLayer.LineProvider.series(
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
-                            pointConnector = Square
+                            interpolator = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
-                            pointConnector = Square
+                            interpolator = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
-                            pointConnector = Square
+                            interpolator = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
-                            pointConnector = Square
+                            interpolator = Square
                         )
                     )
                 } else {
                     LineCartesianLayer.LineProvider.series(
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
-                            pointConnector = Square
+                            interpolator = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
@@ -142,7 +142,7 @@ fun TargetBgProfileGraphCompose(
                                     Fill(profile1Color.copy(alpha = 0.2f))
                                 )
                             },
-                            pointConnector = Square
+                            interpolator = Square
                         )
                     )
                 }
