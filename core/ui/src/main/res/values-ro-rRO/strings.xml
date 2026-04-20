@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">Adresa web nu este validă</string>
     <string name="error_mustbe4hexadidits">Trebuie să conțină 4 caractere din șirul ABCDEF0123456789</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Tratamente</string>
     <string name="treatments_desc">Vedeți și gestionați istoricul tratamentului</string>
     <string name="nav_configuration">Configurație</string>
@@ -1027,4 +1028,6 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAȘI</string>
+    <string name="remove_items">Eliminați elementele</string>
+    <string name="sort_items">Sortați elementele</string>
 </resources>
