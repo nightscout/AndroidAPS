@@ -1,0 +1,328 @@
+<resources>
+    <string name="carelevo">Carelevo</string>
+    <string name="carelevo_shortname">CL</string>
+    <string name="carelevo_description">Pump integration for carelevo</string>
+
+    <string name="common_btn_ok">확인</string>
+
+    <string name="carelevo_bluetooth_state_key">블루투스 상태</string>
+    <string name="carelevo_patch_state_key">연결 상태</string>
+    <string name="carelevo_serial_number_key">시리얼 번호</string>
+    <string name="carelevo_firmware_version_key">펌웨어 버전</string>
+    <string name="carelevo_lot_number_key">로트 번호</string>
+    <string name="carelevo_boot_date_time_key">시작 시간</string>
+    <string name="carelevo_expiration_key">만료 시간</string>
+    <string name="carelevo_infusion_status_key">기저 주입 상태</string>
+    <string name="carelevo_basal_rate_key">기본 basal 양</string>
+    <string name="carelevo_temp_basal_rate_key">임시 basal 양</string>
+    <string name="carelevo_insulin_remain_key">남은 인슐린</string>
+    <string name="carelevo_total_delivered_basal_key">총 주입 기저</string>
+    <string name="carelevo_total_delivered_bolus_key">총 주입 볼러스</string>
+    <string name="carelevo_running_remain_time">패치 남은 시간</string>
+    <string name="carelevo_bolus_status_key">볼러스 상태</string>
+    <string name="carelevo_imme_bolus_rate_key">즉시 볼러스 주입량</string>
+    <string name="carelevo_extend_bolus_rate_key">연장 볼러스 주입량</string>
+    <string name="carelevo_bolus_time_range">볼러스 주입 기간</string>
+    <string name="carelevo_total_insulin_key">총 인슐린 주입량</string>
+
+    <string name="common_label_unit_value_duration_hour_and_minute">%d시간 %d분</string>
+    <string name="common_label_unit_value_date_format_year_month_date_day">yyyy.MM.dd (E)</string>
+    <string name="common_label_unit_value_duration_day_hour">%d일 %d시간</string>
+    <string name="common_label_unit_value_minute">%d분</string>
+    <string name="common_label_unit_value_duration_hour">%d시간</string>
+    <string name="common_label_unit_dose">U</string>
+    <string name="common_label_unit_value_dose">%sU</string>
+    <string name="common_label_unit_value_dose_with_space">%s U</string>
+    <string name="common_label_unit_dose_per_speed">U/hr</string>
+    <string name="common_label_unit_value_dose_per_speed">%sU/hr</string>
+    <string name="common_label_unit_value_dose_per_speed_with_space">%.2f U/hr</string>
+
+    <string name="carelevo_pump_resume_title">주입을 재개 할까요?</string>
+    <string name="carelevo_pump_resume_description">확인 버튼을 누르면 주입이 재개 됩니다.</string>
+
+    <string name="carelevo_pump_stop_duration_title">주입 정지 시간을 설정해 주세요.</string>
+    <string name="carelevo_pump_stop_duration_label_30_min">30분</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour">1시간</string>
+    <string name="carelevo_pump_stop_duration_label_1_hour_30_min">1시간 30분</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour">2시간</string>
+    <string name="carelevo_pump_stop_duration_label_2_hour_30_min">2시간 30분</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour">3시간</string>
+    <string name="carelevo_pump_stop_duration_label_3_hour_30_min">3시간 30분</string>
+    <string name="carelevo_pump_stop_duration_label_4_hour">4시간</string>
+
+    <string name="common_unit_step_format">%1$d/%2$d</string>
+    <string name="common_unit_value_day_hour_min">%1$d일 %2$02d:%3$02d</string>
+    <string name="common_unit_remain_min_sec">%d분 %02d초 남음</string>
+
+    <string name="carelevo_btn_insulin_guide">인슐린 채우기 가이드</string>
+    <string name="carelevo_btn_patch_expiration">사용 종료</string>
+    <string name="carelevo_btn_input_insulin_amount">인슐린 양 입력</string>
+    <string name="carelevo_btn_input_search_patch">패치 검색</string>
+    <string name="carelevo_btn_retry">재시도</string>
+    <string name="carelevo_btn_next">다음</string>
+    <string name="carelevo_btn_safety_check">안전 점검</string>
+    <string name="carelevo_btn_ready_complete">준비 완료</string>
+    <string name="carelevo_btn_close">닫기</string>
+    <string name="carelevo_btn_cancel">취소</string>
+    <string name="carelevo_btn_confirm">확인</string>
+    <string name="carelevo_btn_research">재검색</string>
+    <string name="carelevo_btn_needle_insert_check">바늘 삽입 점검</string>
+
+    <string name="carelevo_state_none_value">연결 안됨</string>
+    <string name="carelevo_state_disconnected_value">연결 끊김</string>
+    <string name="carelevo_state_connected_value">연결 됨</string>
+
+    <string name="carelevo_overview_connect_btn_label">패치 연결</string>
+    <string name="carelevo_overview_communication_btn_label">통신 점검</string>
+    <string name="carelevo_overview_pump_stop_btn_label">주입 정지</string>
+    <string name="carelevo_overview_pump_resume_btn_label">주입 재개</string>
+    <string name="carelevo_overview_pump_discard_btn_label">패치 종료</string>
+
+    <string name="patch_prepare_dialog_title_insulin_amount">채운 인슐린 양 입력</string>
+    <string name="patch_prepare_dialog_msg_insulin_range">설정 가능 범위 : 50 ~ 300 U</string>
+
+    <string name="carelevo_insulin_refill_guide_title">인슐린 채우기 가이드</string>
+    <string name="carelevo_insulin_refill_step1">1. 패치 블리스터 뒷면의 포장지를 제거합니다.</string>
+    <string name="carelevo_insulin_refill_step2">2. 알콜솜을 사용하여 인슐린 바이알의 고무캡을 소독합니다.</string>
+    <string name="carelevo_insulin_refill_step3">3. 인슐린 주입용 주사기의 바늘 보호캡을 당겨 제거합니다.</string>
+    <string name="carelevo_insulin_refill_step4">4. 주사기의 플런저를 잡아당겨 공기 약 2 mL를 채웁니다.</string>
+    <string name="carelevo_insulin_refill_step5">5. 공기를 채운 주사기를 인슐린 바이알에 꽂은 후 공기를 바이알 안으로 주입합니다.</string>
+    <string name="carelevo_insulin_refill_step6">6. 주사기를 꽂은 상태로, 인슐린 바이알과 주사기를 거꾸로 뒤집고 주사기의 압력을 이용해 인슐린 약 2 mL를 채웁니다.</string>
+    <string name="carelevo_insulin_refill_step7">7. 패치의 인슐린 주입구(①)에 주사기 바늘이 바닥에 닿을 때까지 수직으로 끝까지 삽입하고, 주사기 플런저를 위로 끝까지 당겼다가 그대로 놓습니다. 주사기를 인슐린 주입구에서 제거합니다.  </string>
+    <string name="carelevo_insulin_refill_step8">8. 패치에서 제거한 주사기를 똑바로 세운 후 측면을 가볍게 쳐서 공기를 위쪽으로 모두 모이게 합니다.</string>
+    <string name="carelevo_insulin_refill_step9">9. 인슐린 바이알에 바늘을 삽입하고, 주사기 안에 공기가 모두 바이알 안으로 들어가게 한 후 패치 사용 기간 동안 사용할 인슐린 양만큼 주사기에 인슐린을 더 채웁니다.</string>
+    <string name="carelevo_insulin_refill_step10">10. 주사기를 바이알에서 뺀 후, 만약에 공기 방울이 있다면 주사기를 똑바로 세우고 측면을 가볍게 톡톡 쳐서 공기를 위쪽으로 모이게 하여 주사기 안에 있는 공기를 모두 제거합니다.</string>
+    <string name="carelevo_insulin_refill_step11">11. 주사기의 플런저 가장 위쪽의 눈금을 보고 채우려는 인슐린 용량을 정확히 맞춰줍니다.</string>
+    <string name="carelevo_insulin_refill_step12">12. 패치의 인슐린 주입구(①)에 주사기 바늘이 바닥에 닿을 때까지 수직으로 끝까지 삽입하고, 플런저를 천천히 밀어 주사기 안의 모든 인슐린을 패치에 주입합니다.</string>
+
+    <string name="carelevo_connect_prepare_title">패치 시작</string>
+    <string name="carelevo_connect_patch_title">패치 검색 및 연결</string>
+    <string name="carelevo_connect_safety_check_title">안전 점검</string>
+    <string name="carelevo_connect_patch_attach_title">패치 부착</string>
+    <string name="carelevo_connect_needle_check_title">바늘 삽입</string>
+
+    <string name="key_carelevo_low_reservoir_reminders" translatable="false">carelevo_low_reservoir_reminders</string>
+    <string name="carelevo_low_reservoir_reminders_title">인슐린 부족 알람</string>
+    <string name="carelevo_patch_buzzer_alarm_title">패치 부저 알람</string>
+    <string name="carelevo_patch_expiration_reminders_title">패치 사용 기간 알림 설정</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">인슐린 부족 알람 설정 값</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">패치 사용 기간 알림 설정 값</string>
+    <string name="carelevo_patch_expiration_reminders_message">패치를 사용한 기간이 설정한 시간 이상이 되면 알림이 발생합니다.</string>
+
+    <string name="carelevo_preferences_category_confirmation_beeps">확인 신호음</string>
+
+    <string name="carelevo_title_fill_insulin">패치에 인슐린 채우기</string>
+    <string name="carelevo_notice_fill_insulin_amount">사용 기간 (최대 168시간)을 고려하여 패치에 인슐린을 채워주세요.\n(50 U - 300 U)인슐린 양 입력 버튼을 눌러 채운 인슐린 양을 입력해 주세요.</string>
+
+    <string name="carelevo_patch_step_1">STEP 1.</string>
+    <string name="carelevo_patch_step_2">STEP 2.</string>
+    <string name="carelevo_patch_step_3">STEP 3.</string>
+
+    <string name="carelevo_patch_connect_step_1_title">바늘 보호캡 제거하기</string>
+    <string name="carelevo_patch_connect_step_1_desc">패치를 포장재에서 꺼낸 후 바늘 보호캡을 제거해 주세요.</string>
+    <string name="carelevo_patch_connect_step_2_title">전원 켜기 및 연결</string>
+    <string name="carelevo_patch_connect_step_2_desc">전원 버튼을 1초 이상 길게 눌러 부팅음이 확인 되면 아래 패치 검색 버튼을 눌러주세요.</string>
+
+    <string name="carelevo_patch_safety_check_start_title">안전점검</string>
+    <string name="carelevo_patch_safety_check_end_title">안전점검 완료</string>
+    <string name="carelevo_patch_safety_check_start_desc">패치가 정상적으로 연결되었습니다.\n[안전점검]버튼을 눌러주세요.</string>
+    <string name="carelevo_patch_safety_check_progress_desc">안전점검을 진행중입니다.</string>
+    <string name="carelevo_patch_safety_check_end_desc">안전점검을 완료했습니다.\n다음 버튼을 눌러주세요.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">바늘 끝에 인슐린 방울이 맺혔는지 확인해주세요.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">인슐린 방울이 맺히지 않았다면 [재시도] 버튼을 눌러 주세요.</string>
+
+    <string name="carelevo_patch_attach_step1_title">부착 부위 소독</string>
+    <string name="carelevo_patch_attach_step1_desc">알콜솜으로 깨끗이 소독해 주세요.</string>
+    <string name="carelevo_patch_attach_step2_title">패치 보호 테이프 제거</string>
+    <string name="carelevo_patch_attach_step2_desc">패치의 보호 테이프를 제거해 주세요.</string>
+    <string name="carelevo_patch_attach_step3_title">패치 부착</string>
+    <string name="carelevo_patch_attach_step3_desc">패치에 표시된 점이 위로 향하게 피부에 부착해 주세요.</string>
+    <string name="carelevo_patch_attach_step4_desc">피부에 부착한 후, 준비 완료 버튼을 눌러주세요.</string>
+
+    <string name="carelevo_patch_needle_insertion_step1_title">안전캡 제거</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">안전캡을 화살표 방향으로 90도 돌린 후 안전캡을 들어 제거해 주세요.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">바늘 삽입</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">어플리케이터의 푸시 버튼을 끝까지 눌러 바늘을 삽입해 주세요.\n정상적으로 바늘이 삽입되면 부저음이 발생합니다.\n확인 버튼을 눌러 주세요.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">누른 상태로 10초간 유지하세요. 10초 후 부저음이 한 번 더 울립니다.</string>
+
+    <string name="carelevo_dialog_patch_needle_check_title">바늘 삽입이 되지 않았나요?</string>
+    <string name="carelevo_dialog_patch_needle_check_desc">어플리케이터 가운데 부분을 끝까지 눌러 바늘을 삽입해 주세요. 정상적으로 바늘이 삽입되면 부저음이 발생합니다.\n아래 [바늘 삽입 점검] 버튼을 눌러주세요.</string>
+    <string name="carelevo_dialog_patch_needle_check_retry_desc">어플리케이터 가운데 부분을 끝까지 눌러 바늘을 삽입해 주세요. 정상적으로 바늘이 삽입되면 부저음이 발생합니다.\n아래 [재시도] 버튼을 눌러주세요.</string>
+    <string name="carelevo_dialog_patch_needle_retry_count">바늘 삽입 재시도 횟수가 %d번 남았습니다.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">새 패치 사용을 위해 기존 패치를 사용 종료하시겠어요?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">확인 버튼을 누르면 인슐린 주입이 중단됩니다.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">아래 검색된 패치가 있다면 확인 버튼을 눌러 주세요.</string>
+
+    <string name="carelevo_dialog_patch_connect_needle_injected">바늘 삽입 완료 및 어플리케이터 분리</string>
+    <string name="carelevo_dialog_connect_detached">분리 완료</string>
+    <string name="carelevo_dialog_connect_detach_applicator_guide">어플리케이터 양 옆 손잡이를 눌러 패치에서 분리하고\n<b>[분리 완료]</b> 버튼을 눌러주세요. 주입이 시작됩니다.</string>
+
+    <!-- 연결 관련 -->
+    <string name="carelevo_toast_patch_connecting">패치를 연결하는 중입니다.</string>
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">블루투스가 활성화되어 있지 않습니다. 확인해 주세요.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">패치가 연결되어 있지 않습니다.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">패치가 아직 연결되지 않았습니다. 잠시 후 다시 시도해 주세요.</string>
+    <string name="carelevo_toast_msg_scan_failed">스캔 실패했습니다. 다시 시도해 주세요.</string>
+    <string name="carelevo_toast_msg_scan_in_progress">스캔 중입니다. 잠시만 기다려 주세요.</string>
+    <string name="carelevo_toast_msg_patch_not_found">검색된 패치가 없습니다. 다시 시도해 주세요.</string>
+    <string name="carelevo_toast_msg_connect_failed">패치 연결 실패했습니다. 다시 시도해 주세요.</string>
+    <string name="carelevo_toast_msg_connect_complete">패치 연결 성공했습니다.</string>
+
+    <!-- 프로파일 -->
+    <string name="carelevo_toast_msg_profile_not_set">프로파일이 설정되어 있지 않습니다.</string>
+
+    <!-- 캐뉼라 삽입 -->
+    <string name="carelevo_toast_msg_needle_inserted">바늘 삽입이 완료되었습니다.</string>
+    <string name="carelevo_toast_msg_needle_not_inserted">바늘 삽입이 완료되지 않았습니다.</string>
+    <string name="carelevo_toast_msg_needle_check_failed">바늘 삽입에 실패했습니다.</string>
+    <string name="carelevo_toast_msg_needle_retry_count">바늘 삽입 재시도 횟수가 %d번 남았습니다.</string>
+
+    <!-- 패치 사용 종료 -->
+    <string name="carelevo_toast_msg_discard_complete">패치 사용이 종료되었습니다.</string>
+    <string name="carelevo_toast_msg_discard_failed">패치 사용 종료에 실패했습니다. 다시 시도해 주세요.</string>
+
+    <!-- 기저 주입 -->
+    <string name="carelevo_toast_msg_set_basal_complete">패치 연결이 완료되었습니다.</string>
+    <string name="carelevo_toast_msg_set_basal_failed">기저 주입 요청에 실패했습니다. 다시 시도해 주세요.</string>
+
+    <!-- 주입 재개/정지 -->
+    <string name="carelevo_toast_mag_set_basal_resume_success">주입이 재개되었습니다.</string>
+    <string name="carelevo_toast_mag_set_basal_resume_fail">주입 재개에 실패했습니다. 다시 시도해 주세요.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_success">주입이 정지되었습니다.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">주입 정지에 실패했습니다. 다시 시도해 주세요.</string>
+
+    <!-- 안전 점검 -->
+    <string name="carelevo_toast_msg_safety_check_success">안전 점검이 완료되었습니다.</string>
+    <string name="carelevo_toast_msg_safety_check_failed">안전 점검에 실패했습니다.</string>
+
+    <string name="carelevo_comm_check_title">통신 점검</string>
+    <string name="carelevo_comm_check_description">패치와 통신이 원활하지 않습니다.\n재연결을 원하시면 통신점검, 사용종료를 원하시면 사용 종료 버튼을 눌러주세요.</string>
+
+    <string name="alarm_feat_label_warning">경고</string>
+    <string name="alarm_feat_label_alert">주의</string>
+    <string name="alarm_feat_label_notice">알림</string>
+    <string name="alarm_feat_label_unknown">알 수 없음</string>
+
+    <string name="alarm_feat_label_occurrence_time">발생 시간</string>
+    <string name="alarm_feat_format_occurrence_time">yyyy. MM. dd(E) HH:mm</string>
+
+    <string name="alarm_feat_desc_helper">패치에 문제가 발생하셨나요?\n아래 버튼을 눌러 패치를 강제 종료해 주세요.</string>
+
+    <string name="alarm_feat_title_warning_low_insulin">인슐린 부족</string>
+    <string name="alarm_feat_title_warning_expired_patch">패치 사용 종료</string>
+    <string name="alarm_feat_title_warning_low_battery">배터리 부족</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">부적합 온도</string>
+    <string name="alarm_feat_title_warning_not_used_app">앱 미사용 주입 차단</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE 연결 안됨</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">패치 적용 시간 종료</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">안전점검 실패</string>
+    <string name="alarm_feat_title_warning_patch_error">패치 오류</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">주입구 막힘</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">바늘 삽입 오류</string>
+
+    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[패치에 인슐린이 <b>10 U 미만</b>으로, 주입이 중단되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[패치 사용 및 인슐린 주입이 중단되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[패치 배터리가 부족하여 인슐린 주입이 중단되었습니다<br><b>강제 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[인슐린 주입이 중단되었습니다.<br><b>즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[인슐린 주입이 중단되었습니다.<br><b>주입 재개 버튼을 눌러 기저 주입을 다시 시작해 보세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[패치 적용 시간이 만료되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[안전점검이 실패했습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[예상치 못한 오류로 인해 인슐린 주입이 중단되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[주입구가 막혀 인슐린 주입이 중단되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[바늘 삽입에 실패했습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+
+    <string name="alarm_feat_title_alert_low_insulin">인슐린 부족</string>
+    <string name="alarm_feat_title_alert_expired_patch_first">패치 사용 기간 만료</string>
+    <string name="alarm_feat_title_alert_expired_patch_second">패치 사용 종료 임박</string>
+    <string name="alarm_feat_title_alert_low_battery">배터리 부족</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">부적합 온도</string>
+    <string name="alarm_feat_title_alert_not_used_app">앱 미사용 주입 차단</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE 연결 안됨</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">패치 적용 미완료</string>
+    <string name="alarm_feat_title_alert_resume_infusion">주입 재개</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">블루투스 켜기</string>
+
+    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[패치에 남은 인슐린이 <b>%s U</b> 미만입니다.<br><b>패치 교체를 준비해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_first"><![CDATA[패치 사용 기간이 만료되었습니다.<br><b>새 패치로 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_second"><![CDATA[패치 사용이 곧 종료됩니다.<br><b>새 패치로 교체해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[패치에 배터리가 부족합니다.<br><b>패치 교체를 준비해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[인슐린 주입이 중단되었습니다.<br><b>즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요.</b><br>적합한 온도가 되면 기저 주입이 재개됩니다.]]></string>
+    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[확인 버튼을 눌러주세요.<br>확인 버튼을 누르지 않으면 경고 알람으로 상향되고<br><b>인슐린 주입이 차단됩니다.</b>]]></string>
+    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[확인 버튼을 눌러 패치 연결을 완료해 주세요.]]></string>
+    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[주입 정지가 종료되었습니다.<br><b>주입 재개를 눌러 기저 주입을 다시 시작해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[패치 사용을 위해 블루투스가 필요합니다.<br><b>확인 버튼을 누르고 블루투스를 켜 주세요.</b>]]></string>
+
+    <string name="alarm_feat_title_notice_low_insulin">인슐린 부족</string>
+    <string name="alarm_feat_title_notice_expired_patch">패치 사용 기간 알림</string>
+    <string name="alarm_feat_title_notice_check_patch">패치 점검 알림</string>
+    <string name="alarm_feat_title_notice_change_time_zone">국가 표준시간 변경</string>
+    <string name="alarm_feat_title_notice_check_bg">혈당 확인</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS 작동 시작</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS 작동 종료</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS 작동 불가</string>
+    <string name="alarm_feat_title_notice_unknown">패치 오류</string>
+
+    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[패치에 남은 인슐린이 %s U 미만입니다.<br><b>패치 교체를 준비해 주세요.</b>]]></string>
+    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[패치 사용 기간이 <b>%s일 %s시간</b>이 되었습니다.<br>패치 사용에 참고해 주세요.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[<b>%s(UTC %s)에서 %s(UTC %s)</b>(으)로 국가 표준시간이 변경되었습니다.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone_same_country"><![CDATA[<b>%s/%s(UTC %s)에서 %s/%s(UTC %s)</b>(으)로 국가 표준시간이 변경되었습니다.]]></string>
+    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[볼러스 주입 후 <b>%s</b>이 지났습니다.<br>혈당을 확인해 주세요.]]></string>
+    <string name="alarm_feat_desc_notice_lgs_started">LGS 작동이 시작 되었습니다.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">패치 또는 CGM 연결이 끊겨 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS 일시 정지로 인하여 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_time_over">설정한 LGS 작동 시간대가 경과되어 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS 사용 설정을 OFF로 변경하여 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">CGM 혈당 값이 설정 값 이상으로 측정되어 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_unknown">알수 없는 이유로 인해 LGS 작동 종료 되었습니다.</string>
+    <string name="alarm_feat_desc_notice_lgs_error">패치 및 CGM 연결 상태를 확인해 주세요.</string>
+
+    <string name="alarm_feat_desc_unknown">알 수 없는 패치 오류입니다.</string>
+
+    <string name="alarm_feat_btn_patch_discard">사용 종료</string>
+    <string name="alarm_feat_btn_patch_force_discard">강제 종료</string>
+    <string name="alarm_feat_btn_resume_infusion">주입 재개</string>
+
+    <string name="alarm_feat_msg_check_patch_connect">패치 연결 상태를 확인해 주세요.</string>
+    <string name="alarm_feat_msg_fail_alarm_clear">알림 확인 처리에 실패했습니다. 다시 시도 해주세요.</string>
+
+    <!--    notification desc -->
+    <string name="alarm_notification_desc_warning_low_insulin">패치에 인슐린이 10 U 미만 으로, 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">패치 사용 및 인슐린 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+    <string name="alarm_notification_desc_warning_low_battery">패치 배터리가 부족하여 인슐린 주입이 중단되었습니다. 강제 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">인슐린 주입이 중단되었습니다. 즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요.</string>
+    <string name="alarm_notification_desc_warning_not_used_app">인슐린 주입이 중단되었습니다. 주입 재개 버튼을 눌러 기저 주입을 다시 시작해 보세요.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">패치 적용 시간이 만료되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">안전점검이 실패했습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+    <string name="alarm_notification_desc_warning_patch_error">예상치 못한 오류로 인해 인슐린 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">주입구가 막혀 인슐린 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">바늘 삽입에 실패했습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+
+    <string name="alarm_notification_desc_alert_low_insulin">패치에 남은 인슐린이 %s U 미만입니다. 패치 교체를 준비해 주세요.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_first">패치 사용 기간이 만료되었습니다. 새 패치로 교체해 주세요.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_second">패치 사용이 곧 종료됩니다. 새 패치로 교체해 주세요.</string>
+    <string name="alarm_notification_desc_alert_low_battery">패치에 배터리가 부족합니다. 패치 교체를 준비해 주세요.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">인슐린 주입이 중단되었습니다. 즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요. 적합한 온도가 되면 기저 주입이 재개됩니다.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">확인 버튼을 눌러주세요. 확인 버튼을 누르지 않으면 경고 알람으로 상향되고 인슐린 주입이 차단됩니다.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">확인 버튼을 눌러 패치 연결을 완료해 주세요.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">주입 정지가 종료되었습니다. 주입 재개를 눌러 기저 주입을 다시 시작해 주세요.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">패치 사용을 위해 블루투스가 필요합니다. 확인 버튼을 누르고 블루투스를 켜 주세요.</string>
+
+    <string name="alarm_notification_desc_notice_low_insulin">패치에 남은 인슐린이 %s U 미만입니다. 패치 교체를 준비해 주세요.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">패치 사용 기간이 %s일 %s시간이 되었습니다. 패치 사용에 참고해 주세요.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">%s(UTC %s)에서 %s(UTC %s)(으)로 국가 표준시간이 변경되었습니다.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone_same_country">%s/%s(UTC %s)에서 %s/%s(UTC %s)(으)로 국가 표준시간이 변경되었습니다.</string>
+    <string name="alarm_notification_desc_notice_check_bg">볼러스 주입 후 %s이 지났습니다. 혈당을 확인해 주세요.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS 작동이 시작 되었습니다.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">패치 또는 CGM 연결이 끊겨 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS 일시 정지로 인하여 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">설정한 LGS 작동 시간대가 경과되어 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS 사용 설정을 OFF로 변경하여 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">CGM 혈당 값이 설정 값 이상으로 측정되어 LGS 작동이 종료 되었습니다.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">알수 없는 이유로 인해 LGS 작동 종료 되었습니다.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">패치 및 CGM 연결 상태를 확인해 주세요.</string>
+
+
+    <string name="carelevo_profile_update_skip_too_soon">프로필 업데이트가 너무 빠르게 요청되었습니다. 최소 30초 후 다시 시도해주세요.</string>
+    <string name="carelevo_profile_update_skip_comment">업데이트 요청 간격이 짧아 실행되지 않았습니다.</string>
+
+</resources>

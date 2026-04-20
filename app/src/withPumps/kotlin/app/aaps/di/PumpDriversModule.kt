@@ -13,6 +13,7 @@ import app.aaps.pump.omnipod.eros.di.OmnipodErosModule
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import info.nightscout.androidaps.plugins.pump.carelevo.di.CarelevoModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 
 @Module(
@@ -30,6 +31,7 @@ import info.nightscout.pump.combov2.di.ComboV2Module
         MedtrumModule::class,
         EquilModule::class,
         EquilModules::class,
+        CarelevoModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)

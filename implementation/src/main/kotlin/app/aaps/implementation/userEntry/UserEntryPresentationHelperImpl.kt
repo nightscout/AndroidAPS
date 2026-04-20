@@ -1,12 +1,6 @@
 package app.aaps.implementation.userEntry
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Watch
-import androidx.compose.ui.graphics.vector.ImageVector
+import android.text.Spanned
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.UE
@@ -19,64 +13,8 @@ import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.ui.compose.icons.IcAaps
-import app.aaps.core.ui.compose.icons.IcAction
-import app.aaps.core.ui.compose.icons.IcActivity
-import app.aaps.core.ui.compose.icons.IcAnnouncement
-import app.aaps.core.ui.compose.icons.IcAutomation
-import app.aaps.core.ui.compose.icons.IcBgCheck
-import app.aaps.core.ui.compose.icons.IcBolus
-import app.aaps.core.ui.compose.icons.IcByoda
-import app.aaps.core.ui.compose.icons.IcCalculator
-import app.aaps.core.ui.compose.icons.IcCalibration
-import app.aaps.core.ui.compose.icons.IcCannulaChange
-import app.aaps.core.ui.compose.icons.IcCarbs
-import app.aaps.core.ui.compose.icons.IcCgmInsert
-import app.aaps.core.ui.compose.icons.IcClinicalNotes
-import app.aaps.core.ui.compose.icons.IcExtendedBolus
-import app.aaps.core.ui.compose.icons.IcGenericCgm
-import app.aaps.core.ui.compose.icons.IcGenericIcon
-import app.aaps.core.ui.compose.icons.IcLoopClosed
-import app.aaps.core.ui.compose.icons.IcMdi
-import app.aaps.core.ui.compose.icons.IcNote
-import app.aaps.core.ui.compose.icons.IcPatchPump
-import app.aaps.core.ui.compose.icons.IcPluginAutotune
-import app.aaps.core.ui.compose.icons.IcPluginCombo
-import app.aaps.core.ui.compose.icons.IcPluginConfigBuilder
-import app.aaps.core.ui.compose.icons.IcPluginDanaI
-import app.aaps.core.ui.compose.icons.IcPluginDiaconn
-import app.aaps.core.ui.compose.icons.IcPluginEopatch
-import app.aaps.core.ui.compose.icons.IcPluginEquil
-import app.aaps.core.ui.compose.icons.IcPluginEversense
-import app.aaps.core.ui.compose.icons.IcPluginFood
-import app.aaps.core.ui.compose.icons.IcPluginGarmin
-import app.aaps.core.ui.compose.icons.IcPluginGlimp
-import app.aaps.core.ui.compose.icons.IcPluginGlunovo
-import app.aaps.core.ui.compose.icons.IcPluginInsight
-import app.aaps.core.ui.compose.icons.IcPluginInsulin
-import app.aaps.core.ui.compose.icons.IcPluginIntelligo
-import app.aaps.core.ui.compose.icons.IcPluginMM640G
-import app.aaps.core.ui.compose.icons.IcPluginMaintenance
-import app.aaps.core.ui.compose.icons.IcPluginMedtronic
-import app.aaps.core.ui.compose.icons.IcPluginMedtrum
-import app.aaps.core.ui.compose.icons.IcPluginNsClient
-import app.aaps.core.ui.compose.icons.IcPluginNsClientBg
-import app.aaps.core.ui.compose.icons.IcPluginObjectives
-import app.aaps.core.ui.compose.icons.IcPluginPocTec
-import app.aaps.core.ui.compose.icons.IcPluginRandomBg
-import app.aaps.core.ui.compose.icons.IcPluginSms
-import app.aaps.core.ui.compose.icons.IcPluginSyai
-import app.aaps.core.ui.compose.icons.IcPluginTomato
-import app.aaps.core.ui.compose.icons.IcPluginVirtualPump
-import app.aaps.core.ui.compose.icons.IcProfile
-import app.aaps.core.ui.compose.icons.IcPumpBattery
-import app.aaps.core.ui.compose.icons.IcQuestion
-import app.aaps.core.ui.compose.icons.IcQuickwizard
-import app.aaps.core.ui.compose.icons.IcSiteRotation
-import app.aaps.core.ui.compose.icons.IcStats
-import app.aaps.core.ui.compose.icons.IcTbrHigh
-import app.aaps.core.ui.compose.icons.IcTtHigh
-import app.aaps.core.ui.compose.icons.IcXDrip
+import app.aaps.core.objects.R
+import app.aaps.core.utils.HtmlHelper
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -89,123 +27,141 @@ class UserEntryPresentationHelperImpl @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) : UserEntryPresentationHelper {
 
-    override fun icon(source: Sources): ImageVector = when (source) {
-        Sources.Aaps                -> IcAaps
-        Sources.Actions             -> IcAction
-        Sources.Aidex               -> IcXDrip
-        Sources.Announcement        -> IcAnnouncement
-        Sources.Automation          -> IcAutomation
-        Sources.Autotune            -> IcPluginAutotune
-        Sources.BG                  -> IcGenericCgm
-        Sources.BatteryChange       -> IcPumpBattery
-        Sources.BgCheck             -> IcBgCheck
-        Sources.BgFragment          -> IcAaps
-        Sources.CalibrationDialog   -> IcCalibration
-        Sources.CarbDialog          -> IcCarbs
-        Sources.Combo               -> IcPluginCombo
-        Sources.ConcentrationDialog -> IcPluginInsulin
-        Sources.ConfigBuilder       -> IcPluginConfigBuilder
-        Sources.Dana                -> IcPluginDanaI
-        Sources.DanaI               -> IcPluginDanaI
-        Sources.DanaR               -> IcPluginDanaI
-        Sources.DanaRC              -> IcPluginDanaI
-        Sources.DanaRS              -> IcPluginDanaI
-        Sources.DanaRv2             -> IcPluginDanaI
-        Sources.Database            -> Icons.Default.Delete
-        Sources.Dexcom              -> IcByoda
-        Sources.DiaconnG8           -> IcPluginDiaconn
-        Sources.EOPatch2            -> IcPluginEopatch
-        Sources.Equil               -> IcPluginEquil
-        Sources.Eversense           -> IcPluginEversense
-        Sources.Exercise            -> IcActivity
-        Sources.ExtendedBolusDialog -> IcExtendedBolus
-        Sources.FillDialog          -> IcCannulaChange
-        Sources.Food                -> IcPluginFood
-        Sources.Garmin              -> IcPluginGarmin
-        Sources.Glimp               -> IcPluginGlimp
-        Sources.Glunovo             -> IcPluginGlunovo
-        Sources.Insight             -> IcPluginInsight
-        Sources.Insulin             -> IcPluginInsulin
-        Sources.InsulinDialog       -> IcBolus
-        Sources.Intelligo           -> IcPluginIntelligo
-        Sources.LocalProfile        -> IcProfile
-        Sources.Loop                -> IcLoopClosed
-        Sources.LoopDialog          -> IcLoopClosed
-        Sources.MDI                 -> IcMdi
-        Sources.MM640g              -> IcPluginMM640G
-        Sources.Maintenance         -> IcPluginMaintenance
-        Sources.Medtronic           -> IcPluginMedtronic
-        Sources.Medtrum             -> IcPluginMedtrum
-        Sources.NSClient            -> IcPluginNsClient
-        Sources.NSClientSource      -> IcPluginNsClientBg
-        Sources.NSProfile           -> IcPluginNsClient
-        Sources.Note                -> IcNote
-        Sources.NotificationReader  -> IcGenericCgm
-        Sources.Objectives          -> IcPluginObjectives
-        Sources.Omnipod             -> IcPatchPump
-        Sources.OmnipodDash         -> IcPatchPump
-        Sources.OmnipodEros         -> IcPatchPump
-        Sources.Ottai               -> IcPluginSyai
-        Sources.Overview            -> Icons.Default.Home
-        Sources.PocTech             -> IcPluginPocTec
-        Sources.ProfileSwitchDialog -> IcProfile
-        Sources.Pump                -> IcGenericIcon
-        Sources.Question            -> IcQuestion
-        Sources.QuickWizard         -> IcQuickwizard
-        Sources.Random              -> IcPluginRandomBg
-        Sources.SMS                 -> IcPluginSms
-        Sources.SensorInsert        -> IcCgmInsert
-        Sources.SettingsExport      -> IcAutomation
-        Sources.SiBionic            -> IcGenericCgm
-        Sources.Sino                -> IcGenericCgm
-        Sources.SiteRotationDialog  -> IcSiteRotation
-        Sources.Stats               -> IcStats
-        Sources.SyaiTag             -> IcPluginSyai
-        Sources.TTDialog            -> IcTtHigh
-        Sources.TempBasalDialog     -> IcTbrHigh
-        Sources.Tomato              -> IcPluginTomato
-        Sources.TreatmentDialog     -> Icons.Default.Add
-        Sources.Treatments          -> IcClinicalNotes
-        Sources.Unknown             -> Icons.Default.Settings
-        Sources.VirtualPump         -> IcPluginVirtualPump
-        Sources.Wear                -> Icons.Default.Watch
-        Sources.WizardDialog        -> IcCalculator
-        Sources.Xdrip               -> IcXDrip
+    override fun colorId(colorGroup: Action.ColorGroup): Int = when (colorGroup) {
+        Action.ColorGroup.InsulinTreatment -> app.aaps.core.ui.R.color.iob
+        Action.ColorGroup.BasalTreatment   -> app.aaps.core.ui.R.color.basal
+        Action.ColorGroup.CarbTreatment    -> app.aaps.core.ui.R.color.carbs
+        Action.ColorGroup.TT               -> app.aaps.core.ui.R.color.tempTargetConfirmation
+        Action.ColorGroup.Profile          -> app.aaps.core.ui.R.color.white
+        Action.ColorGroup.Loop             -> app.aaps.core.ui.R.color.loopClosed
+        Action.ColorGroup.Careportal       -> app.aaps.core.ui.R.color.high
+        Action.ColorGroup.Pump             -> app.aaps.core.ui.R.color.loopDisconnected
+        Action.ColorGroup.Aaps             -> app.aaps.core.ui.R.color.defaultText
+        Action.ColorGroup.RunningMode      -> app.aaps.core.ui.R.color.white
+        // else                               -> app.aaps.core.ui.R.color.defaultText
     }
+
+    override fun iconId(source: Sources): Int = when (source) {
+        Sources.TreatmentDialog     -> R.drawable.icon_insulin_carbs
+        Sources.InsulinDialog       -> R.drawable.ic_bolus
+        Sources.CarbDialog          -> R.drawable.ic_cp_bolus_carbs
+        Sources.WizardDialog        -> R.drawable.ic_calculator
+        Sources.QuickWizard         -> R.drawable.ic_quick_wizard
+        Sources.ExtendedBolusDialog -> R.drawable.ic_actions_start_extended_bolus
+        Sources.TTDialog            -> R.drawable.ic_temptarget_high
+        Sources.ProfileSwitchDialog -> app.aaps.core.ui.R.drawable.ic_actions_profileswitch
+        Sources.LoopDialog          -> R.drawable.ic_loop_closed
+        Sources.TempBasalDialog     -> R.drawable.ic_actions_start_temp_basal
+        Sources.CalibrationDialog   -> R.drawable.ic_calibration
+        Sources.FillDialog          -> R.drawable.ic_cp_pump_cannula
+        Sources.SiteRotationDialog  -> app.aaps.core.ui.R.drawable.ic_site_rotation
+        Sources.BgCheck             -> R.drawable.ic_cp_bgcheck
+        Sources.SensorInsert        -> R.drawable.ic_cp_cgm_insert
+        Sources.BatteryChange       -> R.drawable.ic_cp_pump_battery
+        Sources.Note                -> R.drawable.ic_cp_note
+        Sources.Exercise            -> R.drawable.ic_cp_exercise
+        Sources.Question            -> R.drawable.ic_cp_question
+        Sources.Announcement        -> R.drawable.ic_cp_announcement
+        Sources.SettingsExport      -> R.drawable.ic_automation
+        Sources.Actions             -> R.drawable.ic_action
+        Sources.Automation          -> R.drawable.ic_automation
+        Sources.Autotune            -> R.drawable.ic_autotune
+        Sources.BG                  -> R.drawable.ic_generic_cgm
+        Sources.Aidex               -> R.drawable.ic_blooddrop_48
+        Sources.Dexcom              -> R.drawable.ic_dexcom_g6
+        Sources.Eversense           -> R.drawable.ic_eversense
+        Sources.Glimp               -> R.drawable.ic_glimp
+        Sources.MM640g              -> R.drawable.ic_generic_cgm
+        Sources.NSClientSource      -> R.drawable.ic_nsclient_bg
+        Sources.PocTech             -> R.drawable.ic_poctech
+        Sources.Tomato              -> R.drawable.ic_sensor
+        Sources.Glunovo             -> R.drawable.ic_glunovo
+        Sources.Intelligo           -> app.aaps.core.ui.R.drawable.ic_intelligo
+        Sources.Xdrip               -> R.drawable.ic_blooddrop_48
+        Sources.Ottai    -> R.drawable.ic_syai_tag
+        Sources.SyaiTag  -> R.drawable.ic_syai_tag
+        Sources.SiBionic -> R.drawable.ic_generic_cgm
+        Sources.Sino     -> R.drawable.ic_generic_cgm
+        Sources.LocalProfile        -> R.drawable.ic_local_profile
+        Sources.Loop                -> R.drawable.ic_loop_closed_white
+        Sources.Maintenance         -> app.aaps.core.ui.R.drawable.ic_maintenance
+        Sources.NSClient            -> app.aaps.core.ui.R.drawable.ic_nightscout_syncs
+        Sources.NSProfile           -> R.drawable.ic_nightscout_profile
+        Sources.Objectives          -> app.aaps.core.ui.R.drawable.ic_graduation
+        Sources.Pump                -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.Dana                -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaR               -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaRC              -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaRv2             -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaRS              -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaI               -> app.aaps.core.ui.R.drawable.ic_danai_128
+        Sources.DiaconnG8           -> app.aaps.core.ui.R.drawable.ic_diaconn_g8
+        Sources.Insight             -> app.aaps.core.ui.R.drawable.ic_insight_128
+        Sources.Combo               -> app.aaps.core.ui.R.drawable.ic_combo_128
+        Sources.Medtronic           -> app.aaps.core.ui.R.drawable.ic_veo_128
+        Sources.Omnipod             -> R.drawable.ic_patch_pump_outline
+        Sources.OmnipodEros         -> R.drawable.ic_patch_pump_outline
+        Sources.OmnipodDash         -> R.drawable.ic_patch_pump_outline
+        Sources.EOPatch2            -> app.aaps.core.ui.R.drawable.ic_eopatch2_128
+        Sources.Equil               -> app.aaps.core.ui.R.drawable.ic_equil_128
+        Sources.Medtrum             -> app.aaps.core.ui.R.drawable.ic_medtrum_128
+        Sources.MDI                 -> R.drawable.ic_ict
+        Sources.VirtualPump         -> R.drawable.ic_virtual_pump
+        Sources.SMS                 -> R.drawable.ic_sms
+        Sources.Treatments          -> R.drawable.ic_treatments
+        Sources.Wear                -> R.drawable.ic_watch
+        Sources.Food                -> R.drawable.ic_food
+        Sources.Stats               -> R.drawable.ic_cp_stats
+        Sources.ConfigBuilder       -> app.aaps.core.ui.R.drawable.ic_cogs
+        Sources.Overview            -> app.aaps.core.ui.R.drawable.ic_home
+        Sources.Aaps                -> R.drawable.ic_aaps
+        Sources.Garmin              -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.Database            -> app.aaps.core.ui.R.drawable.ic_database_cleanup
+        Sources.Unknown             -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.Random              -> R.drawable.ic_aaps
+        Sources.BgFragment          -> R.drawable.ic_aaps
+        Sources.Carelevo            -> app.aaps.core.ui.R.drawable.ic_carelevo_128
+    }
+
+    override fun actionToColoredString(action: Action): Spanned = when (action) {
+        Action.TREATMENT -> HtmlHelper.fromHtml(coloredAction(Action.BOLUS) + " + " + coloredAction(Action.CARBS))
+        else             -> HtmlHelper.fromHtml(coloredAction(action))
+    }
+
+    private fun coloredAction(action: Action): String = "<font color='${rh.gc(colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
     override fun listToPresentationString(list: List<ValueWithUnit>) =
         list.joinToString(separator = "  ", transform = this::toPresentationString)
 
     private fun toPresentationString(valueWithUnit: ValueWithUnit?): String = when (valueWithUnit) {
-        is ValueWithUnit.Gram                 -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Hour                 -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Minute               -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Percent              -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Insulin              -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-        is ValueWithUnit.InsulinConcentration -> "${rh.gs(app.aaps.core.ui.R.string.ins_concentration_confirmed, valueWithUnit.value)}"
-        is ValueWithUnit.UnitPerHour          -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-        is ValueWithUnit.SimpleInt            -> valueWithUnit.value.toString()
-        is ValueWithUnit.SimpleString         -> valueWithUnit.value
-        is ValueWithUnit.TEMeterType          -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TETTReason           -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.RMMode               -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TEType               -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TELocation           -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TEArrow              -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.Timestamp            -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
+        is ValueWithUnit.Gram         -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Hour         -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Minute       -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Percent      -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Insulin      -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+        is ValueWithUnit.UnitPerHour  -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+        is ValueWithUnit.SimpleInt    -> valueWithUnit.value.toString()
+        is ValueWithUnit.SimpleString -> valueWithUnit.value
+        is ValueWithUnit.TEMeterType  -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TETTReason   -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.RMMode       -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TEType       -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TELocation   -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TEArrow      -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.Timestamp    -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-        is ValueWithUnit.Mgdl                 -> {
+        is ValueWithUnit.Mgdl         -> {
             if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueWithUnit.value) + rh.gs(app.aaps.core.ui.R.string.mgdl)
             else decimalFormatter.to1Decimal(valueWithUnit.value * Constants.MGDL_TO_MMOLL) + rh.gs(app.aaps.core.ui.R.string.mmol)
         }
 
-        is ValueWithUnit.Mmoll                -> {
+        is ValueWithUnit.Mmoll        -> {
             if (profileUtil.units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(valueWithUnit.value) + rh.gs(app.aaps.core.ui.R.string.mmol)
             else decimalFormatter.to0Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + rh.gs(app.aaps.core.ui.R.string.mgdl)
         }
 
-        ValueWithUnit.UNKNOWN                 -> ""
-        null                                  -> ""
+        ValueWithUnit.UNKNOWN         -> ""
+        null                          -> ""
     }
 
     override fun userEntriesToCsv(userEntries: List<UE>): String {
@@ -255,30 +211,29 @@ class UserEntryPresentationHelperImpl @Inject constructor(
 
         for (valueWithUnit in fullValueWithUnitList.filterNotNull()) {
             when (valueWithUnit) {
-                is ValueWithUnit.Gram                 -> gram = valueWithUnit.value.toString()
-                is ValueWithUnit.Hour                 -> hour = valueWithUnit.value.toString()
-                is ValueWithUnit.Minute               -> minute = valueWithUnit.value.toString()
-                is ValueWithUnit.Percent              -> percent = valueWithUnit.value.toString()
-                is ValueWithUnit.Insulin              -> insulin = decimalFormatter.to2Decimal(valueWithUnit.value)
-                is ValueWithUnit.InsulinConcentration -> simpleString = simpleString.addWithSeparator(rh.gs(app.aaps.core.ui.R.string.ins_concentration_confirmed, valueWithUnit.value))
-                is ValueWithUnit.UnitPerHour          -> unitPerHour = decimalFormatter.to2Decimal(valueWithUnit.value)
-                is ValueWithUnit.SimpleInt            -> noUnit = noUnit.addWithSeparator(valueWithUnit.value)
-                is ValueWithUnit.SimpleString         -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
-                is ValueWithUnit.TEMeterType          -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TETTReason           -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.RMMode               -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TEType               -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TELocation           -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TEArrow              -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.Timestamp            -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
+                is ValueWithUnit.Gram         -> gram = valueWithUnit.value.toString()
+                is ValueWithUnit.Hour         -> hour = valueWithUnit.value.toString()
+                is ValueWithUnit.Minute       -> minute = valueWithUnit.value.toString()
+                is ValueWithUnit.Percent      -> percent = valueWithUnit.value.toString()
+                is ValueWithUnit.Insulin      -> insulin = decimalFormatter.to2Decimal(valueWithUnit.value)
+                is ValueWithUnit.UnitPerHour  -> unitPerHour = decimalFormatter.to2Decimal(valueWithUnit.value)
+                is ValueWithUnit.SimpleInt    -> noUnit = noUnit.addWithSeparator(valueWithUnit.value)
+                is ValueWithUnit.SimpleString -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
+                is ValueWithUnit.TEMeterType  -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TETTReason   -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.RMMode       -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TEType       -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TELocation   -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TEArrow      -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.Timestamp    -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-                is ValueWithUnit.Mgdl                 ->
+                is ValueWithUnit.Mgdl         ->
                     bg = profileUtil.fromMgdlToStringInUnits(valueWithUnit.value)
 
-                is ValueWithUnit.Mmoll                ->
+                is ValueWithUnit.Mmoll        ->
                     bg = profileUtil.fromMgdlToStringInUnits(valueWithUnit.value * Constants.MMOLL_TO_MGDL)
 
-                ValueWithUnit.UNKNOWN                 -> Unit
+                ValueWithUnit.UNKNOWN         -> Unit
             }
         }
 
