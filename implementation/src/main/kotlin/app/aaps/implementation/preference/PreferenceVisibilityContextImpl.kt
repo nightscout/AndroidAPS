@@ -1,5 +1,6 @@
 package app.aaps.implementation.preference
 
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 class PreferenceVisibilityContextImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val persistenceLayer: PersistenceLayer,
+    private val constraintsChecker: ConstraintsChecker,
     override val preferences: Preferences
 ) : PreferenceVisibilityContext {
 
@@ -36,4 +38,7 @@ class PreferenceVisibilityContextImpl @Inject constructor(
 
     override val isPumpInitialized: Boolean
         get() = activePlugin.activePump.isInitialized()
+
+    override val isConcentrationEnabled: Boolean
+        get() = constraintsChecker.isConcentrationEnabled().value()
 }

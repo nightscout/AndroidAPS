@@ -24,4 +24,5 @@ interface PluginConstraints {
     fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> = insulin
     fun applyCarbsConstraints(carbs: Constraint<Int>): Constraint<Int> = carbs
     fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> = maxIob
+    fun isConcentrationEnabled(value: Constraint<Boolean>): Constraint<Boolean> = value
 }
