@@ -81,6 +81,8 @@ enum class Sources {
     BgFragment,
     Garmin,
     Database,           // for PersistenceLayer
+
+    Carelevo,
     Unknown             //if necessary
     ;
 }
