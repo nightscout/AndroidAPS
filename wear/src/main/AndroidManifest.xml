@@ -610,6 +610,20 @@
                 android:resource="@drawable/running_mode_tile" />
         </service>
 
+        <service
+            android:name=".tile.BgGraphTileService"
+            android:exported="true"
+            android:label="@string/label_bg_graph_tile"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/bg_graph_tile" />
+        </service>
+
         <!-- Transparent activity to handle complication taps reliably on Android 12+ -->
         <activity
             android:name=".complications.ComplicationTapActivity"
@@ -663,7 +677,7 @@
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.activities.BgGraphActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/WearAppCompatDark" />
         <activity
             android:name=".interaction.menus.PreferenceMenuActivity"
