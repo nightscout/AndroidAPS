@@ -295,7 +295,6 @@ class GraphViewModel @AssistedInject constructor(
         val profile = profileFunction.getProfile()
         val request = loop.lastRun?.request
         val isfMgdl = profile?.getProfileIsfMgdl()
-        val isfForCarbs = profile?.getIsfMgdlForCarbs(dateUtil.now(), "Overview", config, processedDeviceStatusData)
         val variableSens =
             if (config.APS) request?.variableSens ?: 0.0
             else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
@@ -319,7 +318,8 @@ class GraphViewModel @AssistedInject constructor(
             isfTo = String.format(Locale.getDefault(), "%1$.1f", profileUtil.fromMgdlToUnits(variableSens, units))
             if (ratioUsed != 1.0 && ratioUsed != lastAutosensRatio)
                 dialogText.add(rh.gs(R.string.algorithm_long, ratioUsed * 100))
-            dialogText.add(rh.gs(R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, units)))
+            val isfForCarbs = profile.getIsfMgdlForCarbs(dateUtil.now(), "Overview", config, processedDeviceStatusData)
+            dialogText.add(rh.gs(R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs, units)))
             if (config.APS) {
                 activePlugin.activeAPS?.getSensitivityOverviewString()?.let { dialogText.add(it) }
             }
