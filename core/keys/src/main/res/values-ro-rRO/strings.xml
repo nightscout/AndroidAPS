@@ -3,7 +3,6 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Mod simplu</string>
     <string name="pref_title_insulin_concentration">Suport pentru concentrația insulinei</string>
-    <string name="pref_summary_insulin_concentration">Permiteți suport pentru diferite concentrații de insulină (U200, U300, șamd)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Păstrați ecranul aprins</string>
     <string name="pref_summary_keep_screen_on">Împiedicați dezactivarea ecranului de către Android. Va consuma multă energie atunci când nu este conectat la o sursă de alimentare.</string>
