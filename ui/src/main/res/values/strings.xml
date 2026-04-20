@@ -14,6 +14,8 @@
     <!--    Widget-->
     <string name="configure">Configure opacity</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">AAPS BG graph</string>
+    <string name="widget_compact_bg_description">AAPS BG + IOB + COB (compact)</string>
 
     <!--     Activities-->
     <string name="activity_monitor">Activity monitor</string>
