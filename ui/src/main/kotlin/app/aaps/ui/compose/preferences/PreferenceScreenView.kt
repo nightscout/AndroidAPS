@@ -20,9 +20,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import kotlinx.coroutines.launch
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.LocalSnackbarHostState
@@ -57,6 +59,10 @@ fun PreferenceScreenView(
 
     val sectionState = rememberPreferenceSectionState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarScope = rememberCoroutineScope()
+    val onShowMessage: (String) -> Unit = { message ->
+        snackbarScope.launch { snackbarHostState.showSnackbar(message) }
+    }
     var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
 
     // Auto-expand the main section
@@ -110,6 +116,7 @@ fun PreferenceScreenView(
                 ) {
                     addPreferenceContent(
                         content = screenDef,
+                        onShowMessage = onShowMessage,
                         sectionState = sectionState
                     )
                 }

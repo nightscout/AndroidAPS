@@ -20,9 +20,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import kotlinx.coroutines.launch
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.autotune.Autotune
@@ -127,6 +129,10 @@ fun AllPreferencesScreen(
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarScope = rememberCoroutineScope()
+    val onShowMessage: (String) -> Unit = { message ->
+        snackbarScope.launch { snackbarHostState.showSnackbar(message) }
+    }
     var composeScreen: ComposeScreenContent? by remember { mutableStateOf(null) }
 
     BackHandler(enabled = composeScreen != null) {
@@ -174,25 +180,25 @@ fun AllPreferencesScreen(
                     state = listState
                 ) {
                     // Built-in: General settings (first)
-                    addPreferenceContent(generalPreferences, sectionState)
-                    addPreferenceContent(appearancePreferences, sectionState)
+                    addPreferenceContent(generalPreferences, onShowMessage, sectionState)
+                    addPreferenceContent(appearancePreferences, onShowMessage, sectionState)
 
                     // Built-in: Protection settings
-                    addPreferenceContent(protectionPreferences, sectionState)
+                    addPreferenceContent(protectionPreferences, onShowMessage, sectionState)
 
                     // Plugin preferences (in fixed order, only enabled plugins)
                     pluginContents.forEach { content ->
-                        addPreferenceContent(content, sectionState)
+                        addPreferenceContent(content, onShowMessage, sectionState)
                     }
 
                     // Built-in: Pump settings
-                    addPreferenceContent(pumpPreferences, sectionState)
+                    addPreferenceContent(pumpPreferences, onShowMessage, sectionState)
 
                     // Built-in: Alerts settings
-                    addPreferenceContent(alertsPreferences, sectionState)
+                    addPreferenceContent(alertsPreferences, onShowMessage, sectionState)
 
                     // Built-in: Maintenance settings (always last)
-                    addPreferenceContent(maintenancePreferences, sectionState)
+                    addPreferenceContent(maintenancePreferences, onShowMessage, sectionState)
                 }
             }
         }

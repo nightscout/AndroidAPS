@@ -31,10 +31,11 @@ import kotlinx.coroutines.delay
  */
 fun LazyListScope.addPreferenceContent(
     content: Any,
+    onShowMessage: (String) -> Unit,
     sectionState: PreferenceSectionState? = null
 ) {
     when (content) {
-        is PreferenceSubScreenDef -> addPreferenceSubScreenDef(content, sectionState)
+        is PreferenceSubScreenDef -> addPreferenceSubScreenDef(content, onShowMessage, sectionState)
     }
 }
 
@@ -45,6 +46,7 @@ fun LazyListScope.addPreferenceContent(
  */
 fun LazyListScope.addPreferenceSubScreenDef(
     def: PreferenceSubScreenDef,
+    onShowMessage: (String) -> Unit,
     sectionState: PreferenceSectionState? = null
 ) {
     val sectionKey = "${def.key}_main"
@@ -64,6 +66,7 @@ fun LazyListScope.addPreferenceSubScreenDef(
             RenderPreferenceItems(
                 items = def.items,
                 parentKey = def.key,
+                onShowMessage = onShowMessage,
                 sectionState = sectionState,
                 visibilityContext = visibilityContext
             )
@@ -78,6 +81,7 @@ fun LazyListScope.addPreferenceSubScreenDef(
 private fun RenderPreferenceItems(
     items: List<Any>,
     parentKey: String,
+    onShowMessage: (String) -> Unit,
     sectionState: PreferenceSectionState?,
     visibilityContext: PreferenceVisibilityContext?
 ) {
@@ -87,6 +91,7 @@ private fun RenderPreferenceItems(
                 HighlightablePreference(preferenceKey = item.key) {
                     AdaptivePreferenceItem(
                         key = item,
+                        onShowMessage = onShowMessage,
                         visibilityContext = visibilityContext
                     )
                 }
@@ -122,6 +127,7 @@ private fun RenderPreferenceItems(
                             ) {
                                 AdaptivePreferenceList(
                                     items = item.items,
+                                    onShowMessage = onShowMessage,
                                     visibilityContext = visibilityContext,
                                     onNavigateToSubScreen = null // Nested subscreens not supported here
                                 )
