@@ -23,7 +23,6 @@ class OpenHumansWorker(
     override suspend fun doWork(): Result {
         return try {
             logger.info(LTag.OHUPLOADER, "Starting upload")
-            setForeground(openHumansUploader.createForegroundInfo(id))
             openHumansUploader.uploadData()
             logger.info(LTag.OHUPLOADER, "Upload finished")
             Result.success()

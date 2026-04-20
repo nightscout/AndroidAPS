@@ -7,12 +7,10 @@ import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.widget.WidgetUpdater
 import app.aaps.history.HistoryBrowserData
 import app.aaps.implementations.ConfigImpl
 import app.aaps.implementations.UiInteractionImpl
 import app.aaps.ui.compose.history.HistoryScope
-import app.aaps.ui.widget.WidgetUpdaterImpl
 import dagger.Binds
 import dagger.Lazy
 import dagger.Module
@@ -87,8 +85,6 @@ abstract class AppModule {
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
-
-        @Binds fun bindWidgetUpdater(impl: WidgetUpdaterImpl): WidgetUpdater
 
         @Binds @Singleton fun bindHistoryScope(impl: HistoryBrowserData): HistoryScope
     }
