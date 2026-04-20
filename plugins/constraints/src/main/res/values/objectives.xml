@@ -70,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">Only grams are allowed for entry of carbohydrates.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs is a replacement for extended bolus in pump world.</string>
     <string name="objectives_exam_learned_nsclient">Remote monitoring and control is possible but not all features must be available remotely.</string>
+    <string name="objectives_exam_learned_concentration1">Using U200 insulin with a profile 50% will require permanent conversion: for external boluses with pens, and all standard reports provided by AAPS or NS will becomes wrong and will have to be converted to IU for health team.</string>
+    <string name="objectives_exam_learned_concentration2">Switching from U200 with a profile 50% to U200 with the insulin concentration feature will require to create a new stronger profile, disable DynISF one week, and training the brain to think in International Units.</string>
+    <string name="objectives_exam_learned_concentration3">Insulin concentration can only be changed when the insulin or patch is changed. But most importantly, especially for tube pumps, never use the pump\'s user interface to deliver boluses directly from the pump.</string>
     <string name="answerdisabledto">Answering disabled until: %1$s</string>
     <string name="wronganswer">Wrong answer!</string>
     <string name="unfinshed_button">Next unfinished</string>
