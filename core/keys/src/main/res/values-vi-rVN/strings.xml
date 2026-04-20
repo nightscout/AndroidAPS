@@ -3,7 +3,6 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Chế độ đơn giản</string>
     <string name="pref_title_insulin_concentration">Hỗ trợ nồng độ insulin</string>
-    <string name="pref_summary_insulin_concentration">Bật hỗ trợ các nồng độ insulin khác nhau (U200, U300, v.v.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Giữ màn hình bật</string>
     <string name="pref_summary_keep_screen_on">Ngăn Android tắt màn hình. Tính năng này sẽ tiêu thụ rất nhiều năng lượng khi không cắm nguồn.</string>
