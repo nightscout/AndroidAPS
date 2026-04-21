@@ -30,6 +30,15 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Toplam</string>
     <!-- SiteRotationDialog -->
+    <string name="site_front">Ön</string>
+    <string name="site_back">Arka</string>
+    <string name="site_man">Erkek</string>
+    <string name="site_woman">Kadın</string>
+    <string name="site_child">Çocuk</string>
+    <string name="user_profile">Kullanıcı Profili</string>
+    <string name="user_profile_description">Kullanıcı Profili Açıklaması, bir erkek, bir kadın veya bir çocuk için en sık erişilebilen yerleri göstermek için kullanılır</string>
+    <string name="site_management">Yer Yönetim Profili</string>
+    <string name="site_management_description">Pompa yerini, CGM yerini veya her ikisini birden yönetmek isteyip istemediğinizi buradan ayarlayabilirsiniz. Bu ayar, algılanan her yeni girişte yer yönetimi iletişim kutusunu otomatik olarak göndermek için kullanılacaktır.</string>
     <!-- FillDialog -->
     <string name="fill_warning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>
     <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
@@ -113,6 +122,7 @@
     <!--    Widget-->
     <string name="use_black_color">Siyah renk kullanın</string>
     <string name="widget_configuration">Araç yapılandırması</string>
+    <string name="until_changed">Değiştirilene kadar</string>
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <string-array name="yes_no_positiveonly_negativeonly">
