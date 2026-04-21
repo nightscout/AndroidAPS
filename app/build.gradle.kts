@@ -149,7 +149,6 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
-        dataBinding = true
         resValues = true
     }
 

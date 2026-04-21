@@ -185,7 +185,7 @@ fun CarelevoOverviewScreen(
             state = patchedState,
             customContent = {
                 Image(
-                    painter = painterResource(id = app.aaps.core.ui.R.drawable.ic_carelevo_128),
+                    painter = painterResource(id = R.drawable.ic_carelevo_128),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -289,7 +289,7 @@ private fun CarelevoOverviewScreenConnectedPreview() {
             ),
             customContent = {
                 Image(
-                    painter = painterResource(id = app.aaps.core.ui.R.drawable.ic_carelevo_128),
+                    painter = painterResource(id = R.drawable.ic_carelevo_128),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -328,7 +328,7 @@ private fun CarelevoOverviewScreenDisconnectedPreview() {
             ),
             customContent = {
                 Image(
-                    painter = painterResource(id = app.aaps.core.ui.R.drawable.ic_carelevo_128),
+                    painter = painterResource(id = R.drawable.ic_carelevo_128),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()

@@ -31,6 +31,7 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import info.nightscout.androidaps.plugins.pump.carelevo.R
 
 internal data class CarelevoAlarmUiModel(
     val appIcon: Int,
@@ -156,7 +157,7 @@ private fun CarelevoAlarmScreenPreview() {
     MaterialTheme {
         CarelevoAlarmScreen(
             alarm = CarelevoAlarmUiModel(
-                appIcon = app.aaps.core.ui.R.drawable.ic_carelevo_128,
+                appIcon = R.drawable.ic_carelevo_128,
                 title = "Low insulin warning",
                 content = "Insulin remaining is below threshold.<br>Please confirm and replace soon.",
                 primaryButtonText = "Confirm",

@@ -366,8 +366,7 @@ class CarelevoPumpPlugin @Inject constructor(
             ),
             CarelevoBooleanPreferenceKey.CARELEVO_BUZZER_REMINDER
         ),
-        icon = pluginDescription.icon,
-        iconResId = app.aaps.core.ui.R.drawable.ic_carelevo_128
+        icon = pluginDescription.icon
     )
 
     override fun isInitialized(): Boolean {

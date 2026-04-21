@@ -103,6 +103,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.BgFragment          -> IcAaps
         Sources.CalibrationDialog   -> IcCalibration
         Sources.CarbDialog          -> IcCarbs
+        Sources.Carelevo            -> IcPluginCarelevo
         Sources.Combo               -> IcPluginCombo
         Sources.ConcentrationDialog -> IcPluginInsulin
         Sources.ConfigBuilder       -> IcPluginConfigBuilder
@@ -172,7 +173,6 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Wear                -> Icons.Default.Watch
         Sources.WizardDialog        -> IcCalculator
         Sources.Xdrip               -> IcXDrip
-        Sources.Carelevo            -> IcPluginCarelevo
     }
 
     override fun listToPresentationString(list: List<ValueWithUnit>) =
