@@ -196,4 +196,20 @@
     <string name="other_medication_label">Annen medisinering. Vennligst les utsagnet nedenfor, og kryss av i boksen for å godta erklæringen.</string>
     <string name="other_medication_text">AndroidAPS reduserer basaldoser eller utsetter insulindoser for å få en økning i blodsukkerverdier. Medisiner av typen SGLT2 hemmere (gliflozins) kan redusere eller hemme forventet økning i blodsukker og kan derfor føre til akutt og farlig høyt blodsukker ketoacidose (DKA).
 \nVanlige medisinnavn er: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nJeg lover å ikke ta slike medisiner mens jeg bruker AndroidAPS og vil deaktivere bruken av loop mens jeg bruker slik medisin.</string>
+    <string name="concentration_feature_label">Administrasjon av insulinkonsentrasjon</string>
+    <string name="u200_with_profile">Før AAPS støttet insulinkonsentrasjoner, kjørte brukerne U200 ved å sette en 50 % profil for å halvere alle verdiene. Hvilke svar er riktig?</string>
+    <string name="u200_with_profile_reports">Min interne AAPS database og NS rapporter blir feilaktig, alle verdiene (boluser, rater, TDD) bør multipliseres med 2 for å se reell status, spesielt for leger og helseteam.</string>
+    <string name="u200_with_profile_pens">Jeg trenger ikke behandle noen omregning mellom AAPS og pennen, hvis jeg bruker en U200-penn til å levere en ekstern Bolus.</string>
+    <string name="u200_with_profile_pens2">Uansett hvilken penn som brukes til å gi en ekstern bolus (U100 eller U200), må jeg konvertere mellom AAPS sin beregnede mengde og dosen jeg velger på pennen for hver eksterne bolus</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Du har brukt omveien med 50 %-profil med U200 og ønsker å bytte til den nye Insulinkonsentrasjonsfunksjonen. Hvilke svar er riktige?</string>
+    <string name="switch_u200_profile_any_time">Jeg kan bytte når som helst, jeg har allerede riktig U200-insulin i pumpen.</string>
+    <string name="switch_u200_profile_ps">Jeg må forberede en profil som er dobbelt så aggressiv (200% sammenlignet med gjeldende standardprofil) og synkronisere denne nye profilen etter neste endring av Patch/Reservoir når U200 insulin er valgt.</string>
+    <string name="switch_u200_profile_dynisf">Jeg må deaktivere DynISF-funksjonen i minst en uke slik at TDD blir i samsvar med faktisk TDD-verdi beregnet i Internasjonale Enheter.</string>
+    <string name="switch_u200_profile_mental">Etter endringen må jeg være veldig oppmerksom i flere uker, for å omstille meg til å tenke seg i Internasjonale Enheter angående bolus-, basalrater og TDD-verdier.</string>
+    <string name="switch_u100_u200">Du bruker for tiden U100 og planlegger å bytte til en annen konsentrasjon ved bruk av den nye insulinkonsentrasjonsfunksjonen. Hva skal du gjøre?</string>
+    <string name="switch_u100_u200_profile">Jeg må endre profilen min.</string>
+    <string name="switch_u100_u200_tube">Jeg skal aldri bruke pumpens brukergrensesnitt (for pumper med slange) for å tilføre boluser.</string>
+    <string name="switch_u100_u200_pen">Jeg må fortsatt håndtere omregning mellom AAPS og ekstern bolus med penn etter endringen.</string>
+    <string name="switch_u100_u200_change">Insulinkonsentrasjonen kan kun endres når Insulin i reservoaret byttes, eller når plaster/Pod byttes.</string>
 </resources>
