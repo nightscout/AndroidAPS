@@ -31,6 +31,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vui lòng cấu hình RileyLink của bạn bên dưới. Sau khi chọn RileyLink, bạn có thể tiếp tục cài đặt khi trạng thái RileyLink hiển thị \'Đã kết nối\'. Việc này có thể mất khoảng một phút.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Lưu ý:</b> Tiếp tục cài đặt sau khi bơm được thiết lập.\n</string>
     <string name="startobjective">Bắt đầu mục tiêu đầu tiên của bạn</string>
+    <string name="open_objectives">Mở mục tiêu</string>
     <string name="setupwizard_permissions">Quyền truy cập</string>
     <string name="setupwizard_profile_info">Tạo hồ sơ với các tỷ lệ basal, IC, ISF và giá trị mục tiêu của bạn. Bạn có thể thêm nhiều hồ sơ sau.</string>
     <string name="setupwizard_permissions_info">AAPS cần quyền truy cập bộ nhớ để hoạt động đúng cách. Vui lòng cấp các quyền cần thiết bên dưới.</string>
