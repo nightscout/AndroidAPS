@@ -3,6 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Enkelmodus</string>
     <string name="pref_title_insulin_concentration">Støtte for insulinkonsentrasjon</string>
+    <string name="pref_summary_insulin_concentration">Aktiver støtte for ulike insulinkonsentrasjoner (U200, U300 osv.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Hold skjermen på</string>
     <string name="pref_summary_keep_screen_on">Hindrer Android i å slå av skjermen. Dette bruker mye batteri når enheten ikke er koblet til strøm.</string>
