@@ -203,7 +203,7 @@
     <string name="u200_with_profile_pens">I don\'t have to manage any conversion between AAPS and the Pen, if I use an U200 pen to deliver an external Bolus.</string>
     <string name="u200_with_profile_pens2">Whatever the Pen used to deliver an external bolus (U100 or U200), I have to convert between AAPS calculated amount and the amount I select on the pen for every external bolus</string>
     <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
-    <string name="switch_u200_profile">You have been using the 50%¨profile workaround with U200 and want to switch to the new Insulin Concentration feature. Which answers are true?</string>
+    <string name="switch_u200_profile">You have been using the 50% profile workaround with U200 and want to switch to the new Insulin Concentration feature. Which answers are true?</string>
     <string name="switch_u200_profile_any_time">I can switch at any time, I already have the correct insulin U200 within my pump.</string>
     <string name="switch_u200_profile_ps">I have to prepare a profile twice as aggressive (200% compared to current default profile) and synchronize this new profile after the next Patch/Reservoir change when the U200 insulin is selected.</string>
     <string name="switch_u200_profile_dynisf">I have to disable the DynISF feature for at least a week for the TDD to be perfectly consistent with the actual TDD value calculated in International Units.</string>
