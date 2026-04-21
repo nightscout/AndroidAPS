@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch chưa được kích hoạt</string>
     <string name="pump_setting_failed">Thiết lập cài đặt người dùng cho Bơm thất bại!</string>
     <string name="pump_sync_error">Lỗi khi đồng bộ lịch sử từ Bơm, một bản ghi đã bị bỏ qua. Kiểm tra tab Điều trị để xem bolus đã được đồng bộ chính xác chưa. Tạm bỏ qua, và nếu lỗi tiếp tục xuất hiện, hãy thay Patch hoặc PumpBase.</string>
+    <string name="patch_reset_after_primed_error">Phát hiện patch bị reset sau khi mồi! Hãy tháo patch và bắt đầu patch mới.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Kết nối trước</string>
     <string name="active_bolus_label">Đang tiêm Bolus</string>
