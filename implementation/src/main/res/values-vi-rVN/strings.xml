@@ -41,6 +41,7 @@
     <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_delivered_format">%1$s/%2$s</string>
     <string name="pump_base_basal_rate_cu">%1$.2f\u00a0CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Đã xuất cài đặt lên lưu trữ đám mây thành công</string>
     <string name="export_to_cloud_failed">Xuất lên lưu trữ đám mây thất bại</string>
