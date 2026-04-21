@@ -9,11 +9,10 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.androidaps.plugins.pump.carelevo"
+    namespace = "app.aaps.pump.carelevo"
 
     buildFeatures {
         compose = true
-        dataBinding = true
     }
 }
 
