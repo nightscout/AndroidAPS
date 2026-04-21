@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -40,8 +40,7 @@ class MaintenanceImpl @Inject constructor(
     private val config: Config,
     private val fileListProvider: FileListProvider,
     private val loggerUtils: LoggerUtils,
-    private val cloudStorageManager: CloudStorageManager,
-    private val sp: SP
+    private val cloudStorageManager: CloudStorageManager
 ) : Maintenance {
 
     override suspend fun executeSendLogs(): ExportResult {
@@ -51,8 +50,8 @@ class MaintenanceImpl @Inject constructor(
             ?: return ExportResult(localSuccess = false)
         val zip = zipLogs(zipFile, logs)
 
-        val logEmail = sp.getBoolean(ExportPrefKeys.PREF_LOG_EMAIL_ENABLED, true)
-        val logCloud = sp.getBoolean(ExportPrefKeys.PREF_LOG_CLOUD_ENABLED, false)
+        val logEmail = preferences.get(BooleanNonKey.ExportLogEmailEnabled)
+        val logCloud = preferences.get(BooleanNonKey.ExportLogCloudEnabled)
         val isCloudActive = cloudStorageManager.isCloudStorageActive()
         val cloudEnabled = logCloud && isCloudActive
 

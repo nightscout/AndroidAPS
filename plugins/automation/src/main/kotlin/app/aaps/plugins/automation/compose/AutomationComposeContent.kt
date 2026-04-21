@@ -522,11 +522,11 @@ private fun AutomationOverflow(
             onClick = { expanded = false; onRun() }
         )
         DropdownMenuItem(
-            text = { Text(stringResource(app.aaps.core.objects.R.string.remove_items)) },
+            text = { Text(stringResource(app.aaps.core.ui.R.string.remove_items)) },
             onClick = { expanded = false; onStartRemove() }
         )
         DropdownMenuItem(
-            text = { Text(stringResource(app.aaps.core.objects.R.string.sort_items)) },
+            text = { Text(stringResource(app.aaps.core.ui.R.string.sort_items)) },
             onClick = { expanded = false; onStartSort() }
         )
     }

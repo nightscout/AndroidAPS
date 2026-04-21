@@ -154,6 +154,29 @@
   }
   ```
   The modifier is in `app.aaps.core.ui.compose.clearFocusOnTap`.
+- **Snackbar pattern (Compose)** - `LocalSnackbarHostState` exists for legacy reasons but is an
+  anti-pattern (hidden dependency, was silently failing before we fixed the default to `error()`).
+  **Do not add new `LocalSnackbarHostState.current` consumers.** Prefer either:
+    1. **Event hoisting from ViewModel / utility class** (preferred for non-Composables):
+       ```kotlin
+       // In ViewModel / domain class
+       private val _snackbarEvents = MutableSharedFlow<String>()
+       val snackbarEvents = _snackbarEvents.asSharedFlow()
+
+       // In the Composable
+       LaunchedEffect(Unit) {
+           viewModel.snackbarEvents.collect { snackbarHostState.showSnackbar(it) }
+       }
+       ```
+    2. **Parameter passing** (for child composables that need to snack):
+       ```kotlin
+       fun MyScreen(onShowMessage: (String) -> Unit) { ... }
+       ```
+  Existing `LocalSnackbarHostState.current` usages can stay as-is until touched for other reasons —
+  no forced migration. Only when refactoring a file anyway, move toward the preferred patterns.
+  **Note for Toast→Snackbar migrations:** services, workers, and background plugins cannot render
+  snackbars (no active Compose tree). For those, use Android Notifications for important messages,
+  keep Toast as low-priority fallback, or drop the message entirely if non-critical.
 - **Avoid adding new inter-module (project) dependencies** - Adding
   `implementation(project(":other:module"))`
   between modules can significantly slow down compilation time. Always discuss before adding these.

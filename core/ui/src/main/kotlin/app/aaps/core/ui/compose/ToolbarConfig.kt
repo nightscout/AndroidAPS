@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 
 /**
  * Configuration for the toolbar in Compose screens.
- * Used by SingleFragmentActivity to render the toolbar for plugins with Compose content.
  *
  * @param title The title to display in the toolbar
  * @param navigationIcon The navigation icon composable (back arrow or close icon)

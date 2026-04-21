@@ -2,7 +2,10 @@ package app.aaps.ui.compose.notificationsSheet
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -88,40 +91,51 @@ private fun NotificationItem(
     val levelColor = notification.level.toColor()
     val categoryIcon = notification.id.category.toIcon()
 
-    ListItem(
-        leadingContent = {
-            Icon(
-                imageVector = categoryIcon,
-                contentDescription = null,
-                tint = levelColor
-            )
-        },
-        headlineContent = {
-            Text(text = notification.text)
-        },
-        supportingContent = {
-            Text(text = dateUtil.timeString(notification.date))
-        },
-        trailingContent = {
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                if (notification.actions.isNotEmpty()) {
-                    notification.actions.forEach { action ->
-                        FilledTonalButton(onClick = {
-                            action.action()
-                            onActionClick()
-                            onDismiss()
-                        }) {
-                            Text(text = stringResource(action.buttonTextRes))
-                        }
-                    }
-                } else {
-                    FilledTonalButton(onClick = { onDismiss() }) {
-                        Text(text = stringResource(R.string.dismiss))
+    Column {
+        ListItem(
+            leadingContent = {
+                Icon(
+                    imageVector = categoryIcon,
+                    contentDescription = null,
+                    tint = levelColor
+                )
+            },
+            headlineContent = {
+                Text(text = notification.text)
+            },
+            supportingContent = {
+                Text(text = dateUtil.timeString(notification.date))
+            }
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 48.dp, end = 16.dp, bottom = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            if (notification.actions.isNotEmpty()) {
+                notification.actions.forEach { action ->
+                    ActionButton(textRes = action.buttonTextRes) {
+                        action.action()
+                        onActionClick()
+                        onDismiss()
                     }
                 }
+            } else {
+                ActionButton(textRes = R.string.dismiss, onClick = onDismiss)
             }
         }
-    )
+    }
+}
+
+@Composable
+private fun RowScope.ActionButton(textRes: Int, onClick: () -> Unit) {
+    FilledTonalButton(
+        onClick = onClick,
+        modifier = Modifier.weight(1f)
+    ) {
+        Text(text = stringResource(textRes))
+    }
 }
 
 @Composable

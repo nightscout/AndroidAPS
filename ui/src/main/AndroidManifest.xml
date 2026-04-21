@@ -8,7 +8,7 @@
         <activity
             android:name=".widget.WidgetConfigureActivity"
             android:exported="false"
-            android:theme="@android:style/Theme.Material.Dialog.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Translucent">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -26,6 +26,30 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".widget.BgGraphWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/bg_graph_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.CompactBgWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/compact_bg_widget_info" />
+        </receiver>
+
         <activity
             android:name=".activities.ErrorActivity"
             android:exported="false"
@@ -33,8 +57,8 @@
         <service
             android:name=".services.AlarmSoundService"
             android:enabled="true"
-            android:foregroundServiceType="specialUse"
-            android:exported="false">
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Plays audible alarms for hypoglycemia, hyperglycemia, and pump/loop error conditions." />

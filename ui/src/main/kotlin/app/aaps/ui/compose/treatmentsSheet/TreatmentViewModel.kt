@@ -159,7 +159,7 @@ class TreatmentViewModel @Inject constructor(
     private fun buildCarbsItem(entry: QuickWizardEntry): QuickWizardItem {
         val buttonText = entry.buttonText()
         val guid = entry.guid()
-        val detail = rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs())
+        val detail = rh.gs(R.string.format_carbs, entry.carbs())
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != entry.carbs())
@@ -194,7 +194,7 @@ class TreatmentViewModel @Inject constructor(
         if (wizard.calculatedTotalInsulin <= 0.0)
             return QuickWizardItem(guid = guid, buttonText = buttonText, mode = entry.mode().value, disabledReason = rh.gs(app.aaps.ui.R.string.wizard_no_insulin_required))
 
-        val detail = rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs()) +
+        val detail = rh.gs(R.string.format_carbs, entry.carbs()) +
             " " + rh.gs(R.string.format_insulin_units, wizard.calculatedTotalInsulin)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(entry.carbs(), aapsLogger)).value()

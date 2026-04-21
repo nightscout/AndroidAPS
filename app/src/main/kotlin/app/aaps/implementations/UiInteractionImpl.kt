@@ -3,17 +3,14 @@ package app.aaps.implementations
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.RawRes
-import app.aaps.MainActivity
-import app.aaps.activities.HistoryBrowseActivity
+import app.aaps.ComposeMainActivity
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.ui.activities.ErrorActivity
 import app.aaps.ui.dialogs.AlertDialogs
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
-import app.aaps.ui.widget.Widget
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -28,10 +25,8 @@ class UiInteractionImpl @Inject constructor(
 
     private val alertDialogs: AlertDialogs = AlertDialogs(preferences, rxBus)
 
-    override val mainActivity: Class<*> = MainActivity::class.java
-    override val historyBrowseActivity: Class<*> = HistoryBrowseActivity::class.java
+    override val mainActivity: Class<*> = ComposeMainActivity::class.java
     override val errorHelperActivity: Class<*> = ErrorActivity::class.java
-    override val singleFragmentActivity: Class<*> = SingleFragmentActivity::class.java
 
     override val unitsEntries = arrayOf<CharSequence>("mg/dL", "mmol/L")
     override val unitsValues = arrayOf<CharSequence>("mg/dl", "mmol")
@@ -43,10 +38,6 @@ class UiInteractionImpl @Inject constructor(
         i.putExtra(AlarmSoundService.TITLE, title)
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(i)
-    }
-
-    override fun updateWidget(context: Context, from: String) {
-        Widget.updateWidget(context, from)
     }
 
     override fun startAlarm(@RawRes sound: Int, reason: String) {

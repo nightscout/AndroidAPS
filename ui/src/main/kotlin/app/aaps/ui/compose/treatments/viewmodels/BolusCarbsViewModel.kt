@@ -210,7 +210,7 @@ class BolusCarbsViewModel @Inject constructor(
             } else {
                 val carbs = ml.carbs
                 if (carbs != null) {
-                    "${rh.gs(R.string.carbs)}: ${rh.gs(app.aaps.core.objects.R.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
+                    "${rh.gs(R.string.carbs)}: ${rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
                 } else {
                     rh.gs(R.string.confirm_remove_multiple_items, selected.size)
                 }

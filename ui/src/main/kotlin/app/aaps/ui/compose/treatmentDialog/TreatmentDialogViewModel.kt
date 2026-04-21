@@ -142,7 +142,7 @@ class TreatmentDialogViewModel @Inject constructor(
         if (carbsAfterConstraints > 0) {
             lines.add(
                 rh.gs(app.aaps.core.ui.R.string.carbs) + ": " +
-                    rh.gs(app.aaps.core.objects.R.string.format_carbs, carbsAfterConstraints)
+                    rh.gs(app.aaps.core.ui.R.string.format_carbs, carbsAfterConstraints)
             )
             if (carbsAfterConstraints != carbs) {
                 lines.add(rh.gs(app.aaps.ui.R.string.carbs_constraint_applied))

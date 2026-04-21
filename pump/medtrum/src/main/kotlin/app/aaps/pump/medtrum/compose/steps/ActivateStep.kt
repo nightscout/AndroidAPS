@@ -2,18 +2,24 @@ package app.aaps.pump.medtrum.compose.steps
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -29,56 +35,70 @@ fun ActivateStep(
 
     val isActivating = patchStep == PatchStep.ACTIVATE
     val isComplete = patchStep == PatchStep.ACTIVATE_COMPLETE
-    val isError = setupStep == MedtrumPatchViewModel.SetupStep.ERROR
+
+    var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
 
     // Trigger activation when entering ACTIVATE step
-    LaunchedEffect(patchStep) {
+    // Note: use Unit as key to only trigger once when entering the step, not on every patchStep change
+    // To avoid sending repeated commands and triggering errors and other unintended consequences
+    LaunchedEffect(Unit) {
         if (patchStep == PatchStep.ACTIVATE) {
             viewModel.startActivate()
         }
     }
 
-    // Auto-navigate on activated and apply insulin profile switch if changed
+    // Auto-navigate on activated and handle unexpected states
     LaunchedEffect(setupStep) {
-        if (setupStep == MedtrumPatchViewModel.SetupStep.ACTIVATED && patchStep == PatchStep.ACTIVATE) {
-            viewModel.executeInsulinProfileSwitch()
-            viewModel.moveStep(PatchStep.ACTIVATE_COMPLETE)
+        if (!isActivating) return@LaunchedEffect
+        when (setupStep) {
+            MedtrumPatchViewModel.SetupStep.ACTIVATED -> {
+                viewModel.executeInsulinProfileSwitch()
+                viewModel.moveStep(PatchStep.ACTIVATE_COMPLETE)
+            }
+
+            MedtrumPatchViewModel.SetupStep.INITIAL,
+            MedtrumPatchViewModel.SetupStep.PRIMED    -> Unit
+            else                                      -> unexpectedStateMessage = setupStep.toString()
         }
     }
 
     val state = when {
-        isActivating && !isError -> ActivateState.ACTIVATING
-        isError                  -> ActivateState.ERROR
-        isComplete               -> ActivateState.COMPLETE
-        else                     -> ActivateState.ACTIVATING
+        isActivating -> ActivateState.ACTIVATING
+        isComplete   -> ActivateState.COMPLETE
+        else         -> ActivateState.ACTIVATING
     }
 
     ActivateStepContent(
         state = state,
         reservoirLevel = viewModel.medtrumPump.reservoir,
-        onRetry = {
-            viewModel.updateSetupStep(MedtrumPatchViewModel.SetupStep.PRIMED)
-            viewModel.moveStep(PatchStep.ACTIVATE)
-        },
         onComplete = { viewModel.moveToPostActivationStep() },
         onCancel = onCancel
     )
+
+    unexpectedStateMessage?.let { msg ->
+        OkDialog(
+            title = stringResource(app.aaps.core.ui.R.string.error),
+            message = stringResource(R.string.unexpected_state, msg),
+            onDismiss = {
+                unexpectedStateMessage = null
+                viewModel.moveStep(PatchStep.CANCEL)
+            }
+        )
+    }
 }
 
-internal enum class ActivateState { ACTIVATING, ERROR, COMPLETE }
+internal enum class ActivateState { ACTIVATING, COMPLETE }
 
 @Composable
 internal fun ActivateStepContent(
     state: ActivateState,
     reservoirLevel: Double = 0.0,
-    onRetry: () -> Unit,
     onComplete: () -> Unit,
     onCancel: () -> Unit
 ) {
     WizardStepLayout(
         primaryButton = when (state) {
-            ActivateState.ACTIVATING -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = {}, loading = true)
-            ActivateState.ERROR      -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.retry), onClick = onRetry)
+            ActivateState.ACTIVATING -> null
             ActivateState.COMPLETE   -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.ok), onClick = onComplete)
         },
         secondaryButton = if (state != ActivateState.COMPLETE) WizardButton(
@@ -92,10 +112,12 @@ internal fun ActivateStepContent(
                     text = stringResource(R.string.activating_pump),
                     style = MaterialTheme.typography.bodyLarge
                 )
-            }
-
-            ActivateState.ERROR      -> {
-                WizardErrorBanner(message = stringResource(R.string.activating_error).stripHtml())
+                Spacer(Modifier.height(48.dp))
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
             }
 
             ActivateState.COMPLETE   -> {
@@ -123,15 +145,7 @@ internal fun ActivateStepContent(
 @Composable
 private fun PreviewActivating() {
     MaterialTheme {
-        ActivateStepContent(state = ActivateState.ACTIVATING, onRetry = {}, onComplete = {}, onCancel = {})
-    }
-}
-
-@Preview(showBackground = true, name = "Activate - Error")
-@Composable
-private fun PreviewError() {
-    MaterialTheme {
-        ActivateStepContent(state = ActivateState.ERROR, onRetry = {}, onComplete = {}, onCancel = {})
+        ActivateStepContent(state = ActivateState.ACTIVATING, onComplete = {}, onCancel = {})
     }
 }
 
@@ -139,6 +153,6 @@ private fun PreviewError() {
 @Composable
 private fun PreviewComplete() {
     MaterialTheme {
-        ActivateStepContent(state = ActivateState.COMPLETE, reservoirLevel = 200.0, onRetry = {}, onComplete = {}, onCancel = {})
+        ActivateStepContent(state = ActivateState.COMPLETE, reservoirLevel = 200.0, onComplete = {}, onCancel = {})
     }
 }

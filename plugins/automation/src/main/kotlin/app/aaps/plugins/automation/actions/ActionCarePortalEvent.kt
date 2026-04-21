@@ -31,7 +31,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
 
     var note = InputString()
     var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)
-    var cpEvent = InputCarePortalMenu(rh)
+    var cpEvent = InputCarePortalMenu()
     private var valuesWithUnit = mutableListOf<ValueWithUnit>()
 
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.careportal

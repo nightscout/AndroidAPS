@@ -2,7 +2,6 @@ package app.aaps.workflow
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -11,18 +10,19 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.OverviewData
+import app.aaps.core.interfaces.overview.graph.OverviewDataCache
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
-import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.JOB
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
-import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.PASS
 import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.UPDATE_PREDICTIONS
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.utils.worker.then
 import app.aaps.workflow.iob.IobCobOref1Worker
 import app.aaps.workflow.iob.IobCobOrefWorker
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
@@ -31,8 +31,14 @@ class CalculationWorkflowImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val dataWorkerStorage: DataWorkerStorage,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    private val mainSignals: CalculationSignalsEmitter,
+    // Lazy: breaks Dagger cycle OverviewDataCache → Loop → IobCobCalculator → CalculationWorkflow → OverviewDataCache.
+    // Side methods that use mainCache run at runtime, never during construction.
+    private val mainCacheProvider: Provider<OverviewDataCache>
 ) : CalculationWorkflow {
+
+    private val mainCache: OverviewDataCache get() = mainCacheProvider.get()
 
     init {
         // Verify definition
@@ -54,6 +60,8 @@ class CalculationWorkflowImpl @Inject constructor(
         job: String,
         iobCobCalculator: IobCobCalculator,
         overviewData: OverviewData,
+        cache: OverviewDataCache,
+        signals: CalculationSignalsEmitter,
         reason: String,
         end: Long,
         bgDataReload: Boolean,
@@ -69,64 +77,38 @@ class CalculationWorkflowImpl @Inject constructor(
             )
             .then(
                 OneTimeWorkRequest.Builder(PrepareBucketedDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBucketedDataWorker.PrepareBucketedData(iobCobCalculator, overviewData)))
+                    .setInputData(dataWorkerStorage.storeInputData(PrepareBucketedDataWorker.PrepareBucketedData(iobCobCalculator, overviewData, cache)))
                     .build()
             )
             .then(
                 OneTimeWorkRequest.Builder(PrepareBgDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBgDataWorker.PrepareBgData(iobCobCalculator, overviewData)))
+                    .setInputData(dataWorkerStorage.storeInputData(PrepareBgDataWorker.PrepareBgData(iobCobCalculator, overviewData, cache)))
                     .build()
             )
             .then(
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(Data.Builder().putString(JOB, job).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_BG.pass).build())
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareTreatmentsDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareTreatmentsDataWorker.PrepareTreatmentsData(overviewData)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareBasalDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBasalDataWorker.PrepareBasalData(iobCobCalculator, overviewData)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareTemporaryTargetDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareTemporaryTargetDataWorker.PrepareTemporaryTargetData(overviewData)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(PrepareRunningModeDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareRunningModeDataWorker.PrepareRunningModeData(overviewData)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(Data.Builder().putString(JOB, job).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_TT.pass).build())
+                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(signals, CalculationWorkflow.ProgressData.DRAW_BG)))
                     .build()
             )
             .then(
                 if (activePlugin.activeSensitivity.isOref1)
                     OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(iobCobCalculator, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
+                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(iobCobCalculator, signals, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
                         .build()
                 else
                     OneTimeWorkRequest.Builder(IobCobOrefWorker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(iobCobCalculator, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
+                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(iobCobCalculator, signals, reason, end, job == MAIN_CALCULATION, triggeredByNewBG)))
                         .build()
             )
-            .then(OneTimeWorkRequest.Builder(UpdateIobCobSensWorker::class.java).build())
             .then(
                 OneTimeWorkRequest.Builder(PrepareIobAutosensGraphDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareIobAutosensGraphDataWorker.PrepareIobAutosensData(iobCobCalculator, overviewData)))
+                    .setInputData(dataWorkerStorage.storeInputData(PrepareIobAutosensGraphDataWorker.PrepareIobAutosensData(iobCobCalculator, overviewData, cache, signals)))
                     .build()
             )
             .then(
                 runIf = job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(Data.Builder().putString(JOB, job).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_IOB.pass).build())
+                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(signals, CalculationWorkflow.ProgressData.DRAW_IOB)))
                     .build()
             )
             .then(
@@ -142,12 +124,12 @@ class CalculationWorkflowImpl @Inject constructor(
             .then(
                 runIf = job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(PreparePredictionsWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData)))
+                    .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData, cache)))
                     .build()
             )
             .then(
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(Data.Builder().putString(JOB, job).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_FINAL.pass).build())
+                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(signals, CalculationWorkflow.ProgressData.DRAW_FINAL)))
                     .build()
             )
             .enqueue()
@@ -162,32 +144,15 @@ class CalculationWorkflowImpl @Inject constructor(
             .beginUniqueWork(
                 UPDATE_PREDICTIONS, ExistingWorkPolicy.REPLACE,
                 OneTimeWorkRequest.Builder(PreparePredictionsWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData)))
+                    .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData, mainCache)))
                     .build()
             )
             .then(
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(Data.Builder().putString(JOB, UPDATE_PREDICTIONS).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_FINAL.pass).build())
+                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(mainSignals, CalculationWorkflow.ProgressData.DRAW_FINAL)))
                     .build()
             )
             .enqueue()
-    }
-
-    override fun runOnEventTherapyEventChange(overviewData: OverviewData) {
-        WorkManager.getInstance(context)
-            .beginUniqueWork(
-                MAIN_CALCULATION, ExistingWorkPolicy.APPEND,
-                OneTimeWorkRequest.Builder(PrepareTreatmentsDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareTreatmentsDataWorker.PrepareTreatmentsData(overviewData)))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(Data.Builder().putInt(PASS, CalculationWorkflow.ProgressData.DRAW_FINAL.pass).build())
-                    .build()
-            )
-            .enqueue()
-
     }
 
     override fun runOnScaleChanged(iobCobCalculator: IobCobCalculator, overviewData: OverviewData) {
@@ -195,17 +160,17 @@ class CalculationWorkflowImpl @Inject constructor(
             .beginUniqueWork(
                 MAIN_CALCULATION, ExistingWorkPolicy.APPEND,
                 OneTimeWorkRequest.Builder(PrepareBucketedDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBucketedDataWorker.PrepareBucketedData(iobCobCalculator, overviewData)))
+                    .setInputData(dataWorkerStorage.storeInputData(PrepareBucketedDataWorker.PrepareBucketedData(iobCobCalculator, overviewData, mainCache)))
                     .build()
             )
             .then(
                 OneTimeWorkRequest.Builder(PrepareBgDataWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(PrepareBgDataWorker.PrepareBgData(iobCobCalculator, overviewData)))
+                    .setInputData(dataWorkerStorage.storeInputData(PrepareBgDataWorker.PrepareBgData(iobCobCalculator, overviewData, mainCache)))
                     .build()
             )
             .then(
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
-                    .setInputData(Data.Builder().putInt(PASS, CalculationWorkflow.ProgressData.DRAW_FINAL.pass).build())
+                    .setInputData(dataWorkerStorage.storeInputData(UpdateGraphWorker.UpdateGraphData(mainSignals, CalculationWorkflow.ProgressData.DRAW_FINAL)))
                     .build()
             )
             .enqueue()

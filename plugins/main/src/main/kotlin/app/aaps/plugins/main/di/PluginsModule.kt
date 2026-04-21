@@ -1,8 +1,6 @@
 package app.aaps.plugins.main.di
 
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.overview.Overview
-import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.persistentNotification.DummyService
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import dagger.Binds
@@ -14,7 +12,6 @@ import dagger.hilt.components.SingletonComponent
 @Module(
     includes = [
         PluginsModule.Bindings::class,
-        OverviewModule::class,
     ]
 )
 @InstallIn(SingletonComponent::class)
@@ -27,7 +24,6 @@ abstract class PluginsModule {
     @InstallIn(SingletonComponent::class)
     interface Bindings {
 
-        @Binds fun bindOverview(overviewPlugin: OverviewPlugin): Overview
         @Binds fun bindIobCobCalculator(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculator
     }
 }

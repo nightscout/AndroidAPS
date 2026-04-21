@@ -105,5 +105,7 @@ class SgvComplication : ModernBaseComplicationProviderService() {
             .build()
     }
 
+    override fun getComplicationAction(): ComplicationAction = ComplicationAction.BG_GRAPH
+
     override fun getProviderCanonicalName(): String = SgvComplication::class.java.canonicalName!!
 }

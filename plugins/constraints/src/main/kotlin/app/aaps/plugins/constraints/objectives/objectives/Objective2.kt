@@ -287,6 +287,32 @@ class Objective2 @Inject constructor(
                 .option(Option(app.aaps.core.ui.R.string.yes, true))
                 .option(Option(app.aaps.core.ui.R.string.no, false))
         )
+        tasks.add(
+            ExamTask(this, R.string.concentration_feature_label, R.string.u200_with_profile, "concentration1")
+                .option(Option(R.string.u200_with_profile_reports, true))
+                .option(Option(R.string.u200_with_profile_pens, false))
+                .option(Option(R.string.u200_with_profile_pens2, true))
+                .hint(Hint(R.string.concentration_hint1))
+                .learned(Learned(R.string.objectives_exam_learned_concentration1))
+        )
+        tasks.add(
+            ExamTask(this, R.string.concentration_feature_label, R.string.switch_u200_profile, "concentration2")
+                .option(Option(R.string.switch_u200_profile_any_time, false))
+                .option(Option(R.string.switch_u200_profile_ps, true))
+                .option(Option(R.string.switch_u200_profile_dynisf, true))
+                .option(Option(R.string.switch_u200_profile_mental, true))
+                .hint(Hint(R.string.concentration_hint1))
+                .learned(Learned(R.string.objectives_exam_learned_concentration2))
+        )
+        tasks.add(
+            ExamTask(this, R.string.concentration_feature_label, R.string.switch_u100_u200, "concentration3")
+                .option(Option(R.string.switch_u100_u200_profile, false))
+                .option(Option(R.string.switch_u100_u200_tube, true))
+                .option(Option(R.string.switch_u100_u200_pen, false))
+                .option(Option(R.string.switch_u100_u200_change, true))
+                .hint(Hint(R.string.concentration_hint1))
+                .learned(Learned(R.string.objectives_exam_learned_concentration3))
+        )
         for (task in tasks) (task as ExamTask).options.shuffle()
 
         for (task in tasks) {

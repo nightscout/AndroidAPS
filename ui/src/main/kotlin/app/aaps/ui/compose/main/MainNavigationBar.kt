@@ -17,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -38,8 +38,11 @@ fun MainNavigationBar(
     automationCount: Int = 0,
     pumpSetupPlugin: PluginBase? = null,
     bgSetupPlugin: PluginBase? = null,
-    bgQualityBadgeIconRes: Int = 0,
+    bgQualityBadgeIcon: ImageVector? = null,
+    bgQualityBadgeTint: Color = Color.Unspecified,
     bgQualityBadgeDescription: String? = null,
+    objectivesSetupPlugin: PluginBase? = null,
+    objectivesProgressText: String? = null,
     onNavigate: (NavigationRequest) -> Unit = {},
     permissionsMissing: Boolean = false,
     onPermissionsClick: () -> Unit = {},
@@ -155,12 +158,12 @@ fun MainNavigationBar(
                 icon = {
                     BadgedBox(
                         badge = {
-                            if (bgQualityBadgeIconRes != 0) {
+                            if (bgQualityBadgeIcon != null) {
                                 Badge(containerColor = Color.Transparent) {
                                     Icon(
-                                        painter = painterResource(id = bgQualityBadgeIconRes),
+                                        imageVector = bgQualityBadgeIcon,
                                         contentDescription = bgQualityBadgeDescription,
-                                        tint = Color.Unspecified,
+                                        tint = bgQualityBadgeTint,
                                         modifier = Modifier.size(16.dp)
                                     )
                                 }
@@ -171,6 +174,41 @@ fun MainNavigationBar(
                     ) {
                         Icon(
                             imageVector = bgIcon,
+                            contentDescription = label,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                },
+                label = { Text(text = label) },
+                colors = navColors
+            )
+        }
+
+        // Objectives progress (visible while any objective is not yet accomplished)
+        val objectivesIcon = objectivesSetupPlugin?.pluginDescription?.icon
+        if (objectivesSetupPlugin != null && objectivesIcon != null) {
+            val label = stringResource(objectivesSetupPlugin.pluginDescription.pluginName)
+            NavigationBarItem(
+                selected = false,
+                onClick = { onNavigate(NavigationRequest.Plugin(objectivesSetupPlugin.javaClass.simpleName)) },
+                icon = {
+                    BadgedBox(
+                        badge = {
+                            if (objectivesProgressText != null) {
+                                Badge(
+                                    containerColor = AapsTheme.generalColors.statusWarning,
+                                    contentColor = Color.Black
+                                ) { Text(text = objectivesProgressText) }
+                            } else {
+                                Badge(
+                                    containerColor = AapsTheme.generalColors.statusWarning,
+                                    contentColor = Color.Black
+                                ) { Text("!") }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = objectivesIcon,
                             contentDescription = label,
                             modifier = Modifier.size(24.dp)
                         )

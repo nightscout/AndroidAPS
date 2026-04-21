@@ -35,6 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -67,6 +68,7 @@ import app.aaps.ui.compose.careDialog.CareDialogScreen
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.extendedBolusDialog.ExtendedBolusDialogScreen
 import app.aaps.ui.compose.fillDialog.FillDialogScreen
+import app.aaps.ui.compose.history.HistoryScreen
 import app.aaps.ui.compose.insulinDialog.InsulinDialogScreen
 import app.aaps.ui.compose.insulinManagement.InsulinManagementScreen
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
@@ -103,6 +105,7 @@ import app.aaps.ui.compose.treatments.viewmodels.TreatmentsViewModel
 import app.aaps.ui.compose.wizardDialog.WizardDialogScreen
 import app.aaps.ui.search.BuiltInSearchables
 import kotlinx.coroutines.launch
+import app.aaps.plugins.main.R as PluginsMainR
 
 /**
  * Safe popBackStack that prevents double-navigation during transitions.
@@ -458,6 +461,13 @@ fun NavGraphBuilder.appNavGraph(
         )
     }
 
+    composable(AppRoute.HistoryBrowser.route) {
+        HistoryScreen(
+            title = stringResource(PluginsMainR.string.nav_history_browser),
+            onNavigateBack = { navController.safePopBackStack() }
+        )
+    }
+
     composable(AppRoute.Preferences.route) {
         AllPreferencesScreen(
             activePlugin = activePlugin,
@@ -611,6 +621,10 @@ fun NavGraphBuilder.appNavGraph(
             onManageInsulin = { navController.navigate(AppRoute.InsulinManagement.createRoute()) },
             onManageProfile = { navController.navigate(AppRoute.Profile.createRoute()) },
             onProfileSwitch = { navController.navigate(AppRoute.ProfileActivation.createRoute(0)) },
+            onRunObjectives = {
+                val index = activePlugin.getPluginsList().indexOfFirst { it is Objectives }
+                if (index >= 0) navController.navigate(AppRoute.PluginContent.createRoute(index))
+            },
             onRequestDirectoryAccess = onRequestDirectoryAccess,
             onRequestPermission = onRequestPermission,
             permissionItems = {

@@ -3,25 +3,18 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.time.T
-import app.aaps.core.graph.data.DataPointWithLabelInterface
-import app.aaps.core.graph.data.GlucoseValueDataPoint
-import app.aaps.core.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.OverviewData
-import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.overview.graph.BgDataPoint
 import app.aaps.core.interfaces.overview.graph.BgRange
 import app.aaps.core.interfaces.overview.graph.BgType
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
-import app.aaps.core.interfaces.overview.graph.TimeRange
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
@@ -38,21 +31,16 @@ class PreparePredictionsWorker(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
-    @Inject lateinit var overviewData: OverviewData
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var config: Config
     @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Inject lateinit var loop: Loop
-    @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var overviewDataCache: OverviewDataCache
     @Inject lateinit var preferences: Preferences
 
     class PreparePredictionsData(
-        val overviewData: OverviewData
+        val overviewData: OverviewData,
+        val cache: OverviewDataCache
     )
 
     override suspend fun doWorkAndLog(): Result {
@@ -61,7 +49,6 @@ class PreparePredictionsWorker(
 
         val apsResult = if (config.APS) loop.lastRun?.constraintsProcessed else processedDeviceStatusData.getAPSResult()
         val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.AAPSCLIENT
-        val menuChartSettings = overviewMenus.setting
         // align to hours
         val calendar = Calendar.getInstance().also {
             it.timeInMillis = System.currentTimeMillis()
@@ -70,31 +57,20 @@ class PreparePredictionsWorker(
             it[Calendar.MINUTE] = 0
             it.add(Calendar.HOUR, 1)
         }
-        if (predictionsAvailable && apsResult != null && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal]) {
+        if (predictionsAvailable && apsResult != null) {
             var predictionHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
             predictionHours = min(2, predictionHours)
             predictionHours = max(0, predictionHours)
-            val hoursToFetch = data.overviewData.rangeToDisplay - predictionHours
-            data.overviewData.toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
+            val hoursToFetch = Constants.GRAPH_TIME_RANGE_HOURS - predictionHours
+            data.overviewData.toTime = calendar.timeInMillis + 100000 // GraphView-era nudge, retained while workers still consume this shape
             data.overviewData.fromTime = data.overviewData.toTime - T.hours(hoursToFetch.toLong()).msecs()
             data.overviewData.endTime = data.overviewData.toTime + T.hours(predictionHours.toLong()).msecs()
         } else {
-            data.overviewData.toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
-            data.overviewData.fromTime = data.overviewData.toTime - T.hours(data.overviewData.rangeToDisplay.toLong()).msecs()
+            data.overviewData.toTime = calendar.timeInMillis + 100000
+            data.overviewData.fromTime = data.overviewData.toTime - T.hours(Constants.GRAPH_TIME_RANGE_HOURS.toLong()).msecs()
             data.overviewData.endTime = data.overviewData.toTime
         }
 
-        val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
-        val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictionsAsGv
-            ?.map { bg -> GlucoseValueDataPoint(bg, profileUtil, rh, dateUtil) }
-            ?.toMutableList()
-        if (predictions != null) {
-            predictions.sortWith { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) }
-            for (prediction in predictions) if (prediction.data.value >= 40) bgListArray.add(prediction)
-        }
-        data.overviewData.predictionsGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })
-
-        // ========== Compose/Vico: Populate prediction BgDataPoints ==========
         val highMarkInUnits = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMarkInUnits = preferences.get(UnitDoubleKey.OverviewLowMark)
 
@@ -123,14 +99,11 @@ class PreparePredictionsWorker(
             ?.sortedBy { it.timestamp }
             ?: emptyList()
 
-        overviewDataCache.updatePredictions(predictionDataPoints)
+        data.cache.updatePredictions(predictionDataPoints)
 
-        // Update time range with endTime that includes predictions
-        val currentTimeRange = overviewDataCache.timeRangeFlow.value
-        if (currentTimeRange != null) {
-            overviewDataCache.updateTimeRange(
-                currentTimeRange.copy(endTime = data.overviewData.endTime)
-            )
+        // Extend cached time range to include prediction horizon
+        data.cache.timeRangeFlow.value?.let { current ->
+            data.cache.updateTimeRange(current.copy(endTime = data.overviewData.endTime))
         }
 
         return Result.success()

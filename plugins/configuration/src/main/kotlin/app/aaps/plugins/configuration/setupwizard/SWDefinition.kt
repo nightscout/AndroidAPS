@@ -86,6 +86,7 @@ class SWDefinition @Inject constructor(
     var onManageInsulin: (() -> Unit)? = null
     var onManageProfile: (() -> Unit)? = null
     var onProfileSwitch: (() -> Unit)? = null
+    var onRunObjectives: (() -> Unit)? = null
     var onRequestDirectoryAccess: (() -> Unit)? = null
     var onRequestPermission: ((PermissionGroup) -> Unit)? = null
     var permissionItems: (() -> List<Pair<PermissionGroup, Boolean>>)? = null
@@ -333,8 +334,10 @@ class SWDefinition @Inject constructor(
         get() = swScreenProvider.get().with(app.aaps.core.ui.R.string.objectives)
             .skippable(false)
             .add(swInfoTextProvider.get().label(R.string.startobjective))
+            .add(swBreakProvider.get())
+            .add(swButtonProvider.get().text(R.string.open_objectives).action { onRunObjectives?.invoke() })
             .validator { activePlugin.activeObjectives?.isStarted(Objectives.FIRST_OBJECTIVE) == true }
-            .visibility { config.APS && activePlugin.activeObjectives?.isStarted(Objectives.FIRST_OBJECTIVE) == false }
+            .visibility { config.APS && activePlugin.activeObjectives?.allAccomplished == false }
 
     private fun swDefinitionFull() = // List all the screens here
         add(screenSetupWizard)

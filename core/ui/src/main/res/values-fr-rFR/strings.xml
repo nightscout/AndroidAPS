@@ -683,4 +683,7 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">V_SI</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAS</string>
+    <string name="remove_items">Supprimer les éléments</string>
+    <string name="sort_items">Trier les éléments</string>
+
 </resources>

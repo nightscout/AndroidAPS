@@ -75,8 +75,10 @@ private val LoopSuperbolusColor   = Color(0xFFFFAE01)
 private val TempBasalColor        = Color(0xFFFF9800)
 private val IobColor              = Color(0xFF1E88E5)
 private val BolusColor            = Color(0xFF1EA3E5)
-private val TempTargetActiveColor = Color(0xFFF4D700)
-private val TempTargetBg          = Color(0x1AF4D700)
+private val TempTargetActiveColor  = Color(0xFFF4D700)
+private val TempTargetBg           = Color(0x1AF4D700)
+private val AutosensTargetColor    = Color(0xFF77DD77)
+private val AutosensTargetBg       = Color(0x1A77DD77)
 private val White70               = Color(0xB3FFFFFF)
 private val White20               = Color(0x33FFFFFF)
 private val CardBg                = Color(0xFF1A1A1A)
@@ -216,7 +218,7 @@ private fun LoopStatusContent(
             oapsResult = data.oapsResult,
             dateUtil = dateUtil
         )
-        TargetsCard(tempTarget = data.tempTarget, defaultRange = data.defaultRange, dateUtil = dateUtil)
+        TargetsCard(tempTarget = data.tempTarget, autosensTarget = data.autosensTarget, defaultRange = data.defaultRange, dateUtil = dateUtil)
         RefreshButton(onClick = onRefresh)
     }
 }
@@ -544,6 +546,7 @@ private fun OapsResultSection(
 @Composable
 private fun TargetsCard(
     tempTarget: TempTargetInfo?,
+    autosensTarget: String?,
     defaultRange: TargetRange,
     dateUtil: DateUtil
 ) {
@@ -594,16 +597,45 @@ private fun TargetsCard(
             Spacer(Modifier.height(6.dp))
         }
 
-        if (defaultRange.lowDisplay != defaultRange.highDisplay) {
+        if (autosensTarget != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(AutosensTargetBg)
+                    .padding(8.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.loop_status_adjusted_target),
+                        color = AutosensTargetColor,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = autosensTarget,
+                        color = AutosensTargetColor,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        } else {
+            if (defaultRange.lowDisplay != defaultRange.highDisplay) {
+                InfoRow(
+                    label = stringResource(R.string.loop_status_target_range),
+                    value = "${defaultRange.lowDisplay} - ${defaultRange.highDisplay} ${defaultRange.units}"
+                )
+                Spacer(Modifier.height(4.dp))
+            }
             InfoRow(
-                label = stringResource(R.string.loop_status_target_range),
-                value = "${defaultRange.lowDisplay} - ${defaultRange.highDisplay} ${defaultRange.units}"
+                label = stringResource(R.string.loop_status_target),
+                value = "${defaultRange.targetDisplay} ${defaultRange.units}"
             )
-            Spacer(Modifier.height(4.dp))
         }
-        InfoRow(
-            label = stringResource(R.string.loop_status_target),
-            value = "${defaultRange.targetDisplay} ${defaultRange.units}"
-        )
     }
 }

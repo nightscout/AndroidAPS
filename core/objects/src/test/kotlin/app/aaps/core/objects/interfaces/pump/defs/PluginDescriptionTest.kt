@@ -1,6 +1,5 @@
 package app.aaps.core.objects.interfaces.pump.defs
 
-import androidx.fragment.app.Fragment
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginDescription
 import com.google.common.truth.Truth.assertThat
@@ -13,19 +12,9 @@ class PluginDescriptionTest {
         assertThat(pluginDescription.mainType).isEqualTo(PluginType.PUMP)
     }
 
-    @Test fun fragmentClassTest() {
-        val pluginDescription = PluginDescription().fragmentClass(Fragment::class.java.name)
-        assertThat(pluginDescription.fragmentClass).isEqualTo(Fragment::class.java.name)
-    }
-
     @Test fun alwaysEnabledTest() {
         val pluginDescription = PluginDescription().alwaysEnabled(true)
         assertThat(pluginDescription.alwaysEnabled).isTrue()
-    }
-
-    @Test fun alwaysVisibleTest() {
-        val pluginDescription = PluginDescription().alwaysVisible(true)
-        assertThat(pluginDescription.alwaysVisible).isTrue()
     }
 
     @Test fun neverVisibleTest() {
@@ -51,10 +40,5 @@ class PluginDescriptionTest {
     @Test fun enableByDefault() {
         val pluginDescription = PluginDescription().enableByDefault(true)
         assertThat(pluginDescription.enableByDefault).isTrue()
-    }
-
-    @Test fun visibleByDefault() {
-        val pluginDescription = PluginDescription().visibleByDefault(true)
-        assertThat(pluginDescription.visibleByDefault).isTrue()
     }
 }

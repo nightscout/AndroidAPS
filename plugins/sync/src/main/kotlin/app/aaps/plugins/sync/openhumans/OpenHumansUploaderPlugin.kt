@@ -16,7 +16,6 @@ import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
-import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
@@ -60,7 +59,6 @@ import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -678,23 +676,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         }
     }
 
-    internal fun createForegroundInfo(id: UUID): ForegroundInfo {
-        val cancel = context.getString(R.string.cancel)
-
-        val intent = WorkManager.getInstance(context)
-            .createCancelPendingIntent(id)
-
-        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_WORKER)
-            .setContentTitle(context.getString(R.string.open_humans_uploading))
-            .setContentText(context.getString(R.string.uploading_to_open_humans))
-            .setSmallIcon(R.drawable.open_humans_notification)
-            .setOngoing(true)
-            .addAction(android.R.drawable.ic_delete, cancel, intent)
-            .build()
-
-        return ForegroundInfo(UPLOAD_NOTIFICATION_ID, notification)
-    }
-
     private companion object {
 
         val HEX_DIGITS = "0123456789ABCDEF".toCharArray()
@@ -705,7 +686,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         const val NOTIFICATION_CHANNEL_WORKER = "OpenHumansWorker"
         const val NOTIFICATION_CHANNEL_MESSAGES = "OpenHumansMessages"
         const val SIGNED_OUT_NOTIFICATION_ID = 3125
-        const val UPLOAD_NOTIFICATION_ID = 3126
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(

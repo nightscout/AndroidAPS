@@ -31,6 +31,7 @@ import app.aaps.core.ui.compose.icons.IcLoopLgs
 import app.aaps.core.ui.compose.icons.IcLoopOpen
 import app.aaps.core.ui.compose.icons.IcLoopPaused
 import app.aaps.core.ui.compose.icons.IcLoopSuperbolus
+import app.aaps.core.ui.compose.loopColor
 
 @Composable
 fun RunningModeChip(
@@ -92,22 +93,11 @@ fun RunningModeChip(
 }
 
 /**
- * Extension to get theme color for RM.Mode
+ * Extension to get theme color for RM.Mode.
+ * Thin composable wrapper around the shared [loopColor] mapping.
  */
 @Composable
-internal fun RM.Mode.toColor(): Color = when (this) {
-    RM.Mode.CLOSED_LOOP       -> AapsTheme.generalColors.loopClosed
-    RM.Mode.CLOSED_LOOP_LGS   -> AapsTheme.generalColors.loopLgs
-    RM.Mode.OPEN_LOOP         -> AapsTheme.generalColors.loopOpened
-    RM.Mode.DISABLED_LOOP     -> AapsTheme.generalColors.loopDisabled
-    RM.Mode.SUPER_BOLUS       -> AapsTheme.generalColors.loopSuperBolus
-    RM.Mode.DISCONNECTED_PUMP -> AapsTheme.generalColors.loopDisconnected
-    RM.Mode.SUSPENDED_BY_PUMP,
-    RM.Mode.SUSPENDED_BY_USER,
-    RM.Mode.SUSPENDED_BY_DST  -> AapsTheme.generalColors.loopDisabled
-
-    RM.Mode.RESUME            -> AapsTheme.generalColors.loopClosed
-}
+internal fun RM.Mode.toColor(): Color = loopColor(AapsTheme.generalColors)
 
 /**
  * Extension to get Compose icon for RM.Mode

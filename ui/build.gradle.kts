@@ -18,10 +18,8 @@ android {
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:graph"))
-    implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
@@ -39,6 +37,8 @@ dependencies {
     api(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.sh.calvin.reorderable)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
     api(libs.androidx.core)
     api(libs.kotlinx.datetime)
 

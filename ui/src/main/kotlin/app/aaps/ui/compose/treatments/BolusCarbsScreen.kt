@@ -425,7 +425,7 @@ private fun MealLinkItem(
                         )
 
                         Text(
-                            text = rh.gs(app.aaps.core.objects.R.string.format_carbs, carbs.amount.toInt()),
+                            text = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs.amount.toInt()),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )

@@ -27,7 +27,6 @@ class StorageConstraintPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .neverVisible(true)
         .alwaysEnabled(true)
         .showInList { false }
         .pluginName(R.string.storage),

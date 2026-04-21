@@ -32,6 +32,8 @@ import com.patrykandpatrick.vico.compose.common.Insets
 import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.compose.common.vicoTheme
 
+private val LegendLabelKey = ExtraStore.Key<List<String>>()
+
 /**
  * Composable that displays IC (Insulin to Carb ratio) profile data as a line chart using Vico charting library.
  * Supports both single profile view and side-by-side comparison of two profiles.
@@ -65,8 +67,6 @@ import com.patrykandpatrick.vico.compose.common.vicoTheme
  *
  * @throws IllegalArgumentException if profile2 is provided but profile2Name is null
  */
-
-private val LegendLabelKey = ExtraStore.Key<List<String>>()
 
 @Composable
 fun IcProfileGraphCompose(
@@ -109,7 +109,6 @@ fun IcProfileGraphCompose(
         }
     }
 
-    val lineColors = listOf(profile2Color, profile1Color)
     val legendItemLabelComponent = rememberTextComponent(style = TextStyle(color = vicoTheme.textColor))
     val legendIcon1 = rememberShapeComponent(fill = Fill(profile1Color))
     val legendIcon2 = rememberShapeComponent(fill = Fill(profile2Color))
@@ -120,7 +119,7 @@ fun IcProfileGraphCompose(
                     LineCartesianLayer.LineProvider.series(
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
-                            pointConnector = Square
+                            interpolator = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
@@ -136,7 +135,7 @@ fun IcProfileGraphCompose(
                                     )
                                 )
                             },
-                            pointConnector = Square
+                            interpolator = Square
                         )
                     )
                 } else {
@@ -155,7 +154,7 @@ fun IcProfileGraphCompose(
                                     )
                                 )
                             },
-                            pointConnector = Square
+                            interpolator = Square
                         )
                     )
                 }

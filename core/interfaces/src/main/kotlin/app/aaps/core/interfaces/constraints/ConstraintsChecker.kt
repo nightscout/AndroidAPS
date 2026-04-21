@@ -22,6 +22,7 @@ interface ConstraintsChecker : PluginConstraints {
     fun isAdvancedFilteringEnabled(): Constraint<Boolean>
     fun isSuperBolusEnabled(): Constraint<Boolean>
     fun isAutomationEnabled(): Constraint<Boolean>
+    fun isConcentrationEnabled(): Constraint<Boolean>
 
     /*
      * Determine max values by walking through all constraints

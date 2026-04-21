@@ -15,14 +15,8 @@ interface UiInteraction {
     /** The main activity of the application. */
     val mainActivity: Class<*>
 
-    /** The activity for browsing history. */
-    val historyBrowseActivity: Class<*>
-
     /** The activity for displaying error information. */
     val errorHelperActivity: Class<*>
-
-    /** A generic activity that can host a single fragment. */
-    val singleFragmentActivity: Class<*>
 
     /**
      * Display names for units preferences.
@@ -41,13 +35,6 @@ interface UiInteraction {
      * @param soundId sound resource. if == 0 alarm is not started
      */
     fun runAlarm(status: String, title: String, @RawRes soundId: Int = 0)
-
-    /**
-     * Triggers an update of the application widget.
-     * @param context The context.
-     * @param from A string indicating the source of the update request.
-     */
-    fun updateWidget(context: Context, from: String)
 
     /**
      * Defines modes for the site rotation dialog.

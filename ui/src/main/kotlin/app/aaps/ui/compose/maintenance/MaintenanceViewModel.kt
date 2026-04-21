@@ -17,8 +17,8 @@ import app.aaps.core.interfaces.maintenance.CloudDirectoryInfo
 import app.aaps.core.interfaces.maintenance.CloudDirectoryManager
 import app.aaps.core.interfaces.maintenance.ExportConfig
 import app.aaps.core.interfaces.maintenance.ExportDestination
-import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ExportResult
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.Maintenance
 import app.aaps.core.interfaces.overview.OverviewData
@@ -204,7 +204,6 @@ class MaintenanceViewModel @Inject constructor(
                     activePlugin.activeNsClient?.dataSyncSelector?.resetToNextFullSync()
                     dataSyncSelectorXdrip.resetToNextFullSync()
                     pumpSync.connectNewPump()
-                    overviewData.reset()
                     overviewDataCache.reset()
                     iobCobCalculator.ads.reset()
                     iobCobCalculator.clearCache()

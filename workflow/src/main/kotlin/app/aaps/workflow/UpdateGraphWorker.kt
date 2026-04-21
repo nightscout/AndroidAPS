@@ -2,14 +2,12 @@ package app.aaps.workflow
 
 import android.content.Context
 import androidx.work.WorkerParameters
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
-import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
+import androidx.work.workDataOf
+import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.workflow.LoggingWorker
+import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
-import java.security.spec.InvalidParameterSpecException
 import javax.inject.Inject
 
 class UpdateGraphWorker(
@@ -17,16 +15,17 @@ class UpdateGraphWorker(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.IO) {
 
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+
+    class UpdateGraphData(
+        val signals: CalculationSignalsEmitter,
+        val pass: CalculationWorkflow.ProgressData
+    )
 
     override suspend fun doWorkAndLog(): Result {
-        val pass = inputData.getInt(CalculationWorkflow.PASS, -1)
-        if (inputData.getString(CalculationWorkflow.JOB) == CalculationWorkflow.MAIN_CALCULATION)
-            activePlugin.activeOverview.overviewBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
-        else
-            rxBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.entries.find { it.pass == pass } ?: throw InvalidParameterSpecException(), 100, false))
+        val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as? UpdateGraphData
+            ?: return Result.failure(workDataOf("Error" to "missing input data"))
+        data.signals.emitProgress(data.pass, 100)
         return Result.success()
     }
 }

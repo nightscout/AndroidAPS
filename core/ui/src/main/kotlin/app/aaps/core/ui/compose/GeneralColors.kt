@@ -109,7 +109,7 @@ data class GeneralColors(
  * Light mode color scheme for general elements.
  * Colors match the light theme values from colors.xml.
  */
-internal val LightGeneralColors = GeneralColors(
+val LightGeneralColors = GeneralColors(
     activeInsulinText = Color(0xFF1E88E5),  // iob color
     calculator = Color(0xFF66BB6A),          // colorCalculatorButton
     futureRecord = Color(0xFF66BB6A),        // green for scheduled/future items
@@ -164,7 +164,7 @@ internal val LightGeneralColors = GeneralColors(
  * Dark mode color scheme for general elements.
  * Colors match the dark theme values from colors.xml (night folder).
  */
-internal val DarkGeneralColors = GeneralColors(
+val DarkGeneralColors = GeneralColors(
     activeInsulinText = Color(0xFF1E88E5),  // iob color (same in both modes)
     calculator = Color(0xFF67E86A),          // colorCalculatorButton (night)
     futureRecord = Color(0xFF6AE86D),        // green for scheduled/future items (night)

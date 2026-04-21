@@ -58,7 +58,7 @@ data class ElementColors(
  * Light mode color scheme for basic elements.
  * Colors match the light theme values from colors.xml.
  */
-internal val LightElementColors = ElementColors(
+val LightElementColors = ElementColors(
     insulin = Color(0xFF1E88E5),         // insulin - bolus
     carbs = Color(0xFFE19701),           // colorCarbsButton
     extendedBolus = Color(0xFFCF8BFE),   // extendedBolus
@@ -107,7 +107,7 @@ internal val LightElementColors = ElementColors(
  * Dark mode color scheme for basic elements.
  * Colors match the dark theme values from colors.xml (night folder).
  */
-internal val DarkElementColors = ElementColors(
+val DarkElementColors = ElementColors(
     insulin = Color(0xFF67DFE8),         // insulin - bolus
     carbs = Color(0xFFFFAE01),           // colorCarbsButton (night)
     extendedBolus = Color(0xFFCF8BFE),   // extendedBolus (night)

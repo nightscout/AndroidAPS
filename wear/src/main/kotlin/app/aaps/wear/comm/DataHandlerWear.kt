@@ -46,6 +46,7 @@ import app.aaps.wear.complications.LongStatusFlippedComplication
 import app.aaps.wear.complications.SgvComplication
 import app.aaps.wear.complications.SgvComplicationExt1
 import app.aaps.wear.complications.SgvComplicationExt2
+import app.aaps.wear.complications.SgvLargeComplication
 import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.data.ComplicationDataRepository
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
@@ -474,6 +475,7 @@ class DataHandlerWear @Inject constructor(
             SgvComplication::class.java,
             SgvComplicationExt1::class.java,
             SgvComplicationExt2::class.java,
+            SgvLargeComplication::class.java,
             // Long status complications (show detailed glucose + status info)
             LongStatusComplication::class.java,
             LongStatusFlippedComplication::class.java,

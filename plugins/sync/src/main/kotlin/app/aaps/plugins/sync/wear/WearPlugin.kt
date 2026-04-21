@@ -34,6 +34,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.compose.WearComposeContent
 import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
@@ -89,6 +90,7 @@ class WearPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
+    private val deferredStart = DeferredForegroundStart()
 
     private val _connectedDevice = MutableStateFlow<String?>(null)
     val connectedDevice: StateFlow<String?> = _connectedDevice.asStateFlow()
@@ -109,7 +111,7 @@ class WearPlugin @Inject constructor(
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        dataLayerListenerServiceMobileHelper.startService(context)
+        deferredStart.start { dataLayerListenerServiceMobileHelper.startService(context) }
         bolusProgressData.state
             .drop(1) // Skip initial null emission on collection start
             .onEach { state ->
@@ -212,6 +214,7 @@ class WearPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         disposable.clear()
+        deferredStart.cancel()
         super.onStop()
         dataLayerListenerServiceMobileHelper.stopService(context)
     }

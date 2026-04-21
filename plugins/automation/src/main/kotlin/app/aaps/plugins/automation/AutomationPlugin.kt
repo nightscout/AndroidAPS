@@ -2,12 +2,6 @@ package app.aaps.plugins.automation
 
 import android.Manifest
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ProcessLifecycleOwner
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpType
@@ -29,6 +23,7 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -36,6 +31,7 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginAutomation
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
+import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
@@ -52,7 +48,6 @@ import app.aaps.plugins.automation.actions.ActionStopTempTarget
 import app.aaps.plugins.automation.compose.AutomationComposeContent
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDelta
-import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventLocationChange
 import app.aaps.plugins.automation.keys.AutomationStringKey
@@ -84,7 +79,6 @@ import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
 import app.aaps.plugins.automation.triggers.TriggerTimeRange
 import app.aaps.plugins.automation.triggers.TriggerWifiSsid
-import app.aaps.plugins.automation.TimerUtil
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -146,7 +140,6 @@ class AutomationPlugin @Inject constructor(
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
         .showInList { config.APS }
-        .neverVisible(!config.APS)
         .description(R.string.automation_description),
     ownPreferences = listOf(AutomationStringKey::class.java),
     aapsLogger, rh, preferences
@@ -154,8 +147,7 @@ class AutomationPlugin @Inject constructor(
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var scope: CoroutineScope? = null
-    private val mainHandler = Handler(Looper.getMainLooper())
-    private var deferredStartObserver: DefaultLifecycleObserver? = null
+    private val deferredStart = DeferredForegroundStart()
 
     private val automationEvents = ArrayList<AutomationEventObject>()
     var executionLog: MutableList<String> = ArrayList()
@@ -183,7 +175,7 @@ class AutomationPlugin @Inject constructor(
     )
 
     override fun onStart() {
-        startLocationServiceWhenForeground()
+        deferredStart.start { locationServiceHelper.startService(context) }
 
         super.onStart()
         loadFromSP()
@@ -237,34 +229,9 @@ class AutomationPlugin @Inject constructor(
         scope?.cancel()
         scope = null
         disposable.clear()
-        mainHandler.post {
-            deferredStartObserver?.let {
-                ProcessLifecycleOwner.get().lifecycle.removeObserver(it)
-                deferredStartObserver = null
-            }
-            locationServiceHelper.stopService(context)
-        }
+        deferredStart.cancel()
+        locationServiceHelper.stopService(context)
         super.onStop()
-    }
-
-    // Android 12+ forbids startForegroundService from background; defer until app is foreground.
-    private fun startLocationServiceWhenForeground() {
-        mainHandler.post {
-            val processLifecycle = ProcessLifecycleOwner.get().lifecycle
-            if (processLifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                locationServiceHelper.startService(context)
-                return@post
-            }
-            val observer = object : DefaultLifecycleObserver {
-                override fun onStart(owner: LifecycleOwner) {
-                    processLifecycle.removeObserver(this)
-                    deferredStartObserver = null
-                    locationServiceHelper.startService(context)
-                }
-            }
-            deferredStartObserver = observer
-            processLifecycle.addObserver(observer)
-        }
     }
 
     private fun storeToSP() {

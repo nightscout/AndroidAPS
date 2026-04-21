@@ -22,8 +22,8 @@ import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.ui.extensions.toVisibility
-import app.aaps.core.ui.extensions.toVisibilityKeepSpace
+import app.aaps.wear.utils.toVisibility
+import app.aaps.wear.utils.toVisibilityKeepSpace
 import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository

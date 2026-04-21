@@ -30,7 +30,6 @@ abstract class PluginBase(
     }
 
     private var state = State.NOT_INITIALIZED
-    private var fragmentVisible = false
 
     open val name: String
         get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else rh.gs(pluginDescription.pluginName)
@@ -58,10 +57,6 @@ abstract class PluginBase(
         if (type == pluginDescription.mainType) return state == State.ENABLED && specialEnableCondition()
         if (type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.PUMP && isEnabled(PluginType.PUMP)) return true
         return type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.APS && isEnabled(PluginType.APS)
-    }
-
-    fun hasFragment(): Boolean {
-        return pluginDescription.fragmentClass != null
     }
 
     fun hasComposeContent(): Boolean {
@@ -137,17 +132,6 @@ abstract class PluginBase(
                 }
             }
         }
-    }
-
-    open fun setFragmentVisible(type: PluginType, fragmentVisible: Boolean) {
-        if (type == pluginDescription.mainType) {
-            this.fragmentVisible = fragmentVisible && specialEnableCondition()
-        }
-    }
-
-    fun isFragmentVisible(): Boolean {
-        if (pluginDescription.alwaysVisible) return true
-        return if (pluginDescription.neverVisible) false else fragmentVisible
     }
 
     fun showInList(type: PluginType): Boolean {

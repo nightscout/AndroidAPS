@@ -115,6 +115,8 @@ class ConstraintsCheckerImpl @Inject constructor(
 
     override fun isAutomationEnabled(): Constraint<Boolean> = isAutomationEnabled(ConstraintObject(true, aapsLogger))
 
+    override fun isConcentrationEnabled(): Constraint<Boolean> = isConcentrationEnabled(ConstraintObject(true, aapsLogger))
+
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
         for (p in constraintsPlugins) {
@@ -181,6 +183,16 @@ class ConstraintsCheckerImpl @Inject constructor(
             val constraint = p as PluginConstraints
             if (!p.isEnabled()) continue
             constraint.isAutomationEnabled(value)
+        }
+        return value
+    }
+
+    override fun isConcentrationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
+        for (p in constraintsPlugins) {
+            val constraint = p as PluginConstraints
+            if (!p.isEnabled()) continue
+            constraint.isConcentrationEnabled(value)
         }
         return value
     }

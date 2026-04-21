@@ -39,6 +39,9 @@ dependencies {
     //WorkManager
     api(libs.androidx.work.runtime) // DataWorkerStorage
 
+    // ProcessLifecycleOwner for DeferredForegroundStart
+    api(libs.androidx.lifecycle.process)
+
     api(libs.com.google.dagger.android)
     api(libs.com.google.dagger.android.support)
 }

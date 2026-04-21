@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="format_carbs">%1$d g</string>
-    <string name="count_selected">%1$d selectat(e)</string>
-    <string name="remove_items">Eliminați elementele</string>
-    <string name="sort_items">Sortați elementele</string>
-</resources>

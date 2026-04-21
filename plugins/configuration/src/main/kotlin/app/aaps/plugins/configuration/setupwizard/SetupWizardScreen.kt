@@ -55,6 +55,7 @@ fun SetupWizardScreen(
     onManageInsulin: () -> Unit,
     onManageProfile: () -> Unit,
     onProfileSwitch: () -> Unit,
+    onRunObjectives: () -> Unit,
     onRequestDirectoryAccess: () -> Unit,
     onRequestPermission: (app.aaps.core.interfaces.plugin.PermissionGroup) -> Unit,
     permissionItems: () -> List<Pair<app.aaps.core.interfaces.plugin.PermissionGroup, Boolean>>,
@@ -69,6 +70,7 @@ fun SetupWizardScreen(
         swDefinition.onManageInsulin = onManageInsulin
         swDefinition.onManageProfile = onManageProfile
         swDefinition.onProfileSwitch = onProfileSwitch
+        swDefinition.onRunObjectives = onRunObjectives
         swDefinition.onRequestDirectoryAccess = onRequestDirectoryAccess
         swDefinition.onRequestPermission = onRequestPermission
         swDefinition.permissionItems = permissionItems
@@ -80,6 +82,7 @@ fun SetupWizardScreen(
             swDefinition.onManageInsulin = null
             swDefinition.onManageProfile = null
             swDefinition.onProfileSwitch = null
+            swDefinition.onRunObjectives = null
             swDefinition.onRequestDirectoryAccess = null
             swDefinition.onRequestPermission = null
             swDefinition.permissionItems = null

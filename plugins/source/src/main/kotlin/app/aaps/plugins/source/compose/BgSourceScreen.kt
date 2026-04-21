@@ -33,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -281,7 +280,7 @@ private fun GlucoseValueItem(
 
             // Trend arrow
             Icon(
-                painter = painterResource(id = glucoseValue.trendArrow.directionToIcon()),
+                imageVector = glucoseValue.trendArrow.directionToIcon(),
                 contentDescription = glucoseValue.trendArrow.name,
                 modifier = Modifier
                     .padding(start = AapsSpacing.small)
