@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.guava.future
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
@@ -99,8 +100,9 @@ class BgGraphTileService : TileService() {
     @Deprecated("Deprecated in TileService but still required for now")
     override fun onResourcesRequest(requestParams: ResourcesRequest): ListenableFuture<ResourceBuilders.Resources> =
         serviceScope.future {
-            // Use cache if ready, otherwise wait for the initial render launched in onCreate
-            val bytes = cachedBytes.get() ?: initialRender.await()
+            val bytes = cachedBytes.get()
+                ?: withTimeoutOrNull(5_000) { initialRender.await() }
+                ?: placeholderBytes()
 
             val cfg = requestParams.deviceConfiguration
             val density = resources.displayMetrics.density
@@ -123,6 +125,16 @@ class BgGraphTileService : TileService() {
                 )
                 .build()
         }
+
+    private fun placeholderBytes(): ByteArray {
+        val widthPx = resources.displayMetrics.widthPixels
+        val heightPx = resources.displayMetrics.heightPixels
+        val bitmap = createBitmap(widthPx, heightPx)
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        bitmap.recycle()
+        return stream.toByteArray()
+    }
 
     private fun renderAndCache(data: ComplicationData) {
         val density = resources.displayMetrics.density
