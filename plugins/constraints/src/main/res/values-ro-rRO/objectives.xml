@@ -70,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">Sunt permise numai grame pentru introducerea carbohidraților.</string>
     <string name="objectives_exam_learned_ecarbs">În universul pompelor, carbohidrații extinși reprezintă un înlocuitor pentru bolusul extins.</string>
     <string name="objectives_exam_learned_nsclient">Monitorizarea și controlul de la distanță sunt posibile, dar nu toate funcțiile trebuie să fie disponibile de la distanță.</string>
+    <string name="objectives_exam_learned_concentration1">Utilizarea insulinei U200 cu un profil 50% necesită o conversie permanentă: pentru bolusurile externe cu stilouri injectoare, și toate rapoartele standard furnizate de AAPS sau NS vor deveni greșite și va trebui să fie convertite în UI pentru echipa medicală.</string>
+    <string name="objectives_exam_learned_concentration2">Trecerea de la U200 cu un profil de la 50% la U200 cu caracteristica concentrației de insulină va necesita crearea unui profil nou mai puternic, să se dezactiveze DynISF o săptămână și să ne instruim creierul pentru a gândi în Unități Internaționale.</string>
+    <string name="objectives_exam_learned_concentration3">Concentrația insulinei poate fi modificată numai atunci când este schimbată insulina sau plasturele. Dar cel mai important, mai ales în cazul pompelor cu fir, nu folosiți niciodată interfața utilizatorului pompei pentru a livra bolusuri direct din pompă.</string>
     <string name="answerdisabledto">Posibilitatea de a răspunde este dezactivată până la: %1$s</string>
     <string name="wronganswer">Răspuns greșit!</string>
     <string name="unfinshed_button">Următoarea nefinalizată</string>
