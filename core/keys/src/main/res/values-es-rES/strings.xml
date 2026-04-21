@@ -3,6 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Modo sencillo</string>
     <string name="pref_title_insulin_concentration">Soporte para concentración de insulina</string>
+    <string name="pref_summary_insulin_concentration">Habilitar el soporte para diferentes concentraciones de insulina (U50, U200, etc.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Mantener pantalla encendida</string>
     <string name="pref_summary_keep_screen_on">Evita que Android apague la pantalla. Consumirá mucha energía cuando el dispositivo no esté conectado a una toma de corriente.</string>
