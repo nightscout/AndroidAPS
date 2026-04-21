@@ -12,6 +12,8 @@
     <!--    Widget-->
     <string name="configure">配置透明度</string>
     <string name="widget_description">AAPS 小部件</string>
+    <string name="widget_bg_graph_description">AAPS 血糖图表</string>
+    <string name="widget_compact_bg_description">AAPS 血糖 + IOB+COB（紧凑）</string>
     <!--     Activities-->
     <string name="activity_monitor">活动监视器</string>
     <string name="time_range">时间范围</string>
