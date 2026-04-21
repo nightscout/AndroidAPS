@@ -86,6 +86,7 @@
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Dışa aktarma ayarları</string>
     <string name="disableloop">Döngüyü devre dışı bırak</string>
+    <string name="disabled_loop">Döngü Devredışı</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
     <string name="suspendloop">Döngüyü duraklat</string>
     <string name="duration_min_label">Süre [min]</string>
@@ -111,6 +112,7 @@
     <string name="duration_label">Süre</string>
     <string name="shortgramm">gr</string>
     <string name="pumpsuspended">Pompa Durduruldu</string>
+    <string name="pump_running">Pompa çalışıyor</string>
     <string name="notconfigured">Yapılandırılmadı</string>
     <string name="loopsuspended">Döngü duraklatıldı</string>
     <string name="trend_arrow">Trend oku</string>
@@ -150,6 +152,9 @@
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
     <string name="lowglucosesuspend">Düşük Glikoz Duraklatma (LGS)</string>
+    <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
+    <string name="pump_suspended">Pompa Durduruldu</string>
+    <string name="mode_reverted">Mod Döndü</string>
     <string name="dia">İES</string>
     <string name="ic_short">IC Karbonhidrat İnsülin Oranı</string>
     <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
@@ -224,6 +229,7 @@
     <string name="careportal_openapsoffline">OpenAPS Çevrimdışı</string>
     <string name="pump_battery_change">Pompa Pil Değişimi</string>
     <string name="temporary_target">Geçici hedef</string>
+    <string name="running_mode">Çalışma modu</string>
     <string name="careportal_temporarytargetvalue">Geçici hedef değeri</string>
     <string name="careportal_temporarytargetcancel">Geçici hedef iptali</string>
     <string name="boluswizard">Bolus sihirbazı</string>
@@ -282,6 +288,7 @@
     <string name="uel_lgs_loop_mode">LGS DÖNGÜ MODU</string>
     <string name="uel_open_loop_mode">AÇIK DÖNGÜ MODU</string>
     <string name="uel_loop_disabled">DÖNGÜ DEVRE DIŞI</string>
+    <string name="uel_loop_resumed">Döngü devam ettirildi</string>
     <string name="uel_reconnect">YENİDEN BAĞLAN</string>
     <string name="uel_disconnect">BAĞLANTIYI KES</string>
     <string name="uel_resume">DEVAM ET</string>
@@ -373,6 +380,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
     <!-- Profile validation -->
+    <string name="error_in_isf_values">İDF değerinde hata</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f Ü</string>
     <string name="carbs_g">Karbonhidrat %1$d g</string>
@@ -573,8 +581,12 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f Ü/s (%2$.2f%%) <br><b>Süre</b>: %3$d dk<br>]]></string>
     <!--    Playback-->
     <!-- ProfileEditor -->
+    <string name="isf_dynamic_label_warning">Algoritmanız İDF\'nizi dinamik olarak hesaplayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda bir geri dönüş olarak veya yalnızca bir referans değeri olarak kullanılabilir</string>
     <!--    Search-->
+    <string name="search_category_plugins">Eklentiler</string>
+    <string name="search_category_wiki">Dökümantasyon</string>
     <!--    Food Management -->
+    <string name="food_management">Yiyecek</string>
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
