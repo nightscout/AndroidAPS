@@ -223,6 +223,7 @@
     <string name="complication_full_status">Stato Completo</string>
     <string name="complication_full_status_flipped">Stato completo (capovolto)</string>
     <string name="complication_blood_glucose">Glicemia</string>
+    <string name="complication_blood_glucose_large">Glucosio Sangue (Grande)</string>
     <string name="complication_blood_glucose_ext1">Glicemia Ext1</string>
     <string name="complication_blood_glucose_ext2">Glicemia Ext2</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
@@ -292,6 +293,7 @@
     <string name="loop_status_temp_target">Target Temporaneo</string>
     <string name="loop_status_target_range">Intervallo</string>
     <string name="loop_status_target">Target</string>
+    <string name="loop_status_adjusted_target">Obiettivo adattato</string>
     <string name="loop_status">Stato loop</string>
     <string name="loop_status_refresh">Aggiorna</string>
     <string name="confirm">Conferma</string>
