@@ -3,6 +3,16 @@
     <string name="automation_short">Auto</string>
     <string name="automation">Automatisation</string>
     <string name="automation_description">Tâches d\'automatisation définies par l\'utilisateur</string>
+    <string name="automation_enabled">Activé</string>
+    <string name="automation_read_only">Lecture seule</string>
+    <string name="automation_new_rule">Nouvelle règle</string>
+    <string name="automation_edit_rule">Modifier la règle</string>
+    <string name="automation_discard_title">Annuler les modifications ?</string>
+    <string name="automation_discard_message">La règle est incomplète et ne peut pas être enregistrée. Ignorer vos modifications ?</string>
+    <string name="automation_discard_confirm">Annuler</string>
+    <string name="automation_category_glucose">Glycémie &amp; traitement</string>
+    <string name="automation_category_device">État du périphérique</string>
+    <string name="automation_category_sensors">Capteurs &amp; connectivité</string>
     <string name="automation_missing_task_name">Veuillez entrer un nom pour la tâche.</string>
     <string name="automation_missing_trigger">Veuillez spécifier au moins un déclencheur.</string>
     <string name="automation_missing_action">Veuillez spécifier au moins une action.</string>
