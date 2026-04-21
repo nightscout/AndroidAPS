@@ -13,6 +13,15 @@
     <string name="automation_category_glucose">Glycémie &amp; traitement</string>
     <string name="automation_category_device">État du périphérique</string>
     <string name="automation_category_sensors">Capteurs &amp; connectivité</string>
+    <string name="automation_category_other">Autre</string>
+    <string name="automation_choose_trigger">Ajouter un déclencheur</string>
+    <string name="automation_add_group">Groupe</string>
+    <string name="automation_choose_action">Ajouter une action</string>
+    <string name="automation_category_targets">Cibles</string>
+    <string name="automation_category_profile">Profil</string>
+    <string name="automation_category_loop">Boucle &amp; insuline</string>
+    <string name="automation_category_alerts">Alertes</string>
+    <string name="automation_category_system">Système</string>
     <string name="automation_missing_task_name">Veuillez entrer un nom pour la tâche.</string>
     <string name="automation_missing_trigger">Veuillez spécifier au moins un déclencheur.</string>
     <string name="automation_missing_action">Veuillez spécifier au moins une action.</string>
@@ -132,5 +141,11 @@
     <string name="on">ACTIVÉ</string>
     <string name="off">DÉSACTIVÉ</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Choisir depuis la carte</string>
+    <string name="tap_to_select_location">Tapez sur la carte pour sélectionner un emplacement</string>
+    <string name="selected_coords">Sélectionné: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Location</string>
+    <string name="permission_location_description">Nécessaire pour les déclencheurs d\'automatisation basés sur la localisation et l\'identification du réseau WiFi</string>
+    <string name="permission_background_location_description">Nécessaire pour que l\'automatisation fonctionne lorsque l\'application est en arrière-plan</string>
 </resources>
