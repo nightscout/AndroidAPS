@@ -380,7 +380,7 @@ class CarelevoBolusCoordinator @Inject constructor(
 
         pluginDisposable += cancelImmeBolusInfusionUseCase.execute()
             .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .timeout(STOP_BOLUS_TIME_OUT, TimeUnit.MILLISECONDS)
             .subscribe(
                 { response ->

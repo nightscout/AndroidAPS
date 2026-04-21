@@ -66,6 +66,7 @@ class CarelevoBleMangerImpl @Inject constructor(
     private var isConnecting = false
     private val stateScope = CoroutineScope(newSingleThreadContext("stateScope"))
     private val commandScope = CoroutineScope(newSingleThreadContext("commandScope"))
+    @Volatile
     private var bluetoothGatt: BluetoothGatt? = null
     private val btManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val btAdapter: BluetoothAdapter? by lazy {
@@ -340,7 +341,7 @@ class CarelevoBleMangerImpl @Inject constructor(
                     "Remote Device is not found."
                 )
 
-            commandScope.async(Dispatchers.Main) {
+            commandScope.async {
                 bluetoothGatt = device.connectGatt(
                     context.applicationContext,
 //                    false,

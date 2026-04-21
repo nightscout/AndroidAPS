@@ -156,7 +156,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
     fun startAlarmClearRequestProcess(info: CarelevoAlarmInfo) {
         compositeDisposable += alarmClearRequestUseCase.execute(AlarmClearUseCaseRequest(alarmId = info.alarmId, alarmType = info.alarmType, alarmCause = info.cause))
             .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe(
                 {
                     aapsLogger.debug(LTag.PUMPCOMM, "acknowledgeAlarm.success alarmId=${info.alarmId}")
@@ -169,7 +169,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
     private fun startAlarmAlertAbnormalClearProcess(info: CarelevoAlarmInfo, alarmCause: AlarmCause) {
         compositeDisposable += alarmUseCase.acknowledgeAlarm(info.alarmId)
             .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe(
                 {
                     when (alarmCause) {
@@ -189,7 +189,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
     private fun startAlarmClearPatchDiscardProcess(info: CarelevoAlarmInfo) {
         compositeDisposable += alarmClearPatchDiscardUseCase.execute(AlarmClearUseCaseRequest(alarmId = info.alarmId, alarmType = info.alarmType, alarmCause = info.cause))
             .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe(
                 {
                     startAlarmClearPatchForceQuitProcess()
@@ -237,7 +237,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
             bleController.clearBond(it)
             compositeDisposable += bleController.execute(Disconnect(address))
                 .subscribeOn(aapsSchedulers.io)
-                .observeOn(aapsSchedulers.main)
+                .observeOn(aapsSchedulers.io)
                 .subscribe(
                     { result ->
                         aapsLogger.debug(LTag.PUMPCOMM, "startAlarmClearPatchForceQuitProcess result=$result")
@@ -266,7 +266,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
     fun clearAllAlarms() {
         compositeDisposable += alarmUseCase.clearAlarms()
             .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe(
                 {
                     _alarmQueue.value = emptyList()
