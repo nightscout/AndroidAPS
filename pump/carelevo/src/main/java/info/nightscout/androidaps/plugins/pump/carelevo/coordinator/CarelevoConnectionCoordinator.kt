@@ -36,15 +36,12 @@ class CarelevoConnectionCoordinator @Inject constructor(
     private val bleController: CarelevoBleController,
     private val requestPatchInfusionInfoUseCase: CarelevoRequestPatchInfusionInfoUseCase
 ) {
-    companion object {
-        private const val LOG_PREFIX = "[CarelevoConnectionCoordinator]"
-    }
 
     private var queueStuckSince: Long? = null
     private var reconnectDisposable = CompositeDisposable()
 
     fun onStop() {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX onStop.clearReconnectDisposable")
+        aapsLogger.debug(LTag.PUMPCOMM, "onStop.clearReconnectDisposable")
         reconnectDisposable.clear()
     }
 
@@ -57,8 +54,8 @@ class CarelevoConnectionCoordinator @Inject constructor(
                 patchInfo.pumpState != null
 
         aapsLogger.debug(
-            LTag.PUMP,
-            "$LOG_PREFIX isInitialized.check " +
+            LTag.PUMPCOMM,
+            "isInitialized.check " +
                 "address=$address, " +
                 "mode=${patchInfo.mode}, " +
                 "runningMinutes=${patchInfo.runningMinutes}, " +
@@ -71,7 +68,7 @@ class CarelevoConnectionCoordinator @Inject constructor(
 
     fun isConnected(): Boolean {
         val address = carelevoPatch.patchInfo.value?.getOrNull()?.address?.uppercase()
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX isConnected.check address=$address")
+        aapsLogger.debug(LTag.PUMPCOMM, "isConnected.check address=$address")
         if (address == null) {
             return true // Keep the command loop from spinning when no address is available yet.
         }
@@ -79,10 +76,10 @@ class CarelevoConnectionCoordinator @Inject constructor(
     }
 
     fun connect(reason: String, txUuid: UUID, onLastDataUpdated: () -> Unit) {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX connect.start reason=$reason")
+        aapsLogger.debug(LTag.PUMPCOMM, "connect.start reason=$reason")
 
         val patchState = carelevoPatch.resolvePatchState()
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX connect.state reason=$reason patchState=$patchState")
+        aapsLogger.debug(LTag.PUMPCOMM, "connect.state reason=$reason patchState=$patchState")
 
         if (reason == "Connection needed" && patchState == PatchState.NotConnectedBooted) {
             onLastDataUpdated()
@@ -92,11 +89,11 @@ class CarelevoConnectionCoordinator @Inject constructor(
 
     fun disconnect(reason: String) {
         val patchState = carelevoPatch.patchState.value?.getOrNull()
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX disconnect.start reason=$reason patchState=$patchState")
+        aapsLogger.debug(LTag.PUMPCOMM, "disconnect.start reason=$reason patchState=$patchState")
     }
 
     fun stopConnecting() {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX stopConnecting.called")
+        aapsLogger.debug(LTag.PUMPCOMM, "stopConnecting.called")
     }
 
     fun refreshPumpStatus(
@@ -114,15 +111,15 @@ class CarelevoConnectionCoordinator @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         onLastDataUpdated()
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX getPumpStatus.success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "getPumpStatus.success")
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX getPumpStatus.responseError error=${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "getPumpStatus.responseError error=${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX getPumpStatus.failure")
+                        aapsLogger.debug(LTag.PUMPCOMM, "getPumpStatus.failure")
                     }
                 }
             }
@@ -130,15 +127,15 @@ class CarelevoConnectionCoordinator @Inject constructor(
 
     fun startReconnection(txUuid: UUID) {
         reconnectDisposable.clear()
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.start")
+        aapsLogger.debug(LTag.PUMPCOMM, "reconnect.start")
 
         if (!carelevoPatch.isBluetoothEnabled()) {
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.skip reason=bluetoothDisabled")
+            aapsLogger.debug(LTag.PUMPCOMM, "reconnect.skip reason=bluetoothDisabled")
             return
         }
 
         val address = carelevoPatch.patchInfo.value?.getOrNull()?.address?.uppercase() ?: return
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.target address=$address")
+        aapsLogger.debug(LTag.PUMPCOMM, "reconnect.target address=$address")
 
         reconnectDisposable.add(
             bleController.execute(Connect(address))
@@ -148,17 +145,17 @@ class CarelevoConnectionCoordinator @Inject constructor(
                     { result ->
                         when (result) {
                             is CommandResult.Success -> {
-                                aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.connect.success")
+                                aapsLogger.debug(LTag.PUMPCOMM, "reconnect.connect.success")
                             }
 
                             else -> {
-                                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX reconnect.connect.failure result=$result")
+                                aapsLogger.error(LTag.PUMPCOMM, "reconnect.connect.failure result=$result")
                                 stopReconnection()
                             }
                         }
                     },
                     { e ->
-                        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX reconnect.connect.error error=$e")
+                        aapsLogger.error(LTag.PUMPCOMM, "reconnect.connect.error error=$e")
                         stopReconnection()
                     }
                 )
@@ -175,7 +172,7 @@ class CarelevoConnectionCoordinator @Inject constructor(
                         btState.getOrNull()?.let { state ->
                             when {
                                 state.shouldBeConnected() -> {
-                                    aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.state connected")
+                                    aapsLogger.debug(LTag.PUMPCOMM, "reconnect.state connected")
 
                                     reconnectDisposable.add(
                                         bleController.execute(DiscoveryService(address))
@@ -183,7 +180,7 @@ class CarelevoConnectionCoordinator @Inject constructor(
                                             .observeOn(aapsSchedulers.io)
                                             .subscribe { result ->
                                                 if (result !is CommandResult.Success) {
-                                                    aapsLogger.error(LTag.PUMP, "$LOG_PREFIX reconnect.discovery.failure result=$result")
+                                                    aapsLogger.error(LTag.PUMPCOMM, "reconnect.discovery.failure result=$result")
                                                     stopReconnection()
                                                 }
                                             }
@@ -191,17 +188,17 @@ class CarelevoConnectionCoordinator @Inject constructor(
                                 }
 
                                 state.shouldBeDiscovered() -> {
-                                    aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.state discovered")
+                                    aapsLogger.debug(LTag.PUMPCOMM, "reconnect.state discovered")
                                     reconnectDisposable.add(
                                         bleController.execute(EnableNotifications(address, txUuid))
                                             .subscribeOn(aapsSchedulers.io)
                                             .observeOn(aapsSchedulers.io)
                                             .subscribe { result ->
-                                                aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.enableNotifications result=$result")
+                                                aapsLogger.debug(LTag.PUMPCOMM, "reconnect.enableNotifications result=$result")
                                                 if (result !is CommandResult.Success) {
                                                     stopReconnection()
                                                 } else {
-                                                    aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.finished")
+                                                    aapsLogger.debug(LTag.PUMPCOMM, "reconnect.finished")
                                                     stopReconnection()
                                                 }
                                             }
@@ -211,14 +208,14 @@ class CarelevoConnectionCoordinator @Inject constructor(
                                 state.isDiscoverCleared() ||
                                     state.isAbnormalBondingFailed() ||
                                     state.isReInitialized() -> {
-                                    aapsLogger.error(LTag.PUMP, "$LOG_PREFIX reconnect.abnormalState state=$state")
+                                    aapsLogger.error(LTag.PUMPCOMM, "reconnect.abnormalState state=$state")
                                     stopReconnection()
                                 }
                             }
                         }
                     },
                     { e ->
-                        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX reconnect.observe.error error=$e")
+                        aapsLogger.error(LTag.PUMPCOMM, "reconnect.observe.error error=$e")
                         stopReconnection()
                     }
                 )
@@ -226,7 +223,7 @@ class CarelevoConnectionCoordinator @Inject constructor(
     }
 
     private fun stopReconnection() {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX reconnect.stop")
+        aapsLogger.debug(LTag.PUMPCOMM, "reconnect.stop")
         reconnectDisposable.clear()
     }
 
@@ -255,8 +252,8 @@ class CarelevoConnectionCoordinator @Inject constructor(
         val timeoutMs = if (isOnlyBasalProfileRunning) 30_000L else 5 * 60 * 1000L
         if (elapsed > timeoutMs) {
             aapsLogger.error(
-                LTag.PUMP,
-                "$LOG_PREFIX queue.forceReset elapsedSec=${elapsed / 1000} timeoutMs=$timeoutMs running=${running.joinToString { it.name }}"
+                LTag.PUMPCOMM,
+                "queue.forceReset elapsedSec=${elapsed / 1000} timeoutMs=$timeoutMs running=${running.joinToString { it.name }}"
             )
             commandQueue.resetPerforming()
             commandQueue.clear()

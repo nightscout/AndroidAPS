@@ -230,11 +230,11 @@ class CarelevoOverviewViewModel @Inject constructor(
             .flatMap { info ->
                 val patchInfo = info?.getOrNull()
                 if (patchInfo == null) {
-                    aapsLogger.debug(LTag.PUMP, "[observePatchInfo] skip null/failure")
+                    aapsLogger.debug(LTag.PUMPCOMM, "[observePatchInfo] skip null/failure")
                     _isCheckScreen.tryEmit(null)
                     Observable.empty()
                 } else {
-                    aapsLogger.debug(LTag.PUMP, "[observePatchInfo] state: $patchInfo")
+                    aapsLogger.debug(LTag.PUMPCOMM, "[observePatchInfo] state: $patchInfo")
                     updateCheckScreen(patchInfo)
                     Observable.just(buildUi(patchInfo))
                 }
@@ -243,10 +243,10 @@ class CarelevoOverviewViewModel @Inject constructor(
             .doOnNext { ui -> updateState(ui) }
             .subscribe(
                 { ui ->
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::observePatchInfo] state : $ui")
+                    aapsLogger.debug(LTag.PUMPCOMM, "state : $ui")
                 },
                 { e ->
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::observePatchInfo] onError", e)
+                    aapsLogger.debug(LTag.PUMPCOMM, "onError", e)
                 }
             )
     }
@@ -279,7 +279,7 @@ class CarelevoOverviewViewModel @Inject constructor(
     }
 
     private fun buildUi(info: CarelevoPatchInfoDomainModel): CarelevoOverviewUiModel {
-        aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::buildUi] info : $info")
+        aapsLogger.debug(LTag.PUMPCOMM, "info : $info")
         val bootLdt = parseBootDateTime(info.bootDateTimeUtcMillis) ?: parseBootDateTime(info.bootDateTime)
         val bootUi = bootLdt?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) ?: ""
 
@@ -310,7 +310,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 { response ->
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::observePatchState] state : ${response.getOrNull()}")
+                    aapsLogger.debug(LTag.PUMPCOMM, "state : ${response.getOrNull()}")
                     response?.getOrNull()?.let { patchState ->
                         _patchState.value = patchState
                         _patchStateFlow.value = patchState
@@ -324,7 +324,7 @@ class CarelevoOverviewViewModel @Inject constructor(
                     }
                 },
                 {
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::observePatchState] doOnError called : $it")
+                    aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
                 }
             )
     }
@@ -397,10 +397,10 @@ class CarelevoOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 { optionalList ->
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::clearExpiredInfusions] success")
+                    aapsLogger.debug(LTag.PUMPCOMM, "success")
                     refreshPatchInfusionInfo()
                 }, { e ->
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::clearExpiredInfusions] error : $e")
+                    aapsLogger.debug(LTag.PUMPCOMM, "error : $e")
                 })
     }
 
@@ -492,14 +492,14 @@ class CarelevoOverviewViewModel @Inject constructor(
     private fun handlePatchDiscardResponse(response: ResponseResult<*>) {
         when (response) {
             is ResponseResult.Success -> {
-                aapsLogger.debug(LTag.PUMP, "[startPatchDiscard] success")
+                aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] success")
                 bleController.unBondDevice()
                 carelevoPatch.releasePatch()
                 triggerEvent(CarelevoOverviewEvent.DiscardComplete)
             }
 
             else                      -> {
-                aapsLogger.debug(LTag.PUMP, "[startPatchDiscard] failed or error")
+                aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] failed or error")
                 triggerEvent(CarelevoOverviewEvent.DiscardFailed)
             }
         }
@@ -507,7 +507,7 @@ class CarelevoOverviewViewModel @Inject constructor(
     }
 
     private fun handlePatchDiscardError(error: Throwable) {
-        aapsLogger.debug(LTag.PUMP, "[startPatchDiscard] error: $error")
+        aapsLogger.debug(LTag.PUMPCOMM, "[startPatchDiscard] error: $error")
         setUiState(UiState.Idle)
         triggerEvent(CarelevoOverviewEvent.DiscardFailed)
     }
@@ -551,7 +551,7 @@ class CarelevoOverviewViewModel @Inject constructor(
             true
         }
 
-        aapsLogger.debug(LTag.PUMP, "[startPumpStopProcess] isTempBasalRunning=$cancelTempBasalResult, isExtendBolusRunning=$cancelExtendBolusResult, stopMinute: $stopMinute")
+        aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] isTempBasalRunning=$cancelTempBasalResult, isExtendBolusRunning=$cancelExtendBolusResult, stopMinute: $stopMinute")
 
         if (cancelExtendBolusResult && cancelTempBasalResult) {
             compositeDisposable += pumpStopUseCase.execute(CarelevoPumpStopRequestModel(durationMin = stopMinute))
@@ -559,7 +559,7 @@ class CarelevoOverviewViewModel @Inject constructor(
                 .subscribeOn(aapsSchedulers.io)
                 .observeOn(aapsSchedulers.main)
                 .doOnError { e ->
-                    aapsLogger.debug(LTag.PUMP, "[startPumpStopProcess] doOnError: $e")
+                    aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] doOnError: $e")
                 }
                 .doFinally {
                     setUiState(UiState.Idle)
@@ -576,22 +576,22 @@ class CarelevoOverviewViewModel @Inject constructor(
                             }
 
                             is ResponseResult.Error   -> {
-                                aapsLogger.debug(LTag.PUMP, "[startPumpStopProcess] response error: ${response.e}")
+                                aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] response error: ${response.e}")
                                 triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                             }
 
                             else                      -> {
-                                aapsLogger.debug(LTag.PUMP, "[startPumpStopProcess] response failed/unknown")
+                                aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] response failed/unknown")
                                 triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                             }
                         }
                     },
                     { e ->
-                        aapsLogger.debug(LTag.PUMP, "[startPumpStopProcess] subscribe throwable: $e")
+                        aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] subscribe throwable: $e")
                         triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                     })
         } else {
-            aapsLogger.debug(LTag.PUMP, "[startPumpStopProcess] no active temp/extend bolus to cancel")
+            aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] no active temp/extend bolus to cancel")
             setUiState(UiState.Idle)
             triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
         }
@@ -602,7 +602,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         isExtendBolusRunning: Boolean,
         stopMinute: Int
     ) {
-        aapsLogger.debug(LTag.PUMP, "[startPumpStopProcess] response success")
+        aapsLogger.debug(LTag.PUMPCOMM, "[startPumpStopProcess] response success")
 
         viewModelScope.launch {
             pumpSync.syncTemporaryBasalWithPumpId(
@@ -660,14 +660,14 @@ class CarelevoOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnError {
-                aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpResume] doOnError called : $it")
+                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
                 setUiState(UiState.Idle)
                 triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
             }
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpResume] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                         viewModelScope.launch {
                             pumpSync.syncStopTemporaryBasalWithPumpId(
                                 timestamp = dateUtil.now(),
@@ -684,7 +684,7 @@ class CarelevoOverviewViewModel @Inject constructor(
                     is ResponseResult.Failure -> {}
 
                     is ResponseResult.Error   -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpResume] response failed: ${response.e.message}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response failed: ${response.e.message}")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
                     }

@@ -44,7 +44,7 @@ class CarelevoUpdateLowInsulinNoticeAmountUseCase @Inject constructor(
 
                 when (request.patchState) {
                     is PatchState.ConnectedBooted -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoUpdateLowInsulinNoticeAmountUseCase] case1 connected requestPatchAndLocalUpdate")
+                        aapsLogger.debug(LTag.PUMPCOMM, "case1 connected requestPatchAndLocalUpdate")
                         patchRepository.requestSetThresholdNotice(SetThresholdNoticeRequest(request.lowInsulinNoticeAmount, 0))
                             .blockingGet()
                             .takeIf { it is RequestResult.Pending }
@@ -67,7 +67,7 @@ class CarelevoUpdateLowInsulinNoticeAmountUseCase @Inject constructor(
                     }
 
                     is PatchState.NotConnectedNotBooting -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoUpdateLowInsulinNoticeAmountUseCase] case2 notConnected localUpdate syncPatch=false")
+                        aapsLogger.debug(LTag.PUMPCOMM, "case2 notConnected localUpdate syncPatch=false")
                         val updateUserSettingInfoResult = userSettingInfoRepository.updateUserSettingInfo(
                             userSettingInfo.copy(updatedAt = DateTime.now(), lowInsulinNoticeAmount = request.lowInsulinNoticeAmount, needLowInsulinNoticeAmountSyncPatch = false)
                         )
@@ -77,7 +77,7 @@ class CarelevoUpdateLowInsulinNoticeAmountUseCase @Inject constructor(
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoUpdateLowInsulinNoticeAmountUseCase] case3 disconnected localUpdate syncPatch=true")
+                        aapsLogger.debug(LTag.PUMPCOMM, "case3 disconnected localUpdate syncPatch=true")
                         val updateUserSettingInfoResult = userSettingInfoRepository.updateUserSettingInfo(
                             userSettingInfo.copy(updatedAt = DateTime.now(), lowInsulinNoticeAmount = request.lowInsulinNoticeAmount, needLowInsulinNoticeAmountSyncPatch = true)
                         )

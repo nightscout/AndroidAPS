@@ -64,7 +64,7 @@ class CarelevoPatchObserver @Inject constructor(
                 if (result is ResponseResult.Success) {
                     result.data?.let {
                         createPatchResultModel(it)?.let { model ->
-                            aapsLogger.debug(LTag.PUMP, "[CarelevoPatchObserver] observePatch model=$model")
+                            aapsLogger.debug(LTag.PUMPCOMM, "observePatch model=$model")
                             _patchEvent.onNext(model)
                             _patchResponseEvent.onNext(model)
                         }

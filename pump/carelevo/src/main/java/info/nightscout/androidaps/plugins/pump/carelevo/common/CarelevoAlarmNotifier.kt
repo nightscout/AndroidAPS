@@ -62,7 +62,7 @@ class CarelevoAlarmNotifier @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 { alarms -> handleAlarmsInternal(alarms) },
-                { e -> aapsLogger.error(LTag.PUMP, "[CarelevoAlarmNotifier] observeAlarms.error error=$e") }
+                { e -> aapsLogger.error(LTag.PUMPCOMM, "observeAlarms.error error=$e") }
             )
     }
 
@@ -72,12 +72,12 @@ class CarelevoAlarmNotifier @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 { alarms -> handleAlarmsInternal(alarms) },
-                { e -> aapsLogger.error(LTag.PUMP, "[CarelevoAlarmNotifier] refreshAlarms.error error=$e") }
+                { e -> aapsLogger.error(LTag.PUMPCOMM, "refreshAlarms.error error=$e") }
             )
     }
 
     private fun handleAlarmsInternal(alarms: List<CarelevoAlarmInfo>) {
-        aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmNotifier] handleAlarmsInternal alarms=$alarms")
+        aapsLogger.debug(LTag.PUMPCOMM, "handleAlarmsInternal alarms=$alarms")
         _alarms.value = alarms
 
         if (!isInForeground) {
@@ -95,7 +95,7 @@ class CarelevoAlarmNotifier @Inject constructor(
 
             val descArgs = buildDescArgsFor(newAlarm)
             val desc = buildDescription(descRes, descArgs)
-            aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmNotifier] showTopNotification titleRes=$titleRes descArgs=$descArgs desc=$desc")
+            aapsLogger.debug(LTag.PUMPCOMM, "showTopNotification titleRes=$titleRes descArgs=$descArgs desc=$desc")
             notificationManager.post(
                 id = NotificationId.COMBO_PUMP_ALARM,
                 text = context.getString(titleRes) + "\n" + HtmlCompat.fromHtml(desc, HtmlCompat.FROM_HTML_MODE_LEGACY),
@@ -251,7 +251,7 @@ class CarelevoAlarmNotifier @Inject constructor(
 
         AlarmCause.ALARM_NOTICE_PATCH_EXPIRED -> {
             val expiry = sp.getInt(CarelevoIntPreferenceKey.CARELEVO_PATCH_EXPIRATION_REMINDER_HOURS.key, 116)
-            aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmNotifier] buildDescArgsFor alarm=${alarm.value} expiry=$expiry")
+            aapsLogger.debug(LTag.PUMPCOMM, "buildDescArgsFor alarm=${alarm.value} expiry=$expiry")
             val (days, hours) = splitDaysAndHours(expiry)
             listOf(days.toString(), hours.toString())
         }

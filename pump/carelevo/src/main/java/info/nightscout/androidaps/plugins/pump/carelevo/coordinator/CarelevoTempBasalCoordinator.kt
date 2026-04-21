@@ -31,9 +31,6 @@ class CarelevoTempBasalCoordinator @Inject constructor(
     private val startTempBasalInfusionUseCase: CarelevoStartTempBasalInfusionUseCase,
     private val cancelTempBasalInfusionUseCase: CarelevoCancelTempBasalInfusionUseCase
 ) {
-    companion object {
-        private const val LOG_PREFIX = "[CarelevoTempBasalCoordinator]"
-    }
 
     fun setTempBasalAbsolute(
         absoluteRate: Double,
@@ -43,16 +40,16 @@ class CarelevoTempBasalCoordinator @Inject constructor(
         onLastDataUpdated: () -> Unit
     ): PumpEnactResult {
         aapsLogger.info(
-            LTag.PUMP,
-            "$LOG_PREFIX setTempBasalAbsolute.start absoluteRate=${absoluteRate.toFloat()} durationInMinutes=${durationInMinutes.toLong()}"
+            LTag.PUMPCOMM,
+            "setTempBasalAbsolute.start absoluteRate=${absoluteRate.toFloat()} durationInMinutes=${durationInMinutes.toLong()}"
         )
         val result = pumpEnactResultProvider.get()
         if (!carelevoPatch.isBluetoothEnabled()) {
-            aapsLogger.info(LTag.PUMP, "$LOG_PREFIX setTempBasalAbsolute.skip reason=bluetoothDisabled")
+            aapsLogger.info(LTag.PUMPCOMM, "setTempBasalAbsolute.skip reason=bluetoothDisabled")
             return result
         }
         if (!carelevoPatch.isCarelevoConnected()) {
-            aapsLogger.info(LTag.PUMP, "$LOG_PREFIX setTempBasalAbsolute.skip reason=notConnected")
+            aapsLogger.info(LTag.PUMPCOMM, "setTempBasalAbsolute.skip reason=notConnected")
             return result
         }
 
@@ -66,14 +63,14 @@ class CarelevoTempBasalCoordinator @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
             .timeout(10, TimeUnit.SECONDS)
             .onErrorReturn { throwable ->
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX setTempBasalAbsolute.error", throwable)
+                aapsLogger.error(LTag.PUMPCOMM, "setTempBasalAbsolute.error", throwable)
                 ResponseResult.Error(throwable)
             }
             .blockingGet()
 
         return when (response) {
             is ResponseResult.Success -> {
-                aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX setTempBasalAbsolute.success")
+                aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalAbsolute.success")
                 onLastDataUpdated()
                 runBlocking {
                     pumpSync.syncTemporaryBasalWithPumpId(
@@ -96,7 +93,7 @@ class CarelevoTempBasalCoordinator @Inject constructor(
             }
 
             else -> {
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX setTempBasalAbsolute.failure response=$response")
+                aapsLogger.error(LTag.PUMPCOMM, "setTempBasalAbsolute.failure response=$response")
                 result.success(false).enacted(false).comment("Internal error")
             }
         }
@@ -110,13 +107,13 @@ class CarelevoTempBasalCoordinator @Inject constructor(
         onLastDataUpdated: () -> Unit
     ): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX setTempBasalPercent.start percent=$percent durationInMinutes=$durationInMinutes")
+        aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalPercent.start percent=$percent durationInMinutes=$durationInMinutes")
         if (!carelevoPatch.isBluetoothEnabled()) {
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX setTempBasalPercent.skip reason=bluetoothDisabled")
+            aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalPercent.skip reason=bluetoothDisabled")
             return result
         }
         if (!carelevoPatch.isCarelevoConnected()) {
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX setTempBasalPercent.skip reason=notConnected")
+            aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalPercent.skip reason=notConnected")
             return result
         }
 
@@ -133,7 +130,7 @@ class CarelevoTempBasalCoordinator @Inject constructor(
             .doOnSuccess { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX setTempBasalPercent.success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalPercent.success")
                         onLastDataUpdated()
                         runBlocking {
                             pumpSync.syncTemporaryBasalWithPumpId(
@@ -157,15 +154,15 @@ class CarelevoTempBasalCoordinator @Inject constructor(
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX setTempBasalPercent.responseError error=${response.e}")
+                        aapsLogger.error(LTag.PUMPCOMM, "setTempBasalPercent.responseError error=${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX setTempBasalPercent.failure")
+                        aapsLogger.error(LTag.PUMPCOMM, "setTempBasalPercent.failure")
                     }
                 }
             }.doOnError {
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX setTempBasalPercent.error", it)
+                aapsLogger.error(LTag.PUMPCOMM, "setTempBasalPercent.error", it)
                 result.success = false
                 result.enacted = false
             }.map {
@@ -178,13 +175,13 @@ class CarelevoTempBasalCoordinator @Inject constructor(
         onLastDataUpdated: () -> Unit
     ): PumpEnactResult {
         val result = pumpEnactResultProvider.get()
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX cancelTempBasal.start")
+        aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal.start")
         if (!carelevoPatch.isBluetoothEnabled()) {
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX cancelTempBasal.skip reason=bluetoothDisabled")
+            aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal.skip reason=bluetoothDisabled")
             return result
         }
         if (!carelevoPatch.isCarelevoConnected()) {
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX cancelTempBasal.skip reason=notConnected")
+            aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal.skip reason=notConnected")
             return result
         }
 
@@ -196,7 +193,7 @@ class CarelevoTempBasalCoordinator @Inject constructor(
             .map { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX cancelTempBasal.success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal.success")
                         onLastDataUpdated()
                         runBlocking {
                             pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -213,7 +210,7 @@ class CarelevoTempBasalCoordinator @Inject constructor(
                     }
 
                     else -> {
-                        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX cancelTempBasal.failure response=$response")
+                        aapsLogger.error(LTag.PUMPCOMM, "cancelTempBasal.failure response=$response")
                         result.success = false
                         result.enacted = false
                     }
@@ -221,7 +218,7 @@ class CarelevoTempBasalCoordinator @Inject constructor(
                 result
             }
             .onErrorReturn { e ->
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX cancelTempBasal.error error=$e")
+                aapsLogger.error(LTag.PUMPCOMM, "cancelTempBasal.error error=$e")
                 result.success = false
                 result.enacted = false
                 result

@@ -95,19 +95,19 @@ class CarelevoCommunicationCheckViewModel @Inject constructor(
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoCommunicationCheckViewModel::startForceDiscard] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoCommunicationCheckEvent.DiscardComplete)
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoCommunicationCheckViewModel::startForceDiscard] response error : ${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoCommunicationCheckEvent.DiscardFailed)
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoCommunicationCheckViewModel::startForceDiscard] response failed")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response failed")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoCommunicationCheckEvent.DiscardFailed)
                     }
@@ -132,11 +132,11 @@ class CarelevoCommunicationCheckViewModel @Inject constructor(
             .subscribe { result ->
                 when (result) {
                     is CommandResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoCommunicationCheckViewModel::startReconnect] connect result success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "connect result success")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoCommunicationCheckViewModel::startReconnect] connect result failed")
+                        aapsLogger.debug(LTag.PUMPCOMM, "connect result failed")
                         cancelReconnect()
                     }
                 }
@@ -148,7 +148,7 @@ class CarelevoCommunicationCheckViewModel @Inject constructor(
                 setUiState(UiState.Loading)
 
                 btState.getOrNull()?.let { state ->
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoCommunicationCheckViewModel::startReconnect] state : $state")
+                    aapsLogger.debug(LTag.PUMPCOMM, "state : $state")
                     if (state.shouldBeConnected()) {
                         bleController.execute(DiscoveryService(address))
                             .blockingGet()

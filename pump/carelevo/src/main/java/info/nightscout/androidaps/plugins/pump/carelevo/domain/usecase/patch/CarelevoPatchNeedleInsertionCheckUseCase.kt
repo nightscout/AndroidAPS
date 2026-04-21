@@ -32,7 +32,7 @@ class CarelevoPatchNeedleInsertionCheckUseCase @Inject constructor(
                 val requestResult = patchRepository.requestCannulaInsertionCheck()
                     .blockingGet()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoPatchNeedleInsertionCheckUseCase] requestCannulaInsertionCheck result=$requestResult")
+                aapsLogger.debug(LTag.PUMPCOMM, "requestCannulaInsertionCheck result=$requestResult")
                 if (requestResult !is RequestResult.Pending) {
                     throw IllegalStateException("request cannula insertion check is not pending")
                 }
@@ -41,7 +41,7 @@ class CarelevoPatchNeedleInsertionCheckUseCase @Inject constructor(
                     .ofType<CannulaInsertionResultModel>()
                     .blockingFirst()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoPatchNeedleInsertionCheckUseCase] insertionResult result=${insertionResult.result}")
+                aapsLogger.debug(LTag.PUMPCOMM, "insertionResult result=${insertionResult.result}")
 
                 val patchInfo = patchInfoRepository.getPatchInfoBySync()
                     ?: throw IllegalStateException("patch info must not be null")

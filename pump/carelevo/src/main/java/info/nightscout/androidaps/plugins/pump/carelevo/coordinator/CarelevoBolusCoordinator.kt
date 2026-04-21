@@ -63,7 +63,6 @@ class CarelevoBolusCoordinator @Inject constructor(
 
     companion object {
         private const val STOP_BOLUS_TIME_OUT = 15_000L
-        private const val LOG_PREFIX = "[CarelevoBolusCoordinator]"
     }
 
     private var isImmeBolusStop = false
@@ -80,7 +79,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         onLastDataUpdated: () -> Unit,
         pluginDisposable: CompositeDisposable
     ): PumpEnactResult {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX deliverTreatment.start bolusType=${detailedBolusInfo.bolusType}")
+        aapsLogger.debug(LTag.PUMPCOMM, "deliverTreatment.start bolusType=${detailedBolusInfo.bolusType}")
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
@@ -94,12 +93,12 @@ class CarelevoBolusCoordinator @Inject constructor(
 
         val infusionInfo = carelevoPatch.infusionInfo.value?.getOrNull()
         aapsLogger.warn(
-            LTag.PUMP,
-            "$LOG_PREFIX deliverTreatment.gate type=${detailedBolusInfo.bolusType}, " +
+            LTag.PUMPCOMM,
+            "deliverTreatment.gate type=${detailedBolusInfo.bolusType}, " +
                 "immeInfo=${infusionInfo?.immeBolusInfusionInfo}"
         )
         if (infusionInfo?.immeBolusInfusionInfo != null) {
-            aapsLogger.warn(LTag.PUMP, "$LOG_PREFIX deliverTreatment.reject reason=immeBolusInProgress")
+            aapsLogger.warn(LTag.PUMPCOMM, "deliverTreatment.reject reason=immeBolusInProgress")
             result.success = false
             result.enacted = false
             result.bolusDelivered = 0.0
@@ -126,7 +125,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 .map { result }
                 .blockingGet()
         } catch (e: Throwable) {
-            aapsLogger.error(LTag.PUMP, "$LOG_PREFIX deliverTreatment.exception error=$e")
+            aapsLogger.error(LTag.PUMPCOMM, "deliverTreatment.exception error=$e")
             rxBus.send(EventForceStopConnecting())
             result.success = false
             result.enacted = false
@@ -161,7 +160,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         ).subscribeOn(aapsSchedulers.io)
             .timeout(3000L, TimeUnit.MILLISECONDS)
             .onErrorReturn { e ->
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX setExtendedBolus.error", e)
+                aapsLogger.error(LTag.PUMPCOMM, "setExtendedBolus.error", e)
                 ResponseResult.Error(e)
             }
             .blockingGet()
@@ -205,14 +204,14 @@ class CarelevoBolusCoordinator @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
             .timeout(3000L, TimeUnit.MILLISECONDS)
             .onErrorReturn { e ->
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX cancelExtendedBolus.error", e)
+                aapsLogger.error(LTag.PUMPCOMM, "cancelExtendedBolus.error", e)
                 ResponseResult.Error(e)
             }
             .blockingGet()
 
         return when (response) {
             is ResponseResult.Success -> {
-                aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX cancelExtendedBolus.success")
+                aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus.success")
                 onLastDataUpdated()
                 runBlocking {
                     pumpSync.syncStopExtendedBolusWithPumpId(
@@ -251,7 +250,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                 is ResponseResult.Error -> response.e.message ?: response.e.toString()
                 else -> "Unknown bolus response"
             }
-            aapsLogger.error(LTag.PUMP, "$LOG_PREFIX deliverTreatment.nonSuccess response=$response")
+            aapsLogger.error(LTag.PUMPCOMM, "deliverTreatment.nonSuccess response=$response")
             result.success = false
             result.enacted = false
             result.bolusDelivered = 0.0
@@ -316,7 +315,7 @@ class CarelevoBolusCoordinator @Inject constructor(
     }
 
     private fun handleBolusError(e: Throwable, result: PumpEnactResult) {
-        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX deliverTreatment.error error=$e")
+        aapsLogger.error(LTag.PUMPCOMM, "deliverTreatment.error error=$e")
         result.success = false
         result.enacted = false
         result.bolusDelivered = 0.0
@@ -338,20 +337,20 @@ class CarelevoBolusCoordinator @Inject constructor(
                     when (response) {
                         is ResponseResult.Success -> {
                             onLastDataUpdated()
-                            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX finishImmeBolus.success")
+                            aapsLogger.debug(LTag.PUMPCOMM, "finishImmeBolus.success")
                         }
 
                         is ResponseResult.Error -> {
-                            aapsLogger.error(LTag.PUMP, "$LOG_PREFIX finishImmeBolus.responseError error=${response.e}")
+                            aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.responseError error=${response.e}")
                         }
 
                         else -> {
-                            aapsLogger.error(LTag.PUMP, "$LOG_PREFIX finishImmeBolus.failure")
+                            aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.failure")
                         }
                     }
                 },
                 { e ->
-                    aapsLogger.error(LTag.PUMP, "$LOG_PREFIX finishImmeBolus.subscribeError error=$e")
+                    aapsLogger.error(LTag.PUMPCOMM, "finishImmeBolus.subscribeError error=$e")
                 }
             )
     }
@@ -360,7 +359,7 @@ class CarelevoBolusCoordinator @Inject constructor(
         totalAllowedMs: Long,
         timeoutMs: Long = STOP_BOLUS_TIME_OUT
     ): Int {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX stopBolus.calculateMaxRetry totalAllowedMs=$totalAllowedMs timeoutMs=$timeoutMs")
+        aapsLogger.debug(LTag.PUMPCOMM, "stopBolus.calculateMaxRetry totalAllowedMs=$totalAllowedMs timeoutMs=$timeoutMs")
         if (timeoutMs == 0L) {
             return 3
         }
@@ -375,8 +374,8 @@ class CarelevoBolusCoordinator @Inject constructor(
         pluginDisposable: CompositeDisposable
     ) {
         aapsLogger.debug(
-            LTag.PUMP,
-            "$LOG_PREFIX stopBolus.start retry=$retryCount maxRetry=$maxRetry"
+            LTag.PUMPCOMM,
+            "stopBolus.start retry=$retryCount maxRetry=$maxRetry"
         )
 
         pluginDisposable += cancelImmeBolusInfusionUseCase.execute()
@@ -389,7 +388,7 @@ class CarelevoBolusCoordinator @Inject constructor(
                         is ResponseResult.Success -> {
                             onLastDataUpdated()
                             val cancelResult = response.data as CancelBolusInfusionResponseModel
-                            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX stopBolus.success result=$cancelResult")
+                            aapsLogger.debug(LTag.PUMPCOMM, "stopBolus.success result=$cancelResult")
                             bolusProgressData.updateProgress(
                                 bolusProgressData.state.value?.percent ?: 100,
                                 rh.gs(
@@ -412,17 +411,17 @@ class CarelevoBolusCoordinator @Inject constructor(
                         }
 
                         is ResponseResult.Error -> {
-                            aapsLogger.error(LTag.PUMP, "$LOG_PREFIX stopBolus.responseError error=${response.e}")
+                            aapsLogger.error(LTag.PUMPCOMM, "stopBolus.responseError error=${response.e}")
                         }
 
                         else -> {
-                            aapsLogger.error(LTag.PUMP, "$LOG_PREFIX stopBolus.failure")
+                            aapsLogger.error(LTag.PUMPCOMM, "stopBolus.failure")
                         }
                     }
                 },
                 { throwable ->
                     if (throwable is TimeoutException) {
-                        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX stopBolus.timeout timeoutMs=$STOP_BOLUS_TIME_OUT retry=$retryCount")
+                        aapsLogger.error(LTag.PUMPCOMM, "stopBolus.timeout timeoutMs=$STOP_BOLUS_TIME_OUT retry=$retryCount")
                         if (retryCount < maxRetry) {
                             stopBolusDeliveringInternal(
                                 retryCount = retryCount + 1,
@@ -432,10 +431,10 @@ class CarelevoBolusCoordinator @Inject constructor(
                                 pluginDisposable = pluginDisposable
                             )
                         } else {
-                            aapsLogger.error(LTag.PUMP, "$LOG_PREFIX stopBolus.timeout.exhausted maxRetry=$maxRetry")
+                            aapsLogger.error(LTag.PUMPCOMM, "stopBolus.timeout.exhausted maxRetry=$maxRetry")
                         }
                     } else {
-                        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX stopBolus.error error=$throwable")
+                        aapsLogger.error(LTag.PUMPCOMM, "stopBolus.error error=$throwable")
                     }
                 }
             )

@@ -63,7 +63,7 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
                     )
                 }.splitSegment()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] splitSegment result=$basalSegment")
+                aapsLogger.debug(LTag.PUMPCOMM, "splitSegment result=$basalSegment")
 
                 val requestBasalList = basalSegment
                     .chunked(8)
@@ -81,7 +81,7 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
                         )
                     }
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] buildRequestList result=$requestBasalList")
+                aapsLogger.debug(LTag.PUMPCOMM, "buildRequestList result=$requestBasalList")
 
                 val programRequest1 = requestBasalList[0]
                 basalRepository.requestSetBasalProgramV2(programRequest1)
@@ -89,13 +89,13 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
                     .takeIf { it is RequestResult.Pending }
                     ?: throw IllegalStateException("request program1 is not pending")
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] requestProgram1.start")
+                aapsLogger.debug(LTag.PUMPCOMM, "requestProgram1.start")
 
                 val requestProgram1Result = patchObserver.basalEvent
                     .ofType<SetBasalProgramResultModel>()
                     .blockingFirst()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] requestProgram1.result result=$requestProgram1Result")
+                aapsLogger.debug(LTag.PUMPCOMM, "requestProgram1.result result=$requestProgram1Result")
 
                 if (requestProgram1Result.result != SetBasalProgramResult.SUCCESS) {
                     throw IllegalStateException("request program1 result is failed")
@@ -107,13 +107,13 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
                     .takeIf { it is RequestResult.Pending }
                     ?: throw IllegalStateException("request program2 is not pending")
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] requestProgram2.start")
+                aapsLogger.debug(LTag.PUMPCOMM, "requestProgram2.start")
 
                 val requestProgram2Result = patchObserver.basalEvent
                     .ofType<SetBasalProgramResultModel>()
                     .blockingFirst()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] requestProgram2.result result=$requestProgram2Result")
+                aapsLogger.debug(LTag.PUMPCOMM, "requestProgram2.result result=$requestProgram2Result")
 
                 if (requestProgram2Result.result != SetBasalProgramResult.SUCCESS) {
                     throw IllegalStateException("request program2 result is failed")
@@ -125,13 +125,13 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
                     .takeIf { it is RequestResult.Pending }
                     ?: throw IllegalStateException("request program3 is not pending")
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] requestProgram3.start")
+                aapsLogger.debug(LTag.PUMPCOMM, "requestProgram3.start")
 
                 val requestProgram3Result = patchObserver.basalEvent
                     .ofType<SetBasalProgramResultModel>()
                     .blockingFirst()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] requestProgram3.result result=$requestProgram3Result")
+                aapsLogger.debug(LTag.PUMPCOMM, "requestProgram3.result result=$requestProgram3Result")
 
                 if (requestProgram3Result.result != SetBasalProgramResult.SUCCESS) {
                     throw IllegalStateException("request program3 result is failed")
@@ -142,7 +142,7 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
 
                 val updatePatchInfoResult = patchInfoRepository.updatePatchInfo(patchInfo.copy(updatedAt = DateTime.now(), mode = 1))
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] updatePatchInfo result=$updatePatchInfoResult")
+                aapsLogger.debug(LTag.PUMPCOMM, "updatePatchInfo result=$updatePatchInfoResult")
 
                 if (!updatePatchInfoResult) {
                     throw IllegalStateException("update patch info is failed")
@@ -164,7 +164,7 @@ class CarelevoSetBasalProgramUseCase @Inject constructor(
                     )
                 )
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoSetBasalProgramUseCase] updateInfusionInfo result=$updateInfusionInfoResult")
+                aapsLogger.debug(LTag.PUMPCOMM, "updateInfusionInfo result=$updateInfusionInfoResult")
 
                 if (!updateInfusionInfoResult) {
                     throw IllegalStateException("update infusion info is failed")

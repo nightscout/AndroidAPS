@@ -46,14 +46,14 @@ internal fun CarelevoAlarmHost(
     val requestBtLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             viewModel.alarmInfo?.let {
-                aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmHost] bluetooth enabled for alarm=${it.alarmId}")
+                aapsLogger.debug(LTag.PUMPCOMM, "bluetooth enabled for alarm=${it.alarmId}")
             }
         }
     }
 
     LaunchedEffect(notifierAlarms) {
         if (notifierAlarms.any { it.alarmType.isCritical() || it.cause == AlarmCause.ALARM_ALERT_BLUETOOTH_OFF }) {
-            aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmHost] load alarms from notifier alarms=$notifierAlarms")
+            aapsLogger.debug(LTag.PUMPCOMM, "load alarms from notifier alarms=$notifierAlarms")
             viewModel.loadUnacknowledgedAlarms()
         }
     }

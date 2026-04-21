@@ -53,24 +53,24 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
                     throw IllegalArgumentException("request is not CarelevoConnectNewPatchRequestModel")
                 }
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] execute called")
+                aapsLogger.debug(LTag.PUMPCOMM, "execute called")
 
                 val randomKey = generateRandomKey(0..255)
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 1. Generated random key: $randomKey")
+                aapsLogger.debug(LTag.PUMPCOMM, "1. Generated random key: $randomKey")
 
                 patchRepository.requestRetrieveMacAddress(RetrieveAddressRequest(randomKey.toByte()))
                     .blockingGet()
                     .takeIf { it is RequestResult.Pending }
                     ?: throw IllegalStateException("")
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 2. Requesting MAC address")
+                aapsLogger.debug(LTag.PUMPCOMM, "2. Requesting MAC address")
 
                 val addressInfoResult = patchObserver.patchEvent
                     .ofType<RetrieveAddressResultModel>()
                     .blockingFirst()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 3. Received MAC address response: $addressInfoResult")
+                aapsLogger.debug(LTag.PUMPCOMM, "3. Received MAC address response: $addressInfoResult")
 
                 if (addressInfoResult.address.isEmpty()) {
                     throw NullPointerException("mac address must be not empty")
@@ -85,26 +85,26 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
                     }
                 }
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 4. Built MAC address: $address")
+                aapsLogger.debug(LTag.PUMPCOMM, "4. Built MAC address: $address")
 
                 val checkSum = (addressInfoResult.address + addressInfoResult.checkSum).convertHexToByteArray()
 
                 val checkSumData = checkSum.checkSumV2(randomKey)
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 5. Generated checksum payload: $checkSumData")
+                aapsLogger.debug(LTag.PUMPCOMM, "5. Generated checksum payload: $checkSumData")
 
                 patchRepository.requestAppAuth(checkSumData)
                     .blockingGet()
                     .takeIf { it is RequestResult.Pending }
                     ?: throw IllegalStateException("")
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 6. Requesting checksum verification")
+                aapsLogger.debug(LTag.PUMPCOMM, "6. Requesting checksum verification")
 
                 val appAuthResult = patchObserver.patchEvent
                     .ofType<AppAuthAckResultModel>()
                     .blockingFirst()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 7. Received checksum verification response: $appAuthResult")
+                aapsLogger.debug(LTag.PUMPCOMM, "7. Received checksum verification response: $appAuthResult")
 
                 if (appAuthResult.result != Result.SUCCESS) {
                     throw IllegalStateException("")
@@ -116,10 +116,10 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
 
                 for (round in 1..PATCH_INFO_ROUND_RETRY_COUNT) {
                     try {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 8. Sending SET TIME round=$round/$PATCH_INFO_ROUND_RETRY_COUNT")
+                        aapsLogger.debug(LTag.PUMPCOMM, "8. Sending SET TIME round=$round/$PATCH_INFO_ROUND_RETRY_COUNT")
                         val (info, detail) = requestPatchInfoRound(request, round)
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 9. Received patch base info: $info")
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 10. Received patch detail info: $detail")
+                        aapsLogger.debug(LTag.PUMPCOMM, "9. Received patch base info: $info")
+                        aapsLogger.debug(LTag.PUMPCOMM, "10. Received patch detail info: $detail")
 
                         val serial = info.serialNum.trim()
                         if (info.result == Result.SUCCESS && serial.isNotEmpty() && detail.result == Result.SUCCESS) {
@@ -129,14 +129,14 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
                         }
 
                         aapsLogger.warn(
-                            LTag.PUMP,
-                            "[CarelevoRxConnectNewPatchUseCase] invalid patch info round=$round/$PATCH_INFO_ROUND_RETRY_COUNT result=${info.result} serial=$serial detailResult=${detail.result}"
+                            LTag.PUMPCOMM,
+                            "invalid patch info round=$round/$PATCH_INFO_ROUND_RETRY_COUNT result=${info.result} serial=$serial detailResult=${detail.result}"
                         )
                     } catch (e: Throwable) {
                         lastPatchInfoError = e
                         aapsLogger.error(
-                            LTag.PUMP,
-                            "[CarelevoRxConnectNewPatchUseCase] requestPatchInfoRound failed round=$round/$PATCH_INFO_ROUND_RETRY_COUNT",
+                            LTag.PUMPCOMM,
+                            "requestPatchInfoRound failed round=$round/$PATCH_INFO_ROUND_RETRY_COUNT",
                             e
                         )
                     }
@@ -155,19 +155,19 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
                     .takeIf { it is RequestResult.Pending }
                     ?: throw IllegalStateException("request set alarm mode is not pending")
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 11. Sending alarm mode request")
+                aapsLogger.debug(LTag.PUMPCOMM, "11. Sending alarm mode request")
 
                 val setAlarmModeResultModel = patchObserver.patchEvent
                     .ofType<AlertAlarmSetResultModel>()
                     .blockingFirst()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 12. Received alarm mode response: $setAlarmModeResultModel")
+                aapsLogger.debug(LTag.PUMPCOMM, "12. Received alarm mode response: $setAlarmModeResultModel")
 
                 if (setAlarmModeResultModel.result != Result.SUCCESS) {
                     throw IllegalStateException("")
                 }
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] : ${request.remains}, ${request.expiry}, ${request.maxBasalSpeed}, ${request.maxVolume}")
+                aapsLogger.debug(LTag.PUMPCOMM, ": ${request.remains}, ${request.expiry}, ${request.maxBasalSpeed}, ${request.maxVolume}")
                 patchRepository.requestSetThreshold(ThresholdSetRequest(request.remains, request.expiry, request.maxBasalSpeed, request.maxVolume, request.isBuzzOn))
                     .blockingGet()
                     .takeIf { it is RequestResult.Pending } ?: throw IllegalStateException("request set time is not pending")
@@ -175,13 +175,13 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
 
 
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 13. Sending threshold settings request")
+                aapsLogger.debug(LTag.PUMPCOMM, "13. Sending threshold settings request")
 
                 val setThresholdResult = patchObserver.patchEvent
                     .ofType<ThresholdSetResultModel>()
                     .blockingFirst()
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 14. Received threshold settings response: $setThresholdResult")
+                aapsLogger.debug(LTag.PUMPCOMM, "14. Received threshold settings response: $setThresholdResult")
 
                 if (setThresholdResult.result != Result.SUCCESS) {
                     throw IllegalStateException("")
@@ -204,7 +204,7 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
                     )
                 )
 
-                aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] 15. Saved patch info: $updatePatchInfoResult")
+                aapsLogger.debug(LTag.PUMPCOMM, "15. Saved patch info: $updatePatchInfoResult")
 
                 if (!updatePatchInfoResult) {
                     throw IllegalStateException("update patch info is failed")
@@ -225,14 +225,14 @@ class CarelevoConnectNewPatchUseCase @Inject constructor(
         request: CarelevoConnectNewPatchRequestModel,
         round: Int
     ): Pair<PatchInformationInquiryModel, PatchInformationInquiryDetailModel> {
-        aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] waiting 9. Patch base info round=$round timeout=${PATCH_EVENT_TIMEOUT_SEC}s")
+        aapsLogger.debug(LTag.PUMPCOMM, "waiting 9. Patch base info round=$round timeout=${PATCH_EVENT_TIMEOUT_SEC}s")
         val patchInfoFuture = patchObserver.patchEvent
             .ofType<PatchInformationInquiryModel>()
             .timeout(PATCH_EVENT_TIMEOUT_SEC, TimeUnit.SECONDS)
             .firstOrError()
             .toFuture()
 
-        aapsLogger.debug(LTag.PUMP, "[CarelevoRxConnectNewPatchUseCase] waiting 10. Patch detail info round=$round timeout=${PATCH_EVENT_TIMEOUT_SEC}s")
+        aapsLogger.debug(LTag.PUMPCOMM, "waiting 10. Patch detail info round=$round timeout=${PATCH_EVENT_TIMEOUT_SEC}s")
         val patchDetailFuture = patchObserver.patchEvent
             .ofType<PatchInformationInquiryDetailModel>()
             .timeout(PATCH_EVENT_TIMEOUT_SEC, TimeUnit.SECONDS)

@@ -91,7 +91,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
         val alarmType = info.alarmType
         val alarmCause = info.cause
 
-        aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmActionHandler] startAlarmClearProcess alarmType=$alarmType, alarmCause=$alarmCause")
+        aapsLogger.debug(LTag.PUMPCOMM, "startAlarmClearProcess alarmType=$alarmType, alarmCause=$alarmCause")
 
         when (alarmCause) {
             AlarmCause.ALARM_ALERT_RESUME_INSULIN_DELIVERY_TIMEOUT -> {
@@ -159,10 +159,10 @@ class CarelevoAlarmActionHandler @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 {
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmActionHandler] acknowledgeAlarm.success alarmId=${info.alarmId}")
+                    aapsLogger.debug(LTag.PUMPCOMM, "acknowledgeAlarm.success alarmId=${info.alarmId}")
                     acknowledgeAndRemoveAlarm(info.alarmId)
                 }, { e ->
-                    aapsLogger.error(LTag.PUMP, "[CarelevoAlarmActionHandler] acknowledgeAlarm.error alarmId=${info.alarmId} error=$e")
+                    aapsLogger.error(LTag.PUMPCOMM, "acknowledgeAlarm.error alarmId=${info.alarmId} error=$e")
                 })
     }
 
@@ -194,7 +194,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
                 {
                     startAlarmClearPatchForceQuitProcess()
                 }, { e ->
-                    aapsLogger.error(LTag.PUMP, "[CarelevoAlarmActionHandler] clearPatchDiscard.error alarmId=${info.alarmId} error=$e")
+                    aapsLogger.error(LTag.PUMPCOMM, "clearPatchDiscard.error alarmId=${info.alarmId} error=$e")
                 })
 
     }
@@ -205,12 +205,12 @@ class CarelevoAlarmActionHandler @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnError {
-                aapsLogger.debug(LTag.PUMP, "[AlarmViewModel::startPumpResume] doOnError called : $it")
+                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
             }
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[AlarmViewModel::startPumpResume] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                         runBlocking {
                             pumpSync.syncStopTemporaryBasalWithPumpId(
                                 timestamp = dateUtil.now(),
@@ -224,7 +224,7 @@ class CarelevoAlarmActionHandler @Inject constructor(
                     is ResponseResult.Failure -> {}
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "[AlarmViewModel::startPumpResume] response failed: ${response.e.message}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response failed: ${response.e.message}")
                     }
                 }
             }
@@ -240,12 +240,12 @@ class CarelevoAlarmActionHandler @Inject constructor(
                 .observeOn(aapsSchedulers.main)
                 .subscribe(
                     { result ->
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmActionHandler] startAlarmClearPatchForceQuitProcess result=$result")
+                        aapsLogger.debug(LTag.PUMPCOMM, "startAlarmClearPatchForceQuitProcess result=$result")
                         bleController.unBondDevice()
                         carelevoPatch.flushPatchInformation()
                         clearAllAlarms()
                     }, { e ->
-                        aapsLogger.error(LTag.PUMP, "[CarelevoAlarmActionHandler] startAlarmClearPatchForceQuitProcess.disconnectError error=$e")
+                        aapsLogger.error(LTag.PUMPCOMM, "startAlarmClearPatchForceQuitProcess.disconnectError error=$e")
                     })
         } ?: run {
             bleController.unBondDevice()
@@ -271,10 +271,10 @@ class CarelevoAlarmActionHandler @Inject constructor(
                 {
                     _alarmQueue.value = emptyList()
                     val ok = _alarmQueueEmptyEvent.tryEmit(Unit)
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoAlarmActionHandler] clearAllAlarms emitEmptyEvent=$ok")
+                    aapsLogger.debug(LTag.PUMPCOMM, "clearAllAlarms emitEmptyEvent=$ok")
                 },
                 { e ->
-                    aapsLogger.error(LTag.PUMP, "[CarelevoAlarmActionHandler] clearAllAlarms.error error=$e")
+                    aapsLogger.error(LTag.PUMPCOMM, "clearAllAlarms.error error=$e")
                 })
     }
 }

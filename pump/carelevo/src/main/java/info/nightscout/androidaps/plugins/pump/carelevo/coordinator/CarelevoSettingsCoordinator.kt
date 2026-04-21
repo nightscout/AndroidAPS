@@ -41,9 +41,6 @@ class CarelevoSettingsCoordinator @Inject constructor(
     private val carelevoPatchExpiredThresholdModifyUseCase: CarelevoPatchExpiredThresholdModifyUseCase,
     private val carelevoPatchBuzzModifyUseCase: CarelevoPatchBuzzModifyUseCase
 ) {
-    companion object {
-        private const val LOG_PREFIX = "[CarelevoSettingsCoordinator]"
-    }
 
     fun updateMaxBolusDose(
         pluginDisposable: CompositeDisposable,
@@ -64,15 +61,15 @@ class CarelevoSettingsCoordinator @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         onLastDataUpdated()
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updateMaxBolusDose.success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updateMaxBolusDose.success")
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updateMaxBolusDose.responseError error=${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updateMaxBolusDose.responseError error=${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updateMaxBolusDose.failure")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updateMaxBolusDose.failure")
                     }
                 }
             }
@@ -86,7 +83,7 @@ class CarelevoSettingsCoordinator @Inject constructor(
         val patchState = carelevoPatch.patchState.value?.getOrNull()
 
         if (lowInsulinNoticeAmount == 0) {
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updateLowInsulinNoticeAmount.skip reason=zero")
+            aapsLogger.debug(LTag.PUMPCOMM, "updateLowInsulinNoticeAmount.skip reason=zero")
             return
         }
 
@@ -102,15 +99,15 @@ class CarelevoSettingsCoordinator @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         onLastDataUpdated()
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updateLowInsulinNoticeAmount.success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updateLowInsulinNoticeAmount.success")
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updateLowInsulinNoticeAmount.responseError error=${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updateLowInsulinNoticeAmount.responseError error=${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updateLowInsulinNoticeAmount.failure")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updateLowInsulinNoticeAmount.failure")
                     }
                 }
             }
@@ -135,15 +132,15 @@ class CarelevoSettingsCoordinator @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         onLastDataUpdated()
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updatePatchExpiredThreshold.success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updatePatchExpiredThreshold.success")
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updatePatchExpiredThreshold.responseError error=${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updatePatchExpiredThreshold.responseError error=${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updatePatchExpiredThreshold.failure")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updatePatchExpiredThreshold.failure")
                     }
                 }
             }
@@ -168,15 +165,15 @@ class CarelevoSettingsCoordinator @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         onLastDataUpdated()
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updatePatchBuzzer.success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updatePatchBuzzer.success")
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updatePatchBuzzer.responseError error=${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updatePatchBuzzer.responseError error=${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX updatePatchBuzzer.failure")
+                        aapsLogger.debug(LTag.PUMPCOMM, "updatePatchBuzzer.failure")
                     }
                 }
             }
@@ -190,15 +187,15 @@ class CarelevoSettingsCoordinator @Inject constructor(
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX deleteUserSettingInfo.success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "deleteUserSettingInfo.success")
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX deleteUserSettingInfo.responseError error=${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "deleteUserSettingInfo.responseError error=${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX deleteUserSettingInfo.failure")
+                        aapsLogger.debug(LTag.PUMPCOMM, "deleteUserSettingInfo.failure")
                     }
                 }
             }
@@ -209,7 +206,7 @@ class CarelevoSettingsCoordinator @Inject constructor(
         onLastDataUpdated: () -> Unit
     ) {
         val insulin = carelevoPatch.patchInfo.value?.getOrNull()?.insulinRemain?.toInt() ?: 0
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX timezoneOrDSTChanged.start insulin=$insulin")
+        aapsLogger.debug(LTag.PUMPCOMM, "timezoneOrDSTChanged.start insulin=$insulin")
         pluginDisposable += carelevoPatchTimeZoneUpdateUseCase.execute(
             CarelevoPatchTimeZoneRequestModel(insulinAmount = insulin)
         )
@@ -218,10 +215,10 @@ class CarelevoSettingsCoordinator @Inject constructor(
             .timeout(3000L, TimeUnit.MILLISECONDS)
             .doOnSuccess {
                 onLastDataUpdated()
-                aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX timezoneOrDSTChanged.success")
+                aapsLogger.debug(LTag.PUMPCOMM, "timezoneOrDSTChanged.success")
             }
             .doOnError { e ->
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX timezoneOrDSTChanged.error", e)
+                aapsLogger.error(LTag.PUMPCOMM, "timezoneOrDSTChanged.error", e)
             }
             .subscribe()
     }

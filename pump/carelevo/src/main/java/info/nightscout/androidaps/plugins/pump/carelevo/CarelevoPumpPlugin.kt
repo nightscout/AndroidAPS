@@ -155,7 +155,7 @@ class CarelevoPumpPlugin @Inject constructor(
 
     override fun onStop() {
         super.onStop()
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPumpPlugin::onStop] onStop called")
+        aapsLogger.debug(LTag.PUMP, "onStop called")
         settingsCoordinator.clearUserSettings(pluginDisposable)
         pluginDisposable.clear()
         connectionCoordinator.onStop()
@@ -214,40 +214,40 @@ class CarelevoPumpPlugin @Inject constructor(
                 Completable.fromAction {
                     carelevoProtocolParserRegister.registerParser()
                 }
-                    .doOnSubscribe { aapsLogger.debug(LTag.PUMP, "onStart", "1) parser registered start") }
-                    .doOnComplete { aapsLogger.debug(LTag.PUMP, "onStart", "1) parser registered done") }
+                    .doOnSubscribe { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 1) parser registered start") }
+                    .doOnComplete { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 1) parser registered done") }
                     .andThen(
                         carelevoPatch.initPatchOnce()
                             .timeout(5, TimeUnit.SECONDS)
                             .onErrorComplete()
-                            .doOnSubscribe { aapsLogger.debug(LTag.PUMP, "onStart", "2) initPatchOnce waiting") }
-                            .doOnComplete { aapsLogger.debug(LTag.PUMP, "onStart", "2) initPatchOnce completed") }
+                            .doOnSubscribe { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 2) initPatchOnce waiting") }
+                            .doOnComplete { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 2) initPatchOnce completed") }
                     )
                     .andThen(
                         Single.fromCallable {
                             runBlocking {
                                 requireNotNull(profileFunction.getProfile()) { "profile is null" }
                             }
-                        }.doOnSuccess { aapsLogger.debug(LTag.PUMP, "onStart", "3) getProfile ok: $it") }
+                        }.doOnSuccess { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 3) getProfile ok: $it") }
                     )
                     .flatMapCompletable { profile ->
                         Completable.fromAction { carelevoPatch.setProfile(profile) }
-                            .doOnComplete { aapsLogger.debug(LTag.PUMP, "onStart", "3) setProfile done") }
+                            .doOnComplete { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 3) setProfile done") }
                     }
                     .andThen(
                         Completable.fromAction {
-                            aapsLogger.debug(LTag.PUMP, "onStart", "4) snapshot check start")
+                            aapsLogger.debug(LTag.PUMPCOMM, "onStart: 4) snapshot check start")
                             val state = carelevoPatch.patchState.value?.getOrNull()
                             val shouldReconnect = state == null ||
                                 (state != PatchState.NotConnectedNotBooting && state != PatchState.ConnectedBooted)
-                            aapsLogger.debug(LTag.PUMP, "onStart", "4) shouldReconnect=$shouldReconnect, state=$state")
+                            aapsLogger.debug(LTag.PUMPCOMM, "onStart: 4) shouldReconnect=$shouldReconnect, state=$state")
                             if (shouldReconnect) connectionCoordinator.startReconnection(txUuid)
-                        }.doOnComplete { aapsLogger.debug(LTag.PUMP, "onStart", "4) snapshot check done") }
+                        }.doOnComplete { aapsLogger.debug(LTag.PUMPCOMM, "onStart: 4) snapshot check done") }
                     )
             }
             .subscribe(
-                { aapsLogger.debug(LTag.PUMP, "onStart", "ALL COMPLETE") },
-                { e -> aapsLogger.debug(LTag.PUMP, "onStart", "chain error", e) }
+                { aapsLogger.debug(LTag.PUMPCOMM, "onStart: ALL COMPLETE") },
+                { e -> aapsLogger.error(LTag.PUMPCOMM, "onStart: chain error", e) }
             )
 
         pluginDisposable += carelevoPatch.patchInfo
@@ -263,7 +263,7 @@ class CarelevoPumpPlugin @Inject constructor(
 
         bleReceiverDisposable = CarelevoObserveReceiver(context, createBluetoothIntentFilter())
             .subscribe { intent ->
-                aapsLogger.debug(LTag.PUMP, "[CarelevoPumpPlugin::onStart] CarelevoObserveReceiver called: ${intent.action}")
+                aapsLogger.debug(LTag.PUMPBTCOMM, "CarelevoObserveReceiver called: ${intent.action}")
                 when (intent.action) {
                     BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
                         val bondState = intent.getIntExtra(
@@ -376,7 +376,7 @@ class CarelevoPumpPlugin @Inject constructor(
 
     override fun isSuspended(): Boolean {
         val patchState = carelevoPatch.resolvePatchState()
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPumpPlugin::isSuspended] result: $patchState")
+        aapsLogger.debug(LTag.PUMP, "result: $patchState")
         return patchState == PatchState.NotConnectedBooted
     }
 
@@ -420,7 +420,7 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     override fun setNewBasalProfile(profile: PumpProfile): PumpEnactResult {
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPumpPlugin::setNewBasalProfile] setNewBasalProfile timezoneOrDSTChanged called - ${carelevoPatch.resolvePatchState()}")
+        aapsLogger.debug(LTag.PUMP, "setNewBasalProfile timezoneOrDSTChanged called - ${carelevoPatch.resolvePatchState()}")
          _lastDataTime.value = System.currentTimeMillis()
         val result = when (carelevoPatch.resolvePatchState()) {
             is PatchState.ConnectedBooted -> {
@@ -437,7 +437,7 @@ class CarelevoPumpPlugin @Inject constructor(
                 pumpEnactResultProvider.get()
             }
         }
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPumpPlugin::setNewBasalProfile] result success=${result.success} enacted=${result.enacted} comment=${result.comment}")
+        aapsLogger.debug(LTag.PUMP, "result success=${result.success} enacted=${result.enacted} comment=${result.comment}")
         return result
     }
 
@@ -455,7 +455,7 @@ class CarelevoPumpPlugin @Inject constructor(
 
     override fun isThisProfileSet(profile: PumpProfile): Boolean {
         val checkResult = carelevoPatch.checkIsSameProfile(profile)
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPumpPlugin::isThisProfileSet] checkResult : $checkResult")
+        aapsLogger.debug(LTag.PUMP, "checkResult : $checkResult")
         return checkResult
     }
 

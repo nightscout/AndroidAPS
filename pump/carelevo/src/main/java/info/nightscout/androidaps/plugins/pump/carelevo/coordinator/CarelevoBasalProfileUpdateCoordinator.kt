@@ -33,9 +33,6 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
     private val setBasalProgramUseCase: CarelevoSetBasalProgramUseCase,
     private val updateBasalProgramUseCase: CarelevoUpdateBasalProgramUseCase
 ) {
-    companion object {
-        private const val LOG_PREFIX = "[CarelevoBasalProfileUpdateCoordinator]"
-    }
 
     private var lastProfileUpdateAttemptMs: Long = 0
 
@@ -45,7 +42,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
         cancelTempBasal: () -> PumpEnactResult,
         onProfileUpdated: (Profile) -> Unit
     ): PumpEnactResult {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX execute.start profile=$profile")
+        aapsLogger.debug(LTag.PUMPCOMM, "execute.start profile=$profile")
 
         val result = pumpEnactResultProvider.get()
         val now = System.currentTimeMillis()
@@ -55,7 +52,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
                 rh.gs(R.string.carelevo_profile_update_skip_too_soon),
                 validMinutes = 1
             )
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX execute.skip tooSoon=true")
+            aapsLogger.debug(LTag.PUMPCOMM, "execute.skip tooSoon=true")
             return result
                 .success(true)
                 .enacted(false)
@@ -83,7 +80,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
 
         return when (response) {
             is ResponseResult.Success -> {
-                aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX execute.success")
+                aapsLogger.debug(LTag.PUMPCOMM, "execute.success")
                 onProfileUpdated(profile)
                 lastProfileUpdateAttemptMs = System.currentTimeMillis()
                 notificationManager.post(
@@ -95,13 +92,13 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
             }
 
             is ResponseResult.Error -> {
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX execute.error error=${response.e}", response.e)
+                aapsLogger.error(LTag.PUMPCOMM, "execute.error error=${response.e}", response.e)
                 lastProfileUpdateAttemptMs = System.currentTimeMillis()
                 result.success(false).enacted(false)
             }
 
             is ResponseResult.Failure -> {
-                aapsLogger.error(LTag.PUMP, "$LOG_PREFIX execute.failure unknownResponse=$response")
+                aapsLogger.error(LTag.PUMPCOMM, "execute.failure unknownResponse=$response")
                 lastProfileUpdateAttemptMs = System.currentTimeMillis()
                 result.success(false).enacted(false)
             }
@@ -117,10 +114,10 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
             errors
                 .zipWith(Flowable.range(1, maxRetry)) { error, retryCount ->
                     if (retryCount < maxRetry) {
-                        aapsLogger.warn(LTag.PUMP, "$LOG_PREFIX $tag.retry attempt=$retryCount/$maxRetry reason=${error.message}")
+                        aapsLogger.warn(LTag.PUMPCOMM, "$tag.retry attempt=$retryCount/$maxRetry reason=${error.message}")
                         retryCount
                     } else {
-                        aapsLogger.error(LTag.PUMP, "$LOG_PREFIX $tag.retry.exhausted max=$maxRetry reason=${error.message}")
+                        aapsLogger.error(LTag.PUMPCOMM, "$tag.retry.exhausted max=$maxRetry reason=${error.message}")
                         throw error
                     }
                 }
@@ -135,10 +132,10 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
         val request = SetBasalProgramRequestModel(profile)
 
         return if (shouldUseSetBasalProgram) {
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX executeBasalProgram mode=SET")
+            aapsLogger.debug(LTag.PUMPCOMM, "executeBasalProgram mode=SET")
             setBasalProgramUseCase.execute(request)
         } else {
-            aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX executeBasalProgram mode=UPDATE")
+            aapsLogger.debug(LTag.PUMPCOMM, "executeBasalProgram mode=UPDATE")
             updateBasalProgramUseCase.execute(request)
         }
     }
@@ -147,7 +144,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
         infusionInfo: CarelevoInfusionInfoDomainModel?,
         cancelExtendedBolus: () -> PumpEnactResult
     ): Single<PumpEnactResult> {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX cancelExtendedBolus.start hasExtended=${infusionInfo?.extendBolusInfusionInfo != null}")
+        aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus.start hasExtended=${infusionInfo?.extendBolusInfusionInfo != null}")
         return if (infusionInfo?.extendBolusInfusionInfo != null) {
             Single.fromCallable { cancelExtendedBolus() }
                 .flatMap { cancelResult ->
@@ -157,7 +154,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
                         Single.error(IllegalStateException("cancelExtendedBolus returned success=false"))
                     }
                 }
-                .doOnError { aapsLogger.error(LTag.PUMP, "$LOG_PREFIX cancelExtendedBolus.error", it) }
+                .doOnError { aapsLogger.error(LTag.PUMPCOMM, "cancelExtendedBolus.error", it) }
         } else {
             Single.just(pumpEnactResultProvider.get().success(true).enacted(false))
         }
@@ -167,7 +164,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
         infusionInfo: CarelevoInfusionInfoDomainModel?,
         cancelTempBasal: () -> PumpEnactResult
     ): Single<PumpEnactResult> {
-        aapsLogger.debug(LTag.PUMP, "$LOG_PREFIX cancelTempBasal.start hasTempBasal=${infusionInfo?.tempBasalInfusionInfo != null}")
+        aapsLogger.debug(LTag.PUMPCOMM, "cancelTempBasal.start hasTempBasal=${infusionInfo?.tempBasalInfusionInfo != null}")
         return if (infusionInfo?.tempBasalInfusionInfo != null) {
             Single.fromCallable { cancelTempBasal() }
                 .flatMap { cancelResult ->
@@ -177,7 +174,7 @@ class CarelevoBasalProfileUpdateCoordinator @Inject constructor(
                         Single.error(IllegalStateException("cancelTempBasal returned success=false"))
                     }
                 }
-                .doOnError { aapsLogger.error(LTag.PUMP, "$LOG_PREFIX cancelTempBasal.error", it) }
+                .doOnError { aapsLogger.error(LTag.PUMPCOMM, "cancelTempBasal.error", it) }
         } else {
             Single.just(pumpEnactResultProvider.get().success(true).enacted(false))
         }

@@ -160,7 +160,7 @@ class CarelevoPatch @Inject constructor(
         val isConnected = isConnected.value ?: false
         val validAddress = patchInfo.value?.getOrNull()?.address
 
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::isCarelevoConnected] address : $address, isConnected : $isConnected, validAddress : $validAddress")
+        aapsLogger.debug(LTag.PUMPCOMM, "address : $address, isConnected : $isConnected, validAddress : $validAddress")
         return address != null && validAddress != null && isConnected && address.equals(validAddress, ignoreCase = true)
     }
 
@@ -176,8 +176,8 @@ class CarelevoPatch @Inject constructor(
         val isPatchValid = patchInfo.value?.getOrNull()?.let { true } ?: false
         val isPeripheralConnected = btState.value?.getOrNull()?.isPeripheralConnected() ?: false
 
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::getPatchState] isPatchValid : $isPatchValid")
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::getPatchState] isPeripheralConnected : $isPeripheralConnected")
+        aapsLogger.debug(LTag.PUMPCOMM, "isPatchValid : $isPatchValid")
+        aapsLogger.debug(LTag.PUMPCOMM, "isPeripheralConnected : $isPeripheralConnected")
 
         val result = when {
             isPeripheralConnected && isPatchValid -> PatchState.ConnectedBooted
@@ -186,16 +186,16 @@ class CarelevoPatch @Inject constructor(
             else -> PatchState.NotConnectedNotBooting
         }
 
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::getPatchState] result : $result")
+        aapsLogger.debug(LTag.PUMPCOMM, "result : $result")
         return result
     }
 
     private fun observeChangeState() {
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observeChangeState] observeChangeState called")
+        aapsLogger.debug(LTag.PUMPCOMM, "observeChangeState called")
         bleDisposable += rxBus.toObservable(EventForceStopConnecting::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe {
-                aapsLogger.warn(LTag.PUMP, "Force stop connectingDisposable")
+                aapsLogger.warn(LTag.PUMPCOMM, "Force stop connectingDisposable")
                 connectingDisposable?.dispose()
                 connectingDisposable = null
             }
@@ -207,8 +207,8 @@ class CarelevoPatch @Inject constructor(
             val btAvailable = btState.getOrNull()?.isAvailable()
             val btPeripheralConnected = btState.getOrNull()?.isPeripheralConnected()
 
-            aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::changeState] btAvailable : $btAvailable")
-            aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::changeState] btPeripheralConnected : $btPeripheralConnected")
+            aapsLogger.debug(LTag.PUMPCOMM, "btAvailable : $btAvailable")
+            aapsLogger.debug(LTag.PUMPCOMM, "btPeripheralConnected : $btPeripheralConnected")
 
             var result = resolvePatchState()
             if (result == PatchState.ConnectedBooted) {
@@ -217,7 +217,7 @@ class CarelevoPatch @Inject constructor(
                 }
             }
 
-            aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::changeState] result : $result")
+            aapsLogger.debug(LTag.PUMPCOMM, "result : $result")
 
             _isConnected.onNext(btPeripheralConnected ?: false)
             _connectedAddress.onNext(Optional.ofNullable(bleController.getConnectedAddress()))
@@ -225,7 +225,7 @@ class CarelevoPatch @Inject constructor(
 
             when (result) {
                 is PatchState.NotConnectedNotBooting -> {
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoPatch::observeChangeState] patch state is no connection")
+                    aapsLogger.debug(LTag.PUMPCOMM, "patch state is no connection")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                     rxBus.send(EventRefreshOverview("Carelevo connection state", true))
                     rxBus.send(EventCustomActionsChanged())
@@ -233,7 +233,7 @@ class CarelevoPatch @Inject constructor(
                 }
 
                 is PatchState.ConnectedBooted -> {
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoPatch::observeChangeState] patch state is ConnectedBooted")
+                    aapsLogger.debug(LTag.PUMPCOMM, "patch state is ConnectedBooted")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
                     rxBus.send(EventRefreshOverview("Carelevo connection state", true))
                     rxBus.send(EventCustomActionsChanged())
@@ -241,7 +241,7 @@ class CarelevoPatch @Inject constructor(
                 }
 
                 is PatchState.NotConnectedBooted -> {
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoPatch::observeChangeState] patch state is NotConnectedBooted")
+                    aapsLogger.debug(LTag.PUMPCOMM, "patch state is NotConnectedBooted")
 
                     /*connectingDisposable?.dispose()
                     connectingDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
@@ -255,7 +255,7 @@ class CarelevoPatch @Inject constructor(
                 }
 
                 else -> {
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoPatch::observeChangeState] patch state is disconnected")
+                    aapsLogger.debug(LTag.PUMPCOMM, "patch state is disconnected")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                 }
             }
@@ -265,14 +265,14 @@ class CarelevoPatch @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnComplete {
-                aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observeChangeState] doOnComplete called")
+                aapsLogger.debug(LTag.PUMPCOMM, "doOnComplete called")
             }
             .doOnError {
                 it.printStackTrace()
-                aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observeChangeState] doOnError called : $it")
+                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
             }
             .subscribe {
-                aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observeChangeState] result : $it")
+                aapsLogger.debug(LTag.PUMPCOMM, "result : $it")
             }
     }
 
@@ -330,7 +330,7 @@ class CarelevoPatch @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .distinctUntilChanged()
             .subscribe { state ->
-                aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observeBleState] state : $state")
+                aapsLogger.debug(LTag.PUMPCOMM, "state : $state")
                 if (state.isEnabled == DeviceModuleState.DEVICE_STATE_OFF) {
                     if (lastBtState != null && lastBtState?.isEnabled != DeviceModuleState.DEVICE_STATE_OFF) {
                         bleController.checkGatt()
@@ -399,16 +399,16 @@ class CarelevoPatch @Inject constructor(
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::proceedPatchEvent] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                         refreshPatchInfusionInfo()
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::proceedPatchEvent] response error : ${response.e}")
+                        aapsLogger.error(LTag.PUMPCOMM, "response error : ${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::proceedPatchEvent] response failed")
+                        aapsLogger.error(LTag.PUMPCOMM, "response failed")
                     }
                 }
             }
@@ -449,7 +449,7 @@ class CarelevoPatch @Inject constructor(
     }
 
     private fun handleAlarm(modelType: String, value: Int?, cause: AlarmCause) {
-        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::proceedPatchEvent] $modelType report : $value, $cause")
+        aapsLogger.debug(LTag.PUMPCOMM, "$modelType report : $value, $cause")
         val info = CarelevoAlarmInfo(
             alarmId = System.currentTimeMillis().toString(),
             alarmType = cause.alarmType,
@@ -463,8 +463,8 @@ class CarelevoPatch @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe(
-                { aapsLogger.debug(LTag.PUMP, "handleAlarm upsert complete") },
-                { e -> aapsLogger.error(LTag.PUMP, "handleAlarm upsert error", e) }
+                { aapsLogger.debug(LTag.PUMPCOMM, "handleAlarm upsert complete") },
+                { e -> aapsLogger.error(LTag.PUMPCOMM, "handleAlarm upsert error", e) }
             )
     }
 
@@ -476,16 +476,16 @@ class CarelevoPatch @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         val result = response.data as CarelevoInfusionInfoDomainModel?
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observeInfusionInfo] response success result ==> $result")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success result ==> $result")
                         _infusionInfo.onNext(Optional.ofNullable(result))
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::observeInfusionInfo] response error : ${response.e}")
+                        aapsLogger.error(LTag.PUMPCOMM, "response error : ${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::observeInfusionInfo] response failed")
+                        aapsLogger.error(LTag.PUMPCOMM, "response failed")
                     }
                 }
             }
@@ -499,16 +499,16 @@ class CarelevoPatch @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         val result = response.data as CarelevoPatchInfoDomainModel?
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observePatchInfo] response success result ==> ${result?.needleFailedCount}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success result ==> ${result?.needleFailedCount}")
                         _patchInfo.onNext(Optional.ofNullable(result))
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observePatchInfo] response error : ${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observePatchInfo] response failed")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response failed")
                     }
                 }
             }
@@ -522,7 +522,7 @@ class CarelevoPatch @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         val result = response.data as CarelevoUserSettingInfoDomainModel?
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observeUserSettingInfo] response success result ==> $result")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success result ==> $result")
                         _userSettingInfo.onNext(Optional.ofNullable(result))
                         if (result == null) {
                             createUserSettingInfo()
@@ -530,11 +530,11 @@ class CarelevoPatch @Inject constructor(
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::observeUserSettingInfo] response error : ${response.e}")
+                        aapsLogger.error(LTag.PUMPCOMM, "response error : ${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::observeUserSettingInfo] response failed")
+                        aapsLogger.error(LTag.PUMPCOMM, "response failed")
                     }
                 }
             }
@@ -556,7 +556,7 @@ class CarelevoPatch @Inject constructor(
         }.observeOn(aapsSchedulers.main)
             .subscribeOn(aapsSchedulers.io)
             .subscribe {
-                aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observeSyncPatch] response success")
+                aapsLogger.debug(LTag.PUMPCOMM, "response success")
             }
     }
 
@@ -573,15 +573,15 @@ class CarelevoPatch @Inject constructor(
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::updateMaxBolusDose] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::updateMaxBolusDose] response error : ${response.e}")
+                        aapsLogger.error(LTag.PUMPCOMM, "response error : ${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::updateMaxBolusDose] response failed")
+                        aapsLogger.error(LTag.PUMPCOMM, "response failed")
                     }
                 }
             }
@@ -599,15 +599,15 @@ class CarelevoPatch @Inject constructor(
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::updateLowInsulinNoticeAmount] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::updateLowInsulinNoticeAmount] response error : ${response.e}")
+                        aapsLogger.error(LTag.PUMPCOMM, "response error : ${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.error(LTag.PUMP, "[CarelevoPatchRx::updateLowInsulinNoticeAmount] response failed")
+                        aapsLogger.error(LTag.PUMPCOMM, "response failed")
                     }
                 }
             }

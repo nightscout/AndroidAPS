@@ -46,7 +46,7 @@ class CarelevoUpdateMaxBolusDoseUseCase @Inject constructor(
                     ?: throw NullPointerException("user setting info must be not null")
 
                 if (infusionInfo?.immeBolusInfusionInfo != null || infusionInfo?.extendBolusInfusionInfo != null) {
-                    aapsLogger.debug(LTag.PUMP, "[CarelevoUpdateMaxBolusDoseUseCase] case1 bolusRunning localUpdate syncPatch=true")
+                    aapsLogger.debug(LTag.PUMPCOMM, "case1 bolusRunning localUpdate syncPatch=true")
 
                     val updateUserSettingInfoResult = userSettingInfoRepository.updateUserSettingInfo(
                         userSettingInfo.copy(updatedAt = DateTime.now(), maxBolusDose = request.maxBolusDose, needMaxBolusDoseSyncPatch = true)
@@ -57,7 +57,7 @@ class CarelevoUpdateMaxBolusDoseUseCase @Inject constructor(
                 } else {
                     when (request.patchState) {
                         is PatchState.ConnectedBooted -> {
-                            aapsLogger.debug(LTag.PUMP, "[CarelevoUpdateMaxBolusDoseUseCase] case2 connected requestPatchAndLocalUpdate")
+                            aapsLogger.debug(LTag.PUMPCOMM, "case2 connected requestPatchAndLocalUpdate")
                             patchRepository.requestSetThresholdMaxDose(SetThresholdInfusionMaxDoseRequest(request.maxBolusDose))
                                 .blockingGet()
                                 .takeIf { it is RequestResult.Pending }
@@ -80,7 +80,7 @@ class CarelevoUpdateMaxBolusDoseUseCase @Inject constructor(
                         }
 
                         is PatchState.NotConnectedNotBooting -> {
-                            aapsLogger.debug(LTag.PUMP, "[CarelevoUpdateMaxBolusDoseUseCase] case3 notConnected localUpdate syncPatch=false")
+                            aapsLogger.debug(LTag.PUMPCOMM, "case3 notConnected localUpdate syncPatch=false")
                             val updateUserSettingInfoResult = userSettingInfoRepository.updateUserSettingInfo(
                                 userSettingInfo.copy(updatedAt = DateTime.now(), maxBolusDose = request.maxBolusDose, needMaxBolusDoseSyncPatch = false)
                             )
@@ -90,7 +90,7 @@ class CarelevoUpdateMaxBolusDoseUseCase @Inject constructor(
                         }
 
                         else -> {
-                            aapsLogger.debug(LTag.PUMP, "[CarelevoUpdateMaxBolusDoseUseCase] case4 disconnected localUpdate syncPatch=true")
+                            aapsLogger.debug(LTag.PUMPCOMM, "case4 disconnected localUpdate syncPatch=true")
                             val updateUserSettingInfoResult = userSettingInfoRepository.updateUserSettingInfo(
                                 userSettingInfo.copy(updatedAt = DateTime.now(), maxBolusDose = request.maxBolusDose, needMaxBolusDoseSyncPatch = true)
                             )

@@ -95,7 +95,7 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::confirmCannulaInsertionResult] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                         /*pumpSync.insertTherapyEventIfNewWithTimestamp(
                             timestamp = System.currentTimeMillis(),
                             type = TE.Type.CANNULA_CHANGE,
@@ -105,11 +105,11 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::ConfirmCannulaInsertionResult] response error : ${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::ConfirmCannulaInsertionResult] response failed")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response failed")
                     }
                 }
             }
@@ -160,14 +160,14 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnError {
-                aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::startPatchDiscard] doOnError called : $it")
+                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
                 setUiState(UiState.Idle)
                 triggerEvent(CarelevoConnectEvent.DiscardFailed)
             }
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::startPatchDiscard] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                         bleController.unBondDevice()
                         carelevoPatch.releasePatch()
                         setUiState(UiState.Idle)
@@ -175,13 +175,13 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::startPatchDiscard] response error : ${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoConnectEvent.DiscardFailed)
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::startPatchDiscard] response failed")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response failed")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoConnectEvent.DiscardFailed)
                     }
@@ -195,7 +195,7 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
             .timeout(3000L, TimeUnit.MILLISECONDS)
             .observeOn(aapsSchedulers.io)
             .doOnError {
-                aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::startPatchForceDiscard] doOnError called : $it")
+                aapsLogger.debug(LTag.PUMPCOMM, "doOnError called : $it")
                 setUiState(UiState.Idle)
                 triggerEvent(CarelevoConnectEvent.DiscardFailed)
             }
@@ -203,7 +203,7 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::startPatchForceDiscard] response success")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response success")
                         bleController.unBondDevice()
                         carelevoPatch.releasePatch()
                         setUiState(UiState.Idle)
@@ -211,13 +211,13 @@ class CarelevoPatchConnectionFlowViewModel @Inject constructor(
                     }
 
                     is ResponseResult.Error -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::startPatchForceDiscard] response error : ${response.e}")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response error : ${response.e}")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoConnectEvent.DiscardFailed)
                     }
 
                     else -> {
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoConnectViewModel::startPatchForceDiscard] response failed")
+                        aapsLogger.debug(LTag.PUMPCOMM, "response failed")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoConnectEvent.DiscardFailed)
                     }
