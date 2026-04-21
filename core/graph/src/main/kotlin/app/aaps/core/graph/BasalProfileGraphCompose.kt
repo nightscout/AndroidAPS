@@ -115,7 +115,7 @@ fun BasalProfileGraphCompose(
                     LineCartesianLayer.LineProvider.series(
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
-                            interpolator = Square
+                            pointConnector = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
@@ -131,7 +131,7 @@ fun BasalProfileGraphCompose(
                                     )
                                 )
                             },
-                            interpolator = Square
+                            pointConnector = Square
                         )
                     )
                 } else {
@@ -150,7 +150,7 @@ fun BasalProfileGraphCompose(
                                     )
                                 )
                             },
-                            interpolator = Square
+                            pointConnector = Square
                         )
                     )
                 }

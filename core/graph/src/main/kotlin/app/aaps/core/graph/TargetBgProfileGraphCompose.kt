@@ -114,26 +114,26 @@ fun TargetBgProfileGraphCompose(
                     LineCartesianLayer.LineProvider.series(
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
-                            interpolator = Square
+                            pointConnector = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
-                            interpolator = Square
+                            pointConnector = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
-                            interpolator = Square
+                            pointConnector = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
-                            interpolator = Square
+                            pointConnector = Square
                         )
                     )
                 } else {
                     LineCartesianLayer.LineProvider.series(
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
-                            interpolator = Square
+                            pointConnector = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
@@ -142,7 +142,7 @@ fun TargetBgProfileGraphCompose(
                                     Fill(profile1Color.copy(alpha = 0.2f))
                                 )
                             },
-                            interpolator = Square
+                            pointConnector = Square
                         )
                     )
                 }

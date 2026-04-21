@@ -100,7 +100,7 @@ fun IsfProfileGraphCompose(
                     LineCartesianLayer.LineProvider.series(
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile2Color)) },
-                            interpolator = Square
+                            pointConnector = Square
                         ),
                         LineCartesianLayer.Line(
                             fill = remember { LineCartesianLayer.LineFill.single(Fill(profile1Color)) },
@@ -116,7 +116,7 @@ fun IsfProfileGraphCompose(
                                     )
                                 )
                             },
-                            interpolator = Square
+                            pointConnector = Square
                         )
                     )
                 } else {
@@ -135,7 +135,7 @@ fun IsfProfileGraphCompose(
                                     )
                                 )
                             },
-                            interpolator = Square
+                            pointConnector = Square
                         )
                     )
                 }

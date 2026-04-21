@@ -23,7 +23,7 @@ wearCompose = "1.6.1"
 hiltNavigationCompose = "1.3.0"
 navigationCompose = "2.9.7"
 lifecycleRuntimeKtx = "2.10.0"
-vico = "3.1.0"
+vico = "3.0.3"
 composeUi = "1.10.6"
 glance = "1.1.1"
 
@@ -47,7 +47,7 @@ com-google-dagger-android-support = { group = "com.google.dagger", name = "dagge
 com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
 
-com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.7" }
+com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.6" }
 com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.12.0" }
 com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
@@ -167,8 +167,8 @@ joda-time = { group = "joda-time", name = "joda-time", version = "2.14.1" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
 com-scottyab-rootbeer-lib = { group = "com.scottyab", name = "rootbeer-lib", version = "0.1.2" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
-com-github-bumptech-glide = { group = "com.github.bumptech.glide", name = "glide", version = "5.0.7" }
-com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "4.14.0" }
+com-github-bumptech-glide = { group = "com.github.bumptech.glide", name = "glide", version = "5.0.5" }
+com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta08" }
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
 io-socket-client = { group = "io.socket", name = "socket.io-client", version = "2.1.2" }
 org-osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version = "6.1.20" }

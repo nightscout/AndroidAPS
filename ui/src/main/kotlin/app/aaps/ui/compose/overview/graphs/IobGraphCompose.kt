@@ -236,7 +236,7 @@ fun IobGraphCompose(
             areaFill = LineCartesianLayer.AreaFill.single(
                 Fill(Brush.verticalGradient(listOf(iobColor.copy(alpha = 1f), Color.Transparent)))
             ),
-            interpolator = Square
+            pointConnector = Square
         )
     }
 
