@@ -196,4 +196,7 @@
     <string name="other_medication_label">Otros medicamentos. Lea la declaración que figura a continuación y marque la casilla para aceptarla.</string>
     <string name="other_medication_text">Los AAPS reducen las tasas basales o suspenden la administración de insulina para elevar la glucemia. Los fármacos de la clase de los inhibidores de SGLT2 (gliflozinas) pueden impedir el aumento de la glucemia y, por tanto, producir una peligrosa deficiencia de insulina que desemboque en DKA.
 \nLos nombres comerciales más comunes son: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nl Por la presente, prometo que no tomaré dichos fármacos cuando utilice AAPS o desactivaré el bucle antes de utilizar dichos fármacos.</string>
+    <string name="concentration_feature_label">Gestión de la concentración de insulina</string>
+    <string name="u200_with_profile">Antes de que AAPS admitiera las concentraciones de insulina, los usuarios utilizaban U200 configurando un perfil al 50% para reducir todos los valores a la mitad. En esa configuración, ¿qué respuestas son verdaderas?</string>
+    <string name="switch_u200_profile">Has estado utilizando el perfil al 50% como solución temporal para la insulina U200 y quieres cambiar a la nueva función de Concentración de Insulina. ¿Qué respuestas son verdaderas?</string>
 </resources>
