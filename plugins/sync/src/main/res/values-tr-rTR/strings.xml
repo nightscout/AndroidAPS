@@ -125,8 +125,23 @@
     <string name="wear_action_loop_state_unauthorized">Lütfen tekrar deneyin.</string>
     <string name="wear_action_loop_state_invalid">Geçersiz döngü durumu talep edildi</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nSüre: %2$d dk</string>
+    <string name="wear_action_loop_state_now_pump_suspended">Pompa Durduruldu</string>
     <string name="wear_action_loop_state_now_superbolus">Süperbolus</string>
     <string name="wear_action_loop_state_now_invalid">Geçersiz</string>
     <string name="garmin_request_key">Anahtar talebi</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Kominikatör</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator (kimlik doğrulama) uygulamasından %1$s için PIN girin</string>
+    <string name="smscommunicator_tab_otp_label">Authenticator (kimlik doğrulama) kurulumu</string>
+    <string name="smscommunicator_code_verify_info">Doğrulama kodu, Authenticator uygulaması (OTP olarak bilinir) tarafından görüntülenen 6 haneden ve ardından 3 veya daha fazla zorunlu PIN hanesinden oluşur.</string>
+    <string name="smscommunicator_otp_reset_btn">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
+    <string name="smscommunicator_otp_reset_title">Kimlik Doğrulayıcı Anahtarını Sıfırla</string>
+    <string name="smscommunicator_otp_reset_prompt">Kimlik Doğrulayıcı (Authenticator) anahtarını sıfırlamak istediğinizden emin misiniz? Şu anda yapılandırılmış tüm Kimlik Doğrulayıcıları geçersiz kılar ve bunları yeniden ayarlamanız gerekir.</string>
+    <string name="smscommunicator_otp_reset_successful"></string>
+    <string name="smscommunicator_otp_export_prompt">OTP secret panoya kopyalamak istediğinizden emin misiniz?\n\nYalnızca kimlik doğrulama uygulamanızın QRCode\'u tarama sorunları varsa, bunu elle girmek veya uygulamayı kullanarak OTP donanımı yapılandırmak istiyorsanız buna ihtiyacınız olabilir.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (Base32 formatında) dışa aktarıldı ve panoya kopyalandı. Doğrulayıcıya veya OTP donanım yazıcısına yapıştırın!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Kimlik Doğrulayıcıyı (Authenticator) yükleyin</string>
+    <string name="smscommunicator_otp_reset_header">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
+    <string name="smscommunicator_otp_install_info">Her takipçi telefonuna, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Kimlik doğrulayıcıyı sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
 </resources>
