@@ -31,6 +31,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">在下面配置你的RileyLink 。选择RileLink后，一旦RileLink状态为“已连接”，就可以继续安装。这可能需要一分钟。\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b>胰岛素泵设置完成后，您可以继续安装。\n</string>
     <string name="startobjective">开始你的第一个目标</string>
+    <string name="open_objectives">开放目标</string>
     <string name="setupwizard_permissions">权限</string>
     <string name="setupwizard_profile_info">创建一份包含基础率（Basal）、胰岛素碳水系数（IC）、胰岛素敏感系数（ISF）及目标血糖值的配置方案。后续可添加多套方案。</string>
     <string name="setupwizard_permissions_info">AAPS 需要存储访问权限才能正常运行。请授予以下所需权限。</string>
