@@ -46,8 +46,10 @@
     <!-- DoubleKey: Actions preferences -->
     <!-- DoubleKey: Safety preferences -->
     <!-- DoubleKey: APS preferences -->
+    <string name="openapsama_bgAccel_ISF_weight_summary">Kş yükselirken uygulanan ağırlıktır ve İDF\'yi güçlendirerek potansiyel olarak insülin salınımını artırır.\\n\\nVarsayılan değer 0,0 bu şekilde kapalıdır.</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <!-- UnitDoubleKey: APS preferences -->
     <!-- IntentKey preferences -->
+    <string name="pref_title_otp_setup">Authenticator (kimlik doğrulama) kurulumu</string>
     <!--    Appearance preferences-->
 </resources>
