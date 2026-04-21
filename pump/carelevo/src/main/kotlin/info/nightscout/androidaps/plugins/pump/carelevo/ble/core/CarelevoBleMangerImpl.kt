@@ -158,9 +158,11 @@ class CarelevoBleMangerImpl @Inject constructor(
         val gattDevice = bluetoothGatt?.device ?: return false
         val bleState = CarelevoBleSource.bluetoothState.value ?: return false
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "isConnected.state\n${dumpBleConnectionState(macAddress.uppercase())}")
-
-        return connectionState == BluetoothProfile.STATE_CONNECTED && device == gattDevice
+        val connected = connectionState == BluetoothProfile.STATE_CONNECTED && device == gattDevice
+        if (!connected) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "isConnected.state\n${dumpBleConnectionState(macAddress.uppercase())}")
+        }
+        return connected
     }
 
     override fun getGatt(): BluetoothGatt? {

@@ -374,9 +374,7 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     override fun isSuspended(): Boolean {
-        val patchState = carelevoPatch.resolvePatchState()
-        aapsLogger.debug(LTag.PUMP, "result: $patchState")
-        return patchState == PatchState.NotConnectedBooted
+        return carelevoPatch.resolvePatchState() == PatchState.NotConnectedBooted
     }
 
     override fun isBusy(): Boolean {
@@ -453,9 +451,7 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: PumpProfile): Boolean {
-        val checkResult = carelevoPatch.checkIsSameProfile(profile)
-        aapsLogger.debug(LTag.PUMP, "checkResult : $checkResult")
-        return checkResult
+        return carelevoPatch.checkIsSameProfile(profile)
     }
 
     private val _lastDataTime = MutableStateFlow(0L)

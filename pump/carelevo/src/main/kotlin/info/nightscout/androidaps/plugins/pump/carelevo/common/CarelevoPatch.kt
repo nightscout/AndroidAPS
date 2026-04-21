@@ -160,7 +160,6 @@ class CarelevoPatch @Inject constructor(
         val isConnected = isConnected.value ?: false
         val validAddress = patchInfo.value?.getOrNull()?.address
 
-        aapsLogger.debug(LTag.PUMPCOMM, "address : $address, isConnected : $isConnected, validAddress : $validAddress")
         return address != null && validAddress != null && isConnected && address.equals(validAddress, ignoreCase = true)
     }
 
@@ -176,18 +175,12 @@ class CarelevoPatch @Inject constructor(
         val isPatchValid = patchInfo.value?.getOrNull()?.let { true } ?: false
         val isPeripheralConnected = btState.value?.getOrNull()?.isPeripheralConnected() ?: false
 
-        aapsLogger.debug(LTag.PUMPCOMM, "isPatchValid : $isPatchValid")
-        aapsLogger.debug(LTag.PUMPCOMM, "isPeripheralConnected : $isPeripheralConnected")
-
-        val result = when {
+        return when {
             isPeripheralConnected && isPatchValid -> PatchState.ConnectedBooted
             isPeripheralConnected && !isPatchValid -> PatchState.NotConnectedNotBooting
             !isPeripheralConnected && isPatchValid -> PatchState.NotConnectedBooted
             else -> PatchState.NotConnectedNotBooting
         }
-
-        aapsLogger.debug(LTag.PUMPCOMM, "result : $result")
-        return result
     }
 
     private fun observeChangeState() {

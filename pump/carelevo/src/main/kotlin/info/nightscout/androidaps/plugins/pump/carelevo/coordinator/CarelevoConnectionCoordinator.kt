@@ -53,22 +53,11 @@ class CarelevoConnectionCoordinator @Inject constructor(
                 patchInfo.runningMinutes != null ||
                 patchInfo.pumpState != null
 
-        aapsLogger.debug(
-            LTag.PUMPCOMM,
-            "isInitialized.check " +
-                "address=$address, " +
-                "mode=${patchInfo.mode}, " +
-                "runningMinutes=${patchInfo.runningMinutes}, " +
-                "pumpState=${patchInfo.pumpState}, " +
-                "hasOperationalState=$hasOperationalState"
-        )
-
         return hasOperationalState && carelevoPatch.isBleConnectedNow(address)
     }
 
     fun isConnected(): Boolean {
         val address = carelevoPatch.patchInfo.value?.getOrNull()?.address?.uppercase()
-        aapsLogger.debug(LTag.PUMPCOMM, "isConnected.check address=$address")
         if (address == null) {
             return true // Keep the command loop from spinning when no address is available yet.
         }
