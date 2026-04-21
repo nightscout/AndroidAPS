@@ -223,6 +223,7 @@
     <string name="complication_full_status">完整状态</string>
     <string name="complication_full_status_flipped">完整状态（翻转）</string>
     <string name="complication_blood_glucose">血糖</string>
+    <string name="complication_blood_glucose_large">血糖（大）</string>
     <string name="complication_blood_glucose_ext1">血糖 Ext1</string>
     <string name="complication_blood_glucose_ext2">血糖 Ext2</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
@@ -293,6 +294,7 @@
     <string name="loop_status_temp_target">临时目标</string>
     <string name="loop_status_target_range">范围</string>
     <string name="loop_status_target">目标</string>
+    <string name="loop_status_adjusted_target">已调整目标</string>
     <string name="loop_status">闭环状态</string>
     <string name="loop_status_refresh">刷新</string>
     <string name="confirm">确认</string>
