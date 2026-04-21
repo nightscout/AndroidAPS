@@ -196,4 +196,20 @@
     <string name="other_medication_label">Alte medicamente. Citește cu atenție mențiunea de mai jos și bifează căsuța pentru a accepta declarația.</string>
     <string name="other_medication_text">AAPS reduce ratele bazale și suspendă livrarea de insulină pentru a crește glicemia. Medicamentele din grupa inhibitorilor SGLT2 (gliflozine) pot preveni creșterea glicemiei si, prin urmare, pot mări riscul de cetoacidoză diabetică (DKA).
 \nBranduri comune de astfel de medicamente sunt: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nDeclar pe propria răspundere că nu voi lua asemenea medicamente cât folosesc AAPS sau că voi dezactiva bucla închisă înainte de le folosi.</string>
+    <string name="concentration_feature_label">Managementul concentrației de insulină</string>
+    <string name="u200_with_profile">Înainte de suportul concentrațiilor de insulină în AAPS, utilizatorii foloseau U200 prin setarea unui profil la 50% care să înjumătățească toate valorile. În acea configurare, ce răspunsuri sunt adevărate?</string>
+    <string name="u200_with_profile_reports">Baza mea de date internă AAPS și rapoartele NS devin greșite, toate valorile (bolusuri, rate, DZT) ar trebui înmulțite cu 2 pentru a se vedea starea reală pentru medici și echipa medicală.</string>
+    <string name="u200_with_profile_pens">Nu trebuie să gestionez nicio conversie între AAPS și stiloul injector, dacă folosesc un stilou U200 pentru a livra un bolus extern.</string>
+    <string name="u200_with_profile_pens2">Indiferent de stiloul injector utilizat pentru a administra un bolus extern (U100 sau U200), trebuie să convertesc între suma calculată în AAPS și suma pe care o selectez pe stilou pentru fiecare bolus extern</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Ați folosit soluția temporară de profil 50% cu U200 și vreți să treceți la noua funcție Concentrația Insulinei. Care dintre următoarele răspunsuri sunt adevărate?</string>
+    <string name="switch_u200_profile_any_time">Pot comuta oricând, am deja insulina corectă U200 în interiorul pompei.</string>
+    <string name="switch_u200_profile_ps">Trebuie să pregătesc un profil de două ori mai agresiv (200% față de profilul actual implicit) și să sincronizez acest profil nou după următoarea schimbare de rezervor/plasture, atunci când este selectată insulina U200.</string>
+    <string name="switch_u200_profile_dynisf">Trebuie să dezactivez funcția DynISF pentru cel puțin o săptămână, astfel încât DZT (Doza Totală Zilnică) să fie perfect consecvent cu valoarea reală a TDD calculată în Unități Internaționale.</string>
+    <string name="switch_u200_profile_mental">După schimbare, va trebui să fiu foarte atent timp de câteva săptămâni, pentru a-mi obișnui creierul să gândească în unități internaționale în ceea ce privește bolusurile, ratele bazale și valorile DZT.</string>
+    <string name="switch_u100_u200">În prezent folosiți U100 și intenționați să treceți la o altă concentrație folosind noua funcție Concentrația Insulinei. Ce ar trebui să faceți?</string>
+    <string name="switch_u100_u200_profile">Trebuie să-mi modific profilul.</string>
+    <string name="switch_u100_u200_tube">Nu ar trebui să folosesc niciodată interfața pompei (pentru pompele cu fir) pentru a administra bolusuri.</string>
+    <string name="switch_u100_u200_pen">Trebuie să gestionez conversia între AAPS și bolusuri externe cu stiloul injector după schimbare.</string>
+    <string name="switch_u100_u200_change">Concentrația de insulină poate fi schimbată doar atunci când este modificată insulina din rezervor sau când este schimbat un plasture/pompă.</string>
 </resources>
