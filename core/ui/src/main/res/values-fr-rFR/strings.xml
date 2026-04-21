@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">Le lien web est invalide</string>
     <string name="error_mustbe4hexadidits">Doit avoir 4 caractères parmi ABCDEF0123456789</string>
     <!--    General-->
+    <string name="treatments">Traitements</string>
     <string name="refresh">Actualiser</string>
     <string name="error">Erreur</string>
     <string name="profile_set_ok">Profil basal dans la pompe mis à jour</string>
@@ -202,6 +203,7 @@
     <string name="reason">Raison</string>
     <string name="nochangerequested">Pas de changement demandé</string>
     <!--    Insulin / Concentration-->
+    <string name="change_insulin">Changer</string>
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Profil incorrect : %1$s</string>
     <!--    Temptarget-->
@@ -683,7 +685,4 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">V_SI</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAS</string>
-    <string name="remove_items">Supprimer les éléments</string>
-    <string name="sort_items">Trier les éléments</string>
-
 </resources>
