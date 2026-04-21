@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">Địa chỉ Url không hợp lệ</string>
     <string name="error_mustbe4hexadidits">Phải gồm 4 ký tự trong tập ABCDEF0123456789</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Điều trị</string>
     <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
     <string name="nav_configuration">Cấu hình</string>
@@ -285,6 +286,10 @@
     <string name="current_insulin">Đang hoạt động</string>
     <string name="change_insulin">Thay đổi</string>
     <string name="select_insulin_description">Chọn loại insulin bạn đang nạp vào bơm. Hồ sơ (profile) sẽ được chuyển đổi sau khi kích hoạt / làm đầy (prime).</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulin đã chọn: %1$s</string>
     <string name="record_insulin_hint">Nếu nhập insulin được tiêm bằng bút, hãy chọn đúng loại insulin bên dưới. Liều lượng luôn được tính bằng Đơn vị Quốc tế (IU).</string>
     <!--    ProfileSwitch-->
@@ -414,6 +419,7 @@
     <string name="arrow_center">Ở giữa</string>
     <!--    Command-->
     <string name="connectiontimedout">Hết thời gian kết nối</string>
+    <string name="pump_not_configured">Boưm chưa được cấu hình</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Đã kích hoạt</string>
     <string name="comment">Nhận xét</string>
@@ -1003,6 +1009,7 @@
     <string name="graph_edit">Sửa biểu đồ</string>
     <string name="graph_number">Biểu đồ %1$d</string>
     <string name="graph_bg">Biểu đồ BG</string>
+    <string name="graph_height">Chiều cao biểu đồ [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
@@ -1015,4 +1022,6 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">VSENS</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
+    <string name="remove_items">Xóa mục</string>
+    <string name="sort_items">Sắp xếp các mục</string>
 </resources>
