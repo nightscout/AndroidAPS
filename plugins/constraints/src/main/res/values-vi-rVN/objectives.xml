@@ -71,6 +71,9 @@
     <string name="objectives_exam_learned_breadgrams">Chỉ được phép nhập carbohydrate theo đơn vị gram.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs là sự thay thế cho bolus kéo dài trong thế giới bơm insulin.</string>
     <string name="objectives_exam_learned_nsclient">Giám sát và điều khiển từ xa là có thể, nhưng không phải tất cả các tính năng đều khả dụng từ xa.</string>
+    <string name="objectives_exam_learned_concentration1">Việc sử dụng insulin U200 với hồ sơ 50% sẽ yêu cầu quy đổi liên tục: đối với các bolus ngoài bằng bút tiêm, và tất cả các báo cáo tiêu chuẩn từ AAPS hoặc Nightscout sẽ bị sai và cần được chuyển đổi sang đơn vị IU cho đội ngũ y tế.</string>
+    <string name="objectives_exam_learned_concentration2">Chuyển từ U200 với hồ sơ 50% sang U200 bằng tính năng nồng độ insulin sẽ yêu cầu tạo một hồ sơ mạnh hơn, tắt DynISF trong một tuần và rèn luyện để làm quen với việc tính theo đơn vị quốc tế.</string>
+    <string name="objectives_exam_learned_concentration3">Chỉ có thể thay đổi nồng độ insulin khi thay insulin hoặc patch. Nhưng quan trọng nhất, đặc biệt với bơm có dây, tuyệt đối không sử dụng giao diện của bơm để tiêm bolus trực tiếp từ bơm.</string>
     <string name="answerdisabledto">Trả lời bị vô hiệu hóa cho đến: %1$s</string>
     <string name="wronganswer">Câu trả lời sai!</string>
     <string name="unfinshed_button">Tiếp theo chưa hoàn thành</string>
