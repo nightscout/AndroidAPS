@@ -55,14 +55,6 @@
     <string name="time_last_4_days">過去四天</string>
     <string name="time_last_week">過去一週</string>
     <string name="time_last_month">過去一個月</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">掃描</string>
-    <string name="ble_config_scan_stop">停止</string>
-    <string name="ble_config_scan_selected">已選擇</string>
-    <string name="ble_config_scan_scanning">掃描中</string>
-    <string name="ble_config_scan_finished">掃描完成</string>
-    <string name="ble_config_scan_error">掃描錯誤：%1$d</string>
-    <string name="ble_config_remove">移除</string>
     <!-- Pump History -->
     <string name="pump_history_type">類型：</string>
 </resources>

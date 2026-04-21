@@ -17,14 +17,6 @@
     <string name="history_group_glucose">Glucèmia</string>
     <string name="history_group_other">Altres</string>
     <!-- Time -->
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Escanejar</string>
-    <string name="ble_config_scan_stop">Aturar</string>
-    <string name="ble_config_scan_selected">Seleccionat</string>
-    <string name="ble_config_scan_scanning">Escanejant</string>
-    <string name="ble_config_scan_finished">Escaneig finalitzat</string>
-    <string name="ble_config_scan_error">Error d\'escaneig: %1$d</string>
-    <string name="ble_config_remove">Eliminar</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipus:</string>
 </resources>

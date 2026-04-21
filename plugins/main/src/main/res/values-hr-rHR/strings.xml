@@ -7,12 +7,9 @@
     <!-- Overview -->
     <string name="a11y_insulin_label">inzulin</string>
     <!-- overview moved to core:ui module -->
-    <string name="description_overview">Prikaži trenutno stanje tvog loop-a i izbore za najuobičajenije postupke</string>
-    <string name="run_question">Pokrenuti %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_treatments">Tretmani</string>
     <string name="basal_shortname">BAZAL</string>
-    <string name="graph_scale">Skala grafikona</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Prikazuje tekuće obavijesti sa kratkim pregledom što loop radi</string>

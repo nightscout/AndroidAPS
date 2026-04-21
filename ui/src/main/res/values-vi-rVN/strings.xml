@@ -12,6 +12,8 @@
     <!--    Widget-->
     <string name="configure">Cấu hình độ trong suốt</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">Biểu đồ đường huyết AAPS</string>
+    <string name="widget_compact_bg_description">AAPS BG + IOB + COB (thu gọn)</string>
     <!--     Activities-->
     <string name="activity_monitor">Màn hình hoạt động</string>
     <string name="time_range">Khoảng thời gian</string>
@@ -187,6 +189,10 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB > 0</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">nút kéo–thả</string>
+    <!--    History browser-->
+    <string name="history_now">Hiện tại</string>
+    <string name="a11y_history_previous_window">Cửa sổ trước</string>
+    <string name="a11y_history_next_window">Cửa sổ tiếp theo</string>
     <string name="additional_ecarbs">Thêm eCarbs</string>
     <string name="calculator_options">Tùy chọn tính toán</string>
     <string name="use_bg">Sử dụng BG</string>
@@ -264,4 +270,9 @@
     <string name="loop_accept_nav_label">Vòng lặp</string>
     <string name="loop_accept_set_basal_question">Chấp nhận liều nền tạm thời mới:</string>
     <string name="loop_accept_perform">Thực hiện</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Vô hiệu hoá</string>
+    <string name="widget_rm_suspended">Bị tạm dừng</string>
+    <string name="widget_rm_resume">Tiếp tục</string>
 </resources>

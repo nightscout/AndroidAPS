@@ -196,4 +196,20 @@
     <string name="other_medication_label">Thuốc khác. Vui lòng đọc tuyên bố dưới đây và đánh dấu vào ô để chấp nhận cam kết.</string>
     <string name="other_medication_text">AAPS giảm basal hoặc tạm ngừng bơm insulin để làm tăng đường huyết. Các thuốc thuộc nhóm ức chế SGLT2 (gliflozin) có thể ngăn sự tăng đường huyết và do đó có thể gây ra tình trạng thiếu insulin nguy hiểm dẫn đến DKA.
 \nCác tên thương mại thường gặp: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nTôi cam kết rằng sẽ không sử dụng các thuốc này khi đang dùng AAPS hoặc sẽ tắt vòng lặp (loop) trước khi sử dụng các thuốc đó.</string>
+    <string name="concentration_feature_label">Quản lý nồng độ insulin</string>
+    <string name="u200_with_profile">Trước khi AAPS hỗ trợ các nồng độ insulin, người dùng sử dụng U200 bằng cách đặt hồ sơ 50% để giảm một nửa tất cả các giá trị. Trong thiết lập đó, những lựa chọn nào là đúng?</string>
+    <string name="u200_with_profile_reports">Cơ sở dữ liệu cục bộ của AAPS và báo cáo trên Nightscout sẽ bị sai; tất cả các giá trị (liều bolus, tốc độ liều nền, tổng liều) cần được nhân với 2 để phản ánh đúng thực trạng, đặc biệt đối với bác sĩ và đội ngũ y tế.</string>
+    <string name="u200_with_profile_pens">Tôi không cần phải thực hiện bất kỳ chuyển đổi nào giữa AAPS và bút tiêm nếu sử dụng bút U200 để tiêm bolus ngoài.</string>
+    <string name="u200_with_profile_pens2">Dù sử dụng bút nào để tiêm bolus ngoài (U100 hay U200), tôi phải quy đổi giữa lượng AAPS tính toán và lượng tôi chọn trên bút cho mỗi lần tiêm bolus ngoài</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Bạn đã sử dụng cách “hồ sơ 50%” với U200 và muốn chuyển sang tính năng Nồng độ insulin mới. Những lựa chọn nào là đúng?</string>
+    <string name="switch_u200_profile_any_time">Tôi có thể chuyển đổi bất cứ lúc nào, vì trong bơm của tôi đã có sẵn insulin U200.</string>
+    <string name="switch_u200_profile_ps">Tôi cần chuẩn bị một hồ sơ “mạnh gấp đôi” (200% so với hồ sơ mặc định hiện tại) và đồng bộ hồ sơ mới này sau lần thay Patch/Reservoir tiếp theo khi chọn insulin U200.</string>
+    <string name="switch_u200_profile_dynisf">Tôi cần tắt tính năng DynISF trong ít nhất một tuần để TDD hoàn toàn khớp với giá trị TDD thực tế được tính theo đơn vị quốc tế.</string>
+    <string name="switch_u200_profile_mental">Sau khi chuyển đổi, tôi cần hết sức cẩn thận trong vài tuần để làm quen với việc tính toán theo đơn vị quốc tế cho bolus, tốc độ liều nền và Tổng liều.</string>
+    <string name="switch_u100_u200">Hiện tại bạn đang dùng U100 và dự định chuyển sang nồng độ khác bằng tính năng Nồng độ insulin mới. Bạn nên làm gì?</string>
+    <string name="switch_u100_u200_profile">Tôi cần chỉnh sửa hồ sơ của mình.</string>
+    <string name="switch_u100_u200_tube">Tôi không bao giờ nên sử dụng giao diện của bơm (đối với bơm có dây) để tiêm bolus.</string>
+    <string name="switch_u100_u200_pen">Sau khi chuyển đổi, tôi vẫn cần quy đổi giữa AAPS và các liều bolus ngoài bằng bút tiêm.</string>
+    <string name="switch_u100_u200_change">Chỉ có thể thay đổi nồng độ insulin khi insulin trong bình chứa được thay hoặc khi thay Patch/Pod.</string>
 </resources>

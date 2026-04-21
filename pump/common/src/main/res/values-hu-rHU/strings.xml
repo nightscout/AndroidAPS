@@ -9,13 +9,5 @@
     <string name="history_group_glucose">Glükóz</string>
     <string name="history_group_other">Egyéb</string>
     <!-- Time -->
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Keresés</string>
-    <string name="ble_config_scan_stop">Leállít</string>
-    <string name="ble_config_scan_selected">Kiválasztott</string>
-    <string name="ble_config_scan_scanning">Keresés</string>
-    <string name="ble_config_scan_finished">Keresés befejezve</string>
-    <string name="ble_config_scan_error">Hiba kereséskor: %1$d</string>
-    <string name="ble_config_remove">Eltávolít</string>
     <!-- Pump History -->
 </resources>

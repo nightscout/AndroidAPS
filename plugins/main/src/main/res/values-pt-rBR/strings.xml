@@ -9,22 +9,14 @@
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Bateria da bomba</string>
     <string name="cannula">Cânula</string>
-    <string name="statuslights_cannula_age">idade da cânula</string>
-    <string name="statuslights_patch_pump_age">Idade da bomba patch</string>
     <string name="patch_pump">Bomba patch</string>
     <!-- Overview -->
-    <string name="a11y_graph">gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
-    <string name="chart_menu">Menu do Gráfico</string>
     <string name="a11y_bg_quality">qualidade da glicemia</string>
     <string name="a11y_blood_glucose">glicemia</string>
     <string name="a11y_bg_outdated">desatualizado</string>
-    <string name="set_basal_question">Aceitar nova basal temporária:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">Início</string>
-    <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
     <string name="data_status">Estado dos dados de glicemia</string>
-    <string name="run_question">Executar %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
     <string name="overview_show_treatments">Tratamentos</string>
@@ -40,8 +32,6 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TRATA</string>
-    <string name="graph_scale">Escala do gráfico</string>
-    <string name="graph_menu_divider_header">Gráfico</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

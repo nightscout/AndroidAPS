@@ -55,14 +55,6 @@
     <string name="time_last_4_days">Afgelopen 4 dagen</string>
     <string name="time_last_week">Vorige week</string>
     <string name="time_last_month">Vorige maand</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Scannen</string>
-    <string name="ble_config_scan_stop">Stop</string>
-    <string name="ble_config_scan_selected">Geselecteerd</string>
-    <string name="ble_config_scan_scanning">Scannen</string>
-    <string name="ble_config_scan_finished">Scannen voltooid</string>
-    <string name="ble_config_scan_error">Scanfout: %1$d</string>
-    <string name="ble_config_remove">Verwijderen</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
 </resources>

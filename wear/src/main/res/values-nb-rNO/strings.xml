@@ -77,6 +77,7 @@
     <string name="menu_ecarb">eKarbo</string>
     <string name="menu_settings">Innstillinger</string>
     <string name="menu_status">Status</string>
+    <string name="menu_bg_graph">Glukosegraf</string>
     <string name="menu_resync">Re-synk</string>
     <string name="menu_prime_fill">Prime/fylling</string>
     <string name="menu_none">Ingen</string>
@@ -198,6 +199,7 @@
     <string name="week_short">u</string>
     <string name="day_short">d</string>
     <string name="hour_short">t</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">gammel</string>
@@ -221,6 +223,7 @@
     <string name="complication_full_status">Full status</string>
     <string name="complication_full_status_flipped">Full status (omvendt)</string>
     <string name="complication_blood_glucose">Blodsukker</string>
+    <string name="complication_blood_glucose_large">Blodsukker (stor)</string>
     <string name="complication_blood_glucose_ext1">BS Ekstern1</string>
     <string name="complication_blood_glucose_ext2">BS Ekstern2</string>
     <string name="complication_br_cob_iob">Basaldose, COB &amp; IOB</string>
@@ -291,6 +294,7 @@
     <string name="loop_status_temp_target">Midlertidig mål</string>
     <string name="loop_status_target_range">Målområde</string>
     <string name="loop_status_target">Målverdi</string>
+    <string name="loop_status_adjusted_target">Justert mål</string>
     <string name="loop_status">Loopstatus</string>
     <string name="loop_status_refresh">Oppdater</string>
     <string name="confirm">Bekreft</string>

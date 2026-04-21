@@ -55,14 +55,6 @@
     <string name="time_last_4_days">4 ngày trước</string>
     <string name="time_last_week">Tuần trước</string>
     <string name="time_last_month">Tháng trước</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Quét</string>
-    <string name="ble_config_scan_stop">Dừng lại</string>
-    <string name="ble_config_scan_selected">Đã chọn</string>
-    <string name="ble_config_scan_scanning">Đang quét</string>
-    <string name="ble_config_scan_finished">Quét hoàn tất</string>
-    <string name="ble_config_scan_error">Lỗi quét: %1$d</string>
-    <string name="ble_config_remove">Xóa</string>
     <!-- Pump History -->
     <string name="pump_history_type">Loại:</string>
 </resources>

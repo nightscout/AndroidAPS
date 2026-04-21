@@ -34,7 +34,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
@@ -47,7 +46,6 @@
     <!-- About -->
     <!--    Maintenance-->
     <!--    Weekday-->
-    <!-- WeekdayPicker -->
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2f од</string>
     <!--    Playback-->

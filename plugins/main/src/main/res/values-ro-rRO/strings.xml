@@ -9,35 +9,14 @@
     <string name="insulin_label">Insulină</string>
     <string name="pb_label">Baterie pompă</string>
     <string name="cannula">Canula</string>
-    <string name="statuslights_cannula_age">vechime canulă</string>
-    <string name="statuslights_patch_pump_age">vechime pompă fără fir</string>
     <string name="patch_pump">Pompă fără fir</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 ore</string>
-    <string name="graph_long_scale_12h">12 ore</string>
-    <string name="graph_long_scale_18h">18 ore</string>
-    <string name="graph_long_scale_24h">24 de ore</string>
-    <string name="a11y_graph">grafic</string>
-    <string name="a11y_graph_scale">alegeți scara graficului</string>
-    <string name="a11y_graph_scale_6h">scară grafică 6 ore</string>
-    <string name="a11y_graph_scale_12h">scară grafică 12 ore</string>
-    <string name="a11y_graph_scale_18h">scară grafică 18 ore</string>
-    <string name="a11y_graph_scale_24h">scară grafică 24 ore</string>
     <string name="a11y_insulin_label">insulină</string>
-    <string name="chart_menu">Meniu diagramă</string>
     <string name="a11y_bg_quality">calitatea valorii glicemiei</string>
     <string name="a11y_blood_glucose">glicemie din sânge</string>
     <string name="a11y_bg_outdated">învechită</string>
-    <string name="set_basal_question">Acceptați noua bazală temporară:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">ACASĂ</string>
-    <string name="description_overview">Afișați starea curentă a buclei și butoanele pentru cele mai folosite acțiuni</string>
     <string name="data_status">Stare date glicemie</string>
-    <string name="run_question">Executați %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicții</string>
     <string name="overview_show_treatments">Tratamente</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="treatments_shortname">TRAT</string>
-    <string name="graph_scale">Scară grafică</string>
-    <string name="graph_menu_divider_header">Grafic</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">folosire:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Afișează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
     <string name="overview_show_steps">Pași</string>
-    <string name="simple_mode_enabled">Mod simplu activat</string>
 </resources>

@@ -9,10 +9,10 @@
     <string name="omnipod_common_pod_management_button_pod_history">Historial de Pod</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">Ningún pod activo</string>
-    <string name="omnipod_common_error_set_basal_failed">Error al establecer el perfil basal.</string>
-    <string name="omnipod_common_error_bolus_did_not_succeed">Bolo no entregado.</string>
-    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">No se ha podido establecer el perfil basal: se ha recibido un perfil vacío. Asegúrese de activar su perfil basal.</string>
-    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Ningún perfil basal está activo. Asegúrese de activar su perfil basal.</string>
+    <string name="omnipod_common_error_set_basal_failed">Error al establecer el perfil basal</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">Bolo no entregado</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">No se ha podido establecer el perfil basal: se ha recibido un perfil vacío. Asegúrese de activar su perfil basal</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Ningún perfil basal está activo. Asegúrese de activar su perfil basal</string>
     <string name="omnipod_common_error_unsupported_custom_command">Comando personalizado no soportado: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Error al actualizar el estado</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Error al actualizar el estado al iniciar</string>
@@ -35,14 +35,14 @@
     <string name="omnipod_common_overview_button_set_time">Ajustar la hora</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Suspender</string>
     <string name="omnipod_common_overview_button_resume_delivery">Reanudar la entrega</string>
-    <string name="omnipod_common_overview_button_silence_alerts">Silenciar Alertas</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Silenciar alertas</string>
     <string name="omnipod_common_overview_pod_status">Estado del Pod</string>
-    <string name="omnipod_common_overview_total_delivered">Total Entregado</string>
+    <string name="omnipod_common_overview_total_delivered">Total entregado</string>
     <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">ID Único</string>
     <string name="omnipod_common_overview_lot_number">Número de Lote</string>
     <string name="omnipod_common_overview_pod_sequence_number">Número de secuencia</string>
-    <string name="omnipod_common_overview_pod_expiry_date">Pod Caduca</string>
+    <string name="omnipod_common_overview_pod_expiry_date">El Pod caduca</string>
     <string name="omnipod_common_overview_last_connection">Última conexión</string>
     <string name="omnipod_common_overview_last_bolus">Último bolo</string>
     <string name="omnipod_common_overview_temp_basal_rate">Tasa basal temporal</string>
@@ -62,19 +62,19 @@
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Insertar el Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Prepara el sitio de infusión. Retira el tapón y el adhesivo del Pod y coloca el Pod en el sitio de infusión.\n\nSi la cánula se queda fuera, pulsa <b>Cancelar</b> y descarta tu Pod.\n\nPresiona <b>Siguiente</b> para insertar la cánula y comenzar la entrega basal.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Al pulsar <b>OK</b>, se insertará la cánula. Asegúrese de que ha colocado el Pod en el sitio de infusión.</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Insertar Cánula</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Intentando establecer la basal inicial programada e insertar la cánula.\n\n Si la cánula ha sido insertada correctamente puede pulsar <b>Siguiente</b>.</string>
-    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod Activado</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Insertar cánula</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Intentando establecer la basal inicial programada e insertar la cánula.\n\n Si la cánula ha sido insertada correctamente puede pulsar <b>Siguiente</b></string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod activado</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_text">\nEl Pod nuevo ahora está activo.\n\nSu tasa basal ha sido programada y la cánula ha sido insertada.\n\nPor favor, verifique que la cánula ha sido insertada correctamente y reemplace su Pod si tiene dudas.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Desactivar Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">\nPulsa <b>Siguiente</b> para desactivar el Pod.\n\n<b>Nota:</b> Esto suspenderá toda la entrega de insulina y desactivará el Pod.</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Desactivando el Pod</string>
-    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Desactivando el Pod.\n\nCuándo la desactivación se haya completado correctamente, puede pulsar <b>Siguiente</b>.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod Desactivado</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">El Pod se ha desactivado.\n\nPor favor, retire el Pod de su cuerpo y recíclelo.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod Descartado</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">El estado de Pod se ha descartado. La entrega de insulina no se ha suspendido porque el Pod no se ha desactivado correctamente!\n\nPor favor, elimine el Pod de su cuerpo y recíclelo.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Desactivando el Pod.\n\nCuándo la desactivación se haya completado correctamente, puede pulsar <b>Siguiente</b></string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod desactivado</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">El Pod se ha desactivado.\n\nPor favor, retire el Pod de su cuerpo y recíclelo</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod descartado</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">El estado de Pod se ha descartado. La entrega de insulina no se ha suspendido porque el Pod no se ha desactivado correctamente!\n\nPor favor, elimine el Pod de su cuerpo y recíclelo</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Si descartas el Pod, ya no podrás comunicarte con él. Sólo deberías hacer esto cuando toda la comunicación con el Pod falla de forma persistente. ¿Estás seguro de que quieres descartar el Pod?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Descartar Pod</string>
     <!-- Omnipod - Preferences -->
@@ -95,7 +95,7 @@
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar automáticamente las alertas de POD</string>
     <string name="omnipod_common_preferences_category_other">Otros</string>
     <string name="omnipod_common_preferences_category_alerts">Alertas</string>
-    <string name="omnipod_common_preferences_category_confirmation_beeps">Sonido de Confirmación</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Sonido de confirmación</string>
     <string name="omnipod_common_preferences_category_notifications">Notificaciones</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sonido para notificaciones TBR inciertas habilitadas</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sonido de notificaciones de SMB inciertos habilitado</string>
@@ -103,7 +103,7 @@
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sonido cuando la notificación de entrega suspendida está activada</string>
     <string name="omnipod_dash_use_bonding">Dispositivo bluetooth vinculado en Android 15</string>
     <!-- Omnipod - Pod Status -->
-    <string name="omnipod_common_pod_status_no_active_pod">Ningún Pod Activo</string>
+    <string name="omnipod_common_pod_status_no_active_pod">Ningún Pod activo</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuración en curso (esperando para activar el Pod)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Configuración en curso (en espera de inserción de cánula)</string>
     <string name="omnipod_common_pod_status_running">Funcionando</string>
@@ -122,25 +122,25 @@
     <string name="omnipod_common_cmd_insert_cannula">Insertar cánula</string>
     <string name="omnipod_common_cmd_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_common_cmd_set_basal_schedule">Establecer Programación Basal</string>
-    <string name="omnipod_common_cmd_set_bolus">Establecer Bolo</string>
-    <string name="omnipod_common_cmd_cancel_bolus">Cancelar Bolo</string>
+    <string name="omnipod_common_cmd_set_bolus">Establecer bolo</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Cancelar bolo</string>
     <string name="omnipod_common_cmd_set_tbr">Establecer TBR</string>
     <string name="omnipod_common_cmd_cancel_tbr_by_driver">Cancelar TBR</string>
     <string name="omnipod_common_cmd_discard_pod">Descartar Pod</string>
-    <string name="omnipod_common_cmd_get_pod_status">Obtener Estado del Pod</string>
-    <string name="omnipod_common_cmd_set_time">Establecer Hora</string>
-    <string name="omnipod_common_cmd_configure_alerts">Configurar Alertas</string>
-    <string name="omnipod_common_cmd_silence_alerts">Silenciar Alertas</string>
-    <string name="omnipod_common_cmd_read_pulse_log">Leer Registro Pulse</string>
-    <string name="omnipod_common_cmd_suspend_delivery">Suspender la Entrega</string>
-    <string name="omnipod_common_cmd_resume_delivery">Reanudar la Entrega</string>
+    <string name="omnipod_common_cmd_get_pod_status">Obtener estado del Pod</string>
+    <string name="omnipod_common_cmd_set_time">Establecer hora</string>
+    <string name="omnipod_common_cmd_configure_alerts">Configurar alertas</string>
+    <string name="omnipod_common_cmd_silence_alerts">Silenciar alertas</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Leer registro de pulsos</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Suspender la entrega</string>
+    <string name="omnipod_common_cmd_resume_delivery">Reanudar la entrega</string>
     <string name="omnipod_common_cmd_cancel_tbr">Cancelar TBR (por el usuario)</string>
     <string name="omnipod_common_cmd_get_pod_info">Obtener información del Pod</string>
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Establecer TBR suspendida simulada</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancelar TBR suspendida simulada</string>
     <string name="omnipod_common_cmd_split_tbr">Dividir TBR</string>
-    <string name="omnipod_common_cmd_play_test_beep">Reproducir Sonido de Prueba</string>
-    <string name="omnipod_common_cmd_unknown_entry">Entrada Desconocida</string>
+    <string name="omnipod_common_cmd_play_test_beep">Reproducir sonido de prueba</string>
+    <string name="omnipod_common_cmd_unknown_entry">Entrada desconocida</string>
     <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Desactivar alertas de suspensión</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Recordatorio para finalizar la vinculación</string>

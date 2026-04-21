@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">Webová adresa je neplatná</string>
     <string name="error_mustbe4hexadidits">Musí byť zo 4 znakov z ABCDEF0123456789</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Ošetrenia</string>
     <string name="treatments_desc">Zobraz a spravuj históriu ošetrení</string>
     <string name="nav_configuration">Konfigurácia</string>
@@ -285,6 +286,10 @@
     <string name="current_insulin">Práve aktívny</string>
     <string name="change_insulin">Vymeň inzulín</string>
     <string name="select_insulin_description">Zvoľ inzulín, ktorým plníš pumpu. Po aktivácii/plnení bude vykonané prepnutie profilu.</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Zvolený inzulín: %1$s</string>
     <string name="record_insulin_hint">Ak zadávaš inzulín aplikovaný perom, zvoľ nižšie ten správny typ inzulínu.</string>
     <!--    ProfileSwitch-->
@@ -414,6 +419,7 @@
     <string name="arrow_center">V strede</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršal čas na pripojenie</string>
+    <string name="pump_not_configured">Pumpa nie je nakonfigurovaná</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Vykonané</string>
     <string name="comment">Komentár</string>
@@ -803,10 +809,6 @@
     <string name="reauthorize">Znovu overiť</string>
     <string name="cloud_auth_success">Overenie cloudového úložiska prebehlo úspešne</string>
     <string name="authorization_status">Stav autorizácie</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">zníženie %1$s o %2$s</string>
-    <string name="a11y_plus_button_description">zvýšenie %1$s o %2$s</string>
-    <string name="you_are_on_allowed_limit">Dosiahnutý povolený limit</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Čas udalosti</string>
@@ -905,14 +907,6 @@
     <string name="weekday_wednesday_short">Str</string>
     <string name="weekday_tuesday_short">Uto</string>
     <string name="weekday_monday_short">Pon</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Po</string>
-    <string name="tuesday_short">Ut</string>
-    <string name="wednesday_short">St</string>
-    <string name="thursday_short">Št</string>
-    <string name="friday_short">Pi</string>
-    <string name="saturday_short">So</string>
-    <string name="sunday_short">Ne</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
@@ -1024,6 +1018,8 @@
     <string name="graph_edit">Upraviť graf</string>
     <string name="graph_number">Graf %1$d</string>
     <string name="graph_bg">Graf glykémie</string>
+    <string name="graph_height">Výška grafu [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAZ</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
@@ -1037,5 +1033,4 @@
     <string name="steps_shortname" comment="Short label for Steps graph series">KROKY</string>
     <string name="remove_items">Odstrániť položky</string>
     <string name="sort_items">Zoradiť položky</string>
-
 </resources>

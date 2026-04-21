@@ -106,6 +106,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Tik teigiamas AIO</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolusas</string>
     <string name="a11y_drag_and_drop_handle">nutempti ir padėti</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
     <string name="confirm_treatment">Patvirtinkite terapiją</string>
     <string name="recalculate">Perskaičiuoti</string>
@@ -118,4 +119,5 @@
         <item>Tik neigiamas</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

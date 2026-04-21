@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Lukk meny</string>
     <string name="authorizationfailed">Autentisering feilet</string>
     <string name="identification_not_set">Identifikasjon ikke satt i utviklermodus</string>
-    <string name="use_compose_main_screen">Bruk Compose hovedskjerm (eksperimentelt)</string>
-    <string name="switch_to_compose_ui">Bytt til Compose UI</string>
-    <string name="switch_to_classic_ui">Bytt til klassisk UI</string>
     <string name="select">Velg</string>
     <string name="set">Angi</string>
     <string name="migrating_preferences">Migrerer innstillinger…</string>

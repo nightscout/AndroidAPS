@@ -55,14 +55,6 @@
     <string name="time_last_4_days">Siste 4 dager</string>
     <string name="time_last_week">Siste uke</string>
     <string name="time_last_month">Siste måned</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Søk</string>
-    <string name="ble_config_scan_stop">Stopp</string>
-    <string name="ble_config_scan_selected">Valgt</string>
-    <string name="ble_config_scan_scanning">Søker</string>
-    <string name="ble_config_scan_finished">Søk fullført</string>
-    <string name="ble_config_scan_error">Søk feilet: %1$d</string>
-    <string name="ble_config_remove">Fjern</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
 </resources>

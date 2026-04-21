@@ -485,10 +485,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">abnehmend %1$s mit %2$s</string>
-    <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
-    <string name="you_are_on_allowed_limit">Erlaubtes Limit erreicht</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ereignis-Zeit</string>
@@ -537,14 +533,6 @@
     <string name="weekday_wednesday_short">Mi</string>
     <string name="weekday_tuesday_short">Di</string>
     <string name="weekday_monday_short">Mo</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Mo</string>
-    <string name="tuesday_short">Di</string>
-    <string name="wednesday_short">Mi</string>
-    <string name="thursday_short">Do</string>
-    <string name="friday_short">Fr</string>
-    <string name="saturday_short">Sa</string>
-    <string name="sunday_short">So</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f IE</string>
     <string name="format_insulin_units">%1$.2f IE</string>

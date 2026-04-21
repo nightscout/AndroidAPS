@@ -11,7 +11,7 @@
     <string name="pref_title_show_wizard_button">Vis kalkulatorknapp</string>
     <string name="pref_title_show_insulin_button">Vis insulinknapp</string>
     <string name="pref_title_show_carbs_button">Vis karboknapp</string>
-    <string name="pref_title_show_cgm_button">Vis CGM-knapp</string>
+    <string name="pref_title_show_cgm_button">Vis sensorapp-knapp</string>
     <string name="pref_summary_show_cgm_button">Åpner xDrip+ eller Dexcom-appen (bruk tilbakeknappen for å returnere).</string>
     <string name="pref_title_show_calibration_button">Vis kalibreringskapp</string>
     <string name="pref_summary_show_calibration_button">Sender en kalibrering til xDrip+ (sørg for at \'Aksepter kalibrering\' er aktivert i xDrip+ under Innstillinger mellom apper).</string>

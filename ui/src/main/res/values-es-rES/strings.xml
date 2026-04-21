@@ -12,6 +12,8 @@
     <!--    Widget-->
     <string name="configure">Configurar la opacidad</string>
     <string name="widget_description">Widget de AAPS</string>
+    <string name="widget_bg_graph_description">Gráfico de glucemia AAPS</string>
+    <string name="widget_compact_bg_description">AAPS Glucosa + IOB + COB (compacta)</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor de actividad</string>
     <string name="time_range">Rango de tiempo</string>
@@ -92,10 +94,10 @@
     <string name="timeshift_label">Cambio de hora</string>
     <string name="percentage_label">Porcentaje</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspender bucle durante 1 hora</string>
-    <string name="suspendloopfor2h">Suspender bucle durante 2 horas</string>
-    <string name="suspendloopfor3h">Suspender bucle durante 3 horas</string>
-    <string name="suspendloopfor10h">Suspender bucle durante 10 horas</string>
+    <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
+    <string name="suspendloopfor2h">Suspender lazo durante 2 horas</string>
+    <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
+    <string name="suspendloopfor10h">Suspender lazo durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
     <string name="disconnectpumpfor15m">Desconectar la bomba durante 15 minutos</string>
     <string name="disconnectpumpfor30m">Desconectar la bomba durante 30 minutos</string>
@@ -137,8 +139,8 @@
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
-    <string name="hide_loop">Ocultar bucle</string>
-    <string name="show_loop">Mostrar bucle</string>
+    <string name="hide_loop">Ocultar lazo</string>
+    <string name="show_loop">Mostrar lazo</string>
     <string name="user_entry">Registro por parte del usuario</string>
     <string name="clone_label">Duplicar</string>
     <string name="add_new_profile">Añadir nuevo perfil</string>
@@ -187,6 +189,10 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Sólo IOB positiva</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
     <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
+    <!--    History browser-->
+    <string name="history_now">Ahora</string>
+    <string name="a11y_history_previous_window">Ventana anterior</string>
+    <string name="a11y_history_next_window">Siguiente ventana</string>
     <string name="additional_ecarbs">Añadir eCarbs</string>
     <string name="calculator_options">Opciones de la calculadora</string>
     <string name="use_bg">Usar glucemia</string>
@@ -261,4 +267,12 @@
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Seleccionar flecha</string>
+    <string name="loop_accept_nav_label">Lazo</string>
+    <string name="loop_accept_set_basal_question">Aceptar nueva basal temporal:</string>
+    <string name="loop_accept_perform">Realizar</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Desactivado</string>
+    <string name="widget_rm_suspended">Suspendido</string>
+    <string name="widget_rm_resume">Reanudar</string>
 </resources>

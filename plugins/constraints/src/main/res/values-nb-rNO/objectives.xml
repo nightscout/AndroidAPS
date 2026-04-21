@@ -58,7 +58,7 @@
     <string name="objectives_exam_learned_profileswitch4">Redigering av profilen er ikke tilstrekkelig til å gjøre en endring. Du må fremdeles fysisk aktivere et profil bytte for å registrere endringene.</string>
     <string name="objectives_exam_learned_exercise">Du bør redusere mengden insulin i kroppen minst 1 time før du starter treningen ved å velge profil under 100 %.</string>
     <string name="objectives_exam_learned_exercise2">Ved å sette høyere midlertidig mål minst 1 time før trening så vil det bidra til å redusere mengden med insulin i kroppen.</string>
-    <string name="objectives_exam_learned_noisycgm">Hvis du ikke stoler på CGM-verdier bør du ikke bruke loop uten tilsyn.</string>
+    <string name="objectives_exam_learned_noisycgm">Hvis du ikke stoler på sensor-verdier bør du ikke bruke loop uten tilsyn.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS må vite at pumpen ikke er tilkoblet for å beregne IOB riktig.</string>
     <string name="objectives_exam_learned_insulin">Å vite hvilken type insulin som er i pumpen er nødvendig for å beregne IOB korrekt.</string>
     <string name="objectives_exam_learned_sensitivity">Sensitivitetsdeteksjon er en del av algoritmen som gir mulighet for å tilpasse insulindoseringen til ulike situasjoner.</string>
@@ -70,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">Kun gram er tillatt for angivelse av karbohydrater.</string>
     <string name="objectives_exam_learned_ecarbs">E-karbohydrater er en erstatning for forlenget bolus i en pumpeverden.</string>
     <string name="objectives_exam_learned_nsclient">Fjernovervåking og kontroll er mulig, men ikke alle funksjoner må være tilgjengelig eksternt.</string>
+    <string name="objectives_exam_learned_concentration1">Ved bruk av U200 insulin med en profil 50 % vil det kreves permanent omregning: for ekstern bolus med penn, og alle standardrapporter fra AAPS eller NS vil bli feil og skal konverteres til IE for helseteam.</string>
+    <string name="objectives_exam_learned_concentration2">Ved å bytte fra U200 med en 50 %-profil til U200 med insulinkonsentrasjon-funksjonen må man lage en ny sterkere profil, deaktivere DynISF en uke og omstille seg for å tenke i Internasjonale Enheter.</string>
+    <string name="objectives_exam_learned_concentration3">Insulinkonsentrasjon kan kun endres når insulin eller plaster/Pod skiftes. Men viktigst, spesielt for slange-pumper, må man aldri bruker pumpens brukergrensesnitt til å levere bolus direkte fra pumpen.</string>
     <string name="answerdisabledto">Besvarelser deaktivert til: %1$s</string>
     <string name="wronganswer">Feil svar!</string>
     <string name="unfinshed_button">Neste ubesvarte</string>

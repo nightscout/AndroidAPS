@@ -102,8 +102,10 @@
     <string name="a11y_only_on_watch">endast på klockan</string>
     <string name="a11y_only_on_phone">endast på telefonen</string>
     <string name="a11y_drag_and_drop_handle">dra och släpp-handtag</string>
+    <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

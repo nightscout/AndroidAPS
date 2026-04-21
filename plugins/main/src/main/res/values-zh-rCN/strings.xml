@@ -9,35 +9,14 @@
     <string name="insulin_label">胰岛素</string>
     <string name="pb_label">泵电池</string>
     <string name="cannula">输注导管</string>
-    <string name="statuslights_cannula_age">导管年龄</string>
-    <string name="statuslights_patch_pump_age">patch 泵年龄</string>
     <string name="patch_pump">Patch 泵</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 小时</string>
-    <string name="graph_long_scale_12h">12 小时</string>
-    <string name="graph_long_scale_18h">18 小时</string>
-    <string name="graph_long_scale_24h">24 小时</string>
-    <string name="a11y_graph">绘图</string>
-    <string name="a11y_graph_scale">选择图形比例</string>
-    <string name="a11y_graph_scale_6h">图表时刻 6 小时</string>
-    <string name="a11y_graph_scale_12h">图表时刻 12 小时</string>
-    <string name="a11y_graph_scale_18h">图表时刻 18 小时</string>
-    <string name="a11y_graph_scale_24h">图表时刻 24 小时</string>
     <string name="a11y_insulin_label">胰岛素</string>
-    <string name="chart_menu">图表菜单</string>
     <string name="a11y_bg_quality">血糖质量</string>
     <string name="a11y_blood_glucose">血糖</string>
     <string name="a11y_bg_outdated">已过期</string>
-    <string name="set_basal_question">接受新的临时基础率</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">主页</string>
-    <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
     <string name="data_status">血糖数据状态</string>
-    <string name="run_question">运行 %s？</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">预测</string>
     <string name="overview_show_treatments">治疗</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">预测</string>
     <string name="basal_shortname">基础率</string>
     <string name="treatments_shortname">治疗</string>
-    <string name="graph_scale">图形缩放</string>
-    <string name="graph_menu_divider_header">绘图</string>
-    <string name="temp_basal_overview_short_name">T：</string>
     <string name="cannula_usage">用法：</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
     <string name="old_data">旧数据</string>
     <string name="overview_show_steps">步数</string>
-    <string name="simple_mode_enabled">简单模式已开启</string>
 </resources>

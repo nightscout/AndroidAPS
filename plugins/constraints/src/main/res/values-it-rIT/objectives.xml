@@ -70,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">Sono ammessi solo grammi per l\'inserimento di carboidrati.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs è un sostituto del bolo esteso nel mondo dei microinfusori.</string>
     <string name="objectives_exam_learned_nsclient">Monitoraggio e controllo remoto sono possibili, ma non tutte le funzionalità devono essere disponibili da remoto.</string>
+    <string name="objectives_exam_learned_concentration1">L\'uso di insulina U200 con un profilo 50% richiederà una conversione permanente: per boli esterni con penne, e tutti i rapporti standard forniti da AAPS o NS diventeranno sbagliati e dovranno essere convertiti in UI per il team sanitario.</string>
+    <string name="objectives_exam_learned_concentration2">Passando da U200 con un profilo 50% a U200 con la funzione di concentrazione di insulina sarà necessario creare un nuovo profilo più forte, disattivare DynISF una settimana e addestrare il cervello a pensare in Unità Internazionali.</string>
+    <string name="objectives_exam_learned_concentration3">La concentrazione di insulina può essere modificata solo quando viene modificata l’insulina o il cerotto. Ma soprattutto, soprattutto per i micro a tubo, non utilizzare mai l\'interfaccia utente del micro per erogare boli direttamente. </string>
     <string name="answerdisabledto">Risposta disabilitata fino a: %1$s</string>
     <string name="wronganswer">Risposta errata!</string>
     <string name="unfinshed_button">Prossimo N.C.</string>

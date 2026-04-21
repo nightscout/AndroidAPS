@@ -15,7 +15,7 @@
     <string name="cwf_comment_avg_delta_ext">Delta de glucosa promedio (15 min) (de AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_temp_target_ext">ObjTemp o ObjTempBajo - ObjTempAlto (de AAPS Client o AAPSClient2)</string>
     <string name="cwf_comment_reservoir_ext">Nivel del reservorio (de AAPSClient o AAPSClient2)</string>
-    <string name="cwf_comment_rig_battery_ext">Batería de Lazo global (%) (de AAPSClient o AAPSClient2)</string>
+    <string name="cwf_comment_rig_battery_ext">Batería de lazo global (%) (de AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Tasa basal (de AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">Valor BGI (de AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_status_ext">Síntesis de estado (desde AAPSClient o AAPSClient2)</string>

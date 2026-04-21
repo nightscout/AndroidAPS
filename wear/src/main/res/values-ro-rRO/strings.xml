@@ -77,6 +77,7 @@
     <string name="menu_ecarb">Carbohidrați extinși</string>
     <string name="menu_settings">Setări</string>
     <string name="menu_status">Stare</string>
+    <string name="menu_bg_graph">Grafic glicemie</string>
     <string name="menu_resync">Resincronizare</string>
     <string name="menu_prime_fill">Amorsare/Umplere</string>
     <string name="menu_none">Nimic</string>
@@ -198,6 +199,7 @@
     <string name="week_short">săpt</string>
     <string name="day_short">z</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">vechi</string>
@@ -221,6 +223,7 @@
     <string name="complication_full_status">Stare completă</string>
     <string name="complication_full_status_flipped">Stare completă (întoarsă)</string>
     <string name="complication_blood_glucose">Glicemie</string>
+    <string name="complication_blood_glucose_large">Glicemia (mare)</string>
     <string name="complication_blood_glucose_ext1">Glicemie Ext1</string>
     <string name="complication_blood_glucose_ext2">Glicemie Ext2</string>
     <string name="complication_br_cob_iob">RB, CoB &amp; IoB</string>
@@ -291,6 +294,7 @@
     <string name="loop_status_temp_target">Țintă temporară</string>
     <string name="loop_status_target_range">Interval</string>
     <string name="loop_status_target">Țintă</string>
+    <string name="loop_status_adjusted_target">Ținta ajustată</string>
     <string name="loop_status">Stare buclă</string>
     <string name="loop_status_refresh">Reîncărcați</string>
     <string name="confirm">Confirmați</string>

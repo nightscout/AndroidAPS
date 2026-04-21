@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch nie je aktivovaný</string>
     <string name="pump_setting_failed">Načítanie uživateľského nastavenia do pumpy zlyhalo!</string>
     <string name="pump_sync_error">Chyba pri synchronizácii histórie z pumpy, záznam bol preskočený. Skontrolujte zoznam ošetrení, či je bolus správne synchronizovaný. Potvrďte a pokiaľ sa znovu ukáže chyba, vymeňte patch, alebo základňu pumpy.</string>
+    <string name="patch_reset_after_primed_error">Po naplnení Patch bol zistený jeho reset! Odstráňte Patch a aktivujte nový.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Naposledy pripojené</string>
     <string name="active_bolus_label">Aktívny bolus</string>
@@ -95,7 +96,6 @@
     <string name="press_next_or_OK">Stlačte <b>OK</b> pre návrat na hlavnú obrazovku. Stlačte <b>Ďalšia</b> pre zahájenie aktivácie novej Patch.</string>
     <string name="activation_in_progress">Ups! Niečo sa pokazilo, zdá sa, že už prebieha aktivácia.</string>
     <string name="press_retry_or_discard">Stlačte <b>Ďalšia</b> pre obnovenie aktivácie alebo <b>Zahodiť</b> pre resetovanie stavu aktivácie.</string>
-    <string name="retry_activation_filled_error">Aktivácia nemôže pokračovať. Stav pumpy sa stratil. Neopakujte plnenie, keď už je Patch zavedený. Prosím zahoďte Patch a začnite novú aktiváciu.</string>
     <string name="reading_activation_status">Počkajte prosím, načítanie stavu aktivácie z Patch.</string>
     <!-- settings-->
     <string name="sn_input_title">Sériové číslo</string>

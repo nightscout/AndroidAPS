@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">L\'URL non è valido</string>
     <string name="error_mustbe4hexadidits">Devono essere 4 caratteri tra ABCDEF0123456789</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Trattamenti</string>
     <string name="treatments_desc">Visualizza e gestisci la cronologia dei trattamenti</string>
     <string name="nav_configuration">Configurazione</string>
@@ -808,10 +809,6 @@
     <string name="reauthorize">Ri-autenticazione</string>
     <string name="cloud_auth_success">Autenticazione archiviazione cloud riuscita</string>
     <string name="authorization_status">Stato Autorizzazione</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">decremento %1$s di %2$s</string>
-    <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>
-    <string name="you_are_on_allowed_limit">Limite consentito raggiunto</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ora evento</string>
@@ -904,14 +901,6 @@
     <string name="weekday_wednesday_short">Mer</string>
     <string name="weekday_tuesday_short">Mar</string>
     <string name="weekday_monday_short">Lun</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">L</string>
-    <string name="tuesday_short">Ma</string>
-    <string name="wednesday_short">Me</string>
-    <string name="thursday_short">G</string>
-    <string name="friday_short">V</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">D</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
@@ -1038,5 +1027,4 @@
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
     <string name="remove_items">Rimuovi elementi</string>
     <string name="sort_items">Ordina elementi</string>
-
 </resources>

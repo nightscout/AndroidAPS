@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Cкрыть панель навигации</string>
     <string name="authorizationfailed">Ошибка авторизации</string>
     <string name="identification_not_set">Идентификация не задана в режиме разработчика</string>
     <string name="select">Выбрать</string>

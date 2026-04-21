@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch chưa được kích hoạt</string>
     <string name="pump_setting_failed">Thiết lập cài đặt người dùng cho Bơm thất bại!</string>
     <string name="pump_sync_error">Lỗi khi đồng bộ lịch sử từ Bơm, một bản ghi đã bị bỏ qua. Kiểm tra tab Điều trị để xem bolus đã được đồng bộ chính xác chưa. Tạm bỏ qua, và nếu lỗi tiếp tục xuất hiện, hãy thay Patch hoặc PumpBase.</string>
+    <string name="patch_reset_after_primed_error">Phát hiện patch bị reset sau khi mồi! Hãy tháo patch và bắt đầu patch mới.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Kết nối trước</string>
     <string name="active_bolus_label">Đang tiêm Bolus</string>
@@ -95,7 +96,6 @@
     <string name="press_next_or_OK">Nhấn <b>ĐỒNG Ý</b> để quay về màn hình chính. Nhấn <b>Tiếp theo</b> để bắt đầu kích hoạt Patch mới.</string>
     <string name="activation_in_progress">Rất tiếc! Đã xảy ra lỗi, có vẻ như một quá trình kích hoạt khác đang diễn ra.</string>
     <string name="press_retry_or_discard">Nhấn <b>Tiếp theo</b> để tiếp tục kích hoạt hoặc <b>Bỏ qua</b> để đặt lại trạng thái kích hoạt.</string>
-    <string name="retry_activation_filled_error">Không thể tiếp tục kích hoạt. Trạng thái bơm đã bị mất. KHÔNG làm đầy lại, vì miếng dán có thể đã được gắn. Hãy bỏ miếng dán và bắt đầu kích hoạt mới.</string>
     <string name="reading_activation_status">Vui lòng chờ, đang đọc trạng thái kích hoạt từ Bơm.</string>
     <!-- settings-->
     <string name="sn_input_title">Số sê-ri</string>

@@ -196,4 +196,20 @@
     <string name="other_medication_label">Altri Farmaci. Leggi la seguente dichiarazione e, per proseguire, accettala selezionando la casella.</string>
     <string name="other_medication_text">AAPS riduce la velocità basale o sospende l\'erogazione di insulina per aumentare la glicemia. Farmaci appartenenti al gruppo degli inibitori SGLT2 (gliflozine) possono ostacolare l\'aumento della glicemia e, quindi, provocare una pericolosa carenza di insulina (DKA).
 \nI marchi più comuni sono: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nCon ciò prometto che non prenderò tali farmaci durante l\'uso di AAPS o disattiverò il loop prima di usare questi farmaci.</string>
+    <string name="concentration_feature_label">Gestione Delle Concentrazioni Di Insulina</string>
+    <string name="u200_with_profile">Prima che AAPS supportasse le concentrazioni di insulina, gli utenti che hanno usato la U200 hanno imppstato un profilo al 50% per dimezzare tutti i valori. In quella configurazione, quali risposte sono vere?</string>
+    <string name="u200_with_profile_reports">Il mio database interno AAPS e i rapporti NS diventano errati, tutti i valori (boli, tassi basale, TDD) dovrebbe essere moltiplicato per 2 per vedere lo stato reale soprattutto per i medici e il team sanitario.</string>
+    <string name="u200_with_profile_pens">Non devo gestire alcuna conversione tra AAPS e Pen, se uso una penna U200 per fornire un bolo esterno.</string>
+    <string name="u200_with_profile_pens2">Qualunque sia la penna utilizzata per erogare un bolo esterno (U100 o U200), Devo convertire tra AAPS l\'importo calcolato e l\'importo che seleziono sulla penna per ogni bolo esterno</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Hai usato il trucco del profilo al 50% con U200 e vuoi passare alla nuova funzione Concentrazione Insulina. Quali risposte sono vere?</string>
+    <string name="switch_u200_profile_any_time">Posso cambiare in qualsiasi momento, ho già l\'insulina U200 corretta all\'interno della pompa.</string>
+    <string name="switch_u200_profile_ps">Devo preparare un profilo due volte più aggressivo (200% rispetto al profilo predefinito attuale) e sincronizzare questo nuovo profilo dopo il prossimo cambio di Patch/Reservoir quando viene selezionata l\'insulina U200.</string>
+    <string name="switch_u200_profile_dynisf">Devo disabilitare la funzione di DynISF per almeno una settimana affinché il TDD sia perfettamente coerente con il valore effettivo di TDD calcolato in Unità Internazionali.</string>
+    <string name="switch_u200_profile_mental">Dopo aver cambiato, dovrò fare molta attenzione per diverse settimane, al fine di far abituare il mio cervello a pensare in unità internazionali per quanto riguarda boli, tassi basali e valori di TDD.</string>
+    <string name="switch_u100_u200">Attualmente si utilizza U100 e si prevede di passare ad un\'altra concentrazione utilizzando la nuova funzione di gestione della concentrazione. Cosa devo fare?</string>
+    <string name="switch_u100_u200_profile">Devo modificare il mio profilo.</string>
+    <string name="switch_u100_u200_tube">Non dovrei mai usare l\'interfaccia utente del micro (per micro a tubo) per fornire boli.</string>
+    <string name="switch_u100_u200_pen">Dopo aver cambiato ho ancora bisogno di gestire la conversione tra AAPS e boli esterni con Pen.</string>
+    <string name="switch_u100_u200_change">La concentrazione di insulina può essere commutata solo quando l\'insulina nel serbatoio viene cambiata o quando viene modificato un cerotto/pod.</string>
 </resources>

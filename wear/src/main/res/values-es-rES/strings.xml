@@ -32,7 +32,7 @@
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
     <string name="pref_show_temp_target">Mostrar Objetivo Temporal</string>
     <string name="pref_show_reservoir_level">Mostrar el nivel del reservorio</string>
-    <string name="pref_show_loop_status">Mostrar estado de bucle</string>
+    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
@@ -77,6 +77,7 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
+    <string name="menu_bg_graph">Gráfico de glucosa</string>
     <string name="menu_resync">Re-sincronizar</string>
     <string name="menu_prime_fill">Cebar/Llenar</string>
     <string name="menu_none">Ninguno</string>
@@ -193,11 +194,12 @@
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
-    <string name="snooze_alert">Posponer Alertas de AAPS</string>
+    <string name="snooze_alert">Silenciar alertas de AAPS</string>
     <string name="sending_snooze">Enviando aplazamientos a AAPS</string>
     <string name="week_short">s</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">antiguo</string>
@@ -228,6 +230,8 @@
     <string name="complication_br_cob_iob_ext2">Tasa Basal, CoB &amp; IoB Ext2</string>
     <string name="complication_br_iob">BR &amp; IOB</string>
     <string name="complication_br">Tasa basal</string>
+    <string name="complication_br_tt">Tasa basal y objetivo de glucosa</string>
+    <string name="complication_target">Objetivo</string>
     <string name="complication_cob_iob">COB &amp; IOB</string>
     <string name="complication_cob_icon">Icono COB</string>
     <string name="complication_cob_detailed">COB detallado</string>

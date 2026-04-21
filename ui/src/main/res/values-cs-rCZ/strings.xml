@@ -121,6 +121,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Pouze kladný IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">Režim „Táhni a pusť“</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Přidat eSacharidy</string>
     <string name="confirm_treatment">Potvrďte prosím záznam</string>
     <string name="recalculate">Přepočítat</string>
@@ -136,4 +137,5 @@
         <item>Pouze záporné</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

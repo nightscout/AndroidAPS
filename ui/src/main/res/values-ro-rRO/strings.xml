@@ -12,6 +12,8 @@
     <!--    Widget-->
     <string name="configure">Configurați opacitatea</string>
     <string name="widget_description">Widget AAPS</string>
+    <string name="widget_bg_graph_description">Grafic glicemie AAPS</string>
+    <string name="widget_compact_bg_description">AAPS Glicemie + IOB + COB (compact)</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor activitate</string>
     <string name="time_range">Interval de timp</string>
@@ -187,6 +189,10 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Doar IOB pozitiv</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
+    <!--    History browser-->
+    <string name="history_now">Acum</string>
+    <string name="a11y_history_previous_window">Fereastra anterioară</string>
+    <string name="a11y_history_next_window">Fereastra următoare</string>
     <string name="additional_ecarbs">Adaugă carbohidrați extinși</string>
     <string name="calculator_options">Opţiuni calculator</string>
     <string name="use_bg">Utilizați glicemia</string>
@@ -264,4 +270,9 @@
     <string name="loop_accept_nav_label">Buclă</string>
     <string name="loop_accept_set_basal_question">Acceptați noua bazală temporară:</string>
     <string name="loop_accept_perform">Efectuați</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">Suspendare la hipoglicemie</string>
+    <string name="widget_rm_disabled">Dezactivat</string>
+    <string name="widget_rm_suspended">Suspendat</string>
+    <string name="widget_rm_resume">Reluați</string>
 </resources>

@@ -77,6 +77,7 @@
     <string name="menu_ecarb">eSacharidy</string>
     <string name="menu_settings">Nastavenia</string>
     <string name="menu_status">Stav</string>
+    <string name="menu_bg_graph">Graf glykémie</string>
     <string name="menu_resync">Opätovne synchronizovať</string>
     <string name="menu_prime_fill">Plnenie/Doplňovanie</string>
     <string name="menu_none">Žiadny</string>
@@ -198,6 +199,7 @@
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s: %2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">starý</string>
@@ -228,6 +230,8 @@
     <string name="complication_br_cob_iob_ext2">Bazál, COB &amp; IOB Ext2</string>
     <string name="complication_br_iob">Bazál &amp; IOB</string>
     <string name="complication_br">Bazálna dávka</string>
+    <string name="complication_br_tt">Bazál &amp; Cieľ</string>
+    <string name="complication_target">Cieľ</string>
     <string name="complication_cob_iob">COB &amp; IOB</string>
     <string name="complication_cob_icon">Ikona COB</string>
     <string name="complication_cob_detailed">Detailný COB</string>

@@ -102,8 +102,10 @@
     <string name="a11y_only_on_watch">kun på ur</string>
     <string name="a11y_only_on_phone">kun på telefon</string>
     <string name="a11y_drag_and_drop_handle">træk og slip-håndtag</string>
+    <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

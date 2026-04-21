@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Tancar navegació</string>
     <string name="authorizationfailed">L\'autorització ha fallat</string>
     <string name="identification_not_set">Identificació no establerta al mode de desenvolupament</string>
 </resources>
