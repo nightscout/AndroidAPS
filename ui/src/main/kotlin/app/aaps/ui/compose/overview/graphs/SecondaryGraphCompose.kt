@@ -480,7 +480,7 @@ fun SecondaryGraphCompose(
                 gapLength = 2.dp
             ),
             areaFill = null,
-            pointConnector = Square
+            interpolator = Square
         )
     }
     val basalActualLine = remember(basalColor) {
@@ -488,7 +488,7 @@ fun SecondaryGraphCompose(
             fill = LineCartesianLayer.LineFill.single(Fill(basalColor)),
             stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.dp),
             areaFill = LineCartesianLayer.AreaFill.single(Fill(basalColor.copy(alpha = 0.3f))),
-            pointConnector = Square
+            interpolator = Square
         )
     }
     val basalLines = remember(basalActualLine, basalProfileLine) {
@@ -826,7 +826,7 @@ fun createSeriesLine(type: SeriesType, colors: SeriesColors): LineCartesianLayer
             areaFill = LineCartesianLayer.AreaFill.single(
                 Fill(Brush.verticalGradient(listOf(color.copy(alpha = 0.3f), Color.Transparent)))
             ),
-            pointConnector = Square
+            interpolator = Square
         )
         // Line only, no fill
         SeriesType.DEV_SLOPE, SeriesType.SENSITIVITY, SeriesType.VAR_SENSITIVITY -> LineCartesianLayer.Line(
@@ -893,7 +893,7 @@ fun rememberIobLineStyles(): IobLineStyles {
                 areaFill = LineCartesianLayer.AreaFill.single(
                     Fill(Brush.verticalGradient(listOf(iobColor.copy(alpha = 1f), Color.Transparent)))
                 ),
-                pointConnector = Square
+                interpolator = Square
             ),
             smallSmbLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
@@ -966,7 +966,7 @@ fun rememberCobLineStyles(): CobLineStyles {
                 areaFill = LineCartesianLayer.AreaFill.single(
                     Fill(Brush.verticalGradient(listOf(cobColor.copy(alpha = 1f), Color.Transparent)))
                 ),
-                pointConnector = AdaptiveStep
+                interpolator = AdaptiveStep
             ),
             failoverDotsLine = LineCartesianLayer.Line(
                 fill = LineCartesianLayer.LineFill.single(Fill(Color.Transparent)),
@@ -1031,7 +1031,7 @@ private fun createDeviationLine(type: DeviationType): LineCartesianLayer.Line {
         fill = LineCartesianLayer.LineFill.single(Fill(color)),
         stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 0.dp),
         areaFill = LineCartesianLayer.AreaFill.single(Fill(color.copy(alpha = 0.5f))),
-        pointConnector = Square
+        interpolator = Square
     )
 }
 

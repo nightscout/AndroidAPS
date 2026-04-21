@@ -381,7 +381,7 @@ fun BgGraphCompose(
                 gapLength = 2.dp
             ),
             areaFill = null,
-            pointConnector = Square
+            interpolator = Square
         )
     }
 
@@ -391,7 +391,7 @@ fun BgGraphCompose(
             fill = LineCartesianLayer.LineFill.single(Fill(basalColor)),
             stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.dp),
             areaFill = LineCartesianLayer.AreaFill.single(Fill(basalColor.copy(alpha = 0.3f))),
-            pointConnector = Square
+            interpolator = Square
         )
     }
 
@@ -408,7 +408,7 @@ fun BgGraphCompose(
             fill = LineCartesianLayer.LineFill.single(Fill(targetLineColor)),
             stroke = LineCartesianLayer.LineStroke.Continuous(thickness = 1.dp),
             areaFill = null,
-            pointConnector = Square
+            interpolator = Square
         )
     }
 
