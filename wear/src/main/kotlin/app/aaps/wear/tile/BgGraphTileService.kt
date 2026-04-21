@@ -221,7 +221,7 @@ class BgGraphTileService : TileService() {
                          else statusData.tempTarget
         val basalText = displayFormat.basalRateSymbol().trimEnd() + statusData.currentBasal.replaceFirst(" ", "")
 
-        val bgSizePx = 32 * density
+        val bgSizePx = 34 * density
         val smSizePx = 12 * density
         val combinedLen = "${statusData.iobSum}$insulinUnit".length + statusData.cob.length +
             basalText.length + targetText.length
@@ -247,7 +247,7 @@ class BgGraphTileService : TileService() {
             else -> secondaryArgb
         }
 
-        val spacerPx = 10 * density
+        val spacerPx = 16 * density
         val bgPaint = Paint().apply {
             color = bgArgb
             textSize = bgSizePx
@@ -268,19 +268,31 @@ class BgGraphTileService : TileService() {
             isAntiAlias = true
         }
 
-        val bgText = "${bgData.sgvString}${bgData.slopeArrow}\uFE0E"
-        val bgTextWidth = bgPaint.measureText(bgText)
+        val arrowSizePx = 26 * density
+        val arrowPaint = Paint().apply {
+            color = bgArgb
+            textSize = arrowSizePx
+            textAlign = Paint.Align.LEFT
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            isAntiAlias = true
+        }
+        val bgValueText = bgData.sgvString
+        val arrowText = "${bgData.slopeArrow}\uFE0E"
+        val valueWidth = bgPaint.measureText(bgValueText)
+        val arrowWidth = arrowPaint.measureText(arrowText)
+        val bgTextWidth = valueWidth + arrowWidth
         val gapPx = 6 * density
         val totalRowW = bgTextWidth + gapPx + smPaint.measureText(bgData.delta)
         val rowStartX = (widthPx - totalRowW) / 2f
         val bgBaseY = spacerPx + bgSizePx
 
-        canvas.drawText(bgText, rowStartX, bgBaseY, bgPaint)
-        canvas.drawText(bgData.delta, rowStartX + bgTextWidth + gapPx, bgBaseY - bgSizePx * 0.35f, smPaint)
-        canvas.drawText("${ageMin}$minUnit", rowStartX + bgTextWidth + gapPx, bgBaseY - bgSizePx * 0.35f + smSizePx * 1.9f, agePaint)
+        canvas.drawText(bgValueText, rowStartX, bgBaseY, bgPaint)
+        canvas.drawText(arrowText, rowStartX + valueWidth, bgBaseY - (bgSizePx - arrowSizePx) * 0.3f, arrowPaint)
+        canvas.drawText(bgData.delta, rowStartX + bgTextWidth + gapPx, bgBaseY - bgSizePx * 0.45f, smPaint)
+        canvas.drawText("${ageMin}$minUnit", rowStartX + bgTextWidth + gapPx, bgBaseY - bgSizePx * 0.45f + smSizePx * 1.5f, agePaint)
 
         val statsY = bgBaseY + smSizePx * 1.2f + 4 * density + statSizePx
-        val statGapPx = 14 * density
+        val statGapPx = 8 * density
         val statItems = listOf(
             "${statusData.iobSum}$insulinUnit" to iobArgb,
             statusData.cob                     to cobArgb,
