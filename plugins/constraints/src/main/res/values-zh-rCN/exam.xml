@@ -202,8 +202,6 @@
     <string name="u200_with_profile_pens">如果我使用 U200 笔进行外部大剂量注射，就无需在 AAPS 和笔之间进行任何换算。</string>
     <string name="u200_with_profile_pens2">无论使用哪种笔进行外部大剂量注射（U100 或 U200），每次注射时我都必须在 AAPS 计算的剂量和笔上选择的剂量之间进行换算</string>
     <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
-    <string name="switch_u200_profile">你一直在使用 50% 配置文件 的临时方案搭配 U200 胰岛素，现在想要切换到新的胰岛素浓度功能。
-以下哪些说法是正确的？</string>
     <string name="switch_u200_profile_any_time">可以随时切换，因为我的泵内已经装有正确的 U200 胰岛素。</string>
     <string name="switch_u200_profile_ps">我需要准备一份强度翻倍的配置方案（相较于当前默认配置的 200%），并在选择 U200 胰岛素后、下次更换贴片 / 储药器时同步这份新配置。</string>
     <string name="switch_u200_profile_dynisf">我必须禁用 DynISF 功能至少一周，才能让每日总胰岛素量（TDD）与以国际单位计算的实际 TDD 值完全一致。</string>
