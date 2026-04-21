@@ -3,6 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">简单模式</string>
     <string name="pref_title_insulin_concentration">胰岛素浓度支持</string>
+    <string name="pref_summary_insulin_concentration">启用对不同的胰岛素浓度支持（U50、U200等）</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">保持屏幕常亮</string>
     <string name="pref_summary_keep_screen_on">阻止 Android 系统关闭手机屏幕。这将非常耗电。</string>
