@@ -130,7 +130,7 @@ class BgGraphTileService : TileService() {
         val heightPx = resources.displayMetrics.heightPixels
         val bitmap = renderTileBitmap(data, widthPx, heightPx)
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         bitmap.recycle()
         val bytes = stream.toByteArray()
         cachedBytes.set(bytes)
@@ -235,7 +235,7 @@ class BgGraphTileService : TileService() {
             else -> secondaryArgb
         }
 
-        val spacerPx = 20 * density
+        val spacerPx = 10 * density
         val bgPaint = Paint().apply {
             color = bgArgb
             textSize = bgSizePx
@@ -264,23 +264,31 @@ class BgGraphTileService : TileService() {
         val bgBaseY = spacerPx + bgSizePx
 
         canvas.drawText(bgText, rowStartX, bgBaseY, bgPaint)
-        canvas.drawText(bgData.delta, rowStartX + bgTextWidth + gapPx, bgBaseY - smSizePx * 0.5f, smPaint)
-        canvas.drawText("${ageMin}$minUnit", rowStartX + bgTextWidth + gapPx, bgBaseY + smSizePx * 0.5f, agePaint)
+        canvas.drawText(bgData.delta, rowStartX + bgTextWidth + gapPx, bgBaseY - bgSizePx * 0.35f, smPaint)
+        canvas.drawText("${ageMin}$minUnit", rowStartX + bgTextWidth + gapPx, bgBaseY - bgSizePx * 0.35f + smSizePx * 1.9f, agePaint)
 
         val statsY = bgBaseY + smSizePx * 1.2f + 4 * density + statSizePx
-        val colW = widthPx.toFloat() / 4f
-        listOf(
+        val statGapPx = 14 * density
+        val statItems = listOf(
             "${statusData.iobSum}$insulinUnit" to iobArgb,
             statusData.cob                     to cobArgb,
             basalText                          to basalArgb,
             targetText                         to targetArgb
-        ).forEachIndexed { i, (text, color) ->
-            canvas.drawText(text, colW * i + colW / 2f, statsY, Paint().apply {
+        )
+        val statPaints = statItems.map { (_, color) ->
+            Paint().apply {
                 this.color = color
                 textSize = statSizePx
-                textAlign = Paint.Align.CENTER
+                textAlign = Paint.Align.LEFT
                 isAntiAlias = true
-            })
+            }
+        }
+        val statWidths = statItems.zip(statPaints).map { (item, paint) -> paint.measureText(item.first) }
+        val totalStatWidth = statWidths.sum() + statGapPx * (statItems.size - 1)
+        var statX = (widthPx - totalStatWidth) / 2f
+        statItems.zip(statPaints).forEachIndexed { i, (item, paint) ->
+            canvas.drawText(item.first, statX, statsY, paint)
+            statX += statWidths[i] + statGapPx
         }
 
         return (statsY + statSizePx * 0.5f + 6 * density).toInt()
