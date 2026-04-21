@@ -11,7 +11,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchRepository
 import app.aaps.pump.carelevo.domain.type.SafetyProgress
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -23,7 +23,7 @@ internal class CarelevoPatchSafetyCheckUseCaseTest {
     private val patchObserver: CarelevoPatchObserver = mock()
     private val patchRepository: CarelevoPatchRepository = mock()
     private val patchInfoRepository: CarelevoPatchInfoRepository = mock()
-    private val patchEvent = PublishSubject.create<PatchResultModel>()
+    private val patchEvent = ReplaySubject.create<PatchResultModel>()
 
     private val sut = CarelevoPatchSafetyCheckUseCase(
         patchObserver = patchObserver,
@@ -36,9 +36,7 @@ internal class CarelevoPatchSafetyCheckUseCaseTest {
         whenever(patchObserver.patchEvent).thenReturn(patchEvent)
         whenever(patchRepository.requestSafetyCheck()).thenAnswer {
             Thread {
-                Thread.sleep(200L)
                 patchEvent.onNext(SafetyCheckResultModel(SafetyCheckResult.REP_REQUEST, volume = 300, durationSeconds = 1))
-                Thread.sleep(300L)
                 patchEvent.onNext(SafetyCheckResultModel(SafetyCheckResult.SUCCESS, volume = 300, durationSeconds = 0))
             }.start()
             Single.just(RequestResult.Pending(true))
@@ -73,7 +71,6 @@ internal class CarelevoPatchSafetyCheckUseCaseTest {
 
     private fun emitAsync(event: PatchResultModel, delayMs: Long = 5L) {
         Thread {
-            Thread.sleep(delayMs)
             patchEvent.onNext(event)
         }.start()
     }

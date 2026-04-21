@@ -15,7 +15,7 @@ import app.aaps.pump.carelevo.domain.usecase.alarm.model.AlarmClearUseCaseReques
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
@@ -31,7 +31,7 @@ internal class AlarmClearRequestUseCaseTest {
     private val patchObserver: CarelevoPatchObserver = mock()
     private val patchRepository: CarelevoPatchRepository = mock()
     private val alarmRepository: CarelevoAlarmInfoRepository = mock()
-    private val patchEvent = PublishSubject.create<PatchResultModel>()
+    private val patchEvent = ReplaySubject.create<PatchResultModel>()
 
     private val sut = AlarmClearRequestUseCase(
         patchObserver = patchObserver,
@@ -146,7 +146,6 @@ internal class AlarmClearRequestUseCaseTest {
 
     private fun emitAsync(event: PatchResultModel, delayMs: Long = 5L) {
         Thread {
-            Thread.sleep(delayMs)
             patchEvent.onNext(event)
         }.start()
     }

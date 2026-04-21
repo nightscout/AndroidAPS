@@ -13,7 +13,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import app.aaps.pump.carelevo.domain.usecase.bolus.model.StartExtendBolusInfusionRequestModel
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -26,7 +26,7 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
     private val bolusRepository: CarelevoBolusRepository = mock()
     private val patchInfoRepository: CarelevoPatchInfoRepository = mock()
     private val infusionInfoRepository: CarelevoInfusionInfoRepository = mock()
-    private val bolusEvent = PublishSubject.create<PatchResultModel>()
+    private val bolusEvent = ReplaySubject.create<PatchResultModel>()
 
     private val sut = CarelevoStartExtendBolusInfusionUseCase(
         patchObserver,
@@ -53,7 +53,6 @@ internal class CarelevoStartExtendBolusInfusionUseCaseTest {
 
     private fun emitAsync(event: PatchResultModel) {
         Thread {
-            Thread.sleep(5)
             bolusEvent.onNext(event)
         }.start()
     }

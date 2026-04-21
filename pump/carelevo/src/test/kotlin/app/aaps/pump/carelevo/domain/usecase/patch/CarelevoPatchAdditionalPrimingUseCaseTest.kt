@@ -8,7 +8,7 @@ import app.aaps.pump.carelevo.domain.model.bt.PatchResultModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -18,7 +18,7 @@ internal class CarelevoPatchAdditionalPrimingUseCaseTest {
 
     private val patchRepository: CarelevoPatchRepository = mock()
     private val patchObserver: CarelevoPatchObserver = mock()
-    private val patchEvent = PublishSubject.create<PatchResultModel>()
+    private val patchEvent = ReplaySubject.create<PatchResultModel>()
 
     private val sut = CarelevoPatchAdditionalPrimingUseCase(
         patchRepository = patchRepository,
@@ -66,7 +66,6 @@ internal class CarelevoPatchAdditionalPrimingUseCaseTest {
 
     private fun emitAsync(event: PatchResultModel, delayMs: Long = 5L) {
         Thread {
-            Thread.sleep(delayMs)
             patchEvent.onNext(event)
         }.start()
     }

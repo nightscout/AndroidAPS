@@ -9,7 +9,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchRepository
 import app.aaps.pump.carelevo.domain.usecase.patch.model.CarelevoPatchTimeZoneRequestModel
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -20,7 +20,7 @@ internal class CarelevoPatchTimeZoneUpdateUseCaseTest {
 
     private val patchRepository: CarelevoPatchRepository = mock()
     private val patchObserver: CarelevoPatchObserver = mock()
-    private val patchEvent = PublishSubject.create<PatchResultModel>()
+    private val patchEvent = ReplaySubject.create<PatchResultModel>()
 
     private val sut = CarelevoPatchTimeZoneUpdateUseCase(
         patchRepository = patchRepository,
@@ -65,7 +65,6 @@ internal class CarelevoPatchTimeZoneUpdateUseCaseTest {
 
     private fun emitAsync(event: PatchResultModel, delayMs: Long = 5L) {
         Thread {
-            Thread.sleep(delayMs)
             patchEvent.onNext(event)
         }.start()
     }

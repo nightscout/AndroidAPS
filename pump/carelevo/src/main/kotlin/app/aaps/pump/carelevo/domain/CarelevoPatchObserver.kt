@@ -11,6 +11,7 @@ import app.aaps.pump.carelevo.domain.model.bt.createPatchResultModel
 import app.aaps.pump.carelevo.domain.repository.CarelevoBasalRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoBolusRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoPatchRepository
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -28,16 +29,16 @@ class CarelevoPatchObserver @Inject constructor(
     private val bleDisposable = CompositeDisposable()
 
     private val _patchEvent: PublishSubject<PatchResultModel> = PublishSubject.create()
-    internal val patchEvent get() = _patchEvent
+    internal val patchEvent: Observable<PatchResultModel> get() = _patchEvent
 
     private val _basalEvent: PublishSubject<PatchResultModel> = PublishSubject.create()
-    internal val basalEvent get() = _basalEvent
+    internal val basalEvent: Observable<PatchResultModel> get() = _basalEvent
 
     private val _bolusEvent: PublishSubject<PatchResultModel> = PublishSubject.create()
-    internal val bolusEvent get() = _bolusEvent
+    internal val bolusEvent: Observable<PatchResultModel> get() = _bolusEvent
 
     private val _patchResponseEvent: PublishSubject<PatchResultModel> = PublishSubject.create()
-    internal val patchResponseEvent get() = _patchResponseEvent
+    internal val patchResponseEvent: Observable<PatchResultModel> get() = _patchResponseEvent
 
     private var _isObserverWorking = false
     val isObserverWorking get() = _isObserverWorking

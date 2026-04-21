@@ -10,7 +10,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchRepository
 import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoPatchBuzzRequestModel
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -21,7 +21,7 @@ internal class CarelevoPatchBuzzModifyUseCaseTest {
 
     private val patchObserver: CarelevoPatchObserver = mock()
     private val patchRepository: CarelevoPatchRepository = mock()
-    private val patchEvent = PublishSubject.create<PatchResultModel>()
+    private val patchEvent = ReplaySubject.create<PatchResultModel>()
 
     private val sut = CarelevoPatchBuzzModifyUseCase(patchObserver, patchRepository)
 
@@ -45,7 +45,6 @@ internal class CarelevoPatchBuzzModifyUseCaseTest {
 
     private fun emitAsync(event: PatchResultModel) {
         Thread {
-            Thread.sleep(5)
             patchEvent.onNext(event)
         }.start()
     }

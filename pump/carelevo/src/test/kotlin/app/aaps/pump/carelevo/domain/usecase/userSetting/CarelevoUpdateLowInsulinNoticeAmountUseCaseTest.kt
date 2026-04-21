@@ -13,7 +13,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepositor
 import app.aaps.pump.carelevo.domain.usecase.userSetting.model.CarelevoUserSettingInfoRequestModel
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -27,7 +27,7 @@ internal class CarelevoUpdateLowInsulinNoticeAmountUseCaseTest {
     private val patchObserver: CarelevoPatchObserver = mock()
     private val patchRepository: CarelevoPatchRepository = mock()
     private val userSettingInfoRepository: CarelevoUserSettingInfoRepository = mock()
-    private val patchEvent = PublishSubject.create<PatchResultModel>()
+    private val patchEvent = ReplaySubject.create<PatchResultModel>()
 
     private val sut = CarelevoUpdateLowInsulinNoticeAmountUseCase(
         aapsLogger,
@@ -67,7 +67,6 @@ internal class CarelevoUpdateLowInsulinNoticeAmountUseCaseTest {
 
     private fun emitAsync(event: PatchResultModel) {
         Thread {
-            Thread.sleep(5)
             patchEvent.onNext(event)
         }.start()
     }

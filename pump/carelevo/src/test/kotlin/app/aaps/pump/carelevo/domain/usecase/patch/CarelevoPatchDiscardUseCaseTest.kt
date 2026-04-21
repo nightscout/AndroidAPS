@@ -12,7 +12,7 @@ import app.aaps.pump.carelevo.domain.repository.CarelevoPatchRepository
 import app.aaps.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -27,7 +27,7 @@ internal class CarelevoPatchDiscardUseCaseTest {
     private val patchInfoRepository: CarelevoPatchInfoRepository = mock()
     private val infusionInfoRepository: CarelevoInfusionInfoRepository = mock()
     private val userSettingInfoRepository: CarelevoUserSettingInfoRepository = mock()
-    private val patchEvent = PublishSubject.create<PatchResultModel>()
+    private val patchEvent = ReplaySubject.create<PatchResultModel>()
 
     private val sut = CarelevoPatchDiscardUseCase(
         patchObserver = patchObserver,
@@ -123,7 +123,6 @@ internal class CarelevoPatchDiscardUseCaseTest {
 
     private fun emitAsync(event: PatchResultModel, delayMs: Long = 5L) {
         Thread {
-            Thread.sleep(delayMs)
             patchEvent.onNext(event)
         }.start()
     }
