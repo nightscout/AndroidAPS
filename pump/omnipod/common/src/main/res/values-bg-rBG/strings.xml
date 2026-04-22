@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Заглушаване на аларми</string>
     <string name="omnipod_common_overview_pod_status">Статус на под</string>
     <string name="omnipod_common_overview_total_delivered">Общо доставени</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2fЕ</string>
     <string name="omnipod_common_overview_pod_unique_id">Уникален ID</string>
     <string name="omnipod_common_overview_lot_number">Партиден(ЛОТ) номер</string>
     <string name="omnipod_common_overview_pod_sequence_number">Пореден номер</string>
