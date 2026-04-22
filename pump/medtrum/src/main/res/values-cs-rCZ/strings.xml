@@ -20,7 +20,6 @@
     <string name="pump_state_label">Stav pumpy</string>
     <string name="active_alarms_label">Aktivní alarmy</string>
     <string name="basal_type_label">Typ bazálu</string>
-    <string name="basal_rate_label">Bazální dávka</string>
     <string name="pump_type_label">Typ pumpy</string>
     <string name="fw_version_label">Verze FW</string>
     <string name="patch_no_label">Č. patche</string>
@@ -76,12 +75,10 @@
     <string name="do_not_attach_to_body">Prozatím nepřipojujte Patch k tělu.</string>
     <string name="half_press_needle">Stiskněte tlačítko jehly do poloviny. Potom klepněte na <b>Další</b> pro spuštění plnění.</string>
     <string name="wait_for_priming">Počkejte prosím na dokončení plnění.</string>
-    <string name="priming_error">Nepodařilo se provést plnění, zkuste to znovu stisknutím tlačítka <b>Opakovat</b>.</string>
     <string name="press_next">Stiskněte <b>Další</b> pro pokračování.</string>
     <string name="press_next_to_start_activation">Stiskněte <b>Další</b> pro spuštění aktivace.</string>
     <string name="remove_safety_lock">Odstraňte bezpečnostní zámek. Připojte pumpu k tělu. Stiskněte tlačítko jehly.</string>
     <string name="activating_pump">Aktivace Pacthe a nastavení počátečního bazálu. Počkejte prosím.</string>
-    <string name="activating_error">Chyba při aktivaci, stiskněte <b>Opakovat</b> pro nový pokus.</string>
     <string name="activating_complete">Nový Patch aktivován. Zbývá %.2f jednotek.</string>
     <string name="can_export_settings">Můžete exportovat nastavení, abyste mohli později obnovit tuto relaci pumpy.</string>
     <string name="press_OK_to_return">Stiskněte <b>OK</b> pro návrat na hlavní obrazovku.</string>
