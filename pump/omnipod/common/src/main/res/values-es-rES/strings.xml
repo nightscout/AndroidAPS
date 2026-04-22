@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Silenciar alertas</string>
     <string name="omnipod_common_overview_pod_status">Estado del Pod</string>
     <string name="omnipod_common_overview_total_delivered">Total entregado</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">ID Único</string>
     <string name="omnipod_common_overview_lot_number">Número de Lote</string>
     <string name="omnipod_common_overview_pod_sequence_number">Número de secuencia</string>
@@ -50,7 +49,6 @@
     <string name="omnipod_common_overview_pod_active_alerts">Alertas de Pod activas</string>
     <string name="omnipod_common_overview_firmware_version">Versión de Firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Hora en el Pod</string>
-    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minutos)</string>
     <string name="omnipod_common_uncertain">inseguro</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Desactivar Pod</string>
