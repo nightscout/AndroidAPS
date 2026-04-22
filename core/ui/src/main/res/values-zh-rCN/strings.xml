@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_field_must_not_be_empty">此字段不能为空</string>
-    <string name="error_url_not_valid">网址无效</string>
     <string name="error_mustbe4hexadidits">必须是4位字符，在ABCDEF0123456789中选用</string>
     <!--    General-->
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">治疗</string>
     <string name="treatments_desc">查看和管理治疗记录</string>
     <string name="nav_configuration">配置</string>
@@ -21,7 +19,6 @@
     <string name="invalid_input">无效的输入数据</string>
     <string name="invalid_number">无效数字</string>
     <string name="constraint_applied">应用约束!</string>
-    <string name="tempbasals_iobtotal_label_string">总 IOB:</string>
     <string name="tt_label">临时目标</string>
     <string name="pump_unreachable">泵无法连接</string>
     <string name="insulin_unit_shortname">U</string>
@@ -33,7 +30,6 @@
     <string name="limiting_iob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
     <string name="loop_disabled">按约束条件禁用循环</string>
     <string name="event_type">事件类型</string>
-    <string name="reload">重新加载</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">保存</string>
@@ -88,16 +84,12 @@
     <string name="success">成功</string>
     <string name="advanced_settings_title">高级设置</string>
     <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
-    <string name="aps_mode_title">APS模式</string>
     <string name="extended_bolus">扩展大剂量(方波)</string>
     <string name="paused">已暂停</string>
     <string name="running">运行中</string>
-    <string name="open_menu">打开菜单</string>
-    <string name="close_menu">关闭菜单</string>
     <string name="tdd_total">胰岛素输注日总量</string>
     <string name="tdd_old_data">旧的数据</string>
     <string name="goingtodeliver">将要输注 %1$.2f U</string>
-    <string name="waitingforpump">正在等待泵</string>
     <string name="androidaps_start">AAPS 已启动</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d 克</string>
@@ -113,10 +105,8 @@
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">日期</string>
     <string name="units_label">单位</string>
-    <string name="insulin_name_label">胰岛素名称</string>
     <string name="insulin_nickname_label">胰岛素昵称</string>
     <string name="concentration_label">浓度</string>
-    <string name="format_concentration">U%1$.0f</string>
     <string name="peak_label">峰值</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC碳水系数</string>
@@ -130,7 +120,6 @@
     <string name="target_long_label">血糖目标</string>
     <string name="shortgram">克</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">蓝牙</string>
     <string name="virtualpump_resultok">确定</string>
     <string name="pump_time_updated">泵时间已经更新</string>
     <string name="exit">退出</string>
@@ -157,9 +146,6 @@
     <string name="waiting_for_pump">正在等待泵…</string>
     <string name="initialization_failed">初始化失败</string>
     <string name="notes_label">备注</string>
-    <string name="remove_button">删除</string>
-    <string name="add_new">新建</string>
-    <string name="addnew_above">在顶部新增</string>
     <string name="wrong_pump_data">数据来自不同的胰岛素泵，修改泵的驱动配置用来重置泵的状态。</string>
     <string name="bg_label">血糖</string>
     <string name="calibration">校准</string>
@@ -174,8 +160,6 @@
     <string name="notconfigured">未配置</string>
     <string name="loopsuspended">闭环暂停了</string>
     <string name="loop_suspended_by_dst">循环因夏令时DST而暂停</string>
-    <string name="trend_arrow">趋势箭头</string>
-    <string name="a11y_autosens_label">自动敏感度</string>
     <string name="required">要</string>
     <string name="a11y_arrow_double_down">迅速下降</string>
     <string name="a11y_arrow_single_down">下降</string>
@@ -190,22 +174,16 @@
     <string name="a11y_inrange">在范围内</string>
     <string name="a11y_low">低</string>
     <string name="average">平均</string>
-    <string name="tir_short">TIR</string>
     <string name="tir">在目标范围的时间</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="remove_label">移除</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="activate_insulin">启用胰岛素</string>
     <string name="reset">重置</string>
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
-    <string name="select_for_removal">选择要删除的</string>
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
     <string name="wear_wizard_settings">Wear 向导设置</string>
-    <string name="bg_trend_label">15分钟 趋势</string>
-    <string name="treatments_wizard_cob_label">碳水</string>
     <string name="bolus_iob_label">大剂量活性胰岛素IOB</string>
     <string name="treatments_wizard_basaliob_label">基础 IOB</string>
     <string name="invalid">无效</string>
@@ -231,14 +209,8 @@
     <string name="pump_suspend">暂停泵</string>
     <string name="pump_resume">恢复泵</string>
     <string name="mode_reverted">模式已恢复</string>
-    <string name="insulin_shortname">INS</string>
     <string name="select_insulin">选择胰岛素</string>
-    <string name="select_pump_insulin">选择泵胰岛素</string>
-    <string name="select_pen_insulin">选择胰岛素</string>
-    <string name="insulin_template">模板</string>
     <string name="dia">DIA</string>
-    <string name="peak">峰值</string>
-    <string name="concentration">浓度</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">临时基础率取消操作失败</string>
@@ -286,14 +258,11 @@
     <string name="current_insulin">当前已激活</string>
     <string name="change_insulin">更改</string>
     <string name="select_insulin_description">选择您要注入泵中的胰岛素。激活/启动后，将应用配置切换。</string>
-    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
-    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">已选择的胰岛素：%1$s</string>
     <string name="record_insulin_hint">如果使用笔注射胰岛素，请从下方选择正确的胰岛素类型。剂量始终以国际单位表示。</string>
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">无效的配置文件：%1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d 分钟</string>
     <!--    Translator-->
@@ -306,7 +275,6 @@
     <string name="careportal_question">问题</string>
     <string name="careportal_exercise">运动</string>
     <string name="careportal_announcement_message">公告: %1$s</string>
-    <string name="careportal_settings_export_message">设置导出： %1$s</string>
     <string name="careportal_note_message">备注： %1$s</string>
     <string name="careportal_question_message">问题 : %1$s</string>
     <string name="careportal_exercise_message">运动 : %1$s</string>
@@ -366,7 +334,6 @@
     <string name="glucosetype_finger">手指</string>
     <string name="glucosetype_sensor">传感器</string>
     <string name="manual">手动</string>
-    <string name="unknown">未知的</string>
     <string name="eatingsoon">很快吃饭</string>
     <string name="hypo">低</string>
     <string name="activity">活动</string>
@@ -378,9 +345,7 @@
     <string name="activation">激活</string>
     <string name="temp_target_management">临时目标</string>
     <string name="revert_to_defaults">恢复为默认值</string>
-    <string name="confirm_remove_preset">是否删除预设 %1$s ？</string>
     <string name="confirm_cancel_temp_target">取消活动的临时目标？</string>
-    <string name="add_new_preset">新增预设</string>
     <string name="loop">闭环</string>
     <string name="ns">NS</string>
     <string name="record">记录</string>
@@ -433,13 +398,6 @@
     <string name="bolus">大剂量</string>
     <string name="tdd_short">TDD</string>
     <string name="tdd">每日总剂量</string>
-    <string name="ratio">比值</string>
-    <string name="amount_days"># 天</string>
-    <string name="weight">权重</string>
-    <string name="warning_Message">如果使用大剂量来充盈排气的话，活性胰岛素的量显示的可能不准确</string>
-    <string name="olddata_Message">旧数据，请按 \"重新加载\"</string>
-    <string name="tbb">基础率总量</string>
-    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">时间检测</string>
     <!-- User Entry -->
@@ -513,7 +471,6 @@
     <string name="uel_stat_reset">统计重置</string>
     <string name="uel_delete_logs">删除日志</string>
     <string name="uel_delete_future_treatments">删除未来的治疗</string>
-    <string name="delete_future_treatments">删除未来的治疗</string>
     <string name="uel_export_settings">导出设置</string>
     <string name="uel_import_settings">导入设置</string>
     <string name="uel_select_directory">选择目录</string>
@@ -530,7 +487,6 @@
     <string name="uel_exit_aaps">退出 AAPS</string>
     <string name="uel_plugin_enabled">插件已启用</string>
     <string name="uel_plugin_disabled">插件已禁用</string>
-    <string name="uel_unknown">未知</string>
     <string name="ue_string">字符串</string>
     <string name="ue_source">来源</string>
     <string name="ue_utc_offset">时区偏移</string>
@@ -544,7 +500,6 @@
     <string name="uel_store_insulin">储存胰岛素</string>
     <string name="uel_change_insulin_concentration">改变胰岛素浓度</string>
     <string name="uel_insulin_removed">已移除胰岛素</string>
-    <string name="uel_other">其他</string>
     <string name="uel_running_mode">运行模式</string>
     <string name="uel_running_mode_removed">运行模式已删除</string>
     <string name="uel_running_mode_updarted">运行模式已更新</string>
@@ -575,7 +530,6 @@
     <string name="profile_name_contains_dot">一些配置文件名称包含点。\n NS不支持此功能。\n配置将不会上载到NS。</string>
     <string name="invalid_profile_not_accepted">不接受来自NS的无效配置文件%1$s</string>
     <string name="errors">错误</string>
-    <string name="view">查看</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">大剂量 %1$.2f U</string>
     <string name="carbs_g">碳水 %1$d 克</string>
@@ -589,8 +543,6 @@
     <string name="set_profile">设置配置文件</string>
     <string name="set_user_settings">用户设置参数</string>
     <string name="smb_bolus_u">SMB剂量 %1$.2f U</string>
-    <string name="start_pump">启动泵</string>
-    <string name="stop_pump">停止泵</string>
     <string name="temp_basal_absolute">临时基础率 %1$.2f U/h %2$d 分</string>
     <string name="temp_basal_percent">临时基础率 %1$d%% %2$d 分</string>
     <string name="insight_set_tbr_over_notification">设置临时基础率超过时通知</string>
@@ -606,9 +558,6 @@
     <string name="autosens_long">Autosens 自动敏感度值：%.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">算法中自动敏感度：%.0f%%</string>
-    <string name="algorithm_short">Alg: %.0f%%</string>
-    <string name="a11y_file">文件</string>
-    <string name="a11y_user">用户</string>
     <!-- Autotune -->
     <string name="autotune">自动调整</string>
     <string name="autotune_tune_days">调整天数</string>
@@ -645,12 +594,10 @@
     <string name="wizard_include_trend">包含趋势</string>
     <string name="wizard_include_iob">包含 IOB</string>
     <string name="wizard_include_cob">包含 COB</string>
-    <string name="wizard_advanced">高级</string>
     <string name="wizard_calculation">计算</string>
     <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
     <string name="carb_equal_zero_no_action">碳水化合物 = 0。未采取任何措施！</string>
     <string name="bolus_equal_zero_no_action">大剂量 = 0。未采取任何措施！</string>
-    <string name="wizard_no_insulin_required">不需要胰岛素！</string>
     <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
     <string name="wizard_no_active_profile">没有激活的个人配置文件！</string>
     <string name="wizard_no_cob">未知的活性碳水！血糖读取缺失或最近重新启动了应用程序？</string>
@@ -668,7 +615,6 @@
     <string name="wizard_explain_tt">临时目标：%1$s</string>
     <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
     <string name="wizard_pump_not_available">没有可用的泵！</string>
-    <string name="quickwizard">快速向导</string>
     <string name="quickwizard_managemnt">快速向导</string>
     <!--    Preferences-->
     <string name="child">儿童</string>
@@ -691,29 +637,22 @@
     <string name="tempbasal_label">临时基础率</string>
     <string name="extended_bolus_label">扩展大剂量(方波)</string>
     <string name="serial_number">序列号</string>
-    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">已断开连接</string>
     <string name="connecting">正在连接</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">单击连接到泵</string>
-    <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">每日单位数</string>
     <string name="max_daily_units">最大每日单位</string>
-    <string name="pump_icon">泵图标</string>
-    <string name="view_profile">查看配置文件</string>
     <string name="pump_history">泵历史记录</string>
-    <string name="stats">统计信息</string>
     <string name="pump_driver_change" comment="26 characters max for translation">泵驱动程序变更</string>
     <string name="device_changed" comment="26 characters max for translation">设备已更改</string>
     <string name="bolus_ok" comment="26 characters max for translation">大剂量完成</string>
     <string name="temp_basal_delivery_error">临时基础输注错误</string>
     <string name="ebstopsloop">在使用扩展大剂量(方波) 功能期间将停止闭环功能。你真的想要启用吗？</string>
-    <string name="not_set_short">未设置</string>
     <string name="pump_busy">胰岛素泵忙碌中</string>
     <string name="connection_error">泵连接错误</string>
     <string name="reading_pump_history">读取泵历史记录</string>
     <string name="password_cleared">密码已清除！</string>
     <string name="pairing">配对中</string>
-    <string name="initializing">正在初始化</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">警告</string>
     <string name="retry" comment="Button label to retry a failed operation">重试</string>
@@ -739,7 +678,6 @@
     <string name="no">否</string>
     <string name="close">关闭</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">请您输入主密码，该密码将用于解密导入的首选项配置。</string>
     <!-- <unattended_export> -->
     <string name="export_ok">OK</string>
     <string name="export_warning">警告</string>
@@ -765,18 +703,7 @@
     <string name="csv_export_failed">用户条目已导出！</string>
     <string name="logs_sent">日志已通过电子邮件发送</string>
     <string name="logs_send_failed">发送日志失败</string>
-    <string name="export_options">导出选项</string>
     <string name="cloud_directory">云目录</string>
-    <string name="export_settings_local">导出设置 (本地)</string>
-    <string name="export_settings_cloud">导出设置 (云)</string>
-    <string name="export_settings_both">导出设置 (本地+云)</string>
-    <string name="import_settings_local">导入设置 (本地)</string>
-    <string name="import_settings_cloud">导入设置 (云)</string>
-    <string name="import_settings_both">导入设置 (本地/云)</string>
-    <string name="send_logs_to_cloud">导出日志到云</string>
-    <string name="export_csv_to_cloud">导出用户条目到云(csv)</string>
-    <string name="export_csv_to_local">导出用户条目到本地 (csv)</string>
-    <string name="setup_cloud_directory_first">请先设置云目录以使用导出设置</string>
     <string name="cloud_token_expired_or_invalid">云存储授权已过期或无效。请重新授权。</string>
     <!-- Export destination chip labels -->
     <string name="chip_local">本地</string>
@@ -824,8 +751,6 @@
     <string name="ble_not_supported_or_not_paired">蓝牙低电量或设备未配对。</string>
     <string name="ble_not_enabled">蓝牙未启用</string>
     <string name="ble_permissions_missing">蓝牙权限未授予。请在应用程序设置中授予这些权限。</string>
-    <string name="location_not_found_title">未启用位置</string>
-    <string name="location_not_found_message">为了蓝牙能发现新的设备，手机定位功能必须启用， AAPS 不会追踪你的位置，你可以在配对成功后禁用定位。</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">插件选项</string>
     <!-- Navigation -->
@@ -835,7 +760,6 @@
     <string name="open_navigation">打开导航栏</string>
     <string name="nav_history_browser">历史浏览</string>
     <string name="nav_history_browser_desc">浏览历史数据和图表</string>
-    <string name="overview">首页概览</string>
     <string name="appearance">外观</string>
     <string name="manage">管理</string>
     <string name="localprofile">配置文件</string>
@@ -855,12 +779,10 @@
     <string name="add">添加</string>
     <string name="remove">删除</string>
     <string name="reorder">重新排序</string>
-    <string name="actions">手动操作</string>
     <string name="status">状态</string>
     <string name="pump_actions">泵动作</string>
     <string name="tempbasal_button">临时基础</string>
     <string name="extended_bolus_button">扩展大剂量(方波)</string>
-    <string name="tools">工具</string>
     <string name="device_maintenance">设备维护</string>
     <string name="from_label">从</string>
     <string name="to_label">到</string>
@@ -909,7 +831,6 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS 播放音频"</string>
     <!-- ProfileEditor -->
-    <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
     <string name="profile_name">配置文件名称：</string>
@@ -924,13 +845,8 @@
     <string name="remove_entry">移除项目</string>
     <string name="target_low_label">低</string>
     <string name="target_high_label">高</string>
-    <string name="select_profile">选择要编辑的配置文件</string>
-    <string name="a11y_add_new_profile">添加新配置文件</string>
-    <string name="a11y_clone_profile">克隆当前配置文件</string>
-    <string name="a11y_delete_current_profile">删除当前配置文件</string>
     <!--    Search-->
     <string name="search">搜索</string>
-    <string name="search_preferences">搜索首选项</string>
     <string name="clear">清除</string>
     <string name="search_category_categories">首选项类别</string>
     <string name="search_category_preferences">首选项设置</string>
@@ -950,9 +866,6 @@
     <string name="subcategory">子类别</string>
     <string name="portion">份量</string>
     <string name="unit_label">单位</string>
-    <string name="fat">脂肪</string>
-    <string name="protein">蛋白质</string>
-    <string name="energy">能量</string>
     <string name="undo">撤销</string>
     <string name="no_data">没有数据</string>
     <string name="manage_food_desc">管理食物数据库条目</string>
@@ -967,12 +880,10 @@
     <string name="maintenance">维护</string>
     <string name="description_maintenance">提供了几个维护功能 (例如日志发送、日志删除)。</string>
     <string name="log_files">日志文件</string>
-    <string name="send_all_logs">用电子邮件发送</string>
     <string name="delete_logs">删除日志</string>
     <string name="logs_deleted">已删除日志</string>
     <string name="aaps_directory">AAPS目录</string>
     <string name="import_setting">导入配置</string>
-    <string name="miscellaneous">其他</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">解密和审查</string>
     <string name="import_decrypt">解密</string>
@@ -984,19 +895,13 @@
     <string name="import_anyway_btn">仍然导入</string>
     <string name="import_restart_title">配置导入了</string>
     <string name="import_restart_message">设置已导入。应用程序需要重启。</string>
-    <string name="import_file_details">文件详细信息</string>
     <string name="import_source_local">本地</string>
     <string name="import_source_cloud">云</string>
     <string name="import_load_more">加载更多</string>
     <string name="import_no_files">找不到设置文件</string>
-    <string name="import_review_summary">导入概况</string>
     <string name="import_decrypt_ok">解密成功。准备导入。</string>
     <string name="import_decrypt_warn">解密成功，但有警告。</string>
     <string name="import_decrypt_error">解密成功，但无法导入。</string>
-    <string name="import_check_before">请在导入之前检查首选项：</string>
-    <string name="import_check_dangerous">不应导入首选项！</string>
-    <string name="import_check_cannot">无法导入首选项！</string>
-    <string name="import_explain_issues">说明导入问题\u2026</string>
     <string name="reset_aps_results">重置 APS 结果</string>
     <string name="database_cleanup">数据库清理</string>
     <string name="nav_resetdb">重置数据库</string>
@@ -1006,7 +911,6 @@
     <!-- Graph configuration -->
     <string name="graph_add">添加图表</string>
     <string name="graph_new">新图表</string>
-    <string name="graph_edit">编辑图表</string>
     <string name="graph_number">图表 %1$d</string>
     <string name="graph_bg">血糖图表</string>
     <string name="graph_height">图表高度 [dp]</string>
