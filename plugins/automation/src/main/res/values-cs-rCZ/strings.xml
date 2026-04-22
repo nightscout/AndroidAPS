@@ -73,7 +73,6 @@
     <string name="location_going_out">Když opustíte oblast s názvem</string>
     <string name="time_range">Časový rozsah</string>
     <string name="timerange_value">Čas je mezi %1$s a %2$s</string>
-    <string name="between">Mezi </string>
     <string name="add_short">PŘIDAT</string>
     <string name="temptargetcompared">Dočasný cíl %1$s</string>
     <string name="btdevicecompared">Připojení Bluetooth k zařízení %1$s %2$s</string>
@@ -114,8 +113,6 @@
     <string name="edit_short">EDIT</string>
     <string name="preconditions">Nutné podmínky:</string>
     <string name="user_action">Uživatelská akce</string>
-    <string name="remove_selected_items">Odstranit zvolené položky</string>
-    <string name="count_selected">Vybráno: %1$d</string>
     <string name="system_automation">Automatizace systému</string>
     <string name="run_automations">Spustit automatizace</string>
     <string name="add_automation">Přidat pravidlo</string>
