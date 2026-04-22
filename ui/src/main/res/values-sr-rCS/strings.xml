@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Primenjeno ograničenje bolusa</string>
     <string name="carbs_constraint_applied">Primenjeno ograničenje ugljenih hidrata</string>
     <string name="temp_target_short">TT</string>
     <!--    Widget-->
@@ -16,16 +15,9 @@
     <!-- Insulin Management -->
     <!-- LoopDialog -->
     <!-- WizardDialog -->
-    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="missing_carbs">Nedostaje %1$d g</string>
-    <string name="carb_time_label">Vreme ugljenih hidrata</string>
     <!-- Treatments -->
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Ugljeni hidrati:</string>
-    <string name="tempbasals_netratio_label_string">Odnos:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Korekcija</string>
-    <string name="meal_bolus">Obrok</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
     <!--QuickWizard-->
