@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop inaktiverad</string>
-    <string name="calculator_label">Kalkylator</string>
     <string name="nav_history_browser">Historikläsare</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">ålder:</string>
-    <string name="level_label">nivå:</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpbatteri</string>
     <string name="cannula">Kanyl</string>
     <string name="patch_pump">Slanglös pump</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulin</string>
-    <string name="a11y_bg_quality">Kvalitet på BG-data</string>
-    <string name="a11y_blood_glucose">blodglukos</string>
-    <string name="a11y_bg_outdated">föråldrad</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">BG datastatus</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">BG-prognos</string>
-    <string name="overview_show_treatments">Behandlingar</string>
-    <string name="overview_show_heartRate">Hjärtfrekvens</string>
-    <string name="overview_show_deviation_slope">Avvikelsekurva</string>
-    <string name="overview_show_activity">Insulinaktivitet (5m)</string>
-    <string name="overview_show_bgi">Blodglukospåverkan</string>
-    <string name="overview_show_deviations">Avvikelser (Dev)</string>
-    <string name="overview_show_cob">Aktiva KH (COB)</string>
-    <string name="overview_show_iob">Aktivt insulin (IOB)</string>
-    <string name="overview_show_basals">Basaler</string>
-    <string name="overview_show_abs_insulin">Absolut insulinmängd</string>
-    <string name="prediction_shortname">Prog</string>
     <string name="basal_shortname">Bas</string>
-    <string name="treatments_shortname">Beh</string>
-    <string name="cannula_usage">användning:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
