@@ -175,6 +175,7 @@
     <string name="a11y_low">lavt</string>
     <string name="average">Gjennomsnitt</string>
     <string name="tir">Tid i målområde</string>
+    <string name="remove_label">Fjern</string>
     <string name="activate_profile">Aktiver profil</string>
     <string name="activate_insulin">Aktiver insulin</string>
     <string name="reset">Tilbakestill</string>
@@ -334,6 +335,7 @@
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
+    <string name="unknown">Ukjent</string>
     <string name="eatingsoon">Spise snart</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivitet</string>
@@ -543,6 +545,8 @@
     <string name="set_profile">SETT PROFIL</string>
     <string name="set_user_settings">SETT BRUKERINNSTILLINGER</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f E</string>
+    <string name="start_pump">Start pumpen</string>
+    <string name="stop_pump">Stopp pumpen</string>
     <string name="temp_basal_absolute">MIDL. BASAL %1$.2f E/t %2$d min</string>
     <string name="temp_basal_percent">MIDL. BASAL %1$d E/t %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFIKASJON</string>
@@ -598,6 +602,7 @@
     <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
     <string name="carb_equal_zero_no_action">Karbo = 0. Ingen handling utført!</string>
     <string name="bolus_equal_zero_no_action">Bolus = 0. Ingen handling utført!</string>
+    <string name="wizard_no_insulin_required">Insulin er ikke nødvendig</string>
     <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
     <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
     <string name="wizard_no_cob">Ukjent COB! BS-verdier mangler eller nylig oppstart av appen?</string>
@@ -653,6 +658,7 @@
     <string name="reading_pump_history">Leser pumpehistorikk</string>
     <string name="password_cleared">Passordet er fjernet!</string>
     <string name="pairing">Sammenkobler</string>
+    <string name="initializing">Initialiserer…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Advarsel</string>
     <string name="retry" comment="Button label to retry a failed operation">Prøv på nytt</string>
