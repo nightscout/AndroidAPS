@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">循環已停用</string>
-    <string name="calculator_label">計算機</string>
     <string name="nav_history_browser">歷史瀏覽器</string>
     <string name="sensor_label">傳感器</string>
-    <string name="age_label">時間：</string>
-    <string name="level_label">容量：</string>
     <string name="insulin_label">胰島素</string>
     <string name="pb_label">幫浦電池</string>
     <string name="cannula">套管</string>
     <string name="patch_pump">貼片幫浦</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">胰島素</string>
-    <string name="a11y_bg_quality">血糖質量</string>
-    <string name="a11y_blood_glucose">血糖</string>
-    <string name="a11y_bg_outdated">過期</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">血糖資料狀態</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">預測</string>
-    <string name="overview_show_treatments">治療</string>
-    <string name="overview_show_heartRate">心率</string>
-    <string name="overview_show_deviation_slope">偏差斜率</string>
-    <string name="overview_show_activity">活動</string>
-    <string name="overview_show_bgi">血糖變化率</string>
-    <string name="overview_show_sensitivity">敏感度變化</string>
-    <string name="overview_show_deviations">偏差</string>
-    <string name="overview_show_cob">碳水化合物</string>
-    <string name="overview_show_iob">胰島素</string>
-    <string name="overview_show_basals">基礎速率</string>
-    <string name="overview_show_abs_insulin">絕對胰島素</string>
-    <string name="overview_show_variable_sens">可變敏感度</string>
-    <string name="prediction_shortname">預測</string>
     <string name="basal_shortname">基礎</string>
-    <string name="treatments_shortname">治療</string>
-    <string name="cannula_usage">使用量：</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">顯示持續通知，簡要概述您的循環正在執行的操作</string>
     <string name="old_data">舊資料</string>
-    <string name="overview_show_steps">步數</string>
 </resources>
