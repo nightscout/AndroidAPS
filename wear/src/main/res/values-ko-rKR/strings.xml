@@ -3,9 +3,6 @@
     <string name="label_watchface_circle">AAPS(원형)</string>
     <string name="label_watchface_digital_style">AAPS(디지털방식)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
-    <string name="label_actions_tile">AAPS(Actions)</string>
-    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="msg_warning_sync">%1$s 이후 받은 데이터가 없습니다! 폰에서 AAPS가 워치로 데이터를 보냈는지 확인하세요</string>
     <string name="msg_warning_old">AAPS 데이터가 %1$s 오래되었습니다! 센서, xDrip+, NS, AAPS 설정 또는 기타사항을 확인하세요!</string>
     <string name="pref_vibrate_on_bolus">Bolus 주입시 진동</string>
