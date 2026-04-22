@@ -46,7 +46,6 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo-Scan-Timeout erreicht</string>
     <string name="combov2_pairing_failed_due_to_error">Pairing fehlgeschlagen wegen Fehler: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Kopplung wurde aus unbekannten Gründen abgebrochen</string>
-    <string name="combov2_pairing_invalid_pin_length">"Ungültige PIN-Länge: Benötigt %1$d Ziffern, hat %2$d"</string>
     <string name="combov2_scanning_for_pump">Suche nach Pumpe</string>
     <string name="combov2_establishing_bt_connection">Bluetooth-Verbindung herstellen (Versuch Nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Führe Handshake mit Pumpe aus</string>
@@ -66,7 +65,6 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_setting_basal_profile_cmddesc">BR-Profil wird aktualisiert.</string>
     <string name="combov2_setting_tbr_cmddesc">Setze %1$d%% TBR für %2$d Minuten</string>
     <string name="combov2_cancelling_tbr">Laufende TBR abbrechen</string>
-    <string name="combov2_delivering_bolus_cmddesc">Gebe %1$.1f IE Bolus ab</string>
     <string name="combov2_fetching_tdd_history_cmddesc">TDD-Verlauf wird abgerufen</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aktualisiere Pumpenzeit und -datum</string>
     <string name="combov2_updating_pump_status_cmddesc">Pumpenstatus wird aktualisiert</string>
