@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Áp dụng giới hạn liều bolus</string>
     <string name="carbs_constraint_applied">Giới hạn Carbs đã bật</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Bắt đầu hoạt động thể lực (TT)</string>
     <string name="start_eating_soon_tt">Sắp ăn (TT)</string>
     <string name="start_hypo_tt">Bắt đầu hạ đường huyết (TT)</string>
     <string name="time_offset">Lệch thời gian</string>
-    <string name="remind_to_bolus_later">Nhắc tiêm bolus sau</string>
-    <string name="a11y_carb_reminder">Đặt nhắc nhở giờ ăn carbs</string>
     <!--    Widget-->
     <string name="configure">Cấu hình độ trong suốt</string>
     <string name="widget_description">AAPS widget</string>
@@ -35,8 +32,6 @@
     <string name="do_you_want_reset_stats">Bạn có muốn đặt lại thống kê hoạt động không?</string>
     <string name="do_you_want_recalculate_tdd_stats">Bạn có muốn tính toán lại thống kê TDD không?</string>
     <string name="calculation_in_progress">Đang tiến hành tính toán</string>
-    <string name="invalid_age">Tuổi không hợp lệ</string>
-    <string name="invalid_weight">Cân nặng không hợp lệ</string>
     <string name="age">Đã dùng</string>
     <string name="weight_label">Cân nặng</string>
     <string name="glucose_type">Loại đường huyết</string>
@@ -44,13 +39,7 @@
     <string name="bg_meter">Máy đo</string>
     <string name="bg_sensor">Cảm biến</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Tổng</string>
     <!-- SiteRotationDialog -->
-    <string name="site_front">Phía trước</string>
-    <string name="site_back">Quay lại</string>
     <string name="site_man">Nam</string>
     <string name="site_woman">Nữ</string>
     <string name="site_child">Trẻ em</string>
@@ -58,14 +47,12 @@
     <string name="user_profile_description">Mô tả Hồ sơ người dùng được dùng để hiển thị các vị trí tiêm phổ biến nhất đối với nam, nữ hoặc trẻ em</string>
     <string name="site_management">Hồ sơ quản lý vị trí tiêm</string>
     <string name="site_management_description">Tại đây bạn có thể chọn quản lý vị trí tiêm, vị trí cảm biến CGM hoặc cả hai. Thiết lập này sẽ được dùng để tự động hiển thị hộp thoại quản lý vị trí mỗi khi phát hiện mục nhập mới</string>
-    <string name="record_site_change">Ghi lại vị trí tiêm/cảm biến</string>
     <string name="update_site_change">Cập nhật vị trí</string>
     <string name="edit_site">Chỉnh sửa</string>
     <string name="record_site_location">Vị trí: %1$s</string>
     <string name="record_site_arrow">Hướng vị trí: %1$s</string>
     <string name="record_site_note">Ghi chú: %1$s</string>
     <string name="delete_site_note">Đã xóa ghi chú</string>
-    <string name="site_filter_info">Chọn loại sự kiện: Thay Cannula / Thay Sensor</string>
     <!-- FillDialog -->
     <string name="fill_warning">Hãy chắc chắn rằng liều lượng phù hợp với thông số của bộ dây truyền!</string>
     <string name="record_pump_site_change">Ghi lại việc thay vị trí tiêm</string>
@@ -73,16 +60,12 @@
     <string name="fill_prime_amount">Lượng insulin mồi</string>
     <string name="fill_pump_units_note">Lượng insulin mồi tính theo đơn vị của bơm</string>
     <string name="fill_insulin_change">Chuyển insulin sang: %1$s (sẽ áp dụng chuyển hồ sơ)</string>
-    <string name="fill_current_insulin">Insulin hiện tại</string>
-    <string name="fill_change_insulin">Thay đổi Insulin</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Không bolus, chỉ lưu lại</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Thiếu tên insulin</string>
     <string name="insulin_name_exists">Tên insulin %1$s đã tồn tại, vui lòng chọn tên khác</string>
     <string name="a11y_add_new_insulin">Thêm insulin mới</string>
     <string name="a11y_delete_current_insulin">Xoa insulin hiện tại</string>
-    <string name="save_or_reset_changes_first">Lưu hoặc đặt lại thay đổi trước</string>
     <string name="activate_insulin_no_profile">Không tìm thấy hồ sơ hoạt động</string>
     <string name="activate_insulin_new_insulin">Insulin mới: %1$s</string>
     <string name="activate_insulin_remaining">Còn lại: %1$d phút</string>
@@ -113,45 +96,25 @@
     <string name="duration3h">3 giờ</string>
     <string name="duration10h">10 giờ</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">kết quả đúng với %</string>
-    <string name="a11_correction_units">kết quả đúng với đơn vị</string>
-    <string name="two_hours">2 giờ</string>
-    <string name="result_insulin_carbs">Kết quả: %1$s %2$s</string>
     <string name="missing_carbs">Còn thiếu %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% carbs ngay, không kéo dài</string>
     <string name="wizard_carbs_type_desc">Giảm %1$d%% carbs, thêm %2$d%% eCarbs, trễ %3$d phút, trong %4$dh</string>
     <string name="wizard_include_info">Chạm để tính hoặc bỏ không tính toán:\n• BG — đường huyết (mặc định bật)\n• TT — mục tiêu tạm thời (mặc định bật)\n• Trend — xu hướng BG (ghi nhớ lần trước)\n• IOB — insulin đang hoạt động (mặc định bật)\n• COB — carbs đang hoạt động (ghi nhớ lần trước)</string>
-    <string name="wizard_bg_age">BG %1$d phút</string>
-    <string name="a11y_current_bg">đường huyết hiện tại</string>
-    <string name="carb_time_label">Carb time</string>
-    <string name="a11y_set_carb_timer">đặt nhắc nhở carb</string>
-    <string name="show_calculation">Hiển thị tính toán</string>
     <!-- Treatments -->
     <string name="no_records_available">Không có bản ghi nào</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Carbs:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Hiệu chỉnh</string>
-    <string name="meal_bolus">Bữa ăn</string>
-    <string name="prime">Mồi bơm</string>
     <string name="carbs_and_bolus">Carb và liều bolus</string>
     <string name="show_invalidated">Hiện các bản ghi không hợp lệ</string>
     <string name="hide_invalidated">Ẩn các bản ghi không hợp lệ</string>
     <string name="careportal_remove_started_events">Xóa các bản ghi đã bắt đầu bởi AAPS</string>
-    <string name="hide_loop">Ẩn vòng lặp</string>
-    <string name="show_loop">Hiển thị vòng lặp</string>
     <string name="user_entry">Nhập liệu người dùng</string>
     <string name="clone_label">Nhân bản</string>
     <string name="add_new_profile">Thêm Hồ sơ mới</string>
-    <string name="show_profile">Hiển thị hồ sơ</string>
     <string name="edit_label">Sửa</string>
-    <string name="edit_profile">Sửa hồ sơ</string>
     <string name="activate_label">Kích hoạt</string>
     <string name="activate_profile">Kích hoạt Hồ sơ</string>
     <string name="remove_label">Loại bỏ</string>
     <string name="active_profile_indicator">ACTIVE</string>
-    <string name="remaining_time_label">Còn lại</string>
     <string name="confirm_remove_profile">Xóa hồ sơ \"%1$s\"?</string>
     <string name="confirm_clone_profile">Nhân bản hồ sơ \"%1$s\"?</string>
     <string name="tbr_type_flag_extended">E</string>
@@ -176,19 +139,14 @@
     <string name="format_with_tdd_and_pct">Age: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Age: %1$d Weight: %2$.0f kg</string>
     <string name="dpv_default_profile">Hồ sơ mặc định DPV</string>
-    <string name="invalid_pct">Giá trị % không hợp lệ</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Tỷ lệ liều nền</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">chỉ trên đồng hồ</string>
-    <string name="a11y_only_on_phone">chỉ trên điện thoại</string>
     <string name="overview_edit_quickwizard_button_text">Button text</string>
     <string name="quick_wizard_mode_wizard">Wizard</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Carbs</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB > 0</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="a11y_drag_and_drop_handle">nút kéo–thả</string>
     <!--    History browser-->
     <string name="history_now">Hiện tại</string>
     <string name="a11y_history_previous_window">Cửa sổ trước</string>
@@ -246,7 +204,6 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">Hành động đã chọn</string>
-    <string name="quick_launch_available_actions">Các hành động có sẵn</string>
     <string name="quick_launch_no_dynamic_items">Không mục nào sẵn có</string>
     <string name="quick_launch_category_treatment">Điều trị</string>
     <string name="quick_launch_category_care">Care Portal</string>
@@ -260,10 +217,7 @@
     <string name="quick_launch_no_tt_presets">Thêm cài đặt sẵn Mục tiêu Tạm thời để sử dụng tại đây</string>
     <string name="quick_launch_no_profiles">Tạo hồ sơ trong Hồ sơ Cục bộ để dùng ở đây</string>
     <string name="quick_launch_edit_profile_preset">Sửa Hồ sơ Cài đặt sẵn</string>
-    <string name="quick_launch_profile_percentage">Phần trăm</string>
-    <string name="quick_launch_profile_duration">Thời lượng</string>
     <string name="quick_launch_profile_permanent">Vĩnh viễn</string>
-    <string name="quick_launch_profile_confirm">Kích hoạt hồ sơ %1$s?</string>
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d phút</string>
     <string name="select_arrow">Chọn Mũi tên</string>
