@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Hurtigknapp)</string>
     <string name="label_user_action_tile">AAPS(Brukerhandling)</string>
-    <string name="label_warning_sync">Ingen data!</string>
-    <string name="label_warning_old">Gamle data!</string>
-    <string name="label_warning_since">Siden %1$s</string>
-    <string name="label_warning_sync_aaps">Synk med AAPS!</string>
     <string name="msg_warning_sync">Ingen data mottatt siden %1$s. Sjekk om AAPS på telefonen sender data</string>
     <string name="msg_warning_old">AAPS-data er %1$s gamle! Sjekk din sensor, xDrip+, NS, AAPS konfigurasjon eller annet!</string>
     <string name="pref_vibrate_on_bolus">Vibrer ved bolus</string>
@@ -83,8 +79,6 @@
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Meny</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Varighet [min]</string>
     <string name="action_tempt_confirmation">Midlertidig mål forespurt</string>
     <string name="action_quick_wizard_confirmation">Hurtigknapp forespurt</string>
     <string name="action_user_action_confirmation">Brukerhandling forespurt</string>
@@ -102,8 +96,6 @@
     <string name="action_ecarbs">eKarbo</string>
     <string name="action_percentage">Prosent\n[%]</string>
     <string name="action_start_minutes">Start\n[minutter]</string>
-    <string name="action_start_minutes_format">%1$d min</string>
-    <string name="action_duration_h">Varighet [t]</string>
     <string name="action_duration_hours">Varighet\n[timer]</string>
     <string name="action_duration_hours_format">%1$d t</string>
     <string name="action_duration_hours_minutes_format">%1$d t %2$d min</string>
@@ -152,7 +144,6 @@
     <string name="color_name_gray">grå</string>
     <string name="color_name_bluegray">blågrå</string>
     <string name="color_name_white">hvit</string>
-    <string name="color_name_black">svart</string>
     <string name="color_name_multicolor">flerfarget</string>
     <string name="pref_simplify_ui">Forenkle brukergrensesnittet</string>
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
@@ -185,8 +176,6 @@
     <string name="tile_no_config">Ingen konfigurasjon tilgjengelig</string>
     <string name="wear_control_not_enabled">Wear kontroller deaktivert</string>
     <string name="wear_control_no_data">Ingen data tilgjengelig</string>
-    <string name="increment">økning</string>
-    <string name="decrement">reduksjon</string>
     <string name="abbreviation_average">snitt</string>
     <string name="no_iob_u">--E</string>
     <string name="no_cob_g">--g</string>
@@ -202,8 +191,6 @@
     <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">gammel</string>
-    <string name="old_warning">!gammel!</string>
     <string name="error">Feil</string>
     <string name="pref_heartRateSampling">Puls</string>
     <string name="pref_heartRateSmoothing">Pulsutjevning</string>
@@ -260,7 +247,6 @@
     <string name="wizard_insulin_format">%1$s E</string>
     <string name="insulin_unit_short">E</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">Trykk for å vise beregningsdetaljene</string>
     <string name="wizard_confirmation_sent">Sendt</string>
     <string name="tile_settings">Flisinnstillinger</string>
     <string name="loop_status_error">Kunne ikke laste inn loopstatus</string>
