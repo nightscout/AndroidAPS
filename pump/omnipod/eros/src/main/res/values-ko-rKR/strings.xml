@@ -41,7 +41,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Pod에서 임시 basal이 작동하고 있으나, AAPS는 이 임시 basal을 인식하지 못하고 있습니다. 임시 basal을 수동으로 취소하십시오.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink 통계</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Pulse Log 확인</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulse 로그</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulse 로그 (클립보드에 복사됨)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
