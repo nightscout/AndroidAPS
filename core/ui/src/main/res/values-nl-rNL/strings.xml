@@ -6,7 +6,6 @@
     <string name="profile_set_ok">Basaal profiel in pomp bijgewerkt</string>
     <string name="invalid_input">Verkeerde ingave</string>
     <string name="constraint_applied">Beperking toegepast!</string>
-    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pomp niet beschikbaar</string>
     <string name="insulin_unit_shortname">E</string>
@@ -17,7 +16,6 @@
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
     <string name="loop_disabled">LOOP UITGESCHAKELD DOOR BEPERKINGEN</string>
     <string name="event_type">Gebeurtenis type</string>
-    <string name="reload">Vernieuw</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Opslaan</string>
@@ -44,13 +42,11 @@
     <string name="success">Succes</string>
     <string name="advanced_settings_title">Geavanceerde instellingen</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
-    <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Vertraagde bolus</string>
     <string name="paused">Gepauzeerd</string>
     <string name="tdd_total">TDD Totaal</string>
     <string name="tdd_old_data">Oude gegevens</string>
     <string name="goingtodeliver">%1$.2f E toedienen</string>
-    <string name="waitingforpump">Wacht op pomp</string>
     <string name="androidaps_start">AAPS gestart</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
@@ -77,7 +73,6 @@
     <string name="target_long_label">Bloedglucose doelwaarde</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pomp tijd bijgewerkt</string>
     <string name="exit">Afsluiten</string>
@@ -102,9 +97,6 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Laden…</string>
     <string name="notes_label">Notities</string>
-    <string name="remove_button">Verwijder</string>
-    <string name="add_new">Nieuwe toevoegen</string>
-    <string name="addnew_above">Voeg nieuw hierboven toe</string>
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibratie</string>
@@ -117,8 +109,6 @@
     <string name="notconfigured">Niet ingesteld</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="loop_suspended_by_dst">Loop onderbroken voor zomer/wintertijd (DST)</string>
-    <string name="trend_arrow">Trendpijl</string>
-    <string name="a11y_autosens_label">Autosens</string>
     <string name="required">nodig</string>
     <string name="a11y_arrow_double_down">snel dalend</string>
     <string name="a11y_arrow_single_down">dalend</string>
@@ -133,17 +123,12 @@
     <string name="a11y_inrange">binnen bereik</string>
     <string name="a11y_low">laag</string>
     <string name="average">Gemiddelde</string>
-    <string name="none"><![CDATA[<geen>]]></string>
-    <string name="remove_label">VERWIJDER</string>
     <string name="activate_profile">Activeer profiel</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="profile">Profiel</string>
-    <string name="select_for_removal">Selecteer om te verwijderen</string>
     <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="copytolocalprofile">Nieuw profiel van dit profiel maken?</string>
-    <string name="bg_trend_label">15min trend</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
     <string name="invalid">Ongeldig</string>
@@ -199,7 +184,6 @@
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
     <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Ongeldig profiel: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    Translator-->
@@ -212,7 +196,6 @@
     <string name="careportal_question">Vraag</string>
     <string name="careportal_exercise">Sport</string>
     <string name="careportal_announcement_message">Mededeling : %1$s</string>
-    <string name="careportal_settings_export_message">Instellingen exporteren: %1$s</string>
     <string name="careportal_note_message">Notitie : %1$s</string>
     <string name="careportal_question_message">Vraag : %1$s</string>
     <string name="careportal_exercise_message">Bewegen : %1$s</string>
@@ -242,7 +225,6 @@
     <string name="glucosetype_finger">Vingerprik</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manueel</string>
-    <string name="unknown">onbekend</string>
     <string name="eatingsoon">Eet Binnenkort</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Activiteit</string>
@@ -299,13 +281,6 @@
     <string name="carbsreq">%1$d g extra koolhydraten nodig binnen %2$d minuten</string>
     <string name="basalrate">Basaal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">Ratio</string>
-    <string name="amount_days"># Dagen</string>
-    <string name="weight">Gewicht</string>
-    <string name="warning_Message">Mogelijk inaccuraat bij gebruik van bolussen om infusieset te vullen!</string>
-    <string name="olddata_Message">Data verouderd, druk op \"Vernieuwen\"</string>
-    <string name="tbb">Totaal basaal</string>
-    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Tijd detectie</string>
     <!-- User Entry -->
@@ -379,7 +354,6 @@
     <string name="uel_stat_reset">STATISTIEKEN RESET</string>
     <string name="uel_delete_logs">VERWIJDER LOGS</string>
     <string name="uel_delete_future_treatments">VERWIJDER TOEKOMSTIGE BEHANDELINGEN</string>
-    <string name="delete_future_treatments">Verwijder behandelingen in de toekomst</string>
     <string name="uel_export_settings">EXPORTEER INSTELLINGEN</string>
     <string name="uel_import_settings">IMPORT INSTELLINGEN</string>
     <string name="uel_select_directory">SELECTEER DIRECTORY</string>
@@ -396,7 +370,6 @@
     <string name="uel_exit_aaps">AAPS AFSLUITEN</string>
     <string name="uel_plugin_enabled">PLUGIN INGESCHAKELD</string>
     <string name="uel_plugin_disabled">PLUGIN UITGESCHAKELD</string>
-    <string name="uel_unknown">ONBEKEND</string>
     <string name="ue_string">Tekst</string>
     <string name="ue_source">Bron</string>
     <string name="ue_utc_offset">Utc Compensatie</string>
@@ -405,7 +378,6 @@
     <string name="ue_none">Geen Eenheid</string>
     <string name="uel_loop_change">LOOP VERANDERD</string>
     <string name="uel_loop_removed">LOOP VERWIJDERD</string>
-    <string name="uel_other">OVERIGE</string>
     <string name="uel_running_mode">BEDRIJFSMODE</string>
     <string name="uel_running_mode_removed">BEDRIJFSMODE VERWIJDERD</string>
     <string name="uel_running_mode_updarted">BEDRIJFSMODE GEWIJZIGD</string>
@@ -438,8 +410,6 @@
     <string name="set_profile">PROFIEL INSTELLEN</string>
     <string name="set_user_settings">GEBRUIKERSINSTELLINGEN</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f E</string>
-    <string name="start_pump">START POMP</string>
-    <string name="stop_pump">STOP POMP</string>
     <string name="temp_basal_absolute">TIJDELIJK BASAAL %1$.2f E/u %2$d min</string>
     <string name="temp_basal_percent">TIJDELIJK BASAAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT MELDING EINDE TBR</string>
@@ -454,9 +424,6 @@
     <string name="isf_for_carbs">ISF voor Bolus Calculator en Koolhydraten Absorptie: %1$.1f</string>
     <string name="autosens_long">Autosens Waarde: %.0f%%</string>
     <string name="algorithm_long">Autosens in algoritme: %.0f%%</string>
-    <string name="algorithm_short">Alg: %.0f%%</string>
-    <string name="a11y_file">bestand</string>
-    <string name="a11y_user">gebruiker</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Afstemmen dagen :</string>
@@ -474,7 +441,6 @@
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
     <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
     <string name="carb_equal_zero_no_action">Koolhydraten = 0. Geen actie!</string>
-    <string name="wizard_no_insulin_required">Geen insuline nodig!</string>
     <string name="wizard_no_actual_bg">Geen recente BG om de berekening op te baseren!</string>
     <string name="wizard_no_active_profile">Geen actief profiel ingesteld!</string>
     <string name="wizard_no_cob">Onbekende COB! BG uitlezing ontbreekt of de recente app herstart?</string>
@@ -491,7 +457,6 @@
     <string name="wizard_explain_tt">Tijdelijk Doel: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s tot %2$s</string>
     <string name="wizard_pump_not_available">Geen pomp beschikbaar!</string>
-    <string name="quickwizard">QuickWizard</string>
     <!--    Preferences-->
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
@@ -516,23 +481,17 @@
     <string name="disconnected">Verbinding verbroken</string>
     <string name="connecting">Verbining maken</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Verbinden met pomp geklikt</string>
-    <string name="reservoir_value">%1$.0f / %2$d E</string>
     <string name="daily_units">Dag totaal</string>
-    <string name="pump_icon">Pomp icoon</string>
-    <string name="view_profile">Profiel bekijken</string>
     <string name="pump_history">Historiek</string>
-    <string name="stats">Statistieken</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pomp stuurprogramma wijzigen.</string>
     <string name="device_changed" comment="26 characters max for translation">Apparaat gewijzigd</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Storing toedienen tijdelijk basaal</string>
-    <string name="not_set_short">Niet ingesteld</string>
     <string name="pump_busy">Pomp is bezig</string>
     <string name="connection_error">Pomp verbindingsstoring</string>
     <string name="reading_pump_history">Lezen van pomp historie</string>
     <string name="password_cleared">Wachtwoord gewist!</string>
     <string name="pairing">Koppelen</string>
-    <string name="initializing">Initialiseren...</string>
     <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
@@ -549,7 +508,6 @@
     <string name="no">Nee</string>
     <string name="close">Sluiten</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Je wordt gevraagd om een masterwachtwoord. Daarmee worden geïmporteerde instellingen ontsleuteld.</string>
     <!-- <unattended_export> -->
     <string name="export_ok">OK</string>
     <string name="export_warning">Waarschuwing</string>
@@ -580,8 +538,6 @@
     <string name="ble_not_supported">Bluetooth Low Energy wordt niet ondersteund.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy wordt niet ondersteund of het apparaat is niet gekoppeld.</string>
     <string name="ble_not_enabled">Bluetooth niet ingeschakeld.</string>
-    <string name="location_not_found_title">Locatie is niet ingeschakeld</string>
-    <string name="location_not_found_message">Om Bluetooth discovery met nieuwere apparaten te laten werken moet locatie worden ingeschakeld. AAPS volgt je locatie niet en locatie kan ook weer worden uitgeschakeld nadat het koppelen is gelukt.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin instellingen</string>
     <!-- Navigation -->
