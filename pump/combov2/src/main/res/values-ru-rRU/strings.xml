@@ -45,7 +45,6 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Тайм-аут сканирования Combo</string>
     <string name="combov2_pairing_failed_due_to_error">Сопряжение не состоялось из-за ошибки: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Сопряжение прервано по неизвестной причине</string>
-    <string name="combov2_pairing_invalid_pin_length">"Недопустимая длина PIN-кода соединения: надо %1$d цифр, указано %2$d"</string>
     <string name="combov2_scanning_for_pump">Поиск помпы</string>
     <string name="combov2_establishing_bt_connection">Установка Bluetooth-соединения (попытка № %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Cинхронизация связи с помпой</string>
@@ -65,7 +64,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Установка базального профиля</string>
     <string name="combov2_setting_tbr_cmddesc">Установка %1$d%% врем базала TBR на %2$d минут</string>
     <string name="combov2_cancelling_tbr">Отмена текущего врем базала TBR</string>
-    <string name="combov2_delivering_bolus_cmddesc">Подается болюс %1$.1f ед</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Получение суточной истории дозировок TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Обновление даты и времени помпы</string>
     <string name="combov2_updating_pump_status_cmddesc">Обновление статуса помпы</string>
