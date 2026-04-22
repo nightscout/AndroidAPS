@@ -23,6 +23,7 @@ import app.aaps.wear.complications.UploaderBatteryComplication
 import app.aaps.wear.complications.WallpaperComplication
 import app.aaps.wear.heartrate.HeartRateListener
 import app.aaps.wear.tile.ActionsTileService
+import app.aaps.wear.tile.BgGraphTileService
 import app.aaps.wear.tile.RunningModeTileService
 import app.aaps.wear.tile.QuickWizardTileService
 import app.aaps.wear.tile.TempTargetTileService
@@ -69,6 +70,7 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesCircleWatchface(): CircleWatchface
     @ContributesAndroidInjector abstract fun contributesCustomWatchface(): CustomWatchface
 
+    @ContributesAndroidInjector abstract fun contributesBgGraphTileService(): BgGraphTileService
     @ContributesAndroidInjector abstract fun contributesTileBase(): TileBase
     @ContributesAndroidInjector abstract fun contributesQuickWizardTileService(): QuickWizardTileService
     @ContributesAndroidInjector abstract fun contributesUserActionTileService(): UserActionTileService
