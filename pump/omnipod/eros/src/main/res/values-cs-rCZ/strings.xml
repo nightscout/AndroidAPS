@@ -45,7 +45,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Statistika RileyLink</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetovat RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Číst protokol pulsů</string>
     <string name="omnipod_eros_pod_management_pulse_log">Protokol pulzů</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Protokol pulzů (zkopírováno do schránky)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
