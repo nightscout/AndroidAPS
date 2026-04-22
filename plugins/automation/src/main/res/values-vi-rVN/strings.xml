@@ -73,7 +73,6 @@
     <string name="location_going_out">Khi bạn rời khỏi khu vực có tên</string>
     <string name="time_range">Khoảng thời gian</string>
     <string name="timerange_value">Thời gian nằm trong khoảng %1$s và %2$s</string>
-    <string name="between">Trong khoảng </string>
     <string name="add_short">THÊM</string>
     <string name="temptargetcompared">Mục tiêu tạm thời %1$s</string>
     <string name="btdevicecompared">Kết nối Bluetooth đến thiết bị %1$s %2$s</string>
@@ -114,8 +113,6 @@
     <string name="edit_short">SỬA</string>
     <string name="preconditions">Điều kiện cần trước:</string>
     <string name="user_action">Thao tác người dùng</string>
-    <string name="remove_selected_items">Xóa mục đã chọn</string>
-    <string name="count_selected">Đã chọn %1$d</string>
     <string name="system_automation">Tự động hóa hệ thống</string>
     <string name="run_automations">Chạy các tự động hóa</string>
     <string name="add_automation">Thêm rule</string>
