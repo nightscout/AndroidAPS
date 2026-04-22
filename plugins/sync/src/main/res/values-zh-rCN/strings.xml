@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(无手表连接)</string>
     <string name="pump_status">泵状态</string>
     <string name="loop_status">闭环状态</string>
-    <string name="wizard_result">计算. 向导:\n胰岛素: %1$.2fU\n碳水: %2$d克</string>
     <string name="quick_wizard_not_available">选定的快速向导不再可用，请刷新</string>
     <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
     <string name="user_action_not_available">所选用户动作 %1$s 已不可用，请刷新您的面板</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">临时目标\n\n最小: %1$s\n最大: %2$s\n持续时间: %3$d 分钟</string>
     <string name="wear_action_tempt_manual_message">临时目标\n\n目标：%1$s\n持续时间：%2$d 分钟</string>
     <string name="wear_action_tempt_preset_message">临时目标\n\n原因：%1$s\n目标%2$s\n持续时间：%3$d 分钟</string>
-    <string name="no_success">未成功-请检查手机</string>
     <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
     <string name="wear_general_settings">常规设置</string>
     <string name="wear_custom_watchface_settings">自定义表盘设置</string>
@@ -127,10 +125,6 @@
     <string name="today">今天</string>
     <string name="weighted">权重</string>
     <string name="full_xdrip_sync_comment">完全同步？可能需要一段时间，直到完成之前，您将不会在 xDrip+ 中看到新的数据。</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient 不支持此操作</string>
-    <string name="wear_action_loop_state_requires_duration">此操作需要持续一段时间</string>
-    <string name="wear_action_loop_state_pump_suspended">泵暂停了！</string>
-    <string name="wear_action_loop_state_profile_invalid">配置文件无效！</string>
     <string name="wear_action_loop_state_unauthorized">请重试。</string>
     <string name="wear_action_loop_state_invalid">请求无效的循环状态</string>
     <string name="wear_action_running_mode_title">运行模式</string>
@@ -159,10 +153,6 @@
     <string name="smscommunicator_otp_reset_btn">重置身份验证器</string>
     <string name="smscommunicator_otp_reset_title">重置身份验证器的密钥</string>
     <string name="smscommunicator_otp_reset_prompt">你确定要重置验证器密钥吗？它将导致以前配置的OTP随机验证码无效，您需要重新设置它们。</string>
-    <string name="smscommunicator_otp_reset_successful">生成了新的身份验证器密钥！请使用更新的二维码设置验证器。</string>
-    <string name="smscommunicator_otp_export_title">导出OTP密钥</string>
-    <string name="smscommunicator_otp_export_prompt">你确定要将OTP密钥复制到剪贴板？\n\n只有在验证器应用扫描二维码出现问题时，你才需要这么做。可能你想手动输入二维码，或者使用专用的应用程序配置硬件OTP令牌。</string>
-    <string name="smscommunicator_otp_export_successful">将OTP密钥 (Base32 格式) 导出并复制到剪贴板。粘贴它到身份验证器或硬件OTP中！</string>
     <string name="smscommunicator_otp_step1_install_header">1. 安装身份验证器app</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. 扫描二维码以安装AAPS随机验证码密钥</string>
     <string name="smscommunicator_otp_step3_test_header">3. 测试一次性验证码</string>
