@@ -20,11 +20,8 @@
 
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">LastConn: %1$d min ago</string>
-    <string name="short_status_alert">Alert: %1$s</string>
     <string name="short_status_last_bolus">LastBolus: %1$sU @ %2$s</string>
     <string name="short_status_temp_basal">Temp: %1$s</string>
-    <string name="short_status_extended">Ext: %1$s</string>
-    <string name="short_status_reservoir">Reserv: %1$dU</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="short_status_not_initialized">Pump not initialized</string>
 
@@ -44,7 +41,6 @@
     <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
     <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_delivered_format">%1$s/%2$s</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f\u00a0CU/h</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
 
 

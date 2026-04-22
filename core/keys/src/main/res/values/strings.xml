@@ -237,7 +237,6 @@
     <string name="pref_title_pump_unreachable_threshold">Pump unreachable threshold</string>
 
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">Peak time</string>
 
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Default tune days</string>
@@ -283,7 +282,6 @@
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
 
@@ -299,7 +297,6 @@
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">Language</string>
@@ -457,10 +454,6 @@
     <string name="lgs_threshold_summary">BG value below which insulin is suspended. Default value uses standard target model. User can set value between 60mg/dl (3.3mmol/l) and 100mg/dl(5.5mmol/l). Values below 65/3.6 result in use of default model</string>
 
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">Algorithm documentation</string>
-    <string name="pref_title_otp_setup">Authenticator setup</string>
-    <string name="pref_title_quick_wizard_settings">QuickWizard settings</string>
-    <string name="pref_title_xdrip_info">xDrip+ info</string>
 
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Range for visualization</string>

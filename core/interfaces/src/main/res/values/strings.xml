@@ -89,9 +89,6 @@
     <string name="pref_show_week_number">Show Week number</string>
     <string name="pref_show_date">Show Date</string>
     <string name="pref_show_seconds">Show Seconds</string>
-    <string name="default_custom_watchface_comment">Default watchface, you can click on EXPORT WATCHFACE button to generate a template</string>
-    <string name="default_custom_watchface_external_comment">Default watchface including external views for followers, you can click on EXPORT WATCHFACE button to generate a template</string>
-    <string name="wear_default_watchface">Default Watchface</string>
     <string name="wear_more_watchfaces">More watchfaces</string>
     <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
     <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
@@ -103,8 +100,6 @@
     <string name="permission_bluetooth_description">Application needs bluetooth permission to communicate with pump</string>
 
     <!-- Insulin -->
-    <string name="insulin_plugin">Insulin</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">Unknown</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -113,7 +108,6 @@
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
-    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
 
     <!-- Concentration -->
     <string name="u10">U10</string>

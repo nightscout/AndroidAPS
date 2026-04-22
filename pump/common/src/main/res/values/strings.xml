@@ -63,6 +63,5 @@
     <string name="time_last_month">Last month</string>
 
     <!-- Pump History -->
-    <string name="pump_history_type">Type:</string>
 
 </resources>

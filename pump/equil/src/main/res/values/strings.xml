@@ -32,7 +32,6 @@
     <string name="equil_tone_mode_shake">Vibrate only</string>
     <string name="equil_tone_mode_tone">Tone only</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrate and tone</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">This operation will stop insulin infusion and retract the pump plunger to the bottom! Also, it will delete the binding status!</string>
 
     <string name="equil_ble_config_confirmation_title">Pair Equil patch pump</string>
@@ -134,7 +133,6 @@
 
     <string name="equil_common_overview_button_suspend_delivery">Suspend</string>
     <string name="equil_common_overview_button_resume_delivery">Resume delivery</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Moments ago</string>
     <string name="equil_common_less_than_a_minute_ago">Less than a minute ago</string>
     <string name="equil_common_time_ago">%1$s ago</string>
