@@ -2,7 +2,6 @@
 <resources>
     <!--Autotune-->
     <string name="dyn_isf_adjust_title" formatted="false">DinamikİDF Ayarlama Faktörü %</string>
-    <string name="dyn_isf_adjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'ün üzerine, daha az agresif düzeltmeler için %100\'ün altına ayarlayın.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
     <string name="openaps_auto_isf">Otomatik İDF</string>
@@ -29,18 +28,7 @@
     <string name="constraints">Kısıtlamalar</string>
     <string name="openapsma_autosensdata_label">Otoduyarlılık verileri</string>
     <string name="openapsma_script_debug_data_label">Skriptte hata ayıkla</string>
-    <string name="openapsma_max_basal_summary">Bu değer OpenAPS\'te \"maksimum bazal\" olarak adlandırılır</string>
-    <string name="openapsma_max_iob_summary">Bu değere OpenAPS bağlamında maks AİNS denir.\nAPS\'de bir kerede verilebilen maksimum insülin [U].</string>
-    <string name="openapsama_min_5m_carb_impact_summary">Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
-Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3. Bu, OpenAPS\'nin önemli bir güvenlik sınırıdır. Bu, bazal dozunuzu en yüksek bazal dozunuzun 3 katıyla sınırlandırır. Bunu değiştirmenize muhtemelen gerek kalmayacak, ancak güvenlik sınırları için \"günlük maksimumun 3 katı; mevcut dozun 4 katı\" ifadesinin ne anlama geldiğinin farkında olmalısınız.</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Varsayılan değer: 2\nYemek bolusu yaptıktan sonra bolus erteleme devreye girer, bu nedenle döngü, yeni yemek yediğinizde düşük geçici bazallar-hedefler ile etkileşime girmez. Buradaki örnek ve varsayılan 2\'dir; bu nedenle 3 saatlik bir İES, bolus ertelemenin kademeli olarak 1,5 saat (3İES/2) üzerinden aşamalı olarak sonlandırılacağı anlamına gelir.</string>
     <string name="openapsama_link_to_preference_json_doc_txt">Dikkat!\nNormalde aşağıdaki bu değerleri değiştirmek zorunda değilsiniz. Lütfen burayı TIKLAYIN ve metni OKUYUN ve bu değerlerden herhangi birini değiştirmeden önce ANLADIĞINIZDAN emin olun.</string>
-    <string name="openapssmb_max_iob_summary">Bu değer OpenAPS bağlamında Max AİNS (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut AİNS bu değerden daha büyükse daha fazla insülin vermez</string>
-    <string name="uam_smb_max_minutes">UAM SMB maks. dakika ayarı</string>
-    <string name="carbs_req_threshold_summary">Bir karbonhidrat öneri uyarısı görüntülemek için minimum karbonhidrat gramı. Bu sayının altındaki karbonhidrat önerileri bildirilmeyecektir.</string>
-    <string name="lgs_threshold_summary">Altına düştüğünde insülinin askıya alındığı KŞ değeri. Varsayılan değer, standart hedef modeli kullanır. Kullanıcı değeri 60mg/dl (3,3mmol/l) ile 100mg/dl(5.5mmol/l) arasında ayarlayabilir. 65/3,6\'nın altındaki değerler varsayılan modelin kullanılmasına neden olur</string>
     <string name="increasing_max_basal">Profilinizdeki maksimum bazal değeriniz düşük olduğu için maksimum bazal değeri artırma</string>
     <string name="max_basal_multiplier">maks bazal çarpanı</string>
     <string name="max_daily_basal_multiplier">maks günlük bazal çarpan</string>
@@ -75,14 +63,12 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_smb_request_time_label">SMB (Super Micro Bolus) zamanı</string>
     <string name="loop_smb_execution_time_label">SMB (Super Micro Bolus) uygulama süresi</string>
     <string name="loop_smb_set_by_pump_label">Pompa tarafından ayarlanan SMB</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <string name="fallback_smb_no_tdd">SMB\'ye dönülüyor. Yeterli günlük doz verisi yok.</string>
     <string name="fallback_to_isf_no_tdd">Profil duyarlılığına geri dönüş. Yeterli veri yok. Sebep: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Potansiyel profil ayarlamaları için yardım (İDF, karbonhidrat ve bazal oranları)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_default_tune_days_title">Veri gün sayısı</string>
-    <string name="autotune_default_tune_days_summary">OtoAyar tarafından işlenecek varsayılan veri gün sayısı (30\'a kadar)</string>
     <string name="autotune_tunedprofile_name">Ayarlandı</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_last_run">Son Çalıştırma :</string>
@@ -110,21 +96,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="autotune_profile_invalid">Profil geçersiz</string>
     <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
     <!--    autoISF -->
-    <string name="half_basal_exercise_target_summary">Örneğin 160 gibi bir sayıya ayarlayın; bunun anlamı, geçici hedef 160 mg/dL olduğunda ve Yüksek geçici hedef duyarlılığı arttırır= doğru olduğunda, bu seviyede 50%% bazal çalışır (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">OtoİDF Ayarları</string>
     <string name="smb_delivery_settings_title">SMB iletim ayarları</string>
-    <string name="openapsama_autoISF_max_summary">otoduyarlılık_maks\'a benzer şekilde İDF\'nin ne kadar güçlü olabileceğini tanımlar.\n\nVarsayılan değer 1.0 Bu şekilde kapalıdır.\n\nUYARI: 2.5\'in üzerindeki değerleri kullanırken son derece dikkatli olun</string>
-    <string name="openapsama_autoISF_min_summary">otoduyarlılık_min\'e benzer şekilde İDF\'nin ne kadar etkisiz olabileceğini tanımlar.\n\nVarsayılan değer olan 1.0 Bu şekilde kapalıdır.</string>
-    <string name="openapsama_dura_ISF_weight_summary">Daha uzun süreli, yüksek glikoz platoları sırasında uygulanan ve İDF\'yi güçlendirerek potansiyel olarak insülin iletimini artıran ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Glikoz hedefin altındayken uygulanan ve İDF\'yi zayıflatarak insülin iletimini potansiyel olarak azaltan ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Glikoz hedefin üzerindeyken uygulanan ve İDF\'yi güçlendirerek insülin salınımını potansiyel olarak artıran ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
-    <string name="openapsama_pp_ISF_weight_summary">Glikoz yükselirken uygulanan ve İDF\'yi güçlendirerek insülin salınımını potansiyel olarak artıran ağırlıktır.\n\nVarsayılan değer 0,0 bu şekilde kapalıdır.</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Kş yükselirken uygulanan ağırlıktır ve İDF\'yi güçlendirerek potansiyel olarak insülin salınımını artırır.\n\nVarsayılan değer 0.0 bu şekilde kapalıdır.</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Kş düşerken uygulanan ve İDF\'yi zayıflatarak insülin iletimini potansiyel olarak azaltan ağırlıktır.\n\nVarsayılan değer olan 0,0 bu şekilde kapalıdır.</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Varsayılan değer: 0,5 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve toplam insülin ihtiyacının ne kadarının SMB olarak verilebileceğini belirtir. Aynı anda bakıcının telefonundan SMB istekleri ayarlayarak insanların tehlikeli bölgelere girmesini önlemek içindir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
-    <string name="openapsama_smb_delivery_ratio_min_summary">Varsayılan değer: 0,5 Bu, yukarıdaki sabit değerden ziyade doğrusal olarak artan bir oranın alt ucudur.</string>
-    <string name="openapsama_smb_delivery_ratio_max_summary">Varsayılan değer: 0,5 Bu, yukarıdaki sabit değerden ziyade doğrusal olarak artan bir oranın üst ucudur.</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Varsayılan değer: 0. Doğrusal olarak artan SMB iletim oranı glikoz aralığına [hedef_kş, hedef_kş+kş_aralığı] eşlenir.\nHedef_kş\'de SMB oranı smb_iletim_oranı_min, hedef_kş+kş_oranı\'nda smb_iletim_oranı_max olur.\n 0 ile doğrusal olarak artan SMB oranı devre dışı bırakılır ve sabit smb_iletim_oranı kullanılır.</string>
-    <string name="openapsama_smb_max_range_extension_summary">Varsayılan değer: 1 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve normalde 120 dakika olan maxSMB/maxUAM süresini hangi faktörle aşabileceğinizi belirtir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">SMB\'lerin devre dışı bırakılacağı maksAİNS yüzdesi.\nVarsayılan değer: %100\n Bu özellik %100 değeri ile devre dışıdır.</string>
 </resources>
