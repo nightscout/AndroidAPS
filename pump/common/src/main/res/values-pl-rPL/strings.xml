@@ -37,5 +37,4 @@
     <string name="time_last_week">Ostatni tydzień</string>
     <string name="time_last_month">Ostatni miesiąc</string>
     <!-- Pump History -->
-    <string name="pump_history_type">Typ:</string>
 </resources>
