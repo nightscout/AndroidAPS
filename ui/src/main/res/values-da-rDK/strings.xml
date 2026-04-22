@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Bolus begrænsning påført</string>
     <string name="carbs_constraint_applied">Kulhydrat begrænsning påført</string>
     <string name="temp_target_short">Midlertidig Mål</string>
     <string name="start_activity_tt">Start Aktivitets mål</string>
     <string name="start_eating_soon_tt">Start \"Spiser snart\" mål</string>
     <string name="start_hypo_tt">Begynd Hypo mål</string>
     <string name="time_offset">Tidsforskydning</string>
-    <string name="remind_to_bolus_later">Påmind om at bolus senere</string>
     <!--    Widget-->
     <string name="configure">Indstil gennemsigtighed</string>
     <string name="widget_description">AAPS widget</string>
@@ -15,8 +13,6 @@
     <string name="activity_monitor">Aktivitetsovervågning</string>
     <string name="do_you_want_reset_stats">Ønsker du at nulstille aktivitetsstatistik?</string>
     <string name="calculation_in_progress">Beregning i gang</string>
-    <string name="invalid_age">Ugyldig angivelse af alder</string>
-    <string name="invalid_weight">Ugyldig angivelse af vægt</string>
     <string name="age">Alder</string>
     <string name="weight_label">Vægt</string>
     <string name="glucose_type">Glukose type</string>
@@ -24,17 +20,12 @@
     <string name="bg_meter">Meter</string>
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">I alt</string>
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Sørg for, at mængden svarer til specifikationen på dit infusionssæt!</string>
     <string name="record_pump_site_change">Registrer skift af infusionssæt</string>
     <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Ikke bolus, registrer kun</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Genbrug %1$d%% %2$dt</string>
     <string name="timeshift_label">Tidsskift</string>
@@ -59,29 +50,14 @@
     <string name="duration3h">3 timer</string>
     <string name="duration10h">10 timer</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">korrekt resultat med %</string>
-    <string name="a11_correction_units">korrekt resultat med enheder</string>
-    <string name="two_hours">2t</string>
-    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Mangler %1$d g</string>
-    <string name="a11y_current_bg">nuværende blodglukose</string>
-    <string name="carb_time_label">Kulhydrat tid</string>
-    <string name="a11y_set_carb_timer">indstil KH alarm</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen poster tilgængelige</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Kulhydrater:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Korrektion</string>
-    <string name="meal_bolus">Måltid</string>
-    <string name="prime">Klargør</string>
     <string name="carbs_and_bolus">Kulhydrater og bolus</string>
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
     <string name="careportal_remove_started_events">Fjern AAPS startede poster</string>
-    <string name="hide_loop">Skjul loop</string>
-    <string name="show_loop">Vis loop</string>
     <string name="user_entry">Bruger indtastning</string>
     <string name="clone_label">Klon</string>
     <!-- ProfileHelperActivity -->
@@ -95,13 +71,8 @@
     <string name="format_with_tdd_and_pct">Alder: %1$d TDD: %2$.0f IE %3$d%%</string>
     <string name="format_with_weight">Alder: %1$d Vægt: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV standardprofil</string>
-    <string name="invalid_pct">Ugyldig angivelse af %</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Basalrate</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">kun på ur</string>
-    <string name="a11y_only_on_phone">kun på telefon</string>
-    <string name="a11y_drag_and_drop_handle">træk og slip-håndtag</string>
     <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->
