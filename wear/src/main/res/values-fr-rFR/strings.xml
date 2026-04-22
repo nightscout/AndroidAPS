@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(Cible Temp)</string>
     <string name="label_quick_wizard_tile">AAPS(Assistant rapide)</string>
     <string name="label_user_action_tile">AAPS (Action utilisateur)</string>
-    <string name="label_warning_sync">Pas de données !</string>
-    <string name="label_warning_old">Données anciennes!</string>
-    <string name="label_warning_since">Depuis %1$s</string>
-    <string name="label_warning_sync_aaps">Synchro avec AAPS !</string>
     <string name="msg_warning_sync">Aucune donnée deçues depuis %1$s! Vérifez sur le téléphone si AAPS envoie les données à la montre</string>
     <string name="msg_warning_old">Données AAPS anciennes de %1$s ! Vérifiez votre capteur, les configurations xDrip+, NS, AAPS ou autre !</string>
     <string name="pref_vibrate_on_bolus">Vibrer sur Bolus</string>
@@ -83,8 +79,6 @@
     <string name="menu_none">Aucun</string>
     <string name="menu_default">Défaut</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Durée [min]</string>
     <string name="action_tempt_confirmation">Cible Temp demandée</string>
     <string name="action_quick_wizard_confirmation">Assistant rapide demandé</string>
     <string name="action_user_action_confirmation">Action de l\'utilisateur demandée</string>
@@ -102,8 +96,6 @@
     <string name="action_ecarbs">eGlucides</string>
     <string name="action_percentage">Pourcentage\n[%]</string>
     <string name="action_start_minutes">Démarrage\n[minutes]</string>
-    <string name="action_start_minutes_format">%1$d min</string>
-    <string name="action_duration_h">Durée [h]</string>
     <string name="action_duration_hours">Durée\n[hours]</string>
     <string name="action_duration_hours_format">%1$d h</string>
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
@@ -152,7 +144,6 @@
     <string name="color_name_gray">gris</string>
     <string name="color_name_bluegray">gris bleu</string>
     <string name="color_name_white">white</string>
-    <string name="color_name_black">noir</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Interface simplifiée</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
@@ -185,8 +176,6 @@
     <string name="tile_no_config">Aucune configuration disponible</string>
     <string name="wear_control_not_enabled">Contrôles Wear désactivés</string>
     <string name="wear_control_no_data">Aucune donnée disponible</string>
-    <string name="increment">augmenter</string>
-    <string name="decrement">diminuer</string>
     <string name="abbreviation_average">moy</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -202,8 +191,6 @@
     <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">ancien</string>
-    <string name="old_warning">!ancien!</string>
     <string name="error">Erreur</string>
     <string name="pref_heartRateSampling">Fréquence Cardiaque</string>
     <string name="pref_heartRateSmoothing">Lissage FC</string>
@@ -260,7 +247,6 @@
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">Cliquez pour développer les détails du calcul</string>
     <string name="wizard_confirmation_sent">Envoyé</string>
     <string name="tile_settings">Paramètres des tuiles</string>
     <string name="loop_status_error">Impossible de charger l\'état</string>
