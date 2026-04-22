@@ -25,7 +25,6 @@
     <string name="random_bg">Náhodná glykémia</string>
     <string name="description_source_random_bg">Vygeneruj náhodné dáta glykémií (iba Demo režim)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="direction">smer</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Prijímať glykémie z aplikáce Syai/Ottai.</string>
