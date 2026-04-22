@@ -17,7 +17,6 @@
     <string name="pump_state_label">Κατάσταση Αντλίας</string>
     <string name="active_alarms_label">Ενεργοί συναγερμοί</string>
     <string name="basal_type_label">Τύπος Βασικού</string>
-    <string name="basal_rate_label">Βασικός Ρυθμός</string>
     <string name="pump_type_label">Τύπος Αντλίας</string>
     <string name="fw_version_label">Έκδοση FW</string>
     <string name="patch_no_label">Patch no</string>
@@ -69,12 +68,10 @@
     <string name="do_not_attach_to_body">Μην τοποθετείτε ακόμη το patch στο σώμα σας.</string>
     <string name="half_press_needle">Μισοπατήστε το κουμπί της βελόνας. Μετά πατήστε <b>Επόμενο</b> για να αρχίσει η πλήρωση.</string>
     <string name="wait_for_priming">Παρακαλώ περιμένετε να ολοκληρωθεί η πλήρωση.</string>
-    <string name="priming_error">Αποτυχία πλήρωσης, πατήστε <b>Επανάληψη</b> για να προσπαθήσετε ξανά.</string>
     <string name="press_next">Πατήστε <b>Επόμενο</b> για να συνεχίσετε.</string>
     <string name="press_next_to_start_activation">Πατήστε <b>Επόμενο</b> για να ξεκινήσετε την ενεργοποίηση.</string>
     <string name="remove_safety_lock">Αφαιρέστε το κλείδωμα ασφάλειας. Τοποθετήστε την αντλία στο σώμα. Πατήστε το κουμπί της βελόνας.</string>
     <string name="activating_pump">Ενεργοποίηση αντλίας και καθορισμός αρχικού βασικού ρυθμού. Παρακαλώ περιμένετε.</string>
-    <string name="activating_error">Αποτυχία ενεργοποίησης, πατήστε <b>Επανάληψη</b> για να προσπαθήσετε ξανά.</string>
     <string name="activating_complete">Νέο patch ενεργοποιήθηκε. Απομένουν %.2f μονάδες.</string>
     <string name="press_OK_to_return">Πατήστε <b>OK</b> για να επιστρέψετε στην κύρια οθόνη.</string>
     <string name="deactivate_sure">Είστε βέβαιοι ότι θέλετε να απενεργοποιήσετε το τρέχον patch;</string>
