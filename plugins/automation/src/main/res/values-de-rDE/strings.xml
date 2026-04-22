@@ -51,7 +51,6 @@
     <string name="location_going_out">Beim Verlassen des angegebenen Gebiets</string>
     <string name="time_range">Zeitraum</string>
     <string name="timerange_value">Für die Zeit zwischen %1$s und %2$s</string>
-    <string name="between">Zwischen </string>
     <string name="add_short">HINZUFÜGEN</string>
     <string name="temptargetcompared">Temporäres Ziel %1$s</string>
     <string name="btdevicecompared">Bluetooth-Verbindung mit Gerät %1$s %2$s</string>
@@ -78,8 +77,6 @@
     <string name="edit_short">BEARBEITEN</string>
     <string name="preconditions">Voraussetzung:</string>
     <string name="user_action">Benutzeraktion</string>
-    <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
-    <string name="count_selected">%1$d ausgewählt</string>
     <string name="system_automation">System-Automatisierung</string>
     <string name="run_automations">Automatisierungen ausführen</string>
     <string name="add_automation">Regel hinzufügen</string>
