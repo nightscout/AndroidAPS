@@ -175,6 +175,7 @@
     <string name="a11y_low">bajo</string>
     <string name="average">Promedio</string>
     <string name="tir">Tiempo en rango</string>
+    <string name="remove_label">Eliminar</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="activate_insulin">Activar insulina</string>
     <string name="reset">Restablecer</string>
@@ -334,6 +335,7 @@
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manualmente</string>
+    <string name="unknown">Desconocido</string>
     <string name="eatingsoon">Comiendo Pronto</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Actividad</string>
@@ -543,6 +545,8 @@
     <string name="set_profile">ESTABLECER PERFIL</string>
     <string name="set_user_settings">ESTABLECER CONFIGURACIÓN DEL USUARIO</string>
     <string name="smb_bolus_u">BOLO SMB %1$.2f U</string>
+    <string name="start_pump">Iniciar bomba</string>
+    <string name="stop_pump">Detener bomba</string>
     <string name="temp_basal_absolute">BASAL TEMPORAL %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">BASAL TEMPORAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT ESTABLECER TBR SOBRE NOTIFICACIÓN</string>
@@ -598,6 +602,7 @@
     <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. ¡No se toma ningua acción!</string>
     <string name="bolus_equal_zero_no_action">Bolo = 0. ¡No se ha realizado ninguna acción!</string>
+    <string name="wizard_no_insulin_required">No se requiere insulina</string>
     <string name="wizard_no_actual_bg">¡No hay valor de glucosa reciente en el que basar el cálculo!</string>
     <string name="wizard_no_active_profile">¡No hay perfil activo!</string>
     <string name="wizard_no_cob">COB desconocido! ¿Valor de glucosa ausente o reincio reciente de la aplicación?</string>
@@ -653,6 +658,7 @@
     <string name="reading_pump_history">Leyendo el historial de la bomba</string>
     <string name="password_cleared">Contraseña borrada</string>
     <string name="pairing">Emparejando</string>
+    <string name="initializing">Inicializando…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Advertencia</string>
     <string name="retry" comment="Button label to retry a failed operation">Reintentar</string>
