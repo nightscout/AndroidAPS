@@ -3,9 +3,6 @@
     <string name="label_watchface_circle">AAPS(Cirkel)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStil)</string>
     <string name="label_watchface_custom">AAPS(Brugerdefineret)</string>
-    <string name="label_actions_tile">AAPS (Handlinger)</string>
-    <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
-    <string name="label_quick_wizard_tile">AAPS(Hurtig Guide)</string>
     <string name="msg_warning_sync">Ingen data modtaget siden %1$s! Tjek om AAPS på telefonen sender data til uret</string>
     <string name="msg_warning_old">AAPS data er %1$s gammel! Tjek din sensor, xDrip+, NS, AAPS config eller lign.!</string>
     <string name="pref_vibrate_on_bolus">Vibrér ved bolus</string>
