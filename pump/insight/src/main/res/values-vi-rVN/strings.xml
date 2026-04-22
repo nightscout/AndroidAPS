@@ -16,10 +16,7 @@
     <string name="not_inserted">Chưa được lắp</string>
     <string name="tdd_bolus">Tổng liều Bolus</string>
     <string name="tdd_basal">Tổng liều nền</string>
-    <string name="tbr_formatter">%1$d%% trong %2$d / %3$d phút</string>
     <string name="multiwave_bolus">Bolus nhiều đợt</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U trong %3$d phút</string>
-    <string name="insight_last_bolus">Liều bolus mới nhất</string>
     <string name="searching_for_devices">Đang tìm kiếm thiết bị…</string>
     <string name="pairing_completed">Hoàn thành ghép đôi</string>
     <string name="code_compare">Mã hiển thị trên thiết bị này có khớp với mã trên bơm của bạn không?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">Đã dừng Bơm</string>
     <string name="pump_started">Đã khởi động Bơm</string>
     <string name="release_software_version">Phiên bản phần mềm</string>
-    <string name="ui_processor_software_version">Phiên bản phần mềm xử lý giao diện</string>
-    <string name="pc_processor_software_version">Phiên bản phần mềm bộ xử lý PC</string>
-    <string name="md_tel_processor_software_version">Phiên bản phần mềm bộ xử lý MD tel</string>
-    <string name="safety_processor_software_version">Phiên bản phần mềm bộ xử lý an toàn</string>
-    <string name="bt_info_page_version">Phiên bản trang thông tin Bluetooth</string>
     <string name="bluetooth_address">Địa chỉ Bluetooth</string>
-    <string name="system_id_appendix">Phụ lục ID hệ thống</string>
     <string name="manufacturing_date">Ngày sản xuất</string>
-    <string name="delete_pairing">Xóa ghép nối</string>
     <string name="log_site_changes">Ghi lại thay đổi vị trí kim truyền</string>
     <string name="log_reservoir_changes">Ghi lại thay đổi bình chứa insulin</string>
     <string name="log_tube_changes">Ghi lại thay đổi dây truyền</string>
@@ -58,11 +48,8 @@
     <string name="max_recovery_duration">Thời gian hồi phục tối đa [giây]</string>
     <string name="min_recovery_duration">Thời gian hồi phục tối thiểu [giây]</string>
     <string name="pump_alert">Cảnh báo Bơm</string>
-    <string name="pairing_information">Thông tin ghép nối</string>
     <string name="last_connection">%1$s (%2$s)</string>
     <string name="unpair">Hủy ghép nối</string>
     <string name="reset_pairing">Đặt lại thông tin ghép đôi?</string>
-    <string name="active_basal_rate">Tỷ lệ liều nền đang hoạt động</string>
-    <string name="active_tbr">TBR đang hoạt động</string>
     <string name="reservoir_level">Mức Insulin</string>
 </resources>
