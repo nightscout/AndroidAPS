@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS (Privremeni cilj)</string>
     <string name="label_quick_wizard_tile">AAPS (Brzi čarobnjak)</string>
     <string name="label_user_action_tile">AAPS (Korisnička radnja)</string>
-    <string name="label_warning_sync">Nema podataka!</string>
-    <string name="label_warning_old">Stari podaci!</string>
-    <string name="label_warning_since">Od %1$s</string>
-    <string name="label_warning_sync_aaps">Sinhronizuj sa AAPS!</string>
     <string name="msg_warning_sync">Nema primljenih podataka od ... Proverite da li AAPS na telefonu šalje podatke na sat.</string>
     <string name="msg_warning_old">AAPS podaci su stari %1$s! Proverite senzor, xDrip+, NS, AAPS podešavanja ili drugi izvor!</string>
     <string name="pref_vibrate_on_bolus">Vibracija tokom bolusa</string>
@@ -69,7 +65,6 @@
     <string name="menu_status">Status</string>
     <string name="menu_resync">Ponovo sinhronizuj</string>
     <string name="menu_menu">Meni</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_carbs">Uglj. hidrati</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Podešavanje 1</string>
@@ -104,7 +99,6 @@
     <string name="color_name_gray">Siva</string>
     <string name="color_name_bluegray">plavo-siva</string>
     <string name="color_name_white">Bela</string>
-    <string name="color_name_black">Crna</string>
     <string name="color_name_multicolor">Višebojna</string>
     <string name="pref_simplify_ui">Pojednostavi interfejs</string>
 </resources>
