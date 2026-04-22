@@ -2,10 +2,6 @@
 <resources>
     <string name="label_watchface_circle">AAPS(Kör)</string>
     <string name="label_watchface_digital_style">AAPS(Digitális)</string>
-    <string name="label_warning_sync">Nincs adat!</string>
-    <string name="label_warning_old">Régi adat!</string>
-    <string name="label_warning_since">%1$s óta</string>
-    <string name="label_warning_sync_aaps">Szinkornizál AAPS-el!</string>
     <string name="pref_vibrate_on_bolus">Rezeg bólusnál</string>
     <string name="pref_show_date">Dátum megjelenítése</string>
     <string name="pref_show_basal_rate">Bázis megjelenítése</string>
@@ -30,7 +26,6 @@
     <string name="menu_none">Semmi</string>
     <string name="menu_default">Alapértelmezett</string>
     <string name="menu_menu">Menü</string>
-    <string name="action_duration_h">Időtartam [h]</string>
     <string name="action_insulin">Inzulin</string>
     <string name="action_preset_1">Előre beállított 1</string>
     <string name="action_preset_2">Előre beállított 2</string>
@@ -64,7 +59,6 @@
     <string name="color_name_gray">szürke</string>
     <string name="color_name_bluegray">kékesszürke</string>
     <string name="color_name_white">fehér</string>
-    <string name="color_name_black">fekete</string>
     <string name="color_name_multicolor">sokszínű</string>
     <string name="pref_vibrate_hourly">Rezgés óránként</string>
     <string name="pref_show_weeknumber">Hét számának megjelenítése</string>
