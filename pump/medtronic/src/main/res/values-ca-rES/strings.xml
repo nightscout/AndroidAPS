@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Nr. de sèrie # no vàlid.</string>
     <string name="medtronic_error_pump_type_not_set">Tipus de bomba no configurat.</string>
     <string name="medtronic_error_pump_type_invalid">Tipus de bomba no compatible.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Freqüència bomba no compatible.</string>
     <string name="medtronic_error_rileylink_address_invalid">Adreça RileyLink no vàlida.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Tipus de bomba detectat diferent al configurat.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Perfils de basal configurats no activats a la bomba. Activeu-los a la bomba.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Historial bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Heu cancel·lat un bolus un cop ja havia estat enviat a la bomba. Donat que la bomba de Medtronic no permet la comanda \"cancel·lar\", haureu de fer-ho manualment: poseu la bomba en mode \"Suspendre\" i després feu \"Reprendre\" (si encara voleu cancel·lar). L\'aplicació agafarà els canvis la següent vegada que s\'actualitzi (menys de 5 minuts).</string>
     <string name="medtronic_cmd_cant_read_tbr">No s\'ha pogut llegir la basal temporal actual.</string>
@@ -74,5 +72,4 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Establir basals temporals neutres</string>
     <string name="set_neutral_temps_summary">Si està activat, cancel·larà la basal temporal abans del final de cada hora. Aquest mètode pot ajudar a evitar que algunes bombes pitin/vibrin cada hora.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (queden %2$d min)</string>
 </resources>
