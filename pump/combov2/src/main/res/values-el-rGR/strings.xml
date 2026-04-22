@@ -46,7 +46,6 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Φτάσατε το χρονικό όριο σάρωσης για Combo</string>
     <string name="combov2_pairing_failed_due_to_error">Η σύζευξη απέτυχε λόγω σφάλματος: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Η σύζευξη ματαιώθηκε για άγνωστους λόγους</string>
-    <string name="combov2_pairing_invalid_pin_length">"Μη έγκυρο μήκος PIN: χρειάζονται %1$d ψηφία, ελήφθησαν %2$d"</string>
     <string name="combov2_scanning_for_pump">Σάρωση για αντλία</string>
     <string name="combov2_establishing_bt_connection">Δημιουργία σύνδεσης Bluetooth (προσπάθεια αριθμ. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Εκτέλεση χειραψίας με αντλία</string>
@@ -66,7 +65,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Ρύθμιση βασικού προφίλ</string>
     <string name="combov2_setting_tbr_cmddesc">Ρύθμιση %1$d%% TBR για %2$d λεπτά</string>
     <string name="combov2_cancelling_tbr">Ακύρωση TBR σε εξέλιξη</string>
-    <string name="combov2_delivering_bolus_cmddesc">Έγχυση bolus %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Ανάκτηση ιστορικού TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Ενημέρωση ημερομηνίας/ώρας αντλίας</string>
     <string name="combov2_updating_pump_status_cmddesc">Ενημέρωση κατάστασης αντλίας</string>
