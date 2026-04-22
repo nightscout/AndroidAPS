@@ -16,10 +16,7 @@
     <string name="not_inserted">Non inserito</string>
     <string name="tdd_bolus">TDD da bolo</string>
     <string name="tdd_basal">TDD da basale</string>
-    <string name="tbr_formatter">%1$d%% per %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolo multiwave</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U per %3$d min</string>
-    <string name="insight_last_bolus">Ultimo bolo</string>
     <string name="searching_for_devices">Ricerca dispositivi…</string>
     <string name="pairing_completed">Associazione completata</string>
     <string name="code_compare">I codici mostrati su questo dispositivo e sul micro combaciano?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">Micro stoppato</string>
     <string name="pump_started">Micro avviato</string>
     <string name="release_software_version">Versione Release software</string>
-    <string name="ui_processor_software_version">Versione UI processor software</string>
-    <string name="pc_processor_software_version">Versione PC processor software</string>
-    <string name="md_tel_processor_software_version">Versione MD tel processor software</string>
-    <string name="safety_processor_software_version">Versione Safety processor software</string>
-    <string name="bt_info_page_version">Versione BT info page</string>
     <string name="bluetooth_address">Indirizzo bluetooth</string>
-    <string name="system_id_appendix">Appendice ID sistema</string>
     <string name="manufacturing_date">Data di produzione</string>
-    <string name="delete_pairing">Elimina associazione</string>
     <string name="log_site_changes">Registra cambi posizione</string>
     <string name="log_reservoir_changes">Registra cambi serbatoio</string>
     <string name="log_tube_changes">Registra cambi catetere</string>
@@ -58,11 +48,8 @@
     <string name="max_recovery_duration">Max. durata recupero [s]</string>
     <string name="min_recovery_duration">Min. durata recupero [s]</string>
     <string name="pump_alert">Avviso micro</string>
-    <string name="pairing_information">Informazioni associazione</string>
     <string name="last_connection">%1$s (%2$s)</string>
     <string name="unpair">Disaccoppia</string>
     <string name="reset_pairing">Resettare le informazioni di associazione?</string>
-    <string name="active_basal_rate">Tasso basale attivo</string>
-    <string name="active_tbr">TBR attivo</string>
     <string name="reservoir_level">Livello serbatoio</string>
 </resources>
