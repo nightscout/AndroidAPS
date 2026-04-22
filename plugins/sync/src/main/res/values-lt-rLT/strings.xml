@@ -63,14 +63,12 @@
     <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>
     <string name="pump_status">Pompos statusas</string>
     <string name="loop_status">Ciklo statusas</string>
-    <string name="wizard_result">Wizard asistento skaičiuotuvas:\nInsulinas: %1$.2fU\nAngliavandeniai: %2$dg</string>
     <string name="quick_wizard_not_available">Pasirinktas greitasis patarėjas nebepasiekiamas, atnaujinkite valdiklį</string>
     <string name="quick_wizard_message">QuickWizard asistentas: %1$s\nInsulinas: %2$.2fU\nAngliavandeniai: %3$dg</string>
     <string name="user_action_not_available">Pasirinktas naudotojo veiksmas %1$s nebepasiekiamas, atnaujinkite savo valdiklį</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
     <string name="wear_action_tempt_min_bg_error">Min. cukraus kiekis nepatenka į diapozoną!</string>
     <string name="wear_action_tempt_max_bg_error">Max. cukraus kiekis nepatenka į diapozoną!</string>
-    <string name="no_success">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukiami į rezultatą:</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
     <string name="wear_custom_watchface_settings">Pasirinktiniai laikrodžio ekrano nustatymai</string>
