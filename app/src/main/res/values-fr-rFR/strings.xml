@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Fermer navigation</string>
     <string name="authorizationfailed">Echec de l\'authentification</string>
     <string name="identification_not_set">Identification non définie en mode dev</string>
-    <string name="use_compose_main_screen">Utiliser l\'écran principal de Compose (expérimental)</string>
-    <string name="switch_to_compose_ui">Basculer vers l\'interface de Compose</string>
-    <string name="switch_to_classic_ui">Basculer vers l\'interface classique</string>
     <string name="select">Choisir</string>
     <string name="set">Appliquer</string>
     <string name="migrating_preferences">Migration des préférences…</string>

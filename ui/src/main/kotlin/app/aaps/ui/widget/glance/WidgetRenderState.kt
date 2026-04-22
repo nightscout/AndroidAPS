@@ -29,5 +29,6 @@ data class WidgetRenderState(
     val runningModeActive: Boolean,
     @DrawableRes val sensitivityIconResId: Int,
     val sensitivityText: String,
+    @DrawableRes val tbrIconResId: Int,
     @ColorInt val backgroundColor: Int
 )

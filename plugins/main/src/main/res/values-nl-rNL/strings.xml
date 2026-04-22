@@ -9,35 +9,14 @@
     <string name="insulin_label">Insuline</string>
     <string name="pb_label">Pomp batterij</string>
     <string name="cannula">Canule</string>
-    <string name="statuslights_cannula_age">canule leeftijd</string>
-    <string name="statuslights_patch_pump_age">patchpomp leeftijd</string>
     <string name="patch_pump">Patchpomp</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6u</string>
-    <string name="graph_scale_12h">12u</string>
-    <string name="graph_scale_18h">18u</string>
-    <string name="graph_scale_24h">24u</string>
-    <string name="graph_long_scale_6h">6 uur</string>
-    <string name="graph_long_scale_12h">12 uur</string>
-    <string name="graph_long_scale_18h">18 uur</string>
-    <string name="graph_long_scale_24h">24 uur</string>
-    <string name="a11y_graph">grafiek</string>
-    <string name="a11y_graph_scale">selecteer grafiek schaal</string>
-    <string name="a11y_graph_scale_6h">grafiek schaal 6 uur</string>
-    <string name="a11y_graph_scale_12h">grafiek schaal 12 uur</string>
-    <string name="a11y_graph_scale_18h">grafiek schaal 18 uur</string>
-    <string name="a11y_graph_scale_24h">grafiek schaal 24 uur</string>
     <string name="a11y_insulin_label">insuline</string>
-    <string name="chart_menu">Grafiek menu</string>
     <string name="a11y_bg_quality">bloedglucose kwaliteit</string>
     <string name="a11y_blood_glucose">bloed glucose</string>
     <string name="a11y_bg_outdated">verouderd</string>
-    <string name="set_basal_question">Accepteer nieuw tijdelijk basaal:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">OVZ</string>
-    <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="data_status">BG data status</string>
-    <string name="run_question">%s uitvoeren?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_treatments">Behandelingen</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">BEHAND</string>
-    <string name="graph_scale">Grafiek schaal</string>
-    <string name="graph_menu_divider_header">Grafiek</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>
     <string name="overview_show_steps">Stappen</string>
-    <string name="simple_mode_enabled">Eenvoudige modus ingeschakeld</string>
 </resources>

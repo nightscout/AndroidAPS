@@ -525,7 +525,7 @@ class ComposeMainActivity : AppCompatActivity() {
                 val objectivesPlugin = objectives as PluginBase
                 val objectivesTotal = objectives.size
                 val objectivesDone = objectives.accomplishedCount
-                val showObjectivesSetup = objectivesTotal > 0 && objectivesDone < objectivesTotal &&
+                val showObjectivesSetup = config.APS && objectivesTotal > 0 && objectivesDone < objectivesTotal &&
                     objectivesPlugin.isEnabled() && objectivesPlugin.hasComposeContent()
                 val objectivesSetupPlugin = if (showObjectivesSetup) objectivesPlugin else null
                 val objectivesProgressText = if (showObjectivesSetup) "$objectivesDone/$objectivesTotal" else null

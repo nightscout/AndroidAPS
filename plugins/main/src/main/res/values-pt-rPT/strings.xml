@@ -9,21 +9,13 @@
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Bateria da Bomba</string>
     <string name="cannula">Cânula</string>
-    <string name="statuslights_cannula_age">idade do cateter</string>
-    <string name="statuslights_patch_pump_age">idade do adesivo da bomba</string>
     <!-- Overview -->
-    <string name="a11y_graph">gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
-    <string name="chart_menu">Menu do Gráfico</string>
     <string name="a11y_bg_quality">qualidade da glicose no sangue</string>
     <string name="a11y_blood_glucose">Glicose no Sangue</string>
     <string name="a11y_bg_outdated">desatualizado</string>
-    <string name="set_basal_question">Aceitar nova basal temporária:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">Início</string>
-    <string name="description_overview">Exibe o estado actual do loop e botões para acções mais comuns</string>
     <string name="data_status">Estado dos dados da GLIC</string>
-    <string name="run_question">Executar %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
     <string name="overview_show_treatments">Tratamentos</string>
@@ -39,8 +31,6 @@
     <string name="prediction_shortname">PREV</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TRATA</string>
-    <string name="graph_scale">Escala do Gráfico</string>
-    <string name="graph_menu_divider_header">Gráfico</string>
     <string name="cannula_usage">utilização:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

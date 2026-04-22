@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="disabled_loop">Bucle desactivado</string>
+    <string name="disabled_loop">Lazo desactivado</string>
     <string name="calculator_label">Calculadora</string>
     <string name="nav_history_browser">Historial</string>
     <string name="sensor_label">Sensor</string>
@@ -9,35 +9,14 @@
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Batería de bomba</string>
     <string name="cannula">Cánula</string>
-    <string name="statuslights_cannula_age">Edad de la cánula</string>
-    <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
     <string name="patch_pump">Bomba parche</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 horas</string>
-    <string name="graph_long_scale_12h">12 horas</string>
-    <string name="graph_long_scale_18h">18 horas</string>
-    <string name="graph_long_scale_24h">24 horas</string>
-    <string name="a11y_graph">gráfico</string>
-    <string name="a11y_graph_scale">selecciona ecala del gráfico</string>
-    <string name="a11y_graph_scale_6h">6 horas de escala de gráfico</string>
-    <string name="a11y_graph_scale_12h">12 horas de escala de gráfico</string>
-    <string name="a11y_graph_scale_18h">18 horas de escala de gráfico</string>
-    <string name="a11y_graph_scale_24h">24 horas de escala de gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
-    <string name="chart_menu">Menú gráfico</string>
     <string name="a11y_bg_quality">calidad de glucosa en sangre</string>
     <string name="a11y_blood_glucose">glucosa en sangre</string>
     <string name="a11y_bg_outdated">obsoleto</string>
-    <string name="set_basal_question">Aceptar nueva basal temporal:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">INICIO</string>
-    <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
     <string name="data_status">Estado de datos de glucosa</string>
-    <string name="run_question">¿Ejecutar %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicciones</string>
     <string name="overview_show_treatments">Tratamientos</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TRAT</string>
-    <string name="graph_scale">Escala gráfica</string>
-    <string name="graph_menu_divider_header">Gráfico</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
+    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="old_data">DATOS CADUCADOS</string>
     <string name="overview_show_steps">Pasos</string>
-    <string name="simple_mode_enabled">Modo simple habilitado</string>
 </resources>

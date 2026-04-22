@@ -140,7 +140,7 @@
     <string name="wear_action_loop_state_now_open">Åpen loop</string>
     <string name="wear_action_loop_state_now_suspended">Pause loop</string>
     <string name="wear_action_loop_state_now_resumed">Gjenoppta loop</string>
-    <string name="wear_action_loop_state_now_disabled">Stans loop</string>
+    <string name="wear_action_loop_state_now_disabled">Deaktiver loop</string>
     <string name="wear_action_loop_state_now_pump_suspended">Pumpe pauset</string>
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Ugyldig</string>

@@ -31,6 +31,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vennligst konfigurer din RileyLink under. Etter å ha valgt en RileyLink, vil det være mulig å fortsette konfigureringen når RileyLink statusen er \"Tilkoblet\". Dette kan ta et minutt.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Merk:</b> Du kan fortsette oppsettet når pumpen er satt opp.\n</string>
     <string name="startobjective">Start første læringsmål</string>
+    <string name="open_objectives">Åpne opplæringsmål</string>
     <string name="setupwizard_permissions">Tillatelser</string>
     <string name="setupwizard_profile_info">Opprett en profil med basaldoser, IK, ISF og målverdier. Du kan legge til flere profiler senere.</string>
     <string name="setupwizard_permissions_info">AAPS trenger lagringstilgang og tillatelser for å fungere ordentlig. Vennligst gi de nødvendige tillatelsene nedenfor.</string>

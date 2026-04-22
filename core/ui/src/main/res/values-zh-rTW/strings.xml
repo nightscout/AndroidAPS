@@ -808,10 +808,6 @@
     <string name="reauthorize">重新驗證</string>
     <string name="cloud_auth_success">雲端儲存驗證成功</string>
     <string name="authorization_status">授權狀態</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">將 %1$s 減少 %2$s</string>
-    <string name="a11y_plus_button_description">將 %1$s 增加 %2$s</string>
-    <string name="you_are_on_allowed_limit">已達允許限制</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">事件時間</string>
@@ -901,14 +897,6 @@
     <string name="weekday_wednesday_short">週三</string>
     <string name="weekday_tuesday_short">週二</string>
     <string name="weekday_monday_short">週一</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">一</string>
-    <string name="tuesday_short">二</string>
-    <string name="wednesday_short">三</string>
-    <string name="thursday_short">四</string>
-    <string name="friday_short">五</string>
-    <string name="saturday_short">六</string>
-    <string name="sunday_short">日</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>

@@ -10,7 +10,7 @@
     <string name="diaconn_g8_history_suspend">Suspender</string>
     <string name="gettingpumpsettings">Recibiendo configuración de la bomba</string>
     <string name="gettingpumptime">Recibiendo hora de la bomba</string>
-    <string name="largetimediff">Gran diferencia de tiempo: \nLa bomba esta desincronizada más de 1,5 horas. \nPor favor, ajusta la hora manualmente en la bomba y asegúrate de que la lectura en el historial de la bomba no causa un comportamiento inesperado. \nSi es posible, borra el historial de la bomba antes de cambiar la hora o desactiva el bucle cerrado durante el periodo DIA (Duración Insulina Activa) después del último registro erróneo, con un mínimo del valor de DIA a partir de ahora.</string>
+    <string name="largetimediff">Gran diferencia de tiempo: \nLa bomba esta desincronizada más de 1,5 horas. \nPor favor, ajusta la hora manualmente en la bomba y asegúrate de que la lectura en el historial de la bomba no causa un comportamiento inesperado. \nSi es posible, borra el historial de la bomba antes de cambiar la hora o desactiva el bucle cerrado durante el periodo DIA (Duración Insulina Activa) después del último registro erróneo, con un mínimo del valor de DIA a partir de ahora</string>
     <string name="largetimedifftitle">Título de gran diferencia horaria</string>
     <string name="approachingdailylimit">Alcanzando el limite de insulina diario</string>
     <string name="startingbolus">Iniciando entrega del bolo</string>
@@ -91,8 +91,8 @@
     <string name="diacon_g8_blocksquarebolus">BOLO DUAL CUADRADO</string>
     <string name="diacon_g8_blockdualbolus">BOLO DUAL</string>
     <string name="diacon_g8_blockreplacetube">SUSTITUIR TUBO</string>
-    <string name="diacon_g8_blockreplaceneedle">NECESITA REEMPLAZO</string>
-    <string name="diacon_g8_blockreplacesyringe">REEMPLAZO DE AGUJA</string>
+    <string name="diacon_g8_blockreplaceneedle">CAMBIAR AGUJA</string>
+    <string name="diacon_g8_blockreplacesyringe">REEMPLAZAR JERINGA</string>
     <string name="diaconn_g8_logalarmblock">Inyección Bloqueada (%s)</string>
     <string name="diaconn_g8_lgorelease">Lanzar basal (%s)</string>
     <string name="diaconn_g8_lgosuspend">Suspender basal (%s)</string>

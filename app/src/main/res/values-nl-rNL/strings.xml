@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Sluit navigatie</string>
     <string name="authorizationfailed">Autorisatie mislukt</string>
     <string name="identification_not_set">Identificatie niet ingesteld in dev modus</string>
     <string name="select">Selecteer</string>

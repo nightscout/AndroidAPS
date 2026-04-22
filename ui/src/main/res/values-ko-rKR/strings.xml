@@ -102,8 +102,10 @@
     <string name="a11y_only_on_watch">watch에서만</string>
     <string name="a11y_only_on_phone">핸드폰에서만</string>
     <string name="a11y_drag_and_drop_handle">드래그 앤 드롭 핸들</string>
+    <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

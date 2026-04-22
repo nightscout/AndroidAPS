@@ -36,13 +36,6 @@
     <string name="time_last_4_days">Pask. 4 d.</string>
     <string name="time_last_week">Praėjusią savaitę</string>
     <string name="time_last_month">Praėjusį mėnesį</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Skanuoti</string>
-    <string name="ble_config_scan_selected">Parinkta</string>
-    <string name="ble_config_scan_scanning">Skanuojama</string>
-    <string name="ble_config_scan_finished">Skanavimas baigtas</string>
-    <string name="ble_config_scan_error">Skanavimo klaida: %1$d</string>
-    <string name="ble_config_remove">Pašalinti</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipas:</string>
 </resources>

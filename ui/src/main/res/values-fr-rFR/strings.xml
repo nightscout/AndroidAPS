@@ -140,6 +140,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">IA positive uniquement</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Ajouter eGlucides</string>
     <string name="confirm_treatment">Veuillez confirmer le traitement</string>
     <string name="recalculate">Recalculer</string>
@@ -155,4 +156,5 @@
         <item>Négatif uniquement</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

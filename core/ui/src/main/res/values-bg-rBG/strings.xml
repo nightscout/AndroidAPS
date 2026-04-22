@@ -479,10 +479,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">понижение %1$s с %2$s</string>
-    <string name="a11y_plus_button_description">увеличение %1$s с %2$s</string>
-    <string name="you_are_on_allowed_limit">Достигнат лимит</string>
     <string name="format_hour_minute">%1$dч %2$dм</string>
     <!-- datetime layout -->
     <string name="event_time_label">Време на събитие</string>
@@ -530,14 +526,6 @@
     <string name="weekday_wednesday_short">Ср</string>
     <string name="weekday_tuesday_short">Вт</string>
     <string name="weekday_monday_short">Пон</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">П</string>
-    <string name="tuesday_short">Вт</string>
-    <string name="wednesday_short">Ср</string>
-    <string name="thursday_short">Ч</string>
-    <string name="friday_short">П</string>
-    <string name="saturday_short">С</string>
-    <string name="sunday_short">Н</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units">%1$.2fЕ</string>
     <!--    Playback-->

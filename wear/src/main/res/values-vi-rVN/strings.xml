@@ -77,6 +77,7 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Cài đặt</string>
     <string name="menu_status">Trạng thái</string>
+    <string name="menu_bg_graph">Biểu đồ BG</string>
     <string name="menu_resync">Đồng bộ lại</string>
     <string name="menu_prime_fill">Prime/Fill</string>
     <string name="menu_none">Không</string>
@@ -198,6 +199,7 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">old</string>
@@ -221,6 +223,7 @@
     <string name="complication_full_status">Toàn bộ trạng thái</string>
     <string name="complication_full_status_flipped">Toàn bộ trạng thái (lật)</string>
     <string name="complication_blood_glucose">Đường máu</string>
+    <string name="complication_blood_glucose_large">Đường huyết (lớn)</string>
     <string name="complication_blood_glucose_ext1">Đường huyết Ext1</string>
     <string name="complication_blood_glucose_ext2">Đường huyết Ext2</string>
     <string name="complication_br_cob_iob">BR, CoB &amp; IoB</string>
@@ -229,6 +232,7 @@
     <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_br">Tỷ lệ liều nền</string>
     <string name="complication_br_tt">BR &amp; Mục tiêu</string>
+    <string name="complication_target">Mục tiêu</string>
     <string name="complication_cob_iob">CoB &amp; IoB</string>
     <string name="complication_cob_icon">Biểu tượng CoB</string>
     <string name="complication_cob_detailed">Chi tiết CoB</string>
@@ -290,6 +294,7 @@
     <string name="loop_status_temp_target">Mục tiêu tạm thời</string>
     <string name="loop_status_target_range">Phạm vi</string>
     <string name="loop_status_target">Mục tiêu</string>
+    <string name="loop_status_adjusted_target">Mục tiêu đã điều chỉnh</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
     <string name="loop_status_refresh">Làm mới</string>
     <string name="confirm">Xác nhận</string>

@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch ikke aktivert</string>
     <string name="pump_setting_failed">Kunne ikke sende brukerinnstillinger til pumpen!</string>
     <string name="pump_sync_error">Feil ved synkronisering av historikk fra pumpe, en post har blitt hoppet over. Sjekk behandlingsfanen for å kontrollere om bolusdosen er synkronisert riktig. Slumre og hvis feilen kommer tilbake bytt patch eller pumpebase.</string>
+    <string name="patch_reset_after_primed_error">Tilbakestilling ble oppdaget etter priming! Fjern patch og sett på et nytt.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Siste tilkobling</string>
     <string name="active_bolus_label">Aktiv bolus</string>
@@ -95,7 +96,6 @@
     <string name="press_next_or_OK">Trykk på <b>OK</b> for å gå tilbake til hovedskjermen. Trykk på <b>Neste</b> for å begynne å aktivere ny patch.</string>
     <string name="activation_in_progress">Oops! Noe gikk galt, det ser ut som at det allerede pågår en aktivering.</string>
     <string name="press_retry_or_discard">Trykk <b>Neste</b> for å gjenoppta aktiveringen eller <b>Forkast</b> for å tilbakestille aktiveringsstatusen.</string>
-    <string name="retry_activation_filled_error">Aktiveringen kan ikke gjenopptas. Pumpens tilstand har gått tapt. IKKE prime på nytt, da patchen kan allerede være satt inn. Kast patchen og start en ny aktivering.</string>
     <string name="reading_activation_status">Vennligst vent, leser aktiveringsstatus fra pumpen.</string>
     <!-- settings-->
     <string name="sn_input_title">Serienummer</string>

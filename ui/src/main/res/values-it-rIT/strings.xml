@@ -12,6 +12,8 @@
     <!--    Widget-->
     <string name="configure">Configura opacità</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">Grafico di glicemia AAPS</string>
+    <string name="widget_compact_bg_description">AAPS BG + IOB + COB (compatto)</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor attività</string>
     <string name="time_range">Intervallo di tempo</string>
@@ -187,6 +189,10 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Solo IOB positivo</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
     <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
+    <!--    History browser-->
+    <string name="history_now">Adesso</string>
+    <string name="a11y_history_previous_window">Finestra precedente</string>
+    <string name="a11y_history_next_window">Finestra successiva</string>
     <string name="additional_ecarbs">Aggiungi eCarbs</string>
     <string name="calculator_options">Opzioni Calcolatore</string>
     <string name="use_bg">Usa Glicemia</string>
@@ -264,4 +270,9 @@
     <string name="loop_accept_nav_label">Loop</string>
     <string name="loop_accept_set_basal_question">Accetta nuova basale temporanea:</string>
     <string name="loop_accept_perform">Esegui</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Disabilitato</string>
+    <string name="widget_rm_suspended">Sospeso</string>
+    <string name="widget_rm_resume">Riprendi</string>
 </resources>

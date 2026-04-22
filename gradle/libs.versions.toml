@@ -168,7 +168,7 @@ org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", v
 com-scottyab-rootbeer-lib = { group = "com.scottyab", name = "rootbeer-lib", version = "0.1.2" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
 com-github-bumptech-glide = { group = "com.github.bumptech.glide", name = "glide", version = "5.0.7" }
-com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "4.14.0" }
+com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta09" }
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
 io-socket-client = { group = "io.socket", name = "socket.io-client", version = "2.1.2" }
 org-osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version = "6.1.20" }
@@ -206,7 +206,7 @@ com-patrykandpatrick-vico-compose-m3 = { group = "com.patrykandpatrick.vico", na
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeUi" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
-sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "3.0.0" }
+sh-calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version = "3.1.0" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { group = "androidx.glance", name = "glance-material3", version.ref = "glance" }
 

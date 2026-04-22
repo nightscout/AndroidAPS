@@ -4,6 +4,7 @@
     <string name="error_url_not_valid">网址无效</string>
     <string name="error_mustbe4hexadidits">必须是4位字符，在ABCDEF0123456789中选用</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">治疗</string>
     <string name="treatments_desc">查看和管理治疗记录</string>
     <string name="nav_configuration">配置</string>
@@ -285,6 +286,10 @@
     <string name="current_insulin">当前已激活</string>
     <string name="change_insulin">更改</string>
     <string name="select_insulin_description">选择您要注入泵中的胰岛素。激活/启动后，将应用配置切换。</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">已选择的胰岛素：%1$s</string>
     <string name="record_insulin_hint">如果使用笔注射胰岛素，请从下方选择正确的胰岛素类型。剂量始终以国际单位表示。</string>
     <!--    ProfileSwitch-->
@@ -804,10 +809,6 @@
     <string name="reauthorize">重新验证</string>
     <string name="cloud_auth_success">云存储验证成功</string>
     <string name="authorization_status">授权状态</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">将%1$s 减少 %2$s</string>
-    <string name="a11y_plus_button_description">将%1$s 增加 %2$s</string>
-    <string name="you_are_on_allowed_limit">已达到允许的限制</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">事件时间</string>
@@ -897,14 +898,6 @@
     <string name="weekday_wednesday_short">星期三</string>
     <string name="weekday_tuesday_short">星期二</string>
     <string name="weekday_monday_short">星期一</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">周一</string>
-    <string name="tuesday_short">周二</string>
-    <string name="wednesday_short">周三</string>
-    <string name="thursday_short">周四</string>
-    <string name="friday_short">周五</string>
-    <string name="saturday_short">周六</string>
-    <string name="sunday_short">周日</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
@@ -1031,5 +1024,4 @@
     <string name="steps_shortname" comment="Short label for Steps graph series">STEPS</string>
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
-
 </resources>

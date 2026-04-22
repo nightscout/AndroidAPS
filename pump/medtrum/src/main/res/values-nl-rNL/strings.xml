@@ -94,7 +94,6 @@
     <string name="press_next_or_OK">Druk op <b>OK</b> om terug te keren naar het hoofdscherm. Druk op <b>Volgende</b> om te beginnen met de activering van een nieuwe patch.</string>
     <string name="activation_in_progress">Oeps! Er ging iets mis, het lijkt erop dat er al een activatie bezig is.</string>
     <string name="press_retry_or_discard">Druk op <b>Volgende</b> om de activering te hervatten of <b>Verwijderen</b> om de activeringsstatus te resetten.</string>
-    <string name="retry_activation_filled_error">Activering kan niet worden hervat. De pomp status is verloren. NIET opnieuw primen, de patch is mogelijk al geplaatst. Verwijder de patch en start een nieuwe activatie.</string>
     <string name="reading_activation_status">Een ogenblik geduld, activeringsstatus van de pomp wordt gelezen.</string>
     <!-- settings-->
     <string name="sn_input_title">Serienummer</string>

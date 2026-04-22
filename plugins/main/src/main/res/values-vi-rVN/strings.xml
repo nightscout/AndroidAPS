@@ -9,35 +9,14 @@
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pin Bơm</string>
     <string name="cannula">Kim truyền</string>
-    <string name="statuslights_cannula_age">cannula age</string>
-    <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 hours</string>
-    <string name="graph_long_scale_12h">12 hours</string>
-    <string name="graph_long_scale_18h">18 hours</string>
-    <string name="graph_long_scale_24h">24 hours</string>
-    <string name="a11y_graph">đồ thị</string>
-    <string name="a11y_graph_scale">chọn thang biểu đồ</string>
-    <string name="a11y_graph_scale_6h">biểu đồ 6 giờ</string>
-    <string name="a11y_graph_scale_12h">biểu đồ 12 giờ</string>
-    <string name="a11y_graph_scale_18h">biểu đồ 18 giờ</string>
-    <string name="a11y_graph_scale_24h">biểu đồ 24 giờ</string>
     <string name="a11y_insulin_label">insulin</string>
-    <string name="chart_menu">Tùy chọn biểu đồ</string>
     <string name="a11y_bg_quality">chất lượng đường huyết</string>
     <string name="a11y_blood_glucose">đường máu</string>
     <string name="a11y_bg_outdated">quá hạn</string>
-    <string name="set_basal_question">Chấp nhận liều nền tạm thời mới:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">HOME</string>
-    <string name="description_overview">Hiển thị trạng thái hiện tại của vòng lặp và các nút cho những thao tác thường dùng nhất</string>
     <string name="data_status">Trạng thái dữ liệu đường huyết</string>
-    <string name="run_question">Chạy %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Dự đoán</string>
     <string name="overview_show_treatments">Lịch sử điều trị</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="graph_scale">Tỷ lệ hiển thị đồ thị</string>
-    <string name="graph_menu_divider_header">Đồ thị</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">đã sử dụng:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Hiển thị thông báo liên tục với tóm tắt ngắn gọn về hoạt động của vòng lặp</string>
     <string name="old_data">DỮ LIỆU CŨ</string>
     <string name="overview_show_steps">Các Bước</string>
-    <string name="simple_mode_enabled">Chế độ đơn giản đã được bật</string>
 </resources>

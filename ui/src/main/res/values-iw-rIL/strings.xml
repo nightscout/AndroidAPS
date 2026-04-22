@@ -103,6 +103,7 @@
     <string name="a11y_only_on_watch">על השעון בלבד</string>
     <string name="a11y_only_on_phone">על הטלפון בלבד</string>
     <string name="a11y_drag_and_drop_handle">לחצן גרירה</string>
+    <!--    History browser-->
     <string name="confirm_treatment">אשר טיפול</string>
     <string name="recalculate">חשב מחדש</string>
     <!--    Widget-->
@@ -111,4 +112,5 @@
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

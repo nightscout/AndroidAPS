@@ -9,35 +9,14 @@
     <string name="insulin_label">Inzulín</string>
     <string name="pb_label">Batéria pumpy</string>
     <string name="cannula">Kanyla</string>
-    <string name="statuslights_cannula_age">vek kanyly</string>
-    <string name="statuslights_patch_pump_age">vek náplasťovej pumpy</string>
     <string name="patch_pump">Náplasťová pumpa</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 hodín</string>
-    <string name="graph_long_scale_12h">12 hodín</string>
-    <string name="graph_long_scale_18h">18 hodín</string>
-    <string name="graph_long_scale_24h">24 hodín</string>
-    <string name="a11y_graph">graf</string>
-    <string name="a11y_graph_scale">vyberte rozsah grafu</string>
-    <string name="a11y_graph_scale_6h">rozsah grafu 6 hodín</string>
-    <string name="a11y_graph_scale_12h">rozsah grafu 12 hodín</string>
-    <string name="a11y_graph_scale_18h">rozsah grafu 18 hodín</string>
-    <string name="a11y_graph_scale_24h">rozsah grafu 24 hodín</string>
     <string name="a11y_insulin_label">inzulín</string>
-    <string name="chart_menu">Grafové menu</string>
     <string name="a11y_bg_quality">kvalita glykémií</string>
     <string name="a11y_blood_glucose">glykémia</string>
     <string name="a11y_bg_outdated">zastaralé</string>
-    <string name="set_basal_question">Povoliť nový dočasný bazál:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">PREH</string>
-    <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="data_status">Stav dát glykémie</string>
-    <string name="run_question">Spustiť %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predikcie</string>
     <string name="overview_show_treatments">Ošetrenia</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="treatments_shortname">OŠET</string>
-    <string name="graph_scale">Mierka grafu</string>
-    <string name="graph_menu_divider_header">Graf</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
     <string name="overview_show_steps">Kroky</string>
-    <string name="simple_mode_enabled">Jednoduchý režim aktívny</string>
 </resources>

@@ -9,35 +9,14 @@
     <string name="insulin_label">Insuline</string>
     <string name="pb_label">Pile pompe</string>
     <string name="cannula">Canule</string>
-    <string name="statuslights_cannula_age">âge canule</string>
-    <string name="statuslights_patch_pump_age">âge pompe patch</string>
     <string name="patch_pump">Pompe patch</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6h</string>
-    <string name="graph_scale_12h">12h</string>
-    <string name="graph_scale_18h">18h</string>
-    <string name="graph_scale_24h">24h</string>
-    <string name="graph_long_scale_6h">6 heures</string>
-    <string name="graph_long_scale_12h">12 heures</string>
-    <string name="graph_long_scale_18h">18 heures</string>
-    <string name="graph_long_scale_24h">24 heures</string>
-    <string name="a11y_graph">graphique</string>
-    <string name="a11y_graph_scale">choisir l\'échelle du graph.</string>
-    <string name="a11y_graph_scale_6h">échelle du graphique 6 heures</string>
-    <string name="a11y_graph_scale_12h">échelle du graphique 12 heures</string>
-    <string name="a11y_graph_scale_18h">échelle du graphique 18 heures</string>
-    <string name="a11y_graph_scale_24h">échelle du graphique 24 heures</string>
     <string name="a11y_insulin_label">insuline</string>
-    <string name="chart_menu">Menu graphique</string>
     <string name="a11y_bg_quality">qualité de la glycémie</string>
     <string name="a11y_blood_glucose">glycémie</string>
     <string name="a11y_bg_outdated">obsolète</string>
-    <string name="set_basal_question">Accepter nouveau basal temp. :</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">ACCUEIL</string>
-    <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
     <string name="data_status">État des données Gly</string>
-    <string name="run_question">Exécuter %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prédictions</string>
     <string name="overview_show_treatments">Traitements</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="treatments_shortname">TRAIT</string>
-    <string name="graph_scale">Échelle du graph.</string>
-    <string name="graph_menu_divider_header">Graph</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
     <string name="overview_show_steps">Pas</string>
-    <string name="simple_mode_enabled">Mode simple activé</string>
 </resources>

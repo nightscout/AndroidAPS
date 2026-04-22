@@ -391,7 +391,6 @@
     <!-- Export destination chip labels -->
     <!-- Maintenance bottom sheet descriptions -->
     <!-- Cloud directory dialog (Compose) -->
-    <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Hora de l\'esdeveniment</string>
@@ -432,14 +431,6 @@
     <string name="weekday_wednesday_short">Dc</string>
     <string name="weekday_tuesday_short">Dt</string>
     <string name="weekday_monday_short">Dl</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Dl</string>
-    <string name="tuesday_short">Dt</string>
-    <string name="wednesday_short">Dc</string>
-    <string name="thursday_short">Dj</string>
-    <string name="friday_short">Dv</string>
-    <string name="saturday_short">Ds</string>
-    <string name="sunday_short">Dg</string>
     <!--    DecimalFormatterImpl -->
     <!--    Playback-->
     <!-- ProfileEditor -->

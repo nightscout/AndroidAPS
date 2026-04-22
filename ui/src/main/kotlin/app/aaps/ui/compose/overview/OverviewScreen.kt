@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.notifications.AapsNotification
+import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.pump.BolusProgressState
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
@@ -44,6 +45,7 @@ fun OverviewScreen(
     runningMode: RM.Mode,
     runningModeText: String,
     runningModeProgress: Float,
+    tbrState: TbrState,
     isSimpleMode: Boolean,
     calcProgress: Int,
     graphViewModel: GraphViewModel,
@@ -94,6 +96,7 @@ fun OverviewScreen(
                     runningMode = runningMode,
                     runningModeText = runningModeText,
                     runningModeProgress = runningModeProgress,
+                    tbrState = tbrState,
                     isSimpleMode = isSimpleMode,
                     calcProgress = calcProgress,
                     graphViewModel = graphViewModel,
@@ -115,6 +118,7 @@ fun OverviewScreen(
                     runningMode = runningMode,
                     runningModeText = runningModeText,
                     runningModeProgress = runningModeProgress,
+                    tbrState = tbrState,
                     isSimpleMode = isSimpleMode,
                     calcProgress = calcProgress,
                     graphViewModel = graphViewModel,

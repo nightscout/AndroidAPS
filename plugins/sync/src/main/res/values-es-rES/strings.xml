@@ -48,7 +48,7 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Enviar datos a xDrip+</string>
     <string name="xdrip_status_settings">xDrip+ Línea de estado avanzada</string>
-    <string name="disabled_loop">Bucle desactivado</string>
+    <string name="disabled_loop">Lazo desactivado</string>
     <string name="xdrip_not_installed">xDrip+ no instalado</string>
     <string name="calibration_sent">Calibración enviada a xDrip+</string>
     <string name="xdrip_local_broadcasts_summary">Enviar datos de glucosa y tratamientos a xDrip+. La fuente de datos \"xDrip+ Sync Follower\" debe estar seleccionada y la aceptación de datos debe estar activada en Ajustes - Ajustes entre aplicaciones - Aceptar glucosa/tratamientos</string>
@@ -67,7 +67,7 @@
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
     <string name="pump_status">Estado de la bomba</string>
-    <string name="loop_status">Estado del bucle</string>
+    <string name="loop_status">Estado del lazo</string>
     <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
     <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
     <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
@@ -116,10 +116,10 @@
     <string name="no_profile">Ningún perfil cargado</string>
     <string name="aps_only">Sólo se aplica en modo APS</string>
     <string name="last_aps_result_na">¡Último resultado no disponible!</string>
-    <string name="loop_status_closed">BUCLE CERRADO</string>
+    <string name="loop_status_closed">LAZO CERRADO</string>
     <string name="loop_status_open">LAZO ABIERTO</string>
     <string name="loop_status_lgs">LGS</string>
-    <string name="loop_status_disabled">BUCLE DESACTIVADO</string>
+    <string name="loop_status_disabled">LAZO DESACTIVADO</string>
     <string name="aps">APS</string>
     <string name="last_run">Última ejecución</string>
     <string name="last_enact">Último acto</string>
@@ -132,7 +132,7 @@
     <string name="wear_action_loop_state_pump_suspended">¡La bomba está suspendida!</string>
     <string name="wear_action_loop_state_profile_invalid">¡Perfil inválido!</string>
     <string name="wear_action_loop_state_unauthorized">Por favor, inténtalo de nuevo.</string>
-    <string name="wear_action_loop_state_invalid">Etado del lazo solicitado inválido</string>
+    <string name="wear_action_loop_state_invalid">Estado del lazo solicitado inválido</string>
     <string name="wear_action_running_mode_title">MODO DE EJECUCIÓN</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuración: %2$d min</string>
     <string name="wear_action_loop_state_now_closed">Lazo cerrado</string>

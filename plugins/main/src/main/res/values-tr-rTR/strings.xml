@@ -9,35 +9,14 @@
     <string name="insulin_label">İnsülin</string>
     <string name="pb_label">Pompa pili</string>
     <string name="cannula">Kanül</string>
-    <string name="statuslights_cannula_age">kanül yaşı</string>
-    <string name="statuslights_patch_pump_age">yama pompa yaşı</string>
     <string name="patch_pump">Yama pompa</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6s</string>
-    <string name="graph_scale_12h">12s</string>
-    <string name="graph_scale_18h">18s</string>
-    <string name="graph_scale_24h">24s</string>
-    <string name="graph_long_scale_6h">6 saat</string>
-    <string name="graph_long_scale_12h">12 saat</string>
-    <string name="graph_long_scale_18h">18 saat</string>
-    <string name="graph_long_scale_24h">24 saat</string>
-    <string name="a11y_graph">grafik</string>
-    <string name="a11y_graph_scale">grafik ölçeğini seç</string>
-    <string name="a11y_graph_scale_6h">6 saatlik ölçek</string>
-    <string name="a11y_graph_scale_12h">12 saatlik ölçek</string>
-    <string name="a11y_graph_scale_18h">18 saatlik ölçek</string>
-    <string name="a11y_graph_scale_24h">24 saatlik ölçek</string>
     <string name="a11y_insulin_label">insülin</string>
-    <string name="chart_menu">Grafik menüsü</string>
     <string name="a11y_bg_quality">kan şekeri kalitesi</string>
     <string name="a11y_blood_glucose">kan şekeri</string>
     <string name="a11y_bg_outdated">güncel değil</string>
-    <string name="set_basal_question">Yeni geçici bazal oranını kabul et:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">GİRİŞ</string>
-    <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="data_status">KŞ veri durumu</string>
-    <string name="run_question">Yürüt %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Tahminler</string>
     <string name="overview_show_treatments">Tedaviler</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">TAHMİN</string>
     <string name="basal_shortname">BAZAL</string>
     <string name="treatments_shortname">TEDAVİ</string>
-    <string name="graph_scale">Grafik ölçeği</string>
-    <string name="graph_menu_divider_header">Grafik</string>
-    <string name="temp_basal_overview_short_name">GB:</string>
     <string name="cannula_usage">kullanım:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
     <string name="overview_show_steps">Adımlar</string>
-    <string name="simple_mode_enabled">Basit Modu Etkinleştir</string>
 </resources>

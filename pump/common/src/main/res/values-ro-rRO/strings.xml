@@ -55,14 +55,6 @@
     <string name="time_last_4_days">Ultimele 4 zile</string>
     <string name="time_last_week">Săptămâna trecută</string>
     <string name="time_last_month">Ultima lună</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Scanați</string>
-    <string name="ble_config_scan_stop">Stop</string>
-    <string name="ble_config_scan_selected">Selectat</string>
-    <string name="ble_config_scan_scanning">Scanați</string>
-    <string name="ble_config_scan_finished">Scanare terminată</string>
-    <string name="ble_config_scan_error">Eroare la scanare: %1$d</string>
-    <string name="ble_config_remove">Ștergeți</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
 </resources>

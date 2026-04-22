@@ -55,14 +55,6 @@
     <string name="time_last_4_days">Posledné 4 dni</string>
     <string name="time_last_week">Posledný týždeň</string>
     <string name="time_last_month">Posledný mesiac</string>
-    <!-- BLE Config -->
-    <string name="ble_config_button_scan_start">Vyhľadávanie</string>
-    <string name="ble_config_scan_stop">Zastaviť</string>
-    <string name="ble_config_scan_selected">Vybrané</string>
-    <string name="ble_config_scan_scanning">Vyhľadávanie</string>
-    <string name="ble_config_scan_finished">Vyhľadávanie dokončené</string>
-    <string name="ble_config_scan_error">Chyba vyhľadávania: %1$d</string>
-    <string name="ble_config_remove">Vymazať</string>
     <!-- Pump History -->
     <string name="pump_history_type">Typ:</string>
 </resources>

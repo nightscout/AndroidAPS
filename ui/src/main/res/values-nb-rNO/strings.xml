@@ -12,6 +12,8 @@
     <!--    Widget-->
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">AAPS BS-graf</string>
+    <string name="widget_compact_bg_description">AAPS BS + IOB + COB (kompakt)</string>
     <!--     Activities-->
     <string name="activity_monitor">Aktivitetsmonitor</string>
     <string name="time_range">Tidsrom</string>
@@ -55,7 +57,7 @@
     <string name="user_profile">Brukerprofil</string>
     <string name="user_profile_description">Brukerprofilbeskrivelsen brukes til å vise de mest brukte stedene for en mann, en kvinne eller et barn</string>
     <string name="site_management">Profil for stedsadministrasjon</string>
-    <string name="site_management_description">Her angir du om du vil håndtere pumpeområde, CGM-område eller begge deler. Denne innstillingen brukes til automatisk å vise dialogen for stedsadministrasjon hver gang en ny registrering oppdages</string>
+    <string name="site_management_description">Her angir du om du vil håndtere pumpeområde, sensorområde eller begge deler. Denne innstillingen brukes til automatisk å vise dialogen for stedsadministrasjon hver gang en ny registrering oppdages</string>
     <string name="record_site_change">Registrer sted</string>
     <string name="update_site_change">Oppdater stedplassering</string>
     <string name="edit_site">Rediger</string>
@@ -187,6 +189,10 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
+    <!--    History browser-->
+    <string name="history_now">Nå</string>
+    <string name="a11y_history_previous_window">Forrige vindu</string>
+    <string name="a11y_history_next_window">Neste vindu</string>
     <string name="additional_ecarbs">Legg til eKarbo</string>
     <string name="calculator_options">Kalkulatoralternativer</string>
     <string name="use_bg">Bruk BS</string>
@@ -264,4 +270,9 @@
     <string name="loop_accept_nav_label">Loop</string>
     <string name="loop_accept_set_basal_question">Godta ny midlertidig basal:</string>
     <string name="loop_accept_perform">Utfør</string>
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">Deaktivert</string>
+    <string name="widget_rm_suspended">Pauset</string>
+    <string name="widget_rm_resume">Gjenoppta</string>
 </resources>

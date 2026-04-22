@@ -78,8 +78,9 @@ class AapsGlanceWidget(
 
 private val ChipCorner = 8.dp
 private val ChipHeight = 40.dp
-private val ChipIconSize = 20.dp
+private val ChipIconSize = 24.dp
 private val ChipGap = 3.dp
+private val ChipTextSize = 19.sp
 private val TextMuted = Color(WidgetTextMuted)
 
 @Composable
@@ -111,7 +112,7 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                 text = state.deltaText,
                 style = TextStyle(
                     color = ColorProvider(TextMuted),
-                    fontSize = 20.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
@@ -126,7 +127,7 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                     text = state.bgText,
                     style = TextStyle(
                         color = ColorProvider(bgColor),
-                        fontSize = 44.sp,
+                        fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
                         textDecoration = if (state.strikeThrough) TextDecoration.LineThrough else TextDecoration.None
                     )
@@ -151,7 +152,8 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                 text = state.timeAgoText,
                 style = TextStyle(
                     color = ColorProvider(TextMuted),
-                    fontSize = 20.sp,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
             )
@@ -189,14 +191,23 @@ private fun ChipsPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                 colorText = state.profileModified
             )
         }
-        if (state.tempTargetText.isNotBlank()) {
-            Spacer(modifier = GlanceModifier.height(ChipGap))
-            Chip(
-                modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
-                text = state.tempTargetText,
-                iconResId = state.tempTargetIconResId,
-                accentColor = Color(state.tempTargetColor),
-                isActive = state.tempTargetActive
+        Spacer(modifier = GlanceModifier.height(ChipGap))
+        Row(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
+            if (state.tempTargetText.isNotBlank()) {
+                Chip(
+                    modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
+                    text = state.tempTargetText,
+                    iconResId = state.tempTargetIconResId,
+                    accentColor = Color(state.tempTargetColor),
+                    isActive = state.tempTargetActive
+                )
+                Spacer(modifier = GlanceModifier.width(ChipGap))
+            } else {
+                Spacer(modifier = GlanceModifier.defaultWeight())
+            }
+            TbrChip(
+                modifier = GlanceModifier.fillMaxHeight(),
+                iconResId = state.tbrIconResId
             )
         }
         Spacer(modifier = GlanceModifier.height(ChipGap))
@@ -253,13 +264,35 @@ private fun Chip(
                 text = text,
                 style = TextStyle(
                     color = ColorProvider(textColor),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
+                    fontSize = ChipTextSize,
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start
                 ),
                 maxLines = maxLines
             )
         }
+    }
+}
+
+@Composable
+private fun TbrChip(
+    modifier: GlanceModifier,
+    @DrawableRes iconResId: Int
+) {
+    val accentColor = DarkElementColors.tempBasal
+    Box(
+        modifier = modifier
+            .cornerRadius(ChipCorner)
+            .background(ColorProvider(accentColor.copy(alpha = 0.2f)))
+            .padding(horizontal = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            provider = ImageProvider(iconResId),
+            contentDescription = null,
+            modifier = GlanceModifier.size(ChipIconSize),
+            colorFilter = ColorFilter.tint(ColorProvider(accentColor))
+        )
     }
 }
 

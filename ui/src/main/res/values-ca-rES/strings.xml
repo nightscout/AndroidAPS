@@ -86,8 +86,10 @@
     <!-- Other dialogs -->
     <string name="basal_rate">Ràtio de basal</string>
     <!--QuickWizard-->
+    <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->
     <!--    TDD Cycle Pattern -->
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

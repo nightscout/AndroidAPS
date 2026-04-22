@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="close_navigation">Đóng điều hướng</string>
     <string name="authorizationfailed">Xác thực không thành công</string>
     <string name="identification_not_set">Chưa thiết lập nhận dạng ở chế độ phát triển</string>
-    <string name="use_compose_main_screen">Sử dụng giao diện chính Compose (thử nghiệm)</string>
-    <string name="switch_to_compose_ui">Chuyển sang giao diện Compose</string>
-    <string name="switch_to_classic_ui">Chuyển sang giao diện cổ điển</string>
     <string name="select">Chọn</string>
     <string name="set">Thiết lập</string>
     <string name="migrating_preferences">Đang chuyển đổi cài đặt…</string>

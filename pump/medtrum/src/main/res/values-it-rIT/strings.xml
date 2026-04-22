@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch non attivata</string>
     <string name="pump_setting_failed">Errore nella configurazione delle impostazioni utente sul micro!</string>
     <string name="pump_sync_error">Errore durante la sincronizzazione della cronologia del micro, un record è stato saltato. Controllare la scheda trattamenti per verificare se il bolo è stato sincronizzato correttamente. Posporre l\'allarme e se l\'errore continua a riproporsi cambiare patch o pompa.</string>
+    <string name="patch_reset_after_primed_error">Rilevato ripristino patch dopo il priming! Rimuovere il cerotto e avviare un nuova cerotto.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Ultima connessione</string>
     <string name="active_bolus_label">Bolo attivo</string>
@@ -95,7 +96,6 @@
     <string name="press_next_or_OK">Premi <b>OK</b> per tornare alla schermata principale. Premi <b>Avanti</b> per avviare l\'attivazione di una nuova patch.</string>
     <string name="activation_in_progress">Oops! Qualcosa è andato storto, sembra ci sia già un\'attivazione in corso.</string>
     <string name="press_retry_or_discard">Premi <b>Avanti</b> per riprendere l\'attivazione o <b>Scarta</b> per resettare lo stato di attivazione.</string>
-    <string name="retry_activation_filled_error">L\'attivazione non può essere ripresa. Lo stato del micro è stato perso. NON rifare il prime, poiché il cerotto può già essere inserito. Eliminare il cerotto e iniziare una nuova attivazione.</string>
     <string name="reading_activation_status">Attendere, lettura dello stato di attivazione dal micro.</string>
     <!-- settings-->
     <string name="sn_input_title">Numero seriale</string>

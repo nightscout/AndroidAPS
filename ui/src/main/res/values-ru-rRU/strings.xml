@@ -121,6 +121,7 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Только положительный активный инсулин IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Суперболюс</string>
     <string name="a11y_drag_and_drop_handle">перетаскиватель</string>
+    <!--    History browser-->
     <string name="additional_ecarbs">Добавить eCarbs</string>
     <string name="confirm_treatment">Подтвердите терапию</string>
     <string name="recalculate">Пересчитать</string>
@@ -136,4 +137,5 @@
         <item>Только отрицательный</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
 </resources>

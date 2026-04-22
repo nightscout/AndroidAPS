@@ -9,35 +9,14 @@
     <string name="insulin_label">אינסולין</string>
     <string name="pb_label">סוללת המשאבה</string>
     <string name="cannula">צינורית</string>
-    <string name="statuslights_cannula_age">גיל הצינורית</string>
-    <string name="statuslights_patch_pump_age">גיל משאבה</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Overview -->
-    <string name="graph_scale_6h">6 שע\'</string>
-    <string name="graph_scale_12h">12 שע\'</string>
-    <string name="graph_scale_18h">18 שע\'</string>
-    <string name="graph_scale_24h">24 שע\'</string>
-    <string name="graph_long_scale_6h">6 שעות</string>
-    <string name="graph_long_scale_12h">12 שעות</string>
-    <string name="graph_long_scale_18h">18 שעות</string>
-    <string name="graph_long_scale_24h">24 שעות</string>
-    <string name="a11y_graph">גרף</string>
-    <string name="a11y_graph_scale">בחר קנה מידה של הגרף</string>
-    <string name="a11y_graph_scale_6h">קנה מידת הגרף 6 שעות</string>
-    <string name="a11y_graph_scale_12h">קנה מידת הגרף 12 שעות</string>
-    <string name="a11y_graph_scale_18h">קנה מידת הגרף 18 שעות</string>
-    <string name="a11y_graph_scale_24h">קנה מידת הגרף 24 שעות</string>
     <string name="a11y_insulin_label">אינסולין</string>
-    <string name="chart_menu">תפריט הגרף</string>
     <string name="a11y_bg_quality">איכות נתוני סוכר</string>
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
-    <string name="set_basal_question">אשר בזאלי זמני חדש:</string>
     <!-- overview moved to core:ui module -->
-    <string name="overview_shortname">בית</string>
-    <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="data_status">מצב נתוני הסוכר</string>
-    <string name="run_question">להפעיל %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">חיזוי</string>
     <string name="overview_show_treatments">טיפולים</string>
@@ -55,14 +34,10 @@
     <string name="prediction_shortname">חיזוי</string>
     <string name="basal_shortname">בזאל\'</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="graph_scale">קנה מידה של הגרף</string>
-    <string name="graph_menu_divider_header">גרף</string>
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
     <string name="overview_show_steps">צעדים</string>
-    <string name="simple_mode_enabled">נבחר המצב הפשוט</string>
 </resources>

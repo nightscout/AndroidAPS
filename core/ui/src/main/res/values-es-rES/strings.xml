@@ -4,10 +4,11 @@
     <string name="error_url_not_valid">La URL web no es válida</string>
     <string name="error_mustbe4hexadidits">Debe tener 4 caracteres de ABCDEF0123456789</string>
     <!--    General-->
+    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Tratamientos</string>
     <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
     <string name="nav_configuration">Configuración</string>
-    <string name="nav_configuration_desc">Configura tu ajustes (MCG, Bomba, ...) y activa las funciones</string>
+    <string name="nav_configuration_desc">Configura tus ajustes (MCG, Bomba, ...) y activa las funciones</string>
     <string name="count_selected">%1$d seleccionado</string>
     <string name="delete">Borrar</string>
     <string name="show_invalidated">Mostrar invalidados</string>
@@ -285,6 +286,10 @@
     <string name="current_insulin">Activo actualmente</string>
     <string name="change_insulin">Cambiar</string>
     <string name="select_insulin_description">Seleccione la insulina con la que está llenando la bomba. Se aplicará un cambio de perfil después de la activación/cebado.</string>
+    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
+    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
+    <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina seleccionada: %1$s</string>
     <string name="record_insulin_hint">Si va a introducir insulina administrada con bolígrafo, seleccione el tipo de insulina correcto a continuación. La dosis es siempre en Unidades Internacionales.</string>
     <!--    ProfileSwitch-->
@@ -414,6 +419,7 @@
     <string name="arrow_center">Centro</string>
     <!--    Command-->
     <string name="connectiontimedout">Tiempo de conexión agotado</string>
+    <string name="pump_not_configured">Bomba no configurada</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Ejecutado</string>
     <string name="comment">Comentario</string>
@@ -803,10 +809,6 @@
     <string name="reauthorize">Volver a autenticar</string>
     <string name="cloud_auth_success">Autenticación en la nube completada con éxito</string>
     <string name="authorization_status">Estado de la autorización</string>
-    <!-- NumberPicker -->
-    <string name="a11y_min_button_description">decremento %1$s por %2$s</string>
-    <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
-    <string name="you_are_on_allowed_limit">Límite permitido alcanzado</string>
     <string name="format_hour_minute">%1$dhoras %2$dmin</string>
     <!-- datetime layout -->
     <string name="event_time_label">Hora del evento</string>
@@ -899,14 +901,6 @@
     <string name="weekday_wednesday_short">Mie</string>
     <string name="weekday_tuesday_short">Mar</string>
     <string name="weekday_monday_short">Lun</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">L</string>
-    <string name="tuesday_short">M</string>
-    <string name="wednesday_short">X</string>
-    <string name="thursday_short">J</string>
-    <string name="friday_short">V</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">D</string>
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
@@ -1018,6 +1012,8 @@
     <string name="graph_edit">Editar gráfico</string>
     <string name="graph_number">Gráfico %1$d</string>
     <string name="graph_bg">Gráfica de BG</string>
+    <string name="graph_height">Altura del gráfico [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
@@ -1031,5 +1027,4 @@
     <string name="steps_shortname" comment="Short label for Steps graph series">PASOS</string>
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
-
 </resources>

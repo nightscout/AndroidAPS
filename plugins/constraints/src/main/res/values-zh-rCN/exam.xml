@@ -195,4 +195,22 @@
     <string name="profileswitch4_multi">可以设置和选择多个配置文件，以适应不断变化的环境(例如激素变化、轮班工作、工作日/周末生活方式)。</string>
     <string name="other_medication_label">其他药物。请阅读下面的声明，然后勾选接受声明。</string>
     <string name="other_medication_text">AAPS通过降低基础率或暂停胰岛素泵来提高血糖值。而SGLT2抑制剂类药物(格列氟嗪) 可防止血糖升高，因此可能会导致危险的胰岛素缺乏DKA症状。\n常见的品牌包括: Invokana卡格列净®, Forxiga达格列净®, Jardiance恩格列净®, Steglatro埃格列净®, Suglat伊格列净L-脯氨酸®, Apleway®, Deberza托格列净®, Synjardy恩格列净/二甲双胍®, Vokanamet卡格列净/速释二甲双胍®, Xigduo达格列净/缓释型盐酸二甲双胍®.\n\n我在此承诺，不会在使用AAPS 时服用此类药物，保证在使用此类药物前停用闭环。</string>
+    <string name="concentration_feature_label">胰岛素浓度管理</string>
+    <string name="u200_with_profile">在 AAPS 支持胰岛素浓度设置之前，用户通过将配置设为 50% 来让所有数值减半，从而使用 U200 胰岛素。
+在这种设置下，哪些说法是正确的？</string>
+    <string name="u200_with_profile_reports">我的 AAPS 内部数据库和 NS 报告数据出现错误，所有数值（大剂量、基础率、每日总胰岛素量 TDD）都需要乘以 2 才能反映真实情况，尤其是给医生和医疗团队查看时。</string>
+    <string name="u200_with_profile_pens">如果我使用 U200 笔进行外部大剂量注射，就无需在 AAPS 和笔之间进行任何换算。</string>
+    <string name="u200_with_profile_pens2">无论使用哪种笔进行外部大剂量注射（U100 或 U200），每次注射时我都必须在 AAPS 计算的剂量和笔上选择的剂量之间进行换算</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">你一直在使用 50% 配置文件 的临时方案搭配 U200 胰岛素，现在想要切换到新的胰岛素浓度功能。以下哪些说法是正确的？</string>
+    <string name="switch_u200_profile_any_time">可以随时切换，因为我的泵内已经装有正确的 U200 胰岛素。</string>
+    <string name="switch_u200_profile_ps">我需要准备一份强度翻倍的配置方案（相较于当前默认配置的 200%），并在选择 U200 胰岛素后、下次更换贴片 / 储药器时同步这份新配置。</string>
+    <string name="switch_u200_profile_dynisf">我必须禁用 DynISF 功能至少一周，才能让每日总胰岛素量（TDD）与以国际单位计算的实际 TDD 值完全一致。</string>
+    <string name="switch_u200_profile_mental">切换之后，我需要在数周内格外小心，让自己习惯以  国际单位（IU） 来思考大剂量、基础率和每日总胰岛素量（TDD）数值。</string>
+    <string name="switch_u100_u200">你目前使用 U100 胰岛素，并计划通过新的胰岛素浓度功能切换到其他浓度。
+我应该怎么做？</string>
+    <string name="switch_u100_u200_profile">我必须修改我的配置文件。</string>
+    <string name="switch_u100_u200_tube">我绝不应该通过泵的用户界面（针对导管式泵）来推注大剂量。</string>
+    <string name="switch_u100_u200_pen">切换之后，我仍然需要在 AAPS 与使用笔进行的外部大剂量注射之间进行换算。</string>
+    <string name="switch_u100_u200_change">只有在更换储药器内胰岛素或更换贴片 / Pod时，才能切换胰岛素浓度。</string>
 </resources>
