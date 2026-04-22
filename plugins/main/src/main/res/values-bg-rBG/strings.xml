@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop изключен</string>
-    <string name="calculator_label">Калкулатор</string>
     <string name="nav_history_browser">История</string>
     <string name="sensor_label">Сензор</string>
-    <string name="age_label">възраст:</string>
-    <string name="level_label">ниво:</string>
     <string name="insulin_label">Инсулин</string>
     <string name="pb_label">Батерия на помпата</string>
     <string name="cannula">Канюла</string>
     <string name="patch_pump">Пач помпа</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">инсулин</string>
-    <string name="a11y_bg_quality">качество на КЗ</string>
-    <string name="a11y_blood_glucose">кръвна захар</string>
-    <string name="a11y_bg_outdated">остаряло</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Статус на данни за КЗ</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Прогнозни КЗ</string>
-    <string name="overview_show_treatments">Лечения</string>
-    <string name="overview_show_heartRate">Сърдечен ритъм</string>
-    <string name="overview_show_deviation_slope">Наклон на отклонението</string>
-    <string name="overview_show_activity">Активност</string>
-    <string name="overview_show_bgi">Въздействие на Кръвна Захар</string>
-    <string name="overview_show_deviations">Отклонения</string>
-    <string name="overview_show_cob">Активни въглехидрати</string>
-    <string name="overview_show_iob">Действащ инсулин</string>
-    <string name="overview_show_basals">Базали</string>
-    <string name="overview_show_abs_insulin">Абсолютен инсулин</string>
-    <string name="prediction_shortname">Предв</string>
     <string name="basal_shortname">БАЗА</string>
-    <string name="treatments_shortname">Леч</string>
-    <string name="cannula_usage">употреба:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
