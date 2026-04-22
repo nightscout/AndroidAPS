@@ -219,8 +219,14 @@ class NSClientV3Service : DaggerService() {
         val docString = response.getString("doc")
         rxBus.send(EventNSClientNewLog("◄ WS CREATE/UPDATE", "$collection <i>$docString</i>"))
         val srvModified = docJson.getLong("srvModified")
-        nsClientV3Plugin.lastLoadedSrvModified.set(collection, srvModified)
-        nsClientV3Plugin.storeLastLoadedSrvModified()
+        // Don't advance the high-water-mark until the initial catch-up load chain
+        // has finished after a (re)connect. Otherwise the Load*Worker chain would
+        // query "modifiedSince (just-bumped pointer)" and skip exactly the offline
+        // window we need to backfill.
+        if (nsClientV3Plugin.initialLoadFinished) {
+            nsClientV3Plugin.lastLoadedSrvModified.set(collection, srvModified)
+            nsClientV3Plugin.storeLastLoadedSrvModified()
+        }
         when (collection) {
             "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it)) }
             "entries"      -> docString.toNSSgvV3()?.let {
