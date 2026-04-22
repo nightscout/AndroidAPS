@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS(圓形)</string>
     <string name="label_watchface_digital_style">AAPS(數位風格)</string>
     <string name="label_watchface_custom">AAPS(自訂)</string>
-    <string name="label_actions_tile">AAPS(動作)</string>
-    <string name="label_temp_target_tile">AAPS(臨時目標)</string>
-    <string name="label_quick_wizard_tile">AAPS(快速嚮導)</string>
-    <string name="label_user_action_tile">AAPS(用戶操作)</string>
     <string name="msg_warning_sync">自 %1$s 起無接收到資料！請檢查手機上的 AAPS 是否將資料傳送到手錶</string>
     <string name="msg_warning_old">AAPS 資料已過期 %1$s！請檢查您的傳感器、xDrip+、NS、AAPS 配置或其他！</string>
     <string name="pref_vibrate_on_bolus">注射時震動</string>
@@ -224,7 +220,6 @@
     <string name="complication_iob_detailed">IoB詳細</string>
     <string name="complication_uploader_phone_battery">Uploader/顯示手機電池</string>
     <string name="status_running_mode">執行模式</string>
-    <string name="label_running_mode_title">AAPS(執行模式)</string>
     <string name="action_running_mode_selected">已請求執行模式</string>
     <string name="title_activity_disconnect_pump">中斷幫浦連線</string>
     <string name="title_activity_suspend_loop">暫停循環</string>
