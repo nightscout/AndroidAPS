@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(ВремЦель)</string>
     <string name="label_quick_wizard_tile">AAPS(Мастер)</string>
     <string name="label_user_action_tile">AAPS (действие пользователя)</string>
-    <string name="label_warning_sync">Данные не поступают!</string>
-    <string name="label_warning_old">Старые данные!</string>
-    <string name="label_warning_since">Длится с: %1$s</string>
-    <string name="label_warning_sync_aaps">Синхронизация с ААПС!</string>
     <string name="msg_warning_sync">Нет данных начиная с %1$s! Убедитесь, что AAPS на телефоне отправляет данные на часы</string>
     <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
@@ -82,7 +78,6 @@
     <string name="menu_none">Не показывать</string>
     <string name="menu_default">По умолчанию</string>
     <string name="menu_menu">Меню</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">Требуется Временная Цель</string>
     <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
     <string name="action_user_action_confirmation">Запрошено действие пользователя</string>
@@ -97,7 +92,6 @@
     <string name="action_ecarbs">Растянутые углеводы eCarbs </string>
     <string name="action_percentage">Процент\n[%]</string>
     <string name="action_start_minutes">Начало\n[minutes]</string>
-    <string name="action_duration_h">Продолжительность [h]</string>
     <string name="action_duration_hours">Продолжительность\n[час]</string>
     <string name="action_insulin">Инсулин</string>
     <string name="action_insulin_units">Инсулин [ед]</string>
@@ -137,7 +131,6 @@
     <string name="color_name_gray">серый</string>
     <string name="color_name_bluegray">сине-серый</string>
     <string name="color_name_white">белый</string>
-    <string name="color_name_black">black</string>
     <string name="color_name_multicolor">полихром</string>
     <string name="pref_simplify_ui">Упростить интерфейс</string>
     <string name="pref_vibrate_hourly">Почасовая вибрация</string>
@@ -170,8 +163,6 @@
     <string name="tile_no_config">Нет доступной конфигурации</string>
     <string name="wear_control_not_enabled">Функция управления Wear выключена</string>
     <string name="wear_control_no_data">Нет данных</string>
-    <string name="increment">приращение</string>
-    <string name="decrement">декремент</string>
     <string name="abbreviation_average">сред</string>
     <string name="no_iob_u">--ед</string>
     <string name="no_cob_g">--г</string>
@@ -186,8 +177,6 @@
     <string name="hour_short">ч</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s%2$s%3$s</string>
-    <string name="old">старые</string>
-    <string name="old_warning">!старое!</string>
     <string name="pref_heartRateSampling">Частота сердечных сокращений</string>
     <string name="pref_heartRateSmoothing">Сглаживание частоты сердечных сокращений</string>
     <string name="pref_stepsSampling">Включить счетчик шагов</string>
@@ -234,7 +223,6 @@
     <string name="wizard_result_total">Итого</string>
     <string name="wizard_insulin_format">%1$s ед</string>
     <string name="insulin_unit_short">ед</string>
-    <string name="expand_calculation_details">Нажмите, чтобы показать детали вычисления</string>
     <string name="wizard_confirmation_sent">Отправлено</string>
     <string name="tile_settings">Настройки плиток</string>
     <string name="loop_status_error">Не удалось загрузить статус</string>
