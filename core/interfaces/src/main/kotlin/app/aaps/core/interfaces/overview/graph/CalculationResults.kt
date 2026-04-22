@@ -367,6 +367,33 @@ data class RunningModeDisplayData(
     val duration: Long                   // Mode duration in ms (0 if permanent)
 )
 
+/**
+ * Running temp-basal chip state classification.
+ */
+enum class TbrState {
+
+    /** No TBR running, or running TBR matches profile basal */
+    NONE,
+
+    /** TBR rate above profile basal */
+    HIGH,
+
+    /** TBR rate below profile basal */
+    LOW
+}
+
+/**
+ * Temp basal display data for overview chips.
+ * Stores raw data; ViewModel derives expiry on ticks.
+ * `timestamp`/`duration` describe the active TBR row (if any) so the ViewModel can
+ * detect `timestamp + duration` expiry the same way it does for TT/Profile/RM.
+ */
+data class TbrDisplayData(
+    val state: TbrState,
+    val timestamp: Long,                 // When TBR started (0 if none)
+    val duration: Long                   // TBR duration in ms (0 if none)
+)
+
 // ============================================================================
 // Treatment Belt Graph Data (running mode segments for belt graph overlay)
 // ============================================================================
