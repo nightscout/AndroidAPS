@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS (круглый)</string>
     <string name="label_watchface_digital_style">AAPS (ЦифровойСтиль)</string>
     <string name="label_watchface_custom">AAPS (настраиваемый)</string>
-    <string name="label_actions_tile">AAPS (Действия)</string>
-    <string name="label_temp_target_tile">AAPS(ВремЦель)</string>
-    <string name="label_quick_wizard_tile">AAPS(Мастер)</string>
-    <string name="label_user_action_tile">AAPS (действие пользователя)</string>
     <string name="msg_warning_sync">Нет данных начиная с %1$s! Убедитесь, что AAPS на телефоне отправляет данные на часы</string>
     <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
