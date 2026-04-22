@@ -29,7 +29,6 @@
     <string name="equil_tone_mode_shake">Chỉ rung</string>
     <string name="equil_tone_mode_tone">Chỉ âm báo</string>
     <string name="equil_tone_mode_tone_and_shake">Rung và âm báo</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">Thao tác này sẽ dừng việc truyền insulin và rút piston bơm về đáy! Đồng thời, nó sẽ xóa trạng thái liên kết!</string>
     <string name="equil_ble_config_confirmation_title">Ghép nối bơm Patch Equil</string>
     <string name="equil_error">Lỗi kết nối</string>
@@ -116,7 +115,6 @@
     <string name="equil_history_item18">Đã dừng lại do dây truyền bất thường</string>
     <string name="equil_common_overview_button_suspend_delivery">Tạm dừng</string>
     <string name="equil_common_overview_button_resume_delivery">Tiếp tục bơm insulin</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d phút)</string>
     <string name="equil_common_moments_ago">Cách đây ít phút</string>
     <string name="equil_common_less_than_a_minute_ago">Chưa đầy một phút trước</string>
     <string name="equil_common_time_ago">%1$s trước</string>
