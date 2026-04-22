@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="error_field_must_not_be_empty">Toto pole nesmí být prázdné</string>
+    <string name="error_url_not_valid">Adresa URL webu není platná</string>
+    <string name="error_mustbe4hexadidits">Musí obsahovat 4 znaky z ABCDEF0123456789</string>
     <!--    General-->
     <string name="refresh">Obnovit</string>
     <string name="error">Chyba</string>
@@ -37,6 +40,7 @@
     <string name="ue_export_to_csv">Exportovat uživatelské záznamy do Excelu (csv)</string>
     <string name="confirm">Potvrdit</string>
     <string name="pump">Pumpa</string>
+    <string name="pump_management">Pumpa</string>
     <string name="missed_bg_readings">Chybějící glykémie</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Ztlumit na 5 minut</string>
@@ -225,6 +229,7 @@
     <string name="careportal_dad_alert">Hlášení psa</string>
     <string name="careportal_insulin_cartridge_change">Výměna inzulínu</string>
     <string name="careportal_profileswitch">Přepnutí profilu</string>
+    <string name="profile_management">Profil</string>
     <string name="careportal_snackbolus">Bolus na svačinu</string>
     <string name="careportal_mealbolus">Bolus na jídlo</string>
     <string name="careportal_correctionbolus">Korekční bolus</string>
@@ -239,6 +244,7 @@
     <string name="careportal_temporarytargetvalue">Hodnota dočasného cíle</string>
     <string name="careportal_temporarytargetcancel">Dočasný cíl konec</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
+    <string name="insulin_management">Inzulín</string>
     <string name="glucosetype_finger">Glukoměr</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Ručně</string>
@@ -250,6 +256,7 @@
     <string name="automation">Automatizace</string>
     <string name="settingsexport">Export nastavení</string>
     <string name="custom">Volitelný</string>
+    <string name="temp_target_management">Dočasný cíl</string>
     <string name="loop">Smyčka</string>
     <string name="ns">NS</string>
     <string name="record">Záznam</string>
@@ -288,6 +295,7 @@
     <string name="arrow_center">Uprostřed</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršel čas připojování</string>
+    <string name="pump_not_configured">Pumpa není nakonfigurována</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Provedeno</string>
     <string name="comment">Komentář</string>
@@ -534,6 +542,12 @@
     <string name="pairing">Párování</string>
     <string name="initializing">Inicializuji ...</string>
     <string name="secs" comment="second short">%1$d s</string>
+    <string name="warning" comment="Generic warning dialog title">Varování</string>
+    <string name="retry" comment="Button label to retry a failed operation">Opakovat</string>
+    <string name="finish" comment="Button label to complete a wizard/setup flow">Dokončit</string>
+    <string name="firmware" comment="Pump firmware version label">Firmware</string>
+    <string name="bolusspeed" comment="Speed at which bolus is delivered">Rychlost bolusu</string>
+    <string name="history" comment="Tab/screen title for viewing past events">Historie</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -558,6 +572,7 @@
     <string name="export_failed">Chyba</string>
     <string name="export_alert">VÝSTRAHA</string>
     <!-- Export dialog strings -->
+    <string name="master_password_missing">Hlavní heslo není nastaveno!\n\nNejdříve nastavte hlavní heslo a zkuste to znovu.</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Nastavení exportováno</string>
     <string name="export_result_message_failed">Nastavení NEJSOU správně exportována!</string>
@@ -634,10 +649,30 @@
     <!-- ProfileEditor -->
     <!--    Search-->
     <!--    Food Management -->
+    <string name="food_management">Potravina</string>
+    <string name="food_deleted">Potravina odstraněna</string>
+    <string name="edit_food">Upravit potravinu</string>
+    <string name="add_food">Přidat potravinu</string>
+    <string name="name">Název</string>
+    <string name="category">Kategorie</string>
+    <string name="subcategory">Podkategorie</string>
+    <string name="portion">Porce</string>
+    <string name="unit_label">Jednotka</string>
+    <string name="fat">Tuky</string>
+    <string name="protein">Bílkoviny</string>
+    <string name="energy">Kalorie</string>
+    <string name="undo">Vrátit zpět</string>
+    <string name="no_data">Žádná data</string>
+    <string name="manage_food_desc">Spravovat položky databáze potravin</string>
+    <string name="label_carbs_g">Sacharidy (g)</string>
+    <string name="label_fat_g">Tuky (g)</string>
+    <string name="label_protein_g">Bílkoviny (g)</string>
+    <string name="label_energy_kj">Kalorie (kJ)</string>
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
+    <string name="graph_height">Výška grafu [dp]</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
 </resources>
