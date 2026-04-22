@@ -52,13 +52,11 @@
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
     <string name="pump_status">Status der Pumpe</string>
     <string name="loop_status">Loop Status</string>
-    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Verschiedene Einheiten werden auf Uhr und Telefon verwendet!</string>
     <string name="wear_action_tempt_min_bg_error">Min-BG ist außerhalb des Bereichs!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG ist außerhalb des Bereichs!</string>
-    <string name="no_success">Nicht erfolgreich - bitte Telefon prüfen</string>
     <string name="wear_wizard_settings_summary">Berechnungen, die im Assistenten berücksichtigt werden:</string>
     <string name="wear_general_settings">Allgemeine Einstellungen</string>
     <string name="wear_custom_watchface_settings">Benutzerdefinierte Watchface Einstellungen</string>
