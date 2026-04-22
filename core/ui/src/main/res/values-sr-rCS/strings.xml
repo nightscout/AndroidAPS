@@ -2,7 +2,6 @@
 <resources>
     <!--    General-->
     <string name="constraint_applied">Primenjeno ograničenje!</string>
-    <string name="tempbasals_iobtotal_label_string">Ukupno IOB:</string>
     <string name="tt_label">TT</string>
     <string name="save">Sačuvaj</string>
     <string name="virtual_pump">Virtuelna Pumpa</string>
@@ -44,7 +43,6 @@
     <!--    CarbsReq-->
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">Odnos</string>
     <!--    Ntp-->
     <!-- User Entry -->
     <!-- HardLimits -->
@@ -55,14 +53,12 @@
     <!-- Autotune -->
     <!-- Alerts -->
     <!-- BolusWizard -->
-    <string name="quickwizard">Brzi Čarobnjak</string>
     <!--    Preferences-->
     <!--    Protection-->
     <!--    Pumps -->
     <!--    Constraints-->
     <!--    Dialogs-->
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za dešifriranje uvezenih postavki.</string>
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
