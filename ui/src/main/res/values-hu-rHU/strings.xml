@@ -10,7 +10,6 @@
     <string name="bg_meter">Mérő</string>
     <string name="bg_sensor">Szenzor</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <!-- InsulinDialog -->
@@ -22,16 +21,13 @@
     <string name="duration3h">3 óra</string>
     <string name="duration10h">10 óra</string>
     <!-- WizardDialog -->
-    <string name="two_hours">2ó</string>
     <string name="missing_carbs">Hiányzik %1$d g</string>
     <!-- Treatments -->
-    <string name="treatments_wizard_correction_label">Korr</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil típusa</string>
     <string name="selected_profile">Kiválasztott:</string>
     <string name="motol_default_profile">Alapértelmezett profil</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Bázisütem</string>
     <!--QuickWizard-->
     <!--    History browser-->
     <!--    Widget-->
