@@ -6,7 +6,6 @@
     <string name="profile_set_ok">Профила на помпата е обновен</string>
     <string name="invalid_input">Грешни входящи данни</string>
     <string name="constraint_applied">Приложено ограничение!</string>
-    <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
     <string name="tt_label">Вр.цел</string>
     <string name="pump_unreachable">Помпата е недостъпна</string>
     <string name="insulin_unit_shortname">Ед.</string>
@@ -17,7 +16,6 @@
     <string name="limiting_iob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
     <string name="loop_disabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="event_type">Тип събитие</string>
-    <string name="reload">Презареди</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
     <string name="save">Съхрани</string>
@@ -44,12 +42,10 @@
     <string name="success">Успешен</string>
     <string name="advanced_settings_title">Разширени настройки</string>
     <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
-    <string name="aps_mode_title">APS режим</string>
     <string name="extended_bolus">Удължен болус</string>
     <string name="paused">Пауза</string>
     <string name="tdd_total">ТДД общо</string>
     <string name="goingtodeliver">Ще стартира %1$.2fЕ болус</string>
-    <string name="waitingforpump">Чакаме помпата</string>
     <string name="androidaps_start">AAPS стартирана</string>
     <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
     <string name="format_carbs">%1$d гр</string>
@@ -76,7 +72,6 @@
     <string name="target_long_label">Целева КЗ</string>
     <string name="shortgram">гр.</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">ОК</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="exit">Изход</string>
@@ -98,9 +93,6 @@
     <string name="time">Време</string>
     <string name="ns_wifi_ssids">WiFi име</string>
     <string name="notes_label">Бележки</string>
-    <string name="remove_button">Изтрий</string>
-    <string name="add_new">Добави нов</string>
-    <string name="addnew_above">Добави нов над</string>
     <string name="wrong_pump_data">Данните идват от различна помпа. Сменете драйвера на помпата, за да възстановите състоянието на помпата.</string>
     <string name="bg_label">КЗ</string>
     <string name="calibration">Калибрация</string>
@@ -110,8 +102,6 @@
     <string name="pumpsuspended">Помпата е спряна</string>
     <string name="notconfigured">Не е конфигуриран</string>
     <string name="loopsuspended">Loop изключен</string>
-    <string name="trend_arrow">Стрелка тенденция</string>
-    <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">нужн</string>
     <string name="a11y_arrow_double_down">пада бързо</string>
     <string name="a11y_arrow_single_down">пада</string>
@@ -126,17 +116,12 @@
     <string name="a11y_inrange">в диапазон</string>
     <string name="a11y_low">ниска</string>
     <string name="average">Средно</string>
-    <string name="none"><![CDATA[<празно>]]></string>
-    <string name="remove_label">ИЗТРИИ</string>
     <string name="activate_profile">Активирай профила</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
-    <string name="select_for_removal">Изберете за премахване</string>
     <string name="confirm_remove_multiple_items">Сигурен ли сте, че искате да премахнете %1$d елементи?</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
-    <string name="bg_trend_label">Δ за 15мин</string>
-    <string name="treatments_wizard_cob_label">СОВ</string>
     <string name="bolus_iob_label">IOB от болуси</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
     <string name="invalid">НЕВАЛИДНО</string>
@@ -177,7 +162,6 @@
     <string name="nochangerequested">Не се изисква промяна</string>
     <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Грешен профил: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d мин</string>
     <!--    Translator-->
@@ -215,7 +199,6 @@
     <string name="glucosetype_finger">Пръст</string>
     <string name="glucosetype_sensor">Сензор</string>
     <string name="manual">Друго</string>
-    <string name="unknown">неизвестно</string>
     <string name="eatingsoon">Преди хранене</string>
     <string name="hypo">Хипоглекимия</string>
     <string name="activity">Физ.активност</string>
@@ -238,13 +221,6 @@
     <string name="carbsreq">%1$d гр допълнителни въглехидрати ще са необходими до %2$d минути</string>
     <string name="basalrate">Базал</string>
     <string name="bolus">Болус</string>
-    <string name="ratio">Коефициент</string>
-    <string name="amount_days"># дни</string>
-    <string name="weight">Тегло</string>
-    <string name="warning_Message">Възможна неточност, ако сте използвали болус за презареждане!</string>
-    <string name="olddata_Message">Стари данни, натиснете \"ПРЕЗАРЕДИ\"</string>
-    <string name="tbb">Общо базален инсулин</string>
-    <string name="tbb2">ОБИ * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Засичане на времето</string>
     <!-- User Entry -->
@@ -314,7 +290,6 @@
     <string name="uel_stat_reset">STAT RESET</string>
     <string name="uel_delete_logs">DELETE LOGS</string>
     <string name="uel_delete_future_treatments">DELETE FUTURE TREATMENTS</string>
-    <string name="delete_future_treatments">Изтрий лечения в бъдещето</string>
     <string name="uel_export_settings">EXPORT SETTINGS</string>
     <string name="uel_import_settings">IMPORT SETTINGS</string>
     <string name="uel_reset_databases">RESET DATABASES</string>
@@ -329,7 +304,6 @@
     <string name="uel_exit_aaps">EXIT AAPS</string>
     <string name="uel_plugin_enabled">PLUGIN ENABLED</string>
     <string name="uel_plugin_disabled">PLUGIN DISABLED</string>
-    <string name="uel_unknown">UNKNOWN</string>
     <string name="ue_string">Низ</string>
     <string name="ue_source">Източник</string>
     <string name="ue_utc_offset">UTC Offset</string>
@@ -338,7 +312,6 @@
     <string name="ue_none">Няма единица</string>
     <string name="uel_loop_change">LOOP CHANGED</string>
     <string name="uel_loop_removed">LOOP REMOVED</string>
-    <string name="uel_other">ДРУГИ</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Профил ниска цел</string>
     <string name="profile_high_target">Профил висока цел</string>
@@ -368,8 +341,6 @@
     <string name="set_profile">ЗАДАЙ ПРОФИЛ</string>
     <string name="set_user_settings">ЗАДАЙ ПОТРЕБИТЕЛСКИ НАСТРОЙКИ</string>
     <string name="smb_bolus_u">SMB БОЛУС %1$.2f Е</string>
-    <string name="start_pump">СТАРТИРАЙ ПОМПА</string>
-    <string name="stop_pump">СТОП ПОМПА</string>
     <string name="temp_basal_absolute">ВРЕМЕНЕН БАЗАЛ %1$.2f Е/ч %2$d мин</string>
     <string name="temp_basal_percent">ВРЕМЕНЕН БАЗАЛ %1$d%% %2$d мин</string>
     <string name="insight_set_tbr_over_notification">INSIGHT НАСТРОЙКА TBR ЧРЕЗ ИЗВЕСТИЯ</string>
@@ -380,8 +351,6 @@
     <string name="formatPercent">%1$.0f %%</string>
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
-    <string name="a11y_file">файл</string>
-    <string name="a11y_user">потребител</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Дни на настройка:</string>
@@ -414,7 +383,6 @@
     <string name="wizard_explain_tt">Временна цел: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s към %2$s</string>
     <string name="wizard_pump_not_available">Помпата не е налична!</string>
-    <string name="quickwizard">Бърза настройка</string>
     <!--    Preferences-->
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
@@ -439,23 +407,17 @@
     <string name="disconnected">Не е сврзана</string>
     <string name="connecting">Свързване</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Натиснато е свързване с помпата</string>
-    <string name="reservoir_value">%1$.0f / %2$d Е</string>
     <string name="daily_units">Инсулин за деня</string>
-    <string name="pump_icon">Икона на помпата</string>
-    <string name="view_profile">Виж профил</string>
     <string name="pump_history">История</string>
-    <string name="stats">Статистика</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Драйверът на помпата е променен.</string>
     <string name="device_changed" comment="26 characters max for translation">Устройството е сменено</string>
     <string name="bolus_ok" comment="26 characters max for translation">Болус ОК</string>
     <string name="temp_basal_delivery_error">Грешка при подаване на временен базал</string>
-    <string name="not_set_short">Не е зададен</string>
     <string name="pump_busy">Помпата е заета</string>
     <string name="connection_error">Грешка при връзка с помпата</string>
     <string name="reading_pump_history">Чете историята на помпата</string>
     <string name="password_cleared">Паролата е изчистена!</string>
     <string name="pairing">Сдвояване</string>
-    <string name="initializing">Инициализация ...</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -471,7 +433,6 @@
     <string name="no">Не</string>
     <string name="close">Затвори</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Парола, която е била използвана за криптиране на експортираните настройки.</string>
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
@@ -491,8 +452,6 @@
     <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
     <string name="ble_not_supported_or_not_paired">Нискоенергиен Bluetooth не се потдържа или устройството не е сдвоено.</string>
     <string name="ble_not_enabled">Bluetooth не е включен.</string>
-    <string name="location_not_found_title">Локацията не е включена</string>
-    <string name="location_not_found_message">За да работи откриването на нови устройсва чрез Bluetooth, трябва да включите локацията. AAPS не проследява вашето местоположение и ще можете да я изключите след успешното свързване.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Настройки на модул</string>
     <!-- Navigation -->
