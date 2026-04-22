@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Ztišit alarmy</string>
     <string name="omnipod_common_overview_pod_status">Stav Podu</string>
     <string name="omnipod_common_overview_total_delivered">Celkem vydáno</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">Unikátní ID</string>
     <string name="omnipod_common_overview_lot_number">Číslo šarže</string>
     <string name="omnipod_common_overview_pod_sequence_number">Pořadové číslo</string>
@@ -50,7 +49,6 @@
     <string name="omnipod_common_overview_pod_active_alerts">Výstrahy aktivního Podu</string>
     <string name="omnipod_common_overview_firmware_version">Verze firmwaru</string>
     <string name="omnipod_common_overview_time_on_pod">Čas na Podu</string>
-    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minut)</string>
     <string name="omnipod_common_uncertain">neznámé</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Deaktivovat Pod</string>
