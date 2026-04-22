@@ -44,5 +44,4 @@
     <string name="time_last_week">Τελευταία εβδομάδα</string>
     <string name="time_last_month">Τελευταίος μήνας</string>
     <!-- Pump History -->
-    <string name="pump_history_type">Τύπος:</string>
 </resources>
