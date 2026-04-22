@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Vòng lặp đã tắt</string>
-    <string name="calculator_label">Calculator</string>
     <string name="nav_history_browser">Xem lịch sử</string>
     <string name="sensor_label">Cảm biến</string>
-    <string name="age_label">đã dùng:</string>
-    <string name="level_label">còn lại:</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pin Bơm</string>
     <string name="cannula">Kim truyền</string>
     <string name="patch_pump">Patch pump</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulin</string>
-    <string name="a11y_bg_quality">chất lượng đường huyết</string>
-    <string name="a11y_blood_glucose">đường máu</string>
-    <string name="a11y_bg_outdated">quá hạn</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Trạng thái dữ liệu đường huyết</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Dự đoán</string>
-    <string name="overview_show_treatments">Lịch sử điều trị</string>
-    <string name="overview_show_heartRate">Heart Rate</string>
-    <string name="overview_show_deviation_slope">Độ dốc lệch</string>
-    <string name="overview_show_activity">Activity</string>
-    <string name="overview_show_bgi">Tác động lên đường huyết</string>
-    <string name="overview_show_sensitivity">Thay đổi độ nhạy</string>
-    <string name="overview_show_deviations">Độ lệch</string>
-    <string name="overview_show_cob">Carb còn tác dụng</string>
-    <string name="overview_show_iob">Insulin còn tác dụng</string>
-    <string name="overview_show_basals">Liều nền</string>
-    <string name="overview_show_abs_insulin">Insulin tuyệt đối</string>
-    <string name="overview_show_variable_sens">Độ nhạy thay đổi</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">TREAT</string>
-    <string name="cannula_usage">đã sử dụng:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Hiển thị thông báo liên tục với tóm tắt ngắn gọn về hoạt động của vòng lặp</string>
     <string name="old_data">DỮ LIỆU CŨ</string>
-    <string name="overview_show_steps">Các Bước</string>
 </resources>
