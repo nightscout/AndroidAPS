@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">לולאה כבויה</string>
-    <string name="calculator_label">מחשבון</string>
     <string name="nav_history_browser">דפדפן היסטוריה</string>
     <string name="sensor_label">חיישן</string>
-    <string name="age_label">גיל:</string>
-    <string name="level_label">נותרו:</string>
     <string name="insulin_label">אינסולין</string>
     <string name="pb_label">סוללת המשאבה</string>
     <string name="cannula">צינורית</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">אינסולין</string>
-    <string name="a11y_bg_quality">איכות נתוני סוכר</string>
-    <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
-    <string name="a11y_bg_outdated">לא עדכני</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">מצב נתוני הסוכר</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">חיזוי</string>
-    <string name="overview_show_treatments">טיפולים</string>
-    <string name="overview_show_heartRate">דופק</string>
-    <string name="overview_show_deviation_slope">שיפוע הסטייה</string>
-    <string name="overview_show_activity">פעילות</string>
-    <string name="overview_show_bgi">השפעת הסוכר בדם</string>
-    <string name="overview_show_sensitivity">שינוי ברגישות</string>
-    <string name="overview_show_deviations">סטיות</string>
-    <string name="overview_show_cob">פחמימות פעילות</string>
-    <string name="overview_show_iob">אניסולין פעיל</string>
-    <string name="overview_show_basals">בזאלי</string>
-    <string name="overview_show_abs_insulin">אינסולין מוחלט</string>
-    <string name="overview_show_variable_sens">רגישות משתנה</string>
-    <string name="prediction_shortname">חיזוי</string>
     <string name="basal_shortname">בזאל\'</string>
-    <string name="treatments_shortname">TREAT</string>
-    <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
-    <string name="overview_show_steps">צעדים</string>
 </resources>
