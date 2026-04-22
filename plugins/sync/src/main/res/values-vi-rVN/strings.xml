@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(Không có đồng hồ kết nối)</string>
     <string name="pump_status">Trạng thái Bơm</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
-    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Quickwizard đã chọn không còn khả dụng nữa, vui lòng làm mới ô của bạn</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="user_action_not_available">Hành động người dùng đã chọn %1$s không còn khả dụng, vui lòng làm mới ô của bạn</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">Mục tiêu tạm thời\n\nThấp nhất: %1$s\nCao nhất: %2$s\nThời gian: %3$d phút</string>
     <string name="wear_action_tempt_manual_message">Mục tiêu tạm thời\n\nMục tiêu: %1$s\nThời gian: %2$d phút</string>
     <string name="wear_action_tempt_preset_message">Mục tiêu tạm thời\n\nLý do: %1$s\nMục tiêu: %2$s\nThời lượng: %3$d phút</string>
-    <string name="no_success">không thành công – vui lòng kiểm tra điện thoại</string>
     <string name="wear_wizard_settings_summary">Các phép tính được bao gồm trong kết quả của Trình hỗ trợ:</string>
     <string name="wear_general_settings">Cài đặt chung</string>
     <string name="wear_custom_watchface_settings">Cài đặt mặt đồng hồ tùy chỉnh</string>
@@ -127,10 +125,6 @@
     <string name="today">Hôm nay</string>
     <string name="weighted">weighted</string>
     <string name="full_xdrip_sync_comment">Đồng bộ đầy đủ? Quá trình này có thể mất một thời gian và cho đến khi hoàn tất, bạn sẽ không thấy dữ liệu mới trong xDrip+.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient không được hỗ trợ cho hành động này</string>
-    <string name="wear_action_loop_state_requires_duration">Hành động này yêu cầu thời gian thực hiện</string>
-    <string name="wear_action_loop_state_pump_suspended">Bơm đã tạm dừng!</string>
-    <string name="wear_action_loop_state_profile_invalid">Hồ sơ không hợp lệ!</string>
     <string name="wear_action_loop_state_unauthorized">Vui lòng thử lại.</string>
     <string name="wear_action_loop_state_invalid">Trạng thái vòng lặp không hợp lệ</string>
     <string name="wear_action_running_mode_title">CHẾ ĐỘ THỂ DỤC</string>
@@ -159,10 +153,6 @@
     <string name="smscommunicator_otp_reset_btn">Đặt lại Xác thực</string>
     <string name="smscommunicator_otp_reset_title">Đặt lại khóa Xác thực</string>
     <string name="smscommunicator_otp_reset_prompt">Bạn có chắc muốn đặt lại khóa Xác thực không? Hành động này sẽ làm tất cả các Xác thực đang cấu hình hiện tại không còn hợp lệ, và bạn sẽ cần thiết lập lại chúng.</string>
-    <string name="smscommunicator_otp_reset_successful">Khóa xác thực mới đã được tạo! Vui lòng sử dụng QRCode cập nhật để thiết lập lại các xác thực.</string>
-    <string name="smscommunicator_otp_export_title">Đang xuất khóa OTP</string>
-    <string name="smscommunicator_otp_export_prompt">Bạn có chắc muốn sao chép khóa OTP vào bộ nhớ tạm không?\n\nBạn chỉ cần làm điều này nếu ứng dụng Xác thực gặp sự cố khi quét QRCode, bạn muốn nhập thủ công, hoặc muốn cấu hình token OTP phần cứng bằng ứng dụng chuyên dụng.</string>
-    <string name="smscommunicator_otp_export_successful">Khóa OTP (dạng Base32) đã được xuất và sao chép vào bộ nhớ tạm. Hãy dán vào ứng dụng xác thực hoặc thiết bị tạo OTP phần cứng!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Cài đặt mã xác thực</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Quét mã để thiết lập mã OTP cho AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Kiểm tra Mã dùng một lần (OTP)</string>
