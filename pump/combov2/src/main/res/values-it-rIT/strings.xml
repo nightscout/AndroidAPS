@@ -47,7 +47,6 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Scansione Combo: timeout raggiunto</string>
     <string name="combov2_pairing_failed_due_to_error">Associazione fallita a causa di un errore: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Associazione interrotta per motivi sconosciuti</string>
-    <string name="combov2_pairing_invalid_pin_length">"PIN di associazione - lunghezza non valida: necessarie %1$d cifre, ricevute %2$d"</string>
     <string name="combov2_scanning_for_pump">Scansione micro</string>
     <string name="combov2_establishing_bt_connection">Connessione Bluetooth (tentativo n. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Esecuzione dell\'associazione con il micro</string>
@@ -67,7 +66,6 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Impostazione profilo basale</string>
     <string name="combov2_setting_tbr_cmddesc">Impostazione TBR %1$d%% per %2$d minuti</string>
     <string name="combov2_cancelling_tbr">Cancellazione TBR in esecuzione</string>
-    <string name="combov2_delivering_bolus_cmddesc">Erogazione bolo di %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Recupero storico TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aggiornamento data e ora del micro</string>
     <string name="combov2_updating_pump_status_cmddesc">Aggiornamento stato micro</string>
