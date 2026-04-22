@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS (Krug)</string>
     <string name="label_watchface_digital_style">AAPS (Digitalni stil)</string>
     <string name="label_watchface_custom">AAPS (Prilagođeno)</string>
-    <string name="label_actions_tile">AAPS (Akcije)</string>
-    <string name="label_temp_target_tile">AAPS (Privremeni cilj)</string>
-    <string name="label_quick_wizard_tile">AAPS (Brzi čarobnjak)</string>
-    <string name="label_user_action_tile">AAPS (Korisnička radnja)</string>
     <string name="msg_warning_sync">Nema primljenih podataka od ... Proverite da li AAPS na telefonu šalje podatke na sat.</string>
     <string name="msg_warning_old">AAPS podaci su stari %1$s! Proverite senzor, xDrip+, NS, AAPS podešavanja ili drugi izvor!</string>
     <string name="pref_vibrate_on_bolus">Vibracija tokom bolusa</string>
