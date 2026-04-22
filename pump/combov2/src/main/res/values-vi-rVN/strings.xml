@@ -47,7 +47,6 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Đã hết thời gian quét Combo</string>
     <string name="combov2_pairing_failed_due_to_error">Ghép nối thất bại do lỗi: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Ghép nối bị hủy do nguyên nhân không xác định</string>
-    <string name="combov2_pairing_invalid_pin_length">"Mã PIN ghép nối sai: cần %1$d chữ số, nhưng nhận được %2$d"</string>
     <string name="combov2_scanning_for_pump">Đang quét tìm bơm</string>
     <string name="combov2_establishing_bt_connection">Đang thiết lập kết nối Bluetooth (lần thử số %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Đang khởi tạo kết nối với bơm</string>
@@ -67,7 +66,6 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Đang cài đặt Hồ sơ liều nền</string>
     <string name="combov2_setting_tbr_cmddesc">Đang cài đặt TBR %1$d%% trong %2$d phút</string>
     <string name="combov2_cancelling_tbr">Đang hủy TBR hiện tại</string>
-    <string name="combov2_delivering_bolus_cmddesc">Đang tiêm bolus %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Đang lấy lịch sử TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Đang cập nhật ngày giờ bơm</string>
     <string name="combov2_updating_pump_status_cmddesc">Đang cập nhật trạng thái bơm</string>
