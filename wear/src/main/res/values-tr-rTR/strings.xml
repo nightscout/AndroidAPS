@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(Geçici Hedef)</string>
     <string name="label_quick_wizard_tile">AAPS(Hızlı Asistan)</string>
     <string name="label_user_action_tile">AAPS(Kullanıcı Eylemi)</string>
-    <string name="label_warning_sync">Veri yok!</string>
-    <string name="label_warning_old">Eski veri!</string>
-    <string name="label_warning_since">%1$s den beri</string>
-    <string name="label_warning_sync_aaps">AAPS ile eşitle!</string>
     <string name="msg_warning_sync">%1$s\' den bu yana veri alınmıyor! Telefondaki AAPS \' nin veri gönderip göndermediğini kontrol edin</string>
     <string name="msg_warning_old">AAPS verileri %1$s eski! Sensörleri denetleyin, xDrip+, NS, AAPS yapılandırma ya da diğerleri!</string>
     <string name="pref_vibrate_on_bolus">Bolus\'ta Titreşim</string>
@@ -82,7 +78,6 @@
     <string name="menu_none">Hiçbiri</string>
     <string name="menu_default">Varsayılan</string>
     <string name="menu_menu">Menü</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">Geçici hedef talebi</string>
     <string name="action_quick_wizard_confirmation">Hızlı asistan talebi</string>
     <string name="action_user_action_confirmation">Kullanıcı Eylemi Gerekli</string>
@@ -97,7 +92,6 @@
     <string name="action_ecarbs">yKarb</string>
     <string name="action_percentage">Yüzde\n[%]</string>
     <string name="action_start_minutes">Başlama\n[minutes]</string>
-    <string name="action_duration_h">Süre [h]</string>
     <string name="action_duration_hours">Süre\n[hours]</string>
     <string name="action_insulin">İnsülin</string>
     <string name="action_insulin_units">İnsülin [U]</string>
@@ -137,7 +131,6 @@
     <string name="color_name_gray">gri</string>
     <string name="color_name_bluegray">mavi gri</string>
     <string name="color_name_white">beyaz</string>
-    <string name="color_name_black">siyah</string>
     <string name="color_name_multicolor">çok renkli</string>
     <string name="pref_simplify_ui">Basitleştirilmiş Kullanıcı Arayüzü</string>
     <string name="pref_vibrate_hourly">Saatlik titreşim</string>
@@ -166,8 +159,6 @@
     <string name="tile_no_config">Mevcut yapılandırma yok</string>
     <string name="wear_control_not_enabled">Saat kontrolleri devre dışı</string>
     <string name="wear_control_no_data">Veri yok</string>
-    <string name="increment">artış</string>
-    <string name="decrement">azalma</string>
     <string name="abbreviation_average">ort</string>
     <string name="no_iob_u">--Ü</string>
     <string name="no_cob_g">--g</string>
@@ -182,8 +173,6 @@
     <string name="hour_short">sa</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">eski</string>
-    <string name="old_warning">!eski!</string>
     <string name="pref_heartRateSampling">Nabız</string>
     <string name="pref_heartRateSmoothing">Nabız yumuşatma</string>
     <string name="pref_stepsSampling">Adım Saymayı Etkinleştir</string>
