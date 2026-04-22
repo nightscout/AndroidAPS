@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
     <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>
-    <string name="dst_loop_disabled_error">El cambio al horario de verano se producirá en menos de 3 horas. El lazo cerrado se desactivará temporalmente y se volverá a activar automáticamente 3 horas después del cambio al horario de verano</string>
     <!-- Storage constraint -->
     <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡El lazo se encuentra desactivado!</string>
     <!-- Version Checker -->
@@ -41,8 +40,6 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Programa de aprendizaje</string>
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
-    <string name="objectives_next_button">Siguiente</string>
-    <string name="objectives_previous_button">Anterior</string>
     <string name="objectives_button_unfinish">Restablecer estado finalizado</string>
     <string name="objectives_button_unstart">Restablecer estado iniciado</string>
 </resources>
