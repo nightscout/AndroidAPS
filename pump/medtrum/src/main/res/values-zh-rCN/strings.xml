@@ -20,7 +20,6 @@
     <string name="pump_state_label">泵状态</string>
     <string name="active_alarms_label">活动提醒</string>
     <string name="basal_type_label">基础率类型</string>
-    <string name="basal_rate_label">基础率</string>
     <string name="pump_type_label">泵类型</string>
     <string name="fw_version_label">固件版本</string>
     <string name="patch_no_label">贴片编号</string>
@@ -76,12 +75,10 @@
     <string name="do_not_attach_to_body">请勿将贴片贴到身体上。</string>
     <string name="half_press_needle">半按针头按钮。然后点击<b>下一步</b>开始充盈。</string>
     <string name="wait_for_priming">请等待充盈完成。</string>
-    <string name="priming_error">启动失败，请按<b>重试</b>再试一次。</string>
     <string name="press_next">按<b>下一步</b>继续。</string>
     <string name="press_next_to_start_activation">按<b>下一步</b>开始激活。</string>
     <string name="remove_safety_lock">取下安全锁。将泵安装到机身上。按下针头按钮。</string>
     <string name="activating_pump">正在启动泵并设置初始基础速率。请等待。</string>
-    <string name="activating_error">激活失败，请按<b>重试</b>再试一次。</string>
     <string name="activating_complete">新贴片已激活。剩余 %.2f 单位。</string>
     <string name="can_export_settings">您可以导出设置以便稍后恢复此修补会话。</string>
     <string name="press_OK_to_return">按<b>OK</b>返回主屏幕。</string>
