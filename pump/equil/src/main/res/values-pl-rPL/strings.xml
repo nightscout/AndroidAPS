@@ -21,7 +21,6 @@
     <string name="equil_tone_mode_shake">Tylko wibracje</string>
     <string name="equil_tone_mode_tone">Tylko dźwięk</string>
     <string name="equil_tone_mode_tone_and_shake">Wibracje i dźwięk</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_ble_config_confirmation_title">Paruj pompę Equil</string>
     <string name="equil_error">Błąd połączenia</string>
     <string name="equil_change">Zmień pompę</string>
