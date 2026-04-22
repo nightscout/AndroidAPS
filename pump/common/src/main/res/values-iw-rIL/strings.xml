@@ -37,5 +37,4 @@
     <string name="time_last_week">בשבוע שעבר</string>
     <string name="time_last_month">בחודש שעבר</string>
     <!-- Pump History -->
-    <string name="pump_history_type">סוג:</string>
 </resources>
