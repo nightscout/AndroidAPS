@@ -25,7 +25,6 @@
     <string name="random_bg">Gly Aléatoire</string>
     <string name="description_source_random_bg">Générer des glycémies aléatoires (mode démo uniquement)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="direction">direction</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Recevoir les glycémies de l’application Syai/Ottai.</string>
