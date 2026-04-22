@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(Часы не подключены)</string>
     <string name="pump_status">Статус помпы</string>
     <string name="loop_status">Статус цикла</string>
-    <string name="wizard_result">Мастер:\nИнсулин: %1$.2fед\nУгл: %2$dг</string>
     <string name="quick_wizard_not_available">Выбранный мастер быстрого доступа больше недоступен, обновите плитку</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
     <string name="user_action_not_available">Выбранное пользовательское действие %1$s более недоступно, пожалуйста, обновите плитку</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">ВЦ\n\nМин:%1$s\nМакс:%2$sПродолжительность:%3$d мин</string>
     <string name="wear_action_tempt_manual_message">ВЦ \n\n Цель: %1$s Продолжительность: %2$d мин</string>
     <string name="wear_action_tempt_preset_message">ВЦ \n\n Причина: %1$s\n Цель: %2$s\n Продолжительность: %3$d мин</string>
-    <string name="no_success">неуспешно - проверьте телефон</string>
     <string name="wear_wizard_settings_summary">Расчеты включены в результат калькулятора: </string>
     <string name="wear_general_settings">Общие настройки</string>
     <string name="wear_custom_watchface_settings">Настройка циферблатов</string>
@@ -124,10 +122,6 @@
     <string name="today">Сегодня</string>
     <string name="weighted">взвешенный</string>
     <string name="full_xdrip_sync_comment">Полная синхронизация? Это может занять длительное время и до завершения вы не увидите новые данные в xDrip+.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient не выполняет такие запросы</string>
-    <string name="wear_action_loop_state_requires_duration">Для этого требуется указать продолжительность</string>
-    <string name="wear_action_loop_state_pump_suspended">Помпа остановлена!</string>
-    <string name="wear_action_loop_state_profile_invalid">Недопустимый профиль!</string>
     <string name="wear_action_loop_state_unauthorized">Повторите попытку.</string>
     <string name="wear_action_loop_state_invalid">Запрошено неверное состояние цикла</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\n Продолжительность: %2$d мин</string>
