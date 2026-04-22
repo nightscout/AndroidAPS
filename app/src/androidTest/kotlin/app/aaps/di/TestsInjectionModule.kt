@@ -1,5 +1,6 @@
 package app.aaps.di
 
+import app.aaps.CobExtendedCarbsTest
 import app.aaps.CompatDbHelperTest
 import app.aaps.LoopTest
 import app.aaps.ReplayApsResultsTest
@@ -19,4 +20,5 @@ abstract class TestsInjectionModule {
     @ContributesAndroidInjector abstract fun contributesLoopTest(): LoopTest
     @ContributesAndroidInjector abstract fun contributesCompatDbHelperTest(): CompatDbHelperTest
     @ContributesAndroidInjector abstract fun contributesRunningConfigurationTest(): RunningConfigurationTest
+    @ContributesAndroidInjector abstract fun contributesCobExtendedCarbsTest(): CobExtendedCarbsTest
 }

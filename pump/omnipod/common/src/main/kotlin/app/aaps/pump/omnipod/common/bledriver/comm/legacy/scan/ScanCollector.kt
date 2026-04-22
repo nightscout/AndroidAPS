@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.scan
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.scan
 
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -13,6 +13,7 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
     // there could be different threads calling the onScanResult callback
     private val found: ConcurrentHashMap<String, ScanResult> = ConcurrentHashMap()
     private var scanFailed = 0
+
     override fun onScanResult(callbackType: Int, result: ScanResult) {
         // callbackType will be ALL
         logger.debug(LTag.PUMPBTCOMM, "Scan found: $result")
@@ -24,7 +25,8 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
         super.onScanFailed(errorCode)
     }
 
-    @Throws(ScanException::class) fun collect(): List<BleDiscoveredDevice> {
+    @Throws(ScanException::class)
+    fun collect(): List<BleDiscoveredDevice> {
         val ret: MutableList<BleDiscoveredDevice> = ArrayList()
         if (scanFailed != 0) {
             throw ScanException(scanFailed)
@@ -35,11 +37,11 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
                 result.scanRecord?.let {
                     val device = BleDiscoveredDevice(result, it, podID)
                     ret.add(device)
-                    logger.debug(LTag.PUMPBTCOMM, "ScanCollector found: " + result.toString() + "Pod ID: " + podID)
+                    logger.debug(LTag.PUMPBTCOMM, "ScanCollector found: $result Pod ID: $podID")
                 }
             } catch (e: DiscoveredInvalidPodException) {
-                logger.debug(LTag.PUMPBTCOMM, "ScanCollector: pod not matching$e")
                 // this is not the POD we are looking for
+                logger.debug(LTag.PUMPBTCOMM, "ScanCollector: pod not matching$e")
             }
         }
         return Collections.unmodifiableList(ret)

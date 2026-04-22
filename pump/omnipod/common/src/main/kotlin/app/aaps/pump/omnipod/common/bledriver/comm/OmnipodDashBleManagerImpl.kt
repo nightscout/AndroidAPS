@@ -1,17 +1,8 @@
 package app.aaps.pump.omnipod.common.bledriver.comm
 
-import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.utils.toHex
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.BusyException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
@@ -20,8 +11,11 @@ import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.FailedToConnectExc
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.MessageIOException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.NotConnectedException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.SessionEstablishmentException
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnectionFactory
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.device.BleDeviceManager
 import app.aaps.pump.omnipod.common.bledriver.comm.pair.LTKExchanger
-import app.aaps.pump.omnipod.common.bledriver.comm.scan.PodScanner
 import app.aaps.pump.omnipod.common.bledriver.comm.session.CommandAckError
 import app.aaps.pump.omnipod.common.bledriver.comm.session.CommandReceiveError
 import app.aaps.pump.omnipod.common.bledriver.comm.session.CommandReceiveSuccess
@@ -29,7 +23,6 @@ import app.aaps.pump.omnipod.common.bledriver.comm.session.CommandSendErrorConfi
 import app.aaps.pump.omnipod.common.bledriver.comm.session.CommandSendErrorSending
 import app.aaps.pump.omnipod.common.bledriver.comm.session.CommandSendSuccess
 import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connection
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionState
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
 import app.aaps.pump.omnipod.common.bledriver.comm.session.NotConnected
@@ -38,7 +31,6 @@ import app.aaps.pump.omnipod.common.bledriver.event.PodEvent
 import app.aaps.pump.omnipod.common.bledriver.pod.command.base.Command
 import app.aaps.pump.omnipod.common.bledriver.pod.response.Response
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
-import app.aaps.pump.omnipod.common.keys.DashBooleanPreferenceKey
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
@@ -48,16 +40,15 @@ import kotlin.reflect.KClass
 
 @Singleton
 class OmnipodDashBleManagerImpl @Inject constructor(
-    private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val podState: OmnipodDashPodStateManager,
     private val config: Config,
-    private val preferences: Preferences,
+    private val bleConnectionFactory: BleConnectionFactory,
+    private val bleDeviceManager: BleDeviceManager,
 ) : OmnipodDashBleManager {
 
     private val busy = AtomicBoolean(false)
-    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-    private var connection: Connection? = null
+    private var connection: BleConnection? = null
     private val ids = Ids(podState)
 
     override fun sendCommand(cmd: Command, responseType: KClass<out Response>): Observable<PodEvent> =
@@ -148,19 +139,17 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 val podAddress =
                     podState.bluetoothAddress
                         ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
-                val podDevice = bluetoothAdapter?.getRemoteDevice(podAddress)
-                    ?: throw ConnectException("Bluetooth not available")
 
-                if (podDevice.bondState == BluetoothDevice.BOND_NONE && preferences.get(DashBooleanPreferenceKey.UseBonding)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                        val result = podDevice.createBond()
-                        aapsLogger.debug(LTag.PUMPBTCOMM, "Bonding with pod resulted $result")
-                        Thread.sleep(10000)
-                    }
+                if (!bleDeviceManager.isBluetoothAvailable()) {
+                    throw ConnectException("Bluetooth not available")
+                }
+
+                if (!bleDeviceManager.ensureBondedIfRequired(podAddress)) {
+                    throw ConnectException("Bluetooth not available or bonding failed")
                 }
 
                 val conn = connection
-                    ?: Connection(podDevice, aapsLogger, config, context, podState)
+                    ?: bleConnectionFactory.createConnection(podAddress)
                 connection = conn
                 if (conn.connectionState() is Connected && conn.session != null) {
                     emitter.onNext(PodEvent.AlreadyConnected(podAddress))
@@ -210,7 +199,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             ?: throw FailedToConnectException("Missing LTK, activate the pod first")
     }
 
-    private fun assertConnected(): Connection {
+    private fun assertConnected(): BleConnection {
         return connection
             ?: throw FailedToConnectException("connection lost")
     }
@@ -228,20 +217,17 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             aapsLogger.info(LTag.PUMPBTCOMM, "Starting new pod activation")
 
             emitter.onNext(PodEvent.Scanning)
-            val adapter = bluetoothAdapter
-                ?: throw ConnectException("Bluetooth not available")
-            val podScanner = PodScanner(aapsLogger, adapter)
+            val podScanner = bleDeviceManager.createPodScanner()
             val podAddress = podScanner.scanForPod(
                 PodScanner.SCAN_FOR_SERVICE_UUID,
                 PodScanner.POD_ID_NOT_ACTIVATED
-            ).scanResult.device.address
+            ).address
             podState.bluetoothAddress = podAddress
 
             emitter.onNext(PodEvent.BluetoothConnecting)
-            val podDevice = adapter.getRemoteDevice(podAddress)
-            val conn = Connection(podDevice, aapsLogger, config, context, podState)
+            val conn = bleConnectionFactory.createConnection(podAddress)
             connection = conn
-            conn.connect(ConnectionWaitCondition(timeoutMs = 3 * Connection.BASE_CONNECT_TIMEOUT_MS))
+            conn.connect(ConnectionWaitCondition(timeoutMs = BleConnection.DEFAULT_CONNECT_TIMEOUT_MS))
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
 
             emitter.onNext(PodEvent.Pairing)
@@ -277,21 +263,12 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun removeBond() {
-        try {
-            if (preferences.get(DashBooleanPreferenceKey.UseBonding) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
-            ) {
-                val device = bluetoothAdapter?.getRemoteDevice(podState.bluetoothAddress) ?: throw IllegalStateException("MAC address not found")
-                // At time of writing (2021-12-06), the removeBond method
-                // is inexplicably still marked with @hide, so we must use
-                // reflection to get to it and unpair this device.
-                val removeBondMethod = device.javaClass.getMethod("removeBond")
-                val result = removeBondMethod.invoke(device)
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Remove bond resulted $result")
-            }
-        } catch (t: Throwable) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "Unpairing device with address ${podState.bluetoothAddress} failed with error $t")
+        val address = podState.bluetoothAddress
+        if (address == null) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "removeBond: MAC address not found")
+            return
         }
+        bleDeviceManager.removeBond(address)
     }
 
     companion object {

@@ -1,26 +1,26 @@
 @file:Suppress("WildcardImport")
 
-package app.aaps.pump.omnipod.common.bledriver.comm.io
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.io
 
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
+import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleCharacteristicIO
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleSendErrorConfirming
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleSendErrorSending
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleSendResult
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleSendSuccess
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallbacks
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.WriteConfirmationError
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.WriteConfirmationSuccess
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.toHex
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.BleCommCallbacks
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.WriteConfirmationError
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.WriteConfirmationSuccess
 import app.aaps.pump.omnipod.common.bledriver.comm.command.BleCommandRTS
-import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
-
-sealed class BleSendResult
-
-object BleSendSuccess : BleSendResult()
-data class BleSendErrorSending(val msg: String, val cause: Throwable? = null) : BleSendResult()
-data class BleSendErrorConfirming(val msg: String, val cause: Throwable? = null) : BleSendResult()
 
 open class BleIO(
     private val aapsLogger: AAPSLogger,
@@ -29,13 +29,12 @@ open class BleIO(
     private val gatt: BluetoothGatt,
     private val bleCommCallbacks: BleCommCallbacks,
     private val type: CharacteristicType
-) {
+) : BleCharacteristicIO {
 
-    /***
-     *
+    /**
      * @return a byte array with the received data or error
      */
-    fun receivePacket(timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): ByteArray? {
+    override fun receivePacket(timeoutMs: Long): ByteArray? {
         return try {
             val packet = incomingPackets.poll(timeoutMs, TimeUnit.MILLISECONDS)
             if (packet == null) {
@@ -48,12 +47,11 @@ open class BleIO(
         }
     }
 
-    /***
-     *
+    /**
      * @param payload the data to send
      */
     @Suppress("ReturnCount", "DEPRECATION")
-    fun sendAndConfirmPacket(payload: ByteArray): BleSendResult {
+    override fun sendAndConfirmPacket(payload: ByteArray): BleSendResult {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending on $type: ${payload.toHex()}")
         val set = characteristic.setValue(payload)
         if (!set) {
@@ -84,7 +82,7 @@ open class BleIO(
      * Called before sending a new message.
      * The incoming queues should be empty, so we log when they are not.
      */
-    open fun flushIncomingQueue(): Boolean {
+    override fun flushIncomingQueue(): Boolean {
         var foundRTS = false
         do {
             val found = incomingPackets.poll()?.also {
@@ -98,11 +96,12 @@ open class BleIO(
     }
 
     /**
-     * Enable intentions on the characteristic
-     * This will signal the pod it can start sending back data
+     * Enable indications on the characteristic.
+     * This will signal the pod it can start sending back data.
      * @return
      */
-    @Suppress("DEPRECATION") fun readyToRead(): BleSendResult {
+    @Suppress("DEPRECATION")
+    override fun readyToRead(): BleSendResult {
         gatt.setCharacteristicNotification(characteristic, true)
             .assertTrue("enable notifications")
 
@@ -131,8 +130,7 @@ open class BleIO(
     }
 
     companion object {
-
-        const val DEFAULT_IO_TIMEOUT_MS = 1000.toLong()
+        const val DEFAULT_IO_TIMEOUT_MS = BleCharacteristicIO.DEFAULT_IO_TIMEOUT_MS
     }
 }
 

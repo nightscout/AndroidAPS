@@ -24,6 +24,7 @@
     <string name="pairing_completed">Asociere reușită</string>
     <string name="code_compare">Sunt identice codurile afișate aici și cele de pe pompă?</string>
     <string name="insight_pairing">Asociere Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Canulă schimbată</string>
     <string name="insightpump_shortname">Obiectiv</string>
@@ -58,4 +59,5 @@
     <string name="min_recovery_duration">Timpul minim de restabilire [s]</string>
     <string name="pump_alert">Alertă a pompei</string>
     <string name="pairing_information">Informații despre asociere</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>

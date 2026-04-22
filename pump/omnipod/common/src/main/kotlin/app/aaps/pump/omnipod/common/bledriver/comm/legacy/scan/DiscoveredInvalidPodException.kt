@@ -1,4 +1,4 @@
-package app.aaps.pump.omnipod.common.bledriver.comm.scan
+package app.aaps.pump.omnipod.common.bledriver.comm.legacy.scan
 
 import android.os.ParcelUuid
 
