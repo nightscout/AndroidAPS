@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS(Apvalus)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(suasmeninta)</string>
-    <string name="label_actions_tile">AAPS(Veiksmai)</string>
-    <string name="label_temp_target_tile">AAPS(laikinas tikslas)</string>
-    <string name="label_quick_wizard_tile">AAPS(greitas vedlys)</string>
-    <string name="label_user_action_tile">AAPS (Vartotojo Veiksmai)</string>
     <string name="msg_warning_sync">Nėra duomenų nuo %1$s! Patikrinkite, ar AAPS telefone siunčia duomenis laikrodžiui</string>
     <string name="msg_warning_old">AAPS duomenys yra %1$s senumo! Patikrinkite sensorių, xDrip+, NS, AAPS konfigūratorių ar kt.!</string>
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
