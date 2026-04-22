@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">일련번호 # 유효하지않음.</string>
     <string name="medtronic_error_pump_type_not_set">펌프 타입이 설정되지 않았습니다.</string>
     <string name="medtronic_error_pump_type_invalid">지원되지 않는 펌프 타입입니다.</string>
-    <string name="medtronic_error_pump_frequency_invalid">지원되지 않는 펌프 주파수입니다.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink 주소가 유효하지 않습니다.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">감지된 펌프타입이 설정된 타입과 다릅니다.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Basal 프로파일/패턴 설정이 펌프에서 활성화되지 않았습니다. 펌프에서 활성화해주세요.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">메드트로닉 펌프 이력</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">펌프에서 이미 설정된 Bolus를 취소했습니다. 메드트로닉 펌프는 취소를 지원하지 않으므로 수동으로 취소해야합니다. (여전히 취소하길 원한다면) 펌프를 일시 중단 모드로 전환 한 다음 다시 시작하십시오. 다음 업데이트시 (5 분 이내에) 변경 사항을 적용합니다.</string>
     <string name="medtronic_cmd_cant_read_tbr">현재 TBR을 읽을 수 없습니다.</string>
@@ -74,7 +72,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">기본 임시 basal 설정</string>
     <string name="set_neutral_temps_summary">활성화되면, 매 한 시간 전에 임시 basal을 취소할 것입니다. 이 기능은 일부 펌프에서 한 시간마다 울리는 소리/진동 경고를 멈추게 합니다.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 분 남음)</string>
     <string name="invalid_history_data">잘못된 펌프 기록 데이터가 탐지되었습니다. 새 이슈를 열고 로그를 제공합니다.</string>
     <string name="riley_statistics">RL Stats</string>
     <string name="clicked_refresh" comment="26 characters max for translation">새로고침 클릭</string>
