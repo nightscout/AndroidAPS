@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Pętla wyłączona</string>
-    <string name="calculator_label">Kalkulator</string>
     <string name="nav_history_browser">Przegląd historii</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">czas:</string>
-    <string name="level_label">poziom:</string>
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Bateria pompy</string>
     <string name="cannula">Kaniula</string>
     <string name="patch_pump">Pompa bezdrenowa</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulina</string>
-    <string name="a11y_bg_quality">jakość pomiaru glikemi</string>
-    <string name="a11y_blood_glucose">stężenie glukozy we krwi</string>
-    <string name="a11y_bg_outdated">nieaktualna</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Stan danych glikemii</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Prognozy poziomu</string>
-    <string name="overview_show_treatments">Zabiegi</string>
-    <string name="overview_show_heartRate">Tętno</string>
-    <string name="overview_show_deviation_slope">Krzywa odchylenie</string>
-    <string name="overview_show_activity">Aktywność</string>
-    <string name="overview_show_bgi">Wpływ na glikemię (BGI)</string>
-    <string name="overview_show_sensitivity">Zmiana wrażliwości</string>
-    <string name="overview_show_deviations">Odchylenia</string>
-    <string name="overview_show_cob">COB (Aktywne Węglow.)</string>
-    <string name="overview_show_iob">IOB (Aktywna Insulina)</string>
-    <string name="overview_show_basals">Dawki Bazowe</string>
-    <string name="overview_show_abs_insulin">Cała insulina</string>
-    <string name="overview_show_variable_sens">Zmienna czułość</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
-    <string name="treatments_shortname">TREAT</string>
-    <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
-    <string name="overview_show_steps">Kroki</string>
 </resources>
