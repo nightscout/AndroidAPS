@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
     <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
     <string name="temp_target_short">Midlertidig mål</string>
     <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
     <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
     <string name="start_hypo_tt">Start midlertidig mål for Hypo</string>
     <string name="time_offset">Tidsforskyvning</string>
-    <string name="remind_to_bolus_later">Påminnelse om å gi bolus senere</string>
-    <string name="a11y_carb_reminder">Sett påminnelse til karbotid</string>
     <!--    Widget-->
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="widget_description">AAPS widget</string>
@@ -35,8 +32,6 @@
     <string name="do_you_want_reset_stats">Vil du tilbakestille aktivitetsstatistikken?</string>
     <string name="do_you_want_recalculate_tdd_stats">Vil du rekalkulere TDD-statistikken?</string>
     <string name="calculation_in_progress">Beregning pågår</string>
-    <string name="invalid_age">Ugyldig alder</string>
-    <string name="invalid_weight">Ugyldig vekt</string>
     <string name="age">Alder</string>
     <string name="weight_label">Vekt</string>
     <string name="glucose_type">Glukosetype</string>
@@ -44,13 +39,7 @@
     <string name="bg_meter">Måler</string>
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Total</string>
     <!-- SiteRotationDialog -->
-    <string name="site_front">Forside</string>
-    <string name="site_back">Bakside</string>
     <string name="site_man">Mann</string>
     <string name="site_woman">Kvinne</string>
     <string name="site_child">Barn</string>
@@ -58,14 +47,12 @@
     <string name="user_profile_description">Brukerprofilbeskrivelsen brukes til å vise de mest brukte stedene for en mann, en kvinne eller et barn</string>
     <string name="site_management">Profil for stedsadministrasjon</string>
     <string name="site_management_description">Her angir du om du vil håndtere pumpeområde, sensorområde eller begge deler. Denne innstillingen brukes til automatisk å vise dialogen for stedsadministrasjon hver gang en ny registrering oppdages</string>
-    <string name="record_site_change">Registrer sted</string>
     <string name="update_site_change">Oppdater stedplassering</string>
     <string name="edit_site">Rediger</string>
     <string name="record_site_location">Infusjonssted: %1$s</string>
     <string name="record_site_arrow">Områdepil: %1$s</string>
     <string name="record_site_note">Notat: %1$s</string>
     <string name="delete_site_note">Notat slettet</string>
-    <string name="site_filter_info">Velg hvilken type behandlingshendelse du vil se: Kanylebytte og/eller sensorbytte</string>
     <!-- FillDialog -->
     <string name="fill_warning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
     <string name="record_pump_site_change">Logg bytte av slangesett</string>
@@ -73,16 +60,12 @@
     <string name="fill_prime_amount">Prime-mengde</string>
     <string name="fill_pump_units_note">Prime-mengden er i pumpeenheter</string>
     <string name="fill_insulin_change">Bytt insulin til: %1$s (profilbytte vil bli brukt)</string>
-    <string name="fill_current_insulin">Nåværende insulin</string>
-    <string name="fill_change_insulin">Bytt insulin</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør hendelse</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Mangler insulinnavn</string>
     <string name="insulin_name_exists">Insulinnavnet %1$s finnes allerede. Velg et nytt navn</string>
     <string name="a11y_add_new_insulin">Legg til nytt insulin</string>
     <string name="a11y_delete_current_insulin">Slett nåværende insulin</string>
-    <string name="save_or_reset_changes_first">Lagre eller tilbakestill gjeldende endringer først</string>
     <string name="activate_insulin_no_profile">Ingen aktiv profil funnet</string>
     <string name="activate_insulin_new_insulin">Nytt insulin: %1$s</string>
     <string name="activate_insulin_remaining">Gjenværende: %1$d min</string>
@@ -113,45 +96,25 @@
     <string name="duration3h">3 timer</string>
     <string name="duration10h">10 timer</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">korriger resultatet med %</string>
-    <string name="a11_correction_units">korriger resultatet med enheter</string>
-    <string name="two_hours">2t</string>
-    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Mangler %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% karbo umiddelbart, ingen forlenget karbo</string>
     <string name="wizard_carbs_type_desc">Karbo redusert med %1$d%%, tillagt eKarbo %2$d%% forsinket %3$dmin for %4$dt</string>
     <string name="wizard_include_info">Trykk for å inkludere/ekskludere fra beregning:\n• BS — blodsukker (på ved start)\n• TT — midl. mål (på ved start)\n• Trend — BS-trend (siste huskede tilstand)\n• IOB — insulin ombord (på ved start)\n• COB — karbo ombord (siste huskede tilstand)</string>
-    <string name="wizard_bg_age">BS-alder: %1$d min</string>
-    <string name="a11y_current_bg">nåværende blodsukker</string>
-    <string name="carb_time_label">Karbotid</string>
-    <string name="a11y_set_carb_timer">angi nedtellingsalarm for karbo</string>
-    <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen registreringer tilgjengelig</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Karbo:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Korr</string>
-    <string name="meal_bolus">Måltid</string>
-    <string name="prime">Prime</string>
     <string name="carbs_and_bolus">Karbo og bolus</string>
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
     <string name="careportal_remove_started_events">Fjern oppføringer startet av AAPS</string>
-    <string name="hide_loop">Skjul loop</string>
-    <string name="show_loop">Vis loop</string>
     <string name="user_entry">Brukeroppføring</string>
     <string name="clone_label">Dupliser</string>
     <string name="add_new_profile">Legg til ny profil</string>
-    <string name="show_profile">Vis profil</string>
     <string name="edit_label">Rediger</string>
-    <string name="edit_profile">Rediger profil</string>
     <string name="activate_label">Aktiver</string>
     <string name="activate_profile">Aktiver profil</string>
     <string name="remove_label">Fjern</string>
     <string name="active_profile_indicator">AKTIV</string>
-    <string name="remaining_time_label">Gjenværende</string>
     <string name="confirm_remove_profile">Fjern profil \"%1$s\"?</string>
     <string name="confirm_clone_profile">Klon profil \"%1$s\"?</string>
     <string name="tbr_type_flag_extended">E</string>
@@ -176,19 +139,14 @@
     <string name="format_with_tdd_and_pct">Alder: %1$d TDD: %2$.0f E %3$d%%</string>
     <string name="format_with_weight">Alder: %1$d Vekt: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV standardprofil</string>
-    <string name="invalid_pct">Ugyldig % verdi</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Basaldose</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">kun på klokke</string>
-    <string name="a11y_only_on_phone">kun på telefon</string>
     <string name="overview_edit_quickwizard_button_text">Knappetekst</string>
     <string name="quick_wizard_mode_wizard">Hurtigknapp</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Karbo</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
     <!--    History browser-->
     <string name="history_now">Nå</string>
     <string name="a11y_history_previous_window">Forrige vindu</string>
@@ -246,7 +204,6 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">Valgte handlinger</string>
-    <string name="quick_launch_available_actions">Tilgjengelige handlinger</string>
     <string name="quick_launch_no_dynamic_items">Ingen ting tilgjengelig</string>
     <string name="quick_launch_category_treatment">Behandling</string>
     <string name="quick_launch_category_care">Helseportal</string>
@@ -260,10 +217,7 @@
     <string name="quick_launch_no_tt_presets">Legg til forhåndsinnstillinger for midlertidige mål for å bruke dem her</string>
     <string name="quick_launch_no_profiles">Opprett profiler i Lokal profil for å bruke dem her</string>
     <string name="quick_launch_edit_profile_preset">Rediger forhåndsinnstilling for profil</string>
-    <string name="quick_launch_profile_percentage">Prosent</string>
-    <string name="quick_launch_profile_duration">Varighet</string>
     <string name="quick_launch_profile_permanent">Permanent</string>
-    <string name="quick_launch_profile_confirm">Aktiver profil %1$s?</string>
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Velg pil</string>
