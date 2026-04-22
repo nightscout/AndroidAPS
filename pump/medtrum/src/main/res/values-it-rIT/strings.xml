@@ -20,7 +20,6 @@
     <string name="pump_state_label">Stato micro</string>
     <string name="active_alarms_label">Attiva allarmi</string>
     <string name="basal_type_label">Tipo basale</string>
-    <string name="basal_rate_label">Velocità basale</string>
     <string name="pump_type_label">Tipo micro</string>
     <string name="fw_version_label">Versione FW</string>
     <string name="patch_no_label">Patch no</string>
@@ -76,12 +75,10 @@
     <string name="do_not_attach_to_body">Non attaccare ancora la patch al corpo.</string>
     <string name="half_press_needle">Premere a metà il tasto dell\'ago. Poi tocca <b>Avanti</b> per avviare il caricamento.</string>
     <string name="wait_for_priming">Attendi il completamento del caricamento.</string>
-    <string name="priming_error">Impossibile caricare, premi <b>Riprova</b> per riprovare.</string>
     <string name="press_next">Premi <b>Avanti</b> per continuare.</string>
     <string name="press_next_to_start_activation">Premi <b>Avanti</b> per avviare l\'attivazione.</string>
     <string name="remove_safety_lock">Rimuovere il blocco di sicurezza. Fissare il micro al corpo. Premere il tasto dell’ago.</string>
     <string name="activating_pump">Attivazione del micro e impostazione della velocità basale iniziale. Attendere.</string>
-    <string name="activating_error">Impossibile attivare, premi <b>Riprova</b> per riprovare.</string>
     <string name="activating_complete">Nuova patch attivata. %.2f unità rimanenti.</string>
     <string name="can_export_settings">È possibile esportare le impostazioni per poter recuperare questa patch in seguito.</string>
     <string name="press_OK_to_return">Premi <b>OK</b> per tornare alla schermata principale.</string>
