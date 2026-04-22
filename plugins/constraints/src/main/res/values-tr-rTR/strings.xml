@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">24 saat veya daha kısa süre içinde yaz saati değişikliği</string>
     <string name="dst_loop_disabled_warning">Yaz Saati Uygulaması 3 saatten daha kısa bir süre önce değişti - Kapalı döngü devre dışı</string>
-    <string name="dst_loop_disabled_error">Yaz Saati Uygulaması (DST) değişikliği 3 saatten kısa bir süre önce gerçekleşti. Kapalı döngü geçici olarak devre dışı bırakıldı. DST değişikliğinden 3 saat sonra otomatik olarak yeniden etkinleştirilecek</string>
     <!-- Storage constraint -->
     <string name="disk_full">Dahili depolama biriminden en az %1$d MB yer kaldı! Döngü devre dışı!</string>
     <!-- Version Checker -->
@@ -41,8 +40,6 @@
     <string name="objectives_shortname">GRV</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
-    <string name="objectives_next_button">Sonraki</string>
-    <string name="objectives_previous_button">Önceki</string>
     <string name="objectives_button_unfinish">Bitmiş durumu sıfırla</string>
     <string name="objectives_button_unstart">Başlatma durumunu sıfırla</string>
 </resources>
