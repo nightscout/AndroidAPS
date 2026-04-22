@@ -28,7 +28,6 @@
     <string name="equil_tone_mode_shake">Iba vibrovať</string>
     <string name="equil_tone_mode_tone">Iba zvuky</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrácie a zvuky</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">Táto operácia zastaví vydávanie inzulínu, a zasunie piest pumpy do východzej polohy! Taktiež zruší spárovanie!</string>
     <string name="equil_ble_config_confirmation_title">Spárovať Equil Patch pumpu</string>
     <string name="equil_error">Chyba pripojenia</string>
@@ -115,7 +114,6 @@
     <string name="equil_history_item18">Zastavené abnormálne podávanie izulínu</string>
     <string name="equil_common_overview_button_suspend_delivery">Pozastaviť</string>
     <string name="equil_common_overview_button_resume_delivery">Obnoviť podávanie inzulínu</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Pred chvíľou</string>
     <string name="equil_common_less_than_a_minute_ago">Pred menej ako minútou</string>
     <string name="equil_common_time_ago">pred %1$s</string>
