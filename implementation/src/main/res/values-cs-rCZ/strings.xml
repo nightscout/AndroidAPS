@@ -18,11 +18,8 @@
     <string name="carbs_short" comment="max 6 characters">Sach</string>
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">PoslSpojPřed: %1$dmin</string>
-    <string name="short_status_alert">Výstraha: %1$s</string>
     <string name="short_status_last_bolus">PoslBolus: %1$sU @ %2$s</string>
     <string name="short_status_temp_basal">DočBazál: %1$s</string>
-    <string name="short_status_extended">Prodl: %1$s</string>
-    <string name="short_status_reservoir">Zás: %1$dU</string>
     <string name="short_status_battery">Bat: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpa není inicializována</string>
     <!--    Permissions-->
@@ -34,7 +31,6 @@
     <string name="permission_notifications_description">Vyžadováno pro zobrazování výstrah, alarmů a aktualizací stavu pumpy</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f\u00a0CU/h</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Nastavení úspěšně exportováno do cloudového úložiště</string>
