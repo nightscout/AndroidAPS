@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
     <string name="pump_status">Stav pumpy</string>
     <string name="loop_status">Stav smyčky</string>
-    <string name="wizard_result">Kalkulátor: \nInzulín: %1$.2fU\nSacharidy: %2$dg</string>
     <string name="quick_wizard_not_available">Vybraný rychlý bolus již není k dispozici, obnovte prosím dlaždici</string>
     <string name="quick_wizard_message">Rychlý bolus: %1$s\nInzulín: %2$.2fU\nSacharidy: %3$dg</string>
     <string name="user_action_not_available">Vybraná akce uživatele %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">Doč. cíl:\n\nMin: %1$s\nMax: %2$s\nTrvání: %3$d</string>
     <string name="wear_action_tempt_manual_message">Doč. cíl:\n\nCíl: %1$s\nTrvání: %2$d</string>
     <string name="wear_action_tempt_preset_message">Doč. cíl:\n\nDůvod: %1$s\nCíl: %2$s\nTrvání: %3$d</string>
-    <string name="no_success">neúspěšně - zkontrolujte mobil</string>
     <string name="wear_wizard_settings_summary">Kalkulace použité ve výsledku wizardu:</string>
     <string name="wear_general_settings">Základní nastavení</string>
     <string name="wear_custom_watchface_settings">Nastavení vlastního ciferníku</string>
@@ -127,10 +125,6 @@
     <string name="today">Dnes</string>
     <string name="weighted">vážený</string>
     <string name="full_xdrip_sync_comment">Plná synchronizace? Může to chvíli trvat a dokud nebude dokončena, neuvidíte v xDrip+ nová data.</string>
-    <string name="wear_action_loop_state_no_nsclient">Tato akce není u AAPSClient podporována</string>
-    <string name="wear_action_loop_state_requires_duration">Tato akce vyžaduje dobu trvání</string>
-    <string name="wear_action_loop_state_pump_suspended">Pumpa je pozastavena!</string>
-    <string name="wear_action_loop_state_profile_invalid">Neplatný profil!</string>
     <string name="wear_action_loop_state_unauthorized">Zkuste to prosím znovu.</string>
     <string name="wear_action_loop_state_invalid">Neplatný požadavek na stav smyčky</string>
     <string name="wear_action_running_mode_title">PROVOZNÍ REŽIM</string>
@@ -156,10 +150,6 @@
     <string name="smscommunicator_otp_reset_btn">Resetovat Authenticatory</string>
     <string name="smscommunicator_otp_reset_title">Resetovat klíč Authenticatoru</string>
     <string name="smscommunicator_otp_reset_prompt">Opravdu chcete resetovat klíč Authenticatoru? Tím znehodnotíte všechny aktuálně nakonfigurované Authenticatory a budete je muset nastavit znovu.</string>
-    <string name="smscommunicator_otp_reset_successful">Byl vygenerován nový klíč Authenticatoru! Pro nastavení autentizátorů použijte aktualizovaný QR kód.</string>
-    <string name="smscommunicator_otp_export_title">Exportování OTP kódu</string>
-    <string name="smscommunicator_otp_export_prompt">Opravdu chcete zkopírovat OTP kód do schránky?\n\nToto můžete potřebovat pouze v případě, že vaše aplikace Authenticator má problém naskenovat QR kód, chcete ho zadat ručně nebo chcete nakonfigurovat hardwarový OTP token pomocí dedikované aplikace.</string>
-    <string name="smscommunicator_otp_export_successful">OTP tajemství (ve formátu Base32) exportováno a zkopírováno do schránky. Vložte je do autentizátoru nebo hardwarového OTP burneru!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Nainstalujte Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pro nastavení AAPS OTP kódů</string>
     <string name="smscommunicator_otp_step3_test_header">3. Otestujte jednorázové heslo</string>
