@@ -101,4 +101,18 @@
     <string name="num1pin">1: (12 číslic)</string>
     <string name="num2pin">2: (8 číslic)</string>
     <string name="basal_bolus_step">Bazální/bolusový krok</string>
+    <string name="connecting_to_pump">Připojování k pumpě</string>
+    <string name="pairing_successful">Spárování úspěšné!</string>
+    <string name="pairing_successful_message">Vaše pumpa je nyní připojena a připravena k použití.</string>
+    <string name="cancel_pairing_title">Zrušit párování?</string>
+    <string name="cancel_pairing_message">Proces párování bude přerušen.</string>
+    <string name="done">Hotovo</string>
+    <string name="open_bluetooth_settings">Otevřít nastavení Bluetooth</string>
+    <string name="enter_pump_password">Zadejte heslo pumpy</string>
+    <string name="select_paired_device">Vyberte spárované zařízení</string>
+    <string name="no_paired_devices">Nenalezena žádná spárovaná zařízení Dana. Nejprve spárujte pumpu v nastavení Bluetooth Androidu.</string>
+    <string name="password_hint">4místné heslo (0-9999)</string>
+    <string name="connecting_verifying">Připojování a ověřování hesla</string>
+    <string name="password_ok">Heslo úspěšně ověřeno!</string>
+    <string name="password_wrong">Nesprávné heslo. Vraťte se a opravte jej.</string>
 </resources>
