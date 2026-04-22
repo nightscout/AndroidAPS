@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">静默报警</string>
     <string name="omnipod_common_overview_pod_status">Pod状态</string>
     <string name="omnipod_common_overview_total_delivered">输注总量</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">唯一 ID</string>
     <string name="omnipod_common_overview_lot_number">批号</string>
     <string name="omnipod_common_overview_pod_sequence_number">序号</string>
@@ -50,7 +49,6 @@
     <string name="omnipod_common_overview_pod_active_alerts">Pod活动提醒</string>
     <string name="omnipod_common_overview_firmware_version">固件版本</string>
     <string name="omnipod_common_overview_time_on_pod">Pod上的时间</string>
-    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d 分钟)</string>
     <string name="omnipod_common_uncertain">不确定</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">停用Pod</string>
