@@ -32,18 +32,11 @@
     <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
     <string name="readstatus">Получавам състоянието на помпата</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Искане</string>
-    <string name="error_asking_for_permissions">Грешка искане за разрешения</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Коя помпа бихте искали да използвате с AAPS?</string>
     <string name="configbuilder_aps_description">Кои APS алгоритъм да се използва за корекции в лечението?</string>
-    <string name="configbuilder_general_description">Това са някой общи функции, които може да са Ви от полза.</string>
-    <string name="configbuilder_constraints_description">Кои ограничения да се прилагат?</string>
-    <string name="configbuilder_loop_description">Използвайте това за да активирате цикъл в AAPS.</string>
-    <string name="configbuilder_insulin_description">Кой тип на инсулин използвате?</string>
     <string name="configbuilder_bgsource_description">От къде трябва AAPS да взима данни?</string>
-    <string name="configbuilder_smoothing_description">Изберете алгоритъм за изглаждане</string>
     <string name="configbuilder_sensitivity_description">Кой алгоритъм за определяне на чувствителността да се използва?</string>
     <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише базали, съхранявани в помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
     <string name="nsclient_version_does_not_match">Версията на AAPSClient не съвпада с версията на AAPS. Моля обновете.</string>
