@@ -95,8 +95,6 @@
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">La aplicación necesita permiso de Bluetooth para comunicarse con la bomba</string>
     <!-- Insulin -->
-    <string name="insulin_plugin">Insulina</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">Desconocido</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -105,7 +103,6 @@
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Tiempo de Pico [min]</string>
-    <string name="insulin_oref_peak">Tiempo de pico de la curva de la insulina activa</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u40">U40</string>
