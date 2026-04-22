@@ -175,7 +175,7 @@
     <string name="a11y_low">low</string>
     <string name="average">Average</string>
     <string name="tir">Time in Range</string>
-    <string name="remove_label">REMOVE</string>
+    <string name="remove_label">Remove</string>
     <string name="activate_profile">Activate profile</string>
     <string name="activate_insulin">Activate insulin</string>
     <string name="reset">Reset</string>
@@ -344,7 +344,7 @@
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
-    <string name="unknown">unknown</string>
+    <string name="unknown">Unknown</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Activity</string>
@@ -565,8 +565,8 @@
     <string name="set_profile">SET PROFILE</string>
     <string name="set_user_settings">SET USER SETTINGS</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
-    <string name="start_pump">START PUMP</string>
-    <string name="stop_pump">STOP PUMP</string>
+    <string name="start_pump">Start pump</string>
+    <string name="stop_pump">Stop pump</string>
     <string name="temp_basal_absolute">TEMP BASAL %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">TEMP BASAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFICATION</string>
@@ -627,7 +627,7 @@
     <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>
     <string name="bolus_equal_zero_no_action">Bolus = 0. No action taken!</string>
-    <string name="wizard_no_insulin_required">No insulin required!</string>
+    <string name="wizard_no_insulin_required">No insulin required</string>
     <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
     <string name="wizard_no_active_profile">No active profile set!</string>
     <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
@@ -687,7 +687,7 @@
     <string name="reading_pump_history">Reading pump history</string>
     <string name="password_cleared">Password cleared!</string>
     <string name="pairing">Pairing</string>
-    <string name="initializing">Initializing ...</string>
+    <string name="initializing">Initializing…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Warning</string>
     <string name="retry" comment="Button label to retry a failed operation">Retry</string>
