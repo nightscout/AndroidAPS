@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Seri no # geçersiz.</string>
     <string name="medtronic_error_pump_type_not_set">Pompa Tipi ayarlanmadı.</string>
     <string name="medtronic_error_pump_type_invalid">Pompa Tipi desteklenmiyor.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Pompa Frekansı desteklenmiyor.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink Adresi geçersiz.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Algılanan pompa tipi, yapılandırılmış tiple aynı değil.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Bazal profiller/şablon ayarı pompada etkinleştirilmemiştir. Pompada etkinleştirin.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Medtronic Pompa Geçmişi</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Pompa üzerinde ayarlandıktan sonra Bolus\'u iptal ettiniz. Medtronic Pompa iptali desteklemediğinden, elle iptal etmeniz gerekecektir. Pompayı Askıya Al moduna getirin ve ardından Devam et\'e basın. (yine de iptal etmek istiyorsanız). Uygulama, bir sonraki güncellemede (5 dakikadan daha kısa sürede) değişiklikleri alacaktır.</string>
     <string name="medtronic_cmd_cant_read_tbr">Mevcut TBR (geçici bazal oranı) okunamadı.</string>
@@ -74,7 +72,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Sık kullanılan Geçici Bazalları ayarla</string>
     <string name="set_neutral_temps_summary">Etkinleştirilirse, her saatin sonunda geçici bazali iptal eder. Bu yöntem, bazı pompaların saatte bip sesini/titremesini durdurmaya yardımcı olabilir.</string>
-    <string name="mdt_tbr_remaining">%1$.1f Ü/sa (%2$d dk. kaldı)</string>
     <string name="invalid_history_data">Geçersiz pompa geçmişi verisi tespit edildi. Yeni hata bildirim konusu açın ve günlükleri gönderin.</string>
     <string name="riley_statistics">RL İstatistikleri</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Yenileme tıklandı</string>
