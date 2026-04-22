@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_field_must_not_be_empty">Il campo non deve essere vuoto</string>
-    <string name="error_url_not_valid">L\'URL non è valido</string>
     <string name="error_mustbe4hexadidits">Devono essere 4 caratteri tra ABCDEF0123456789</string>
     <!--    General-->
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Trattamenti</string>
     <string name="treatments_desc">Visualizza e gestisci la cronologia dei trattamenti</string>
     <string name="nav_configuration">Configurazione</string>
@@ -21,7 +19,6 @@
     <string name="invalid_input">Dati di input non validi</string>
     <string name="invalid_number">Numero non valido</string>
     <string name="constraint_applied">Vincolo applicato!</string>
-    <string name="tempbasals_iobtotal_label_string">IOB totale:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Micro irraggiungibile</string>
     <string name="insulin_unit_shortname">U</string>
@@ -33,7 +30,6 @@
     <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="loop_disabled">LOOP DISABILITATO DAI VINCOLI</string>
     <string name="event_type">Tipo evento</string>
-    <string name="reload">Ricarica</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Salva</string>
@@ -88,16 +84,12 @@
     <string name="success">OK</string>
     <string name="advanced_settings_title">Impostazioni avanzate</string>
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
-    <string name="aps_mode_title">Modalità APS</string>
     <string name="extended_bolus">Bolo esteso</string>
     <string name="paused">In pausa</string>
     <string name="running">In esecuzione</string>
-    <string name="open_menu">Open menu</string>
-    <string name="close_menu">Chiudi menu</string>
     <string name="tdd_total">TDD totale</string>
     <string name="tdd_old_data">Dati vecchi</string>
     <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
-    <string name="waitingforpump">In attesa del micro</string>
     <string name="androidaps_start">AAPS avviato</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -113,10 +105,8 @@
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unità</string>
-    <string name="insulin_name_label">Nome insulina</string>
     <string name="insulin_nickname_label">Soprannome dell\'insulina</string>
     <string name="concentration_label">Concentrazione</string>
-    <string name="format_concentration">U%1$.0f</string>
     <string name="peak_label">Picco</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
@@ -130,7 +120,6 @@
     <string name="target_long_label">Target glicemia</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Ora del micro aggiornata</string>
     <string name="exit">Esci</string>
@@ -157,9 +146,6 @@
     <string name="waiting_for_pump">In attesa del micro...</string>
     <string name="initialization_failed">Inizializzazione non riuscita</string>
     <string name="notes_label">Note</string>
-    <string name="remove_button">Rimuovi</string>
-    <string name="add_new">Aggiungi nuovo</string>
-    <string name="addnew_above">Aggiungi nuovo sopra</string>
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Calibrazione</string>
@@ -174,8 +160,6 @@
     <string name="notconfigured">Non configurato</string>
     <string name="loopsuspended">Loop sospeso</string>
     <string name="loop_suspended_by_dst">Loop sospeso da DST</string>
-    <string name="trend_arrow">Freccia trend</string>
-    <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">ric</string>
     <string name="a11y_arrow_double_down">discesa rapida</string>
     <string name="a11y_arrow_single_down">discesa</string>
@@ -190,22 +174,16 @@
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">basso</string>
     <string name="average">Media</string>
-    <string name="tir_short">TIR</string>
     <string name="tir">Tempo nell’intervallo</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="remove_label">RIMUOVI</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="activate_insulin">Attiva insulina</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
-    <string name="select_for_removal">Seleziona per la rimozione</string>
     <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
     <string name="wear_wizard_settings">Impostazioni Rapide Orologio</string>
-    <string name="bg_trend_label">Trend di 15min</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">IOB da bolo</string>
     <string name="treatments_wizard_basaliob_label">IOB da basale</string>
     <string name="invalid">NON VALIDO</string>
@@ -231,14 +209,8 @@
     <string name="pump_suspend">Sospendi micro</string>
     <string name="pump_resume">Riprendi micro</string>
     <string name="mode_reverted">Modalità ripristinata</string>
-    <string name="insulin_shortname">INS</string>
     <string name="select_insulin">Seleziona Insulina</string>
-    <string name="select_pump_insulin">Seleziona Insulina</string>
-    <string name="select_pen_insulin">Seleziona Insulina</string>
-    <string name="insulin_template">Modello</string>
     <string name="dia">DIA</string>
-    <string name="peak">Picco</string>
-    <string name="concentration">Concentrazione</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Basale temporanea: cancellazione fallita</string>
@@ -286,14 +258,11 @@
     <string name="current_insulin">Attualmente attivo</string>
     <string name="change_insulin">Cambiare</string>
     <string name="select_insulin_description">Selezionare l\'insulina con cui si sta riempiendo la pompa. Dopo l\'attivazione/prime, verrà applicato un interruttore del profilo.</string>
-    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
-    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina Selezionata: %1$s</string>
     <string name="record_insulin_hint">Se si entra in insulina applicata dalla penna, selezionare di seguito il tipo di insulina corretto. La dose è sempre nelle Unità Internazionali.</string>
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Profilo non valido: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    Translator-->
@@ -306,7 +275,6 @@
     <string name="careportal_question">Domanda</string>
     <string name="careportal_exercise">Esercizio fisico</string>
     <string name="careportal_announcement_message">Avviso: %1$s</string>
-    <string name="careportal_settings_export_message">Esportazione Impostazioni: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Domanda : %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
@@ -366,7 +334,6 @@
     <string name="glucosetype_finger">Dito</string>
     <string name="glucosetype_sensor">Sensore</string>
     <string name="manual">Manuale</string>
-    <string name="unknown">sconosciuto</string>
     <string name="eatingsoon">Pasto a breve</string>
     <string name="hypo">Ipoglicemia</string>
     <string name="activity">Attività</string>
@@ -378,9 +345,7 @@
     <string name="activation">Attivazione</string>
     <string name="temp_target_management">Target Temporaneo</string>
     <string name="revert_to_defaults">Ripristino delle impostazioni predefinite</string>
-    <string name="confirm_remove_preset">Rimuovere preset %1$s?</string>
     <string name="confirm_cancel_temp_target">Annullare il target temporaneo attivo?</string>
-    <string name="add_new_preset">Aggiungi nuovo preset</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -433,13 +398,6 @@
     <string name="bolus">Bolo</string>
     <string name="tdd_short">TDD</string>
     <string name="tdd">Dose totale giornaliera</string>
-    <string name="ratio">Rapporto</string>
-    <string name="amount_days"># Giorni</string>
-    <string name="weight">Peso</string>
-    <string name="warning_Message">Probabilmente inaccurato se per il caricamento/riempimento si usano i boli al posto dell\'apposita funzione!</string>
-    <string name="olddata_Message">Dati vecchi, premi \"RICARICA\"</string>
-    <string name="tbb">Basale originale totale</string>
-    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Rilevamento tempo</string>
     <!-- User Entry -->
@@ -513,7 +471,6 @@
     <string name="uel_stat_reset">RESET STAT</string>
     <string name="uel_delete_logs">ELIMINA LOG</string>
     <string name="uel_delete_future_treatments">ELIMINA TRATTAMENTI FUTURI</string>
-    <string name="delete_future_treatments">Elimina trattamenti futuri</string>
     <string name="uel_export_settings">ESPORTA IMPOSTAZIONI</string>
     <string name="uel_import_settings">IMPORTA IMPOSTAZIONI</string>
     <string name="uel_select_directory">SELEZIONA CARTELLA</string>
@@ -530,7 +487,6 @@
     <string name="uel_exit_aaps">USCITA AAPS</string>
     <string name="uel_plugin_enabled">PLUGIN ABILITATO</string>
     <string name="uel_plugin_disabled">PLUGIN DISABILITATO</string>
-    <string name="uel_unknown">SCONOSCIUTO</string>
     <string name="ue_string">Stringa</string>
     <string name="ue_source">Origine</string>
     <string name="ue_utc_offset">Offset UTC</string>
@@ -544,7 +500,6 @@
     <string name="uel_store_insulin">CONSERVAZIONE INSULINA</string>
     <string name="uel_change_insulin_concentration">MODIFICA CONCENTRAZIONE INSULINA</string>
     <string name="uel_insulin_removed">INSULINA RIMOSSA</string>
-    <string name="uel_other">ALTRO</string>
     <string name="uel_running_mode">MODALITÀ RUNNING</string>
     <string name="uel_running_mode_removed">MODALITÀ RUNNING RIMOSSA</string>
     <string name="uel_running_mode_updarted">MODALITÀ RUNNING AGGIORNATA</string>
@@ -575,7 +530,6 @@
     <string name="profile_name_contains_dot">Alcuni nomi profilo contengono punti.\nQuesto non è supportato da NS.\nI profili non verranno caricati su NS.</string>
     <string name="invalid_profile_not_accepted">Profilo %1$s non valido - non accettato da NS</string>
     <string name="errors">Errori</string>
-    <string name="view">Vista</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CHO %1$d g</string>
@@ -589,8 +543,6 @@
     <string name="set_profile">IMPOSTA PROFILO</string>
     <string name="set_user_settings">CONFIGURA IMPOSTAZIONI UTENTE</string>
     <string name="smb_bolus_u">BOLO SMB %1$.2f U</string>
-    <string name="start_pump">AVVIA MICRO</string>
-    <string name="stop_pump">STOPPA MICRO</string>
     <string name="temp_basal_absolute">BASALE TEMPORANEA %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">BASALE TEMPORANEA %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFICATION</string>
@@ -606,9 +558,6 @@
     <string name="autosens_long">Valore Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens nell\'algoritmo: %.0f%%</string>
-    <string name="algorithm_short">Alg: %.0f%%</string>
-    <string name="a11y_file">file</string>
-    <string name="a11y_user">utente</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Giorni regolazione :</string>
@@ -645,12 +594,10 @@
     <string name="wizard_include_trend">Includi la tendenza</string>
     <string name="wizard_include_iob">Includi IOB</string>
     <string name="wizard_include_cob">Includi IOB</string>
-    <string name="wizard_advanced">Avanzate</string>
     <string name="wizard_calculation">Calcolo</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="carb_equal_zero_no_action">CHO = 0. Nessuna azione intrapresa!</string>
     <string name="bolus_equal_zero_no_action">Bolo = 0. Nessuna azione intrapresa!</string>
-    <string name="wizard_no_insulin_required">Insulina non necessaria!</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
     <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
@@ -668,7 +615,6 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
-    <string name="quickwizard">Calcolatore rapido</string>
     <string name="quickwizard_managemnt">Assistente Rapido</string>
     <!--    Preferences-->
     <string name="child">Bambino</string>
@@ -691,29 +637,22 @@
     <string name="tempbasal_label">Basale temporanea</string>
     <string name="extended_bolus_label">Bolo Esteso</string>
     <string name="serial_number">Numero seriale</string>
-    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">Disconnesso</string>
     <string name="connecting">Connessione</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Connetti al micro: cliccato</string>
-    <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Unità giornaliere</string>
     <string name="max_daily_units">Unità massime giornaliere</string>
-    <string name="pump_icon">Icona micro</string>
-    <string name="view_profile">Visualizza profilo</string>
     <string name="pump_history">Storico micro</string>
-    <string name="stats">Statistiche</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Cambio driver micro.</string>
     <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiato</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
     <string name="temp_basal_delivery_error">Errore erogazione basale temporanea</string>
     <string name="ebstopsloop">L\'uso della funzione bolo esteso interromperà la modalità loop chiuso per il tempo di esecuzione del bolo esteso. Lo vuoi davvero?</string>
-    <string name="not_set_short">Non impostato</string>
     <string name="pump_busy">Il micro è occupato</string>
     <string name="connection_error">Errore connessione micro</string>
     <string name="reading_pump_history">Lettura storico micro</string>
     <string name="password_cleared">Password cancellata!</string>
     <string name="pairing">Associazione</string>
-    <string name="initializing">Inizializzazione...</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Avviso</string>
     <string name="retry" comment="Button label to retry a failed operation">Riprova</string>
@@ -739,7 +678,6 @@
     <string name="no">No</string>
     <string name="close">Chiudi</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Ti verrà chiesta la password master, che è necessaria per decrittare le preferenze importate.</string>
     <!-- <unattended_export> -->
     <string name="export_ok">OK</string>
     <string name="export_warning">Avviso</string>
@@ -765,18 +703,7 @@
     <string name="csv_export_failed">Voci utente NON esportate!</string>
     <string name="logs_sent">Log inviati via email</string>
     <string name="logs_send_failed">Impossibile inviare i log</string>
-    <string name="export_options">Opzioni di esportazione</string>
     <string name="cloud_directory">Directory Cloud</string>
-    <string name="export_settings_local">Esporta impostazioni (locale)</string>
-    <string name="export_settings_cloud">Esporta impostazioni (Cloud)</string>
-    <string name="export_settings_both">Esporta impostazioni (Local+Cloud)</string>
-    <string name="import_settings_local">Importa impostazioni (locale)</string>
-    <string name="import_settings_cloud">Importa impostazioni (Cloud)</string>
-    <string name="import_settings_both">Importa impostazioni (Local/Cloud)</string>
-    <string name="send_logs_to_cloud">Esporta log su Cloud</string>
-    <string name="export_csv_to_cloud">Esporta in cloud le voci utente (csv)</string>
-    <string name="export_csv_to_local">Esporta in locale le voci utente (csv)</string>
-    <string name="setup_cloud_directory_first">Si prega di impostare la directory Cloud prima di utilizzare le impostazioni di esportazione</string>
     <string name="cloud_token_expired_or_invalid">Autorizzazione all\'archiviazione cloud scaduta o non valida. Per favore ri-autorizza.</string>
     <!-- Export destination chip labels -->
     <string name="chip_local">Locale</string>
@@ -824,8 +751,6 @@
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
     <string name="ble_permissions_missing">Le autorizzazioni Bluetooth non sono concesse. Si prega di concederle nelle impostazioni dell\'app.</string>
-    <string name="location_not_found_title">La localizzazione non è abilitata</string>
-    <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferenze plugin</string>
     <!-- Navigation -->
@@ -835,7 +760,6 @@
     <string name="open_navigation">Apri navigazione</string>
     <string name="nav_history_browser">Navigatore della cronologia</string>
     <string name="nav_history_browser_desc">Sfoglia i dati storici e i grafici</string>
-    <string name="overview">Panoramica</string>
     <string name="appearance">Aspetto</string>
     <string name="manage">Gestisci</string>
     <string name="localprofile">Profilo</string>
@@ -855,12 +779,10 @@
     <string name="add">Aggiungi</string>
     <string name="remove">Rimuovi</string>
     <string name="reorder">Riordina</string>
-    <string name="actions">Azioni</string>
     <string name="status">Stato</string>
     <string name="pump_actions">Azioni micro</string>
     <string name="tempbasal_button">Basale temporanea</string>
     <string name="extended_bolus_button">Bolo esteso</string>
-    <string name="tools">Strumenti</string>
     <string name="device_maintenance">Manutenzione del dispositivo</string>
     <string name="from_label">Da</string>
     <string name="to_label">A</string>
@@ -912,7 +834,6 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS riproduce audio"</string>
     <!-- ProfileEditor -->
-    <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
     <string name="profile_name">Nome profilo:</string>
@@ -927,13 +848,8 @@
     <string name="remove_entry">Rimuovi elemento</string>
     <string name="target_low_label">Basso</string>
     <string name="target_high_label">Alto</string>
-    <string name="select_profile">Seleziona profilo da modificare</string>
-    <string name="a11y_add_new_profile">aggiungi nuovo profilo</string>
-    <string name="a11y_clone_profile">clona profilo corrente</string>
-    <string name="a11y_delete_current_profile">elimina profilo corrente</string>
     <!--    Search-->
     <string name="search">Cerca</string>
-    <string name="search_preferences">Cerca preferenze</string>
     <string name="clear">Pulisci</string>
     <string name="search_category_categories">Categorie di preferenze</string>
     <string name="search_category_preferences">Preferenze</string>
@@ -953,9 +869,6 @@
     <string name="subcategory">Sottocategoria</string>
     <string name="portion">Porzione</string>
     <string name="unit_label">Unità</string>
-    <string name="fat">Grassi</string>
-    <string name="protein">Proteine</string>
-    <string name="energy">Energia</string>
     <string name="undo">Annulla</string>
     <string name="no_data">Nessun dato</string>
     <string name="manage_food_desc">Gestisci voci del database degli alimenti</string>
@@ -970,12 +883,10 @@
     <string name="maintenance">Manutenzione</string>
     <string name="description_maintenance">Fornisce numerose funzioni per la manutenzione (es. invio log, eliminazione log).</string>
     <string name="log_files">File di log</string>
-    <string name="send_all_logs">Invia log via email</string>
     <string name="delete_logs">Elimina log</string>
     <string name="logs_deleted">Log cancellati</string>
     <string name="aaps_directory">Directory AAPS</string>
     <string name="import_setting">Importa impostazioni</string>
-    <string name="miscellaneous">Varie</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Decifra &amp; Review</string>
     <string name="import_decrypt">Decripta</string>
@@ -987,19 +898,13 @@
     <string name="import_anyway_btn">Importa Comunque</string>
     <string name="import_restart_title">Impostazioni importate</string>
     <string name="import_restart_message">Le impostazioni sono state importate. L\'applicazione deve riavviarsi.</string>
-    <string name="import_file_details">Dettagli file</string>
     <string name="import_source_local">Locale</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Carica altro</string>
     <string name="import_no_files">Nessun file di impostazioni trovato</string>
-    <string name="import_review_summary">Riepilogo importazione</string>
     <string name="import_decrypt_ok">Decifratura riuscita. Pronto per l\'importazione.</string>
     <string name="import_decrypt_warn">Decrittografia riuscita, ma ci sono avvertimenti.</string>
     <string name="import_decrypt_error">Decifratura riuscita, ma l\'importazione non è possibile.</string>
-    <string name="import_check_before">Controlla le preferenze prima dell\'importazione:</string>
-    <string name="import_check_dangerous">Le preferenze non dovrebbero essere importate!</string>
-    <string name="import_check_cannot">Le preferenze non possono essere importate!</string>
-    <string name="import_explain_issues">Descrivi i problemi di importazione\u2026</string>
     <string name="reset_aps_results">Resetta i risultati di APS</string>
     <string name="database_cleanup">Pulizia database</string>
     <string name="nav_resetdb">Reset database</string>
@@ -1009,7 +914,6 @@
     <!-- Graph configuration -->
     <string name="graph_add">Aggiungi grafico</string>
     <string name="graph_new">Nuovo grafico</string>
-    <string name="graph_edit">Modifica grafico</string>
     <string name="graph_number">%1$d Grafico</string>
     <string name="graph_bg">Grafico glicemia</string>
     <string name="graph_height">Altezza grafico [dp]</string>
