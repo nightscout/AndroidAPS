@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Serijos Nr. neteisingas.</string>
     <string name="medtronic_error_pump_type_not_set">Nenustatytas pompos tipas.</string>
     <string name="medtronic_error_pump_type_invalid">Nepalaikomas pompos tipas.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Nepalaikomas pompos dažnis.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adresas neteisingas.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Aptiktas pompos tipas neatitinka nustatymų.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Bazės profilis / nustatymas pompoje nėra įgalintas. Įgalinkite jį pompoje.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Medtronic pompos istorija</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Atšaukėte bolusą, kuris jau buvo nustatytas pompoje. Medronic pompa nepalaiko šio atšaukimo, todėl turite jį atšaukti rankiniu būdu. Sustabdykite pompą ir vėl ją paleiskite (jei vis dar norite atšaukti bolusą). Programa perims pokyčius su kitu atnaujinimu (per mažiau nei 5 minutes).</string>
     <string name="medtronic_cmd_cant_read_tbr">Negalima sužinoti dabartinės laikinos bazės.</string>
@@ -74,7 +72,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
     <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
-    <string name="mdt_tbr_remaining">%1$.1f vv/h (liko %2$d min)</string>
     <string name="invalid_history_data">Aptikti neteisingi pompos istorijos duomenys. Sukurkite naują problemos įrašą ir pateikite logus.</string>
     <string name="riley_statistics">RL statistika</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Paspausta atnaujinti</string>
