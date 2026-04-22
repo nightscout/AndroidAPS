@@ -36,5 +36,4 @@
     <string name="time_last_week">지난 주</string>
     <string name="time_last_month">지난 달</string>
     <!-- Pump History -->
-    <string name="pump_history_type">종류:</string>
 </resources>
