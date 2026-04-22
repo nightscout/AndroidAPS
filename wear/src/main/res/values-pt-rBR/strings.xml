@@ -5,10 +5,6 @@
     <string name="label_actions_tile">AAPS(Ações)</string>
     <string name="label_temp_target_tile">AAPS(Meta Temporária)</string>
     <string name="label_quick_wizard_tile">AAPS(Assistente Rápido)</string>
-    <string name="label_warning_sync">Sem dados!</string>
-    <string name="label_warning_old">Dados antigos!</string>
-    <string name="label_warning_since">Desde %1$s</string>
-    <string name="label_warning_sync_aaps">Sincronizar com AAPS!</string>
     <string name="msg_warning_sync">Nenhum dado recebido desde %1$s! Confira se o AAPS no telefone envia dados para o relógio</string>
     <string name="msg_warning_old">Dados AAPS são %1$s antigos! Verifique sensor, xDrip+, NS, configuração AAPS ou outra!</string>
     <string name="pref_vibrate_on_bolus">Vibrar no Bólus</string>
@@ -61,7 +57,6 @@
     <string name="menu_none">Nenhum</string>
     <string name="menu_default">Padrão</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">Solicitação de Meta Temporária</string>
     <string name="action_quick_wizard_confirmation">Solicitação do Assistente Rápido</string>
     <string name="action_treatment_confirmation">Solicitação de Tratamento</string>
@@ -72,7 +67,6 @@
     <string name="action_profile_switch_confirmation">Solicitação de Alternância de Perfil</string>
     <string name="action_carbs">Carboidratos</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_duration_h">Duração [h]</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Predefinição 1</string>
     <string name="action_preset_2">Predefinição 2</string>
@@ -109,7 +103,6 @@
     <string name="color_name_gray">cinza</string>
     <string name="color_name_bluegray">cinza azulado</string>
     <string name="color_name_white">branco</string>
-    <string name="color_name_black">preto</string>
     <string name="color_name_multicolor">multicor</string>
     <string name="pref_simplify_ui">Simplificar UI</string>
     <string name="pref_vibrate_hourly">Vibrar de hora em hora</string>
@@ -135,8 +128,6 @@
     <string name="tile_no_config">Nenhuma configuração disponível</string>
     <string name="wear_control_not_enabled">Controles do Wear desativados</string>
     <string name="wear_control_no_data">Sem dados disponíveis</string>
-    <string name="increment">incremento</string>
-    <string name="decrement">diminuição</string>
     <string name="abbreviation_average">média</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -149,6 +140,4 @@
     <string name="week_short">s</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
-    <string name="old">antigo</string>
-    <string name="old_warning">!old!</string>
 </resources>
