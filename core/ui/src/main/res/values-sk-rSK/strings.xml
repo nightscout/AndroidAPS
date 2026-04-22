@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_field_must_not_be_empty">Toto pole nesmie byť prázdne</string>
-    <string name="error_url_not_valid">Webová adresa je neplatná</string>
     <string name="error_mustbe4hexadidits">Musí byť zo 4 znakov z ABCDEF0123456789</string>
     <!--    General-->
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Ošetrenia</string>
     <string name="treatments_desc">Zobraz a spravuj históriu ošetrení</string>
     <string name="nav_configuration">Konfigurácia</string>
@@ -21,7 +19,6 @@
     <string name="invalid_input">Chybné vstupné dáta</string>
     <string name="invalid_number">Neplatné číslo</string>
     <string name="constraint_applied">Aplikované obmedzenie!</string>
-    <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
     <string name="tt_label">DC</string>
     <string name="pump_unreachable">Pumpa nedostupná</string>
     <string name="insulin_unit_shortname">U</string>
@@ -33,7 +30,6 @@
     <string name="limiting_iob">IOB obmedzený na %1$.1f U: %2$s</string>
     <string name="loop_disabled">UZAVRETÝ OKRUH DEAKTIVOVANÝ OBMEDZENÍM</string>
     <string name="event_type">Typ udalosti</string>
-    <string name="reload">Znova načítať</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
     <string name="save">Uložiť</string>
@@ -88,16 +84,12 @@
     <string name="success">Úspešne</string>
     <string name="advanced_settings_title">Rozšírené nastavenia</string>
     <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
-    <string name="aps_mode_title">APS mód</string>
     <string name="extended_bolus">Predĺžený bolus</string>
     <string name="paused">Pozastavené</string>
     <string name="running">Beží</string>
-    <string name="open_menu">Otvoriť ponuku</string>
-    <string name="close_menu">Zatvoriť ponuku</string>
     <string name="tdd_total">CDD celkom</string>
     <string name="tdd_old_data">Staré dáta</string>
     <string name="goingtodeliver">Podávanie %1$.2f U inzulínu</string>
-    <string name="waitingforpump">Čakám na pumpu</string>
     <string name="androidaps_start">AAPS spustený</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -113,10 +105,8 @@
     <string name="active"><![CDATA[<Aktívny>]]></string>
     <string name="date">Dátum</string>
     <string name="units_label">Jednotky</string>
-    <string name="insulin_name_label">Názov inzulínu</string>
     <string name="insulin_nickname_label">Prezývka inzulínu</string>
     <string name="concentration_label">Koncentrácia</string>
-    <string name="format_concentration">U%1$.0f</string>
     <string name="peak_label">Vrchol</string>
     <string name="dia_label">Doba pôsobenia inzulínu</string>
     <string name="ic_label">Inzulínovo-sacharidový pomer</string>
@@ -130,7 +120,6 @@
     <string name="target_long_label">Cieľová glykémia</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Čas v pumpe bol aktualizovaný</string>
     <string name="exit">Koniec</string>
@@ -157,9 +146,6 @@
     <string name="waiting_for_pump">Čakám na pumpu...</string>
     <string name="initialization_failed">Inicializácia zlyhala</string>
     <string name="notes_label">Poznámky</string>
-    <string name="remove_button">Vymazať</string>
-    <string name="add_new">Pridať nový</string>
-    <string name="addnew_above">Pridať novú nad</string>
     <string name="wrong_pump_data">Dáta prichádzajú z inej pumpy. Zmeňte ovládač pre obnovenie stavu pumpy.</string>
     <string name="bg_label">Glykémia</string>
     <string name="calibration">Kalibrácia</string>
@@ -174,8 +160,6 @@
     <string name="notconfigured">Nenakonfigurované</string>
     <string name="loopsuspended">Uzavretý okruh pozastavený</string>
     <string name="loop_suspended_by_dst">Uzavretý okruh pozastavený kvôli zmene času</string>
-    <string name="trend_arrow">Trendová šípka</string>
-    <string name="a11y_autosens_label">Automatická detekcia citlivosti</string>
     <string name="required">pož.</string>
     <string name="a11y_arrow_double_down">rýchly pokles</string>
     <string name="a11y_arrow_single_down">klesajúca</string>
@@ -190,22 +174,16 @@
     <string name="a11y_inrange">v rozsahu</string>
     <string name="a11y_low">nízka</string>
     <string name="average">Priemer</string>
-    <string name="tir_short">TIR</string>
     <string name="tir">Čas v rozsahu</string>
-    <string name="none"><![CDATA[<prázdne>]]></string>
-    <string name="remove_label">VYMAZAŤ</string>
     <string name="activate_profile">Aktivovať profil</string>
     <string name="activate_insulin">Aktivuj inzulín</string>
     <string name="reset">Resetovať</string>
     <string name="profileswitch_ismissing">Prepnutie profilu chýba. Vykonajte prepnutie profilu, alebo ho aktivujte na záložke lokálneho profilu.</string>
     <string name="profile">Profil</string>
-    <string name="select_for_removal">Vyberte pre odstránenie</string>
     <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položiek</string>
     <string name="overview_treatment_label">Ošetrenie</string>
     <string name="copytolocalprofile">Vytvoriť z tohoto profilu nový profil?</string>
     <string name="wear_wizard_settings">Nastavenie sprievodcu na hodinkách</string>
-    <string name="bg_trend_label">15min trend</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolusový IOB</string>
     <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
     <string name="invalid">NEPLATNÝ</string>
@@ -231,14 +209,8 @@
     <string name="pump_suspend">Pozastaviť pumpu</string>
     <string name="pump_resume">Obnoviť pumpu</string>
     <string name="mode_reverted">Režim bol obnovený</string>
-    <string name="insulin_shortname">INZ</string>
     <string name="select_insulin">Zvoľ inzulín</string>
-    <string name="select_pump_insulin">Zvoľ inzulín v pumpe</string>
-    <string name="select_pen_insulin">Zvoľ inzulín</string>
-    <string name="insulin_template">Šablóna</string>
     <string name="dia">DIA</string>
-    <string name="peak">Vrchol</string>
-    <string name="concentration">Koncentrácia</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Zrušenie dočasného bazálu zlyhalo</string>
@@ -286,14 +258,11 @@
     <string name="current_insulin">Práve aktívny</string>
     <string name="change_insulin">Vymeň inzulín</string>
     <string name="select_insulin_description">Zvoľ inzulín, ktorým plníš pumpu. Po aktivácii/plnení bude vykonané prepnutie profilu.</string>
-    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
-    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Zvolený inzulín: %1$s</string>
     <string name="record_insulin_hint">Ak zadávaš inzulín aplikovaný perom, zvoľ nižšie ten správny typ inzulínu.</string>
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Chybný profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min.</string>
     <!--    Translator-->
@@ -306,7 +275,6 @@
     <string name="careportal_question">Otázka</string>
     <string name="careportal_exercise">Pohyb</string>
     <string name="careportal_announcement_message">Oznámenie: %1$s</string>
-    <string name="careportal_settings_export_message">Export nastavení: %1$s</string>
     <string name="careportal_note_message">Poznámka : %1$s</string>
     <string name="careportal_question_message">Otázka: %1$s</string>
     <string name="careportal_exercise_message">Cvičenie : %1$s</string>
@@ -366,7 +334,6 @@
     <string name="glucosetype_finger">Prst</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Iný</string>
-    <string name="unknown">neznámy</string>
     <string name="eatingsoon">Pred jedlom</string>
     <string name="hypo">Hypoglykémia</string>
     <string name="activity">Aktivita</string>
@@ -378,9 +345,7 @@
     <string name="activation">Aktivácia</string>
     <string name="temp_target_management">Dočasný cieľ</string>
     <string name="revert_to_defaults">Obnoviť predvolené</string>
-    <string name="confirm_remove_preset">Odstrániť predvolené %1$s?</string>
     <string name="confirm_cancel_temp_target">Zrušiť aktívny dočasný cieľ?</string>
-    <string name="add_new_preset">Pridať novú predvoľbu</string>
     <string name="loop">Uzavretý okruh</string>
     <string name="ns">NS</string>
     <string name="record">Záznam</string>
@@ -433,13 +398,6 @@
     <string name="bolus">Bolus</string>
     <string name="tdd_short">CDD</string>
     <string name="tdd">Celková denná dávka</string>
-    <string name="ratio">Pomer</string>
-    <string name="amount_days">Dní</string>
-    <string name="weight">Váha</string>
-    <string name="warning_Message">Pravdepodobne nepresné, ak bol použitý bolus na plnenie!</string>
-    <string name="olddata_Message">Zastaralé dáta. Stlačte tlačítko „ZNOVA NAČÍTAŤ“</string>
-    <string name="tbb">Celk. denný bazál</string>
-    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detekcia času</string>
     <!-- User Entry -->
@@ -513,7 +471,6 @@
     <string name="uel_stat_reset">RESET ŠTATISTÍK</string>
     <string name="uel_delete_logs">VYMAZAŤ LOGY</string>
     <string name="uel_delete_future_treatments">VYMAZAŤ BUDÚCE OŠETRENIA</string>
-    <string name="delete_future_treatments">Odstrániť ošetrenia v budúcnosti</string>
     <string name="uel_export_settings">EXPORTOVAŤ NASTAVENIA</string>
     <string name="uel_import_settings">IMPORTOVAŤ NASTAVENIA</string>
     <string name="uel_select_directory">VYBERTE PRIEČINOK</string>
@@ -530,7 +487,6 @@
     <string name="uel_exit_aaps">UKONČIŤ AAPS</string>
     <string name="uel_plugin_enabled">PLUG-IN POVOLENÝ</string>
     <string name="uel_plugin_disabled">PLUG-IN ZAKÁZANÝ</string>
-    <string name="uel_unknown">NEZNÁME</string>
     <string name="ue_string">Reťazec</string>
     <string name="ue_source">Zdroj</string>
     <string name="ue_utc_offset">Posunutie UTC</string>
@@ -544,7 +500,6 @@
     <string name="uel_store_insulin">USKLADNENIE INZULÍNU</string>
     <string name="uel_change_insulin_concentration">ZMENIŤ KONCENTRÁCIU INZULÍNU</string>
     <string name="uel_insulin_removed">INZULÍN ODSTRÁNENÝ</string>
-    <string name="uel_other">INÉ</string>
     <string name="uel_running_mode">REŽIM UZAVRETÉHO OKRUHU</string>
     <string name="uel_running_mode_removed">REŽIM UZAVRETÉHO OKRUHU ODSTRÁNENÝ</string>
     <string name="uel_running_mode_updarted">REŽIM UZAVRETÉHO OKRUHU AKTUALIZOVANÝ</string>
@@ -575,7 +530,6 @@
     <string name="profile_name_contains_dot">Názov profilu obsahuje bodky.\nToto nie je v NS podporované.\nProfil nebude prenesený do NS.</string>
     <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebol akceptovaný z NS</string>
     <string name="errors">Chyby</string>
-    <string name="view">Zobraziť</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">SACHARIDY %1$d g</string>
@@ -589,8 +543,6 @@
     <string name="set_profile">NASTAVIŤ PROFIL</string>
     <string name="set_user_settings">NASTAVIŤ POUŽ. NASTAVENIA</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
-    <string name="start_pump">SPUSTIŤ PUMPU</string>
-    <string name="stop_pump">ZASTAVIŤ PUMPU</string>
     <string name="temp_basal_absolute">DOČAS. BAZÁL %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">DOČAS. BAZÁL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT NASTAVIŤ TBR CEZ OZNÁMENIE</string>
@@ -606,9 +558,6 @@
     <string name="autosens_long">Hodnota Autosense: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Detekcia citlivosti algoritmu: %.0f%%</string>
-    <string name="algorithm_short">Alg: %.0f%%</string>
-    <string name="a11y_file">súbor</string>
-    <string name="a11y_user">používateľ</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Ladiť dni:</string>
@@ -645,12 +594,10 @@
     <string name="wizard_include_trend">Zahŕňa trend</string>
     <string name="wizard_include_iob">Zahŕňa IOB</string>
     <string name="wizard_include_cob">Zahŕňa COB</string>
-    <string name="wizard_advanced">Pokročilý</string>
     <string name="wizard_calculation">Výpočet</string>
     <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
     <string name="carb_equal_zero_no_action">Sacharidy = 0. Žiadna akcia!</string>
     <string name="bolus_equal_zero_no_action">Bolus = 0. Žiadna akcia!</string>
-    <string name="wizard_no_insulin_required">Nie je požadovaný žiadny inzulín!</string>
     <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
     <string name="wizard_no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="wizard_no_cob">Neznáme COB! Chýbajú glykémie, alebo bola práve reštartovaná aplikácia?</string>
@@ -668,7 +615,6 @@
     <string name="wizard_explain_tt">DC: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s do %2$s</string>
     <string name="wizard_pump_not_available">Pumpa nedostupná!</string>
-    <string name="quickwizard">Rýchly bolus</string>
     <string name="quickwizard_managemnt">Rýchly sprievodca</string>
     <!--    Preferences-->
     <string name="child">Dieťa</string>
@@ -691,29 +637,22 @@
     <string name="tempbasal_label">Dočasný bazál</string>
     <string name="extended_bolus_label">Predĺžený bolus</string>
     <string name="serial_number">Sériové číslo</string>
-    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">Odpojené</string>
     <string name="connecting">Pripájanie</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknuté pripojiť k pumpe</string>
-    <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Jednotiek za deň</string>
     <string name="max_daily_units">Max jednotiek denne</string>
-    <string name="pump_icon">Ikona pumpy</string>
-    <string name="view_profile">Zobraziť profil</string>
     <string name="pump_history">História pumpy</string>
-    <string name="stats">Štatistiky</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Zmena ovládača pumpy.</string>
     <string name="device_changed" comment="26 characters max for translation">Zariadenie zmenené</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Chyba podávania dočasného bazálu</string>
     <string name="ebstopsloop">Použitie funkcie predĺženého bolusu zastaví uzavretý okruh na dobu trvania predĺženého bolusu. Naozaj to chcete?</string>
-    <string name="not_set_short">Nenastavené</string>
     <string name="pump_busy">Pumpa je zaneprázdnená</string>
     <string name="connection_error">Chyba pripájania pumpy</string>
     <string name="reading_pump_history">Načítavam históriu z pumpy</string>
     <string name="password_cleared">Heslo vymazané!</string>
     <string name="pairing">Párovanie</string>
-    <string name="initializing">Inicializácia ...</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Upozornenie</string>
     <string name="retry" comment="Button label to retry a failed operation">Opakovať</string>
@@ -739,7 +678,6 @@
     <string name="no">Nie</string>
     <string name="close">Zavrieť</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
     <!-- <unattended_export> -->
     <string name="export_ok">OK</string>
     <string name="export_warning">Varovanie</string>
@@ -765,18 +703,7 @@
     <string name="csv_export_failed">Export užívateľských záznamov zlyhal!</string>
     <string name="logs_sent">Logy odoslané cez E-mail</string>
     <string name="logs_send_failed">Odosielanie logov zlyhalo</string>
-    <string name="export_options">Nastavenia exportu</string>
     <string name="cloud_directory">Cloudový adresár</string>
-    <string name="export_settings_local">Exportovať nastavenia (Lokálne)</string>
-    <string name="export_settings_cloud">Exportovať nastavenia (Cloud)</string>
-    <string name="export_settings_both">Exportovať nastavenia (Lokálne+Cloud)</string>
-    <string name="import_settings_local">Importovať nastavenia (Lokálne)</string>
-    <string name="import_settings_cloud">Importovať nastavenia (Cloud)</string>
-    <string name="import_settings_both">Importovať nastavenia (Lokálne+Cloud)</string>
-    <string name="send_logs_to_cloud">Exportovať logy do cloudu</string>
-    <string name="export_csv_to_cloud">Exportovat záznamy užívateľa do cloudu (csv)</string>
-    <string name="export_csv_to_local">Exportovať užívateľské záznamy do lokálneho úložiska (csv)</string>
-    <string name="setup_cloud_directory_first">Ak chcete používať Export nastavení, najskôr nastavte adresár cloudu</string>
     <string name="cloud_token_expired_or_invalid">Platnosť autorizácie cloudového úložiska vypršala, alebo je neplatná. Prosím zopakujte pokus o autorizáciu.</string>
     <!-- Export destination chip labels -->
     <string name="chip_local">Lokálne</string>
@@ -824,8 +751,6 @@
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie je podporované, alebo zariadenie nie je spárované.</string>
     <string name="ble_not_enabled">Bluetooth nie je aktivovaný.</string>
     <string name="ble_permissions_missing">Povolenie Bluetooth nie je udelené. Prosím udeľte ho v nastaveniach aplikácie.</string>
-    <string name="location_not_found_title">Poloha nie je aktivovaná</string>
-    <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Nastavenie modulu</string>
     <!-- Navigation -->
@@ -835,7 +760,6 @@
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="nav_history_browser">Prehliadač histórie</string>
     <string name="nav_history_browser_desc">Prehliadať dáta a grafy z histórie</string>
-    <string name="overview">Prehľad</string>
     <string name="appearance">Vzhľad</string>
     <string name="manage">Spravovať</string>
     <string name="localprofile">Profil</string>
@@ -855,12 +779,10 @@
     <string name="add">Pridať</string>
     <string name="remove">Odstrániť</string>
     <string name="reorder">Usporiadať</string>
-    <string name="actions">Akcie</string>
     <string name="status">Stav</string>
     <string name="pump_actions">Akcie pumpy</string>
     <string name="tempbasal_button">Dočasný bazál</string>
     <string name="extended_bolus_button">Predĺžený bolus</string>
-    <string name="tools">Nástroje</string>
     <string name="device_maintenance">Údržba zariadenia</string>
     <string name="from_label">Od</string>
     <string name="to_label">Do</string>
@@ -918,7 +840,6 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS prehráva zvuk"</string>
     <!-- ProfileEditor -->
-    <string name="dia_short">DIA</string>
     <string name="basal_short">BAZ</string>
     <string name="target_short">CIEĽ</string>
     <string name="profile_name">Názov profilu:</string>
@@ -933,13 +854,8 @@
     <string name="remove_entry">Odstrániť záznam</string>
     <string name="target_low_label">Nízka</string>
     <string name="target_high_label">Vysoká</string>
-    <string name="select_profile">Vyberte profil pre úpravu</string>
-    <string name="a11y_add_new_profile">pridať nový profil</string>
-    <string name="a11y_clone_profile">klonovať aktuálny profil</string>
-    <string name="a11y_delete_current_profile">zmazať aktuálny profil</string>
     <!--    Search-->
     <string name="search">Hľadať</string>
-    <string name="search_preferences">Predvoľby vyhľadávania</string>
     <string name="clear">Vyčistiť</string>
     <string name="search_category_categories">Kategórie vyhľadávania</string>
     <string name="search_category_preferences">Nastavenie kategórii vyhľadávania</string>
@@ -959,9 +875,6 @@
     <string name="subcategory">Podkategória</string>
     <string name="portion">Porcia</string>
     <string name="unit_label">Jednotka</string>
-    <string name="fat">Tuk</string>
-    <string name="protein">Bielkovina</string>
-    <string name="energy">Energia</string>
     <string name="undo">Krok späť</string>
     <string name="no_data">Žiadne dáta</string>
     <string name="manage_food_desc">Spravuj databázu záznamov jedál</string>
@@ -976,12 +889,10 @@
     <string name="maintenance">Údržba</string>
     <string name="description_maintenance">Poskytuje viaceré funkcie pre údržbu (ako napr. zasielanie logov, vymazanie logov).</string>
     <string name="log_files">Log súbory</string>
-    <string name="send_all_logs">Zasielať logy E-mailom</string>
     <string name="delete_logs">Vymazať logy</string>
     <string name="logs_deleted">Logy odstránené</string>
     <string name="aaps_directory">AAPS priečinok</string>
     <string name="import_setting">Importovať nastavenia</string>
-    <string name="miscellaneous">Rôzne</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Dešifrovanie &amp; Kontrola</string>
     <string name="import_decrypt">Dešifrovať</string>
@@ -993,19 +904,13 @@
     <string name="import_anyway_btn">Importovať aj tak</string>
     <string name="import_restart_title">Nastavenia importované</string>
     <string name="import_restart_message">Nastavenia boli importované. Aplikácia vyžaduje reštart.</string>
-    <string name="import_file_details">Podrobnosti súboru</string>
     <string name="import_source_local">Lokálne</string>
     <string name="import_source_cloud">Cloud</string>
     <string name="import_load_more">Načítať viac</string>
     <string name="import_no_files">Nenájdené žiadne súbory s nastaveniami</string>
-    <string name="import_review_summary">Prehľad importu</string>
     <string name="import_decrypt_ok">Dešifrovanie úspešné. Pripravené na import.</string>
     <string name="import_decrypt_warn">Dešifrovanie úspešné, ale sú tu upozornenia.</string>
     <string name="import_decrypt_error">Dešifrovanie úspešné, ale import nie je možný.</string>
-    <string name="import_check_before">Prosím skontroluj nastavenia pred importom:</string>
-    <string name="import_check_dangerous">Nastavenia by nemali byť importované!</string>
-    <string name="import_check_cannot">Nastavenia nemôžu byť importované!</string>
-    <string name="import_explain_issues">Vysvetli chyby pri importe\u2026</string>
     <string name="reset_aps_results">Resetovať výsledky APS</string>
     <string name="database_cleanup">Vyčistenie databázy</string>
     <string name="nav_resetdb">Reset databázy</string>
@@ -1015,7 +920,6 @@
     <!-- Graph configuration -->
     <string name="graph_add">Pridať graf</string>
     <string name="graph_new">Nový graf</string>
-    <string name="graph_edit">Upraviť graf</string>
     <string name="graph_number">Graf %1$d</string>
     <string name="graph_bg">Graf glykémie</string>
     <string name="graph_height">Výška grafu [dp]</string>
