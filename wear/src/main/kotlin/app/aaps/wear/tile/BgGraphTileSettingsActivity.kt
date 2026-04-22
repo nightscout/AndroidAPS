@@ -36,17 +36,33 @@ class BgGraphTileSettingsActivity : AppCompatActivity() {
 
 @Composable
 private fun BgGraphTileSettingsScreen(sp: SP) {
-    var tapAction = remember { mutableStateOf(sp.getString("tile_bg_graph_tap_action", "bg_graph")) }
-    val options = listOf(
+    val tapAction = remember { mutableStateOf(sp.getString("tile_bg_graph_tap_action", "bg_graph")) }
+    val hours = remember { mutableStateOf(sp.getString("tile_bg_graph_hours", "3")) }
+    val hourUnit = stringResource(R.string.hour_short)
+    val tapOptions = listOf(
         TileSettingOption("bg_graph", stringResource(R.string.tile_tap_bg_graph)),
         TileSettingOption("menu", stringResource(R.string.tile_tap_main_menu)),
         TileSettingOption("loop_status", stringResource(R.string.tile_tap_loop_status))
     )
+    val hourOptions = listOf(
+        TileSettingOption("1", "1$hourUnit"),
+        TileSettingOption("3", "3$hourUnit"),
+        TileSettingOption("6", "6$hourUnit"),
+    )
     val rows = listOf(
+        TileSettingRow(
+            label = stringResource(R.string.tile_graph_time_range),
+            currentValue = hours.value,
+            options = hourOptions,
+            onSelect = { value ->
+                hours.value = value
+                sp.putString("tile_bg_graph_hours", value)
+            }
+        ),
         TileSettingRow(
             label = stringResource(R.string.tile_tap_action),
             currentValue = tapAction.value,
-            options = options,
+            options = tapOptions,
             onSelect = { value ->
                 tapAction.value = value
                 sp.putString("tile_bg_graph_tap_action", value)

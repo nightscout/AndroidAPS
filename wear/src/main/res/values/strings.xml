@@ -287,6 +287,7 @@
     <string name="label_running_mode_title">Running mode</string>
     <string name="label_bg_graph_tile">BG Graph</string>
     <string name="tile_tap_action">Tap action</string>
+    <string name="tile_graph_time_range">Time range</string>
     <string name="tile_tap_bg_graph">BG Graph</string>
     <string name="tile_tap_main_menu">Main Menu</string>
     <string name="tile_tap_loop_status">Loop Status</string>
