@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Petlja onemogućena</string>
-    <string name="calculator_label">Kalkulator</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Inzulin</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">inzulin</string>
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
-    <string name="overview_show_treatments">Tretmani</string>
     <string name="basal_shortname">BAZAL</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
