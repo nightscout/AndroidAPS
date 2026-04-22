@@ -33,18 +33,11 @@
     <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
     <string name="readstatus">Odczyt stanu</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Żądanie</string>
-    <string name="error_asking_for_permissions">Wystąpił błąd podczas żądania uprawnień</string>
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Którą pompę chcesz użyć do AAPS?</string>
     <string name="configbuilder_aps_description">Który algorytm APS powinien dokonywać korekcji terapii?</string>
-    <string name="configbuilder_general_description">To są główne wtyczki, które mogą okazać się użyteczne.</string>
-    <string name="configbuilder_constraints_description">Które ograniczenia są zastosowane?</string>
-    <string name="configbuilder_loop_description">Użyj, aby aktywować integrację pętli AAPS.</string>
-    <string name="configbuilder_insulin_description">Jakiego typu insuliny używasz?</string>
     <string name="configbuilder_bgsource_description">Skąd AAPS powinien czerpać dane?</string>
-    <string name="configbuilder_smoothing_description">Wybierz algorytm wygładzania</string>
     <string name="configbuilder_sensitivity_description">Który algorytm wrażliwości powinien być używany?</string>
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>
     <string name="nsclient_version_does_not_match">Wersja AAPSClient nie jest zgodna z wersją AAPS. Proszę zaktualizować.</string>
