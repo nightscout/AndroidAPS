@@ -16,10 +16,7 @@
     <string name="not_inserted">No insertado</string>
     <string name="tdd_bolus">Bolo TDD</string>
     <string name="tdd_basal">Basal TDD</string>
-    <string name="tbr_formatter">%1$d%% durante %2$d / %3$d minutos</string>
     <string name="multiwave_bolus">Bolo multionda</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U durante %3$d min</string>
-    <string name="insight_last_bolus">Último bolo</string>
     <string name="searching_for_devices">Buscando dispositivos…</string>
     <string name="pairing_completed">Emparejamiento completado</string>
     <string name="code_compare">¿Coinciden los códigos mostrados en este dispositivo con los de la bomba?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
     <string name="release_software_version">Versión de software</string>
-    <string name="ui_processor_software_version">Versión de software de procesador de interfaz de usuario</string>
-    <string name="pc_processor_software_version">Versión del software del procesador de PC</string>
-    <string name="md_tel_processor_software_version">Versión softw. del procesador MD tel</string>
-    <string name="safety_processor_software_version">Versión del software del procesador de seguridad</string>
-    <string name="bt_info_page_version">Versión de la página de BT</string>
     <string name="bluetooth_address">Dirección Bluetooth</string>
-    <string name="system_id_appendix">Apéndice ID del sistema</string>
     <string name="manufacturing_date">Fecha de fabricación</string>
-    <string name="delete_pairing">Eliminar emparejamiento</string>
     <string name="log_site_changes">Registrar cambios de cánulas</string>
     <string name="log_reservoir_changes">Registrar cambios de cartucho</string>
     <string name="log_tube_changes">Registrar cambios de tubo</string>
@@ -58,11 +48,8 @@
     <string name="max_recovery_duration">Máxima duración de la recuperación [s]</string>
     <string name="min_recovery_duration">Mínima duración de la recuperación [s]</string>
     <string name="pump_alert">Alerta de infusor</string>
-    <string name="pairing_information">Información de emparejamiento</string>
     <string name="last_connection">%1$s (%2$s)</string>
     <string name="unpair">Desvincular</string>
     <string name="reset_pairing">¿Restablecer la información de emparejamiento?</string>
-    <string name="active_basal_rate">Tasa basal activa</string>
-    <string name="active_tbr">TBR activa</string>
     <string name="reservoir_level">Nivel del reservorio</string>
 </resources>
