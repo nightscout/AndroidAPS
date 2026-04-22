@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop disabilitato</string>
-    <string name="calculator_label">Calcolatore</string>
     <string name="nav_history_browser">Storico</string>
     <string name="sensor_label">Sensore</string>
-    <string name="age_label">età:</string>
-    <string name="level_label">livello:</string>
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Batteria micro</string>
     <string name="cannula">Cannula</string>
     <string name="patch_pump">Micro a patch</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulina</string>
-    <string name="a11y_bg_quality">qualità glicemia</string>
-    <string name="a11y_blood_glucose">glicemia</string>
-    <string name="a11y_bg_outdated">obsoleto</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Stato dati BG</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Predizioni</string>
-    <string name="overview_show_treatments">Trattamenti</string>
-    <string name="overview_show_heartRate">Frequenza cardiaca</string>
-    <string name="overview_show_deviation_slope">Pendenza deviazione</string>
-    <string name="overview_show_activity">Attività</string>
-    <string name="overview_show_bgi">Impatto glicemia (BGI)</string>
-    <string name="overview_show_sensitivity">Variazione di sensibilità</string>
-    <string name="overview_show_deviations">Deviazioni</string>
-    <string name="overview_show_cob">CHO attivi</string>
-    <string name="overview_show_iob">Insulina attiva</string>
-    <string name="overview_show_basals">Basali</string>
-    <string name="overview_show_abs_insulin">Insulina assoluta</string>
-    <string name="overview_show_variable_sens">Sensibilità variabile</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">TRATT</string>
-    <string name="cannula_usage">uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>
-    <string name="overview_show_steps">Passi</string>
 </resources>
