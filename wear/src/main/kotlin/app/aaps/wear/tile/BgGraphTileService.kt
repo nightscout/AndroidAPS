@@ -98,6 +98,7 @@ class BgGraphTileService : TileService() {
             Tile.Builder()
                 .setResourcesVersion(resourceVersion.get().toString())
                 .setTileTimeline(Timeline.fromLayoutElement(buildLayout()))
+                .setFreshnessIntervalMillis(60_000)
                 .build()
         )
 
