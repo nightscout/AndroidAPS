@@ -6,14 +6,12 @@
     <string name="profile_set_ok">Ažuriran bazalni profil u pumpi</string>
     <string name="invalid_input">Nevažeći ulazni podaci</string>
     <string name="constraint_applied">Primijenjeno ograničenje!</string>
-    <string name="tempbasals_iobtotal_label_string">Ukupni aktivni inzulin:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pumpa nedostupna</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpa nije pokrenuta, profil nije postavljen!</string>
     <string name="failed_update_basal_profile">Ažuriranje bazalnog profila nije uspjelo</string>
-    <string name="reload">Ponovno učitaj</string>
     <string name="save">Spremi</string>
     <string name="snooze">Snooze</string>
     <string name="virtual_pump">Virtualna pumpa</string>
@@ -34,7 +32,6 @@
     <string name="paused">Pauzirano</string>
     <string name="tdd_total">TDD Total</string>
     <string name="goingtodeliver">Isporučit ću %1$.2f U</string>
-    <string name="waitingforpump">Čekanje pumpe</string>
     <string name="androidaps_start">AAPS je počeo</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -62,15 +59,12 @@
     <string name="exit">Izlaz</string>
     <string name="iob">Aktivni inzulin</string>
     <string name="cob">Aktivni UGH</string>
-    <string name="remove_button">Ukloniti</string>
     <string name="bg_label">GUK</string>
     <string name="calibration">Kalibracija</string>
     <string name="alarminxmin">Uključi alarm za %1$d min</string>
     <string name="duration_label">Trajanje</string>
     <string name="shortgramm">g</string>
     <string name="loopsuspended">Petlja suspendirana</string>
-    <string name="trend_arrow">Strelica trenda</string>
-    <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">potrebno</string>
     <string name="a11y_arrow_double_down">brzo padajući</string>
     <string name="a11y_arrow_single_down">padanje</string>
@@ -85,17 +79,12 @@
     <string name="a11y_inrange">u rasponu</string>
     <string name="a11y_low">nisko</string>
     <string name="average">Prosječno</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="remove_label">UKLONITI</string>
     <string name="activate_profile">Aktiviraj profil</string>
     <string name="profileswitch_ismissing">ProfileSwitch nedostaje. Promijenite profil ili pritisnite \"Aktiviraj profil\" u lokalnom profilu.</string>
     <string name="profile">Profil</string>
-    <string name="select_for_removal">Odaberite za uklanjanje</string>
     <string name="confirm_remove_multiple_items">Jeste li sigurni da želite ukloniti %1$d stavke</string>
     <string name="overview_treatment_label">Tretman</string>
     <string name="copytolocalprofile">Napraviti novi profil iz ovog profila?</string>
-    <string name="bg_trend_label">15min trend</string>
-    <string name="treatments_wizard_cob_label">Aktivni UGH</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Bazalni aktivni inzulin</string>
     <string name="invalid">GREŠKA</string>
@@ -139,13 +128,6 @@
     <string name="carbsreq">%1$d g dodatnih ugljikohidrata potrebnih unutar %2$d minuta</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">Omjer</string>
-    <string name="amount_days"># dana</string>
-    <string name="weight">Težina</string>
-    <string name="warning_Message">Moguće netočno ako se koriste bolusi za pripremu/punjenje!</string>
-    <string name="olddata_Message">Stari podaci, pritisnite \"UČITAJ PONOVNO\"</string>
-    <string name="tbb">Ukupna baza bazala</string>
-    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detekcija vremena</string>
     <!-- User Entry -->
@@ -166,7 +148,6 @@
     <string name="uel_stat_reset">STAT RESET</string>
     <string name="uel_delete_logs">IZBRIŠI DNEVNIKE</string>
     <string name="uel_delete_future_treatments">IZBRIŠITE BUDUĆE TRETMANE</string>
-    <string name="delete_future_treatments">Izbrišite buduće tretmane</string>
     <string name="uel_export_settings">IZVOZ POSTAVKI</string>
     <string name="uel_import_settings">UVOZ POSTAVKI</string>
     <string name="uel_reset_databases">RESETIRAJ BAZE PODATAKA</string>
@@ -181,7 +162,6 @@
     <string name="uel_exit_aaps">UGASI AAPS</string>
     <string name="uel_plugin_enabled">DODATAK OMOGUĆEN</string>
     <string name="uel_plugin_disabled">PLUGIN ONEMOGUĆEN</string>
-    <string name="uel_unknown">NEPOZNATO</string>
     <string name="ue_string">Niz</string>
     <string name="ue_source">Izvor</string>
     <string name="ue_utc_offset">UTC pomak</string>
@@ -190,7 +170,6 @@
     <string name="ue_none">Nema uređaja</string>
     <string name="uel_loop_change">PETLJA PROMIJENJENA</string>
     <string name="uel_loop_removed">PETLJA UKLONJENA</string>
-    <string name="uel_other">OSTALO</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil niski cilj</string>
     <string name="profile_high_target">Profil visoki cilj</string>
@@ -205,8 +184,6 @@
     <!-- Profile validation -->
     <!-- Command Queue + readStatus reasons -->
     <string name="formatPercent">%1$.0f%%</string>
-    <string name="a11y_file">datoteka</string>
-    <string name="a11y_user">korisnik</string>
     <!-- Autotune -->
     <string name="autotune_tune_days">Dani prilagodbe:</string>
     <string name="autotune_select_profile">Odaberite profil za podešavanje</string>
@@ -229,13 +206,9 @@
     <string name="serial_number">Serijski broj</string>
     <string name="disconnected">Odspojen</string>
     <string name="connecting">Povezivanje</string>
-    <string name="reservoir_value">%1$.0f / %2$d U</string>
-    <string name="stats">Statistika</string>
     <string name="temp_basal_delivery_error">Pogreška isporuke temp bazala</string>
-    <string name="not_set_short">Nije postavljeno</string>
     <string name="pump_busy">Pumpa je zauzeta</string>
     <string name="connection_error">Greška u spajanju pumpe</string>
-    <string name="initializing">Pokretanje...</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ograničavanje maksimalne bazalne doze na %1$.2f U/h zbog %2$s</string>
     <string name="pumplimit">ograničenje pumpe</string>
@@ -265,8 +238,6 @@
     <string name="ble_not_supported">Bluetooth Low Energy nije podržan.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nije podržan ili uređaj nije uparen.</string>
     <string name="ble_not_enabled">Bluetooth nije omogućen.</string>
-    <string name="location_not_found_title">Lokacija nije omogućena</string>
-    <string name="location_not_found_message">Da bi Bluetooth otkrivanje radilo na novijim uređajima, lokacija mora biti omogućena. AAPS ne prati vašu lokaciju i može se onemogućiti nakon uspješnog uparivanja.</string>
     <!--    Preferences -->
     <!-- Navigation -->
     <!-- Alerts -->

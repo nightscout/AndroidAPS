@@ -42,7 +42,6 @@
     <string name="medtronic_error_serial_invalid">Serial # chưa hợp lệ.</string>
     <string name="medtronic_error_pump_type_not_set">Chưa chọn loại Bơm.</string>
     <string name="medtronic_error_pump_type_invalid">Loại Bơm này không được hỗ trợ.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Tần số bơm không được hỗ trợ.</string>
     <string name="medtronic_error_rileylink_address_invalid">Địa chỉ RileyLink không hợp lệ.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Loại Bơm phát hiện không khớp với loại đã cấu hình.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Cài đặt các profiles/patterns chưa được bật trên bơm. Hãy bật nó trên bơm.</string>
@@ -59,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Lịch sử bơm Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Bạn đã hủy liều Bolus sau khi nó đã được thiết lập trên bơm. Vì bơm Medtronic không hỗ trợ hủy trực tiếp, bạn sẽ cần hủy thủ công. Đặt bơm vào chế độ Suspend rồi thực hiện Resume (nếu bạn vẫn muốn hủy). Ứng dụng sẽ nhận các thay đổi này trong lần cập nhật tiếp theo (dưới 5 phút).</string>
     <string name="medtronic_cmd_cant_read_tbr">Không thể đọc TBR hiện tại.</string>
@@ -91,8 +89,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Thiết lập liều nền tạm thời trung tính</string>
     <string name="set_neutral_temps_summary">Nếu được bật, tính năng này sẽ hủy liều nền tạm thời trước khi kết thúc mỗi giờ. Phương pháp này có thể giúp ngăn một số bơm phát tiếng bíp hoặc rung vào đầu giờ.</string>
-    <string name="medtronic_tbr_remaining">%1$s (%2$d phút còn lại)</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/giờ (%2$d phút còn lại)</string>
     <string name="invalid_history_data">Phát hiện dữ liệu lịch sử bơm không hợp lệ. Hãy tạo báo cáo mới và cung cấp nhật ký.</string>
     <string name="riley_statistics">Thống kê RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Đã nhấn làm mới</string>

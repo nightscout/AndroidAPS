@@ -20,7 +20,6 @@
     <string name="pump_state_label">Pumpestatus</string>
     <string name="active_alarms_label">Aktive alarmer</string>
     <string name="basal_type_label">Basal type</string>
-    <string name="basal_rate_label">Basaldose</string>
     <string name="pump_type_label">Pumpetype</string>
     <string name="fw_version_label">FW versjon</string>
     <string name="patch_no_label">Patch nr</string>
@@ -76,12 +75,10 @@
     <string name="do_not_attach_to_body">Ikke koble patch til kroppen enda.</string>
     <string name="half_press_needle">Trykk nål-knappen halvveis. Trykk deretter <b>Neste</b> for å starte priming.</string>
     <string name="wait_for_priming">Vent mens priming fullføres.</string>
-    <string name="priming_error">Kunne ikke prime, trykk <b>Prøv igjen</b> for å prøve igjen.</string>
     <string name="press_next">Trykk <b>Neste</b> for å fortsette.</string>
     <string name="press_next_to_start_activation">Trykk <b>Neste</b> for å starte aktivering.</string>
     <string name="remove_safety_lock">Fjern sikkerhetslåsen. Koble pumpen til kroppen. Trykk nål-knappen.</string>
     <string name="activating_pump">Aktiverer pumpe og setter basaldose. Vennligst vent.</string>
-    <string name="activating_error">Kunne ikke aktivere, trykk <b>Prøv igjen</b> for å prøve igjen.</string>
     <string name="activating_complete">Ny patch aktivert. %.2f enheter gjenstår.</string>
     <string name="can_export_settings">Du kan eksportere innstillingene for å kunne gjenopprette denne patchøkten senere.</string>
     <string name="press_OK_to_return">Trykk <b>OK</b> for å gå tilbake til hovedskjermen.</string>

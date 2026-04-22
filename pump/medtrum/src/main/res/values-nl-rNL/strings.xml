@@ -19,7 +19,6 @@
     <string name="pump_state_label">Pomp status</string>
     <string name="active_alarms_label">Actieve alarmen</string>
     <string name="basal_type_label">Basaal type</string>
-    <string name="basal_rate_label">Basaal snelheid</string>
     <string name="pump_type_label">Type pomp</string>
     <string name="fw_version_label">FW versie</string>
     <string name="patch_no_label">Patch nr</string>
@@ -74,12 +73,10 @@
     <string name="do_not_attach_to_body">Plaats de patch nog niet op het lichaam.</string>
     <string name="half_press_needle">Druk de naald knop half in. Druk daarna op <b>Volgende</b> om het voorvullen te starten.</string>
     <string name="wait_for_priming">Wacht alstublieft tot het voorvullen voltooid is.</string>
-    <string name="priming_error">Voorvullen mislukt, druk op <b>Opnieuw</b> om het nogmaals te proberen.</string>
     <string name="press_next">Druk op <b>Volgende</b> om verder te gaan.</string>
     <string name="press_next_to_start_activation">Druk op <b>Volgende</b> om het activeren te starten.</string>
     <string name="remove_safety_lock">Verwijder het veiligheidsslot, Bevestig de pomp aan het lichaam. Druk op de naald knop.</string>
     <string name="activating_pump">Pomp activeren en initiële basaalstand instellen. Even geduld alstublieft.</string>
-    <string name="activating_error">Activeren mislukt, druk op <b>Opnieuw</b> om het nogmaals te proberen.</string>
     <string name="activating_complete">Nieuwe patch geactiveerd. %.2f Eenheden resterend.</string>
     <string name="can_export_settings">Je kunt de instellingen exporteren om deze patch sessie later te kunnen herstellen.</string>
     <string name="press_OK_to_return">Druk op <b>OK</b> om terug te keren naar het hoofdscherm.</string>

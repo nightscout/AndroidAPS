@@ -28,7 +28,6 @@
     <string name="equil_tone_mode_shake">僅震動</string>
     <string name="equil_tone_mode_tone">僅聲音</string>
     <string name="equil_tone_mode_tone_and_shake">聲音和震動</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">此操作將停止胰島素輸注，並將幫浦推桿退回至底部！同時也會刪除綁定狀態！</string>
     <string name="equil_ble_config_confirmation_title">配對Equil貼片幫浦</string>
     <string name="equil_error">連線錯誤</string>
@@ -115,7 +114,6 @@
     <string name="equil_history_item18">異常輸液停止</string>
     <string name="equil_common_overview_button_suspend_delivery">暫停</string>
     <string name="equil_common_overview_button_resume_delivery">恢復輸送</string>
-    <string name="equil_common_overview_tbr_value">%1$s 於 %2$s (%3$d/%4$d 分鐘)</string>
     <string name="equil_common_moments_ago">片刻前</string>
     <string name="equil_common_less_than_a_minute_ago">不到一分鐘前</string>
     <string name="equil_common_time_ago">%1$s前</string>

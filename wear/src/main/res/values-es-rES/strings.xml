@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(Objetivo Temporal)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistente Rápido)</string>
     <string name="label_user_action_tile">AAPS(Acción del usuario)</string>
-    <string name="label_warning_sync">Sin datos</string>
-    <string name="label_warning_old">Datos antiguos</string>
-    <string name="label_warning_since">Desde %1$s</string>
-    <string name="label_warning_sync_aaps">Sincronizar con AAPS</string>
     <string name="msg_warning_sync">No se han recibido datos desde %1$s. Comprobar si AAPS, (en el teléfono) envía los datos al reloj</string>
     <string name="msg_warning_old">Los datos de AAPS son %1$s antiguos. Comprueba el sensor, xDrip+, NS, configuración de AAPS y otros</string>
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
@@ -83,8 +79,6 @@
     <string name="menu_none">Ninguno</string>
     <string name="menu_default">Por defecto</string>
     <string name="menu_menu">Menú</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Duración [min]</string>
     <string name="action_tempt_confirmation">Objetivo Temporal Solicitado</string>
     <string name="action_quick_wizard_confirmation">Asistente Rápido Solicitado</string>
     <string name="action_user_action_confirmation">Acción de usuario solicitada</string>
@@ -102,8 +96,6 @@
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Porcentaje\n[%]</string>
     <string name="action_start_minutes">Iniciar\n[minutos]</string>
-    <string name="action_start_minutes_format">%1$d min</string>
-    <string name="action_duration_h">Duración [h]</string>
     <string name="action_duration_hours">Duración\n[horas]</string>
     <string name="action_duration_hours_format">%1$d h</string>
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
@@ -152,7 +144,6 @@
     <string name="color_name_gray">Gris</string>
     <string name="color_name_bluegray">Gris azulado</string>
     <string name="color_name_white">Blanco</string>
-    <string name="color_name_black">Negro</string>
     <string name="color_name_multicolor">Multicolor</string>
     <string name="pref_simplify_ui">Simplificar interfaz</string>
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
@@ -185,8 +176,6 @@
     <string name="tile_no_config">No hay configuración disponible</string>
     <string name="wear_control_not_enabled">Controles Wear desactivados</string>
     <string name="wear_control_no_data">No hay datos disponibles</string>
-    <string name="increment">incremento</string>
-    <string name="decrement">decremento</string>
     <string name="abbreviation_average">media</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -202,8 +191,6 @@
     <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">antiguo</string>
-    <string name="old_warning">¡antiguo!</string>
     <string name="error">Error</string>
     <string name="pref_heartRateSampling">Ritmo cardíaco</string>
     <string name="pref_heartRateSmoothing">Suavizado de RC</string>
@@ -223,6 +210,7 @@
     <string name="complication_full_status">Estado completo</string>
     <string name="complication_full_status_flipped">Estado completo (invertido)</string>
     <string name="complication_blood_glucose">Glucosa en sangre</string>
+    <string name="complication_blood_glucose_large">Glucemia (grande)</string>
     <string name="complication_blood_glucose_ext1">Glocosa en sangre Ext1</string>
     <string name="complication_blood_glucose_ext2">Glucosa en sangre Ext2</string>
     <string name="complication_br_cob_iob">BR, COB &amp; IOB</string>
@@ -259,7 +247,6 @@
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">Haga clic para expandir los detalles de cálculo</string>
     <string name="wizard_confirmation_sent">Enviado</string>
     <string name="tile_settings">Ajustes de tarjetas</string>
     <string name="loop_status_error">Error al cargar el estado del lazo</string>
@@ -293,6 +280,7 @@
     <string name="loop_status_temp_target">Objetivo temporal</string>
     <string name="loop_status_target_range">Rango</string>
     <string name="loop_status_target">Objetivo</string>
+    <string name="loop_status_adjusted_target">Objetivo ajustado</string>
     <string name="loop_status">Estado del lazo</string>
     <string name="loop_status_refresh">Actualizar</string>
     <string name="confirm">Confirmar</string>

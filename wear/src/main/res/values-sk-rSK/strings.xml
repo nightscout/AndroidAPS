@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(Dočasný cieľ)</string>
     <string name="label_quick_wizard_tile">AAPS(Rýchly bolus)</string>
     <string name="label_user_action_tile">AAPS (Akcia používateľa)</string>
-    <string name="label_warning_sync">Žiadne dáta!</string>
-    <string name="label_warning_old">Zastaralé dáta!</string>
-    <string name="label_warning_since">Od %1$s</string>
-    <string name="label_warning_sync_aaps">Synchronizácia s AAPS!</string>
     <string name="msg_warning_sync">Žiadne dáta od %1$s! Skontroluj, či AAPS na telefóne posiela dáta na hodinky</string>
     <string name="msg_warning_old">AAPS dáta sú %1$s staré! Skontroluj tvoj senzor, xDrip+, NS, AAPS nastavenia atď.!</string>
     <string name="pref_vibrate_on_bolus">Zavibrovať pri boluse</string>
@@ -83,8 +79,6 @@
     <string name="menu_none">Žiadny</string>
     <string name="menu_default">Štandardný</string>
     <string name="menu_menu">Ponuka</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Trvanie [min]</string>
     <string name="action_tempt_confirmation">Požadovaný dočasný cieľ</string>
     <string name="action_quick_wizard_confirmation">Požadovaný rýchly bolus</string>
     <string name="action_user_action_confirmation">Vyžaduje sa akcia používateľa</string>
@@ -102,8 +96,6 @@
     <string name="action_ecarbs">eSacharidy</string>
     <string name="action_percentage">Percento\n[%]</string>
     <string name="action_start_minutes">Spustiť\n[minúty]</string>
-    <string name="action_start_minutes_format">%1$d min</string>
-    <string name="action_duration_h">Trvanie [h]</string>
     <string name="action_duration_hours">Trvanie\n[hodiny]</string>
     <string name="action_duration_hours_format">%1$d h</string>
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
@@ -152,7 +144,6 @@
     <string name="color_name_gray">sivá</string>
     <string name="color_name_bluegray">modrosivá</string>
     <string name="color_name_white">biela</string>
-    <string name="color_name_black">čierna</string>
     <string name="color_name_multicolor">viacfarebná</string>
     <string name="pref_simplify_ui">Zjednodušené užívateľské rozhranie</string>
     <string name="pref_vibrate_hourly">Vibrovať každú hodinu</string>
@@ -185,8 +176,6 @@
     <string name="tile_no_config">Nie je dostupná žiadna konfigurácia</string>
     <string name="wear_control_not_enabled">Ovládanie hodinkami vypnuté</string>
     <string name="wear_control_no_data">Žiadne údaje nie sú k dispozícii</string>
-    <string name="increment">prírastok</string>
-    <string name="decrement">zníženie</string>
     <string name="abbreviation_average">priemer</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -202,8 +191,6 @@
     <string name="minute_short">m</string>
     <string name="hour_minute">%1$s: %2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">starý</string>
-    <string name="old_warning">!starý!</string>
     <string name="error">Chyba</string>
     <string name="pref_heartRateSampling">Tepová frekvencia</string>
     <string name="pref_heartRateSmoothing">Vyhladzovanie HR</string>
@@ -259,7 +246,6 @@
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">Kliknutím rozbalíte podrobnosti výpočtu</string>
     <string name="wizard_confirmation_sent">Odoslané</string>
     <string name="tile_settings">Nastavenie dlaždice</string>
     <string name="loop_status_error">Nepodarilo sa načítať stav</string>

@@ -16,10 +16,7 @@
     <string name="not_inserted">Non inséré</string>
     <string name="tdd_bolus">DTQ Bolus</string>
     <string name="tdd_basal">DTQ Basale</string>
-    <string name="tbr_formatter">%1$d%% pour %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus mixte</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U pour %3$d min</string>
-    <string name="insight_last_bolus">Dernier bolus</string>
     <string name="searching_for_devices">Recherche d\'appareils en cours…</string>
     <string name="pairing_completed">Appairage terminé</string>
     <string name="code_compare">Les codes affichés sur cet appareil et sur la pompe sont-ils identiques ?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">Pompe arrêtée</string>
     <string name="pump_started">Pompe démarrée</string>
     <string name="release_software_version">Version du logiciel</string>
-    <string name="ui_processor_software_version">Version du logiciel de processeur UI</string>
-    <string name="pc_processor_software_version">Version du logiciel du processeur PC</string>
-    <string name="md_tel_processor_software_version">Version du logiciel MD tel processeur</string>
-    <string name="safety_processor_software_version">Version logicielle du processeur de sécurité</string>
-    <string name="bt_info_page_version">Version de la page d\'info BT</string>
     <string name="bluetooth_address">Adresse Bluetooth</string>
-    <string name="system_id_appendix">Annexe ID Système</string>
     <string name="manufacturing_date">Date de fabrication</string>
-    <string name="delete_pairing">Supprimer l’appairage</string>
     <string name="log_site_changes">Enreg. changement de site</string>
     <string name="log_reservoir_changes">Enreg. changement de réservoir</string>
     <string name="log_tube_changes">Enreg. changement de tubulure</string>
@@ -58,11 +48,8 @@
     <string name="max_recovery_duration">Durée max. de récupération [s]</string>
     <string name="min_recovery_duration">Durée min. de récupération [s]</string>
     <string name="pump_alert">Alerte de la pompe</string>
-    <string name="pairing_information">Information sur l’appairage</string>
     <string name="last_connection">%1$s (%2$s)</string>
     <string name="unpair">Désappairer</string>
     <string name="reset_pairing">Réinitialiser les informations d\'appairage ?</string>
-    <string name="active_basal_rate">Débit de base</string>
-    <string name="active_tbr">DBT actif</string>
     <string name="reservoir_level">Niveau du réservoir</string>
 </resources>

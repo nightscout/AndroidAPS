@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">Co je pravda o DIA?</string>
     <string name="dia_label_exam">Doba působnosti inzulínu (DIA)</string>
+    <string name="dia_profile">Měli byste nastavit hodnotu DIA v konfiguraci inzulínu.</string>
     <string name="dia_minimumis5h">Minimální hodnota je 5 hodin.</string>
     <string name="dia_hint1">https://wiki.aaps.app/cs/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Pokud jste spokojeni s tím, že hodnota DIA použitá v pumpě před AAPS dobře fungovala, není třeba ji měnit, když začínáte se smyčkou.</string>
@@ -75,7 +76,9 @@
     <string name="prerequisites2_supportedcgm">Podporované CGM a vhodná aplikace pro příjem glykémií v telefonu/zařízení.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Aktualizace AAPS</string>
+    <string name="update_git">Na svém počítači musíte mít nainstalovaný a nakonfigurovaný Git nebo použít build v prohlížeči.</string>
     <string name="update_asap">Pokud jsou uvolněny aktualizované verze AAPS, starší verze mohou být po určité době vzdálené omezeny.</string>
+    <string name="update_keys">Pokud používáte sestavení v Android Studiu, měli byste si uložit a zaznamenat umístění keystore a pro aktualizace používat stejný podpisový klíč jako pro předchozí instalaci.</string>
     <string name="update_askfriend">Máte-li potíže se sestavením apk, můžete nainstalovat apk, který byl vybudován přítelem.</string>
     <string name="update_hint1">https://wiki.aaps.app/cs/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Řešení problémů</string>
@@ -193,4 +196,19 @@
     <string name="other_medication_label">Ostatní léky. Přečtěte si prosím níže uvedené prohlášení a poté zaškrtněte políčko pro přijetí prohlášení.</string>
     <string name="other_medication_text">AAPS snižuje bazály na zvýšení hladiny cukru v krvi. Léky ze skupiny inhibitorů SGLT2 (glifloziny) mohou zabránit očekávanému zvýšení hodnoty glykémie, a tak mohou produkovat nebezpečný nedostatek inzulínu (ketoacidózu).
 \nBěžné značky jsou: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nTímto slibuji, že tyto léky neberu při používání AAPS nebo deaktivuji smyčku před užíváním těchto léků.</string>
+    <string name="concentration_feature_label">Správa koncentrace inzulínu</string>
+    <string name="u200_with_profile">Než AAPS začal podporovat koncentrace inzulínu, uživatelé používali U200 nastavením 50% profilu, aby rozpůlili všechny hodnoty. Které odpovědi jsou v tomto nastavení pravdivé?</string>
+    <string name="u200_with_profile_reports">Moje interní databáze AAPS a reporty z NS jsou chybné, všechny hodnoty (bolusy, dávky, TDD) musí být vynásobeny 2, aby ukazovaly skutečný stav, zejména pro lékaře a zdravotnický tým.</string>
+    <string name="u200_with_profile_pens">Nemusím řešit žádný přepočet mezi AAPS a perem, pokud použiji pero U200 k podání externího bolusu.</string>
+    <string name="u200_with_profile_pens2">Ať už je pro externí bolus použito jakékoli pero (U100 nebo U200), musím pro každý externí bolus přepočítat mezi množstvím vypočítaným AAPS a množstvím, které si na peru zvolím.</string>
+    <string name="switch_u200_profile">Používali jste provizorní řešení s 50% profilem a U200 a chcete přejít na novou funkci Koncentrace inzulínu. Které odpovědi jsou pravdivé?</string>
+    <string name="switch_u200_profile_any_time">Mohu přepnout kdykoli, v pumpě již mám správný inzulín U200.</string>
+    <string name="switch_u200_profile_ps">Musím si připravit dvakrát agresivnější profil (200 % oproti současnému výchozímu) a tento nový profil synchronizovat po další výměně Patche/zásobníku, když je vybrán inzulín U200.</string>
+    <string name="switch_u200_profile_dynisf">Musím vypnout funkci DynISF alespoň na týden, aby TDD bylo dokonale konzistentní se skutečnou hodnotou TDD vypočítanou v mezinárodních jednotkách.</string>
+    <string name="switch_u200_profile_mental">Po přepnutí budu muset být několik týdnů velmi opatrný, aby si můj mozek zvykl přemýšlet v mezinárodních jednotkách u bolusů, bazálních dávek a hodnot TDD.</string>
+    <string name="switch_u100_u200">Aktuálně používáte U100 a plánujete přejít na jinou koncentraci pomocí nové funkce Koncentrace inzulínu. Co byste měli udělat?</string>
+    <string name="switch_u100_u200_profile">Musím upravit svůj profil.</string>
+    <string name="switch_u100_u200_tube">Neměl bych nikdy používat uživatelské rozhraní pumpy (u pump s hadičkou) k podávání bolusů.</string>
+    <string name="switch_u100_u200_pen">I po přepnutí musím řešit přepočet mezi AAPS a externími bolusy perem.</string>
+    <string name="switch_u100_u200_change">Koncentraci inzulínu lze přepnout pouze při výměně inzulínu v zásobníku nebo při výměně Patche/Podu.</string>
 </resources>

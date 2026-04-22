@@ -196,4 +196,20 @@
     <string name="other_medication_label">Otros medicamentos. Lea la declaración que figura a continuación y marque la casilla para aceptarla.</string>
     <string name="other_medication_text">Los AAPS reducen las tasas basales o suspenden la administración de insulina para elevar la glucemia. Los fármacos de la clase de los inhibidores de SGLT2 (gliflozinas) pueden impedir el aumento de la glucemia y, por tanto, producir una peligrosa deficiencia de insulina que desemboque en DKA.
 \nLos nombres comerciales más comunes son: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nl Por la presente, prometo que no tomaré dichos fármacos cuando utilice AAPS o desactivaré el bucle antes de utilizar dichos fármacos.</string>
+    <string name="concentration_feature_label">Gestión de la concentración de insulina</string>
+    <string name="u200_with_profile">Antes de que AAPS admitiera las concentraciones de insulina, los usuarios utilizaban U200 configurando un perfil al 50% para reducir todos los valores a la mitad. En esa configuración, ¿qué respuestas son verdaderas?</string>
+    <string name="u200_with_profile_reports">Mi base de datos interna de AAPS y los informes de Nightscout se vuelven incorrectos; todos los valores (bolos, tasas, TDD) deberían multiplicarse por 2 para ver el estado real, especialmente para los médicos y el equipo de salud</string>
+    <string name="u200_with_profile_pens">No tengo que gestionar ninguna conversión entre AAPS y el boli (Pen) si utilizo un boli de U200 para administrar un bolo externo</string>
+    <string name="u200_with_profile_pens2">Independientemente del boli (pen) utilizado para administrar un bolo externo (U100 o U200), tengo que realizar la conversión entre la cantidad calculada por AAPS y la cantidad que selecciono en el boli para cada bolo externo</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Has estado utilizando el perfil al 50% como solución temporal para la insulina U200 y quieres cambiar a la nueva función de Concentración de Insulina. ¿Qué respuestas son verdaderas?</string>
+    <string name="switch_u200_profile_any_time">Puedo cambiar en cualquier momento, ya tengo la insulina U200 correcta dentro de mi bomba</string>
+    <string name="switch_u200_profile_ps">Tengo que preparar un perfil el doble de agresivo (200% en comparación con el perfil predeterminado actual) y sincronizar este nuevo perfil tras el próximo cambio de parche/reservorio cuando se seleccione la insulina U200</string>
+    <string name="switch_u200_profile_dynisf">Tengo que desactivar la función ISF Dinámico durante al menos una semana para que la TDD sea perfectamente coherente con el valor de TDD real calculado en Unidades Internacionales</string>
+    <string name="switch_u200_profile_mental">Después del cambio, tendré que ser muy cuidadoso durante varias semanas para que mi cerebro se acostumbre a pensar en unidades internacionales con respecto a los bolos, las tasas basales y los valores de TDD</string>
+    <string name="switch_u100_u200">Actualmente utilizas U100 y tienes previsto cambiar a otra concentración utilizando la nueva función de Concentración de Insulina. ¿Qué debo hacer?</string>
+    <string name="switch_u100_u200_profile">Tengo que modificar mi perfil</string>
+    <string name="switch_u100_u200_tube">Nunca debo utilizar la interfaz de usuario de la bomba (en bombas de tubo) para administrar bolos</string>
+    <string name="switch_u100_u200_pen">Todavía tengo que gestionar la conversión entre AAPS y los bolos externos con el boli (Pen) después del cambio</string>
+    <string name="switch_u100_u200_change">La concentración de insulina solo puede cambiarse cuando se cambia la insulina del reservorio o cuando se cambia el parche o el pod</string>
 </resources>

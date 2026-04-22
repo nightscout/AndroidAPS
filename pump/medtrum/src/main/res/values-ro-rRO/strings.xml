@@ -20,7 +20,6 @@
     <string name="pump_state_label">Stare pompă</string>
     <string name="active_alarms_label">Alarme active</string>
     <string name="basal_type_label">Tip bazală</string>
-    <string name="basal_rate_label">Rată bazală</string>
     <string name="pump_type_label">Tip pompă</string>
     <string name="fw_version_label">Versiune FW</string>
     <string name="patch_no_label">Plasture nr.</string>
@@ -76,12 +75,10 @@
     <string name="do_not_attach_to_body">Nu atașați plasturele pe corp încă.</string>
     <string name="half_press_needle">Apăsați pe jumătate butonul acului. Apoi apăsați <b>Înainte</b> pentru a începe amorsarea.</string>
     <string name="wait_for_priming">Vă rugăm să așteptați finalizarea amorsării.</string>
-    <string name="priming_error">Amorsarea a eșuat, apăsați <b>Reîncearcă</b> pentru a încerca din nou.</string>
     <string name="press_next">Apăsați <b>Înainte</b> pentru a continua.</string>
     <string name="press_next_to_start_activation">Apăsați <b>Înainte</b> pentru a începe activarea.</string>
     <string name="remove_safety_lock">Înlăturați dispozitivul de siguranță. Atașați pompa la corp. Apăsați butonul acului.</string>
     <string name="activating_pump">Se activează pompa și se setează rata bazală inițială. Vă rog așteptați.</string>
-    <string name="activating_error">Activarea a eșuat, apăsați <b>Reîncearcă</b> pentru a încerca din nou.</string>
     <string name="activating_complete">Plasture nou activat. %.2f unități rămase.</string>
     <string name="can_export_settings">Puteți exporta setările pentru a putea recupera această sesiune de plasture mai târziu.</string>
     <string name="press_OK_to_return"><b>OK</b> pentru a reveni la ecranul principal.</string>

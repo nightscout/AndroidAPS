@@ -6,7 +6,6 @@
     <string name="profile_set_ok">Perfil de basal actualitzat a la bomba</string>
     <string name="invalid_input">Dades no vàlides</string>
     <string name="constraint_applied">Restricció aplicada!</string>
-    <string name="tempbasals_iobtotal_label_string">IOB total:</string>
     <string name="tt_label">OT</string>
     <string name="pump_unreachable">Bomba no accessible</string>
     <string name="insulin_unit_shortname">U</string>
@@ -17,7 +16,6 @@
     <string name="limiting_iob">Limitant IOB a %1$.1f U a causa de %2$s</string>
     <string name="loop_disabled">LLAÇ DESACTIVAT PER RESTRICCIONS</string>
     <string name="event_type">Tipus d\'esdeveniment</string>
-    <string name="reload">Actualitzar</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Desar</string>
@@ -47,7 +45,6 @@
     <string name="paused">En pausa</string>
     <string name="tdd_total">TDD Total</string>
     <string name="goingtodeliver">A punt de lliurar %1$.2f U</string>
-    <string name="waitingforpump">Esperant bomba</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
@@ -67,7 +64,6 @@
     <string name="basal_long_label">Ràtio de basal</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Actualitzada hora de la bomba</string>
     <string name="exit">Sortir</string>
@@ -89,7 +85,6 @@
     <string name="time">Hora</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
     <string name="notes_label">Notes</string>
-    <string name="remove_button">Eliminar</string>
     <string name="wrong_pump_data">Dades procedents d\'una altra bomba. Canvieu el driver de la bomba per restablir el seu estat.</string>
     <string name="bg_label">Glucèmia</string>
     <string name="calibration">Calibració</string>
@@ -99,22 +94,17 @@
     <string name="pumpsuspended">Bomba aturada</string>
     <string name="notconfigured">No configurat</string>
     <string name="loopsuspended">Llaç aturat</string>
-    <string name="trend_arrow">Fletxa de tendència</string>
     <string name="required">req</string>
     <string name="a11y_arrow_none">cap</string>
     <string name="a11y_arrow_unknown">desconegut</string>
     <string name="a11y_high">alt</string>
     <string name="a11y_low">baix</string>
     <string name="average">Mitja</string>
-    <string name="none"><![CDATA[<cap>]]></string>
-    <string name="remove_label">ELIMINA</string>
     <string name="activate_profile">Activar perfil</string>
     <string name="profileswitch_ismissing">Falta canvi de perfil. Si us plau feu un canvi de perfil o cliqueu \"Activar perfil\" al perfil local.</string>
     <string name="profile">Perfil</string>
     <string name="overview_treatment_label">Tractament</string>
     <string name="copytolocalprofile">Crear nou perfil local a partir d\'aquest perfil?</string>
-    <string name="bg_trend_label">Tendència 15 min</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">IOB Bolus</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
     <string name="invalid">NO VÀLID</string>
@@ -146,7 +136,6 @@
     <string name="nochangerequested">Cap canvi sol·licitat</string>
     <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Perfil no vàlid: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    Translator-->
@@ -179,7 +168,6 @@
     <string name="glucosetype_finger">Dit</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
-    <string name="unknown">desconegut</string>
     <string name="eatingsoon">Menjar aviat</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Activitat (esport)</string>
@@ -201,12 +189,6 @@
     <!--    CarbsReq-->
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">Ràtio</string>
-    <string name="amount_days"># Dies</string>
-    <string name="weight">Ponderació</string>
-    <string name="warning_Message">Possiblement imprecís si feu servir bolus per encebar!</string>
-    <string name="tbb">Basal total</string>
-    <string name="tbb2">TBB (Total Basal Base) * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detecció de temps</string>
     <!-- User Entry -->
@@ -289,7 +271,6 @@
     <string name="uel_exit_aaps">SORTIR</string>
     <string name="uel_plugin_enabled">PLUGIN ACTIVAT</string>
     <string name="uel_plugin_disabled">PLUGIN DESACTIVAT</string>
-    <string name="uel_unknown">DESCONEGUT</string>
     <string name="ue_string">Text</string>
     <string name="ue_source">Font</string>
     <string name="ue_utc_offset">Decalatge UTC</string>
@@ -298,7 +279,6 @@
     <string name="ue_none">Cap unitat</string>
     <string name="uel_loop_change">LLAÇ MODIFICAT</string>
     <string name="uel_loop_removed">LLAÇ ELIMINAT</string>
-    <string name="uel_other">ALTRES</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Objectiu baix del perfil</string>
     <string name="profile_high_target">Objectiu alt del perfil</string>
@@ -328,7 +308,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="a11y_user">usuari</string>
     <!-- Autotune -->
     <!-- Alerts -->
     <string name="urgent_alarm">Alarma urgent</string>
@@ -338,7 +317,6 @@
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detectada absorció lenta de carbohidrats: %2$d%% del temps. Torneu a comprovar els vostres càlculs. Els COB (carbs actius) podrien sobreestimar-se i lliurar-se més insulina del compte!!!!!</font>]]></string>
     <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
     <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
-    <string name="quickwizard">Assistent</string>
     <!--    Preferences-->
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
@@ -355,19 +333,13 @@
     <string name="serial_number">Nr. de sèrie</string>
     <string name="disconnected">Desconnectat</string>
     <string name="connecting">Connectant</string>
-    <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Unitats diàries</string>
-    <string name="pump_icon">Icona de la bomba</string>
-    <string name="view_profile">Veure perfil</string>
     <string name="pump_history">Historial de la bomba</string>
-    <string name="stats">Estadístiques</string>
     <string name="temp_basal_delivery_error">Error en lliurar basal temporal</string>
-    <string name="not_set_short">No configurat</string>
     <string name="pump_busy">Bomba ocupada</string>
     <string name="connection_error">Error de connexió de la bomba</string>
     <string name="reading_pump_history">Llegint històric bomba</string>
     <string name="pairing">Sincronitzant</string>
-    <string name="initializing">Inicialitzant...</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitant màx ràtio basal a %1$.2f U a causa de %2$s</string>
     <string name="pumplimit">límit de la bomba</string>
@@ -383,7 +355,6 @@
     <string name="no">No</string>
     <string name="close">Tancar</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Se us demanarà una clau mestra, es necessita per desencriptar la configuració importada.</string>
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
@@ -401,8 +372,6 @@
     <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>
     <string name="ble_not_enabled">Bluetooth no activat.</string>
-    <string name="location_not_found_title">Ubicació no habilitada</string>
-    <string name="location_not_found_message">Per a que el descobriment de nous dispositius en Bluetooth funcioni, la ubicació ha d\'estar habilitada. AAPS no fa un seguiment de la vostra localització. A més, pot ser deshabilitada un cop la sincronització s\'ha produït.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Configuració plugin</string>
     <!-- Navigation -->

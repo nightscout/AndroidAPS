@@ -19,7 +19,6 @@
     <string name="pump_state_label">Статус помпы</string>
     <string name="active_alarms_label">Активные оповещения</string>
     <string name="basal_type_label">Тип базала</string>
-    <string name="basal_rate_label">Базальная скорость</string>
     <string name="pump_type_label">Тип помпы</string>
     <string name="fw_version_label">Версия ПО</string>
     <string name="patch_no_label">Номер патча</string>
@@ -74,12 +73,10 @@
     <string name="do_not_attach_to_body">Пока не устанавливайте патч на тело.</string>
     <string name="half_press_needle">Слегка нажмите на кнопку иглы. Затем нажмите <b>Далее</b> для начала заправки.</string>
     <string name="wait_for_priming">Дождитесь окончания заправки.</string>
-    <string name="priming_error">Не удалось заполнить помпу, нажмите <b>Повторить</b>, чтобы попробовать еще раз.</string>
     <string name="press_next">Нажмите <b>Далее</b> для продолжения.</string>
     <string name="press_next_to_start_activation">Нажмите <b>Далее</b> для начала активации.</string>
     <string name="remove_safety_lock">Снимите защиту. Прикрепите помпу к телу. Нажмите на кнопку иглы.</string>
     <string name="activating_pump">Активация помпы и установка базальной скорости. Пожалуйста, подождите.</string>
-    <string name="activating_error">Сбой активации, нажмите <b>Повторить</b>, чтобы попробовать еще раз.</string>
     <string name="activating_complete">Новый патч активирован. Заполнение %.2f единиц.</string>
     <string name="can_export_settings">Можно экспортировать настройки, чтобы затем восстановить эту сессию патча.</string>
     <string name="press_OK_to_return">Нажмите <b>OK</b> для возврата к главному экрану.</string>

@@ -11,6 +11,7 @@
     <string name="medtronic_pump_max_basal">Max. bazál na pumpě (U)</string>
     <string name="medtronic_custom_action_wake_and_tune">Probuzení a spojování</string>
     <string name="medtronic_custom_action_clear_bolus_block">Vymazat blokování bolusu</string>
+    <string name="medtronic_custom_action_reset_rileylink">Resetovat RileyLink</string>
     <string name="medtronic_pump_battery_select">Typ baterie (Zobrazení napájení)</string>
     <string name="medtronic_pump_battery_no">Nevybráno (Jednoduché)</string>
     <string name="medtronic_pump_battery_alkaline">Alkalické (Rozšířené)</string>
@@ -18,6 +19,9 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Rozšířené)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Rozšířené)</string>
     <!-- Pump type entries -->
+    <string name="medtronic_pump_type_unsupported">Ostatní (nepodporováno)</string>
+    <string name="medtronic_pump_type_523_24a">523 (Fw 2.4A nebo nižší)</string>
+    <string name="medtronic_pump_type_723_24a">723 (Fw 2.4A nebo nižší)</string>
     <!-- Bolus delay entries -->
     <!-- MDT Fragment -->
     <string name="rl_battery_label">Baterie RileyLink</string>
@@ -25,7 +29,6 @@
     <string name="medtronic_error_serial_invalid">Sériové číslo neplatné.</string>
     <string name="medtronic_error_pump_type_not_set">Nenastaven typ pumpy.</string>
     <string name="medtronic_error_pump_type_invalid">Nepodporovaný typ pumpy.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Nepodporovaná frekvence pumpy.</string>
     <string name="medtronic_error_rileylink_address_invalid">Chybná adresa RileyLinku.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Detekovaná pumpa je jiného typu než nakonfigurovaná.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Nastavení bazálních profilů/vzorů není na pumpě povoleno. Povolte je na pumpě.</string>
@@ -42,7 +45,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Historie Medtronic pumpy</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Zrušili jste bolus potom, co byl nastaven na pumpě. Protože Medtronic nepodporuje zrušení bolusu, musíte ho zrušit ručně. Pozastavte pumpu a znovu spusťte. Aplikace detekuje změnu při příštím připojení (do 5 min).</string>
     <string name="medtronic_cmd_cant_read_tbr">Nelze načíst současný dočasný bazál.</string>
@@ -74,7 +76,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Nastavit neutrální dočasný bazál</string>
     <string name="set_neutral_temps_summary">Je-li povoleno, zastaví dočasný bazál před koncem každé hodiny. To může u některých pump pomoci zastavit pípání/vibrace v celou hodinu.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min zbývá)</string>
     <string name="invalid_history_data">Byla zjištěna neplatná data historie pumpy. Otevřete nový problém a poskytněte logy.</string>
     <string name="riley_statistics">Statistiky RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Kliknuto na tlačítko obnovit</string>

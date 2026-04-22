@@ -46,7 +46,6 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Sökningen tog för lång tid</string>
     <string name="combov2_pairing_failed_due_to_error">Parkoppling misslyckades på grund av fel: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Parkoppling avbröts av okänd anledning</string>
-    <string name="combov2_pairing_invalid_pin_length">"Ogiltig längd på PIN-kod. Behöver %1$d siffror men fick %2$d"</string>
     <string name="combov2_scanning_for_pump">Söker efter pump</string>
     <string name="combov2_establishing_bt_connection">Upprättar Bluetooth-anslutning (försök nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Utför handskakning med pump</string>
@@ -66,7 +65,6 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_setting_basal_profile_cmddesc">Sätter basalprofil</string>
     <string name="combov2_setting_tbr_cmddesc">Sätter temp basal %1$d%% i %2$d minuter</string>
     <string name="combov2_cancelling_tbr">Avbryter pågående temp basal</string>
-    <string name="combov2_delivering_bolus_cmddesc">Levererar %1$.1f U som bolus</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Hämtar TDD-historik</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Uppdaterar pumpens datumtid</string>
     <string name="combov2_updating_pump_status_cmddesc">Uppdaterar pumpens status</string>

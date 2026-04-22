@@ -33,18 +33,11 @@
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
     <string name="readstatus">Статус \'чтение\'</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Запрос</string>
-    <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AAPS?</string>
     <string name="configbuilder_aps_description">Какой алгоритм ИПЖ должен выполнять подстройку терапии?</string>
-    <string name="configbuilder_general_description">Это некоторые общепринятые плагины которые могут пригодиться.</string>
-    <string name="configbuilder_constraints_description">Какие ограничения применяются?</string>
-    <string name="configbuilder_loop_description">Используйте, чтобы активировать интеграцию AAPS в цикл ИПЖ.</string>
-    <string name="configbuilder_insulin_description">Какой тип инсулина вы используете?</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>
-    <string name="configbuilder_smoothing_description">Выберите алгоритм сглаживания</string>
     <string name="configbuilder_sensitivity_description">Какой алгоритм чувствительности следует использовать?</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
     <string name="nsclient_version_does_not_match">Версия AAPSClient не совпадает с версией AAPS. Обновите версию.</string>

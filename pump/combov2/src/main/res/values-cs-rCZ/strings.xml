@@ -47,7 +47,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Časový limit pro vyhledávání Combo dosažen</string>
     <string name="combov2_pairing_failed_due_to_error">Párování se nezdařilo z důvodu chyby: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Párování přerušeno z neznámých důvodů</string>
-    <string name="combov2_pairing_invalid_pin_length">"Neplatná délka PINu párování: potřeba %1$d číslic, zadáno %2$d"</string>
     <string name="combov2_scanning_for_pump">Vyhledávání pumpy</string>
     <string name="combov2_establishing_bt_connection">Navazování připojení Bluetooth (pokus č. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Provádím navazování spojení s pumpou</string>
@@ -67,7 +66,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Nastavení bazálního profilu</string>
     <string name="combov2_setting_tbr_cmddesc">Nastavení %1$d%% dočasného bazálu na %2$d minut</string>
     <string name="combov2_cancelling_tbr">Zrušení probíhajícího dočasného bazálu</string>
-    <string name="combov2_delivering_bolus_cmddesc">Podávání %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Načítám CDD historii</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aktualizace data a času v pumpě</string>
     <string name="combov2_updating_pump_status_cmddesc">Nahrávám stav pumpy</string>

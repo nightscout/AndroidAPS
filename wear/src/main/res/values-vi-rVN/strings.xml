@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS (Mục tiêu tạm thời)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="label_user_action_tile">AAPS(User Action)</string>
-    <string name="label_warning_sync">Không có dữ liệu!</string>
-    <string name="label_warning_old">Dữ liệu cũ!</string>
-    <string name="label_warning_since">Từ %1$s</string>
-    <string name="label_warning_sync_aaps">Đồng bộ với AAPS!</string>
     <string name="msg_warning_sync">Không nhận được dữ liệu kể từ %1$s! Kiểm tra xem AAPS trên điện thoại có gửi dữ liệu cho đồng hồ hay không</string>
     <string name="msg_warning_old">Dữ liệu AAPS đã cũ %1$s! Kiểm tra cảm biến, xDrip+, NS, cấu hình AAPS hoặc nguyên nhân khác!</string>
     <string name="pref_vibrate_on_bolus">Rung khi bolus</string>
@@ -83,8 +79,6 @@
     <string name="menu_none">Không</string>
     <string name="menu_default">Mặc định</string>
     <string name="menu_menu">Danh Mục</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Thời lượng [phút]</string>
     <string name="action_tempt_confirmation">Mục tiêu tạm thời được yêu cầu</string>
     <string name="action_quick_wizard_confirmation">Yêu cầu Quick Wizard</string>
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
@@ -102,8 +96,6 @@
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Phần trăm\n[%]</string>
     <string name="action_start_minutes">Bắt đầu\n[phút]</string>
-    <string name="action_start_minutes_format">%1$d phút</string>
-    <string name="action_duration_h">Thời lượng [giờ]</string>
     <string name="action_duration_hours">Thời lượng\n[giờ]</string>
     <string name="action_duration_hours_format">%1$d giờ</string>
     <string name="action_duration_hours_minutes_format">%1$d g %2$d phút</string>
@@ -152,7 +144,6 @@
     <string name="color_name_gray">xám</string>
     <string name="color_name_bluegray">xanh xám</string>
     <string name="color_name_white">trắng</string>
-    <string name="color_name_black">đen</string>
     <string name="color_name_multicolor">nhiều màu</string>
     <string name="pref_simplify_ui">Giao diện đơn giản</string>
     <string name="pref_vibrate_hourly">Rung báo theo giờ</string>
@@ -185,8 +176,6 @@
     <string name="tile_no_config">Không có cấu hình</string>
     <string name="wear_control_not_enabled">Điều khiển thiết bị đeo tắt</string>
     <string name="wear_control_no_data">Không có dữ liệu</string>
-    <string name="increment">tăng dần</string>
-    <string name="decrement">giảm dần</string>
     <string name="abbreviation_average">avg</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -202,8 +191,6 @@
     <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">old</string>
-    <string name="old_warning">!old!</string>
     <string name="error">Lỗi</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
     <string name="pref_heartRateSmoothing">Làm mượt HR</string>
@@ -260,7 +247,6 @@
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">Nhấn để mở rộng chi tiết tính toán</string>
     <string name="wizard_confirmation_sent">Gửi</string>
     <string name="tile_settings">Cài đặt Tile</string>
     <string name="loop_status_error">Không tải được trạng thái</string>

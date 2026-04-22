@@ -20,7 +20,6 @@
     <string name="pump_state_label">Estado de la bomba</string>
     <string name="active_alarms_label">Alarmas activas</string>
     <string name="basal_type_label">Tipo de basal</string>
-    <string name="basal_rate_label">Tasa basal</string>
     <string name="pump_type_label">Tipo de bomba</string>
     <string name="fw_version_label">Versión de firmware</string>
     <string name="patch_no_label">Parche n°</string>
@@ -76,12 +75,10 @@
     <string name="do_not_attach_to_body">No pegues todavía el parche al cuerpo.</string>
     <string name="half_press_needle">Pulsa el botón de la aguja hasta la mitad. A continuación, pulsa <b>Siguiente</b> para iniciar el purgado.</string>
     <string name="wait_for_priming">Espera a que finalice el cebado.</string>
-    <string name="priming_error">No se ha podido purgar, pulsa <b>Reintentar</b> para volver a intentarlo.</string>
     <string name="press_next">Presiona <b>Siguiente</b> para continuar.</string>
     <string name="press_next_to_start_activation">Presiona <b>Siguiente</b> para comenzar la activación.</string>
     <string name="remove_safety_lock">Retira el cierre de seguridad. Acopla la bomba al cuerpo. Pulsa el botón de la aguja.</string>
     <string name="activating_pump">Activando la bomba y ajustando la tasa basal inicial. Espera por favor.</string>
-    <string name="activating_error">Fallo al activar, pulsa <b>Reintentar</b> para volver a intenetarlo.</string>
     <string name="activating_complete">Nuevo parche activado %.2f Unidades restantes.</string>
     <string name="can_export_settings">Puedes exportar los ajustes para poder recuperar esta sesión del parche más adelante.</string>
     <string name="press_OK_to_return">Presiona <b>OK</b> para volver a la pantalla principal.</string>

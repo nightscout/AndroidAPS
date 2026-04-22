@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sensor_label">Szenzor</string>
-    <string name="age_label">kor:</string>
     <string name="insulin_label">Inzulin</string>
     <string name="cannula">Kanül</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">inzulin</string>
     <!-- overview moved to core:ui module -->
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Előrejelzések</string>
-    <string name="overview_show_basals">Bázis</string>
-    <string name="overview_show_abs_insulin">Inzulin összesen</string>
     <string name="basal_shortname">BÁZ</string>
     <!--    Iob-->
     <!--    PersistentNotification-->

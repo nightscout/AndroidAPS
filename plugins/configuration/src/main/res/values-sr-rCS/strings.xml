@@ -6,14 +6,10 @@
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="profile">Profil</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Zahtev</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na belu listu za optimizaciju baterije – mogli biste imati problema s performansama.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Koju pumpu želite da koristite sa AAPS-om?</string>
     <string name="configbuilder_aps_description">Koji APS algoritam treba da izvrši prilagođavanja terapije?</string>
-    <string name="configbuilder_general_description">Ovo su neki opšti dodaci koji bi vam mogli biti korisni.</string>
-    <string name="configbuilder_constraints_description">Koja ograničenja se primenjuju?</string>
-    <string name="configbuilder_loop_description">Koristite ovo da aktivirate integraciju AAPS-ovog loop-a.</string>
     <string name="configbuilder_bgsource_description">Odakle AAPS treba da dobija svoje podatke?</string>
     <!--ImportExport-->
     <!-- password_preferences_encrypt_prompt moved to core:ui -->

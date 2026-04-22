@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
-    <string name="calculator_label">Υπολογιστής</string>
     <string name="nav_history_browser">Ιστορικό περιήγησης</string>
     <string name="sensor_label">Αισθητήρας</string>
-    <string name="age_label">ηλικία:</string>
-    <string name="level_label">επίπεδο:</string>
     <string name="insulin_label">Ινσουλίνη</string>
     <string name="pb_label">Μπαταρία αντλίας</string>
     <string name="cannula">Καθετήρας</string>
     <string name="patch_pump">Αυτοκόλλητη αντλία</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">ινσουλίνη</string>
-    <string name="a11y_bg_quality">ποιότητα γλυκόζης αίματος</string>
-    <string name="a11y_blood_glucose">γλυκόζη αίματος</string>
-    <string name="a11y_bg_outdated">μη ενημερωμένα</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Κατάσταση δεδομένων BG</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Προβλέψεις</string>
-    <string name="overview_show_treatments">Θεραπείες</string>
-    <string name="overview_show_heartRate">Καρδιακός ρυθμός</string>
-    <string name="overview_show_deviation_slope">Κλίση απόκλισης</string>
-    <string name="overview_show_activity">Δραστηριότητα</string>
-    <string name="overview_show_bgi">Επιπτώσεις Γλυκόζης Αίματος</string>
-    <string name="overview_show_deviations">Αποκλίσεις</string>
-    <string name="overview_show_cob">Ενεργοί Υδατάνθρακες</string>
-    <string name="overview_show_iob">Ενεργή Ινσουλίνη</string>
-    <string name="overview_show_basals">Βασικοί</string>
-    <string name="overview_show_abs_insulin">Απόλυτη ινσουλίνη</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">ΘΕΡΑΠ</string>
-    <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>

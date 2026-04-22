@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Wycisz alarmy</string>
     <string name="omnipod_common_overview_pod_status">Status Poda</string>
     <string name="omnipod_common_overview_total_delivered">Łącznie dostarczono</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">Unikalny ID</string>
     <string name="omnipod_common_overview_lot_number">Numer LOT</string>
     <string name="omnipod_common_overview_pod_sequence_number">Numer sekwencji</string>

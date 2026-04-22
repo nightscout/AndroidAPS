@@ -92,8 +92,6 @@
     <string name="permission_bluetooth_title">蓝牙</string>
     <string name="permission_bluetooth_description">应用程序需要蓝牙权限才能通过泵进行通信</string>
     <!-- Insulin -->
-    <string name="insulin_plugin">胰岛素</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">未知</string>
     <string name="rapid_acting_oref">Novorapid(诺和锐)</string>
     <string name="lyumjev">Lyumjev(超速效赖脯)</string>
@@ -102,7 +100,6 @@
     <string name="fast_acting_insulin_comment">Novorapid(诺和锐), Novolog(门冬), Humalog(优泌乐)</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp(超速效门冬)</string>
     <string name="insulin_peak_time">峰值时间 [min]</string>
-    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u40">U40</string>

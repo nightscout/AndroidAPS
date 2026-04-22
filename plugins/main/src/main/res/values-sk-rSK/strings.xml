@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
-    <string name="calculator_label">Kalkulačka</string>
     <string name="nav_history_browser">Prehliadač histórie</string>
     <string name="sensor_label">Senzor</string>
-    <string name="age_label">vek:</string>
-    <string name="level_label">úroveň:</string>
     <string name="insulin_label">Inzulín</string>
     <string name="pb_label">Batéria pumpy</string>
     <string name="cannula">Kanyla</string>
     <string name="patch_pump">Náplasťová pumpa</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">inzulín</string>
-    <string name="a11y_bg_quality">kvalita glykémií</string>
-    <string name="a11y_blood_glucose">glykémia</string>
-    <string name="a11y_bg_outdated">zastaralé</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Stav dát glykémie</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Predikcie</string>
-    <string name="overview_show_treatments">Ošetrenia</string>
-    <string name="overview_show_heartRate">Tepová frekvencia</string>
-    <string name="overview_show_deviation_slope">Odchýlka sklonu</string>
-    <string name="overview_show_activity">Aktivita</string>
-    <string name="overview_show_bgi">Vplyv na glykémiu (BGI)</string>
-    <string name="overview_show_sensitivity">Zmena citlivosti</string>
-    <string name="overview_show_deviations">Odchýlky</string>
-    <string name="overview_show_cob">Aktívne sacharidy</string>
-    <string name="overview_show_iob">Aktívny inzulín</string>
-    <string name="overview_show_basals">Bazály</string>
-    <string name="overview_show_abs_insulin">Celkový inzulín</string>
-    <string name="overview_show_variable_sens">Premenlivá citlivosť</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
-    <string name="treatments_shortname">OŠET</string>
-    <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
-    <string name="overview_show_steps">Kroky</string>
 </resources>

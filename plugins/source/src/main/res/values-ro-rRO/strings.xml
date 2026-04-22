@@ -25,7 +25,6 @@
     <string name="random_bg">Glicemie generată aleatoriu</string>
     <string name="description_source_random_bg">Generează glicemie aleatoare (doar mod demonstrativ)</string>
     <string name="random_bg_short">Glicemie</string>
-    <string name="direction">direcție</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Primiți date de glicemie din aplicația Syai/Ottai.</string>

@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Заглушить</string>
     <string name="omnipod_common_overview_pod_status">Статус помпы</string>
     <string name="omnipod_common_overview_total_delivered">Всего подано</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f ед</string>
     <string name="omnipod_common_overview_pod_unique_id">Уникальный ID</string>
     <string name="omnipod_common_overview_lot_number">Номер партии</string>
     <string name="omnipod_common_overview_pod_sequence_number">Порядковый номер</string>

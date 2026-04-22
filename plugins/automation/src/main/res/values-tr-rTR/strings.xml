@@ -53,7 +53,6 @@
     <string name="location_going_out">Adlı alandan ayrıldığınızda</string>
     <string name="time_range">Zaman aralığı</string>
     <string name="timerange_value">%1$s ile %2$s arasında</string>
-    <string name="between">Arasında </string>
     <string name="add_short">EKLE</string>
     <string name="temptargetcompared">Geçici hedef %1$s</string>
     <string name="btdevicecompared">%1$s %2$s cihazına Bluetooth bağlantısı</string>
@@ -94,8 +93,6 @@
     <string name="edit_short">DÜZENLE</string>
     <string name="preconditions">Ön koşullar:</string>
     <string name="user_action">Kullanıcı onayı ile</string>
-    <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
-    <string name="count_selected">%1$d seçildi</string>
     <string name="system_automation">Sistem otomasyonu</string>
     <string name="run_automations">Otomasyonları çalıştır</string>
     <string name="add_automation">Kural ekle</string>

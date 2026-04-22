@@ -47,7 +47,6 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo 掃描逾時已達</string>
     <string name="combov2_pairing_failed_due_to_error">由於錯誤而導致配對失敗：%1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">因未知原因中止配對</string>
-    <string name="combov2_pairing_invalid_pin_length">"無效的配對 PIN 長度：需要 %1$d 位數字，得到 %2$d 位"</string>
     <string name="combov2_scanning_for_pump">正在掃描幫浦</string>
     <string name="combov2_establishing_bt_connection">正在建立藍牙連線（第 %1$d 次嘗試）</string>
     <string name="combov2_pairing_performing_handshake">正在與幫浦進行交握</string>
@@ -67,7 +66,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">正在設定基礎速率配置</string>
     <string name="combov2_setting_tbr_cmddesc">設定 %1$d%% 的臨時基礎速率，持續 %2$d 分鐘</string>
     <string name="combov2_cancelling_tbr">取消正在進行的臨時基礎速率</string>
-    <string name="combov2_delivering_bolus_cmddesc">正在注射 %1$.1f U 胰島素</string>
     <string name="combov2_fetching_tdd_history_cmddesc">正在獲取每日總劑量歷史紀錄</string>
     <string name="combov2_updating_pump_datetime_cmddesc">正在更新幫浦日期時間</string>
     <string name="combov2_updating_pump_status_cmddesc">正在更新幫浦狀態</string>

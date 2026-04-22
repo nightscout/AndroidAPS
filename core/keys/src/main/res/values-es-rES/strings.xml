@@ -3,6 +3,7 @@
     <!-- General preferences -->
     <string name="pref_title_simple_mode">Modo sencillo</string>
     <string name="pref_title_insulin_concentration">Soporte para concentración de insulina</string>
+    <string name="pref_summary_insulin_concentration">Habilitar el soporte para diferentes concentraciones de insulina (U50, U200, etc.)</string>
     <!-- Overview preferences -->
     <string name="pref_title_keep_screen_on">Mantener pantalla encendida</string>
     <string name="pref_summary_keep_screen_on">Evita que Android apague la pantalla. Consumirá mucha energía cuando el dispositivo no esté conectado a una toma de corriente.</string>
@@ -202,7 +203,6 @@
     <string name="pref_title_half_basal_exercise_target">Objetivo de ejercicio con mitad de basal</string>
     <string name="half_basal_exercise_target_summary">Establezca un valor numérico, por ejemplo 160, que significa que cuando el objetivo temporal sea 160 mg/dL y la opción de sensibilidad ante objetivos altos esté activada, se administrará el 50% de la basal en este nivel (120 = 75%; 140 = 60%).</string>
     <string name="pref_title_iob_threshold_percent">Porcentaje de umbral de IOB</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Porcentaje del IOB máximo por encima del cual se desactivan los SMB\\nEl valor predeterminado es 100%\\nCon un valor del 100%, esta función queda efectivamente desactivada</string>
     <string name="pref_title_dynisf_adjustment_factor">Factor de ajuste de ISF dinámico</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Factor de ajuste para el ISF dinámico. Establezca un valor superior al 100% para dosis de corrección más agresivas, e inferior al 100% para correcciones menos agresivas</string>
     <string name="pref_title_autosens_period">Periodo de Autosens</string>
@@ -213,7 +213,6 @@
     <string name="pref_title_stale_data_threshold">Umbral de datos desactualizados</string>
     <string name="pref_title_pump_unreachable_threshold">Umbral de bomba no alcanzable</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">Tiempo de pico</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Días predeterminados de ajuste</string>
     <string name="autotune_default_tune_days_summary">Cantidad predeterminada de días de datos que serán procesados por Autotune (hasta un máximo de 30)</string>
@@ -252,7 +251,6 @@
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
@@ -267,7 +265,6 @@
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">Idioma</string>
@@ -360,11 +357,8 @@
     <string name="pref_title_ama_max_iob">Max IOB para AMA</string>
     <string name="openapsma_max_iob_summary">Este valor se denomina Max IOB en el contexto de OpenAPS\nRepresenta la cantidad máxima de insulina en unidades [U] que el sistema de lazo cerrado puede administrar de una sola vez</string>
     <string name="pref_title_max_daily_multiplier">Multiplicador de seguridad diaria máxima</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Valor por defecto: 3. Este es un límite de seguridad clave de OpenAPS. Lo que hace es limitar tus basales a 3 veces (en este perfil) tu tasa basal más alta. Es probable que no necesites cambiar esto, pero debes ser consciente de que a esto se refiere la discusión sobre los límites de seguridad de \'3x máximo diario; 4x actual</string>
     <string name="pref_title_current_basal_multiplier">Multiplicador de seguridad basal actual</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los límites de seguridad clave de OpenAPS, y la otra parte de la regla de seguridad \"3x máximo diario; 4x actual\". Esto significa que tu basal, independientemente del basal máximo configurado en tu bomba, no puede ser superior a este número multiplicado por tu nivel de basal actual. El objetivo es evitar que los usuarios entren en terreno peligroso al configurar basales máximos excesivamente altos antes de comprender cómo funciona el algoritmo. De nuevo, el valor predeterminado es 4x; la mayoría de las personas nunca necesitarán ajustar esto y, en su lugar, es más probable que deban ajustar otros parámetros si sienten que están \"chocando\" con este límite de seguridad</string>
     <string name="pref_title_bolus_snooze_divisor">Divisor de DIA para la espera del bolo</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Valor por defecto: 2\\nEl bolo snooze se activa después de realizar un bolo para una comida, de modo que el lazo cerrado (loop) no lo contrarreste con basales temporales bajas justo después de haber comido. En este ejemplo, el valor por defecto es 2; por tanto, una DIA de 3 horas significa que el bolo snooze se irá eliminando gradualmente a lo largo de 1.5 horas (3DIA/2)</string>
     <string name="pref_title_ama_min_5m_carbs_impact">Impacto mínimo de carbohidratos en 5m para AMA</string>
     <string name="pref_title_smb_min_5m_carbs_impact">Impacto mínimo de carbohidratos en 5m para SMB</string>
     <string name="openapsama_min_5m_carb_impact_summary">Valor por defecto: 3.0 (AMA) u 8.0 (SMB). Este es un ajuste para el impacto de absorción de carbohidratos por defecto cada 5 minutos. El valor predeterminado es una expectativa de 3 mg/dL cada 5 min. Esto afecta la velocidad a la que se reducen (decaen) los carbohidratos activos (COB) y cuánta absorción de carbohidratos se asume al calcular las predicciones futuras de glucosa, especialmente cuando la glucosa cae más de lo esperado o no sube tanto como se preveía</string>
@@ -373,27 +367,16 @@
     <string name="pref_title_absorption_maxtime">Tiempo máximo de absorción</string>
     <string name="absorption_max_time_summary">Tiempo en horas en el que se espera que todos los carbohidratos de la comida hayan sido absorbidos</string>
     <string name="pref_title_autosens_min">Autosens mínimo</string>
-    <string name="openapsama_autosens_min_summary">Valor por defecto: 0.7\nEl otro lado de los límites de seguridad de Autosens, que establece un tope a qué tan bajo puede Autosens ajustar las basales, y qué tan alto puede ajustar el ISF y los objetivos de glucosa</string>
     <string name="pref_title_autosens_max">Autosens máximo</string>
-    <string name="openapsama_autosens_max_summary">Valor por defecto: 1.2\\nEste es un tope multiplicador para Autosens (y próximamente Autotune) que establece un límite máximo del 20% sobre qué tan alto puede ser el ratio de Autosens. Esto, a su vez, determina qué tan alto puede Autosens ajustar las basales, qué tan bajo puede ajustar el ISF y qué tan bajo puede establecer el objetivo de glucosa</string>
     <string name="pref_title_autoisf_min">AutoISF mínimo</string>
-    <string name="openapsama_autoISF_min_summary">De forma similar al autosens_min, esto define qué tan débil puede llegar a ser el ISF.\\n\\nEl valor por defecto de 1.0 desactiva efectivamente este efecto</string>
     <string name="pref_title_autoisf_max">AutoISF máximo</string>
-    <string name="openapsama_autoISF_max_summary">De forma similar al autosens_max, esto define qué tan fuerte puede llegar a ser el ISF\\n\\nEl valor por defecto de 1.0 desactiva efectivamente este efecto\\n\\nADVERTENCIA: Tenga mucho cuidado al utilizar valores superiores a 2.5</string>
     <string name="pref_title_bg_accel_weight">Peso de la aceleración de la glucosa en el ISF</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Este es el peso aplicado mientras la glucosa se acelera, el cual fortalece el ISF, aumentando potencialmente la administración de insulina\\n\\nEl valor por defecto de 0.0 desactiva efectivamente este efecto</string>
     <string name="pref_title_bg_brake_weight">Peso del freno de la glucosa en el ISF</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Este es el peso aplicado mientras la glucosa desacelera, el cual debilita el ISF, reduciendo potencialmente la administración de insulina\\n\\nEl valor por defecto de 0.0 desactiva efectivamente este efecto.</string>
     <string name="pref_title_low_bg_weight">Peso del rango de glucosa baja</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Este es el peso aplicado mientras la glucosa está por debajo del objetivo, el cual debilita el ISF, reduciendo potencialmente la administración de insulina\\n\\nEl valor por defecto de 0.0 desactiva efectivamente este efecto</string>
     <string name="pref_title_high_bg_weight">Peso del rango de glucosa alta</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Este es el peso aplicado mientras la glucosa está por encima del objetivo, el cual fortalece el ISF, aumentando potencialmente la administración de insulina\\n\\nEl valor por defecto de 0.0 desactiva efectivamente este efecto</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Rango de glucosa para el ratio de entrega de SMB</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valor por defecto: 0. El aumento lineal del ratio de entrega de SMB se mapea al rango de glucosa [objetivo_BG, objetivo_BG + rango_BG].\\nEn el \'objetivo_BG\' el ratio de SMB es el mínimo (smb_delivery_ratio_min); en el \'objetivo_BG + rango_BG\' es el máximo (smb_delivery_ratio_max)\\ Con 0, el aumento lineal se desactiva y se utiliza el ratio fijo de entrega de SMB</string>
     <string name="pref_title_pp_weight">Peso del ISF posprandial</string>
-    <string name="openapsama_pp_ISF_weight_summary">Este es el peso aplicado mientras la glucosa está subiendo y que refuerza el ISF, aumentando así potencialmente el suministro de insulina.\\n\\nEl valor predeterminado 0.0 desactiva eficazmente este efecto.</string>
     <string name="pref_title_dura_weight">Peso de la duración del ISF</string>
-    <string name="openapsama_dura_ISF_weight_summary">Este es el peso aplicado durante mesetas de glucosa elevadas y prolongadas, el cual refuerza el ISF, aumentando así potencialmente el suministro de insulina.\\n\\nEl valor predeterminado 0.0 desactiva eficazmente este efecto.</string>
     <string name="pref_title_smb_delivery_ratio">Ratio de suministro de SMB</string>
     <string name="openapsama_smb_delivery_ratio_summary">Valor predeterminado: 0.5. Este es otro límite de seguridad clave de OpenAPS y especifica qué proporción del total de insulina requerida se puede suministrar como SMB. Esto es para evitar que las personas entren en una situación peligrosa al configurar solicitudes de SMB desde el teléfono de los cuidadores al mismo tiempo. Aumente este valor experimental de forma lenta y con precaución.</string>
     <string name="pref_title_smb_delivery_ratio_min">Ratio mínimo de suministro de SMB</string>
@@ -409,10 +392,6 @@
     <string name="pref_title_lgs_threshold">Umbral de LGS</string>
     <string name="lgs_threshold_summary">Valor de glucosa por debajo del cual se suspende la insulina. El valor predeterminado utiliza el modelo de objetivo estándar. El usuario puede establecer un valor entre 60 mg/dl (3.3 mmol/l) y 100 mg/dl (5.5 mmol/l). Los valores inferiores a 65/3.6 darán como resultado el uso del modelo predeterminado.</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">Documentación del algoritmo</string>
-    <string name="pref_title_otp_setup">Configuración del autenticador</string>
-    <string name="pref_title_quick_wizard_settings">Configuración de QuickWizard</string>
-    <string name="pref_title_xdrip_info">Información de xDrip+</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Rango para visualización</string>
 </resources>

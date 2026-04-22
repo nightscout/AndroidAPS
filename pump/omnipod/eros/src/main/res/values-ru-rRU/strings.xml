@@ -44,7 +44,6 @@
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">На Поде работает временный базал, но ААПС ничего не знает об этом временном базале. Отмените временный базал вручную.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Статистика RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Читать журнал импульсов</string>
     <string name="omnipod_eros_pod_management_pulse_log">Журнал Pulse </string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Журнал отладки из буфера обмена</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->

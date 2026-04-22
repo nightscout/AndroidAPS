@@ -16,10 +16,7 @@
     <string name="not_inserted">Не е поставено</string>
     <string name="tdd_bolus">ТДД болус</string>
     <string name="tdd_basal">ТДД базал</string>
-    <string name="tbr_formatter">%1$d%% за %2$d / %3$d мин</string>
     <string name="multiwave_bolus">Двувълнов болус</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
-    <string name="insight_last_bolus">Последен болус</string>
     <string name="searching_for_devices">Търсене на устройства...</string>
     <string name="pairing_completed">Сдвояване завършено</string>
     <string name="code_compare">Съвпадат ли кодовете, показани на това устройство и на Вашата помпа?</string>
@@ -35,15 +32,8 @@
     <string name="pump_stopped">Помпата е спряна</string>
     <string name="pump_started">Помпата е стартирана</string>
     <string name="release_software_version">Софтуер версия</string>
-    <string name="ui_processor_software_version">UI процесор софтуер версия</string>
-    <string name="pc_processor_software_version">PC процесор софтуер версия</string>
-    <string name="md_tel_processor_software_version">MD тел процесор софтуер версия</string>
-    <string name="safety_processor_software_version">Софтуерна версия на процесора за безопасност</string>
-    <string name="bt_info_page_version">BT информационна страница версия</string>
     <string name="bluetooth_address">Bluetooth адрес</string>
-    <string name="system_id_appendix">Системно ID приложение</string>
     <string name="manufacturing_date">Дата на производство</string>
-    <string name="delete_pairing">Изтриване на сдвояване</string>
     <string name="log_site_changes">Записвай смяната на местата</string>
     <string name="log_reservoir_changes">Записвай смените на резервоар</string>
     <string name="log_tube_changes">Записвай смените на тръба</string>
@@ -56,5 +46,4 @@
     <string name="max_recovery_duration">Макс време за възстановяване [сек]</string>
     <string name="min_recovery_duration">Мин време за възстановяване [сек]</string>
     <string name="pump_alert">Аларма на помпата</string>
-    <string name="pairing_information">Информация за сдвояването</string>
 </resources>

@@ -32,18 +32,11 @@
     <string name="setupwizard_pump_riley_link_status">RileyLink 상태:</string>
     <string name="readstatus">상태 불러오기</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">요청</string>
-    <string name="error_asking_for_permissions">사용 권한을 묻는 중 오류가 발생했습니다</string>
     <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">어떤 펌프를 AAPS에서 사용하시겠습니까?</string>
     <string name="configbuilder_aps_description">어떤 APS 알고리즘을 사용합니까?</string>
-    <string name="configbuilder_general_description">유용한 여러가지 플러그인</string>
-    <string name="configbuilder_constraints_description">어떤 제약을 적용합니까?</string>
-    <string name="configbuilder_loop_description">AAPS의 루프를 활성하기 위해서 이것을 사용하십시오.</string>
-    <string name="configbuilder_insulin_description">어떤 종류의 인슐린을 사용합니까?</string>
     <string name="configbuilder_bgsource_description">AAPS가 어디에서 데이터를 가져옵니까?</string>
-    <string name="configbuilder_smoothing_description">평탄화 알고리즘을 선택합니다</string>
     <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
     <string name="allow_hardware_pump_text">주의: 하드웨어 펌프를 활성화하고 연결하면 AAPS가 basal 설정을 프로파일에서 펌프로 복사하여 펌프에 저장된 기존 basal양을 덮어쓰게 될것입니다. AAPS의 basal 설정이 올바른지 확인하십시오. 확실하지 않거나 펌프의 basal 설정을 덮어쓰지 않으려면 취소를 누르고 나중에 펌프로 전환을 연결하십시오.</string>
     <string name="nsclient_version_does_not_match">AAPS 클라이언트 버전이 AAPS 버전과 일치하지 않습니다. 업데이트 하십시오.</string>

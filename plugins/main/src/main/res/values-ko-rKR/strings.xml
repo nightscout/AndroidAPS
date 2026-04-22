@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop 중지됨</string>
-    <string name="calculator_label">계산기</string>
     <string name="nav_history_browser">이력 브라우저</string>
     <string name="sensor_label">센서</string>
-    <string name="age_label">나이:</string>
-    <string name="level_label">레벨:</string>
     <string name="insulin_label">인슐린</string>
     <string name="pb_label">펌프 배터리</string>
     <string name="cannula">캐뉼라</string>
     <string name="patch_pump">패치 펌프</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">인슐린</string>
-    <string name="a11y_bg_quality">혈당의 질</string>
-    <string name="a11y_blood_glucose">혈당</string>
-    <string name="a11y_bg_outdated">만료됨</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">BG 데이터 상태</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">예측</string>
-    <string name="overview_show_treatments">관리</string>
-    <string name="overview_show_heartRate">심장 박동수</string>
-    <string name="overview_show_deviation_slope">편차 기울기</string>
-    <string name="overview_show_activity">활동</string>
-    <string name="overview_show_bgi">BG impact</string>
-    <string name="overview_show_deviations">편차</string>
-    <string name="overview_show_cob">체내탄수화물양(COB)</string>
-    <string name="overview_show_iob">체내인슐린양(IOB)</string>
-    <string name="overview_show_basals">Basal</string>
-    <string name="overview_show_abs_insulin">인슐린 절대값</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">TREAT</string>
-    <string name="cannula_usage">사용:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>

@@ -6,10 +6,6 @@
     <string name="label_actions_tile">AAPS( Ενέργειες)</string>
     <string name="label_temp_target_tile">AAPS(προσωρινός_στόχος)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
-    <string name="label_warning_sync">Δεν υπάρχουν δεδομένα!</string>
-    <string name="label_warning_old">Παλιά δεδομένα!</string>
-    <string name="label_warning_since">Από %1$s</string>
-    <string name="label_warning_sync_aaps">Συγχρονισμός με AAPS!</string>
     <string name="msg_warning_sync">Δεν ελήφθησαν δεδομένα από τις %1$s! Ελέγξτε αν το AAPS στο τηλέφωνο στέλνει δεδομένα στο ρολόι</string>
     <string name="msg_warning_old">Τα δεδομένα AAPS είναι %1$s παλιά! Ελέγξτε τον αισθητήρα, το xDrip +, το NS, το AAPS ή άλλα!</string>
     <string name="pref_vibrate_on_bolus">Δόνηση στην Δόση Bolus</string>
@@ -72,7 +68,6 @@
     <string name="menu_none">Καμία</string>
     <string name="menu_default">Προεπιλογή</string>
     <string name="menu_menu">Μενού</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">Ζητήθηκε Προσωρινός Στόχος</string>
     <string name="action_quick_wizard_confirmation">Ζητήθηκε Γρήγορος Οδηγός</string>
     <string name="action_treatment_confirmation">Ζητήθηκε Θεραπεία</string>
@@ -83,7 +78,6 @@
     <string name="action_profile_switch_confirmation">Ζητήθηκε Αλλαγή Προφίλ</string>
     <string name="action_carbs">Υδατάνθρακες</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_duration_h">Διάρκεια [h]</string>
     <string name="action_insulin">Ινσουλίνη</string>
     <string name="action_preset_1">Προεπιλογή 1</string>
     <string name="action_preset_2">Προεπιλογή 2</string>
@@ -120,7 +114,6 @@
     <string name="color_name_gray">γκρι</string>
     <string name="color_name_bluegray">μπλε-γκρι</string>
     <string name="color_name_white">λευκό</string>
-    <string name="color_name_black">μαύρο</string>
     <string name="color_name_multicolor">πολύχρονο</string>
     <string name="pref_simplify_ui">Απλοποίηση UI</string>
     <string name="pref_vibrate_hourly">Δόνηση ωριαία</string>
@@ -147,8 +140,6 @@
     <string name="tile_no_config">Δεν υπάρχουν διαθέσιμες ρυθμίσεις</string>
     <string name="wear_control_not_enabled">Έλεγχος μέσω ρολογιού απενεργοποιημένος</string>
     <string name="wear_control_no_data">Δεν υπάρχουν διαθέσιμα δεδομένα</string>
-    <string name="increment">αύξηση</string>
-    <string name="decrement">μείωση</string>
     <string name="abbreviation_average">μέσος</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -163,7 +154,5 @@
     <string name="hour_short">ω</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">παλιός</string>
-    <string name="old_warning">!παλαιός!</string>
     <string name="pref_heartRateSampling">Καρδιακός ρυθμός</string>
 </resources>

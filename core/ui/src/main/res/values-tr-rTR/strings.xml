@@ -6,7 +6,6 @@
     <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
     <string name="invalid_input">Geçersiz bilgi girişi</string>
     <string name="constraint_applied">Sınırlaması uygulanır!</string>
-    <string name="tempbasals_iobtotal_label_string">Toplam AİNS:</string>
     <string name="tt_label">GH</string>
     <string name="pump_unreachable">Pompa\'ya ulaşılamıyor</string>
     <string name="insulin_unit_shortname">Ü</string>
@@ -17,7 +16,6 @@
     <string name="limiting_iob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="loop_disabled">DÖNGÜ KISITLAMALARDAN DEVREDIŞI BIRAKILDI</string>
     <string name="event_type">Etkinlik tipi</string>
-    <string name="reload">Yeniden yükle</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Kaydet</string>
@@ -44,13 +42,11 @@
     <string name="success">Başarılı</string>
     <string name="advanced_settings_title">Gelişmiş Ayarlar</string>
     <string name="extendedbolusdeliveryerror">Yayma bolus iletim hatası</string>
-    <string name="aps_mode_title">APS modu</string>
     <string name="extended_bolus">Yayma Bolus</string>
     <string name="paused">Duraklatıldı</string>
     <string name="tdd_total">GTD Toplam</string>
     <string name="tdd_old_data">Eski veri</string>
     <string name="goingtodeliver">%1$.2f Ü gönderilecek</string>
-    <string name="waitingforpump">Pompa bekleniyor</string>
     <string name="androidaps_start">AAPS başladı</string>
     <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
     <string name="format_carbs">%1$d g</string>
@@ -77,7 +73,6 @@
     <string name="target_long_label">Kan Şekeri Hedefi</string>
     <string name="shortgram">gr</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">Tamam</string>
     <string name="pump_time_updated">Pompa zamanı güncellendi</string>
     <string name="exit">Çıkış</string>
@@ -86,6 +81,7 @@
     <string name="alarm">Alarm</string>
     <string name="exportsettings">Dışa aktarma ayarları</string>
     <string name="disableloop">Döngüyü devre dışı bırak</string>
+    <string name="disabled_loop">Döngü Devredışı</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
     <string name="suspendloop">Döngüyü duraklat</string>
     <string name="duration_min_label">Süre [min]</string>
@@ -100,9 +96,6 @@
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="notes_label">Notlar</string>
-    <string name="remove_button">Kaldır</string>
-    <string name="add_new">Yeni ekle</string>
-    <string name="addnew_above">Yukarı yeni ekle</string>
     <string name="wrong_pump_data">Veriler farklı pompadan geliyor. Pompa durumunu sıfırlamak için pompa sürücüsünü değiştirin.</string>
     <string name="bg_label">KŞ</string>
     <string name="calibration">Kalibrasyon</string>
@@ -111,10 +104,9 @@
     <string name="duration_label">Süre</string>
     <string name="shortgramm">gr</string>
     <string name="pumpsuspended">Pompa Durduruldu</string>
+    <string name="pump_running">Pompa çalışıyor</string>
     <string name="notconfigured">Yapılandırılmadı</string>
     <string name="loopsuspended">Döngü duraklatıldı</string>
-    <string name="trend_arrow">Trend oku</string>
-    <string name="a11y_autosens_label">Oto duyarlılık</string>
     <string name="required">iht.</string>
     <string name="a11y_arrow_double_down">hızla düşüyor</string>
     <string name="a11y_arrow_single_down">düşüyor</string>
@@ -129,17 +121,12 @@
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
     <string name="average">Ortalama</string>
-    <string name="none"><![CDATA[<yok>]]></string>
-    <string name="remove_label">KALDIR</string>
     <string name="activate_profile">Profil etkinleştir</string>
     <string name="profileswitch_ismissing">Profil geçişi yok. Lütfen Profil Değiştirme ile bir profil geçişi yapın veya Yerel Profil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
     <string name="profile">Profil</string>
-    <string name="select_for_removal">Silmek için seçin</string>
     <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
     <string name="overview_treatment_label">Tedavi</string>
     <string name="copytolocalprofile">Bu profilden yeni profil oluşturulsun mu?</string>
-    <string name="bg_trend_label">15 dk eğilim</string>
-    <string name="treatments_wizard_cob_label">AKRB</string>
     <string name="bolus_iob_label">Bolus AİNS</string>
     <string name="treatments_wizard_basaliob_label">Bazal AİNS</string>
     <string name="invalid">GEÇERSİZ</string>
@@ -150,6 +137,9 @@
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
     <string name="lowglucosesuspend">Düşük Glikoz Duraklatma (LGS)</string>
+    <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
+    <string name="pump_suspended">Pompa Durduruldu</string>
+    <string name="mode_reverted">Mod Döndü</string>
     <string name="dia">İES</string>
     <string name="ic_short">IC Karbonhidrat İnsülin Oranı</string>
     <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
@@ -190,7 +180,6 @@
     <string name="nochangerequested">Değişiklik yapılmadı</string>
     <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Geçersiz profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d dak</string>
     <!--    Translator-->
@@ -203,7 +192,6 @@
     <string name="careportal_question">Soru</string>
     <string name="careportal_exercise">Egzersiz</string>
     <string name="careportal_announcement_message">Duyuru : %1$s</string>
-    <string name="careportal_settings_export_message">Ayarlar Dışa Aktarılıyor: %1$s</string>
     <string name="careportal_note_message">Not : %1$s</string>
     <string name="careportal_question_message">Soru : %1$s</string>
     <string name="careportal_exercise_message">Alıştırma : %1$s</string>
@@ -224,13 +212,13 @@
     <string name="careportal_openapsoffline">OpenAPS Çevrimdışı</string>
     <string name="pump_battery_change">Pompa Pil Değişimi</string>
     <string name="temporary_target">Geçici hedef</string>
+    <string name="running_mode">Çalışma modu</string>
     <string name="careportal_temporarytargetvalue">Geçici hedef değeri</string>
     <string name="careportal_temporarytargetcancel">Geçici hedef iptali</string>
     <string name="boluswizard">Bolus sihirbazı</string>
     <string name="glucosetype_finger">Parmak</string>
     <string name="glucosetype_sensor">Sensör</string>
     <string name="manual">Manuel</string>
-    <string name="unknown">bilinmiyor</string>
     <string name="eatingsoon">Yakında Yenecek</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Aktivite</string>
@@ -254,13 +242,6 @@
     <string name="carbsreq">%2$d dakika içinde %1$d g ek karbonhidrat gerekiyor</string>
     <string name="basalrate">Bazal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">Oran</string>
-    <string name="amount_days"># Gün</string>
-    <string name="weight">Ağırlık</string>
-    <string name="warning_Message">Hazırlama / doldurma için boluslar kullanılıyorsa muhtemelen yanlış!</string>
-    <string name="olddata_Message">Eski veriler, lütfen \"YENİDEN YÜKLE\"ye basın</string>
-    <string name="tbb">Günlük bazal miktarı</string>
-    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Zaman algılama</string>
     <!-- User Entry -->
@@ -282,6 +263,7 @@
     <string name="uel_lgs_loop_mode">LGS DÖNGÜ MODU</string>
     <string name="uel_open_loop_mode">AÇIK DÖNGÜ MODU</string>
     <string name="uel_loop_disabled">DÖNGÜ DEVRE DIŞI</string>
+    <string name="uel_loop_resumed">Döngü devam ettirildi</string>
     <string name="uel_reconnect">YENİDEN BAĞLAN</string>
     <string name="uel_disconnect">BAĞLANTIYI KES</string>
     <string name="uel_resume">DEVAM ET</string>
@@ -330,7 +312,6 @@
     <string name="uel_stat_reset">İSTATİSK SIFIRLAMA</string>
     <string name="uel_delete_logs">GÜNLÜKLERİ SİL</string>
     <string name="uel_delete_future_treatments">GELECEK TEDAVİLERİ SİL</string>
-    <string name="delete_future_treatments">İleri tarihli tedavileri sil</string>
     <string name="uel_export_settings">AYARLARI DIŞA AKTAR</string>
     <string name="uel_import_settings">AYARLARI İÇE AKTAR</string>
     <string name="uel_select_directory">DİZİNİ SEÇİN</string>
@@ -347,7 +328,6 @@
     <string name="uel_exit_aaps">AAPS\'DEN ÇIK</string>
     <string name="uel_plugin_enabled">EKLENTİ ETKİN</string>
     <string name="uel_plugin_disabled">EKLENTİ DEVRE DIŞI</string>
-    <string name="uel_unknown">BİLİNMEYEN</string>
     <string name="ue_string">Dizi</string>
     <string name="ue_source">Kaynak</string>
     <string name="ue_utc_offset">UTC Denkleme</string>
@@ -356,7 +336,6 @@
     <string name="ue_none">Birim Yok</string>
     <string name="uel_loop_change">DÖNGÜ DEĞİŞTİ</string>
     <string name="uel_loop_removed">DÖNGÜ KALDIRILDI</string>
-    <string name="uel_other">DİĞER</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Düşük hedef profili</string>
     <string name="profile_high_target">Yüksek hedef profili</string>
@@ -373,6 +352,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
     <!-- Profile validation -->
+    <string name="error_in_isf_values">İDF değerinde hata</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f Ü</string>
     <string name="carbs_g">Karbonhidrat %1$d g</string>
@@ -386,8 +366,6 @@
     <string name="set_profile">PROFİL AYARLA</string>
     <string name="set_user_settings">KULLANICI AYARLARINI BELİRLE</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f Ü</string>
-    <string name="start_pump">POMPAYI BAŞLAT</string>
-    <string name="stop_pump">POMPAYI DURDUR</string>
     <string name="temp_basal_absolute">GEÇİCİ BAZAL %1$.2f Ü/sa %2$d dak</string>
     <string name="temp_basal_percent">GEÇİCİ BAZAL %1$d%% %2$d dak</string>
     <string name="insight_set_tbr_over_notification">INSIGHT GBO GİRİLDİĞİNDE BİLDİR</string>
@@ -402,9 +380,6 @@
     <string name="isf_for_carbs">Hesap makinesi ve Karb. emilimi için İDF: %1$.1f</string>
     <string name="autosens_long">Otoduyarlılık değeri: %.0f%%</string>
     <string name="algorithm_long">Algoritmadaki otoduyarlılık: %.0f%%</string>
-    <string name="algorithm_short">Alg: %.0f%%</string>
-    <string name="a11y_file">dosya</string>
-    <string name="a11y_user">kullanıcı</string>
     <!-- Autotune -->
     <string name="autotune">Otoayar</string>
     <string name="autotune_tune_days">Ayar günleri:</string>
@@ -422,7 +397,6 @@
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
     <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
     <string name="carb_equal_zero_no_action">Karb = 0. Hiçbir şey yapılmadı!</string>
-    <string name="wizard_no_insulin_required">İnsülin gerekmiyor!</string>
     <string name="wizard_no_actual_bg">Hesaplamayı temel alacak yeni bir KŞ yok!</string>
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_no_cob">Aktif karbonhidrat (AKRB) bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>
@@ -439,7 +413,6 @@
     <string name="wizard_explain_tt">GeçiciH: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s - %2$s</string>
     <string name="wizard_pump_not_available">Pompa mevcut değil!</string>
-    <string name="quickwizard">Hızlı Asistan</string>
     <!--    Preferences-->
     <string name="child">Çocuk</string>
     <string name="teenage">Ergen</string>
@@ -464,23 +437,17 @@
     <string name="disconnected">Bağlantı kesildi</string>
     <string name="connecting">Bağlanıyor</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pompaya bağlan tıklandı</string>
-    <string name="reservoir_value">%1$.0f / %2$d Ü</string>
     <string name="daily_units">Günlük ünite</string>
-    <string name="pump_icon">Pompa simgesi</string>
-    <string name="view_profile">Profili görüntüle</string>
     <string name="pump_history">Pompa geçmişi</string>
-    <string name="stats">İstatistikler</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pompa sürücüsü değişimi.</string>
     <string name="device_changed" comment="26 characters max for translation">Cihaz değişti</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus Tmm</string>
     <string name="temp_basal_delivery_error">Geçici Bazal teslimat hatası</string>
-    <string name="not_set_short">Belirlenmemiş</string>
     <string name="pump_busy">Pompa meşgul</string>
     <string name="connection_error">Pompa bağlantı hatası</string>
     <string name="reading_pump_history">Pompa geçmişi okunuyor</string>
     <string name="password_cleared">Parola temizlendi!</string>
     <string name="pairing">Eşleştiriliyor</string>
-    <string name="initializing">Başlatılıyor ...</string>
     <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
@@ -497,7 +464,6 @@
     <string name="no">Hayır</string>
     <string name="close">Kapat</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">İçe aktarılan tercihlerin şifresini çözmek için gerekli olan ana parola sorulacaktır.</string>
     <!-- <unattended_export> -->
     <string name="export_ok">Tamam</string>
     <string name="export_warning">Uyarı</string>
@@ -528,8 +494,6 @@
     <string name="ble_not_supported">Düşük Enerji Bluetooth desteklenmez.</string>
     <string name="ble_not_supported_or_not_paired">Düşük Enerji Bluetooth desteklenmiyor veya cihaz eşleştirilmedi.</string>
     <string name="ble_not_enabled">Bluetooth etkin değil.</string>
-    <string name="location_not_found_title">Konum Etkin Değil</string>
-    <string name="location_not_found_message">Bluetooth cihaz bulmanın daha yeni cihazlarda çalışması için konum etkinleştirilmelidir. AAPS konumunuzu izlemez ve eşleştirme başarılı olduktan sonra devre dışı bırakılabilir.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
     <!-- Navigation -->
@@ -573,15 +537,16 @@
     <string name="rate_percent_duration_formatted"><![CDATA[<b>Oran</b>: %1$.2f Ü/s (%2$.2f%%) <br><b>Süre</b>: %3$d dk<br>]]></string>
     <!--    Playback-->
     <!-- ProfileEditor -->
+    <string name="isf_dynamic_label_warning">Algoritmanız İDF\'nizi dinamik olarak hesaplayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda bir geri dönüş olarak veya yalnızca bir referans değeri olarak kullanılabilir</string>
     <!--    Search-->
+    <string name="search_category_plugins">Eklentiler</string>
+    <string name="search_category_wiki">Dökümantasyon</string>
     <!--    Food Management -->
+    <string name="food_management">Yiyecek</string>
     <!--    Log Settings-->
     <!--    Maintenance-->
     <!-- Import settings screen -->
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
-    <string name="remove_items">Öğeleri kaldır</string>
-    <string name="sort_items">Öğeleri Sırala</string>
-
 </resources>

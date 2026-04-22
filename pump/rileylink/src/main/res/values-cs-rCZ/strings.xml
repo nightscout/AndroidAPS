@@ -8,6 +8,7 @@
     <string name="pump_status_error_comm">Chyba komunikace</string>
     <string name="pump_status_timeout_comm">Vypršel časový limit komunikace</string>
     <string name="pump_status_invalid_config">Neplatná konfigurace</string>
+    <string name="medtronic_pump_encoding_title">Kódování Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">Softwarové 4b6b kódování</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardwarové 4b6b kódování</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
@@ -75,4 +76,7 @@
     </plurals>
     <string name="orange_use_scanning_level">Použít vyhledávání</string>
     <string name="orange_use_scanning_level_summary">Vyhledat před připojením k OrangeLink. Mělo by to zlepšit spojení (může být také použito s ostatními klony RileyLink, pokud je to nutné)</string>
+    <string name="rileylink_pair">Spárovat RileyLink</string>
+    <string name="rileylink_pair_success">RileyLink byl úspěšně spárován</string>
+    <string name="rileylink_config_reset">Konfigurace RileyLinku resetována</string>
 </resources>

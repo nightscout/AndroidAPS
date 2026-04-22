@@ -51,13 +51,11 @@
     <string name="no_watch_connected">(Χωρίς Σύνδεση Ρολογιού)</string>
     <string name="pump_status">Κατάσταση Αντλίας</string>
     <string name="loop_status">Κατάσταση κυκλώματος</string>
-    <string name="wizard_result">Υπολογισμός. Οδηγός:\nΙνσουλίνη: %1$.2fU\nΥδατάνθρακες: %2$dg</string>
     <string name="quick_wizard_not_available">Ο επιλεγμένος οδηγός δεν είναι πλέον διαθέσιμος, παρακαλώ ανανεώστε το πλακίδιο σας</string>
     <string name="quick_wizard_message">Γρήγορος οδηγός: %1$s\nΙνσουλίνη: %2$.2fU\nΥδατάνθρακες: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Χρησιμοποιούνται διαφορετικές μονάδες στο ρολόι και το τηλέφωνο!</string>
     <string name="wear_action_tempt_min_bg_error">Ελάσιχτο-BG εκτός εύρους!</string>
     <string name="wear_action_tempt_max_bg_error">Μέγιστο-BG εκτός εύρους!</string>
-    <string name="no_success">αποτυχία - ελέγξτε τηλέφωνο</string>
     <string name="wear_wizard_settings_summary">Υπολογισμοί που περιλαμβάνονται στο αποτέλεσμα του γρήγορου οδηγού:</string>
     <string name="wear_general_settings">Γενικές Ρυθμίσεις</string>
     <string name="wear_custom_watchface_settings">Προσαρμοσμένες Ρυθμίσεις Watchface</string>

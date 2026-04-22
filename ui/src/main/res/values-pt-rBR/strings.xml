@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Restrição de bólus aplicada</string>
     <string name="carbs_constraint_applied">Restrições de carboidatros aplicada</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Iniciar atividade TT</string>
     <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
     <string name="start_hypo_tt">Começar TT Hipo</string>
     <string name="time_offset">Fuso horário</string>
-    <string name="remind_to_bolus_later">Lembrar de administrar bolus mais tarde</string>
     <!--    Widget-->
     <string name="configure">Configurar opacidade</string>
     <string name="widget_description">Widget do AAPS</string>
@@ -15,8 +13,6 @@
     <string name="activity_monitor">Monitor de atividade</string>
     <string name="do_you_want_reset_stats">Quer reiniciar as estatísticas de atividade?</string>
     <string name="calculation_in_progress">Cálculo em andamento</string>
-    <string name="invalid_age">Entrada de idade inválida</string>
-    <string name="invalid_weight">Entrada de peso inválida</string>
     <string name="age">Idade</string>
     <string name="weight_label">Peso</string>
     <string name="glucose_type">Tipo de glicose</string>
@@ -24,17 +20,12 @@
     <string name="bg_meter">Medidor</string>
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg I:C: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Total</string>
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
     <string name="record_pump_site_change">Registar mudança de sítio</string>
     <string name="record_insulin_cartridge_change">Registar mudança cartucho</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Sem bólus, registar apenas</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="timeshift_label">Alteração Turno</string>
@@ -59,29 +50,14 @@
     <string name="duration3h">3 horas</string>
     <string name="duration10h">10 horas</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">resultado correto em %</string>
-    <string name="a11_correction_units">resultado correto em unidades</string>
-    <string name="two_hours">2h</string>
-    <string name="result_insulin_carbs">Resultado: %1$s %2$ss</string>
     <string name="missing_carbs">Precisando de %1$d g</string>
-    <string name="a11y_current_bg">glicemia atual</string>
-    <string name="carb_time_label">Hora do carboidrato</string>
-    <string name="a11y_set_carb_timer">definir alarme temporizador de carboidrato</string>
     <!-- Treatments -->
     <string name="no_records_available">Nenhum registro disponível</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Carboidratos:</string>
-    <string name="tempbasals_netratio_label_string">Rácio:</string>
-    <string name="tempbasals_iob_label_string">IA:</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="meal_bolus">Refeição</string>
-    <string name="prime">Purgar/Preencher</string>
     <string name="carbs_and_bolus">Carboidratos e bolus</string>
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="careportal_remove_started_events">Remover entradas do AAPS iniciadas</string>
-    <string name="hide_loop">Ocultar loop</string>
-    <string name="show_loop">Exibir loop</string>
     <string name="user_entry">Entrada do usuário</string>
     <string name="clone_label">Clonar</string>
     <!-- ProfileHelperActivity -->
@@ -95,13 +71,8 @@
     <string name="format_with_tdd_and_pct">Idade: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Idade: %1$d Peso: %2$.0f kg</string>
     <string name="dpv_default_profile">Perfil padrão DPV</string>
-    <string name="invalid_pct">Entrada % inválida</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Taxa basal</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">somente no smartwatch</string>
-    <string name="a11y_only_on_phone">somente no telefone</string>
-    <string name="a11y_drag_and_drop_handle">arraste e solte aqui</string>
     <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->

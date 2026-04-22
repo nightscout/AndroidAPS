@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Núm. Série inválido.</string>
     <string name="medtronic_error_pump_type_not_set">Modelo de Bomba não definido.</string>
     <string name="medtronic_error_pump_type_invalid">Modelo de Bomba não suportado.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frequência da Bomba não suportada.</string>
     <string name="medtronic_error_rileylink_address_invalid">Endereço RileyLink inválido.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">O Modelo de bomba detectada não é o mesmo do modelo configurado.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">A configuração de perfis/padrões de basal não está ativada na bomba. Ative-a na bomba.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Histórico da Bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelou o Bólus, depois de ele já ter sido definido na Bomba. Uma vez que a Bomba Medtronic não suporta cancelamento, precisará de cancelar manualmente. Coloque a Bomba no modo de Suspender e depois Retome (se ainda quiser cancelar). A aplicação irá captar as alterações, na próxima atualização (em menos de 5 minutos).</string>
     <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler a DBT actual.</string>
@@ -74,7 +72,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Definir basais temporárias neutras</string>
     <string name="set_neutral_temps_summary">Se activado, cancela a basal temporária antes de perfazer uma hora. Este método evita que as bombas Medtronic emitam um sinal sonoro e/ou vibrem quando a basal temporária se estende por mais de uma hora.</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
     <string name="invalid_history_data">Detetados dados de histórico de bomba inválidos. Abra um novo problema e forneça registos.</string>
     <string name="riley_statistics">Estatísticas RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Clicou em atualizar</string>

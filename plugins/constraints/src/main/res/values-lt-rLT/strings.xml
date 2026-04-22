@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val. ar mažiau</string>
     <string name="dst_loop_disabled_warning">Laiko persukimas įvyko prieš mažiau nei 3 val. - Uždaras ciklas išjungtas</string>
-    <string name="dst_loop_disabled_error">Laiko pasukimas įvyko mažiau nei prieš 3 valandas. Uždaras ciklas laikinai išjungtas, automatiškai vėl įsijungs po 3 valandų nuo laiko pasukimo</string>
     <!-- Storage constraint -->
     <string name="disk_full">Atlaisvinkite ne mažiau kaip %1$d MB vidinėje atmintyje! Ciklas išjungtas!</string>
     <!-- Version Checker -->
@@ -40,8 +39,6 @@
     <string name="objectives_shortname">TIKSL</string>
     <string name="description_objectives">Mokymosi programa</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
-    <string name="objectives_next_button">Toliau</string>
-    <string name="objectives_previous_button">Atgal</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
 </resources>

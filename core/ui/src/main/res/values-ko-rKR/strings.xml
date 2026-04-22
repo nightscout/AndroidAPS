@@ -6,7 +6,6 @@
     <string name="profile_set_ok">Basal 프로파일이 펌프에 업데이트 되었습니다</string>
     <string name="invalid_input">사용할수 없는 입력 데이터</string>
     <string name="constraint_applied">제한 적용!</string>
-    <string name="tempbasals_iobtotal_label_string">IOB 총량:</string>
     <string name="tt_label">임시목표</string>
     <string name="pump_unreachable">펌프에 연결할 수 없습니다.</string>
     <string name="insulin_unit_shortname">U</string>
@@ -17,7 +16,6 @@
     <string name="limiting_iob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
     <string name="loop_disabled">제한으로 인해 LOOP가 사용불가합니다.</string>
     <string name="event_type">이벤트 종류</string>
-    <string name="reload">새로고침</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">저장</string>
@@ -44,13 +42,11 @@
     <string name="success">성공</string>
     <string name="advanced_settings_title">고급 설정</string>
     <string name="extendedbolusdeliveryerror">확장 Bolus 주입 에러</string>
-    <string name="aps_mode_title">APS 모드</string>
     <string name="extended_bolus">확장 Bolus</string>
     <string name="paused">일시중지</string>
     <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">오래된 데이터</string>
     <string name="goingtodeliver">%1$.2f U을 주입합니다.</string>
-    <string name="waitingforpump">펌프를 기다리는 중</string>
     <string name="androidaps_start">AAPS 시작</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -77,7 +73,6 @@
     <string name="target_long_label">혈당 목표치</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">블루투스</string>
     <string name="virtualpump_resultok">네</string>
     <string name="pump_time_updated">펌프 시간 업데이트</string>
     <string name="exit">종료</string>
@@ -99,9 +94,6 @@
     <string name="time">시간</string>
     <string name="ns_wifi_ssids">와이파이 SSID</string>
     <string name="notes_label">노트</string>
-    <string name="remove_button">삭제</string>
-    <string name="add_new">새로 추가하기</string>
-    <string name="addnew_above">위에 새로 추가하기</string>
     <string name="wrong_pump_data">다른 펌프에서 전송된 데이터. 펌프 상태 재설정을 위해 펌프 드라이버를 바꾸세요.</string>
     <string name="bg_label">혈당</string>
     <string name="calibration">보정</string>
@@ -111,8 +103,6 @@
     <string name="pumpsuspended">펌프 일시중지됨</string>
     <string name="notconfigured">설정되지 않음</string>
     <string name="loopsuspended">Loop 일시중지</string>
-    <string name="trend_arrow">경향 화살표</string>
-    <string name="a11y_autosens_label">자동 감지</string>
     <string name="required">필요량</string>
     <string name="a11y_arrow_double_down">급속 하락</string>
     <string name="a11y_arrow_single_down">하락</string>
@@ -127,17 +117,12 @@
     <string name="a11y_inrange">범위 내</string>
     <string name="a11y_low">소</string>
     <string name="average">평균</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="remove_label">삭제</string>
     <string name="activate_profile">프로파일 활성화하기</string>
     <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
     <string name="profile">프로파일</string>
-    <string name="select_for_removal">제거할 항목 선택하기</string>
     <string name="confirm_remove_multiple_items">정말로 %1$d 항목을 제거하시겠습니까?</string>
     <string name="overview_treatment_label">관리</string>
     <string name="copytolocalprofile">이 프로파일에서 새로운 프로파일을 생성하시겠습니까?</string>
-    <string name="bg_trend_label">15분 추이</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="invalid">유효하지 않음</string>
@@ -180,7 +165,6 @@
     <string name="nochangerequested">변경사항 없음</string>
     <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">유효하지 않은 프로파일: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d 분</string>
     <!--    Translator-->
@@ -218,7 +202,6 @@
     <string name="glucosetype_finger">채혈</string>
     <string name="glucosetype_sensor">센서</string>
     <string name="manual">수동</string>
-    <string name="unknown">알수없음</string>
     <string name="eatingsoon">식사직전</string>
     <string name="hypo">저혈당</string>
     <string name="activity">활동</string>
@@ -241,13 +224,6 @@
     <string name="carbsreq">%2$d 분 내에 %1$d g의 추가적인 탄수화물이 필요함</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">비율</string>
-    <string name="amount_days">#일</string>
-    <string name="weight">가중</string>
-    <string name="warning_Message">교체/채움을 위해 Bolus를 사용한 경우 부정확할 수 있습니다!!</string>
-    <string name="olddata_Message">이전 데이터, \"다시 로딩하기\"를 누르세요</string>
-    <string name="tbb">총 기본 Basal</string>
-    <string name="tbb2">총기초량 * 2</string>
     <!--    Ntp-->
     <string name="timedetection">시간 감지</string>
     <!-- User Entry -->
@@ -317,7 +293,6 @@
     <string name="uel_stat_reset">통계 재설정</string>
     <string name="uel_delete_logs">로그 지우기</string>
     <string name="uel_delete_future_treatments">이후의 처치 지우기</string>
-    <string name="delete_future_treatments">향후 치료 삭제하기</string>
     <string name="uel_export_settings">설정 내보내기</string>
     <string name="uel_import_settings">설정 들여오기</string>
     <string name="uel_reset_databases">데이터베이스 재설정</string>
@@ -332,7 +307,6 @@
     <string name="uel_exit_aaps">AAPS 나가기</string>
     <string name="uel_plugin_enabled">플러그인 활성화됨</string>
     <string name="uel_plugin_disabled">플러그인 비활성화됨</string>
-    <string name="uel_unknown">알 수 없음</string>
     <string name="ue_string">문자열</string>
     <string name="ue_source">소스</string>
     <string name="ue_utc_offset">UTC 오프셋</string>
@@ -341,7 +315,6 @@
     <string name="ue_none">Unit 없음</string>
     <string name="uel_loop_change">Loop 변경됨</string>
     <string name="uel_loop_removed">Loop 제거됨</string>
-    <string name="uel_other">기타</string>
     <!-- HardLimits -->
     <string name="profile_low_target">프로파일 저혈당 목표</string>
     <string name="profile_high_target">프로파일 고혈당 목표</string>
@@ -371,8 +344,6 @@
     <string name="set_profile">프로파일 설정하기</string>
     <string name="set_user_settings">사용자 설정 설정하기</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
-    <string name="start_pump">펌프 시작하기</string>
-    <string name="stop_pump">펌프 중지하기</string>
     <string name="temp_basal_absolute">임시 BASAL %1$.2f U/h %2$d 분</string>
     <string name="temp_basal_percent">임시 BASAL %1$d%% %2$d 분</string>
     <string name="insight_set_tbr_over_notification">알림에 대한 인식 설정 TBR</string>
@@ -383,8 +354,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="a11y_file">파일</string>
-    <string name="a11y_user">사용자</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">조정 일수 :</string>
@@ -402,7 +371,6 @@
     <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
     <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
     <string name="carb_equal_zero_no_action">탄수화물= 0. 아무런 조치도 취하지 않았습니다!</string>
-    <string name="wizard_no_insulin_required">인슐린이 필요하지 않습니다!</string>
     <string name="wizard_no_actual_bg">기저 계산에는 최근 BG가 없습니다!</string>
     <string name="wizard_no_active_profile">활성화된 프로파일 설정이 없습니다!</string>
     <string name="wizard_no_cob">알 수 없는 COB입니다! BG 판독이 누락되었거나, 최근 앱을 다시 시작하였습니까?</string>
@@ -419,7 +387,6 @@
     <string name="wizard_explain_tt">임시T: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s 에서 %2$s</string>
     <string name="wizard_pump_not_available">이용가능한 펌프가 없습니다!</string>
-    <string name="quickwizard">빠른 마법사 실행</string>
     <!--    Preferences-->
     <string name="child">어린이</string>
     <string name="teenage">청소년</string>
@@ -444,23 +411,17 @@
     <string name="disconnected">연결 끊김</string>
     <string name="connecting">연결중</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">펌프를 연결하기 위해 클릭하기</string>
-    <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">일 인슐린 총량</string>
-    <string name="pump_icon">펌프 아이콘</string>
-    <string name="view_profile">프로파일 보기</string>
     <string name="pump_history">펌프 이력</string>
-    <string name="stats">통계</string>
     <string name="pump_driver_change" comment="26 characters max for translation">펌프 드라이버가 교체되었습니다.</string>
     <string name="device_changed" comment="26 characters max for translation">장치가 교체되었습니다</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">임시Basal 주입 에러</string>
-    <string name="not_set_short">설정되지 않음</string>
     <string name="pump_busy">펌프가 바쁩니다</string>
     <string name="connection_error">펌프 연결 에러</string>
     <string name="reading_pump_history">펌프 이력 읽기</string>
     <string name="password_cleared">비밀번호가 지워졌습니다.</string>
     <string name="pairing">동기화</string>
-    <string name="initializing">초기화중 ...</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
     <string name="pumplimit">펌프 제한</string>
@@ -476,7 +437,6 @@
     <string name="no">아니오</string>
     <string name="close">닫기</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">내보낸 preferences를 가져오기 위해서는 마스터 비밀번호가 필요합니다.</string>
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
@@ -496,8 +456,6 @@
     <string name="ble_not_supported">BLE(블루투스 저전력) 지원되지 않음</string>
     <string name="ble_not_supported_or_not_paired">저전력 블루투스(BLE)가 작동하지 않거나, 기기가 연동되지 않았습니다.</string>
     <string name="ble_not_enabled">블루투스가 활성화되지 않았습니다.</string>
-    <string name="location_not_found_title">위치가 활성화되지 않았습니다.</string>
-    <string name="location_not_found_message">최신 스마트폰에서 블루투스 검색이 작동하려면 위치가 활성화되어 있어야합니다. AAPS는 당신의 위치를 추적하지 않으며 페어링에 성공한 후 비활성화 할 수 있습니다.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">플러그인 설정</string>
     <!-- Navigation -->
@@ -542,7 +500,4 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
-    <string name="remove_items">항목 제거하기</string>
-    <string name="sort_items">항목 분류하기</string>
-
 </resources>

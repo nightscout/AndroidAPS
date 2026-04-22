@@ -11,7 +11,11 @@
     <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Naplňte nový Pod dostatkem inzulínu na 3 dny.\n\nPoslouchejte, zda Pod během procesu plnění dvakrát zapípá. Tento zvukový signál značí, že bylo naplněno minimální množství 85 U. Ujistěte se, že stříkačka je zcela vyprázdněná, a to i poté, co uslyšíte dvě pípnutí.\n\nPo naplnění Podu prosím stiskněte tlačítko <b>Další</b>.\n\n<b>Poznámka:</b> prozatím nesundávejte kryt jehly Podu.</string>
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Systém se snaží spárovat s novým Podem a naplnit ho.\n\nJakmile bude inicializační proces úspěšně dokončen, můžete stisknout tlačítko <b>Další</b>.</string>
     <!-- Exceptions -->
+    <string name="omnipod_dash_failed_to_connect">Připojení se nezdařilo</string>
+    <string name="omnipod_dash_found_too_many_pods">Nalezeno příliš mnoho Podů</string>
+    <string name="omnipod_dash_scan_failed">Skenování se nezdařilo</string>
     <string name="omnipod_dash_generic_error">Obecná chyba: %1$s</string>
+    <string name="omnipod_dash_connection_lost">Ztráta připojení</string>
     <string name="omnipod_dash_failed_to_send">Nezdařilo se odeslat příkaz</string>
     <string name="omnipod_dash_command_not_sent">Příkaz nebyl odeslán</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Příkaz nebyl přijat podem</string>

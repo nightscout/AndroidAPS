@@ -15,7 +15,6 @@
     <string name="pump_state_label">Pumpenstatus</string>
     <string name="active_alarms_label">Aktive Alarme</string>
     <string name="basal_type_label">Basaltyp</string>
-    <string name="basal_rate_label">Basalrate</string>
     <string name="pump_type_label">Pumpentyp</string>
     <string name="fw_version_label">FW-Version</string>
     <string name="patch_no_label">Patch Nr.</string>
@@ -67,12 +66,10 @@
     <string name="do_not_attach_to_body">Den Patch noch nicht an den Körper anhängen.</string>
     <string name="half_press_needle">Nadelknopf halb durchdrücken. Drücke dann <b>Weiter</b> um das Füllen zu starten.</string>
     <string name="wait_for_priming">Bitte warten Sie, bis das Füllen abgeschlossen ist.</string>
-    <string name="priming_error">Fehler beim Füllen; drücke <b>Erneut</b> um es erneut zu versuchen.</string>
     <string name="press_next">Drücke <b>Nächste</b> um fortzufahren.</string>
     <string name="press_next_to_start_activation">Drücken <b>Nächste</b> um die Aktivierung zu starten.</string>
     <string name="remove_safety_lock">Entferne den Sicherheitsverschluss. Befestige die Pumpe an Deinem Körper. Drücke dann die Nadel-Taste.</string>
     <string name="activating_pump">Pumpe wird aktiviert und die Anfangs-Basalrate wird festgelegt. Bitte warten.</string>
-    <string name="activating_error">Fehler beim Füllen; drücke <b>Erneut</b> um es erneut zu versuchen.</string>
     <string name="activating_complete">Neuer Patch aktiviert. %.2f Einheiten übrig.</string>
     <string name="press_OK_to_return">Drücke <b>OK</b> um zum Hauptbildschirm zurückzukehren.</string>
     <string name="deactivate_sure">Bist Du sicher, dass Du den aktuellen Patch deaktivieren möchtest?</string>

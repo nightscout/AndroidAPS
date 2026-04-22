@@ -51,13 +51,11 @@
     <string name="no_watch_connected">(Няма активна връзка)</string>
     <string name="pump_status">Статус на помпата</string>
     <string name="loop_status">Статус на цикъл</string>
-    <string name="wizard_result">Съветник:\nИнсулин: %1$.2fЕ\nВъгл: %2$dгр</string>
     <string name="quick_wizard_not_available">Избраният съветник вече не е наличен, моля, опреснете</string>
     <string name="quick_wizard_message">Съветник:%1$s\nИнсулин: %2$.2fЕ\nВъгл:%3$dгр</string>
     <string name="wear_action_tempt_unit_error">Различни мерни единици се ползват на телефона и часовника!</string>
     <string name="wear_action_tempt_min_bg_error">Мин КЗ е извън обхват!</string>
     <string name="wear_action_tempt_max_bg_error">Макс КЗ е извън обхват!</string>
-    <string name="no_success">неуспешно - моля проверете телефона</string>
     <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>
     <string name="wear_general_settings">Основни настройки</string>
     <string name="wear_custom_watchface_settings">Настройки на Watchface</string>

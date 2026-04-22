@@ -51,13 +51,11 @@
     <string name="no_watch_connected">(Nenhum relógio conectado)</string>
     <string name="pump_status">Estado da Bomba</string>
     <string name="loop_status">Status do loop</string>
-    <string name="wizard_result">Calculadora:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
     <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="wear_action_tempt_unit_error">Unidades diferentes usadas no relógio e telefone!</string>
     <string name="wear_action_tempt_min_bg_error">Glicemia mínima fora do alvo!</string>
     <string name="wear_action_tempt_max_bg_error">Glicemia maxima fora da meta!</string>
-    <string name="no_success">não foi bem sucedido - por favor, verifique o telefone</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_general_settings">Configurações gerais</string>
     <string name="wear_custom_watchface_settings">Configurações personalizadas de Watchface</string>

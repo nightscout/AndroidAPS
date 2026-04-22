@@ -20,7 +20,6 @@
     <string name="pump_state_label">Trạng thái Bơm</string>
     <string name="active_alarms_label">Bật cảnh báo</string>
     <string name="basal_type_label">Kiểu liều nền</string>
-    <string name="basal_rate_label">Tỷ lệ liều nền</string>
     <string name="pump_type_label">Loại Bơm</string>
     <string name="fw_version_label">Phiên bản FW</string>
     <string name="patch_no_label">Patch no</string>
@@ -76,12 +75,10 @@
     <string name="do_not_attach_to_body">Chưa gắn Patch lên cơ thể lúc này.</string>
     <string name="half_press_needle">Nhấn nửa nút kim, rồi chạm <b>Tiếp tục</b> để bắt đầu mồi insulin.</string>
     <string name="wait_for_priming">Vui lòng chờ cho quá trình xả mồi insulin hoàn tất.</string>
-    <string name="priming_error">Mồi insulin thất bại, nhấn <b>Thử lại</b> để thử lại.</string>
     <string name="press_next">Nhấn <b>Tiếp theo</b> để tiếp tục.</string>
     <string name="press_next_to_start_activation">Nhấn <b>Tiếp theo</b> để bắt đầu kích hoạt.</string>
     <string name="remove_safety_lock">Tháo khóa an toàn. Gắn pump lên cơ thể. Nhấn nút kim.</string>
     <string name="activating_pump">Đang kích hoạt Bơm và cài đặt liều nền. Vui lòng chờ.</string>
-    <string name="activating_error">Kích hoạt thất bại, nhấn <b>Thử lại</b> để thử lại.</string>
     <string name="activating_complete">Patch mới đã được kích hoạt. Còn lại %.2f đơn vị.</string>
     <string name="can_export_settings">Bạn có thể xuất cài đặt để khôi phục lại phiên Patch này sau.</string>
     <string name="press_OK_to_return">Nhấn <b>ĐỒNG Ý</b> để quay về màn hình chính.</string>

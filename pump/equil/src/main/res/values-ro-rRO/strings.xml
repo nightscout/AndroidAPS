@@ -30,7 +30,6 @@
     <string name="equil_tone_mode_shake">Doar vibrare</string>
     <string name="equil_tone_mode_tone">Doar sunet</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrare și sunet</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">Această operațiune va opri infuzia de insulină și va retrage pistonul pompei până la capăt! De asemenea, va șterge legătura!</string>
     <string name="equil_ble_config_confirmation_title">Asociere pompă plasture Equil</string>
     <string name="equil_error">Eroare conexiune</string>
@@ -117,7 +116,6 @@
     <string name="equil_history_item18">Infuzie anormală oprită</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspendare</string>
     <string name="equil_common_overview_button_resume_delivery">Reluați administrarea</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Momente în urmă</string>
     <string name="equil_common_less_than_a_minute_ago">Mai puțin de un minut în urmă</string>
     <string name="equil_common_time_ago">%1$s în urmă</string>

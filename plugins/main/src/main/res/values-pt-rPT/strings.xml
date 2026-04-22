@@ -1,37 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop Desactivado</string>
-    <string name="calculator_label">Calculadora</string>
     <string name="nav_history_browser">Navegador do histórico</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">idade:</string>
-    <string name="level_label">nível:</string>
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Bateria da Bomba</string>
     <string name="cannula">Cânula</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulina</string>
-    <string name="a11y_bg_quality">qualidade da glicose no sangue</string>
-    <string name="a11y_blood_glucose">Glicose no Sangue</string>
-    <string name="a11y_bg_outdated">desatualizado</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Estado dos dados da GLIC</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Previsões</string>
-    <string name="overview_show_treatments">Tratamentos</string>
-    <string name="overview_show_heartRate">Frequência cardíaca</string>
-    <string name="overview_show_deviation_slope">Desvio de inclinação</string>
-    <string name="overview_show_activity">Actividade</string>
-    <string name="overview_show_bgi">Impacto Glicose</string>
-    <string name="overview_show_deviations">Desvios</string>
-    <string name="overview_show_cob">Hidratos de Carbono Ativos (HCA)</string>
-    <string name="overview_show_iob">Insulina ativa</string>
-    <string name="overview_show_basals">Basais</string>
-    <string name="overview_show_abs_insulin">Insulina absoluta</string>
-    <string name="prediction_shortname">PREV</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">TRATA</string>
-    <string name="cannula_usage">utilização:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>

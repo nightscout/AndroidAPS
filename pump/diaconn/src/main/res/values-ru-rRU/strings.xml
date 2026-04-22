@@ -11,11 +11,9 @@
     <string name="gettingpumpsettings">Получение настроек помпы</string>
     <string name="gettingpumptime">Получение времени помпы</string>
     <string name="largetimediff">Большая разница во времени: \n Время в помпе расходится более чем 1,5 ч. \n. Установите время на помпе вручную и убедитесь, что чтение истории помпы не вызывает неожиданное поведение.\n если возможно, удалите историю из помпы перед изменением времени или отключите замкнутый цикл на один DIA после последней неверной записи в журнале, и как минимум на один DIA с настоящего момента.</string>
-    <string name="largetimedifftitle">Большая разница во времени Название</string>
     <string name="approachingdailylimit">Приближается суточный лимит инсулина</string>
     <string name="startingbolus">Начало подачи болюса</string>
     <string name="waitingforestimatedbolusend">Ожидание завершения болюса</string>
-    <string name="gettingbolusstatus">Получение статуса болюса</string>
     <string name="stoppingtempbasal">Остановка врем базала</string>
     <string name="settingtempbasal">Установка врем базала</string>
     <string name="settingextendedbolus">Установка пролонгированного болюса</string>
@@ -30,10 +28,8 @@
     <string name="insulinlimitviolation">Нарушение лимита инсулина</string>
     <string name="boluserrorcode">Запрошено: %1$.2f ед. Подано: %2$.2f ед. Код ошибки: %3$s</string>
     <string name="selectedpump">Выбранная помпа</string>
-    <string name="diaconn_g8_bluetooth_status">Состояние Bluetooth</string>
     <string name="bolus_step">Шаг болюса</string>
     <string name="basal_step">Шаг базала</string>
-    <string name="diaconn_g8_user_options">НАСТРОЙКИ ПОЛЬЗОВАТЕЛЯ</string>
     <string name="pairfirst">Пожалуйста, выполните сопряжение помпы с телефоном!</string>
     <string name="processinghistory">"Обработка события "</string>
     <string name="diaconn_g8_history_tempbasal">Временный базал</string>

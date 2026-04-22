@@ -25,7 +25,6 @@
     <string name="random_bg">Willekeurige BG</string>
     <string name="description_source_random_bg">Willekeurige BG data genereren (alleen Demo modus)</string>
     <string name="random_bg_short">BG</string>
-    <string name="direction">richting</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Ontvang glucose-gegevens van de Syai/Ottai App.</string>

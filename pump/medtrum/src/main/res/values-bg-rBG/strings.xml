@@ -15,7 +15,6 @@
     <string name="pump_state_label">Състояние на помпата</string>
     <string name="active_alarms_label">Активни аларми</string>
     <string name="basal_type_label">Тип базал</string>
-    <string name="basal_rate_label">Базал</string>
     <string name="pump_type_label">Тип помпа</string>
     <string name="fw_version_label">Версия на FW</string>
     <string name="patch_no_label">Номер на пач помпа</string>
@@ -67,12 +66,10 @@
     <string name="do_not_attach_to_body">Все още не прикрепяйте пач помпата към тялото.</string>
     <string name="half_press_needle">Натиснете бутона на иглата до средата. След това натиснете <b>Следващ</b>, за да започнете пълнене.</string>
     <string name="wait_for_priming">Моля изчакайте напълването да приключи.</string>
-    <string name="priming_error">Неуспешно напълване, натиснете <b>Повтори</b>, за да опитате отново.</string>
     <string name="press_next">Натиснете <b>Следващ</b>, за да продължите.</string>
     <string name="press_next_to_start_activation">Натиснете <b>Следващ</b>, за да започнете активацията.</string>
     <string name="remove_safety_lock">Отстранете предпазителя. Прикрепете помпата към тялото. Натиснете бутона на иглата.</string>
     <string name="activating_pump">Активиране на помпата и настройване на първоначален базал. Моля, изчакайте.</string>
-    <string name="activating_error">Неуспешна активация, натиснете <b>Повтори</b>, за да опитате отново.</string>
     <string name="activating_complete">Активирана нова пач помпа. Остават %.2f Ед.</string>
     <string name="press_OK_to_return">Натиснете <b>OK</b>, за да се върнете на главния екран.</string>
     <string name="deactivate_sure">Сигурни ли сте, че искате да деактивирате текущата пач помпа?</string>

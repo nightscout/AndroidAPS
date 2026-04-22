@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Llaç desactivat</string>
-    <string name="calculator_label">Calculadora</string>
     <string name="nav_history_browser">Historial</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">edat:</string>
-    <string name="level_label">nivell:</string>
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Pila de la bomba</string>
     <string name="cannula">Cànula</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulina</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Estat de dades de glucèmia</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Prediccions</string>
-    <string name="overview_show_treatments">Tractaments</string>
-    <string name="overview_show_deviation_slope">Pendent de desviació</string>
-    <string name="overview_show_activity">Activitat</string>
-    <string name="overview_show_bgi">Impacte glucèmia</string>
-    <string name="overview_show_deviations">Desviacions</string>
-    <string name="overview_show_cob">Carbohidrats actius (COB)</string>
-    <string name="overview_show_iob">Insulina \"a bord\" (IOB)</string>
-    <string name="overview_show_basals">Basals</string>
-    <string name="overview_show_abs_insulin">Insulina absoluta</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">TRACT</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>

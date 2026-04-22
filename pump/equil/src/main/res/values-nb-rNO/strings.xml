@@ -28,7 +28,6 @@
     <string name="equil_tone_mode_shake">Kun vibrering</string>
     <string name="equil_tone_mode_tone">Kun lyd</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrering og lyd</string>
-    <string name="equil_unit_u">%1$s E</string>
     <string name="equil_unbind_content">Denne operasjonen vil stoppe insulininfusjonen og trekke pumpestempelet tilbake til bunnen! Den vil også slette bindingsstatusen!</string>
     <string name="equil_ble_config_confirmation_title">Sammenkoble Equil-patchpumpe</string>
     <string name="equil_error">Tilkoblingsfeil</string>
@@ -115,7 +114,6 @@
     <string name="equil_history_item18">Unormal infusjon stoppet</string>
     <string name="equil_common_overview_button_suspend_delivery">Pause</string>
     <string name="equil_common_overview_button_resume_delivery">Gjenoppta tilførselen</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">For litt siden</string>
     <string name="equil_common_less_than_a_minute_ago">Mindre enn ett minutt siden</string>
     <string name="equil_common_time_ago">%1$s siden</string>

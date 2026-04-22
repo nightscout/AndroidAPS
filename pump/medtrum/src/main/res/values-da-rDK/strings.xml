@@ -17,7 +17,6 @@
     <string name="pump_state_label">Pumpe tilstand</string>
     <string name="active_alarms_label">Aktive alarmer</string>
     <string name="basal_type_label">Basaltype</string>
-    <string name="basal_rate_label">Basalrate</string>
     <string name="pump_type_label">Pumpetype</string>
     <string name="fw_version_label">Firmwareversion</string>
     <string name="patch_no_label">Patch nr.</string>
@@ -69,12 +68,10 @@
     <string name="do_not_attach_to_body">Sæt ikke Patchen på kroppen endnu.</string>
     <string name="half_press_needle">Halvtryk på nåleknappen. Tryk derefter på <b>Næste</b> for at starte klargøring.</string>
     <string name="wait_for_priming">Vent venligst til klargøringen er færdig.</string>
-    <string name="priming_error">Kunne ikke klargøre, tryk på <b>Prøv igen</b> for at prøve igen.</string>
     <string name="press_next">Tryk på <b>Næste</b> for at fortsætte.</string>
     <string name="press_next_to_start_activation">Tryk på <b>Næste</b> for at starte aktivering.</string>
     <string name="remove_safety_lock">Fjern sikkerhedslåsen. Sæt pumpen på kroppen. Tryk på nåleknappen.</string>
     <string name="activating_pump">Aktiverer pumpen og indstiller den oprindelige basalrate. Vent venligst.</string>
-    <string name="activating_error">Kunne ikke aktivere, tryk på <b>Prøv igen</b> for at prøve igen.</string>
     <string name="activating_complete">Ny patch aktiveret. %.2f Enheder tilbage.</string>
     <string name="press_OK_to_return">Tryk <b>OK</b> for at vende tilbage til hovedskærmen.</string>
     <string name="deactivate_sure">Er du sikker på, at du vil deaktivere den aktuelle Patch?</string>

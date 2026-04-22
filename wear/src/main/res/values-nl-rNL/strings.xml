@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(Tijdelijk Streefdoel)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="label_user_action_tile">AAPS(Gebruikersactie)</string>
-    <string name="label_warning_sync">Geen gegevens!</string>
-    <string name="label_warning_old">Oude gegevens!</string>
-    <string name="label_warning_since">Sinds %1$s</string>
-    <string name="label_warning_sync_aaps">Synchroniseer met AAPS!</string>
     <string name="msg_warning_sync">Geen gegevens ontvangen sinds %1$s! Controleer of AAPS op de telefoon gegevens verstuurt naar horloge</string>
     <string name="msg_warning_old">AAPS gegevens zijn %1$s oud! Controleer je sensor, xDrip+, NS, AAPS instellingen of andere!</string>
     <string name="pref_vibrate_on_bolus">Trillen bij bolus</string>
@@ -82,7 +78,6 @@
     <string name="menu_none">Geen</string>
     <string name="menu_default">Standaard</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">Tijdelijk streefdoel aangevraagd</string>
     <string name="action_quick_wizard_confirmation">QuickWizard aangevraagd</string>
     <string name="action_user_action_confirmation">Gebruiker actie aangevraagd</string>
@@ -97,7 +92,6 @@
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage\n[%]</string>
     <string name="action_start_minutes">Start\n[minuten]</string>
-    <string name="action_duration_h">Duur [h]</string>
     <string name="action_duration_hours">Duur\n[uren]</string>
     <string name="action_insulin">Insuline</string>
     <string name="action_insulin_units">Insuline [E]</string>
@@ -137,7 +131,6 @@
     <string name="color_name_gray">grijs</string>
     <string name="color_name_bluegray">blauwgrijs</string>
     <string name="color_name_white">wit</string>
-    <string name="color_name_black">zwart</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Versimpel interface</string>
     <string name="pref_vibrate_hourly">Tril ieder uur</string>
@@ -170,8 +163,6 @@
     <string name="tile_no_config">Geen configuratie beschikbaar</string>
     <string name="wear_control_not_enabled">Wear OS besturing uitgeschakeld</string>
     <string name="wear_control_no_data">Geen data beschikbaar</string>
-    <string name="increment">verhoog</string>
-    <string name="decrement">verlaag</string>
     <string name="abbreviation_average">gem</string>
     <string name="no_iob_u">--E</string>
     <string name="no_cob_g">--g</string>
@@ -186,8 +177,6 @@
     <string name="hour_short">u</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">oud</string>
-    <string name="old_warning">!oud!</string>
     <string name="pref_heartRateSampling">Hartslag</string>
     <string name="pref_heartRateSmoothing">HR Vloeiend maken</string>
     <string name="pref_stepsSampling">Stappenteller inschakelen</string>
@@ -234,7 +223,6 @@
     <string name="wizard_result_total">Totaal</string>
     <string name="wizard_insulin_format">%1$s E</string>
     <string name="insulin_unit_short">E</string>
-    <string name="expand_calculation_details">Klik om rekendetails uit te vouwen</string>
     <string name="wizard_confirmation_sent">Verzonden</string>
     <string name="tile_settings">Tegel instellingen</string>
     <string name="loop_status_error">Status kon niet geladen worden</string>

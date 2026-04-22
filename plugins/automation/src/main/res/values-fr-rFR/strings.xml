@@ -3,6 +3,25 @@
     <string name="automation_short">Auto</string>
     <string name="automation">Automatisation</string>
     <string name="automation_description">Tâches d\'automatisation définies par l\'utilisateur</string>
+    <string name="automation_enabled">Activé</string>
+    <string name="automation_read_only">Lecture seule</string>
+    <string name="automation_new_rule">Nouvelle règle</string>
+    <string name="automation_edit_rule">Modifier la règle</string>
+    <string name="automation_discard_title">Annuler les modifications ?</string>
+    <string name="automation_discard_message">La règle est incomplète et ne peut pas être enregistrée. Ignorer vos modifications ?</string>
+    <string name="automation_discard_confirm">Annuler</string>
+    <string name="automation_category_glucose">Glycémie &amp; traitement</string>
+    <string name="automation_category_device">État du périphérique</string>
+    <string name="automation_category_sensors">Capteurs &amp; connectivité</string>
+    <string name="automation_category_other">Autre</string>
+    <string name="automation_choose_trigger">Ajouter un déclencheur</string>
+    <string name="automation_add_group">Groupe</string>
+    <string name="automation_choose_action">Ajouter une action</string>
+    <string name="automation_category_targets">Cibles</string>
+    <string name="automation_category_profile">Profil</string>
+    <string name="automation_category_loop">Boucle &amp; insuline</string>
+    <string name="automation_category_alerts">Alertes</string>
+    <string name="automation_category_system">Système</string>
     <string name="automation_missing_task_name">Veuillez entrer un nom pour la tâche.</string>
     <string name="automation_missing_trigger">Veuillez spécifier au moins un déclencheur.</string>
     <string name="automation_missing_action">Veuillez spécifier au moins une action.</string>
@@ -53,7 +72,6 @@
     <string name="location_going_out">Quand vous sortez de la zone</string>
     <string name="time_range">Plage horaire</string>
     <string name="timerange_value">L\'heure est comprise entre %1$s et %2$s</string>
-    <string name="between">Entre </string>
     <string name="add_short">AJOUT</string>
     <string name="temptargetcompared">Cible Temp. %1$s</string>
     <string name="btdevicecompared">Connexion Bluetooth à l\'appareil %1$s %2$s</string>
@@ -94,8 +112,6 @@
     <string name="edit_short">ÉDITER</string>
     <string name="preconditions">Conditions préalables :</string>
     <string name="user_action">Actions utilisateur</string>
-    <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
-    <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="system_automation">Système d\'automatisation</string>
     <string name="run_automations">Exécuter les automatisations</string>
     <string name="add_automation">Ajouter une règle</string>
@@ -122,5 +138,11 @@
     <string name="on">ACTIVÉ</string>
     <string name="off">DÉSACTIVÉ</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Choisir depuis la carte</string>
+    <string name="tap_to_select_location">Tapez sur la carte pour sélectionner un emplacement</string>
+    <string name="selected_coords">Sélectionné: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Location</string>
+    <string name="permission_location_description">Nécessaire pour les déclencheurs d\'automatisation basés sur la localisation et l\'identification du réseau WiFi</string>
+    <string name="permission_background_location_description">Nécessaire pour que l\'automatisation fonctionne lorsque l\'application est en arrière-plan</string>
 </resources>

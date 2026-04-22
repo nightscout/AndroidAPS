@@ -6,10 +6,6 @@
     <string name="label_actions_tile">AAPS(Ações)</string>
     <string name="label_temp_target_tile">AAPS(Alvo Temporário)</string>
     <string name="label_quick_wizard_tile">AAPS(Configuração Rápida)</string>
-    <string name="label_warning_sync">Sem dados!</string>
-    <string name="label_warning_old">Dados antigos!</string>
-    <string name="label_warning_since">Desde %1$s</string>
-    <string name="label_warning_sync_aaps">Sincronizar com AAPS!</string>
     <string name="msg_warning_sync">Nenhum dado recebido desde %1$s! Confira se o AAPS no telefone envia dados para o relógio</string>
     <string name="msg_warning_old">Dados AAPS são %1$s antigos! Verifique sensor, xDrip+, NS, configuração AAPS ou outra!</string>
     <string name="pref_vibrate_on_bolus">Vibrar no Bólus</string>
@@ -71,7 +67,6 @@
     <string name="menu_none">Nenhum</string>
     <string name="menu_default">Padrão</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">Alvo Temporário solicitado</string>
     <string name="action_quick_wizard_confirmation">Pedido de Assistente Rápido</string>
     <string name="action_treatment_confirmation">Pedido de Tratamento</string>
@@ -82,7 +77,6 @@
     <string name="action_profile_switch_confirmation">Troca de perfil solicitada</string>
     <string name="action_carbs">Hidratos</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_duration_h">Duração [h]</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Predefinição 1</string>
     <string name="action_preset_2">Predefinição 2</string>
@@ -119,7 +113,6 @@
     <string name="color_name_gray">cinzento</string>
     <string name="color_name_bluegray">cinza azul</string>
     <string name="color_name_white">branco</string>
-    <string name="color_name_black">preto</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Simplificar a Interface</string>
     <string name="pref_vibrate_hourly">Vibrar por hora</string>
@@ -146,8 +139,6 @@
     <string name="tile_no_config">Nenhuma configuração disponível</string>
     <string name="wear_control_not_enabled">Controlos do Wear desativados</string>
     <string name="wear_control_no_data">Dados indisponíveis</string>
-    <string name="increment">aumentar</string>
-    <string name="decrement">diminuir</string>
     <string name="abbreviation_average">média</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -162,7 +153,5 @@
     <string name="hour_short">h</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">antigo</string>
-    <string name="old_warning">!antigo!</string>
     <string name="pref_heartRateSampling">Frequência cardíaca</string>
 </resources>

@@ -42,7 +42,6 @@
     <string name="medtronic_error_serial_invalid">Número de serie no válido.</string>
     <string name="medtronic_error_pump_type_not_set">Tipo de bomba no configurado.</string>
     <string name="medtronic_error_pump_type_invalid">Tipo de bomba no compatible.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Frecuencia de la bomba no compatible.</string>
     <string name="medtronic_error_rileylink_address_invalid">Dirección de RileyLink no válida.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">El tipo de bomba detectado no es el mismo que el configurado.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Los perfiles de basal/valor de los patrones no están activados en la bomba. Actívalos en la bomba.</string>
@@ -59,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Historial de la bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelaste el bolo después de que ya se hubiera configurado en la bomba. Dado que la bomba Medtronic no permite la cancelación directa, tendrás que cancelarlo manualmente. Pon la bomba en modo Suspender y luego selecciona Reanudar (si aún deseas cancelarlo). La aplicación detectará los cambios en la próxima actualización (en menos de 5 minutos).</string>
     <string name="medtronic_cmd_cant_read_tbr">No se pudo leer la basal temporal actual.</string>
@@ -91,8 +89,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
     <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>
-    <string name="medtronic_tbr_remaining">%1$s (quedan %2$d min)</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
     <string name="invalid_history_data">Se han detectado datos inválidos en el historial de la bomba. Abre una nueva incidencia y proporciona los archivos de registros.</string>
     <string name="riley_statistics">Estadísticas del RL</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Refresco pulsado</string>

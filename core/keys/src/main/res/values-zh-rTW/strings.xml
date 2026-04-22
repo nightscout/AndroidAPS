@@ -202,7 +202,6 @@
     <string name="pref_title_half_basal_exercise_target">一半基礎率的運動目標</string>
     <string name="half_basal_exercise_target_summary">設定為一個數值，例如 160，表示當臨時目標為 160 mg/dL 且「高臨時目標提高敏感度 = true」時，於此層級執行 50%% 的基礎率（120 = 75%%；140 = 60%%）。</string>
     <string name="pref_title_iob_threshold_percent">IOB 門檻百分比</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">當超過最大 IOB 的此百分比時，將停用微量注射。\\n預設值：100%%\\n設定為 100%% 時，等同停用此功能。</string>
     <string name="pref_title_dynisf_adjustment_factor">DynamicISF 調整係數</string>
     <string name="dyn_isf_adjust_summary" formatted="false">DynamicISF 的調整係數。設定高於 100% 會更積極地進行校正注射；低於 100% 則較為保守。</string>
     <string name="pref_title_autosens_period">自動敏感度調整 期間</string>
@@ -213,7 +212,6 @@
     <string name="pref_title_stale_data_threshold">資料過期門檻</string>
     <string name="pref_title_pump_unreachable_threshold">幫浦無法連線門檻</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">峰值時間</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">預設調校天數</string>
     <string name="autotune_default_tune_days_summary">Autotune 預設要處理的資料天數（最多 30 天）</string>
@@ -252,7 +250,6 @@
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
@@ -267,7 +264,6 @@
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">語系</string>
@@ -360,11 +356,8 @@
     <string name="pref_title_ama_max_iob">AMA 的最大 IOB</string>
     <string name="openapsma_max_iob_summary">在 OpenAPS 環境中，此數值稱為 Max IOB\n這是 APS 一次可輸送的最大胰島素量（單位為 [U]）。</string>
     <string name="pref_title_max_daily_multiplier">每日安全倍數上限</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">預設值：3。這是 OpenAPS 重要的安全上限。它會將你的基礎率限制為你最大基礎率的 3 倍。通常不需要更改，但你應該知道，安全上限中所說的「每日最大 3 倍；當前 4 倍」是指這個設定。</string>
     <string name="pref_title_current_basal_multiplier">目前基礎率安全倍數</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">預設值：4 這是關鍵 OpenAPS 安全上限的另一半，對應於安全上限中的「每日最大值的 3 倍；目前值的 4 倍」。這表示不論你在幫浦上設定的最大基礎率為何，你的基礎率都不能高於目前基礎率的此數值倍。此設計是為了避免在尚未理解演算法運作前，就把最大基礎率設得過高而進入危險情況。預設為 4 倍；大多數人不需要調整這個設定，若覺得「碰到」這個安全上限，更可能需要調整其他設定。</string>
     <string name="pref_title_bolus_snooze_divisor">注射緩衝 DIA 除數</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">預設值：2\\n在你進行餐前注射後會啟用注射延遲，這樣在你剛用餐時，循環就不會以低臨時基礎率來抵消。此處範例與預設皆為 2；因此，若 DIA 為 3 小時，表示注射延遲會在 1.5 小時內逐漸解除（3 DIA/2）。</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA 最小每 5 分鐘碳水影響</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB 最小每 5 分鐘碳水影響</string>
     <string name="openapsama_min_5m_carb_impact_summary">預設值：3.0（AMA）或 8.0（SMB）。這是每 5 分鐘的預設碳水吸收影響設定。預設為預期的 3 mg/dl/5 min。當血糖下降超過預期或上升不如預期時，這會影響活性碳水化合物（COB）的遞減速度，以及在計算未來預測血糖時假設的碳水吸收量。</string>
@@ -373,27 +366,16 @@
     <string name="pref_title_absorption_maxtime">最大吸收時間</string>
     <string name="absorption_max_time_summary">以小時為單位，預期餐點中的所有碳水會在此時間內完全吸收</string>
     <string name="pref_title_autosens_min">自動敏感度調整最小值</string>
-    <string name="openapsama_autosens_min_summary">預設值：0.7\\n這是自動敏感度調整安全限制的另一側，用來限制自動敏感度調整對基礎率可下調的幅度，以及對 ISF 與血糖目標可上調的幅度。</string>
     <string name="pref_title_autosens_max">自動敏感度調整最大值</string>
-    <string name="openapsama_autosens_max_summary">預設值：1.2\\n這是 autosens（以及即將支援的 autotune）的倍率上限，用來將 autosens 比率的最高值限制在 20%% 以內；這同時決定了自動敏感度調整對基礎率可上調的幅度、對 ISF 可下調的幅度，以及可將血糖目標設定得多低。</string>
     <string name="pref_title_autoisf_min">AutoISF 最小值</string>
-    <string name="openapsama_autoISF_min_summary">與 autosens_min 類似，此設定定義 ISF 最弱可以到什麼程度。\\n\\n預設值 1.0 會等同關閉此效果。</string>
     <string name="pref_title_autoisf_max">AutoISF 最大值</string>
-    <string name="openapsama_autoISF_max_summary">與 autosens_max 類似，此設定定義 ISF 最強可以到什麼程度。\\n\\n預設值 1.0 會等同關閉此效果。\\n\\n警告：使用大於 2.5 的數值時請格外小心。</string>
     <string name="pref_title_bg_accel_weight">血糖加速階段 ISF 權重</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">這是在血糖加速上升時套用的權重，會增強 ISF，因而可能增加胰島素輸注。\\n\\n預設值 0.0 會等同關閉此效果。</string>
     <string name="pref_title_bg_brake_weight">血糖減速階段 ISF 權重</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">這是在血糖上升減速時套用的權重，會削弱 ISF，因而可能降低胰島素輸注。\\n\\n預設值 0.0 會等同關閉此效果。</string>
     <string name="pref_title_low_bg_weight">低血糖範圍權重</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">這是在血糖低於目標時套用的權重，會削弱 ISF，因而可能降低胰島素輸注。\\n\\n預設值 0.0 會等同關閉此效果。</string>
     <string name="pref_title_high_bg_weight">高血糖範圍權重</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">這是在血糖高於目標時套用的權重，會增強 ISF，因而可能增加胰島素輸注。\\n\\n預設值 0.0 會等同關閉此效果。</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">SMB 投藥比例血糖範圍</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">預設值：0。線性遞增的微量注射送達比率會被映射到血糖範圍 [target_bg, target_bg+bg_range]。\\n在 target_bg 時，微量注射比率為 smb_delivery_ratio_min；在 target_bg+bg_range 時，為 smb_delivery_ratio_max。\\n設為 0 時，會停用線性遞增的微量注射比率，並改用固定的 smb_delivery_ratio。</string>
     <string name="pref_title_pp_weight">餐後 ISF 權重</string>
-    <string name="openapsama_pp_ISF_weight_summary">這是在血糖上升時套用的權重，會增強 ISF，因而可能增加胰島素輸注。\\n\\n預設值 0.0 會等同關閉此效果。</string>
     <string name="pref_title_dura_weight">持續時間 ISF 權重</string>
-    <string name="openapsama_dura_ISF_weight_summary">這是在持續較久且偏高的血糖平台期套用的權重，會增強 ISF，因而可能增加胰島素輸注。\\n\\n預設值 0.0 會等同關閉此效果。</string>
     <string name="pref_title_smb_delivery_ratio">SMB 投藥比例</string>
     <string name="openapsama_smb_delivery_ratio_summary">預設值：0.5 這是另一個關鍵的 OpenAPS 安全上限，用來指定所需總胰島素中可由 SMB 送達的比例。此設計是為了避免在同一時間，照護者的手機同時送出 SMB 請求而造成危險。此為實驗性數值，請謹慎且逐步調高。</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB 投藥比例下限</string>
@@ -409,10 +391,6 @@
     <string name="pref_title_lgs_threshold">LGS 臨界值</string>
     <string name="lgs_threshold_summary">當血糖低於此值時，將暫停胰島素。預設值使用標準目標模型。使用者可將數值設定在 60 mg/dl（3.3 mmol/l）與 100 mg/dl（5.5 mmol/l）之間。若低於 65/3.6，則改用預設模型。</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">演算法文件</string>
-    <string name="pref_title_otp_setup">驗證器設定</string>
-    <string name="pref_title_quick_wizard_settings">快速嚮導設定</string>
-    <string name="pref_title_xdrip_info">xDrip+ 資訊</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">視覺化範圍</string>
 </resources>

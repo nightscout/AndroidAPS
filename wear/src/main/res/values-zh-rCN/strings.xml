@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(临时目标)</string>
     <string name="label_quick_wizard_tile">AAPS(快速向导)</string>
     <string name="label_user_action_tile">AAPS（用户操作）</string>
-    <string name="label_warning_sync">没有数据</string>
-    <string name="label_warning_old">旧数据</string>
-    <string name="label_warning_since">自从 %1$s</string>
-    <string name="label_warning_sync_aaps">与 AAPS 同步 !</string>
     <string name="msg_warning_sync">自 %1$s以来未收到任何数据! 检查手机上的 AAPS 是否发送数据到手表。</string>
     <string name="msg_warning_old">AAPS 数据为 %1$s之前! 请检查传感器， xDrip+， NS， AAPS 配置或其他!</string>
     <string name="pref_vibrate_on_bolus">大剂量时震动</string>
@@ -83,8 +79,6 @@
     <string name="menu_none">无</string>
     <string name="menu_default">默认 </string>
     <string name="menu_menu">菜单</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">持续时间 [分]</string>
     <string name="action_tempt_confirmation">临时目标请求</string>
     <string name="action_quick_wizard_confirmation">快速向导请求</string>
     <string name="action_user_action_confirmation">请求用户操作</string>
@@ -102,8 +96,6 @@
     <string name="action_ecarbs">碳水化合物</string>
     <string name="action_percentage">百分比\n[%]</string>
     <string name="action_start_minutes">开始\n[分钟]</string>
-    <string name="action_start_minutes_format">%1$d min</string>
-    <string name="action_duration_h">持续时长 [h]</string>
     <string name="action_duration_hours">持续时间\n[小时]</string>
     <string name="action_duration_hours_format">%1$d h</string>
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
@@ -152,7 +144,6 @@
     <string name="color_name_gray">灰色</string>
     <string name="color_name_bluegray">蓝灰色</string>
     <string name="color_name_white">白色</string>
-    <string name="color_name_black">黑色</string>
     <string name="color_name_multicolor">彩色</string>
     <string name="pref_simplify_ui">简化界面</string>
     <string name="pref_vibrate_hourly">按小时振动</string>
@@ -185,8 +176,6 @@
     <string name="tile_no_config">无可用配置</string>
     <string name="wear_control_not_enabled">穿戴设备控制功能已禁用</string>
     <string name="wear_control_no_data">无可用数据</string>
-    <string name="increment">增加</string>
-    <string name="decrement">减少</string>
     <string name="abbreviation_average">平均</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -202,8 +191,6 @@
     <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">旧的</string>
-    <string name="old_warning">!旧！</string>
     <string name="error">错误</string>
     <string name="pref_heartRateSampling">心率</string>
     <string name="pref_heartRateSmoothing">心率平滑</string>
@@ -260,7 +247,6 @@
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">点击以展开计算详情</string>
     <string name="wizard_confirmation_sent">已发送</string>
     <string name="tile_settings">卡片设定</string>
     <string name="loop_status_error">加载状态失败</string>

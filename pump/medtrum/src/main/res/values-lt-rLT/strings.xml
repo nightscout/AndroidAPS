@@ -19,7 +19,6 @@
     <string name="pump_state_label">Pompos būsena</string>
     <string name="active_alarms_label">Aktyvūs aliarmai</string>
     <string name="basal_type_label">Bazės tipas</string>
-    <string name="basal_rate_label">Bazės dydis</string>
     <string name="pump_type_label">Pompos tipas</string>
     <string name="fw_version_label">FW versija</string>
     <string name="patch_no_label">Rezervuaro nr.</string>
@@ -73,12 +72,10 @@
     <string name="do_not_attach_to_body">Kol kas neklijuokite pompos prie kūno.</string>
     <string name="half_press_needle">Spustelėkite adatos mygtuką. Spauskite <b>Toliau</b> pildymui pradėti.</string>
     <string name="wait_for_priming">Palaukite, kol baigsis pildymas.</string>
-    <string name="priming_error">Pildymas nepavyko, spauskite <b>Kartoti</b>.</string>
     <string name="press_next">Norėdami tęsti, spauskite <b>Toliau</b>.</string>
     <string name="press_next_to_start_activation">Aktyvavimui pradėti spauskite <b>Toliau</b>.</string>
     <string name="remove_safety_lock">Pašalinkite apsaugą. Priklijuokite pompą prie kūno. Paspauskite adatos mygtuką.</string>
     <string name="activating_pump">Palaukite, kol bus aktyvuota pompa ir nustatyta pradinė bazė.</string>
-    <string name="activating_error">Aktyvavimas nepavyko, spauskite <b>Kartoti</b>.</string>
     <string name="activating_complete">Naujas rezervuaras įjungtas. Yra %.2f v insulino.</string>
     <string name="can_export_settings">Galite eksportuoti nustatymus, kad vėliau galėtumėte atkurti šios pompos sesiją.</string>
     <string name="press_OK_to_return">Norėdanu grįžti į pradžios ekraną, spauskite <b>OK</b>.</string>

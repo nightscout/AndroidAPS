@@ -56,5 +56,4 @@
     <string name="time_last_week">За прошедшую неделю</string>
     <string name="time_last_month">За прошлый месяц</string>
     <!-- Pump History -->
-    <string name="pump_history_type">Тип:</string>
 </resources>

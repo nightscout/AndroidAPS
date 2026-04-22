@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Dialogs-->
+    <string name="confirmation">Potvrzení</string>
     <!--    Events-->
     <string name="bolus_delivering">Podávání %1$.2fU</string>
     <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU podáno</string>
@@ -97,6 +98,9 @@
     <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
     <string name="forever">Navždy</string>
     <!-- Permission rationales (used by PumpPluginBase) -->
+    <string name="permission_bluetooth_description">Aplikace potřebuje oprávnění Bluetooth pro komunikaci s pumpou</string>
     <!-- Insulin -->
+    <string name="unknown">Neznámé</string>
+    <string name="insulin_peak_time">Čas vrcholu [min]</string>
     <!-- Concentration -->
 </resources>

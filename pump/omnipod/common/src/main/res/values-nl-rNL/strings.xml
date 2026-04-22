@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Alarmen Stil</string>
     <string name="omnipod_common_overview_pod_status">Pod Status</string>
     <string name="omnipod_common_overview_total_delivered">Totaal toegediend</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f E</string>
     <string name="omnipod_common_overview_pod_unique_id">Uniek ID</string>
     <string name="omnipod_common_overview_lot_number">LOT Nummer</string>
     <string name="omnipod_common_overview_pod_sequence_number">Volgnummer</string>

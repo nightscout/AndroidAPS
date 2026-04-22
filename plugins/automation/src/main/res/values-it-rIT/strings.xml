@@ -73,7 +73,6 @@
     <string name="location_going_out">Quando lasci l\'area denominata</string>
     <string name="time_range">Intervallo di tempo</string>
     <string name="timerange_value">L\'intervallo di tempo è compreso tra %1$s e %2$s</string>
-    <string name="between">Tra </string>
     <string name="add_short">AGG</string>
     <string name="temptargetcompared">Temp-Target %1$s</string>
     <string name="btdevicecompared">Connessione Bluetooth a dispositivo %1$s %2$s</string>
@@ -114,8 +113,6 @@
     <string name="edit_short">MODIFICA</string>
     <string name="preconditions">Presupposti:</string>
     <string name="user_action">Azione utente</string>
-    <string name="remove_selected_items">Rimuovi elementi selezionati</string>
-    <string name="count_selected">%1$d selezionato</string>
     <string name="system_automation">Automazione sistema</string>
     <string name="run_automations">Esegui automazioni</string>
     <string name="add_automation">Aggiungi regola</string>

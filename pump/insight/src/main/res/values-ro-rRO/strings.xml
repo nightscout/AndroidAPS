@@ -16,10 +16,7 @@
     <string name="not_inserted">Nu este introdus</string>
     <string name="tdd_bolus">Bolus DZT</string>
     <string name="tdd_basal">Bazală DZT</string>
-    <string name="tbr_formatter">%1$d%% pentru %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus multiwave</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U pentru %3$d min</string>
-    <string name="insight_last_bolus">Ultimul Bolus</string>
     <string name="searching_for_devices">Căutare dispozitive…</string>
     <string name="pairing_completed">Asociere reușită</string>
     <string name="code_compare">Sunt identice codurile afișate aici și cele de pe pompă?</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">Pompă oprită</string>
     <string name="pump_started">Pompă pornită</string>
     <string name="release_software_version">Versiunea de software</string>
-    <string name="ui_processor_software_version">Versiunea software procesor UI</string>
-    <string name="pc_processor_software_version">Versiunea software procesor PC</string>
-    <string name="md_tel_processor_software_version">Versiunea software procesor MD tel</string>
-    <string name="safety_processor_software_version">Versiunea software procesor siguranță</string>
-    <string name="bt_info_page_version">Versiunea BT info</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
-    <string name="system_id_appendix">Indexul sistem ID</string>
     <string name="manufacturing_date">Data fabricării</string>
-    <string name="delete_pairing">Ștergeți asocierea</string>
     <string name="log_site_changes">Înregistrați schimbările locului de inserție</string>
     <string name="log_reservoir_changes">Jurnal al schimbărilor rezervorului</string>
     <string name="log_tube_changes">Înregistrați schimbările canulei</string>
@@ -58,11 +48,8 @@
     <string name="max_recovery_duration">Timpul maxim de restabilire [s]</string>
     <string name="min_recovery_duration">Timpul minim de restabilire [s]</string>
     <string name="pump_alert">Alertă a pompei</string>
-    <string name="pairing_information">Informații despre asociere</string>
     <string name="last_connection">%1$s (%2$s)</string>
     <string name="unpair">Dezasociați</string>
     <string name="reset_pairing">Resetați informațiile de asociere?</string>
-    <string name="active_basal_rate">Rata bazală activă</string>
-    <string name="active_tbr">RBT activă</string>
     <string name="reservoir_level">Nivel rezervor</string>
 </resources>

@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
     <string name="pump_status">Pumpestatus</string>
     <string name="loop_status">Loopstatus</string>
-    <string name="wizard_result">Boluskalkulator:\nBolus: %1$.2fE\nKarbo: %2$dg</string>
     <string name="quick_wizard_not_available">Den valgte hurtigknappen er ikke lenger tilgjengelig, oppdater klokkeflis</string>
     <string name="quick_wizard_message">Hurtigknapp: %1$s\nBolus: %2$.2fE\nKarbo: %3$dg</string>
     <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">Midlertidig mål\n\nLav: %1$s\nHøy: %2$s\nVarighet: %3$d min</string>
     <string name="wear_action_tempt_manual_message">Midlertidig mål\n\nMål: %1$s\nVarighet: %2$d min</string>
     <string name="wear_action_tempt_preset_message">Midlertidig mål\n\nÅrsak: %1$s\nMål: %2$s\nVarighet: %3$d min</string>
-    <string name="no_success">feilet - sjekk telefonen</string>
     <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra kalkulator:</string>
     <string name="wear_general_settings">Generelle innstillinger</string>
     <string name="wear_custom_watchface_settings">Innstillinger for tilpasset urskive</string>
@@ -127,10 +125,6 @@
     <string name="today">Idag</string>
     <string name="weighted">vektlagt</string>
     <string name="full_xdrip_sync_comment">Full synkronisering? Det kan ta en stund og før den er ferdig vil du ikke se nye data i xDrip+.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient støttes ikke for denne handlingen</string>
-    <string name="wear_action_loop_state_requires_duration">Denne handlingen krever varighet</string>
-    <string name="wear_action_loop_state_pump_suspended">Pumpen er pauset!</string>
-    <string name="wear_action_loop_state_profile_invalid">Ugyldig profil!</string>
     <string name="wear_action_loop_state_unauthorized">Vennligst prøv igjen.</string>
     <string name="wear_action_loop_state_invalid">Ugyldig loop-status forespurt</string>
     <string name="wear_action_running_mode_title">KJØREMODUS</string>
@@ -159,10 +153,6 @@
     <string name="smscommunicator_otp_reset_btn">Tilbakestill autentiseringsfunksjoner</string>
     <string name="smscommunicator_otp_reset_title">Tilbakestill autentiseringsnøkkel</string>
     <string name="smscommunicator_otp_reset_prompt">Er du sikker på at du vil tilbakestille autentiseringsnøkkelen? Det vil gjøre alle autentiseringsverktøy som er konfigurert ugyldige, og du må konfigurere dem på nytt.</string>
-    <string name="smscommunicator_otp_reset_successful">Ny autentiseringsnøkkel ble generert! Bruk den oppdaterte QR-koden for å tilordne autentiseringsnøkler.</string>
-    <string name="smscommunicator_otp_export_title">Eksporterer engangskodehemmelighet</string>
-    <string name="smscommunicator_otp_export_prompt">Er du sikker på at du vil kopiere engangskoden til utklippstavlen?\n\nDu trenger kanskje bare dette hvis autentiseringsappen din har problemer med å skanne QR-koden, du vil skrive den inn manuelt eller du vil konfigurere maskinvare-engangskoden ved hjelp av en dedikert app.</string>
-    <string name="smscommunicator_otp_export_successful">Engangskode-hemmelighet (i Base32-format) eksportert og kopiert til utklippstavlen. Lim den inn i autentiseringsverktøyet eller maskinvare-engangskode-brenneren!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installer Autentisering</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Skann koden for å sette opp AAPS OTP-koder</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test engangspassord</string>

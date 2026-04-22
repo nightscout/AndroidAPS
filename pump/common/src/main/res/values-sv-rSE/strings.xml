@@ -37,5 +37,4 @@
     <string name="time_last_week">Senaste veckan</string>
     <string name="time_last_month">Senaste månaden</string>
     <!-- Pump History -->
-    <string name="pump_history_type">Typ:</string>
 </resources>

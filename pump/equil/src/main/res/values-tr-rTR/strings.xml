@@ -21,7 +21,6 @@
     <string name="equil_tone_mode_shake">Sadece titreşim</string>
     <string name="equil_tone_mode_tone">Sadece ses</string>
     <string name="equil_tone_mode_tone_and_shake">Titreşim ve ses</string>
-    <string name="equil_unit_u">%1$s Ü</string>
     <string name="equil_ble_config_confirmation_title">Equil Patch pompasını eşleştirin</string>
     <string name="equil_error">Bağlantı Hatası</string>
     <string name="equil_change">Pompayı değiştir</string>

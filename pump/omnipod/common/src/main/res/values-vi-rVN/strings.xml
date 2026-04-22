@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Tắt cảnh báo</string>
     <string name="omnipod_common_overview_pod_status">Trạng thái Pod</string>
     <string name="omnipod_common_overview_total_delivered">Tổng lượng đã tiêm</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">Mã số duy nhất</string>
     <string name="omnipod_common_overview_lot_number">Số Lô</string>
     <string name="omnipod_common_overview_pod_sequence_number">Số thứ tự</string>
@@ -50,7 +49,6 @@
     <string name="omnipod_common_overview_pod_active_alerts">Cảnh báo Pod đang bật</string>
     <string name="omnipod_common_overview_firmware_version">Phiên bản phần mềm</string>
     <string name="omnipod_common_overview_time_on_pod">Thời gian trên Pod</string>
-    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d phút)</string>
     <string name="omnipod_common_uncertain">không chắc chắn</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Hủy kích hoạt Pod</string>

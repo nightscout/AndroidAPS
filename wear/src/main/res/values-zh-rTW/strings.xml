@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(臨時目標)</string>
     <string name="label_quick_wizard_tile">AAPS(快速嚮導)</string>
     <string name="label_user_action_tile">AAPS(用戶操作)</string>
-    <string name="label_warning_sync">無資料！</string>
-    <string name="label_warning_old">資料過舊！</string>
-    <string name="label_warning_since">自 %1$s 起</string>
-    <string name="label_warning_sync_aaps">與 AAPS 同步！</string>
     <string name="msg_warning_sync">自 %1$s 起無接收到資料！請檢查手機上的 AAPS 是否將資料傳送到手錶</string>
     <string name="msg_warning_old">AAPS 資料已過期 %1$s！請檢查您的傳感器、xDrip+、NS、AAPS 配置或其他！</string>
     <string name="pref_vibrate_on_bolus">注射時震動</string>
@@ -82,8 +78,6 @@
     <string name="menu_none">無</string>
     <string name="menu_default">預設</string>
     <string name="menu_menu">選單</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">持續時間 [分鐘]</string>
     <string name="action_tempt_confirmation">已請求臨時目標</string>
     <string name="action_quick_wizard_confirmation">已請求快速嚮導</string>
     <string name="action_user_action_confirmation">用戶操作請求</string>
@@ -101,8 +95,6 @@
     <string name="action_ecarbs">碳水化合物</string>
     <string name="action_percentage">百分比\n[%]</string>
     <string name="action_start_minutes">開始\n[分鐘]</string>
-    <string name="action_start_minutes_format">%1$d 分鐘</string>
-    <string name="action_duration_h">持續 [小時]</string>
     <string name="action_duration_hours">持續時間\n[小時]</string>
     <string name="action_duration_hours_format">%1$d 小時</string>
     <string name="action_duration_hours_minutes_format">%1$d 小時 %2$d 分鐘</string>
@@ -151,7 +143,6 @@
     <string name="color_name_gray">灰色</string>
     <string name="color_name_bluegray">藍灰色</string>
     <string name="color_name_white">白色</string>
-    <string name="color_name_black">黑色</string>
     <string name="color_name_multicolor">多色</string>
     <string name="pref_simplify_ui">簡化 UI</string>
     <string name="pref_vibrate_hourly">每小時震動</string>
@@ -184,8 +175,6 @@
     <string name="tile_no_config">無可用配置</string>
     <string name="wear_control_not_enabled">Wear控制已停用</string>
     <string name="wear_control_no_data">無可用資料</string>
-    <string name="increment">增加</string>
-    <string name="decrement">減少</string>
     <string name="abbreviation_average">平均</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -200,8 +189,6 @@
     <string name="hour_short">時</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">舊</string>
-    <string name="old_warning">！舊！</string>
     <string name="error">錯誤</string>
     <string name="pref_heartRateSampling">心率</string>
     <string name="pref_heartRateSmoothing">心率平滑</string>
@@ -257,7 +244,6 @@
     <string name="wizard_insulin_format">%1$s 單位</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">點擊以展開計算詳細內容</string>
     <string name="wizard_confirmation_sent">已送出</string>
     <string name="tile_settings">資訊方塊設定</string>
     <string name="loop_status_error">狀態載入失敗</string>

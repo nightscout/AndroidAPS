@@ -203,7 +203,6 @@
     <string name="pref_title_half_basal_exercise_target">Target Di Esercizio Metà Basale</string>
     <string name="half_basal_exercise_target_summary">Impostare un numero, ad esempio 160, significa che quando il target temporaneo è 160 mg/dL e l\'opzione aumenta la sensibilità se rileva sensibilità è attivo, esegue il 50%% della basale a questo livello (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Soglia IOB percentuale</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentuale di maxIOB al di sopra del quale gli SMB sono disabilitati.\nValore predefinito: 100%\nCon 100% questa funzione è effettivamente disabilitata.</string>
     <string name="pref_title_dynisf_adjustment_factor">Fattore di regolazione per ISF Dinamico (%)</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Fattore di regolazione per ISF Dinamico. Imposta più del 100% per dosi di correzione più aggressive e meno del 100% per correzioni meno aggressive.</string>
     <string name="pref_title_autosens_period">Periodo di autosens</string>
@@ -214,7 +213,6 @@
     <string name="pref_title_stale_data_threshold">Soglia dati non aggiornati</string>
     <string name="pref_title_pump_unreachable_threshold">Soglia micro irraggiungibile</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">Tempo picco</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Giorni di regolazione predefiniti</string>
     <string name="autotune_default_tune_days_summary">Numero predefinito di giorni di dati da elaborare da Autotune (fino a 30)</string>
@@ -253,7 +251,6 @@
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
@@ -268,7 +265,6 @@
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">Lingua</string>
@@ -361,11 +357,8 @@
     <string name="pref_title_ama_max_iob">IOB massimo per AMA</string>
     <string name="openapsma_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
     <string name="pref_title_max_daily_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Valore predefinito: 3 Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare la tua basale ad un valore pari alla tua velocità basale massima moltiplicata per 3. Probabilmente non avrai bisogno di cambiare questo valore ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
     <string name="pref_title_current_basal_multiplier">Moltiplicatore di sicurezza della basale corrente</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Valore predefinito: 4 Questo è un ulteriore parametro di sicurezza chiave in OpenAPS. La tua basale temporanea, indipendentemente dalla basale massima impostata sul micro, non può mai essere più alta di questo valore moltiplicato per la tua basale corrente in ogni specifico momento. Questo serve a impedire alle persone di addentrarsi in \"territori pericolosi\" impostando basali massime eccessivamente alte prima di aver capito come funziona l\'algoritmo. Ancora una volta, il valore predefinito è 4x; la maggior parte delle persone non avrà bisogno di modificare questo valore e avrà, invece, maggiori probabilità di dover regolare altre impostazioni se ha la sensazione di \"scontrarsi\" con questo limite di sicurezza.</string>
     <string name="pref_title_bolus_snooze_divisor">Bolo posticipato - Divisore DIA</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Valore predefinito: 2\nBolus snooze è attivato dopo un bolo pasto per fare in modo che il loop non imposti basali temporanee basse quando hai appena mangiato. AndroidAPS non imposterà velocità basali troppo basse nel periodo corrispondente a DIA diviso il parametro bolus snooze - divisore DIA. Con DIA di 3 ore \"bolus snooze\" durerà 1.5 ore (3/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA 5m impatto carboidrati</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB 5m impatto carboidrati</string>
     <string name="openapsama_min_5m_carb_impact_summary">Valore predefinito: 3.0 (AMA) o 8.0 (SMB). Questa è un\'impostazione per l\'impatto di assorbimento predefinito dei carboidrati in 5 minuti. L\'impostazione predefinita è una previsione di 3mg/dl/5min. Ha effetto sulla velocità di decadimento dei COB (carboidrati attivi) e su quanto il loro assorbimento incide nella previsione dell’andamento glicemico, quando la glicemia sta scendendo più del previsto o non sta salendo quanto previsto.</string>
@@ -374,27 +367,16 @@
     <string name="pref_title_absorption_maxtime">Tempo massimo di assorbimento</string>
     <string name="absorption_max_time_summary">Tempo in ore in cui è previsto che tutti i carboidrati del pasto vengano assorbiti</string>
     <string name="pref_title_autosens_min">Autosens min</string>
-    <string name="openapsama_autosens_min_summary">Valore predefinito: 0.7\nUn altro limite di sicurezza di autosens, imposta un blocco a quanto in basso autosens può regolare le basali e a quanto in alto può regolare ISF e target glicemici.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
-    <string name="openapsama_autosens_max_summary">Valore predefinito: 1.2\n Questo è un valore di moltiplicatore per autosens (e presto autotune) per impostare un limite massimo del 20% su quanto in alto può essere il rapporto di autosens, che a sua volta determina quanto in alto autosens possibile regolare basai, quanto in basso può regolare ISF e quanto in basso è possibile impostare il target di BG.</string>
     <string name="pref_title_autoisf_min">AutoISF min</string>
-    <string name="openapsama_autoISF_min_summary">Simile a autosens_min questo definisce quanto debole ISF possa diventare.\n\nIl valore predefinito 1.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_autoisf_max">AutoISF max</string>
-    <string name="openapsama_autoISF_max_summary">Simile a autosens_max questo definisce quanto forte ISF può diventare.\n\nIl valore predefinito 1.0 disattiva in modo efficace questo effetto.\n\nATTENZIONE: Fai molta attenzione quando usi valori superiori a 2,5</string>
     <string name="pref_title_bg_accel_weight">Accelerazione glicemia Peso ISF</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Questo è il peso applicato mentre il glucosio accelera e che rafforza ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_bg_brake_weight">BG freno ISF peso</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Questo è il peso applicato mentre il glucosio decelera e che indebolisce ISF riducendo potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_low_bg_weight">Basso range BG peso</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Questo è il peso applicato mentre il glucosio è al di sotto del target e che indebolisce ISF riducendo potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_high_bg_weight">Alto range BG peso</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Questo è il peso applicato mentre il glucosio è superiore all’obiettivo e che rafforza l’ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Ratio di erogazione SMB nel range BG</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valore predefinito: 0. Il rapporto di erogazione SMB che aumenta linearmente è mappato sull\'intervallo di glucosio [target_bg, target_bg+bg_range].\nA target_bg il rapporto SMB è smb_delivery_ratio_min, a target_bg+bg_range è smb_delivery_ratio_max\nCon 0 il rapporto SMB che aumenta linearmente è disattivato e viene utilizzato il rapporto fisso smb_delivery_ratio.</string>
     <string name="pref_title_pp_weight">Peso ISF post-prandiale</string>
-    <string name="openapsama_pp_ISF_weight_summary">Questo è il peso applicato mentre il glucosio sta aumentando e che rafforza ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_dura_weight">Durata ISF peso</string>
-    <string name="openapsama_dura_ISF_weight_summary">Questo è il peso applicato durante eventi di glucosio alto di lunga durata e che rafforza ISF aumentando così potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
     <string name="pref_title_smb_delivery_ratio">Ratio di erogazione SMB</string>
     <string name="openapsama_smb_delivery_ratio_summary">Valore predefinito: 0,5 Questo è un altro importante limite di sicurezza di OpenAPS e specifica quale parte dell\'insulina totale necessaria può essere somministrata come SMB. Questo per evitare che le persone si trovino in una zona pericolosa impostando contemporaneamente le richieste SMB dal telefono dei caregiver. Aumentare lentamente e con cautela questo valore sperimentale.</string>
     <string name="pref_title_smb_delivery_ratio_min">Ratio di erogazione SMB min</string>
@@ -410,10 +392,6 @@
     <string name="pref_title_lgs_threshold">Soglia LGS</string>
     <string name="lgs_threshold_summary">Glicemia sotto la quale l\'erogazione d\'insulina è sospesa. Il valore predefinito utilizza il modello target standard. L\'utente può impostare un valore compreso tra 60 mg/dl (3.3mmol/l) e 100mg/dl (5.5mmol/l). Con valori inferiori a 65 mg/dl (3.6mmol/l) viene usato il modello predefinito</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">Documentazione dell\'algoritmo</string>
-    <string name="pref_title_otp_setup">Configurazione dell\'autenticatore</string>
-    <string name="pref_title_quick_wizard_settings">Impostazioni della procedura guidata</string>
-    <string name="pref_title_xdrip_info">xDrip+ info</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
 </resources>

@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Smyčka zakázána</string>
-    <string name="calculator_label">Kalkulačka</string>
     <string name="nav_history_browser">Prohlížeč historie</string>
     <string name="sensor_label">Senzor</string>
-    <string name="age_label">stáří:</string>
-    <string name="level_label">úroveň:</string>
     <string name="insulin_label">Inzulín</string>
     <string name="pb_label">Baterie pumpy</string>
     <string name="cannula">Kanyla</string>
     <string name="patch_pump">Náplasťová pumpa</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">inzulín</string>
-    <string name="a11y_bg_quality">kvalita glykémií</string>
-    <string name="a11y_blood_glucose">glykémie</string>
-    <string name="a11y_bg_outdated">zastaralé</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Stav glykémie</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Predikce</string>
-    <string name="overview_show_treatments">Ošetření</string>
-    <string name="overview_show_heartRate">Tepová frekvence</string>
-    <string name="overview_show_deviation_slope">Odchylka sklonu</string>
-    <string name="overview_show_activity">Aktivita</string>
-    <string name="overview_show_bgi">Vliv na hladinu glukózy</string>
-    <string name="overview_show_sensitivity">Změna citlivosti</string>
-    <string name="overview_show_deviations">Odchylky</string>
-    <string name="overview_show_cob">Zbývající sacharidy</string>
-    <string name="overview_show_iob">Zbývající inzulín</string>
-    <string name="overview_show_basals">Bazály</string>
-    <string name="overview_show_abs_insulin">Absolutní inzulin</string>
-    <string name="overview_show_variable_sens">Proměnná citlivost</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
-    <string name="treatments_shortname">OŠET</string>
-    <string name="cannula_usage">použití:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="old_data">ZASTARALÉ</string>
-    <string name="overview_show_steps">Kroky</string>
 </resources>

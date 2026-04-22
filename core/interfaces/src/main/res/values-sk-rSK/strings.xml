@@ -101,8 +101,6 @@
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Aplikácia potrebuje povolenie pre Bluetooth na komunikáciu s pumpou</string>
     <!-- Insulin -->
-    <string name="insulin_plugin">Inzulín</string>
-    <string name="insulin_shortname">INZ</string>
     <string name="unknown">Neznámy</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -111,7 +109,6 @@
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Vrchol krivky [min]</string>
-    <string name="insulin_oref_peak">Čas vrcholu IOB krivky</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u40">U40</string>

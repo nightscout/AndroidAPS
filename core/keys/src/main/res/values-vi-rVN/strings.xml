@@ -202,7 +202,6 @@
     <string name="pref_title_half_basal_exercise_target">Mục tiêu tập luyện với 50% liều nền</string>
     <string name="half_basal_exercise_target_summary">Đặt thành một số, ví dụ 160, có nghĩa là khi mục tiêu tạm thời là 160 mg/dL và tùy chọn \'High temptarget raises sensitivity=true\' được bật, Aaps sẽ chạy 50%% liều nền ở mức này (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Ngưỡng phần trăm IOB</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Phần trăm của maxIOB mà trên mức đó SMB sẽ bị tắt.\nGiá trị mặc định: 100%\nVới 100%, tính năng này sẽ bị tắt hoàn toàn.</string>
     <string name="pref_title_dynisf_adjustment_factor">Hệ số điều chỉnh DynamicISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Hệ số điều chỉnh cho DynamicISF. Đặt lớn hơn 100% để có liều hiệu chỉnh mạnh hơn, và nhỏ hơn 100% để có liều hiệu chỉnh nhẹ hơn.</string>
     <string name="pref_title_autosens_period">Khoảng thời gian Autosens</string>
@@ -213,7 +212,6 @@
     <string name="pref_title_stale_data_threshold">Ngưỡng dữ liệu lỗi thời</string>
     <string name="pref_title_pump_unreachable_threshold">Ngưỡng mất kết nối với bơm</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">Thời gian đỉnh</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Ngày điều chỉnh mặc định</string>
     <string name="autotune_default_tune_days_summary">Số ngày dữ liệu mặc định được Autotune xử lý (tối đa 30)</string>
@@ -252,7 +250,6 @@
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
@@ -267,7 +264,6 @@
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">Ngôn ngữ</string>
@@ -360,11 +356,8 @@
     <string name="pref_title_ama_max_iob">IOB tối đa cho AMA</string>
     <string name="openapsma_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB.\n Đây là lượng insulin tối đa [U] mà APS có thể đưa vào cùng một lúc.</string>
     <string name="pref_title_max_daily_multiplier">Hệ số an toàn tối đa hằng ngày</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Mặc định: 3. Đây là một giới hạn an toàn quan trọng của OpenAPS. Nó giới hạn liều liều nền tối đa của bạn bằng 3 lần liều liều nền lớn nhất của bạn (áp dụng cho người này). Thông thường bạn không cần thay đổi, nhưng bạn nên biết rằng đây là những gì được nói đến khi nhắc đến ‘3x max daily; 4x current’ cho giới hạn an toàn.</string>
     <string name="pref_title_current_basal_multiplier">Hệ số an toàn của liều nền hiện tại</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Giá trị mặc định: 4. Đây là nửa còn lại của các giới hạn an toàn chính của OpenAPS, và là nửa còn lại của ‘3x max daily; 4x current’ trong các giới hạn an toàn. Điều này có nghĩa là liều liều nền của bạn, bất kể liều liều nền tối đa được thiết lập trên bơm, không thể cao hơn con số này nhân với mức liều nền hiện tại. Điều này nhằm ngăn người dùng rơi vào tình huống nguy hiểm khi thiết lập liều liều nền tối đa quá cao trước khi hiểu cách thuật toán hoạt động. Giá trị mặc định là 4x; hầu hết người dùng sẽ không cần điều chỉnh, và thay vào đó có thể cần điều chỉnh các cài đặt khác nếu cảm thấy “đang chạm” vào giới hạn an toàn này.</string>
     <string name="pref_title_bolus_snooze_divisor">Hệ số chia DIA khi hoãn bolus</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Giá trị mặc định: 2\nHoãn liều Bolus được kích hoạt sau khi bạn thực hiện một bolus bữa ăn, để vòng lặp không điều chỉnh bằng các temp thấp khi bạn vừa ăn. Ví dụ ở đây và giá trị mặc định là 2; nghĩa là với DIA 3 giờ, bolus snooze sẽ được loại bỏ dần trong 1,5 giờ (3DIA/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA: ảnh hưởng carbs tối thiểu 5 phút</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB: ảnh hưởng carbs tối thiểu 5 phút</string>
     <string name="openapsama_min_5m_carb_impact_summary">Giá trị mặc định: 3,0 (AMA) hoặc 8,0 (SMB). Đây là cài đặt cho mức ảnh hưởng hấp thụ carb mặc định trong mỗi 5 phút. Giá trị mặc định là 3mg/dl/5 phút. Thông số này ảnh hưởng đến tốc độ giảm của COB, và lượng hấp thụ carb được giả định khi tính toán dự đoán đường huyết trong dự kiến, trong trường hợp đường huyết giảm nhiều hơn dự kiến hoặc không tăng như mong đợi.</string>
@@ -373,21 +366,10 @@
     <string name="pref_title_absorption_maxtime">Thời gian hấp thu tối đa</string>
     <string name="absorption_max_time_summary">Thời gian (giờ) mà dự kiến toàn bộ carb từ bữa ăn sẽ được hấp thụ</string>
     <string name="pref_title_autosens_min">Autosens tối thiểu</string>
-    <string name="openapsama_autosens_min_summary">Giá trị mặc định: 0,7\nĐây là giới hạn an toàn phía ngược lại của autosens, đặt mức trần cho việc autosens có thể điều chỉnh liều nền xuống thấp nhất bao nhiêu, cũng như điều chỉnh ISF và mục tiêu BG lên cao nhất bao nhiêu.</string>
     <string name="pref_title_autosens_max">Autosens tối đa</string>
-    <string name="openapsama_autosens_max_summary">Giá trị mặc định: 1,2\nĐây là giới hạn hệ số nhân cho autosens (và sắp tới là autotune) để đặt mức giới hạn tối đa 20%% đối với tỷ lệ autosens. Điều này sẽ quyết định autosens có thể điều chỉnh liều nền tối đa bao nhiêu, điều chỉnh ISF xuống thấp nhất bao nhiêu, và đặt mục tiêu BG thấp đến mức nào.</string>
     <string name="pref_title_autoisf_min">AutoISF tối thiểu</string>
-    <string name="openapsama_autoISF_min_summary">Tương tự như autosens_min, thiết lập này xác định mức yếu tối đa mà ISF có thể đạt được.\n\nGiá trị mặc định 1,0 về cơ bản tắt hiệu ứng này.</string>
     <string name="pref_title_autoisf_max">AutoISF tối đa</string>
-    <string name="openapsama_autoISF_max_summary">Tương tự như autosens_max, thiết lập này xác định mức độ mạnh tối đa mà ISF có thể đạt được.\n\nGiá trị mặc định 1,0 về cơ bản tắt hiệu ứng này.\n\nCẢNH BÁO: Hãy cực kỳ thận trọng khi sử dụng giá trị trên 2,5</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết tăng nhanh, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết giảm tốc, giúp làm yếu ISF và do đó có thể làm giảm lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Đây là thệ số được áp dụng khi đường huyết thấp hơn mục tiêu, giúp làm yếu ISF và do đó có thể làm giảm lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Đây là hệ số được áp dụng khi đường huyết cao hơn mục tiêu, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Phạm vi BG cho tỷ lệ SMB</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Giá trị mặc định: 0. Tỷ lệ phân phối SMB tăng tuyến tính được ánh xạ theo khoảng đường huyết [target_bg, target_bg + bg_range].\nTại mức target_bg, tỷ lệ SMB là smb_delivery_ratio_min, và tại target_bg + bg_range, tỷ lệ SMB là smb_delivery_ratio_max.\nKhi đặt 0, tỷ lệ SMB tăng tuyến tính sẽ bị tắt và thay vào đó dùng tỷ lệ SMB cố định (smb_delivery_ratio).</string>
-    <string name="openapsama_pp_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết đang tăng, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
-    <string name="openapsama_dura_ISF_weight_summary">Đây là trọng số được áp dụng trong các giai đoạn đường huyết cao kéo dài, giúp tăng cường ISF và do đó có thể làm tăng lượng insulin được phân phối.\n\nGiá trị mặc định 0,0 về cơ bản tắt hiệu ứng này.</string>
     <string name="pref_title_smb_delivery_ratio">Tỷ lệ phân phối SMB</string>
     <string name="openapsama_smb_delivery_ratio_summary">Giá trị mặc định: 0,5. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định tỷ lệ insulin cần thiết có thể được bơm dưới dạng SMB. Mục đích là để ngăn tình trạng nguy hiểm khi có yêu cầu SMB được gửi đồng thời từ điện thoại của người chăm sóc. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
     <string name="pref_title_smb_delivery_ratio_min">Tỷ lệ SMB tối thiểu</string>
@@ -403,10 +385,6 @@
     <string name="pref_title_lgs_threshold">Ngưỡng LGS</string>
     <string name="lgs_threshold_summary">Đường huyết dưới mức này sẽ tạm dừng việc tiêm insulin. Mức mặc định sử dụng mô hình mục tiêu chuẩn. Người dùng có thể đặt giá trị trong khoảng 60 mg/dL (3,3 mmol/L) đến 100 mg/dL (5,5 mmol/L). Các giá trị dưới 65 mg/dL (3,6 mmol/L) sẽ sử dụng mô hình mặc định</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">Tài liệu thuật toán</string>
-    <string name="pref_title_otp_setup">Cài đặt xác thực</string>
-    <string name="pref_title_quick_wizard_settings">Cài đặt QuickWizard</string>
-    <string name="pref_title_xdrip_info">Thông tin Xdrip+</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Phạm vi để hiển thị</string>
 </resources>

@@ -37,19 +37,12 @@
     <string name="setupwizard_pump_riley_link_status">Stav RileyLinku:</string>
     <string name="readstatus">Načítať stav</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Požiadavka</string>
-    <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
     <string name="configbuilder_aps_description">Aký APS algoritmus má byť použitý pre prispôsobenie liečby?</string>
-    <string name="configbuilder_general_description">Toto sú všeobecné moduly, ktoré môžu byť užitočné.</string>
     <string name="configbuilder_sync_description">Nahrávanie dát, synchronizácia a komunikácia pluginov.</string>
-    <string name="configbuilder_constraints_description">Aké obmedzenia sú použité?</string>
-    <string name="configbuilder_loop_description">Použi toto, pre aktiváciu integrácie AndroidAPS uzavretého okruhu.</string>
-    <string name="configbuilder_insulin_description">Aký druh inzulínu používate?</string>
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
-    <string name="configbuilder_smoothing_description">Vyberte algoritmus pre vyhladzovanie</string>
     <string name="configbuilder_sensitivity_description">Aký druh algoritmu pre detekciu citlivosti má byť použitý?</string>
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje nastavenie bazálu z aktívneho profilu do pumpy. Overte si, že máte v AAPS korektný bazálny profil. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
     <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>

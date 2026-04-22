@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(Niciun ceas conectat)</string>
     <string name="pump_status">Stare pompă</string>
     <string name="loop_status">Stare buclă</string>
-    <string name="wizard_result">Calc. Asistent:\nInsulină: %1$.2fU\nCarburi: %2$dg</string>
     <string name="quick_wizard_not_available">Asistentul rapid selectat nu mai este disponibil, vă rugăm să reîncărcați iconița</string>
     <string name="quick_wizard_message">Asistent calcul: %1$s\nInsulină: %2$.2fU\nCarbohidrați: %3$dg</string>
     <string name="user_action_not_available">Acțiunea utilizatorului selectat %1$s nu mai este disponibilă, vă rugăm să reîmprospătați iconița</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">Țintă Temporară\n\nMin: %1$s\nMax: %2$s\nDurata: %3$d min</string>
     <string name="wear_action_tempt_manual_message">Țintă Temporară\n\nȚintă: %1$s\nDurată: %2$d min</string>
     <string name="wear_action_tempt_preset_message">Țintă Temporară\n\nMotiv: %1$s\nȚintă: %2$s\nDurată: %3$d min</string>
-    <string name="no_success">fără succes - verificați telefonul</string>
     <string name="wear_wizard_settings_summary">Calcule incluse în rezultatul asistentului:</string>
     <string name="wear_general_settings">Setări generale</string>
     <string name="wear_custom_watchface_settings">Cadran ceas - Setări personalizate </string>
@@ -127,10 +125,6 @@
     <string name="today">Astăzi</string>
     <string name="weighted">ponderat</string>
     <string name="full_xdrip_sync_comment">Sincronizare completă? Poate dura ceva timp și până la finalizare nu vor exista date noi în xDrip+.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient nu este acceptat pentru această acțiune</string>
-    <string name="wear_action_loop_state_requires_duration">Această acțiune necesită durată</string>
-    <string name="wear_action_loop_state_pump_suspended">Pompa este suspendată!</string>
-    <string name="wear_action_loop_state_profile_invalid">Profilul este invalid!</string>
     <string name="wear_action_loop_state_unauthorized">Vă rugăm să încercați din nou.</string>
     <string name="wear_action_loop_state_invalid">Stare de buclă solicitată nevalidă</string>
     <string name="wear_action_running_mode_title">MODUL DE RULARE</string>
@@ -159,10 +153,6 @@
     <string name="smscommunicator_otp_reset_btn">Resetați autentificatorii</string>
     <string name="smscommunicator_otp_reset_title">Resetați cheia de autentificare</string>
     <string name="smscommunicator_otp_reset_prompt">Sunteți sigur că doriți să resetați cheia de autentificare? Aceasta va anula toți autentificatorii configurați în prezent, și va trebui să le configurați din nou.</string>
-    <string name="smscommunicator_otp_reset_successful">A fost generată noua cheie de autentificare! Utilizați codul QR actualizat pentru a furniza autentificatorii.</string>
-    <string name="smscommunicator_otp_export_title">Exportare secret OTP</string>
-    <string name="smscommunicator_otp_export_prompt">Sunteți sigur că doriți să copiați secretul OTP în clipboard?\n\nEste posibil să aveți nevoie doar de asta dacă aplicația dumneavoastră de autentificare are probleme cu scanarea QRCode, vrei să îl introduci manual sau să configurezi jetonul OTP hardware folosind aplicația dedicată.</string>
-    <string name="smscommunicator_otp_export_successful">Secret OTP (în formatul Base32) exportat și copiat în clipboard. Lipiți-l în autentificator sau în dispozitivul hardware OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalați Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scanați codul pentru configurarea codurilor OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testați parolă unică</string>

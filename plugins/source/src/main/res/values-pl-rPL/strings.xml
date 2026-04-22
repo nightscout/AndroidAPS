@@ -25,7 +25,6 @@
     <string name="random_bg">Losowa glikemia</string>
     <string name="description_source_random_bg">Generuj losowe odczyty glukozy (wyłącznie do celów demonstracyjnych)</string>
     <string name="random_bg_short">BG</string>
-    <string name="direction">kierunek</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Otrzymuj glikemię z aplikacji Syai/Ottai.</string>

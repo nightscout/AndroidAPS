@@ -25,7 +25,6 @@
     <string name="random_bg">BG casuale</string>
     <string name="description_source_random_bg">Genera dati glicemia casuali (solo modalità demo)</string>
     <string name="random_bg_short">BG</string>
-    <string name="direction">direzione</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Ottai.</string>

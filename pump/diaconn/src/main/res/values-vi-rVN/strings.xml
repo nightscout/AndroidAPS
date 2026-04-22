@@ -11,11 +11,9 @@
     <string name="gettingpumpsettings">Đang cập nhật cài đặt Bơm</string>
     <string name="gettingpumptime">Đang cập nhật thời gian Bơm</string>
     <string name="largetimediff">Chênh lệch thời gian lớn:\nThời gian trên bơm lệch hơn 1,5 giờ.\nVui lòng chỉnh thời gian trên bơm thủ công và đảm bảo việc đọc lịch sử từ bơm không gây ra hành vi bất ngờ.\nNếu có thể, hãy xóa lịch sử trên bơm trước khi thay đổi thời gian hoặc tắt chế độ vòng lặp kín trong một khoảng DIA kể từ mục lịch sử sai cuối cùng, nhưng tối thiểu một DIA kể từ bây giờ.</string>
-    <string name="largetimedifftitle">Chênh lệch múi giờ lớn</string>
     <string name="approachingdailylimit">Sắp đạt giới hạn insulin hằng ngày</string>
     <string name="startingbolus">Đang tiêm bolus</string>
     <string name="waitingforestimatedbolusend">Đang chờ kết thúc liều bolus ước tính</string>
-    <string name="gettingbolusstatus">Đang cập nhật trạng thái liều Bolus</string>
     <string name="stoppingtempbasal">Đang dừng liều nền tạm thời</string>
     <string name="settingtempbasal">Đang cài đặt liều nền tạm thời</string>
     <string name="settingextendedbolus">Đang cập nhật liều bolus kéo dài</string>
@@ -30,10 +28,8 @@
     <string name="insulinlimitviolation">Vi phạm giới hạn insulin</string>
     <string name="boluserrorcode">Yêu cầu: %1$.2fU Đã tiêm: %2$.2fU Mã lỗi: %3$s</string>
     <string name="selectedpump">Bơm đã chọn</string>
-    <string name="diaconn_g8_bluetooth_status">Trạng thái Bluetooth</string>
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
-    <string name="diaconn_g8_user_options">TÙY CHỌN NGƯỜI DÙNG</string>
     <string name="pairfirst">Hãy kết nối Bơm với điện thoại của bạn!</string>
     <string name="processinghistory">"Đang xử lý sự kiện "</string>
     <string name="diaconn_g8_history_tempbasal">Liều nền tạm thời</string>

@@ -25,7 +25,6 @@
     <string name="random_bg">随机血糖</string>
     <string name="description_source_random_bg">生成随机血糖数据（仅限demo演示模式）</string>
     <string name="random_bg_short">血糖</string>
-    <string name="direction">方向</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">从 Syai/欧态 App 接收血糖数据。</string>

@@ -73,7 +73,6 @@
     <string name="location_going_out">当您离开指定的区域时</string>
     <string name="time_range">时间范围</string>
     <string name="timerange_value">时间在 %1$s 和 %2$s 之间</string>
-    <string name="between">在...之间</string>
     <string name="add_short">添加</string>
     <string name="temptargetcompared">临时目标 %1$s</string>
     <string name="btdevicecompared">蓝牙连接设备 %1$s %2$s</string>
@@ -114,8 +113,6 @@
     <string name="edit_short">编辑</string>
     <string name="preconditions">前置条件：</string>
     <string name="user_action">用户操作</string>
-    <string name="remove_selected_items">删除选中项？</string>
-    <string name="count_selected">已选中 %1$d</string>
     <string name="system_automation">系统自动化</string>
     <string name="run_automations">运行自动化</string>
     <string name="add_automation">添加规则</string>

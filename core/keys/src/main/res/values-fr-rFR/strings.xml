@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- General preferences -->
+    <string name="pref_title_simple_mode">Mode simple</string>
+    <string name="pref_title_insulin_concentration">Support de concentration d\'insuline</string>
+    <string name="pref_summary_insulin_concentration">Activer le support de différentes concentrations d\'insuline (U50, U200, etc.)</string>
     <!-- Overview preferences -->
+    <string name="pref_title_keep_screen_on">Garder l\'écran allumé</string>
+    <string name="pref_summary_keep_screen_on">Empêcher Android d\'éteindre l\'écran. Ceci consommera beaucoup de batterie lorsque vous n’êtes pas connecté à une prise de courant.</string>
+    <string name="pref_title_show_treatment_button">Afficher le bouton de traitement</string>
+    <string name="pref_title_show_wizard_button">Afficher le bouton de l\'assistant</string>
+    <string name="pref_title_show_insulin_button">Afficher le bouton d\'insuline</string>
+    <string name="pref_title_show_carbs_button">Afficher le bouton des glucides</string>
+    <string name="pref_title_show_cgm_button">Afficher le bouton MGC</string>
+    <string name="pref_summary_show_cgm_button">Ouvre xDrip+ ou Dexcom app (vous pouvez utiliser le bouton Retour pour retourner à AAPS).</string>
+    <string name="pref_title_show_calibration_button">Afficher le bouton d\'étalonnage</string>
+    <string name="pref_summary_show_calibration_button">Envoie une calibration à xDrip+ (assurez-vous que \'Accepter les étalonnages\' est activé dans xDrip+ dans les paramètres Inter-App).</string>
+    <string name="pref_title_show_notes_in_dialogs">Afficher les notes dans les boîtes de dialogue</string>
+    <string name="pref_title_use_bolus_advisor">Utiliser l\'assistant bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Activer l\'assistant de bolus qui aide avec les calculs de bolus lors des hyper-glycémies.</string>
+    <string name="pref_title_use_bolus_reminder">Utiliser le rappel de bolus</string>
+    <string name="pref_summary_use_bolus_reminder">Activer les notifications de rappel de bolus pour aider à suivre l\'administration de l\'insuline.</string>
+    <string name="pref_title_use_super_bolus">Utiliser le super bolus</string>
+    <string name="pref_summary_use_super_bolus">Activer la fonction super bolus qui emprunte de l\'insuline à partir du basal pour une injection immédiate.</string>
     <!-- Pump preferences -->
+    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_summary_bt_watchdog">Coupe le Bluetooth du téléphone une seconde si la connexion pompe n’est pas possible. Cela peut aider pour les téléphones dont la connexion Bluetooth se bloque.</string>
     <!-- Alert preferences -->
+    <string name="pref_title_alert_missed_bg_reading">Alerte si aucune Glycémie n\'est reçue</string>
+    <string name="pref_title_alert_pump_unreachable">Alerte si la pompe est hors de portée</string>
+    <string name="pref_title_alert_carbs_required">Alerte si glucides requis</string>
+    <string name="pref_title_alert_urgent_as_android_notification">Déclencher les alarmes urgentes vers les notifications Android</string>
+    <string name="pref_title_alert_increase_volume">Augmenter progressivement le volume des notifications</string>
     <!-- BG Source preferences -->
+    <string name="pref_title_bg_source_upload_to_ns">Télécharger des Gly vers NS</string>
+    <string name="pref_title_bg_source_create_sensor_change">Enreg. changement de capteur</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Créer un événement changement de capteur lorsque le capteur est inséré.</string>
     <!-- APS preferences -->
+    <string name="pref_title_aps_use_dynamic_sensitivity">Activer la sensibilité dynamique</string>
+    <string name="pref_summary_aps_use_dynamic_sensitivity">Utilisez DynamicISF pour régler la sensibilité au lieu d\'Autosens.</string>
+    <string name="pref_title_aps_use_autosens">Utiliser Autosens</string>
+    <string name="pref_title_aps_use_smb">Activer SMB</string>
+    <string name="pref_summary_aps_use_smb">Activez Super Micro Bolus. SMB injecte immédiatement de l\'insuline pour répondre à la hausse de la glycémie.</string>
+    <string name="pref_title_aps_use_smb_with_high_tt">Activer les SMB avec Cibles Temp hautes</string>
+    <string name="pref_summary_aps_use_smb_with_high_tt">Autoriser SMB lorsque la Cible Temp haute est active.</string>
+    <string name="pref_title_aps_use_smb_always">Activer en permanence les SMB</string>
+    <string name="pref_summary_aps_use_smb_always">Activer SMB dans toutes les conditions indépendamment du bolus ou des GA.</string>
+    <string name="pref_title_aps_use_smb_with_cob">Activer SMB avec les GA</string>
+    <string name="pref_summary_aps_use_smb_with_cob">Autoriser SMB lorsqu\'il y a des Glucides Actifs.</string>
+    <string name="pref_title_aps_use_smb_with_low_tt">Activer les SMB avec Cibles Temp basses</string>
+    <string name="pref_summary_aps_use_smb_with_low_tt">Autoriser SMB lorsque la Cible Temp basse est active.</string>
+    <string name="pref_title_aps_use_smb_after_carbs">Activer les SMB après les glucides</string>
+    <string name="pref_summary_aps_use_smb_after_carbs">Autoriser SMB pour la période suivant la saisie de glucides.</string>
+    <string name="pref_title_aps_use_uam">Activer RNS</string>
+    <string name="pref_summary_aps_use_uam">Activer la détection et le traitement des Repas Non Signalés.</string>
+    <string name="pref_title_aps_sensitivity_raises_target">Sensibilité augmente la Cible</string>
+    <string name="pref_summary_aps_sensitivity_raises_target">Quand une sensibilité est détectée, augmentation de la glycémie cible.</string>
+    <string name="pref_title_aps_resistance_lowers_target">Résistance diminue la cible</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->

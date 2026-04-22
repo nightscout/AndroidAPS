@@ -19,7 +19,6 @@
     <string name="pump_state_label">幫浦狀態</string>
     <string name="active_alarms_label">啟用中的警報</string>
     <string name="basal_type_label">基礎率類型</string>
-    <string name="basal_rate_label">基礎率</string>
     <string name="pump_type_label">幫浦類型</string>
     <string name="fw_version_label">韌體版本</string>
     <string name="patch_no_label">貼片編號</string>
@@ -75,12 +74,10 @@
     <string name="do_not_attach_to_body">尚未連線貼片到身體。</string>
     <string name="half_press_needle">半按針按鈕。然後點擊 <b>下一步</b> 開始灌注。</string>
     <string name="wait_for_priming">請等待灌注完成。</string>
-    <string name="priming_error">灌注失敗，請按 <b>重試</b> 重試。</string>
     <string name="press_next">按 <b>下一步</b> 繼續。</string>
     <string name="press_next_to_start_activation">按 <b>下一步</b> 開始啟動。</string>
     <string name="remove_safety_lock">移除安全鎖。將幫浦連線到身體。按針按鈕。</string>
     <string name="activating_pump">啟動幫浦並設定初始基礎率。請稍候。</string>
-    <string name="activating_error">啟動失敗，請按 <b>重試</b> 重試。</string>
     <string name="activating_complete">新貼片已啟動。剩餘 %.2f 單位。</string>
     <string name="can_export_settings">您可以匯出設定以便稍後恢復此貼片會話。</string>
     <string name="press_OK_to_return">按 <b>確定</b> 返回主畫面。</string>

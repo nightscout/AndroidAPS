@@ -3,6 +3,26 @@
     <string name="automation_short">Auto</string>
     <string name="automation">Automatizace</string>
     <string name="automation_description">Automatické úkoly definované uživatelem</string>
+    <string name="automation_enabled">Povoleno</string>
+    <string name="automation_read_only">Pouze pro čtení</string>
+    <string name="automation_new_rule">Nové pravidlo</string>
+    <string name="automation_edit_rule">Upravit pravidlo</string>
+    <string name="automation_discard_title">Zahodit změny?</string>
+    <string name="automation_discard_message">Pravidlo je neúplné a nelze jej uložit. Zahodit vaše změny?</string>
+    <string name="automation_discard_confirm">Zahodit</string>
+    <string name="automation_category_time">Čas a rozvrh</string>
+    <string name="automation_category_glucose">Glykémie a ošetření</string>
+    <string name="automation_category_device">Stav zařízení</string>
+    <string name="automation_category_sensors">Senzory a konektivita</string>
+    <string name="automation_category_other">Ostatní</string>
+    <string name="automation_choose_trigger">Přidat spouštěč</string>
+    <string name="automation_add_group">Skupina</string>
+    <string name="automation_choose_action">Přidat akci</string>
+    <string name="automation_category_targets">Cíle</string>
+    <string name="automation_category_profile">Profil</string>
+    <string name="automation_category_loop">Smyčka a inzulín</string>
+    <string name="automation_category_alerts">Výstrahy</string>
+    <string name="automation_category_system">Systém</string>
     <string name="automation_missing_task_name">Zadejte prosím název úlohy.</string>
     <string name="automation_missing_trigger">Prosím zadejte alespoň jednu podmínku.</string>
     <string name="automation_missing_action">Prosím zadejte alespoň jednu akci.</string>
@@ -53,7 +73,6 @@
     <string name="location_going_out">Když opustíte oblast s názvem</string>
     <string name="time_range">Časový rozsah</string>
     <string name="timerange_value">Čas je mezi %1$s a %2$s</string>
-    <string name="between">Mezi </string>
     <string name="add_short">PŘIDAT</string>
     <string name="temptargetcompared">Dočasný cíl %1$s</string>
     <string name="btdevicecompared">Připojení Bluetooth k zařízení %1$s %2$s</string>
@@ -94,8 +113,6 @@
     <string name="edit_short">EDIT</string>
     <string name="preconditions">Nutné podmínky:</string>
     <string name="user_action">Uživatelská akce</string>
-    <string name="remove_selected_items">Odstranit zvolené položky</string>
-    <string name="count_selected">Vybráno: %1$d</string>
     <string name="system_automation">Automatizace systému</string>
     <string name="run_automations">Spustit automatizace</string>
     <string name="add_automation">Přidat pravidlo</string>
@@ -122,5 +139,11 @@
     <string name="on">ZAP</string>
     <string name="off">VYP</string>
     <!--    Map Picker (OpenStreetMap)-->
+    <string name="pick_from_map">Vybrat z mapy</string>
+    <string name="tap_to_select_location">Klepněte na mapu pro výběr místa</string>
+    <string name="selected_coords">Vybráno: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
+    <string name="permission_location_title">Poloha</string>
+    <string name="permission_location_description">Potřebné pro automatizační triggery na základě polohy a identifikaci WiFi sítí</string>
+    <string name="permission_background_location_description">Potřebné, aby automatizační triggery fungovaly, když je aplikace na pozadí</string>
 </resources>

@@ -38,19 +38,12 @@
     <string name="setupwizard_pump_riley_link_status">Trạng thái RileyLink:</string>
     <string name="readstatus">Đọc trạng thái</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Yêu cầu</string>
-    <string name="error_asking_for_permissions">Lỗi khi yêu cầu cấp quyền</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Thiết bị này dường như không hỗ trợ loại trừ khỏi tối ưu pin – bạn có thể gặp các vấn đề về hiệu suất.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Bạn muốn sử dụng loại bơm nào với AAPS?</string>
     <string name="configbuilder_aps_description">Thuật toán APS nào sẽ thực hiện điều chỉnh điều trị?</string>
-    <string name="configbuilder_general_description">Đây là một số Tiện ích chung mà bạn có thể thấy hữu ích.</string>
     <string name="configbuilder_sync_description">Các plugin tải lên dữ liệu, đồng bộ hóa và giao tiếp.</string>
-    <string name="configbuilder_constraints_description">Những giới hạn nào đang được áp dụng?</string>
-    <string name="configbuilder_loop_description">Sử dụng tùy chọn này để kích hoạt tích hợp vòng lặp của AAPS.</string>
-    <string name="configbuilder_insulin_description">Bạn đang dùng loại insulin gì?</string>
     <string name="configbuilder_bgsource_description">Bạn muốn AAPS lấy dữ liệu từ đâu?</string>
-    <string name="configbuilder_smoothing_description">Chọn thuật toán làm mượt</string>
     <string name="configbuilder_sensitivity_description">Bạn muốn chọn thuật toán độ nhạy nào?</string>
     <string name="allow_hardware_pump_text">Chú ý: Nếu bạn kích hoạt và kết nối với phần cứng bơm insulin, AAPS sẽ sao chép các thiết lập liều nền từ Hồ sơ sang bơm, ghi đè lên tốc độ liều nền hiện có được lưu trên bơm. Hãy đảm bảo rằng bạn đã có thiết lập liều nền chính xác trong AAPS. Nếu bạn không chắc chắn hoặc không muốn ghi đè các thiết lập liều nền trên bơm, hãy nhấn Hủy và thực hiện lại việc chuyển sang bơm sau.</string>
     <string name="nsclient_version_does_not_match">Phiên bản AAPSClient không khớp với phiên bản AAPS. Vui lòng cập nhật.</string>

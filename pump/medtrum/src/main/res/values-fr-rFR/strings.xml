@@ -19,7 +19,6 @@
     <string name="pump_state_label">État de la pompe</string>
     <string name="active_alarms_label">Alarmes actives</string>
     <string name="basal_type_label">Type de Basale</string>
-    <string name="basal_rate_label">Débit de Basal</string>
     <string name="pump_type_label">Type de pompe</string>
     <string name="fw_version_label">Version du FW</string>
     <string name="patch_no_label">N° du Patch</string>
@@ -74,12 +73,10 @@
     <string name="do_not_attach_to_body">Ne fixez pas encore le Patch sur le corps.</string>
     <string name="half_press_needle">Appuyez à mi-course sur le bouton de l\'aiguille. Puis appuyez sur <b>Suivant</b> pour démarrer l\'amorçage.</string>
     <string name="wait_for_priming">Merci de patienter jusqu\'à la fin de l\'amorçage.</string>
-    <string name="priming_error">Échec d\'amorçage, appuyez sur <b>Réessayez</b> pour éssayer à nouveau.</string>
     <string name="press_next">Appuyez sur <b>Suivant</b> pour continuer.</string>
     <string name="press_next_to_start_activation">Appuyez sur <b>Suivant</b> pour démarrer l\'activation.</string>
     <string name="remove_safety_lock">Retirez le verrou de sécurité. Fixez la pompe au corps. Appuyez sur le bouton de l\'aiguille.</string>
     <string name="activating_pump">Activation de la pompe et du débit de base initial. Veuillez patienter.</string>
-    <string name="activating_error">Échec de l\'activation, appuyez sur <b>Réessayez</b> pour éssayer à nouveau.</string>
     <string name="activating_complete">Nouveau Patch activé. %.2f Unités restantes.</string>
     <string name="can_export_settings">Vous pouvez exporter les paramètres pour pouvoir récupérer cette session de patch plus tard.</string>
     <string name="press_OK_to_return">Appuyez sur <b>OK</b> pour revenir à l\'écran principal.</string>

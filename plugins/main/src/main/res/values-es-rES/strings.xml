@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Lazo desactivado</string>
-    <string name="calculator_label">Calculadora</string>
     <string name="nav_history_browser">Historial</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">Edad:</string>
-    <string name="level_label">Nivel:</string>
     <string name="insulin_label">Insulina</string>
     <string name="pb_label">Batería de bomba</string>
     <string name="cannula">Cánula</string>
     <string name="patch_pump">Bomba parche</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulina</string>
-    <string name="a11y_bg_quality">calidad de glucosa en sangre</string>
-    <string name="a11y_blood_glucose">glucosa en sangre</string>
-    <string name="a11y_bg_outdated">obsoleto</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Estado de datos de glucosa</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Predicciones</string>
-    <string name="overview_show_treatments">Tratamientos</string>
-    <string name="overview_show_heartRate">Ritmo cardíaco</string>
-    <string name="overview_show_deviation_slope">Pendiente de desviación</string>
-    <string name="overview_show_activity">Actividad</string>
-    <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
-    <string name="overview_show_sensitivity">Cambio de sensibilidad</string>
-    <string name="overview_show_deviations">Desviaciones</string>
-    <string name="overview_show_cob">Carbohidratos activos COB</string>
-    <string name="overview_show_iob">Insulina activa</string>
-    <string name="overview_show_basals">Basales</string>
-    <string name="overview_show_abs_insulin">Insulina absoluta</string>
-    <string name="overview_show_variable_sens">Sensibilidad variable</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">TRAT</string>
-    <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="old_data">DATOS CADUCADOS</string>
-    <string name="overview_show_steps">Pasos</string>
 </resources>

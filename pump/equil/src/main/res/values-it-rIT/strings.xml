@@ -28,7 +28,6 @@
     <string name="equil_tone_mode_shake">Solo vibrazione</string>
     <string name="equil_tone_mode_tone">Solo suoneria</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrazione e suoneria</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">Questa operazione interromperà l\'infusione di insulina e ritrarrà lo stantuffo della pompa verso il basso! Inoltre, eliminerà lo stato!</string>
     <string name="equil_ble_config_confirmation_title">Accoppiamento Micro Equil Patch</string>
     <string name="equil_error">Errore di connessione</string>
@@ -115,7 +114,6 @@
     <string name="equil_history_item18">Infusione Anomala Fermata</string>
     <string name="equil_common_overview_button_suspend_delivery">Sospendi</string>
     <string name="equil_common_overview_button_resume_delivery">Riprendi erogazione</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Un momento fa</string>
     <string name="equil_common_less_than_a_minute_ago">Meno di 1 minuto fa</string>
     <string name="equil_common_time_ago">%1$sm fa</string>

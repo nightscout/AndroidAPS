@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Primijenjeno ograničenje bolusa</string>
     <string name="carbs_constraint_applied">Primijenjeno je ograničenje ugljikohidrata</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Započni aktivnost TT</string>
     <string name="start_eating_soon_tt">Započnite uskoro počnite jesti TT</string>
     <string name="start_hypo_tt">Pokrenite Hypo TT</string>
     <string name="time_offset">Vremenski odmak</string>
-    <string name="remind_to_bolus_later">Podsjetite na kasniji bolus</string>
     <!--    Widget-->
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
@@ -17,39 +15,24 @@
     <string name="bg_meter">Aparatić</string>
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Total</string>
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <!-- InsulinDialog -->
     <!-- Insulin Management -->
     <!-- LoopDialog -->
     <!-- WizardDialog -->
-    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
-    <string name="a11y_set_carb_timer">postavite timer alarma ugljikohidrata</string>
     <!-- Treatments -->
     <string name="no_records_available">Nema dostupnih zapisa</string>
     <string name="treatments_iob_label_string">Aktivni inzulin:</string>
-    <string name="treatments_carbs_label_string">Ugljikohidrati (UH):</string>
-    <string name="tempbasals_netratio_label_string">Omjer:</string>
-    <string name="tempbasals_iob_label_string">Aktivni inzulin:</string>
-    <string name="treatments_wizard_correction_label">Korekcija</string>
-    <string name="meal_bolus">Obrok</string>
-    <string name="prime">Punjenje katetera</string>
     <string name="carbs_and_bolus">Ugljikohidrati i bolus</string>
     <string name="show_invalidated">Prikaži poništen</string>
     <string name="hide_invalidated">Sakrij poništeno</string>
     <string name="careportal_remove_started_events">Uklonite započete unose AAPS-a</string>
-    <string name="hide_loop">Sakrij petlju</string>
-    <string name="show_loop">Prikaži petlju</string>
     <string name="user_entry">Unos korisnika</string>
     <string name="clone_label">Kloniraj</string>
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Odabrano:</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Bazalna stopa</string>
     <!--QuickWizard-->
     <!--    History browser-->
     <!--    Widget-->

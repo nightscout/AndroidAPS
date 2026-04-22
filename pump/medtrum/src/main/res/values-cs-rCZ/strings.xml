@@ -13,13 +13,13 @@
     <string name="patch_not_active">Patch není aktivován</string>
     <string name="pump_setting_failed">Načtení uživatelského nastavení do pumpy selhalo!</string>
     <string name="pump_sync_error">Chyba při synchronizaci historie z pumpy, záznam byl přeskočen. Zkontrolujte, zda je bolus správně synchronizován. Potvrďte, a pokud se chyba vrátí, změňte patch nebo pumpu.</string>
+    <string name="patch_reset_after_primed_error">Po naplnění patche byl zjištěn jeho reset! Odstraňte patch a aktivujte nový.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Naposledy připojeno</string>
     <string name="active_bolus_label">Aktivní bolus</string>
     <string name="pump_state_label">Stav pumpy</string>
     <string name="active_alarms_label">Aktivní alarmy</string>
     <string name="basal_type_label">Typ bazálu</string>
-    <string name="basal_rate_label">Bazální dávka</string>
     <string name="pump_type_label">Typ pumpy</string>
     <string name="fw_version_label">Verze FW</string>
     <string name="patch_no_label">Č. patche</string>
@@ -54,6 +54,7 @@
     <string name="retry">Opakovat</string>
     <string name="step_prepare_patch">Aktivovat Patch</string>
     <string name="step_prepare_patch_connect">Připojit a naplnit</string>
+    <string name="step_select_insulin">Vybrat inzulín</string>
     <string name="step_prime">Naplnit</string>
     <string name="step_priming">Plnění</string>
     <string name="step_priming_complete">Plnění dokončeno</string>
@@ -74,12 +75,10 @@
     <string name="do_not_attach_to_body">Prozatím nepřipojujte Patch k tělu.</string>
     <string name="half_press_needle">Stiskněte tlačítko jehly do poloviny. Potom klepněte na <b>Další</b> pro spuštění plnění.</string>
     <string name="wait_for_priming">Počkejte prosím na dokončení plnění.</string>
-    <string name="priming_error">Nepodařilo se provést plnění, zkuste to znovu stisknutím tlačítka <b>Opakovat</b>.</string>
     <string name="press_next">Stiskněte <b>Další</b> pro pokračování.</string>
     <string name="press_next_to_start_activation">Stiskněte <b>Další</b> pro spuštění aktivace.</string>
     <string name="remove_safety_lock">Odstraňte bezpečnostní zámek. Připojte pumpu k tělu. Stiskněte tlačítko jehly.</string>
     <string name="activating_pump">Aktivace Pacthe a nastavení počátečního bazálu. Počkejte prosím.</string>
-    <string name="activating_error">Chyba při aktivaci, stiskněte <b>Opakovat</b> pro nový pokus.</string>
     <string name="activating_complete">Nový Patch aktivován. Zbývá %.2f jednotek.</string>
     <string name="can_export_settings">Můžete exportovat nastavení, abyste mohli později obnovit tuto relaci pumpy.</string>
     <string name="press_OK_to_return">Stiskněte <b>OK</b> pro návrat na hlavní obrazovku.</string>
@@ -98,8 +97,17 @@
     <!-- settings-->
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
+    <string name="change_sn">Změnit</string>
     <string name="alarm_setting_title">Nastavení alarmů</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavení alarmů.</string>
+    <string name="alarm_setting_light_vibrate_beep">Blikání, vibrace a pípnutí</string>
+    <string name="alarm_setting_light_vibrate">Blikání a vibrace</string>
+    <string name="alarm_setting_light_beep">Blikání a pípnutí</string>
+    <string name="alarm_setting_light">Blikání</string>
+    <string name="alarm_setting_vibrate_beep">Vibrace a pípnutí</string>
+    <string name="alarm_setting_vibrate">Vibrace</string>
+    <string name="alarm_setting_beep">Pípnutí</string>
+    <string name="alarm_setting_silent">Tiché</string>
     <string name="pump_warning_notification_title">Oznámení o varování pumpy</string>
     <string name="pump_warning_notification_summary">Zobrazit upozornění na nekritická varování pumpy: vybitá baterie, téměř prázdný zásobník (20 jednotek) a brzy dojde inzulin. Doporučeno ponechat zapnuté, když jsou výstrahy pumpy nastaveny na ticho.</string>
     <string name="pump_warning_expiry_hour_title">Varování před vypršením platnosti pumpy [hodiny]</string>

@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop deaktiviert</string>
-    <string name="calculator_label">Rechner</string>
     <string name="nav_history_browser">Historie</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">Alter:</string>
-    <string name="level_label">Level:</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpenbatterie</string>
     <string name="cannula">Kanüle</string>
     <string name="patch_pump">Patch-Pumpe</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">Insulin</string>
-    <string name="a11y_bg_quality">BZ-Qualität</string>
-    <string name="a11y_blood_glucose">Blutzucker</string>
-    <string name="a11y_bg_outdated">veraltet</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Status BZ-Daten</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
-    <string name="overview_show_treatments">Behandlungen</string>
-    <string name="overview_show_heartRate">Herzfrequenz</string>
-    <string name="overview_show_deviation_slope">Steigung der Abweichung</string>
-    <string name="overview_show_activity">Aktivität</string>
-    <string name="overview_show_bgi">Blutzuckerwirkung</string>
-    <string name="overview_show_deviations">Abweichungen</string>
-    <string name="overview_show_cob">Aktive Kohlenhydrate</string>
-    <string name="overview_show_iob">Aktives Insulin</string>
-    <string name="overview_show_basals">Basal</string>
-    <string name="overview_show_abs_insulin">Gesamtinsulin</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">BEH</string>
-    <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>

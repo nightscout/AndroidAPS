@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop is uitgeschakeld</string>
-    <string name="calculator_label">Bolus wizard</string>
     <string name="nav_history_browser">Historiek venster</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">leeftijd:</string>
-    <string name="level_label">level:</string>
     <string name="insulin_label">Insuline</string>
     <string name="pb_label">Pomp batterij</string>
     <string name="cannula">Canule</string>
     <string name="patch_pump">Patchpomp</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insuline</string>
-    <string name="a11y_bg_quality">bloedglucose kwaliteit</string>
-    <string name="a11y_blood_glucose">bloed glucose</string>
-    <string name="a11y_bg_outdated">verouderd</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">BG data status</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Voorspellingen</string>
-    <string name="overview_show_treatments">Behandelingen</string>
-    <string name="overview_show_heartRate">Hartslag</string>
-    <string name="overview_show_deviation_slope">Richtingscoëfficiënt afwijking</string>
-    <string name="overview_show_activity">Activiteit</string>
-    <string name="overview_show_bgi">Bloedglucose impact</string>
-    <string name="overview_show_sensitivity">Gevoeligheid wijziging</string>
-    <string name="overview_show_deviations">Afwijkingen</string>
-    <string name="overview_show_cob">Opgenomen Koolhydraten</string>
-    <string name="overview_show_iob">Opgenomen Insuline</string>
-    <string name="overview_show_basals">Basalen</string>
-    <string name="overview_show_abs_insulin">Absolute insuline</string>
-    <string name="overview_show_variable_sens">Variabele gevoeligheid</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">BEHAND</string>
-    <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>
-    <string name="overview_show_steps">Stappen</string>
 </resources>

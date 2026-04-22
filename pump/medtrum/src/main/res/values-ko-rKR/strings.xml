@@ -16,7 +16,6 @@
     <string name="pump_state_label">펌프 상태</string>
     <string name="active_alarms_label">알람 활성화</string>
     <string name="basal_type_label">Basal 종류</string>
-    <string name="basal_rate_label">Basal 양</string>
     <string name="pump_type_label">펌프 종류</string>
     <string name="fw_version_label">펌웨어 버전</string>
     <string name="patch_no_label">Patch 번호</string>
@@ -68,12 +67,10 @@
     <string name="do_not_attach_to_body">아직 몸에 patch를 부착하지 마십시오.</string>
     <string name="half_press_needle">바늘 버튼을 반쯤 누르세요. 그리고나서 <b>다음</b>을 눌러 프라임을 시작하세요.</string>
     <string name="wait_for_priming">프라이밍이 완료될 때까지 기다리십시오.</string>
-    <string name="priming_error">프라임에 실패함, <b>재시도</b>를 눌러 다시 시도하세요.</string>
     <string name="press_next">계속하려면 <b>다음</b>을 누르세요.</string>
     <string name="press_next_to_start_activation">활성화를 시작하려면 <b>다음</b>을 누르세요.</string>
     <string name="remove_safety_lock">안전 잠금 장치를 제거하세요. 몸에 펌프를 부착하세요. 바늘 버튼을 누르세요.</string>
     <string name="activating_pump">펌프를 활성화하고 초기 basal 양을 설정함. 기다리세요.</string>
-    <string name="activating_error">활성화에 실패함, <b>재시도</b>를 눌러 다시 시도하세요.</string>
     <string name="activating_complete">새 patch가 활성화됨. %.2f U남아있음.</string>
     <string name="press_OK_to_return">메인 화면으로 돌아가려면 <b>OK</b>를 누르세요.</string>
     <string name="deactivate_sure">현재 patch를 비활성화하는 것이 맞습니까?</string>

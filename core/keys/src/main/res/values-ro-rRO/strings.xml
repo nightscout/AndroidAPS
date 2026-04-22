@@ -203,7 +203,6 @@
     <string name="pref_title_half_basal_exercise_target">Țină exercițiu, înjumătățire exercițiu</string>
     <string name="half_basal_exercise_target_summary">Setat la un număr, spre exemplu 160, înseamnă că atunci când Ținta Temporară este de 160 mg/dL și Ținta Temporară ridicată crește sensibilitatea = adevărat, se execută 50%% bazală la acest nivel (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Pragul procentual IOB</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procentul de maxIOB peste care SMB-urile sunt dezactivate.\\nValoarea implicită: 100%\\nCu 100% această caracteristică este de fapt dezactivată.</string>
     <string name="pref_title_dynisf_adjustment_factor">Factor de ajustare DynamicISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Factor de ajustare pentru DynamicISF. Setează peste 100% pentru doze de corecție mai agresive, și sub 100% pentru corecții mai puțin agresive.</string>
     <string name="pref_title_autosens_period">Perioadă Autosens</string>
@@ -214,7 +213,6 @@
     <string name="pref_title_stale_data_threshold">Prag pentru date învechite</string>
     <string name="pref_title_pump_unreachable_threshold">Prag pompă inaccesibilă</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">Vârf de acțiune</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Număr implicit de zile pentru ajustare</string>
     <string name="autotune_default_tune_days_summary">Numărul implicit de zile de date pentru a fi procesate de Autotune (până la 30)</string>
@@ -253,7 +251,6 @@
     <string name="units_format_insulin_int">%1$d U</string>
     <string name="units_format_insulin_rate">%1$.1f U/h</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
@@ -268,7 +265,6 @@
     <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f U/o (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/l (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">Limba</string>
@@ -361,11 +357,8 @@
     <string name="pref_title_ama_max_iob">IOB maxim pentru SMB</string>
     <string name="openapsma_max_iob_summary">Această valoare se numește Max IOB în contextul OpenAPS\nAceasta este insulina maximă în [U] pe care APS o poate livra imediat.</string>
     <string name="pref_title_max_daily_multiplier">Multiplicator maxim de siguranță zilnic</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3 Aceasta este o limită cheie de siguranță OpenAPS. Ceea ce face este să limiteze bazalele dumneavoastră la a fi de 3x (pentru această persoană) din cea mai mare rată bazală. Probabil că nu va trebui să schimbaţi acest lucru, dar trebuie să ştiţi că asta se discută despre \"3x max zilnic; 4x curent” pentru plafoanele de siguranță.</string>
     <string name="pref_title_current_basal_multiplier">Multiplicator de siguranță pentru bazala curentă</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4 Aceasta este cealaltă jumătate a limitelor de siguranţă OpenAPS şi cealaltă jumătate de \"3x max zilnic; 4x curent” al plafoanelor de siguranță. Asta înseamnă că bazala dumneavoastră, indiferent de valoarea maximă a bazalei din pompă, nu poate fi mai mare decât acest număr ori nivelul curent al bazalei dumneavoastră. Acest lucru este menit să împiedice pacienții să intre pe teritoriu periculos prin stabilirea bazalelor maxime excesiv de mari înainte de a înțelege cum funcționează algoritmul. Din nou, valoarea implicită este 4x; majoritatea persoanelor nu vor trebui niciodată să o ajusteze și este mai probabil ca acestea să fie nevoite să adapteze alte setări în cazul în care simt că „ating” acest plafon de siguranță.</string>
     <string name="pref_title_bolus_snooze_divisor">Divizor DIA pentru amânarea alertei de bolus</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Valoare implicită: 2\\nAmânarea bolusului este pusă în aplicare după ce faceți un bolus pentru masă, astfel încât bucla să nu contracareze cu bazale joase când tocmai ați mâncat. Exemplul de aici şi valoarea implicită este 2; prin urmare, un DIA de 3 ore înseamnă că amânarea bolusului va fi eliminată treptat în decurs de 1,5 ore (3DIA/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">Impactul minim al carbohidraților pe 5 minute (Advanced Meal Assist - AMA)</string>
     <string name="pref_title_smb_min_5m_carbs_impact">Impactul minim al carbohidraților pe 5 minute (SMB)</string>
     <string name="openapsama_min_5m_carb_impact_summary">Valoarea implicită: 3.0 (AMA) sau 8.0 (SMB). Aceasta este o setare pentru impactul implicit al carbohidraţilor pe 5 minute. Valoarea implicită este 3mg/dl la 5min. Aceasta influenţează rapiditatea cu care se scade COB şi modul în care se ia în calcul absorbţia carbohidraţilor în calcularea valorilor estimate ale glicemiei, atunci când glicemia este în scădere mai mare decât se aştepta sau nu creşte atât de repede pe cât se aştepta.</string>
@@ -374,27 +367,16 @@
     <string name="pref_title_absorption_maxtime">Timpul maxim de absorbție</string>
     <string name="absorption_max_time_summary">Timpul în ore în care este de așteptat ca toți carbohidrații de la masă să fie absorbiți</string>
     <string name="pref_title_autosens_min">Autosens min</string>
-    <string name="openapsama_autosens_min_summary">Valoare implicită: 0.7\\nCealaltă parte a limitelor de siguranță Autosens, care limitează cât de jos poate Autosens ajusta bazalele și cât de mult poate mări ISF și țintele de glicemie.</string>
     <string name="pref_title_autosens_max">Autosens max</string>
-    <string name="openapsama_autosens_max_summary">Valoare implicită: 1.2\\nAceasta este valoarea limită de multiplicare pentru autosens (și pentru autotune, în curând) pentru a seta o limită maximă de 20%% din cât de mare poate fi raportul autosens, care, la rândul ei, determină cât de mult poate autosens să modifice bazalele, cât de jos poate modifica ISF și cât de jos poate pune ținta glicemiei.</string>
     <string name="pref_title_autoisf_min">AutoISF min</string>
-    <string name="openapsama_autoISF_min_summary">Similar cu autosens_min, acesta definește cât de slab poate deveni ISF.\n\nValoarea implicită 1,0 dezactivează acest efect.</string>
     <string name="pref_title_autoisf_max">AutoISF max</string>
-    <string name="openapsama_autoISF_max_summary">Similar cu autosens_max, aceasta definește cât de puternic poate deveni ISF.\\n\nValoarea implicită de 1,0 dezactivează acest efect.\\n\nAVERTISMENT: Atenție mare la folosirea unei valori peste 2,5.</string>
     <string name="pref_title_bg_accel_weight">Ponderea accelerației glicemiei în ISF</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="pref_title_bg_brake_weight">Ponderea frânei glicemiei în ISF</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în scădere și care determină slăbirea ISF și, prin urmare, reducerea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="pref_title_low_bg_weight">Greutate interval glicemic scăzut</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este sub țintă, ceea ce determină slăbirea ISF și, prin urmare, reducerea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="pref_title_high_bg_weight">Greutate interval glicemic ridicat</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Aceasta este ponderea aplicată când glicemia este peste țintă și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Raportul de livrare SMB în funcție de intervalul glicemic</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valoare implicită: 0. Rata de livrare SMB în creștere liniară este cartografiată la intervalul de glicemie [target_bg, target_bg+bg_range].\\nLa target_bg rata SMB este smb_delivery_ratio_min, la target_bg+bg_range este smb_delivery_ratio_max\\nCu 0 rata SMB cu creștere liniară este dezactivată și se utilizează rata fixă smb_delivery_ratio.</string>
     <string name="pref_title_pp_weight">Greutatea post-prandială a ISF</string>
-    <string name="openapsama_pp_ISF_weight_summary">Aceasta este ponderea aplicată când glicemia este în creștere și care determină întărirea ISF și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită 0,0 oprește acest efect.</string>
     <string name="pref_title_dura_weight">Durată de greutate ISF</string>
-    <string name="openapsama_dura_ISF_weight_summary">Aceasta este ponderea aplicată în timpul perioadelor persistente de hiperglicemie și care determină întărirea ISF-ului și, prin urmare, creșterea cantității de insulină.\\n\\nValoarea implicită de 0,0 oprește acest efect.</string>
     <string name="pref_title_smb_delivery_ratio">Raportul administrării SMB</string>
     <string name="openapsama_smb_delivery_ratio_summary">Valoarea implicită: 0,5 Acesta este un alt plafon de siguranţă OpenAPS şi specifică ce procent din insulina totală necesară poate fi livrat sub formă de SMB. Acest lucru este menit să împiedice oamenii să intre pe un teritoriu periculos prin setarea în același timp a cererilor de SMB de la telefonul persoanelor care îi îngrijesc. Creșteți această valoare experimentală încet și cu precauție.</string>
     <string name="pref_title_smb_delivery_ratio_min">Minimul raportului de administrare SMB</string>
@@ -410,10 +392,6 @@
     <string name="pref_title_lgs_threshold">Pragul LGS (Suspendare la Hipoglicemie)</string>
     <string name="lgs_threshold_summary">Valoarea glicemiei sub care administrarea insulinei este suspendată. Valoarea implicită folosește modelul standard de țintă. Utilizatorul poate seta valoarea între 60mg/dl (3,3mmol/l) și 100 mg/dl (5,5mmol/l). Valorile sub 65/3,6 determină utilizarea modelului standard</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">Documentație algoritm</string>
-    <string name="pref_title_otp_setup">Setare Authenticator</string>
-    <string name="pref_title_quick_wizard_settings">Setări AsistentRapid</string>
-    <string name="pref_title_xdrip_info">Informații xDrip+</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
 </resources>

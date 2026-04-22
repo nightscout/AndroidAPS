@@ -34,7 +34,6 @@
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
     <!--    Wear-->
-    <string name="no_success">no funciona - si us plau comproveu al mòbil</string>
     <string name="wear_wizard_settings_summary">Càlculs inclosos al resultat de l\'assistent:</string>
     <string name="wear_general_settings">Configuració general</string>
     <string name="resend_all_data">Reenviar totes les dades</string>

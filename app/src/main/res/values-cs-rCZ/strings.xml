@@ -4,4 +4,10 @@
     <string name="identification_not_set">Identifikace není nastavena ve vývojářském režimu</string>
     <string name="select">Vybrat</string>
     <string name="set">Nastavit</string>
+    <string name="migrating_preferences">Migrace nastavení…</string>
+    <string name="initializing_plugins">Inicializace pluginů…</string>
+    <string name="initializing">Inicializace…</string>
+    <string name="migrating_profile_switches">Migrace změn profilu…</string>
+    <string name="migrating_effective_profile_switches">Migrace efektivních změn profilu…</string>
+    <string name="migrating_boluses">Migrace bolusů…</string>
 </resources>

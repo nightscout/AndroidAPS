@@ -11,11 +11,9 @@
     <string name="gettingpumpsettings">Se obțin setările pompei</string>
     <string name="gettingpumptime">Se citește ora pompei</string>
     <string name="largetimediff">Diferență majoră de timp:\nOra din pompă este diferită cu mai multe de 1.5 ore.\nCorectați manual ora din pompă și asigurați-vă că sincronizarea cu datele din pompă nu va produce un comportament neașteptat.\nDacă este posibil, ștergeți istoricul pompei înaintea modificării orei și inactivați bucla închisă pentru un interval DIA după ultima intrare istorică cu timp greșit, dar minim o DIA de acum încolo.</string>
-    <string name="largetimedifftitle">Diferență majoră de timp Titlu</string>
     <string name="approachingdailylimit">Se apropie de limita zilnică de insulină</string>
     <string name="startingbolus">Pornire livrare bolus</string>
     <string name="waitingforestimatedbolusend">Se așteaptă sfârșitul bolusului estimat</string>
-    <string name="gettingbolusstatus">Se citește starea bolusului</string>
     <string name="stoppingtempbasal">Se oprește bazala temporară</string>
     <string name="settingtempbasal">Se setează bazala temporară</string>
     <string name="settingextendedbolus">Se setează bolusul extins</string>
@@ -30,10 +28,8 @@
     <string name="insulinlimitviolation">Încălcare a limitei de insulină</string>
     <string name="boluserrorcode">Solicitat: %1$.2fU Livrat: %2$.2fU Cod eroare: %3$s</string>
     <string name="selectedpump">Pompa selectată</string>
-    <string name="diaconn_g8_bluetooth_status">Stare Bluetooth</string>
     <string name="bolus_step">Pas bolus</string>
     <string name="basal_step">Pas bazală</string>
-    <string name="diaconn_g8_user_options">OPȚIUNI UTILIZATOR</string>
     <string name="pairfirst">Vă rog să asociați pompa cu telefonul!</string>
     <string name="processinghistory">"Se procesează evenimentul "</string>
     <string name="diaconn_g8_history_tempbasal">Bazală temporară</string>

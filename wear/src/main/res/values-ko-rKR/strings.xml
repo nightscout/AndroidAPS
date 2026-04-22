@@ -6,10 +6,6 @@
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
-    <string name="label_warning_sync">데이터없음!</string>
-    <string name="label_warning_old">오래된 데이터!</string>
-    <string name="label_warning_since">%1$s 이후</string>
-    <string name="label_warning_sync_aaps">AAPS와 연결!</string>
     <string name="msg_warning_sync">%1$s 이후 받은 데이터가 없습니다! 폰에서 AAPS가 워치로 데이터를 보냈는지 확인하세요</string>
     <string name="msg_warning_old">AAPS 데이터가 %1$s 오래되었습니다! 센서, xDrip+, NS, AAPS 설정 또는 기타사항을 확인하세요!</string>
     <string name="pref_vibrate_on_bolus">Bolus 주입시 진동</string>
@@ -75,7 +71,6 @@
     <string name="menu_none">없음</string>
     <string name="menu_default">기본</string>
     <string name="menu_menu">메뉴</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">임시 목표 요청됨</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard 요청됨</string>
     <string name="action_treatment_confirmation">처치 요청됨</string>
@@ -86,7 +81,6 @@
     <string name="action_profile_switch_confirmation">프로파일 변경 요청됨</string>
     <string name="action_carbs">탄수화물</string>
     <string name="action_ecarbs">eCarbs</string>
-    <string name="action_duration_h">기간 [h]</string>
     <string name="action_insulin">인슐린</string>
     <string name="action_preset_1">프리셋 1</string>
     <string name="action_preset_2">프리셋 2</string>
@@ -123,7 +117,6 @@
     <string name="color_name_gray">회색</string>
     <string name="color_name_bluegray">청회색</string>
     <string name="color_name_white">흰색</string>
-    <string name="color_name_black">검정</string>
     <string name="color_name_multicolor">다양한 색상</string>
     <string name="pref_simplify_ui">UI 단순화</string>
     <string name="pref_vibrate_hourly">시간마다 진동</string>
@@ -150,8 +143,6 @@
     <string name="tile_no_config">가능한 환경설정 없음</string>
     <string name="wear_control_not_enabled">Wear 조작 불가능함</string>
     <string name="wear_control_no_data">사용할 수 있는 데이터 없음</string>
-    <string name="increment">증가</string>
-    <string name="decrement">감소</string>
     <string name="abbreviation_average">평균</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -166,7 +157,5 @@
     <string name="hour_short">h</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">old</string>
-    <string name="old_warning">!old!</string>
     <string name="pref_heartRateSampling">심박수</string>
 </resources>

@@ -19,7 +19,6 @@
     <string name="pump_state_label">Status pompy</string>
     <string name="active_alarms_label">Aktywne alarmy</string>
     <string name="basal_type_label">Typ bazy</string>
-    <string name="basal_rate_label">Dawka bazowa</string>
     <string name="pump_type_label">Typ pompy</string>
     <string name="fw_version_label">Wersja FW</string>
     <string name="patch_no_label">Nr Patcha</string>
@@ -74,12 +73,10 @@
     <string name="do_not_attach_to_body">Nie należy jeszcze przymocowywać Patcha do ciała.</string>
     <string name="half_press_needle">Wciśnij do połowy przycisk igły. Następnie naciśnij <b>Dalej</b> aby rozpocząć napełnianie.</string>
     <string name="wait_for_priming">Proszę poczekaj na zakończenie napełniania.</string>
-    <string name="priming_error">Błąd podczas napełniania, naciśnij <b>Spróbuj ponownie</b>, aby spróbować ponownie.</string>
     <string name="press_next">Naciśnij <b>Dalej</b>, aby kontynuować.</string>
     <string name="press_next_to_start_activation">Naciśnij <b>Dalej</b>, aby rozpocząć aktywację.</string>
     <string name="remove_safety_lock">Zdejmij blokadę zabezpieczającą. Przymocuj pompę do ciała. Naciśnij przycisk igły.</string>
     <string name="activating_pump">Aktywowanie pompy i ustawianie początkowej dawki bazowej. Proszę czekać.</string>
-    <string name="activating_error">Błąd podczas aktywacji, naciśnij <b>Spróbuj ponownie</b>, aby spróbować ponownie.</string>
     <string name="activating_complete">Nowy Patch aktywowany. Pozostało %.2f jednostek.</string>
     <string name="can_export_settings">Możesz wyeksportować ustawienia, aby móc odzyskać tę sesję patcha później.</string>
     <string name="press_OK_to_return">Naciśnij <b>OK</b>, aby powrócić do ekranu głównego.</string>

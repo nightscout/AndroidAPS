@@ -203,7 +203,6 @@
     <string name="pref_title_half_basal_exercise_target">Halv basal treningsmålverdi</string>
     <string name="half_basal_exercise_target_summary">Sett til et tall, f.eks. 160, som betyr at når midlertidig mål er 160 mg/dL og Høyt midlertidig mål øker sensitivitet=sann, kjøres 50%% basal på dette nivået (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">IOB-terskelprosent</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Prosentandel av maks IOB over hvilken SMB deaktiveres.\nStandardverdi: 100%%\nMed 100%% er denne funksjonen effektivt deaktivert.</string>
     <string name="pref_title_dynisf_adjustment_factor">DynamiskISF-justeringsfaktor</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Justeringsfaktor for DynamiskISF. Verdier over 100% vil gi mer aggressive korreksjonsdoser, mens verdier under 100% vil gi mindre aggressive korreksjoner.</string>
     <string name="pref_title_autosens_period">Autosens-periode</string>
@@ -214,7 +213,6 @@
     <string name="pref_title_stale_data_threshold">Terskel for utdaterte data</string>
     <string name="pref_title_pump_unreachable_threshold">Terskel for utilgjengelig pumpe</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">Toppunkttid</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Standard antall tune-dager</string>
     <string name="autotune_default_tune_days_summary">Standard antall dager med data som skal behandles av Autotune (opptil 30)</string>
@@ -253,7 +251,6 @@
     <string name="units_format_insulin_int">%1$d E</string>
     <string name="units_format_insulin_rate">%1$.1f E/t</string>
     <string name="units_format_mgdl">%1$s mg/dL</string>
-    <string name="units_format_mmol">%1$s mmol/L</string>
     <string name="units_format_double">%1$.1f</string>
     <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
@@ -268,7 +265,6 @@
     <string name="units_format_insulin_range">%1$.1f E (%2$.1f - %3$.1f)</string>
     <string name="units_format_insulin_rate_range">%1$.1f E/t (%2$.1f - %3$.1f)</string>
     <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
-    <string name="units_format_mmol_range">%1$s mmol/L (%2$s - %3$s)</string>
     <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
     <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
     <string name="pref_title_language">Språk</string>
@@ -361,11 +357,8 @@
     <string name="pref_title_ama_max_iob">Maks IOB for AMA</string>
     <string name="openapsma_max_iob_summary">Denne verdien kalles Maks IOB i OpenAPS-sammenheng\nDette er maksimal insulin i [E] som APS kan levere på én gang.</string>
     <string name="pref_title_max_daily_multiplier">Maks daglig sikkerhetsmultiplikator</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3. Dette er en viktig OpenAPS-sikkerhetsbegrensning som begrenser basaldosen din til å være 3 ganger (i dette tilfellet) din høyeste basaldose. Du vil sannsynligvis ikke trenge å endre dette, men bør kjenne til hva «3x maks daglig; 4x nåværende» betyr for sikkerhetsbegrensninger.</string>
     <string name="pref_title_current_basal_multiplier">Nåværende basal sikkerhetsmultiplikator</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4. Dette er den andre halvdelen av de viktige OpenAPS-sikkerhetsbegrensningene — «3x maks daglig; 4x nåværende». Din basaldose kan ikke overstige dette tallet ganger din nåværende basaldose, uavhengig av maks basal satt på pumpen. Dette forhindrer farlige situasjoner ved for høy maks basal. Standard er 4x og de fleste trenger aldri å justere dette.</string>
     <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA-divisor</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Standardverdi: 2\nBolussnooze aktiveres etter et måltidsbolus, slik at loopen ikke motvirker med lave midlertidige basaldoser like etter måltid. Standard er 2; så en 3-timers DIA betyr at bolussnooze gradvis fases ut over 1,5 timer (3DIA/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5 min karboabsorpsjonsvirkning</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB min 5 min karboabsorpsjonsvirkning</string>
     <string name="openapsama_min_5m_carb_impact_summary">Standardverdi: 3.0 (AMA) eller 8.0 (SMB). Dette er en innstilling for standard karboabsorpsjonsvirkning per 5 minutter. Standard forventet er 3mg/dl/5min. Dette påvirker hvor raskt COB avtar, og hvor mye karboabsorpsjon antas ved beregning av fremtidig forventet BS, når BS faller mer enn forventet, eller når det ikke stiger så mye som forventet.</string>
@@ -374,27 +367,16 @@
     <string name="pref_title_absorption_maxtime">Maks absorpsjonstid</string>
     <string name="absorption_max_time_summary">Tid i timer der alle karbo fra et måltid forventes å være absorbert</string>
     <string name="pref_title_autosens_min">Autosens minimum</string>
-    <string name="openapsama_autosens_min_summary">Standardverdi: 0,7\nSetter et tak på hvor lavt Autosens kan justere basaldoser ned, og hvor høyt det kan justere ISF og BS-mål opp.</string>
     <string name="pref_title_autosens_max">Autosens maksimum</string>
-    <string name="openapsama_autosens_max_summary">Standardverdi: 1,2\nSetter en 20%% øvre grense på Autosens-ratioen (og snart autotune), som bestemmer hvor høyt Autosens kan justere basaldoser, hvor lavt det kan justere ISF, og hvor lavt det kan sette BS-målet.</string>
     <string name="pref_title_autoisf_min">AutoISF minimum</string>
-    <string name="openapsama_autoISF_min_summary">Ligner på autosens_min — definerer hvor svak ISF kan bli.\n\nStandardverdien 1,0 deaktiverer effektivt denne effekten.</string>
     <string name="pref_title_autoisf_max">AutoISF maksimum</string>
-    <string name="openapsama_autoISF_max_summary">Ligner på autosens_max — definerer hvor sterk ISF kan bli.\n\nStandardverdien 1.0 deaktiverer effektivt denne effekten.\n\nADVARSEL: Vær ekstremt forsiktig ved bruk av verdier over 2.5</string>
     <string name="pref_title_bg_accel_weight">BS-akselerasjon ISF-vekt</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Dette er vekten som tillegges når blodsukkeret akselererer og som styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
     <string name="pref_title_bg_brake_weight">BS-bremsing ISF-vekt</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Dette er vekten som tillegges når blodsukkeret deakselererer og svekker ISF og dermed potensielt reduserer insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
     <string name="pref_title_low_bg_weight">Lavt BS-område vekt</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Dette er vekten som tillegges når blodsukkeret er under målet og svekker ISF og dermed potensielt reduserer insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
     <string name="pref_title_high_bg_weight">Høyt BS-område vekt</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Dette er vekten som tillegges når blodsukkeret er over målet og styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">SMB leveringsratio BS-område</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standardverdi: 0. Den lineært økende SMB-leveringsratioen tilordnes BS-området [mål_bg, mål_bg+bg_område].\nVed mål_bg er SMB-ratioen smb_delivery_ratio_min, ved mål_bg+bg_område er den smb_delivery_ratio_max.\nMed 0 deaktiveres den lineært økende SMB-ratioen og den faste smb_delivery_ratio brukes.</string>
     <string name="pref_title_pp_weight">Postprandial ISF-vekt</string>
-    <string name="openapsama_pp_ISF_weight_summary">Dette er vekten som tillegges når blodsukkeret stiger og som styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
     <string name="pref_title_dura_weight">Varighet ISF-vekt</string>
-    <string name="openapsama_dura_ISF_weight_summary">Vekten som brukes under lengre vedvarende, forhøyede blodsukkerplateauer, og som styrker ISF og dermed potensielt øker insulinleveringen.\n\nStandardverdien 0.0 deaktiverer effektivt denne effekten.</string>
     <string name="pref_title_smb_delivery_ratio">SMB leveringsratio</string>
     <string name="openapsama_smb_delivery_ratio_summary">Standardverdi: 0.5 Dette er en annen viktig OpenAPS sikkerhetsgrense, og angir hvilken andel av den totale insulin som kreves kan leveres som SMB. Dette er for å forhindre at personer kommer inn i farlig territorium ved å sette SMB-forespørsler fra omsorgspersonens telefon samtidig. Øk denne eksperimentelle verdien sakte og med forsiktighet.</string>
     <string name="pref_title_smb_delivery_ratio_min">SMB leveringsratio min</string>
@@ -410,10 +392,6 @@
     <string name="pref_title_lgs_threshold">LGS-terskel</string>
     <string name="lgs_threshold_summary">BS-verdien som insulinet stanses under. Standardverdien bruker standard målmodell. Brukeren kan angi verdi mellom 60 mg/dL (3,3 mmol/L) og 100 mg/dL (5,5 mmol/L). Verdier under 65/3,6 resulterer i bruk av standardmodellen.</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">Algoritmedokumentasjon</string>
-    <string name="pref_title_otp_setup">Oppsett av autentisering</string>
-    <string name="pref_title_quick_wizard_settings">Hurtigknapp-innstillinger</string>
-    <string name="pref_title_xdrip_info">xDrip+ info</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Område for visualisering</string>
 </resources>

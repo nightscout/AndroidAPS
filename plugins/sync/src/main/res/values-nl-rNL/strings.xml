@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(Geen horloge verbonden)</string>
     <string name="pump_status">Pomp status</string>
     <string name="loop_status">Loop status</string>
-    <string name="wizard_result">Reken. Wizard:\nInsuline: %1$.2fE\nKoolhy.: %2$dg</string>
     <string name="quick_wizard_not_available">Geselecteerde QuickWizard is niet meer beschikbaar, vernieuw uw tegel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsuline: %2$.2fE\nKoolhy.: %3$dg</string>
     <string name="user_action_not_available">De geselecteerde gebruikersactie %1$s is niet meer beschikbaar, ververs uw tegel</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">Tijdelijk streefdoel:\n\nMin: %1$s\nMax: %2$s\nDuur: %3$d minuten</string>
     <string name="wear_action_tempt_manual_message">Tijdelijk streefdoel:\n\nDoel: %1$s\nDuur: %2$d minuten</string>
     <string name="wear_action_tempt_preset_message">Tijdelijk streefdoel:\n\nReden: %1$s\nDoel: %2$s\nDuur: %3$d minuten</string>
-    <string name="no_success">Niet geslaagd - controleer de telefoon</string>
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
     <string name="wear_general_settings">Algemene instellingen</string>
     <string name="wear_custom_watchface_settings">Aanpasbare Wijzerplaat Instellingen</string>
@@ -124,10 +122,6 @@
     <string name="today">Vandaag</string>
     <string name="weighted">gewogen</string>
     <string name="full_xdrip_sync_comment">Volledige synchronisatie? Het kan enige tijd duren en tot het is voltooid zie je geen nieuwe gegevens in xDrip+.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient wordt niet ondersteund voor deze actie</string>
-    <string name="wear_action_loop_state_requires_duration">Deze actie vereist een tijdsduur</string>
-    <string name="wear_action_loop_state_pump_suspended">Pomp is onderbroken!</string>
-    <string name="wear_action_loop_state_profile_invalid">Profiel ongeldig!</string>
     <string name="wear_action_loop_state_unauthorized">Probeer het opnieuw.</string>
     <string name="wear_action_loop_state_invalid">Ongeldige loop status aangevraagd</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuur: %2$d min</string>

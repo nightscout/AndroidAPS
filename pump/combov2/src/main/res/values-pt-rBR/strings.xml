@@ -65,7 +65,6 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_setting_basal_profile_cmddesc">Configurando perfil basal</string>
     <string name="combov2_setting_tbr_cmddesc">Definindo %1$d%% de TBT por %2$d minutos</string>
     <string name="combov2_cancelling_tbr">Cancelando de TBT em andamento</string>
-    <string name="combov2_delivering_bolus_cmddesc">Aplicando %1$.1f U bolus</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Obtendo histórico TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Atualizando data e hora da bomba</string>
     <string name="combov2_updating_pump_status_cmddesc">Atualizando status da bomba</string>

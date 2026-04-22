@@ -6,7 +6,6 @@
     <string name="profile_set_ok">Basalprofilen uppdaterad i pumpen</string>
     <string name="invalid_input">Fel på inmatning</string>
     <string name="constraint_applied">Begränsning nådd</string>
-    <string name="tempbasals_iobtotal_label_string">IOB fr basal:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pumpen kan inte nås</string>
     <string name="insulin_unit_shortname">U</string>
@@ -17,7 +16,6 @@
     <string name="limiting_iob">Begränsar IOB till %1$.1f pga %2$s</string>
     <string name="loop_disabled">LOOP INAKTIVERAD PGA BEGRÄNSNINGAR</string>
     <string name="event_type">Händelsetyp</string>
-    <string name="reload">Hämta</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Spara</string>
@@ -44,12 +42,10 @@
     <string name="success">Lyckad</string>
     <string name="advanced_settings_title">Avancerade inställningar</string>
     <string name="extendedbolusdeliveryerror">Förlängd bolus misslyckad</string>
-    <string name="aps_mode_title">APS-läge</string>
     <string name="extended_bolus">Förlängd bolus</string>
     <string name="paused">Pausad</string>
     <string name="tdd_total">TDD totalt</string>
     <string name="goingtodeliver">Kommer att leverera %1$.2f enheter</string>
-    <string name="waitingforpump">Väntar på pump</string>
     <string name="androidaps_start">AAPS startad</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$dg</string>
@@ -76,7 +72,6 @@
     <string name="target_long_label">Mål-BG</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Tiden uppdaterad i pumpen</string>
     <string name="exit">Avsluta</string>
@@ -98,9 +93,6 @@
     <string name="time">Tid</string>
     <string name="ns_wifi_ssids">WiFi nätverksnamn</string>
     <string name="notes_label">Anteckning</string>
-    <string name="remove_button">Ta bort</string>
-    <string name="add_new">Lägg till ny</string>
-    <string name="addnew_above">Lägg till nytt ovan</string>
     <string name="wrong_pump_data">Data kommer från en annan pump. Byt pumpdrivrutin för att återställa.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
@@ -110,8 +102,6 @@
     <string name="pumpsuspended">Pump pausad</string>
     <string name="notconfigured">Inte konfigurerad</string>
     <string name="loopsuspended">Loop pausad</string>
-    <string name="trend_arrow">Trendpil</string>
-    <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">beh</string>
     <string name="a11y_arrow_double_down">sjunker snabbt</string>
     <string name="a11y_arrow_single_down">sjunker</string>
@@ -126,17 +116,12 @@
     <string name="a11y_inrange">inom målområdet</string>
     <string name="a11y_low">låg</string>
     <string name="average">Medel</string>
-    <string name="none"><![CDATA[<ingen>]]></string>
-    <string name="remove_label">TA BORT</string>
     <string name="activate_profile">Aktivera profil</string>
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
     <string name="profile">Profil</string>
-    <string name="select_for_removal">Markera för borttagning</string>
     <string name="confirm_remove_multiple_items">Är du säker på att du vill ta bort %1$d objekt</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Skapa kopia av denna profil?</string>
-    <string name="bg_trend_label">15 min trend</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">IOB från basal</string>
     <string name="invalid">OGILTIG</string>
@@ -177,7 +162,6 @@
     <string name="nochangerequested">Ingen ändring behövs</string>
     <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Ogiltig profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    Translator-->
@@ -215,7 +199,6 @@
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
-    <string name="unknown">okänd</string>
     <string name="eatingsoon">Äta snart</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Träning</string>
@@ -238,13 +221,6 @@
     <string name="carbsreq">%1$d g kolhydrater behövs inom %2$d minuter</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">Kvot</string>
-    <string name="amount_days">Antal dagar</string>
-    <string name="weight">Vikt</string>
-    <string name="warning_Message">Kan visa fel om man använder bolus för förfyllning!</string>
-    <string name="olddata_Message">Gammal data, vänligen tryck på \"UPPDATERA\"</string>
-    <string name="tbb">Total grundbasal</string>
-    <string name="tbb2">TDB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Tidsdetektering</string>
     <!-- User Entry -->
@@ -314,7 +290,6 @@
     <string name="uel_stat_reset">ÅTERSTÄLL STATISTIK</string>
     <string name="uel_delete_logs">RADERA LOGGAR</string>
     <string name="uel_delete_future_treatments">RADERA FRAMTIDA BEHANDLINGAR</string>
-    <string name="delete_future_treatments">Radera framtida behandlingar</string>
     <string name="uel_export_settings">EXPORTERA INSTÄLLNINGAR</string>
     <string name="uel_import_settings">IMPORTERA INSTÄLLNINGAR</string>
     <string name="uel_reset_databases">ÅTERSTÄLL DATABASERNA</string>
@@ -329,7 +304,6 @@
     <string name="uel_exit_aaps">AVSLUTA AAPS</string>
     <string name="uel_plugin_enabled">INSTICKSMODUL AKTIVERAD</string>
     <string name="uel_plugin_disabled">INSTICKSMODUL INAKTIVERAD</string>
-    <string name="uel_unknown">OKÄND</string>
     <string name="ue_string">Sträng</string>
     <string name="ue_source">Källa</string>
     <string name="ue_utc_offset">UTC Offset</string>
@@ -338,7 +312,6 @@
     <string name="ue_none">Ingen enhet</string>
     <string name="uel_loop_change">LOOP ÄNDRAD</string>
     <string name="uel_loop_removed">LOOP BORTTAGEN</string>
-    <string name="uel_other">ANNAT</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Nedre målvärde för profilen</string>
     <string name="profile_high_target">Övre målvärde för profilen</string>
@@ -368,8 +341,6 @@
     <string name="set_profile">SPARA PROFIL</string>
     <string name="set_user_settings">SPARA ANVÄNDARINSTÄLLNINGAR</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
-    <string name="start_pump">STARTA PUMP</string>
-    <string name="stop_pump">PAUSA PUMP</string>
     <string name="temp_basal_absolute">TEMP BASAL %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">TEMP BASAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR ÖVER NOTIS</string>
@@ -380,8 +351,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="a11y_file">fil</string>
-    <string name="a11y_user">ditt namn</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Justering dagar :</string>
@@ -414,7 +383,6 @@
     <string name="wizard_explain_tt">TempM: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s till %2$s</string>
     <string name="wizard_pump_not_available">Ingen pump tillgänglig!</string>
-    <string name="quickwizard">Snabbknappar</string>
     <!--    Preferences-->
     <string name="child">Barn</string>
     <string name="teenage">Tonåring</string>
@@ -439,23 +407,17 @@
     <string name="disconnected">Frånkopplad</string>
     <string name="connecting">Ansluter</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Klickade Anslut till pump</string>
-    <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Enheter per dag</string>
-    <string name="pump_icon">Pumpikon</string>
-    <string name="view_profile">Visa profil</string>
     <string name="pump_history">Pumphistorik</string>
-    <string name="stats">Statistik</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pumpdrivr. byte.</string>
     <string name="device_changed" comment="26 characters max for translation">Enheten ändrad</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Fel vid justering av temp basal</string>
-    <string name="not_set_short">Ej vald</string>
     <string name="pump_busy">Pump upptagen</string>
     <string name="connection_error">Anslutningsfel</string>
     <string name="reading_pump_history">Läser historik från pumpen</string>
     <string name="password_cleared">Lösenordet togs bort!</string>
     <string name="pairing">Parkoppling</string>
-    <string name="initializing">Startar...</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
@@ -471,7 +433,6 @@
     <string name="no">Nej</string>
     <string name="close">Stäng</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att avkryptera importerade inställningar.</string>
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
@@ -491,8 +452,6 @@
     <string name="ble_not_supported">Enheten stöder inte BLE.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy stöds inte, eller så är enheten inte parkopplad.</string>
     <string name="ble_not_enabled">Bluetooth är avstängt.</string>
-    <string name="location_not_found_title">Platsdata är inte aktiverat</string>
-    <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Inställningar för insticksprogram</string>
     <!-- Navigation -->
@@ -532,7 +491,4 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
-    <string name="remove_items">Ta bort objekt</string>
-    <string name="sort_items">Sortera objekt</string>
-
 </resources>

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">大剂量约束条件应用了</string>
     <string name="carbs_constraint_applied">碳水化合物约束条件应用了</string>
     <string name="temp_target_short">临时目标</string>
     <string name="start_activity_tt">开始运动临时目标</string>
     <string name="start_eating_soon_tt">开始很快吃饭TT(临时目标)</string>
     <string name="start_hypo_tt">开始低的临时目标</string>
     <string name="time_offset">时区偏移</string>
-    <string name="remind_to_bolus_later">稍后提醒输注大剂量</string>
-    <string name="a11y_carb_reminder">将提醒设置碳水时间</string>
     <!--    Widget-->
     <string name="configure">配置透明度</string>
     <string name="widget_description">AAPS 小部件</string>
@@ -35,8 +32,6 @@
     <string name="do_you_want_reset_stats">您想要重置所有的统计信息吗？</string>
     <string name="do_you_want_recalculate_tdd_stats">您想重新计算 TDD每日总剂量统计数据吗？</string>
     <string name="calculation_in_progress">正在进行计算</string>
-    <string name="invalid_age">输入的年龄无效</string>
-    <string name="invalid_weight">输入的权重无效</string>
     <string name="age">年龄</string>
     <string name="weight_label">重量</string>
     <string name="glucose_type">血糖类型</string>
@@ -44,13 +39,7 @@
     <string name="bg_meter">血糖仪</string>
     <string name="bg_sensor">传感器</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">总计</string>
     <!-- SiteRotationDialog -->
-    <string name="site_front">前面</string>
-    <string name="site_back">后面</string>
     <string name="site_man">男性</string>
     <string name="site_woman">女性</string>
     <string name="site_child">儿童</string>
@@ -58,14 +47,12 @@
     <string name="user_profile_description">用户信息描述用于显示男性、女性或儿童最常用的部位</string>
     <string name="site_management">部位管理配置</string>
     <string name="site_management_description">在这里设置是否管理输注部位、CGM 传感器部位，或两者同时管理。该设置将用于在每次检测到新记录时，自动弹出部位更换提醒对话框</string>
-    <string name="record_site_change">记录部位位置</string>
     <string name="update_site_change">更新部位位置</string>
     <string name="edit_site">编辑</string>
     <string name="record_site_location">部位位置：%1$s</string>
     <string name="record_site_arrow">部位箭头: %1$s</string>
     <string name="record_site_note">备注： %1$s</string>
     <string name="delete_site_note">备注已删除</string>
-    <string name="site_filter_info">选择要查看的治疗事件类型：管路更换和/或传感器更换</string>
     <!-- FillDialog -->
     <string name="fill_warning">请确保数量和输液器里的药量匹配</string>
     <string name="record_pump_site_change">记录泵管路更换</string>
@@ -73,16 +60,12 @@
     <string name="fill_prime_amount">预注剂量</string>
     <string name="fill_pump_units_note">预注剂量以泵单位表示</string>
     <string name="fill_insulin_change">将胰岛素切换为：%1$s（将套用配置切换）</string>
-    <string name="fill_current_insulin">当前胰岛素</string>
-    <string name="fill_change_insulin">更换胰岛素</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">缺少胰岛素名称</string>
     <string name="insulin_name_exists">胰岛素名称 %1$s 已存在，请选择新的名称</string>
     <string name="a11y_add_new_insulin">新增胰岛素</string>
     <string name="a11y_delete_current_insulin">删除当前的胰岛素</string>
-    <string name="save_or_reset_changes_first">先保存或重置当前更改</string>
     <string name="activate_insulin_no_profile">未找到生效的配置文件</string>
     <string name="activate_insulin_new_insulin">新的胰岛素：%1$s</string>
     <string name="activate_insulin_remaining">剩余： %1$d 分钟</string>
@@ -113,45 +96,25 @@
     <string name="duration3h">3 小时</string>
     <string name="duration10h">10 小时</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">校正结果使用%</string>
-    <string name="a11_correction_units">校正结果使用单位</string>
-    <string name="two_hours">2小时</string>
-    <string name="result_insulin_carbs">结果: %1$s %2$s</string>
     <string name="missing_carbs">缺少 %1$d 克</string>
     <string name="wizard_carbs_type_bread_desc">100% 即时碳水，无扩展碳水</string>
     <string name="wizard_carbs_type_desc">碳水减少了 %1$d%%，添加了eCarbs %2$d%%，延迟了 %3$d 分钟，持续 %4$d 小时</string>
     <string name="wizard_include_info">轻触以在计算中包含/排除：\n•血糖—血糖（起始为开启）\n•临时目标—临时目标（起始为开启）\n•趋势—血糖趋势（会记住上次状态）\n•IOB—活性胰岛素（起始为开启）\n•COB—活性碳水化合物（会记住上次状态）</string>
-    <string name="wizard_bg_age">血糖时间： %1$d 分钟</string>
-    <string name="a11y_current_bg">当前血糖</string>
-    <string name="carb_time_label">碳水时间</string>
-    <string name="a11y_set_carb_timer">设置碳水计时器提醒</string>
-    <string name="show_calculation">显示计算</string>
     <!-- Treatments -->
     <string name="no_records_available">当前暂无记录</string>
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
-    <string name="treatments_carbs_label_string">碳水化合物:</string>
-    <string name="tempbasals_netratio_label_string">比率：</string>
-    <string name="tempbasals_iob_label_string">IOB活性胰岛素:</string>
-    <string name="treatments_wizard_correction_label">矫正值</string>
-    <string name="meal_bolus">饮食</string>
-    <string name="prime">充盈</string>
     <string name="carbs_and_bolus">碳水与大剂量</string>
     <string name="show_invalidated">显示无效项</string>
     <string name="hide_invalidated">隐藏失效项</string>
     <string name="careportal_remove_started_events">删除 AAPS 启动的条目</string>
-    <string name="hide_loop">隐藏闭环</string>
-    <string name="show_loop">显示闭环</string>
     <string name="user_entry">用户条目</string>
     <string name="clone_label">克隆</string>
     <string name="add_new_profile">添加新配置文件</string>
-    <string name="show_profile">显示配置文件</string>
     <string name="edit_label">编辑</string>
-    <string name="edit_profile">编辑配置文件</string>
     <string name="activate_label">激活</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="remove_label">删除</string>
     <string name="active_profile_indicator">激活</string>
-    <string name="remaining_time_label">剩余</string>
     <string name="confirm_remove_profile">删除配置文件 %1$s 吗？</string>
     <string name="confirm_clone_profile">克隆配置文件 \"%1$s\"？</string>
     <string name="tbr_type_flag_extended">E</string>
@@ -176,19 +139,14 @@
     <string name="format_with_tdd_and_pct">年龄: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">年龄: %1$d 体重: %2$.0f 千克</string>
     <string name="dpv_default_profile">DPV默认个人配置</string>
-    <string name="invalid_pct">输入的百分比无效</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">基础率</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">仅在手表</string>
-    <string name="a11y_only_on_phone">仅在手机</string>
     <string name="overview_edit_quickwizard_button_text">按钮文本</string>
     <string name="quick_wizard_mode_wizard">向导</string>
     <string name="quick_wizard_mode_insulin">胰岛素</string>
     <string name="quick_wizard_mode_carbs">碳水化合物</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">仅限正IOB</string>
     <string name="overview_edit_quickwizard_superbolus">超级大剂量Superbolus</string>
-    <string name="a11y_drag_and_drop_handle">拖放操作</string>
     <!--    History browser-->
     <string name="history_now">当前</string>
     <string name="a11y_history_previous_window">上一窗口</string>
@@ -246,7 +204,6 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">已选操作</string>
-    <string name="quick_launch_available_actions">可用操作</string>
     <string name="quick_launch_no_dynamic_items">无可用项目</string>
     <string name="quick_launch_category_treatment">治疗</string>
     <string name="quick_launch_category_care">关怀入口</string>
@@ -260,10 +217,7 @@
     <string name="quick_launch_no_tt_presets">添加临时目标预设以便在此使用</string>
     <string name="quick_launch_no_profiles">在本地配置中创建配置文件以便在此使用</string>
     <string name="quick_launch_edit_profile_preset">编辑配置文件</string>
-    <string name="quick_launch_profile_percentage">百分比</string>
-    <string name="quick_launch_profile_duration">持续时间</string>
     <string name="quick_launch_profile_permanent">永久</string>
-    <string name="quick_launch_profile_confirm">激活配置文件 %1$s ？</string>
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d 分</string>
     <string name="select_arrow">选择箭头</string>

@@ -38,19 +38,12 @@
     <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
     <string name="readstatus">Citire stare</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Cerință</string>
-    <string name="error_asking_for_permissions">Eroare în solicitarea permisiunilor</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Ce pompă dorești să folosești cu AAPS?</string>
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
-    <string name="configbuilder_general_description">Există pluginuri generale pe care le-ați putea găsi utile.</string>
     <string name="configbuilder_sync_description">Module de încărcare date, sincronizare și de comunicare.</string>
-    <string name="configbuilder_constraints_description">Ce constrângeri sunt aplicate?</string>
-    <string name="configbuilder_loop_description">Utilizați acest lucru pentru a activa integrarea buclei AAPS.</string>
-    <string name="configbuilder_insulin_description">Ce tip de insulină folosiți?</string>
     <string name="configbuilder_bgsource_description">De unde ar trebui AAPS să primească datele?</string>
-    <string name="configbuilder_smoothing_description">Alege algoritmul de uniformizare</string>
     <string name="configbuilder_sensitivity_description">Ce algoritm de detecție a sensibilității doriți să folosiți?</string>
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AAPS va copia setările ratei bazale din profilul din aplicație în pompă. Profilul existent în pompă va fi suprascris cu cel din AAPS. Asigurați-vă că sunt corecte setările ratei bazale în profilul din AAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
     <string name="nsclient_version_does_not_match">Versiunea AAPSClient nu se potrivește cu versiunea AAPS. Vă rugăm să actualizați.</string>

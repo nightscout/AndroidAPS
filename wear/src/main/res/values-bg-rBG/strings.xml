@@ -6,10 +6,6 @@
     <string name="label_actions_tile">AAPS(Действия)</string>
     <string name="label_temp_target_tile">AAPS(Временна цел)</string>
     <string name="label_quick_wizard_tile">AAPS(Съветник)</string>
-    <string name="label_warning_sync">Няма данни!</string>
-    <string name="label_warning_old">Стари данни!</string>
-    <string name="label_warning_since">От %1$s</string>
-    <string name="label_warning_sync_aaps">Свържи с AAPS!</string>
     <string name="msg_warning_sync">Няма данни от %1$s! Проверете дали AAPS на телефона изпраща данни до часовника</string>
     <string name="msg_warning_old">Данните са %1$s стари! Проверете сензора, xDrip+, NS, AAPS конфигурацията и други!</string>
     <string name="pref_vibrate_on_bolus">Вибрация при болус</string>
@@ -66,7 +62,6 @@
     <string name="menu_none">Без</string>
     <string name="menu_default">Стандартен</string>
     <string name="menu_menu">Меню</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">Заявен Временен базал</string>
     <string name="action_quick_wizard_confirmation">Заявен Съветник</string>
     <string name="action_treatment_confirmation">Заявена Терапия</string>
@@ -77,7 +72,6 @@
     <string name="action_profile_switch_confirmation">Заявка за смяна на профил</string>
     <string name="action_carbs">въглехидрати</string>
     <string name="action_ecarbs">Удължени въглехидрати</string>
-    <string name="action_duration_h">Прод [h]</string>
     <string name="action_insulin">Инсулин</string>
     <string name="action_preset_1">Шаблон 1</string>
     <string name="action_preset_2">Шаблон 2</string>
@@ -114,7 +108,6 @@
     <string name="color_name_gray">сиво</string>
     <string name="color_name_bluegray">син сив</string>
     <string name="color_name_white">бяло</string>
-    <string name="color_name_black">черно</string>
     <string name="color_name_multicolor">многоцветно</string>
     <string name="pref_simplify_ui">Опростен интерфейс</string>
     <string name="pref_vibrate_hourly">Вибрира почасово</string>
@@ -140,8 +133,6 @@
     <string name="tile_no_config">Няма настройки</string>
     <string name="wear_control_not_enabled">Управление от часовник изключено</string>
     <string name="wear_control_no_data">Няма налични данни</string>
-    <string name="increment">Нарастване</string>
-    <string name="decrement">Намаляване</string>
     <string name="abbreviation_average">средно</string>
     <string name="no_iob_u">--Е</string>
     <string name="no_cob_g">--гр</string>
@@ -156,7 +147,5 @@
     <string name="hour_short">ч</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">стар</string>
-    <string name="old_warning">!старо!</string>
     <string name="pref_heartRateSampling">Сърдечен ритъм</string>
 </resources>

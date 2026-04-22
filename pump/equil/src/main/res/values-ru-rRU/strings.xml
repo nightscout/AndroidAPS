@@ -21,7 +21,6 @@
     <string name="equil_tone_mode_shake">Только вибрация</string>
     <string name="equil_tone_mode_tone">Только звук</string>
     <string name="equil_tone_mode_tone_and_shake">Вибрация и звук</string>
-    <string name="equil_unit_u">%1$s ед</string>
     <string name="equil_ble_config_confirmation_title">Выполнить сопряжение с помпой Equil Patch</string>
     <string name="equil_error">Ошибка соединения</string>
     <string name="equil_change">Заменить помпу</string>

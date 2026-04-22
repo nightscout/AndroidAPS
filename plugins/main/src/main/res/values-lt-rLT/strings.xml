@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Ciklas išjungtas</string>
-    <string name="calculator_label">Skaičiuotuvas</string>
     <string name="nav_history_browser">Istorija</string>
     <string name="sensor_label">Sensorius</string>
-    <string name="age_label">laikas:</string>
-    <string name="level_label">lygis:</string>
     <string name="insulin_label">Insulinas</string>
     <string name="pb_label">Pompos baterija</string>
     <string name="cannula">Kaniulė</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulinas</string>
-    <string name="a11y_bg_quality">glikemijos duomenų kokybė</string>
-    <string name="a11y_blood_glucose">kraujo glikemija</string>
-    <string name="a11y_bg_outdated">nebegalioja</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">Glikemijos statusas</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Prognozė</string>
-    <string name="overview_show_treatments">Terapija</string>
-    <string name="overview_show_heartRate">Pulsas</string>
-    <string name="overview_show_deviation_slope">Nuokrypiai</string>
-    <string name="overview_show_activity">Aktyvumas</string>
-    <string name="overview_show_bgi">Glikemijos įtaka</string>
-    <string name="overview_show_sensitivity">Jautrumo keitimas</string>
-    <string name="overview_show_deviations">Nuokrypiai</string>
-    <string name="overview_show_cob">Aktyvūs angliavandeniai</string>
-    <string name="overview_show_iob">Aktyvus insulinas organizme</string>
-    <string name="overview_show_basals">Bazė</string>
-    <string name="overview_show_abs_insulin">Insulinas absoliučiais vienetais</string>
-    <string name="overview_show_variable_sens">Kintamas jautrumas</string>
-    <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">VB</string>
-    <string name="treatments_shortname">ĮRAŠ</string>
-    <string name="cannula_usage">naud:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>
-    <string name="overview_show_steps">Žingsniai</string>
 </resources>

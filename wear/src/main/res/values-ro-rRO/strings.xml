@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(Țintă Temporară)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistent Rapid)</string>
     <string name="label_user_action_tile">AAPS(Acțiune Utilizator)</string>
-    <string name="label_warning_sync">Nu există date!</string>
-    <string name="label_warning_old">Date vechi!</string>
-    <string name="label_warning_since">De acum %1$s</string>
-    <string name="label_warning_sync_aaps">Sincronizare cu AAPS!</string>
     <string name="msg_warning_sync">Nu au fost primite date de acum %1$s! Verificați că AAPS pe telefon trimite date către ceas</string>
     <string name="msg_warning_old">Datele AAPS sunt vechi de %1$s! Verificați senzorul, xDrip+, NS, configurația AAPS sau altele!</string>
     <string name="pref_vibrate_on_bolus">Vibrare la Bolus</string>
@@ -83,8 +79,6 @@
     <string name="menu_none">Nimic</string>
     <string name="menu_default">Implicit</string>
     <string name="menu_menu">Meniu</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Durată [min]</string>
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
@@ -102,8 +96,6 @@
     <string name="action_ecarbs">Carbohidrați extinși</string>
     <string name="action_percentage">Procentaj\n[%]</string>
     <string name="action_start_minutes">Start\n[minute]</string>
-    <string name="action_start_minutes_format">%1$d minute</string>
-    <string name="action_duration_h">Durată [h]</string>
     <string name="action_duration_hours">Durată\n[ore]</string>
     <string name="action_duration_hours_format">%1$d h</string>
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
@@ -152,7 +144,6 @@
     <string name="color_name_gray">gri</string>
     <string name="color_name_bluegray">gri albastru</string>
     <string name="color_name_white">alb</string>
-    <string name="color_name_black">negru</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Simplificare interfață</string>
     <string name="pref_vibrate_hourly">Vibrați la fiecare oră</string>
@@ -185,8 +176,6 @@
     <string name="tile_no_config">Nici o configurație disponibilă</string>
     <string name="wear_control_not_enabled">Comenzi Wear dezactivate</string>
     <string name="wear_control_no_data">Nu există date disponibile</string>
-    <string name="increment">creștere</string>
-    <string name="decrement">scădere</string>
     <string name="abbreviation_average">med.</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -202,8 +191,6 @@
     <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">vechi</string>
-    <string name="old_warning">!vechi!</string>
     <string name="error">Eroare</string>
     <string name="pref_heartRateSampling">Ritm cardiac</string>
     <string name="pref_heartRateSmoothing">Uniformizare rată cardio (RC)</string>
@@ -260,7 +247,6 @@
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">Atingeți pentru a extinde detaliile calculului</string>
     <string name="wizard_confirmation_sent">Trimis</string>
     <string name="tile_settings">Setări panouri</string>
     <string name="loop_status_error">Eroare la actualizarea stării</string>

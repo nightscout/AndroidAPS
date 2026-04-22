@@ -18,11 +18,8 @@
     <string name="carbs_short" comment="max 6 characters">Carbohidrați</string>
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">UltimaConexiune: acum %1$d min</string>
-    <string name="short_status_alert">Alertă: %1$s</string>
     <string name="short_status_last_bolus">UltimulBolus: %1$s @ %2$s</string>
     <string name="short_status_temp_basal">BazalăTemporară: %1$s</string>
-    <string name="short_status_extended">Ext: %1$s</string>
-    <string name="short_status_reservoir">Rezervor: %1$dU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="short_status_not_initialized">Pompa nu este inițializată</string>
     <!--    Permissions-->
@@ -40,7 +37,6 @@
     <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
     <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
     <string name="concentration_delivered_format">%1$s/%2$s</string>
-    <string name="pump_base_basal_rate_cu">%1$.2f\u00a0CU/h</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Setări exportate cu succes către stocarea în cloud</string>

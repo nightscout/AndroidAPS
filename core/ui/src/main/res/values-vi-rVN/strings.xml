@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_field_must_not_be_empty">Trường này không được để trống</string>
-    <string name="error_url_not_valid">Địa chỉ Url không hợp lệ</string>
     <string name="error_mustbe4hexadidits">Phải gồm 4 ký tự trong tập ABCDEF0123456789</string>
     <!--    General-->
-    <string name="temp_basal_overview_short_name">T:</string>
     <string name="treatments">Điều trị</string>
     <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
     <string name="nav_configuration">Cấu hình</string>
@@ -21,7 +19,6 @@
     <string name="invalid_input">Dữ liệu đầu vào không hợp lệ</string>
     <string name="invalid_number">Số không hợp lệ</string>
     <string name="constraint_applied">Đã áp dụng giới hạn!</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Không thể kết nối với bơm</string>
     <string name="insulin_unit_shortname">U</string>
@@ -33,7 +30,6 @@
     <string name="limiting_iob">Giới hạn IOB: %1$.1f U – Lý do: %2$s.</string>
     <string name="loop_disabled">VÒNG LẶP BỊ TẮT DO GIỚI HẠN AN TOÀN</string>
     <string name="event_type">Loại sự kiện</string>
-    <string name="reload">Tải lại</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Lưu</string>
@@ -88,16 +84,12 @@
     <string name="success">Thành công</string>
     <string name="advanced_settings_title">Cài đặt nâng cao</string>
     <string name="extendedbolusdeliveryerror">Tiêm liều Bolus kéo dài thất bại</string>
-    <string name="aps_mode_title">Chế độ APS</string>
     <string name="extended_bolus">Liều Bolus kéo dài</string>
     <string name="paused">Đã tạm dừng</string>
     <string name="running">Đang chạy</string>
-    <string name="open_menu">Mở Menu</string>
-    <string name="close_menu">Đóng menu</string>
     <string name="tdd_total">Tổng TDD</string>
     <string name="tdd_old_data">Dữ liệu cũ</string>
     <string name="goingtodeliver">Đang tiêm %1$.2f U Insulin</string>
-    <string name="waitingforpump">Đang chờ phản hồi từ Bơm</string>
     <string name="androidaps_start">AAPS đã khởi động</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
@@ -113,10 +105,8 @@
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Ngày</string>
     <string name="units_label">Đơn vị</string>
-    <string name="insulin_name_label">Tên Insulin</string>
     <string name="insulin_nickname_label">Tên gọi insulin</string>
     <string name="concentration_label">Tập trung</string>
-    <string name="format_concentration">U%1$.0f</string>
     <string name="peak_label">Đỉnh (Peak)</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
@@ -130,7 +120,6 @@
     <string name="target_long_label">Mục tiêu đường huyết</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">ĐỒNG Ý</string>
     <string name="pump_time_updated">Đã cập nhật thời gian bơm</string>
     <string name="exit">Thoát</string>
@@ -157,9 +146,6 @@
     <string name="waiting_for_pump">Đang chờ phản hồi từ Bơm…</string>
     <string name="initialization_failed">Khởi tạo thất bại</string>
     <string name="notes_label">Ghi chú</string>
-    <string name="remove_button">Xóa</string>
-    <string name="add_new">Thêm mới</string>
-    <string name="addnew_above">Thêm ở trên</string>
     <string name="wrong_pump_data">Phát hiện dữ liệu từ bơm khác. Hãy chọn lại loại bơm để khởi tạo lại.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Hiệu chuẩn</string>
@@ -174,8 +160,6 @@
     <string name="notconfigured">Chưa được thiết lập</string>
     <string name="loopsuspended">Vòng lặp đã tạm dừng</string>
     <string name="loop_suspended_by_dst">Vòng lặp bị tạm dừng do thay đổi múi giờ (DST)</string>
-    <string name="trend_arrow">Mũi tên xu hướng</string>
-    <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">req</string>
     <string name="a11y_arrow_double_down">giảm nhanh</string>
     <string name="a11y_arrow_single_down">giảm</string>
@@ -190,22 +174,16 @@
     <string name="a11y_inrange">trong phạm vi</string>
     <string name="a11y_low">thấp</string>
     <string name="average">Trung bình</string>
-    <string name="tir_short">TIR</string>
     <string name="tir">Thời gian trong phạm vi</string>
-    <string name="none"><![CDATA[<không>]]></string>
-    <string name="remove_label">XÓA</string>
     <string name="activate_profile">Kích hoạt Hồ sơ</string>
     <string name="activate_insulin">Kích hoạt insulin</string>
     <string name="reset">Đặt lại</string>
     <string name="profileswitch_ismissing">Thiếu chuyển đổi hồ sơ. Vui lòng thực hiện chuyển đổi hồ sơ hoặc nhấn “Kích hoạt hồ sơ” trong Hồ sơ cục bộ.</string>
     <string name="profile">Hồ sơ</string>
-    <string name="select_for_removal">Chọn để xóa</string>
     <string name="confirm_remove_multiple_items">Bạn có chắc chắn muốn xóa %1$d mục không</string>
     <string name="overview_treatment_label">Điều trị</string>
     <string name="copytolocalprofile">Tạo Hồ sơ mới từ Hồ sơ này không?</string>
     <string name="wear_wizard_settings">Cài đặt Wizard trên Wear OS</string>
-    <string name="bg_trend_label">Xu hướng 15 phút</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="invalid">KHÔNG HỢP LỆ</string>
@@ -231,14 +209,8 @@
     <string name="pump_suspend">Tạm dừng bơm</string>
     <string name="pump_resume">Tiếp tục bơm</string>
     <string name="mode_reverted">Chế độ đã được khôi phục</string>
-    <string name="insulin_shortname">INS</string>
     <string name="select_insulin">Chọn loại Insulin</string>
-    <string name="select_pump_insulin">Chọn loại insulin cho bơm</string>
-    <string name="select_pen_insulin">Chọn loại Insulin</string>
-    <string name="insulin_template">Mẫu</string>
     <string name="dia">DIA</string>
-    <string name="peak">Đỉnh</string>
-    <string name="concentration">Nồng độ</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Hủy liều nền tạm thời thất bại</string>
@@ -286,14 +258,11 @@
     <string name="current_insulin">Đang hoạt động</string>
     <string name="change_insulin">Thay đổi</string>
     <string name="select_insulin_description">Chọn loại insulin bạn đang nạp vào bơm. Hồ sơ (profile) sẽ được chuyển đổi sau khi kích hoạt / làm đầy (prime).</string>
-    <string name="bolus_delivered">%1$.2f\u00a0U / %2$.2f\u00a0U</string>
-    <string name="bolus_delivered_CU">%1$.2f\u00a0CU / %2$.2f\u00a0CU</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulin đã chọn: %1$s</string>
     <string name="record_insulin_hint">Nếu nhập insulin được tiêm bằng bút, hãy chọn đúng loại insulin bên dưới. Liều lượng luôn được tính bằng Đơn vị Quốc tế (IU).</string>
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Hồ sơ không hợp lệ: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d phút</string>
     <!--    Translator-->
@@ -306,7 +275,6 @@
     <string name="careportal_question">Câu hỏi</string>
     <string name="careportal_exercise">Bài tập luyện</string>
     <string name="careportal_announcement_message">Thông báo: %1$s</string>
-    <string name="careportal_settings_export_message">Xuất cài đặt : %1$s</string>
     <string name="careportal_note_message">Ghi chú: %1$s</string>
     <string name="careportal_question_message">Câu hỏi: %1$s</string>
     <string name="careportal_exercise_message">Bài tập luyện : %1$s</string>
@@ -366,7 +334,6 @@
     <string name="glucosetype_finger">Ngón tay</string>
     <string name="glucosetype_sensor">Cảm biến</string>
     <string name="manual">Thủ công</string>
-    <string name="unknown">không xác định</string>
     <string name="eatingsoon">Chuẩn bị ăn</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Hoạt động</string>
@@ -378,9 +345,7 @@
     <string name="activation">Kích hoạt</string>
     <string name="temp_target_management">Mục tiêu tạm thời</string>
     <string name="revert_to_defaults">Khôi phục về mặc định</string>
-    <string name="confirm_remove_preset">Xóa cài đặt sẵn %1$s?</string>
     <string name="confirm_cancel_temp_target">Hủy mục tiêu tạm thời đang hoạt động?</string>
-    <string name="add_new_preset">Thêm mẫu cài đặt mới</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -433,13 +398,6 @@
     <string name="bolus">Bolus</string>
     <string name="tdd_short">TDD</string>
     <string name="tdd">Tổng liều hàng ngày</string>
-    <string name="ratio">Tỷ lệ</string>
-    <string name="amount_days"># Ngày</string>
-    <string name="weight">Trọng lượng</string>
-    <string name="warning_Message">Kết quả có thể sai lệch nếu tính cả bolus dùng để mồi/đổ đầy ống!</string>
-    <string name="olddata_Message">Dữ liệu cũ, vui lòng nhấn \'RELOAD\'</string>
-    <string name="tbb">Tổng liều nền cơ bản</string>
-    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Nhận diện thời gian</string>
     <!-- User Entry -->
@@ -513,7 +471,6 @@
     <string name="uel_stat_reset">ĐẶT LẠI THỐNG KÊ</string>
     <string name="uel_delete_logs">XOÁ NHẬT KÝ</string>
     <string name="uel_delete_future_treatments">XOÁ LIỆU TRÌNH SẮP TỚI</string>
-    <string name="delete_future_treatments">Xoá liệu trình sắp tới</string>
     <string name="uel_export_settings">XUẤT CÀI ĐẶT</string>
     <string name="uel_import_settings">NHẬP CÀI ĐẶT</string>
     <string name="uel_select_directory">CHỌN THƯ MỤC</string>
@@ -530,7 +487,6 @@
     <string name="uel_exit_aaps">THOÁT AAPS</string>
     <string name="uel_plugin_enabled">ĐÃ BẬT PLUGIN</string>
     <string name="uel_plugin_disabled">ĐÃ TẮT PLUGIN</string>
-    <string name="uel_unknown">KHÔNG XÁC ĐỊNH</string>
     <string name="ue_string">Chuỗi</string>
     <string name="ue_source">Nguồn</string>
     <string name="ue_utc_offset">UTC Offset</string>
@@ -544,7 +500,6 @@
     <string name="uel_store_insulin">LƯU INSULIN</string>
     <string name="uel_change_insulin_concentration">THAY ĐỔI NỒNG ĐỘ INSULIN</string>
     <string name="uel_insulin_removed">INSULIN ĐÃ ĐƯỢC LOẠI BỎ</string>
-    <string name="uel_other">KHÁC</string>
     <string name="uel_running_mode">RUNNING MODE</string>
     <string name="uel_running_mode_removed">ĐÃ XÓA CHẾ ĐỘ THỂ DỤC</string>
     <string name="uel_running_mode_updarted">ĐÃ CẬP NHẬT CHẾ ĐỘ THỂ DỤC</string>
@@ -575,7 +530,6 @@
     <string name="profile_name_contains_dot">Một số tên hồ sơ chứa dấu chấm (.). Điều này không được NS hỗ trợ. Các hồ sơ sẽ không được tải lên NS.</string>
     <string name="invalid_profile_not_accepted">Hồ sơ %1$s không hợp lệ, không được chấp nhận từ NS</string>
     <string name="errors">Lỗi</string>
-    <string name="view">Xem</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">CARBS %1$d g</string>
@@ -589,8 +543,6 @@
     <string name="set_profile">THIẾT LẬP HỒ SƠ</string>
     <string name="set_user_settings">CÀI ĐẶT NGƯỜI DÙNG</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
-    <string name="start_pump">KHỞI ĐỘNG BƠM</string>
-    <string name="stop_pump">DỪNG BƠM</string>
     <string name="temp_basal_absolute">LIỀU NỀN TẠM THỜI %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">LIỀU NỀN TẠM THỜI %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT: TBR VƯỢT QUÁ GIỚI HẠN</string>
@@ -606,9 +558,6 @@
     <string name="autosens_long">Giá trị Autosens: %.0f%%</string>
     <string name="autosens_short">%.0f%%</string>
     <string name="algorithm_long">Autosens trong thuật toán: %.0f%%</string>
-    <string name="algorithm_short">Alg: %.0f%%</string>
-    <string name="a11y_file">tập tin</string>
-    <string name="a11y_user">người dùng</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Tune days :</string>
@@ -645,12 +594,10 @@
     <string name="wizard_include_trend">Bao gồm xu hướng BG</string>
     <string name="wizard_include_iob">Bao gồm IOB</string>
     <string name="wizard_include_cob">Bao gồm COB</string>
-    <string name="wizard_advanced">Nâng cao</string>
     <string name="wizard_calculation">Tính toán</string>
     <string name="no_action_selected">Không có hành động nào được chọn, sẽ không có gì xảy ra</string>
     <string name="carb_equal_zero_no_action">Carb = 0. Không có hành động nào được thực hiện!</string>
     <string name="bolus_equal_zero_no_action">Bolus = 0. Không thực hiện hành động nào!</string>
-    <string name="wizard_no_insulin_required">Không cần insulin!</string>
     <string name="wizard_no_actual_bg">Chưa có BG gần đây để tính toán!</string>
     <string name="wizard_no_active_profile">Chưa có Hồ sơ nào hoạt động!</string>
     <string name="wizard_no_cob">COB không xác định! Thiếu dữ liệu BG hoặc ứng dụng vừa khởi động lại?</string>
@@ -668,7 +615,6 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">Không có bơm khả dụng!</string>
-    <string name="quickwizard">QuickWizard</string>
     <string name="quickwizard_managemnt">QuickWizard</string>
     <!--    Preferences-->
     <string name="child">Trẻ em</string>
@@ -691,29 +637,22 @@
     <string name="tempbasal_label">Liều nền tạm thời</string>
     <string name="extended_bolus_label">Liều Bolus kéo dài</string>
     <string name="serial_number">Số sê-ri</string>
-    <string name="last_bolus_format">%1$.2f U %2$s</string>
     <string name="disconnected">Ngắt kết nối</string>
     <string name="connecting">Đang kết nối</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Đã nhấn kết nối với Bơm</string>
-    <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Đơn vị hàng ngày</string>
     <string name="max_daily_units">Số đơn vị tối đa mỗi ngày</string>
-    <string name="pump_icon">Biểu tượng Bơm</string>
-    <string name="view_profile">Xem Hồ sơ</string>
     <string name="pump_history">Lịch sử bơm</string>
-    <string name="stats">Thống kê</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Thay trình điều khiển bơm.</string>
     <string name="device_changed" comment="26 characters max for translation">Thiết bị đã thay đổi</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus thành công</string>
     <string name="temp_basal_delivery_error">Lỗi khi tiêm liều nền tạm thời</string>
     <string name="ebstopsloop">Dùng Bolus kéo dài sẽ tạm dừng vòng lặp kín trong thời gian thực hiện. Bạn có muốn tiếp tục không?</string>
-    <string name="not_set_short">Chưa đặt</string>
     <string name="pump_busy">Bơm đang bận</string>
     <string name="connection_error">Lỗi kết nối bơm</string>
     <string name="reading_pump_history">Đang đọc lịch sử bơm</string>
     <string name="password_cleared">Đã xóa bỏ mật khẩu!</string>
     <string name="pairing">Đang ghép đôi</string>
-    <string name="initializing">Đang khởi tạo...</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Cảnh báo</string>
     <string name="retry" comment="Button label to retry a failed operation">Thử lại</string>
@@ -739,7 +678,6 @@
     <string name="no">Không</string>
     <string name="close">Đóng</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Bạn sẽ được yêu cầu nhập mật khẩu chính, cần để giải mã các cài đặt đã nhập.</string>
     <!-- <unattended_export> -->
     <string name="export_ok">ĐỒNG Ý</string>
     <string name="export_warning">Cảnh báo</string>
@@ -765,18 +703,7 @@
     <string name="csv_export_failed">Xuất các mục nhập của người dùng THẤT BẠI!</string>
     <string name="logs_sent">Đã gửi nhật ký qua email</string>
     <string name="logs_send_failed">Gửi nhật ký thất bại</string>
-    <string name="export_options">Xuất các tuỳ chọn</string>
     <string name="cloud_directory">Thư mục đám mây</string>
-    <string name="export_settings_local">Xuất cài đặt (Cục bộ)</string>
-    <string name="export_settings_cloud">Xuất cài đặt (Đám mây)</string>
-    <string name="export_settings_both">Xuất cài đặt (Cục bộ + Đám mây)</string>
-    <string name="import_settings_local">Nhập cài đặt (Cục bộ)</string>
-    <string name="import_settings_cloud">Nhập cài đặt (Đám mây)</string>
-    <string name="import_settings_both">Nhập cài đặt (Cục bộ/Đám mây)</string>
-    <string name="send_logs_to_cloud">Xuất nhật ký lên đám mây</string>
-    <string name="export_csv_to_cloud">Xuất dữ liệu người dùng lên đám mây (csv)</string>
-    <string name="export_csv_to_local">Xuất mục dữ liệu vào cục bộ (csv)</string>
-    <string name="setup_cloud_directory_first">Vui lòng thiết lập Thư mục đám mây trước để sử dụng Xuất Cài đặt</string>
     <string name="cloud_token_expired_or_invalid">Quyền xác thực lưu trữ đám mây đã hết hạn hoặc không hợp lệ. Vui lòng xác thực lại.</string>
     <!-- Export destination chip labels -->
     <string name="chip_local">Cục Bộ</string>
@@ -824,8 +751,6 @@
     <string name="ble_not_supported_or_not_paired">Không hỗ trợ Bluetooth hoặc thiết bị chưa được ghép nối.</string>
     <string name="ble_not_enabled">Bluetooth chưa được bật.</string>
     <string name="ble_permissions_missing">Quyền truy cập Bluetooth chưa được cấp. Vui lòng cấp quyền trong cài đặt ứng dụng.</string>
-    <string name="location_not_found_title">Vị trí chưa được bật</string>
-    <string name="location_not_found_message">Để phát hiện Bluetooth trên các thiết bị mới, cần bật dịch vụ vị trí. AAPS không theo dõi vị trí của bạn và có thể tắt dịch vụ vị trí sau khi ghép nối thành công.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Tùy chọn plugin</string>
     <!-- Navigation -->
@@ -835,7 +760,6 @@
     <string name="open_navigation">Mở điều hướng</string>
     <string name="nav_history_browser">Xem lịch sử</string>
     <string name="nav_history_browser_desc">Duyệt dữ liệu và biểu đồ lịch sử</string>
-    <string name="overview">Tổng quan</string>
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Hồ sơ</string>
@@ -855,12 +779,10 @@
     <string name="add">Thêm</string>
     <string name="remove">Loại bỏ</string>
     <string name="reorder">Sắp xếp lại</string>
-    <string name="actions">Hành động</string>
     <string name="status">Trạng thái</string>
     <string name="pump_actions">Các hành động bơm</string>
     <string name="tempbasal_button">Liều nền tạm thời</string>
     <string name="extended_bolus_button">Liều bolus kéo dài</string>
-    <string name="tools">Công cụ</string>
     <string name="device_maintenance">Bảo trì thiết bị</string>
     <string name="from_label">Từ</string>
     <string name="to_label">Đến</string>
@@ -909,7 +831,6 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS phát âm thanh"</string>
     <!-- ProfileEditor -->
-    <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
     <string name="profile_name">Tên Hồ sơ:</string>
@@ -924,13 +845,8 @@
     <string name="remove_entry">Xóa mục</string>
     <string name="target_low_label">Thấp</string>
     <string name="target_high_label">Cao</string>
-    <string name="select_profile">Chọn Hồ sơ để chỉnh sửa</string>
-    <string name="a11y_add_new_profile">thêm Hồ sơ mới</string>
-    <string name="a11y_clone_profile">nhân bản Hồ sơ hiện tại</string>
-    <string name="a11y_delete_current_profile">xóa Hồ sơ hiện tại</string>
     <!--    Search-->
     <string name="search">Tìm kiếm</string>
-    <string name="search_preferences">Tùy chọn tìm kiếm</string>
     <string name="clear">Xóa</string>
     <string name="search_category_categories">Danh mục tùy chọn</string>
     <string name="search_category_preferences">Tùy chọn</string>
@@ -950,9 +866,6 @@
     <string name="subcategory">Danh mục con</string>
     <string name="portion">Phần</string>
     <string name="unit_label">Đơn vị</string>
-    <string name="fat">Chất béo</string>
-    <string name="protein">Chất đạm</string>
-    <string name="energy">Năng lượng</string>
     <string name="undo">Hoàn tác</string>
     <string name="no_data">Không có dữ liệu</string>
     <string name="manage_food_desc">Quản lý cơ sở dữ liệu thực phẩm</string>
@@ -967,12 +880,10 @@
     <string name="maintenance">Bảo trì hệ thống</string>
     <string name="description_maintenance">Cung cấp một số chức năng bảo trì (ví dụ: gửi nhật ký, xóa nhật ký).</string>
     <string name="log_files">Tập tin nhật ký</string>
-    <string name="send_all_logs">Gửi nhật ký qua Email</string>
     <string name="delete_logs">Xóa các nhật ký</string>
     <string name="logs_deleted">Đã xóa nhật ký</string>
     <string name="aaps_directory">Thư mục AAPS</string>
     <string name="import_setting">Nhập cài đặt</string>
-    <string name="miscellaneous">Các tùy chọn khác</string>
     <!-- Import settings screen -->
     <string name="import_decrypt_review">Giải mã &amp; xem lại</string>
     <string name="import_decrypt">Giải mã</string>
@@ -984,19 +895,13 @@
     <string name="import_anyway_btn">Vẫn nhập</string>
     <string name="import_restart_title">Đã nhập cài đặt</string>
     <string name="import_restart_message">Cài đặt đã được nhập. Ứng dụng cần khởi động lại.</string>
-    <string name="import_file_details">Chi tiết tệp</string>
     <string name="import_source_local">Cục bộ</string>
     <string name="import_source_cloud">Đám mây</string>
     <string name="import_load_more">Tải thêm</string>
     <string name="import_no_files">Không tìm thấy tệp cài đặt</string>
-    <string name="import_review_summary">Tóm tắt quá trình nhập</string>
     <string name="import_decrypt_ok">Giải mã thành công. Sẵn sàng để nhập.</string>
     <string name="import_decrypt_warn">Giải mã thành công, nhưng có cảnh báo.</string>
     <string name="import_decrypt_error">Giải mã thành công, nhưng không thể nhập.</string>
-    <string name="import_check_before">Vui lòng kiểm tra tùy chọn trước khi nhập:</string>
-    <string name="import_check_dangerous">Không nên nhập các tùy chọn!</string>
-    <string name="import_check_cannot">Không thể nhập các tùy chọn!</string>
-    <string name="import_explain_issues">Giải thích các vấn đề khi nhập\u2026</string>
     <string name="reset_aps_results">Đặt lại kết quả APS</string>
     <string name="database_cleanup">Dọn dẹp cơ sở dữ liệu</string>
     <string name="nav_resetdb">Đặt lại cơ sở dữ liệu</string>
@@ -1006,7 +911,6 @@
     <!-- Graph configuration -->
     <string name="graph_add">Thêm biểu đồ</string>
     <string name="graph_new">Biểu đồ mới</string>
-    <string name="graph_edit">Sửa biểu đồ</string>
     <string name="graph_number">Biểu đồ %1$d</string>
     <string name="graph_bg">Biểu đồ BG</string>
     <string name="graph_height">Chiều cao biểu đồ [dp]</string>

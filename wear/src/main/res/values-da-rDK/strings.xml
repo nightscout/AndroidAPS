@@ -6,10 +6,6 @@
     <string name="label_actions_tile">AAPS (Handlinger)</string>
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Hurtig Guide)</string>
-    <string name="label_warning_sync">Ingen data!</string>
-    <string name="label_warning_old">Gammel data!</string>
-    <string name="label_warning_since">Siden %1$s</string>
-    <string name="label_warning_sync_aaps">Synkroniser med AAPS!</string>
     <string name="msg_warning_sync">Ingen data modtaget siden %1$s! Tjek om AAPS på telefonen sender data til uret</string>
     <string name="msg_warning_old">AAPS data er %1$s gammel! Tjek din sensor, xDrip+, NS, AAPS config eller lign.!</string>
     <string name="pref_vibrate_on_bolus">Vibrér ved bolus</string>
@@ -73,7 +69,6 @@
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">Midlertidig Mål Anmodet</string>
     <string name="action_quick_wizard_confirmation">Hurtig Guide Anmodet</string>
     <string name="action_treatment_confirmation">Behandling Anmodet</string>
@@ -84,7 +79,6 @@
     <string name="action_profile_switch_confirmation">Profilskift anmodet</string>
     <string name="action_carbs">Kulhydrater</string>
     <string name="action_ecarbs">Forlængede kulhydrater</string>
-    <string name="action_duration_h">Varighed [h]</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Forvalg 1</string>
     <string name="action_preset_2">Forvalg 2</string>
@@ -121,7 +115,6 @@
     <string name="color_name_gray">grå</string>
     <string name="color_name_bluegray">blå grå</string>
     <string name="color_name_white">hvid</string>
-    <string name="color_name_black">sort</string>
     <string name="color_name_multicolor">multifarvet</string>
     <string name="pref_simplify_ui">Forenklet Brugerflade</string>
     <string name="pref_vibrate_hourly">Vibrér hver time</string>
@@ -148,8 +141,6 @@
     <string name="tile_no_config">Ingen konfiguration tilgængelig</string>
     <string name="wear_control_not_enabled">Wear kontrol deaktiveret</string>
     <string name="wear_control_no_data">Ingen data tilgængelig</string>
-    <string name="increment">forøgelse</string>
-    <string name="decrement">formindskelse</string>
     <string name="abbreviation_average">gns.</string>
     <string name="no_iob_u">--IE</string>
     <string name="no_cob_g">--g</string>
@@ -164,7 +155,5 @@
     <string name="hour_short">t</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s %2$s %3$s</string>
-    <string name="old">gammel</string>
-    <string name="old_warning">!gammel!</string>
     <string name="pref_heartRateSampling">Puls</string>
 </resources>

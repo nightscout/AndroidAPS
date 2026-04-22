@@ -27,24 +27,23 @@
     <string name="exitwizard">Přeskočit průvodce</string>
     <string name="setupwizard_sensitivity_description">Plugin senzitivita slouží k detekci změn v senzitivitě a k počítání COB. Více informací zde:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Vyberte jeden z dostupných algoritmů. Jsou seřazeny od nejstaršího k nejnovějšímu. Novější algoritmus je obvykle výkonnější. Nezapomeňte si před použitím přečíst dokumentaci OpenAPS a vše nastavit.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svůj RileyLink níže. Po výběru RileyLinku bude možné pokračovat v nastavení, jakmile stav RileyLinku je \"Připojeno\". Tato akce může chvilku trvat.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy můžete pokračovat v nastavení.\n</string>
     <string name="startobjective">Spusťte první cíl</string>
+    <string name="open_objectives">Otevřít Cíle</string>
+    <string name="setupwizard_permissions">Oprávnění</string>
+    <string name="setupwizard_profile_info">Vytvořte profil s vašimi bazálními dávkami, IC, ISF a cílovými hodnotami. Více profilů můžete přidat později.</string>
+    <string name="setupwizard_permissions_info">AAPS potřebuje přístup k úložišti a oprávnění pro správnou funkci. Níže udělte požadovaná oprávnění.</string>
     <string name="setupwizard_pump_riley_link_status">Status RileyLink:</string>
     <string name="readstatus">Načíst status</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="request">Požadavek</string>
-    <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Jakou pumpu chcete s AAPS používat?</string>
     <string name="configbuilder_aps_description">Jaký algoritmus má AndroidAPS používat?</string>
-    <string name="configbuilder_general_description">Obecné pluginy, které by se Vám mohly hodit.</string>
-    <string name="configbuilder_constraints_description">Jaká omezení byla použita?</string>
-    <string name="configbuilder_loop_description">Použitím aktivujte integraci AAPS.</string>
-    <string name="configbuilder_insulin_description">Jaký druh inzulínu používáte?</string>
+    <string name="configbuilder_sync_description">Pluginy pro nahrávání dat, synchronizaci a komunikaci.</string>
     <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
-    <string name="configbuilder_smoothing_description">Vyberte algoritmus pro vyhlazování</string>
     <string name="configbuilder_sensitivity_description">Jaký druh algoritmu pro detekci citlivosti chcete použít?</string>
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
     <string name="nsclient_version_does_not_match">Verze AAPSClienta se neshoduje s verzí AAPS. Aktualizujte prosím.</string>

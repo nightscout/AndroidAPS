@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Schimbare oră vară/iarnă în mai puțin de 24h</string>
     <string name="dst_loop_disabled_warning">Schimbare oră vară/iarnă în mai puțin de 3 ore - buclă închisă dezactivată</string>
-    <string name="dst_loop_disabled_error">Schimbarea orei de vară (DST) a avut loc cu mai puțin de 3 ore în urmă. Bucla închisă dezactivată temporar. Se va reactiva automat la 3 ore după schimbarea DST</string>
     <!-- Storage constraint -->
     <string name="disk_full">Eliberați cel puțin %1$d MB de pe stocarea internă! Buclă dezactivată!</string>
     <!-- Version Checker -->
@@ -41,8 +40,6 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Program de învățare</string>
     <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
-    <string name="objectives_next_button">Următor</string>
-    <string name="objectives_previous_button">Anterior</string>
     <string name="objectives_button_unfinish">Resetare stare finalizată</string>
     <string name="objectives_button_unstart">Resetare stare de început</string>
 </resources>

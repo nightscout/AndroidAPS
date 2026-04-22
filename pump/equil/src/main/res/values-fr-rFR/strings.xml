@@ -21,7 +21,6 @@
     <string name="equil_tone_mode_shake">Vibreur uniquement</string>
     <string name="equil_tone_mode_tone">Son uniquement</string>
     <string name="equil_tone_mode_tone_and_shake">Son et vibreur</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_ble_config_confirmation_title">Appairer la pompe patch Equil</string>
     <string name="equil_error">Erreur de connexion</string>
     <string name="equil_change">Changer la pompe</string>

@@ -71,6 +71,9 @@
     <string name="objectives_exam_learned_breadgrams">Sólo se permiten gramos para la entrada de carbohidratos</string>
     <string name="objectives_exam_learned_ecarbs">Los eCarbs son un reemplazo del bolo extendido, en el mundo de las bombas</string>
     <string name="objectives_exam_learned_nsclient">La supervisión y el control remotos son posibles, pero no todas las funcionalidades están disponibles de forma remota</string>
+    <string name="objectives_exam_learned_concentration1">Utilizar insulina U200 con un perfil al 50% requerirá una conversión permanente: para los bolos externos con bolígrafos (pens), y todos los informes estándar proporcionados por AAPS o Nightscout serán incorrectos y tendrán que convertirse a Unidades Internacionales (UI) para el equipo médico</string>
+    <string name="objectives_exam_learned_concentration2">Cambiar de U200 con un perfil al 50% a U200 con la función de concentración de insulina requerirá crear un nuevo perfil más fuerte, desactivar DynISF durante una semana y entrenar al cerebro para pensar en Unidades Internacionales</string>
+    <string name="objectives_exam_learned_concentration3">La concentración de insulina solo puede cambiarse cuando se cambia la insulina o el parche. Pero lo más importante, especialmente en las bombas de tubo, es no utilizar nunca la interfaz de usuario de la bomba para administrar bolos directamente desde ella</string>
     <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>
     <string name="wronganswer">Respuesta incorrecta!</string>
     <string name="unfinshed_button">Siguien&amp;te sin terminar</string>

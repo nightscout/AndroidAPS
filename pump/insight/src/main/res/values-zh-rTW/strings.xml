@@ -16,10 +16,7 @@
     <string name="not_inserted">未植入</string>
     <string name="tdd_bolus">每日總劑量注射</string>
     <string name="tdd_basal">每日總劑量基礎率</string>
-    <string name="tbr_formatter">%1$d%% 持續 %2$d / %3$d 分鐘</string>
     <string name="multiwave_bolus">多波段胰島素注射</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U 持續 %3$d 分鐘</string>
-    <string name="insight_last_bolus">上次注射</string>
     <string name="searching_for_devices">搜尋設備中…</string>
     <string name="pairing_completed">配對完成</string>
     <string name="code_compare">此設備顯示的代碼與幫浦上的代碼是否匹配？</string>
@@ -37,15 +34,8 @@
     <string name="pump_stopped">幫浦停止</string>
     <string name="pump_started">幫浦啟動</string>
     <string name="release_software_version">釋出軟體版本</string>
-    <string name="ui_processor_software_version">UI 處理器軟體版本</string>
-    <string name="pc_processor_software_version">PC 處理器軟體版本</string>
-    <string name="md_tel_processor_software_version">MD 電話處理器軟體版本</string>
-    <string name="safety_processor_software_version">安全處理器軟體版本</string>
-    <string name="bt_info_page_version">藍牙資訊頁面版本</string>
     <string name="bluetooth_address">藍牙地址</string>
-    <string name="system_id_appendix">系統 ID 附錄</string>
     <string name="manufacturing_date">製造日期</string>
-    <string name="delete_pairing">刪除配對</string>
     <string name="log_site_changes">紀錄場地變更</string>
     <string name="log_reservoir_changes">紀錄儲存變更</string>
     <string name="log_tube_changes">紀錄導管變更</string>
@@ -58,11 +48,8 @@
     <string name="max_recovery_duration">最大恢復持續時間 [秒]</string>
     <string name="min_recovery_duration">最小恢復持續時間 [秒]</string>
     <string name="pump_alert">幫浦警報</string>
-    <string name="pairing_information">配對資訊</string>
     <string name="last_connection">%1$s (%2$s)</string>
     <string name="unpair">解除配對</string>
     <string name="reset_pairing">要重設配對資訊嗎？</string>
-    <string name="active_basal_rate">作用中基礎率</string>
-    <string name="active_tbr">作用中臨時基礎率</string>
     <string name="reservoir_level">藥量</string>
 </resources>
