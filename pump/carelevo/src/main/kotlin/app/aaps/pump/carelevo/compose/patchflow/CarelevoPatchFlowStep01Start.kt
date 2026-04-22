@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,8 +27,11 @@ import app.aaps.pump.carelevo.R
 import app.aaps.pump.carelevo.compose.dialog.CarelevoActionDialog
 import app.aaps.pump.carelevo.compose.dialog.CarelevoInsulinAmountPickerSheet
 import app.aaps.pump.carelevo.compose.dialog.CarelevoInsulinRefillGuideDialog
+import app.aaps.pump.carelevo.compose.smoketest.CarelevoBleSmokeTestDialog
+import app.aaps.pump.carelevo.config.BleEnvConfig
 import app.aaps.pump.carelevo.presentation.type.CarelevoPatchStep
 import app.aaps.pump.carelevo.presentation.viewmodel.CarelevoPatchConnectionFlowViewModel
+import java.util.UUID
 
 @Composable
 internal fun CarelevoPatchFlowStep01Start(
@@ -38,6 +42,15 @@ internal fun CarelevoPatchFlowStep01Start(
     var showDiscardDialog by remember { mutableStateOf(false) }
     var showGuideDialog by remember { mutableStateOf(false) }
     var showInsulinAmountPicker by remember { mutableStateOf(false) }
+    var showSmokeTestDialog by remember { mutableStateOf(false) }
+
+    if (showSmokeTestDialog) {
+        CarelevoBleSmokeTestDialog(
+            rxUuid = UUID.fromString(BleEnvConfig.BLE_RX_CHAR_UUID),
+            txUuid = UUID.fromString(BleEnvConfig.BLE_TX_CHAR_UUID),
+            onDismiss = { showSmokeTestDialog = false }
+        )
+    }
 
     if (showDiscardDialog) {
         CarelevoActionDialog(
@@ -79,7 +92,8 @@ internal fun CarelevoPatchFlowStep01Start(
     CarelevoPatchStartContent(
         onGuideClick = { showGuideDialog = true },
         onDiscardClick = { showDiscardDialog = true },
-        onFillAmountClick = { showInsulinAmountPicker = true }
+        onFillAmountClick = { showInsulinAmountPicker = true },
+        onSmokeTestClick = { showSmokeTestDialog = true }
     )
 }
 
@@ -87,7 +101,8 @@ internal fun CarelevoPatchFlowStep01Start(
 private fun CarelevoPatchStartContent(
     onGuideClick: () -> Unit,
     onDiscardClick: () -> Unit,
-    onFillAmountClick: () -> Unit
+    onFillAmountClick: () -> Unit,
+    onSmokeTestClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -112,26 +127,39 @@ private fun CarelevoPatchStartContent(
             }
         }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Button(
-                onClick = onDiscardClick,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(60.dp)
-            ) {
-                PatchFlowButtonText(text = stringResource(R.string.carelevo_btn_patch_expiration))
+            // Dev-only: smoke test the new BLE stack against a fresh (unpaired) pump.
+            // Safe here because the Start screen runs before any connection is attempted.
+            TextButton(onClick = onSmokeTestClick) {
+                Text(
+                    text = "[Dev] BLE smoke test",
+                    style = MaterialTheme.typography.labelSmall
+                )
             }
-            Button(
-                onClick = onFillAmountClick,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(60.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                PatchFlowButtonText(text = stringResource(R.string.carelevo_btn_input_insulin_amount))
+                Button(
+                    onClick = onDiscardClick,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(60.dp)
+                ) {
+                    PatchFlowButtonText(text = stringResource(R.string.carelevo_btn_patch_expiration))
+                }
+                Button(
+                    onClick = onFillAmountClick,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(60.dp)
+                ) {
+                    PatchFlowButtonText(text = stringResource(R.string.carelevo_btn_input_insulin_amount))
+                }
             }
         }
     }
