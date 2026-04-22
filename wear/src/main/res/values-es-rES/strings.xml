@@ -3,10 +3,10 @@
     <string name="label_watchface_circle">AAPS (Círculo)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
     <string name="label_watchface_custom">AAPS(personalizado)</string>
-    <string name="label_actions_tile">AAPS(Acciones)</string>
-    <string name="label_temp_target_tile">AAPS(Objetivo Temporal)</string>
-    <string name="label_quick_wizard_tile">AAPS(Asistente Rápido)</string>
-    <string name="label_user_action_tile">AAPS(Acción del usuario)</string>
+    <string name="label_actions_tile">Acciones</string>
+    <string name="label_temp_target_tile">Objetivo temporal</string>
+    <string name="label_quick_wizard_tile">Asistente rápido</string>
+    <string name="label_user_action_tile">Acción del usuario</string>
     <string name="msg_warning_sync">No se han recibido datos desde %1$s. Comprobar si AAPS, (en el teléfono) envía los datos al reloj</string>
     <string name="msg_warning_old">Los datos de AAPS son %1$s antiguos. Comprueba el sensor, xDrip+, NS, configuración de AAPS y otros</string>
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
@@ -227,7 +227,8 @@
     <string name="complication_iob_detailed">IOB detallado</string>
     <string name="complication_uploader_phone_battery">Batería de teléfono que sube los datos</string>
     <string name="status_running_mode">Modo de funcionamiento</string>
-    <string name="label_running_mode_title">AAPS (Modo de funcionamiento)</string>
+    <string name="label_running_mode_title">Modo de funcionamiento</string>
+    <string name="label_bg_graph_tile">Gráfico de glucemia</string>
     <string name="action_running_mode_selected">Modo de funcionamiento solicitado</string>
     <string name="title_activity_disconnect_pump">Desconectar bomba</string>
     <string name="title_activity_suspend_loop">Suspender lazo</string>
