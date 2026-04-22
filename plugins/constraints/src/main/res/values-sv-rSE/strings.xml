@@ -39,8 +39,6 @@
     <string name="objectives_shortname">Mål</string>
     <string name="description_objectives">Inlärningsprogram</string>
     <string name="doyouwantresetstart">Vill du starta om målet? Du kan förlora de steg du gjort hittills.</string>
-    <string name="objectives_next_button">Nästa</string>
-    <string name="objectives_previous_button">Föregående</string>
     <string name="objectives_button_unfinish">Nollställ slutfört läge</string>
     <string name="objectives_button_unstart">Nollställ startat läge</string>
 </resources>
