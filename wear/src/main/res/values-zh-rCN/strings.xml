@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS(圆形)</string>
     <string name="label_watchface_digital_style">AAPS(数字风格)</string>
     <string name="label_watchface_custom">AAPS（自定义）</string>
-    <string name="label_actions_tile">AAPS(操作)</string>
-    <string name="label_temp_target_tile">AAPS(临时目标)</string>
-    <string name="label_quick_wizard_tile">AAPS(快速向导)</string>
-    <string name="label_user_action_tile">AAPS（用户操作）</string>
     <string name="msg_warning_sync">自 %1$s以来未收到任何数据! 检查手机上的 AAPS 是否发送数据到手表。</string>
     <string name="msg_warning_old">AAPS 数据为 %1$s之前! 请检查传感器， xDrip+， NS， AAPS 配置或其他!</string>
     <string name="pref_vibrate_on_bolus">大剂量时震动</string>
@@ -227,7 +223,6 @@
     <string name="complication_iob_detailed">IoB 详情</string>
     <string name="complication_uploader_phone_battery">上传器/手机电池</string>
     <string name="status_running_mode">运行模式</string>
-    <string name="label_running_mode_title">AAPS(运行模式)</string>
     <string name="action_running_mode_selected">已请求运行模式</string>
     <string name="title_activity_disconnect_pump">断开泵连接</string>
     <string name="title_activity_suspend_loop">暂停闭环</string>
