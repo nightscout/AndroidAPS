@@ -60,4 +60,9 @@
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="pairing_information">Informace o párování</string>
     <string name="last_connection">%1$s (%2$s)</string>
+    <string name="unpair">Odpárovat</string>
+    <string name="reset_pairing">Resetovat informace o párování?</string>
+    <string name="active_basal_rate">Aktivní bazál</string>
+    <string name="active_tbr">Aktivní dočasný bazál</string>
+    <string name="reservoir_level">Stav zásobníku</string>
 </resources>
