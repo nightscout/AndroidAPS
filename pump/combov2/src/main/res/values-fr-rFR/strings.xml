@@ -38,7 +38,6 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Délai d\'attente de recherche de la combo atteint</string>
     <string name="combov2_pairing_failed_due_to_error">L\'appairage a échoué en raison de l\'erreur : %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">L\'appairage a échoué pour raisons inconnues</string>
-    <string name="combov2_pairing_invalid_pin_length">"Longueur du code PIN d'appairage invalide : %1$d chiffres nécessaires, %2$d reçu"</string>
     <string name="combov2_scanning_for_pump">Recherche de la pompe</string>
     <string name="combov2_establishing_bt_connection">Établissement de la connexion Bluetooth (tentative n° %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Initialisation de la communication avec la pompe</string>
@@ -58,7 +57,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Définir le profil basal</string>
     <string name="combov2_setting_tbr_cmddesc">Réglage du DBT %1$d%% pendant %2$d minutes</string>
     <string name="combov2_cancelling_tbr">Annulation du DBT en cours</string>
-    <string name="combov2_delivering_bolus_cmddesc">Injection de %1$.1fU de bolus en cours</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Récupération de l\'historique DTQ</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Mise à jour date et heure de la pompe</string>
     <string name="combov2_updating_pump_status_cmddesc">Mise à jour de l\'état pompe</string>
