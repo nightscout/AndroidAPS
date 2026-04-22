@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Bolus kısıtlaması uygulandı</string>
     <string name="carbs_constraint_applied">Karbonhidrat kısıtlaması uygulandı</string>
     <string name="temp_target_short">GH</string>
     <string name="start_activity_tt">Egzersiz Başlat GH</string>
     <string name="start_eating_soon_tt">Yakında Yemek GH</string>
     <string name="start_hypo_tt">Hipo GH başlat</string>
     <string name="time_offset">Saat farkı</string>
-    <string name="remind_to_bolus_later">Bolusu daha sonra hatırlat</string>
     <!--    Widget-->
     <string name="configure">Şeffaflığı yapılandır</string>
     <string name="widget_description">AAPS widget</string>
@@ -16,8 +14,6 @@
     <string name="do_you_want_reset_stats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
     <string name="do_you_want_recalculate_tdd_stats">GTD istatistiklerini tekrar hesaplamak istiyor musunuz?</string>
     <string name="calculation_in_progress">Hesaplanıyor</string>
-    <string name="invalid_age">Geçersiz yaş girişi</string>
-    <string name="invalid_weight">Geçersiz ağırlık girişi</string>
     <string name="age">Yaş</string>
     <string name="weight_label">Ağırlık</string>
     <string name="glucose_type">Glikoz türü</string>
@@ -25,13 +21,7 @@
     <string name="bg_meter">GlkMetre</string>
     <string name="bg_sensor">Sensör</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s IDF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg Kİ: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Toplam</string>
     <!-- SiteRotationDialog -->
-    <string name="site_front">Ön</string>
-    <string name="site_back">Arka</string>
     <string name="site_man">Erkek</string>
     <string name="site_woman">Kadın</string>
     <string name="site_child">Çocuk</string>
@@ -44,7 +34,6 @@
     <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
     <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
     <string name="timeshift_label">Zaman kaydırma</string>
@@ -69,29 +58,14 @@
     <string name="duration3h">3 saat</string>
     <string name="duration10h">10 saat</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">% ile doğru sonuç</string>
-    <string name="a11_correction_units">ünite ile doğru sonuç</string>
-    <string name="two_hours">2sa</string>
-    <string name="result_insulin_carbs">Sonuç: %1$s %2$s</string>
     <string name="missing_carbs">%1$d g eksik</string>
-    <string name="a11y_current_bg">geçerli kan şekeri</string>
-    <string name="carb_time_label">Karb. zamanı</string>
-    <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
     <!-- Treatments -->
     <string name="no_records_available">Kayıt mevcut değil</string>
     <string name="treatments_iob_label_string">AİNS:</string>
-    <string name="treatments_carbs_label_string">Karbonhidrat:</string>
-    <string name="tempbasals_netratio_label_string">Oran:</string>
-    <string name="tempbasals_iob_label_string">AİNS:</string>
-    <string name="treatments_wizard_correction_label">Düzeltme</string>
-    <string name="meal_bolus">Ögün</string>
-    <string name="prime">Doldur</string>
     <string name="carbs_and_bolus">Karbonhidrat ve bolus</string>
     <string name="show_invalidated">Geçersiz olanları göster</string>
     <string name="hide_invalidated">Geçersiz olanları gizle</string>
     <string name="careportal_remove_started_events">AAPS tarafından başlatılmış girdileri kaldırın</string>
-    <string name="hide_loop">Döngüyü gizle</string>
-    <string name="show_loop">Döngüyü göster</string>
     <string name="user_entry">Kullanıcı girişi</string>
     <string name="clone_label">Klon</string>
     <!-- ProfileHelperActivity -->
@@ -105,16 +79,11 @@
     <string name="format_with_tdd_and_pct">Yaş: %1$d GTD: %2$.0f Ü %3$d%%</string>
     <string name="format_with_weight">Yaş: %1$d Ağırlık: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV Varsayılan profil</string>
-    <string name="invalid_pct">Geçersiz % giriş</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Bazal oranı</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">sadece saatte</string>
-    <string name="a11y_only_on_phone">sadece telefonda</string>
     <string name="overview_edit_quickwizard_button_text">Buton Metni</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Yalnızca pozitif AİNS</string>
     <string name="overview_edit_quickwizard_superbolus">Süperbolus</string>
-    <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
     <!--    History browser-->
     <string name="additional_ecarbs">yKarb ekle</string>
     <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
