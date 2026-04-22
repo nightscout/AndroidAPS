@@ -8,11 +8,24 @@
     <string name="start_hypo_tt">Spustit dočasný cíl Hypoglykémie</string>
     <string name="time_offset">Časový posun</string>
     <string name="remind_to_bolus_later">Upozornit později na bolus</string>
+    <string name="a11y_carb_reminder">Nastavit připomínku na čas sacharidů</string>
     <!--    Widget-->
     <string name="configure">Konfigurovat průhlednost</string>
     <string name="widget_description">Widget AAPS</string>
+    <string name="widget_bg_graph_description">Graf glykémie AAPS</string>
+    <string name="widget_compact_bg_description">AAPS gly + IOB + COB (kompaktní)</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktivity</string>
+    <string name="time_range">Časové rozmezí</string>
+    <string name="cgp_title">Glukózový pentagon (CGP) – 14 dní</string>
+    <string name="cgp_mean_glucose" comment="Glucose Pentagon axis: Mean glucose">Průměr</string>
+    <string name="cgp_reference">Zdravý člověk</string>
+    <string name="cgp_patient">Pacient</string>
+    <string name="cgp_pgr_very_low">Velmi nízké riziko</string>
+    <string name="cgp_pgr_low">Nízké riziko</string>
+    <string name="cgp_pgr_moderate">Střední riziko</string>
+    <string name="cgp_pgr_high">Vysoké riziko</string>
+    <string name="cgp_pgr_extremely_high">Extrémně vysoké riziko</string>
     <string name="do_you_want_reset_stats">Chcete resetovat statistiky aktivity?</string>
     <string name="do_you_want_recalculate_tdd_stats">Chcete přepočítat statistiky CDD?</string>
     <string name="calculation_in_progress">Probíhá výpočet</string>
@@ -40,18 +53,37 @@
     <string name="site_management">Profil správy místa aplikace</string>
     <string name="site_management_description">Zde nastavíte, zda chcete spravovat místa aplikace pro pumpu, senzor nebo obojí. Toto nastavení bude použito k automatickému zobrazení dialogového okna správy místa aplikace u každého zjištěného nového záznamu.</string>
     <string name="record_site_change">Zaznamenat místo aplikace</string>
+    <string name="update_site_change">Aktualizovat umístění setu</string>
     <string name="edit_site">Upravit</string>
     <string name="record_site_location">Místo aplikace: %1$s</string>
     <string name="record_site_arrow">Šipka místa aplikace: %1$s</string>
     <string name="record_site_note">Poznámka: %1$s</string>
     <string name="delete_site_note">Poznámka odstraněna</string>
+    <string name="site_filter_info">Vyberte typ terapeutické události, kterou chcete vidět: výměna kanyly a/nebo výměna senzoru</string>
     <!-- FillDialog -->
     <string name="fill_warning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
     <string name="record_pump_site_change">Zaznamenat výměnu setu</string>
     <string name="record_insulin_cartridge_change">Zaznamenat výměnu inzulínu</string>
+    <string name="fill_prime_amount">Množství na naplnění</string>
+    <string name="fill_pump_units_note">Množství na naplnění je v jednotkách pumpy</string>
+    <string name="fill_insulin_change">Změnit inzulín na: %1$s (bude aplikováno přepnutí profilu)</string>
+    <string name="fill_current_insulin">Aktuální inzulín</string>
+    <string name="fill_change_insulin">Změnit inzulín</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
     <!-- Insulin Management -->
+    <string name="missing_insulin_name">Chybí název inzulínu</string>
+    <string name="insulin_name_exists">Název inzulínu %1$s již existuje, vyberte nový název</string>
+    <string name="a11y_add_new_insulin">Přidat nový inzulín</string>
+    <string name="a11y_delete_current_insulin">Odstranit aktuální inzulín</string>
+    <string name="save_or_reset_changes_first">Nejprve uložte nebo resetujte aktuální změny</string>
+    <string name="activate_insulin_no_profile">Nebyl nalezen žádný aktivní profil</string>
+    <string name="activate_insulin_new_insulin">Nový inzulín: %1$s</string>
+    <string name="activate_insulin_remaining">Zbývá: %1$d min</string>
+    <string name="activate_insulin_profile_switch">Bude vytvořeno přepnutí profilu:\n\n<b>%1$s</b></string>
+    <string name="load_peak_from">Načíst vrchol z</string>
+    <string name="cannot_delete_last_insulin">Nelze odstranit poslední inzulín</string>
+    <string name="cannot_delete_active_insulin">Nelze odstranit aktivní inzulín</string>
     <string name="reuse_profile_pct_hours">Znovu použít %1$d%% %2$dh</string>
     <string name="timeshift_label">Posun času</string>
     <string name="percentage_label">% změna</string>
@@ -80,9 +112,14 @@
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Výsledek: %1$s %2$s</string>
     <string name="missing_carbs">Chybí %1$d g</string>
+    <string name="wizard_carbs_type_bread_desc">100 % okamžité sacharidy, žádné prodloužené sacharidy</string>
+    <string name="wizard_carbs_type_desc">Sacharidy snížené o %1$d %%, přidané eSACH %2$d %% zpožděné o %3$d min po dobu %4$d h</string>
+    <string name="wizard_include_info">Klepnutím zahrnete/vyloučíte z výpočtu:\n Gly – glykémie (na začátku ZAPNUTO)\n TT – dočasný cíl (na začátku ZAPNUTO)\n Trend – trend glykémie (poslední stav zapamatován)\n IOB – insulin on board (na začátku ZAPNUTO)\n COB – sacharidy on board (poslední stav zapamatován)</string>
+    <string name="wizard_bg_age">Stáří glykémie: %1$d min</string>
     <string name="a11y_current_bg">aktuální hodnota glykémie</string>
     <string name="carb_time_label">Čas jídla</string>
     <string name="a11y_set_carb_timer">nastavit upozornění na sacharidy</string>
+    <string name="show_calculation">Zobrazit výpočet</string>
     <!-- Treatments -->
     <string name="no_records_available">Nejsou k dispozici žádné záznamy</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -100,10 +137,28 @@
     <string name="show_loop">Zobrazit smyčku</string>
     <string name="user_entry">Uživatelská položka</string>
     <string name="clone_label">Klonovat</string>
+    <string name="add_new_profile">Přidat nový profil</string>
+    <string name="show_profile">Zobrazit profil</string>
+    <string name="edit_label">Upravit</string>
+    <string name="edit_profile">Upravit profil</string>
+    <string name="activate_label">Aktivovat</string>
+    <string name="activate_profile">Aktivovat profil</string>
+    <string name="remove_label">Odstranit</string>
+    <string name="active_profile_indicator">AKTIVNÍ</string>
+    <string name="remaining_time_label">Zbývá</string>
+    <string name="confirm_remove_profile">Odstranit profil \"%1$s\"?</string>
+    <string name="confirm_clone_profile">Klonovat profil \"%1$s\"?</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Typ profilu</string>
+    <string name="profile_parameters">Parametry profilu</string>
+    <string name="active_profile">Aktivní profil</string>
+    <string name="available_profiles">Dostupné profily</string>
+    <string name="profile_switches">Přepnutí profilu</string>
     <string name="basal_pct_from_tdd_label">% bazálu</string>
     <string name="selected_profile">Vybráno:</string>
+    <string name="comparation">Porovnání</string>
+    <string name="profile_tab_1">Profil 1</string>
+    <string name="profile_tab_2">Profil 2</string>
     <string name="motol_default_profile">Výchozí profil</string>
     <string name="current_profile">Aktuální profil</string>
     <string name="available_profile">Dostupný profil</string>
@@ -118,11 +173,37 @@
     <string name="a11y_only_on_watch">pouze na hodinkách</string>
     <string name="a11y_only_on_phone">pouze na telefonu</string>
     <string name="overview_edit_quickwizard_button_text">Text tlačítka</string>
+    <string name="quick_wizard_mode_wizard">Průvodce</string>
+    <string name="quick_wizard_mode_insulin">Inzulín</string>
+    <string name="quick_wizard_mode_carbs">Sacharidy</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Pouze kladný IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="a11y_drag_and_drop_handle">Režim „Táhni a pusť“</string>
     <!--    History browser-->
+    <string name="history_now">Nyní</string>
+    <string name="a11y_history_previous_window">Předchozí okno</string>
+    <string name="a11y_history_next_window">Následující okno</string>
     <string name="additional_ecarbs">Přidat eSacharidy</string>
+    <string name="calculator_options">Možnosti kalkulačky</string>
+    <string name="use_bg">Použít gly</string>
+    <string name="use_cob">Použít COB</string>
+    <string name="use_iob">Použít IOB</string>
+    <string name="use_trend">Použít trend</string>
+    <string name="trend_all">Vše</string>
+    <string name="trend_positive_only">Pouze pozitivní</string>
+    <string name="trend_negative_only">Pouze negativní</string>
+    <string name="use_temp_target">Použít dočasný cíl</string>
+    <string name="use_alarm">Použít alarm</string>
+    <string name="device_selection">Výběr zařízení</string>
+    <string name="show_on_phone">Zobrazit na telefonu</string>
+    <string name="show_on_watch">Zobrazit na hodinkách</string>
+    <string name="ecarbs_additional">Další sacharidy</string>
+    <string name="valid_from_to">Platné časové rozmezí</string>
+    <string name="carb_time">Čas sacharidů</string>
+    <string name="save_changes_question">Uložit změny této položky?</string>
+    <string name="wizard_no_insulin_required">Není potřeba žádný inzulín</string>
+    <string name="carbs_constraint_violation">Sacharidy omezeny omezeními</string>
+    <string name="insulin_constraint_violation">Inzulín omezen omezeními</string>
     <string name="confirm_treatment">Potvrďte prosím záznam</string>
     <string name="recalculate">Přepočítat</string>
     <!--    Widget-->
@@ -130,12 +211,55 @@
     <string name="widget_configuration">Konfigurace widgetu</string>
     <string name="until_changed">Dokud nebude změněno</string>
     <!--    Permissions-->
+    <string name="permission_sheet_title">Vyžadovaná oprávnění</string>
+    <string name="permission_sheet_subtitle">Pro správnou funkci aplikace jsou potřeba některá oprávnění</string>
+    <string name="permission_grant">Udělit</string>
+    <string name="permission_change">Změnit</string>
+    <string name="permission_denied_go_to_settings">Oprávnění bylo trvale odepřeno. Povolte jej prosím v nastavení aplikace.</string>
+    <string name="permission_open_settings">Nastavení</string>
+    <string name="permission_directory_picker_error">Nelze spustit výběr adresáře. Obvykle problém Androidu nebo Family Link.</string>
+    <string name="permission_nav_label">Oprávnění</string>
     <!--    TDD Cycle Pattern -->
+    <string name="cycle_offset">Posun cyklu</string>
+    <string name="raw_tdd">Surové TDD</string>
+    <string name="cleaned_tdd">Očištěné TDD</string>
+    <string name="cleaned_tdd_explanation">TDD minus inzulín na sacharidy.</string>
+    <string name="cycle_lines_legend">Jednotlivé cykly</string>
+    <string name="cycles_found">%1$d cyklů (%2$d dní)</string>
+    <string name="cycle_day1_date">Den 1 = %1$s</string>
+    <string name="calculation_in_progress_percent">Výpočet %1$d %%</string>
+    <string name="not_enough_data_for_cycles">Nedostatek dat (potřeba alespoň 56 dní pro 2 cykly)</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Oba</item>
         <item>Pouze kladné</item>
         <item>Pouze záporné</item>
     </string-array>
     <!-- Toolbar configuration -->
+    <string name="quick_launch_selected_actions">Vybrané akce</string>
+    <string name="quick_launch_available_actions">Dostupné akce</string>
+    <string name="quick_launch_no_dynamic_items">Žádné položky k dispozici</string>
+    <string name="quick_launch_category_treatment">Ošetření</string>
+    <string name="quick_launch_category_profile">Profil</string>
+    <string name="quick_launch_category_temp_target">Přednastavení dočasných cílů</string>
+    <string name="quick_launch_category_quick_wizard">Rychlé bolusy</string>
+    <string name="quick_launch_category_automation">Automatizace</string>
+    <string name="quick_launch_all_selected">Všechny položky vybrány</string>
+    <string name="quick_launch_no_quick_wizard">Přidejte položky Rychlých bolusů, abyste je zde mohli použít</string>
+    <string name="quick_launch_no_automation">Vytvořte uživatelské automatizační akce, abyste je zde mohli použít</string>
+    <string name="quick_launch_no_tt_presets">Přidejte přednastavení dočasných cílů, abyste je zde mohli použít</string>
+    <string name="quick_launch_no_profiles">Vytvořte profily v místním profilu, abyste je zde mohli použít</string>
+    <string name="quick_launch_edit_profile_preset">Upravit přednastavení profilu</string>
+    <string name="quick_launch_profile_percentage">Procenta</string>
+    <string name="quick_launch_profile_duration">Trvání</string>
+    <string name="quick_launch_profile_permanent">Trvalé</string>
+    <string name="quick_launch_profile_confirm">Aktivovat profil %1$s?</string>
+    <string name="quick_launch_profile_confirm_pct">%1$d %%</string>
+    <string name="select_arrow">Vybrat šipku</string>
+    <string name="loop_accept_nav_label">Smyčka</string>
+    <string name="loop_accept_set_basal_question">Přijmout nový dočasný bazál:</string>
+    <string name="loop_accept_perform">Provést</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_disabled">Zakázáno</string>
+    <string name="widget_rm_suspended">Pozastaveno</string>
+    <string name="widget_rm_resume">Obnovit</string>
 </resources>
