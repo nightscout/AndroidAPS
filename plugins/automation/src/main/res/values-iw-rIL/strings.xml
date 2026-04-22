@@ -51,7 +51,6 @@
     <string name="location_going_out">כשעוזבים אזור ששמו</string>
     <string name="time_range">טווח זמן</string>
     <string name="timerange_value">הזמן בין %1$s ו- %2$s</string>
-    <string name="between">בין </string>
     <string name="add_short">הוספה</string>
     <string name="temptargetcompared">ערך מטרה זמני %1$s</string>
     <string name="btdevicecompared">חיבור בלוטות\' להתקן %1$s %2$s</string>
@@ -78,8 +77,6 @@
     <string name="edit_short">עריכה</string>
     <string name="preconditions">תנאים מוקדמים:</string>
     <string name="user_action">פעולות משתמש</string>
-    <string name="remove_selected_items">הסר פריטים נבחרים</string>
-    <string name="count_selected">%1$d נבחרו</string>
     <string name="system_automation">אוטומציית מערכת</string>
     <string name="run_automations">הפעל אוטומציות</string>
     <string name="add_automation">הוספת כלל</string>
