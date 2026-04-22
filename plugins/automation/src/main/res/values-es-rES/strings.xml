@@ -73,7 +73,6 @@
     <string name="location_going_out">Cuando dejes el área llamada</string>
     <string name="time_range">Intervalo de tiempo</string>
     <string name="timerange_value">El tiempo está entre %1$s y %2$s</string>
-    <string name="between">Entre </string>
     <string name="add_short">AÑADIR</string>
     <string name="temptargetcompared">Objetivo temporal %1$s</string>
     <string name="btdevicecompared">Conexión Bluetooth con el dispositivo %1$s %2$s</string>
@@ -114,8 +113,6 @@
     <string name="edit_short">EDITAR</string>
     <string name="preconditions">Precondiciones:</string>
     <string name="user_action">Acción del usuario</string>
-    <string name="remove_selected_items">Eliminar elementos seleccionados</string>
-    <string name="count_selected">%1$d seleccionados</string>
     <string name="system_automation">Automatización del sistema</string>
     <string name="run_automations">Ejecutar automatizaciones</string>
     <string name="add_automation">Añadir regla</string>
