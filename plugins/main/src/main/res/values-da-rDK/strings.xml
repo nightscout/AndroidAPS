@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Loop deaktiveret</string>
-    <string name="calculator_label">Beregner</string>
     <string name="nav_history_browser">Historik browser</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">alder:</string>
-    <string name="level_label">niveau:</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pumpe batteri</string>
     <string name="cannula">Kanyle</string>
     <string name="patch_pump">Patch pumpe</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulin</string>
-    <string name="a11y_bg_quality">blodglukose kvalitet</string>
-    <string name="a11y_blood_glucose">blodglucose</string>
-    <string name="a11y_bg_outdated">forældet</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">BG data status</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Forudsigelser</string>
-    <string name="overview_show_treatments">Behandlinger</string>
-    <string name="overview_show_heartRate">Puls</string>
-    <string name="overview_show_deviation_slope">Afvigelses hældning</string>
-    <string name="overview_show_activity">Aktivitet</string>
-    <string name="overview_show_bgi">Blodsukker virkning</string>
-    <string name="overview_show_deviations">Afvigelser</string>
-    <string name="overview_show_cob">Aktive kulhydrater </string>
-    <string name="overview_show_iob">Aktivt insulin </string>
-    <string name="overview_show_basals">Basaler</string>
-    <string name="overview_show_abs_insulin">Absolut insulin</string>
-    <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">BEHANDL</string>
-    <string name="cannula_usage">brug:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en løbende notifikation med en kort oversigt over, hvad dit loop gør</string>
