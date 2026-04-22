@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Sẽ đổi sang giờ mùa hè trong vòng 24 giờ tới</string>
     <string name="dst_loop_disabled_warning">Thay đổi giờ mùa hè cách đây chưa đến 3 giờ - Vòng lặp kín đã bị vô hiệu</string>
-    <string name="dst_loop_disabled_error">Thay đổi giờ mùa hè (DST) xảy ra cách đây chưa đến 3 giờ. Vòng lặp kín đã bị tạm vô hiệu và sẽ tự động bật lại sau 3 giờ kể từ khi thay đổi giờ DST</string>
     <!-- Storage constraint -->
     <string name="disk_full">Giải phóng ít nhất %1$d MB từ bộ nhớ trong! Đã tắt vòng lặp!</string>
     <!-- Version Checker -->
@@ -41,8 +40,6 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Chương trình đào tạo</string>
     <string name="doyouwantresetstart">Bạn có muốn đặt lại mục tiêu khởi động không? Tiến trình của bạn có thể sẽ bị mất.</string>
-    <string name="objectives_next_button">Tiếp theo</string>
-    <string name="objectives_previous_button">Trước đó</string>
     <string name="objectives_button_unfinish">Đặt lại trạng thái đã hoàn thành</string>
     <string name="objectives_button_unstart">Đặt lại trạng thái đã bắt đầu</string>
 </resources>
