@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">בולוס מעבר למגבלה</string>
     <string name="carbs_constraint_applied">פחמימות מעבר למגבלה</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">התחל ערך מטרה פ\' גופנית</string>
     <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
     <string name="start_hypo_tt">הפעלת היפו TT</string>
     <string name="time_offset">היסט זמן</string>
-    <string name="remind_to_bolus_later">תזכורת להזרקת בולוס אח\"כ</string>
     <!--    Widget-->
     <string name="configure">הגדרת אטימות</string>
     <string name="widget_description">ווידג\'ט AAPS</string>
@@ -16,8 +14,6 @@
     <string name="do_you_want_reset_stats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="do_you_want_recalculate_tdd_stats">האם ברצונכם לאפס את סטטיסטיקת המינונים היומיים הכוללים?</string>
     <string name="calculation_in_progress">מבצע חישוב</string>
-    <string name="invalid_age">רשומת גיל לא חוקית</string>
-    <string name="invalid_weight">רשומת משקל לא חוקית</string>
     <string name="age">גיל</string>
     <string name="weight_label">משקל</string>
     <string name="glucose_type">סוג גלוקוז</string>
@@ -25,17 +21,12 @@
     <string name="bg_meter">מד</string>
     <string name="bg_sensor">חיישן</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s פקטור הרגישות: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
-    <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
-    <string name="treatments_wizard_total_label">סה\"כ</string>
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
     <string name="record_pump_site_change">רשום החלפת אתר עירוי</string>
     <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">רישום בולוס ללא הזרקה</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
     <string name="timeshift_label">היסט זמן</string>
@@ -60,29 +51,14 @@
     <string name="duration3h">3 שעות</string>
     <string name="duration10h">10 שעות</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">תיקון עם %</string>
-    <string name="a11_correction_units">תיקון עם יחידות</string>
-    <string name="two_hours">שעתיים</string>
-    <string name="result_insulin_carbs">תוצאה: %1$s %2$s</string>
     <string name="missing_carbs">חסרים %1$d גר\'</string>
-    <string name="a11y_current_bg">רמת סוכר נוכחית</string>
-    <string name="carb_time_label">זמן פחמימות</string>
-    <string name="a11y_set_carb_timer">הגדרת אזעקה טיימר פחמימות</string>
     <!-- Treatments -->
     <string name="no_records_available">אין רישומים זמינים</string>
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
-    <string name="treatments_carbs_label_string">פחמימות:</string>
-    <string name="tempbasals_netratio_label_string">יחס:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">תיקון</string>
-    <string name="meal_bolus">ארוחה</string>
-    <string name="prime">תיחול</string>
     <string name="carbs_and_bolus">פחמ\' ובולוס</string>
     <string name="show_invalidated">הצג פסולים</string>
     <string name="hide_invalidated">הסתר פסולים</string>
     <string name="careportal_remove_started_events">הסרת רשומות הפעלת AAPS</string>
-    <string name="hide_loop">החבא לולאה</string>
-    <string name="show_loop">הצג לולאה</string>
     <string name="user_entry">קלט המשתמש</string>
     <string name="clone_label">שכפול</string>
     <!-- ProfileHelperActivity -->
@@ -96,13 +72,8 @@
     <string name="format_with_tdd_and_pct">גיל: %1$d יח\' מינון יומי כולל: %2$.0f יח\' %3$d%%</string>
     <string name="format_with_weight">גיל: %1$d יח\' משקל: %2$.0f ק\"ג</string>
     <string name="dpv_default_profile">פרופיל ברירת מחדל DPV</string>
-    <string name="invalid_pct">רשומת אחוזים לא חוקית</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">מינון בזאלי</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">על השעון בלבד</string>
-    <string name="a11y_only_on_phone">על הטלפון בלבד</string>
-    <string name="a11y_drag_and_drop_handle">לחצן גרירה</string>
     <!--    History browser-->
     <string name="confirm_treatment">אשר טיפול</string>
     <string name="recalculate">חשב מחדש</string>
