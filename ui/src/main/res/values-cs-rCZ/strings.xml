@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Aplikováno omezení bolusu</string>
     <string name="carbs_constraint_applied">Aplikováno omezení sacharidů</string>
     <string name="temp_target_short">DC</string>
     <string name="start_activity_tt">Spustit dočasný cíl Aktivita</string>
     <string name="start_eating_soon_tt">Spustit dočasný cíl Před jídlem</string>
     <string name="start_hypo_tt">Spustit dočasný cíl Hypoglykémie</string>
     <string name="time_offset">Časový posun</string>
-    <string name="remind_to_bolus_later">Upozornit později na bolus</string>
-    <string name="a11y_carb_reminder">Nastavit připomínku na čas sacharidů</string>
     <!--    Widget-->
     <string name="configure">Konfigurovat průhlednost</string>
     <string name="widget_description">Widget AAPS</string>
@@ -29,8 +26,6 @@
     <string name="do_you_want_reset_stats">Chcete resetovat statistiky aktivity?</string>
     <string name="do_you_want_recalculate_tdd_stats">Chcete přepočítat statistiky CDD?</string>
     <string name="calculation_in_progress">Probíhá výpočet</string>
-    <string name="invalid_age">Neplatná položka věku</string>
-    <string name="invalid_weight">Neplatná položka váhy</string>
     <string name="age">Věk</string>
     <string name="weight_label">Váha</string>
     <string name="glucose_type">Zadání glykémie</string>
@@ -38,13 +33,7 @@
     <string name="bg_meter">Glukoměr</string>
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Celkem</string>
     <!-- SiteRotationDialog -->
-    <string name="site_front">Přední</string>
-    <string name="site_back">Zadní</string>
     <string name="site_man">Muž</string>
     <string name="site_woman">Žena</string>
     <string name="site_child">Dítě</string>
@@ -52,14 +41,12 @@
     <string name="user_profile_description">Popis profilu uživatele se používá k zobrazení nejčastějších míst aplikace dostupných pro muže, ženy nebo děti</string>
     <string name="site_management">Profil správy místa aplikace</string>
     <string name="site_management_description">Zde nastavíte, zda chcete spravovat místa aplikace pro pumpu, senzor nebo obojí. Toto nastavení bude použito k automatickému zobrazení dialogového okna správy místa aplikace u každého zjištěného nového záznamu.</string>
-    <string name="record_site_change">Zaznamenat místo aplikace</string>
     <string name="update_site_change">Aktualizovat umístění setu</string>
     <string name="edit_site">Upravit</string>
     <string name="record_site_location">Místo aplikace: %1$s</string>
     <string name="record_site_arrow">Šipka místa aplikace: %1$s</string>
     <string name="record_site_note">Poznámka: %1$s</string>
     <string name="delete_site_note">Poznámka odstraněna</string>
-    <string name="site_filter_info">Vyberte typ terapeutické události, kterou chcete vidět: výměna kanyly a/nebo výměna senzoru</string>
     <!-- FillDialog -->
     <string name="fill_warning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
     <string name="record_pump_site_change">Zaznamenat výměnu setu</string>
@@ -67,16 +54,12 @@
     <string name="fill_prime_amount">Množství na naplnění</string>
     <string name="fill_pump_units_note">Množství na naplnění je v jednotkách pumpy</string>
     <string name="fill_insulin_change">Změnit inzulín na: %1$s (bude aplikováno přepnutí profilu)</string>
-    <string name="fill_current_insulin">Aktuální inzulín</string>
-    <string name="fill_change_insulin">Změnit inzulín</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Chybí název inzulínu</string>
     <string name="insulin_name_exists">Název inzulínu %1$s již existuje, vyberte nový název</string>
     <string name="a11y_add_new_insulin">Přidat nový inzulín</string>
     <string name="a11y_delete_current_insulin">Odstranit aktuální inzulín</string>
-    <string name="save_or_reset_changes_first">Nejprve uložte nebo resetujte aktuální změny</string>
     <string name="activate_insulin_no_profile">Nebyl nalezen žádný aktivní profil</string>
     <string name="activate_insulin_new_insulin">Nový inzulín: %1$s</string>
     <string name="activate_insulin_remaining">Zbývá: %1$d min</string>
@@ -107,45 +90,25 @@
     <string name="duration3h">3 hodiny</string>
     <string name="duration10h">10 hodin</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">správný výsledek v %</string>
-    <string name="a11_correction_units">správný výsledek s jednotkami</string>
-    <string name="two_hours">2h</string>
-    <string name="result_insulin_carbs">Výsledek: %1$s %2$s</string>
     <string name="missing_carbs">Chybí %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100 % okamžité sacharidy, žádné prodloužené sacharidy</string>
     <string name="wizard_carbs_type_desc">Sacharidy snížené o %1$d %%, přidané eSACH %2$d %% zpožděné o %3$d min po dobu %4$d h</string>
     <string name="wizard_include_info">Klepnutím zahrnete/vyloučíte z výpočtu:\n Gly – glykémie (na začátku ZAPNUTO)\n TT – dočasný cíl (na začátku ZAPNUTO)\n Trend – trend glykémie (poslední stav zapamatován)\n IOB – insulin on board (na začátku ZAPNUTO)\n COB – sacharidy on board (poslední stav zapamatován)</string>
-    <string name="wizard_bg_age">Stáří glykémie: %1$d min</string>
-    <string name="a11y_current_bg">aktuální hodnota glykémie</string>
-    <string name="carb_time_label">Čas jídla</string>
-    <string name="a11y_set_carb_timer">nastavit upozornění na sacharidy</string>
-    <string name="show_calculation">Zobrazit výpočet</string>
     <!-- Treatments -->
     <string name="no_records_available">Nejsou k dispozici žádné záznamy</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Sacharidy:</string>
-    <string name="tempbasals_netratio_label_string">Poměr:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Korekce</string>
-    <string name="meal_bolus">Jídlo</string>
-    <string name="prime">Doplňování</string>
     <string name="carbs_and_bolus">Sacharidy a bolusy</string>
     <string name="show_invalidated">Zobrazit zneplatněné</string>
     <string name="hide_invalidated">Skrýt zneplatněné</string>
     <string name="careportal_remove_started_events">Odebrat záznamy spuštěné AAPS</string>
-    <string name="hide_loop">Skrýt smyčku</string>
-    <string name="show_loop">Zobrazit smyčku</string>
     <string name="user_entry">Uživatelská položka</string>
     <string name="clone_label">Klonovat</string>
     <string name="add_new_profile">Přidat nový profil</string>
-    <string name="show_profile">Zobrazit profil</string>
     <string name="edit_label">Upravit</string>
-    <string name="edit_profile">Upravit profil</string>
     <string name="activate_label">Aktivovat</string>
     <string name="activate_profile">Aktivovat profil</string>
     <string name="remove_label">Odstranit</string>
     <string name="active_profile_indicator">AKTIVNÍ</string>
-    <string name="remaining_time_label">Zbývá</string>
     <string name="confirm_remove_profile">Odstranit profil \"%1$s\"?</string>
     <string name="confirm_clone_profile">Klonovat profil \"%1$s\"?</string>
     <!-- ProfileHelperActivity -->
@@ -166,19 +129,14 @@
     <string name="format_with_tdd_and_pct">Věk: %1$d CDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Věk: %1$.0f Hmotnost: %2$.0f kg</string>
     <string name="dpv_default_profile">Výchozí profil DPV</string>
-    <string name="invalid_pct">Neplatný vstup %</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Bazál</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">pouze na hodinkách</string>
-    <string name="a11y_only_on_phone">pouze na telefonu</string>
     <string name="overview_edit_quickwizard_button_text">Text tlačítka</string>
     <string name="quick_wizard_mode_wizard">Průvodce</string>
     <string name="quick_wizard_mode_insulin">Inzulín</string>
     <string name="quick_wizard_mode_carbs">Sacharidy</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Pouze kladný IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="a11y_drag_and_drop_handle">Režim „Táhni a pusť“</string>
     <!--    History browser-->
     <string name="history_now">Nyní</string>
     <string name="a11y_history_previous_window">Předchozí okno</string>
@@ -236,7 +194,6 @@
     </string-array>
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">Vybrané akce</string>
-    <string name="quick_launch_available_actions">Dostupné akce</string>
     <string name="quick_launch_no_dynamic_items">Žádné položky k dispozici</string>
     <string name="quick_launch_category_treatment">Ošetření</string>
     <string name="quick_launch_category_profile">Profil</string>
@@ -249,10 +206,7 @@
     <string name="quick_launch_no_tt_presets">Přidejte přednastavení dočasných cílů, abyste je zde mohli použít</string>
     <string name="quick_launch_no_profiles">Vytvořte profily v místním profilu, abyste je zde mohli použít</string>
     <string name="quick_launch_edit_profile_preset">Upravit přednastavení profilu</string>
-    <string name="quick_launch_profile_percentage">Procenta</string>
-    <string name="quick_launch_profile_duration">Trvání</string>
     <string name="quick_launch_profile_permanent">Trvalé</string>
-    <string name="quick_launch_profile_confirm">Aktivovat profil %1$s?</string>
     <string name="quick_launch_profile_confirm_pct">%1$d %%</string>
     <string name="select_arrow">Vybrat šipku</string>
     <string name="loop_accept_nav_label">Smyčka</string>
