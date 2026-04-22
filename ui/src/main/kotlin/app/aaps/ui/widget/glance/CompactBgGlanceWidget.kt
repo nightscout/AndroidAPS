@@ -129,6 +129,12 @@ private fun CompactContent(state: WidgetRenderState) {
             modifier = GlanceModifier.padding(start = ICON_TEXT_GAP),
             maxLines = 1
         )
+        Image(
+            provider = ImageProvider(state.tbrIconResId),
+            contentDescription = null,
+            modifier = GlanceModifier.size(ICON_SIZE).padding(start = SECTION_GAP),
+            colorFilter = ColorFilter.tint(ColorProvider(DarkElementColors.tempBasal))
+        )
     }
 }
 
@@ -147,5 +153,5 @@ private fun LoadingContent() {
 
 private val SECTION_GAP = 6.dp
 private val ICON_TEXT_GAP = 3.dp
-private val ICON_SIZE = 20.dp
+private val ICON_SIZE = 30.dp
 private val TEXT_SIZE = 22.sp

@@ -26,7 +26,6 @@
     <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
     <string name="random_bg_short">BG</string>
 
-    <string name="direction">direction</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai/Ottai App.</string>

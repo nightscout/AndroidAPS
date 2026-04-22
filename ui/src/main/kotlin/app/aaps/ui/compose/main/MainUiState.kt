@@ -3,6 +3,7 @@ package app.aaps.ui.compose.main
 import androidx.compose.runtime.Immutable
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
+import app.aaps.core.interfaces.overview.graph.TbrState
 
 /**
  * State of the TempTarget chip in Overview
@@ -39,6 +40,8 @@ data class MainUiState(
     val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
     val runningModeText: String = "",
     val runningModeProgress: Float = 0f, // 0-1 progress for temporary modes
+    // Running TBR state for chip (HIGH / LOW / NONE)
+    val tbrState: TbrState = TbrState.NONE,
     // QuickWizard entries for treatment bottom sheet
     val quickWizardItems: List<QuickWizardItem> = emptyList(),
     // Navigation-triggered dialogs

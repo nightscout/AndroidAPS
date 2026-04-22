@@ -112,6 +112,13 @@ fun rememberBottomAxisItemPlacer(minTimestamp: Long): HorizontalAxis.ItemPlacer 
 const val DEFAULT_GRAPH_ZOOM_MINUTES = 360.0
 
 /**
+ * Maximum zoom-in level — never show fewer than this many minutes.
+ * Prevents Vico's internal label/constraint math from overflowing at extreme zoom
+ * (Compose `Constraints` can't represent the resulting data-label widths → crash).
+ */
+const val MIN_GRAPH_ZOOM_MINUTES = 30.0
+
+/**
  * Filters data points to only include those within the valid x-axis range.
  *
  * Use this when you have data that might extend beyond the visible time range

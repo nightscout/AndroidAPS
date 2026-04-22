@@ -73,11 +73,9 @@ private val LoopDisconnectedColor = Color(0xFF939393)
 private val LoopUnknownColor      = Color(0xFF9E9E9E)
 private val LoopSuperbolusColor   = Color(0xFFFFAE01)
 private val TempBasalColor        = Color(0xFFFF9800)
-private val IobColor              = Color(0xFF1E88E5)
 private val BolusColor            = Color(0xFF1EA3E5)
 private val TempTargetActiveColor  = Color(0xFFF4D700)
 private val TempTargetBg           = Color(0x1AF4D700)
-private val AutosensTargetColor    = Color(0xFF77DD77)
 private val AutosensTargetBg       = Color(0x1A77DD77)
 private val White70               = Color(0xB3FFFFFF)
 private val White20               = Color(0x33FFFFFF)
@@ -96,7 +94,7 @@ private fun LoopStatusData.LoopMode.toColor(): Color = when (this) {
     LoopStatusData.LoopMode.UNKNOWN      -> LoopUnknownColor
 }
 
-private fun ageColor(ageMs: Long): Color {
+private fun loopAgeColor(ageMs: Long): Color {
     val minutes = ageMs / 60_000
     return when {
         minutes < 4  -> LoopClosedColor
@@ -397,26 +395,26 @@ private fun LastRunSection(lastRun: Long?, lastEnact: Long?, dateUtil: DateUtil)
                 InfoRow(
                     label = stringResource(R.string.loop_status_last_run_enact),
                     value = enactTimeStr,
-                    valueColor = ageColor(enactAgeMs)
+                    valueColor = loopAgeColor(enactAgeMs)
                 )
             } else {
                 InfoRow(
                     label = stringResource(R.string.loop_status_last_run),
                     value = runTimeStr,
-                    valueColor = ageColor(runAgeMs)
+                    valueColor = loopAgeColor(runAgeMs)
                 )
                 Spacer(Modifier.height(4.dp))
                 InfoRow(
                     label = stringResource(R.string.loop_status_last_enact),
                     value = enactTimeStr,
-                    valueColor = ageColor(enactAgeMs)
+                    valueColor = loopAgeColor(enactAgeMs)
                 )
             }
         } else {
             InfoRow(
                 label = stringResource(R.string.loop_status_last_run),
                 value = runTimeStr,
-                valueColor = ageColor(runAgeMs)
+                valueColor = loopAgeColor(runAgeMs)
             )
         }
     } else {

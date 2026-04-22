@@ -107,7 +107,8 @@ fun GraphsSection(
     )
     val bgZoomState = rememberVicoZoomState(
         zoomEnabled = true,
-        initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES)
+        initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES),
+        maxZoom = Zoom.x(MIN_GRAPH_ZOOM_MINUTES)
     )
 
     // Pre-allocate secondary graph scroll/zoom states (up to MAX_SECONDARY_GRAPHS)

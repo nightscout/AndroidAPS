@@ -21,7 +21,6 @@
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
     <string name="basal_type_label">Basal type</string>
-    <string name="basal_rate_label">Basal rate</string>
     <string name="pump_type_label">Pump type</string>
     <string name="fw_version_label">FW version</string>
     <string name="patch_no_label">Patch no</string>
@@ -81,12 +80,10 @@
     <string name="do_not_attach_to_body">Do not attach the patch to the body yet.</string>
     <string name="half_press_needle">Half-press needle button. Then tap <b>Next</b> to start prime.</string>
     <string name="wait_for_priming">Please wait for the priming to complete.</string>
-    <string name="priming_error">Failed to prime, press <b>Retry</b> to try again.</string>
     <string name="press_next">Press <b>Next</b> to continue.</string>
     <string name="press_next_to_start_activation">Press <b>Next</b> to start activation.</string>
     <string name="remove_safety_lock">Remove the safety lock. Attach the pump to the body. Press the needle button.</string>
     <string name="activating_pump">Activating pump and setting initial basal rate. Please Wait.</string>
-    <string name="activating_error">Failed to activate, press <b>Retry</b> to try again.</string>
     <string name="activating_complete">New patch activated. %.2f Units remaining.</string>
     <string name="can_export_settings">You can export the settings to be able to recover this patch session later.</string>
     <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>

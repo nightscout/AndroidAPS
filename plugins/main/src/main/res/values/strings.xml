@@ -2,46 +2,22 @@
 <resources>
 
     <string name="disabled_loop">Loop Disabled</string>
-    <string name="calculator_label">Calculator</string>
 
     <string name="nav_history_browser">History browser</string>
     <string name="sensor_label">Sensor</string>
-    <string name="age_label">age:</string>
-    <string name="level_label">level:</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pump battery</string>
     <string name="cannula">Cannula</string>
     <string name="patch_pump">Patch pump</string>
 
     <!-- Overview -->
-    <string name="a11y_insulin_label">insulin</string>
-    <string name="a11y_bg_quality">blood glucose quality</string>
-    <string name="a11y_blood_glucose">blood glucose</string>
-    <string name="a11y_bg_outdated">outdated</string>
 
     <!-- overview moved to core:ui module -->
 
-    <string name="data_status">BG data status</string>
 
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Predictions</string>
-    <string name="overview_show_treatments">Treatments</string>
-    <string name="overview_show_heartRate">Heart Rate</string>
-    <string name="overview_show_deviation_slope">Deviation slope</string>
-    <string name="overview_show_activity">Activity</string>
-    <string name="overview_show_bgi">Blood Glucose Impact</string>
-    <string name="overview_show_sensitivity">Sensitivity change</string>
-    <string name="overview_show_deviations">Deviations</string>
-    <string name="overview_show_cob">Carbs On Board</string>
-    <string name="overview_show_iob">Insulin On Board</string>
-    <string name="overview_show_basals">Basals</string>
-    <string name="overview_show_abs_insulin">Absolute insulin</string>
-    <string name="overview_show_variable_sens">Variable sensitivity</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">TREAT</string>
 
-    <string name="cannula_usage">usage:</string>
 
     <!--    Iob-->
     <string name="iob_cob_calculator" translatable="false">IobCobCalculator</string>
@@ -50,6 +26,5 @@
     <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="old_data">OLD DATA</string>
-    <string name="overview_show_steps">Steps</string>
 
 </resources>

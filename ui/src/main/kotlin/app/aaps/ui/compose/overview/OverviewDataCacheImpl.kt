@@ -53,6 +53,8 @@ import app.aaps.core.interfaces.overview.graph.RunningModeGraphData
 import app.aaps.core.interfaces.overview.graph.RunningModeSegment
 import app.aaps.core.interfaces.overview.graph.StepsGraphData
 import app.aaps.core.interfaces.overview.graph.TargetLineData
+import app.aaps.core.interfaces.overview.graph.TbrDisplayData
+import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
 import app.aaps.core.interfaces.overview.graph.TempTargetState
 import app.aaps.core.interfaces.overview.graph.TherapyEventGraphPoint
@@ -93,8 +95,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -172,9 +177,23 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     override val profileFlow: StateFlow<ProfileDisplayData?> = _profileFlow.asStateFlow()
     private val _runningModeFlow = MutableStateFlow<RunningModeDisplayData?>(null)
     override val runningModeFlow: StateFlow<RunningModeDisplayData?> = _runningModeFlow.asStateFlow()
+    private val _tbrFlow = MutableStateFlow<TbrDisplayData?>(null)
+    override val tbrFlow: StateFlow<TbrDisplayData?> = _tbrFlow.asStateFlow()
 
     override fun refreshTempTarget() {
         scope.launch { updateTempTargetFromDatabase() }
+    }
+
+    override fun refreshProfile() {
+        scope.launch { updateProfileFromDatabase() }
+    }
+
+    override fun refreshRunningMode() {
+        scope.launch { updateRunningModeFromDatabase() }
+    }
+
+    override fun refreshTbr() {
+        scope.launch { updateTbrFromDatabase() }
     }
 
     // Secondary graph flows
@@ -247,6 +266,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                 updateProfileFromDatabase()
                 updateTempTargetFromDatabase()
                 updateRunningModeFromDatabase()
+                updateTbrFromDatabase()
             }
 
             // Observe GlucoseValue changes
@@ -368,7 +388,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             scope.launch {
                 persistenceLayer.observeChanges(TB::class.java)
                     .debounce(300)
-                    .collect { rebuildBasalGraph() }
+                    .collect {
+                        rebuildBasalGraph()
+                        updateTbrFromDatabase()
+                    }
             }
             scope.launch {
                 persistenceLayer.observeChanges(EB::class.java)
@@ -376,19 +399,28 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     .collect { rebuildBasalGraph() }
             }
 
-            // NSClient status: initial load + subscribe to updates + 60s ticker for time-ago refresh
+            // NSClient status: initial load + rxBus subscription + 60s ticker — but only while
+            // the nsClientStatusFlow has observers. The cache is a singleton, so without this
+            // gate the 60s rebuild would fire 24/7 even though the flow is only consumed by the
+            // overview (AAPSCLIENT-only).
             if (config.AAPSCLIENT) {
-                scope.launch { rebuildNsClientStatus() }
                 scope.launch {
-                    rxBus.toFlow(EventNsClientStatusUpdated::class.java).collect {
-                        rebuildNsClientStatus()
-                    }
-                }
-                scope.launch {
-                    while (true) {
-                        delay(60_000)
-                        rebuildNsClientStatus()
-                    }
+                    _nsClientStatusFlow.subscriptionCount
+                        .map { it > 0 }
+                        .distinctUntilChanged()
+                        .collectLatest { hasSubscribers ->
+                            if (!hasSubscribers) return@collectLatest
+                            rebuildNsClientStatus()
+                            launch {
+                                rxBus.toFlow(EventNsClientStatusUpdated::class.java).collect {
+                                    rebuildNsClientStatus()
+                                }
+                            }
+                            while (true) {
+                                delay(60_000)
+                                rebuildNsClientStatus()
+                            }
+                        }
                 }
             }
         }
@@ -529,6 +561,35 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             mode = rmRecord.mode,
             timestamp = rmRecord.timestamp,
             duration = rmRecord.duration
+        )
+    }
+
+    // =========================================================================
+    // Running TBR chip computation
+    // =========================================================================
+
+    private suspend fun updateTbrFromDatabase() {
+        val profile = profileFunction.getProfile()
+        if (profile == null) {
+            _tbrFlow.value = TbrDisplayData(TbrState.NONE, 0L, 0L)
+            return
+        }
+        val now = dateUtil.now()
+        val basalData = iobCobCalculator.getBasalData(profile, now)
+        val state = when {
+            !basalData.isTempBasalRunning                               -> TbrState.NONE
+            abs(basalData.tempBasalAbsolute - basalData.basal) < 0.01  -> TbrState.NONE
+            basalData.tempBasalAbsolute > basalData.basal               -> TbrState.HIGH
+            else                                                        -> TbrState.LOW
+        }
+        // Pull timing from the active TB row for expiry detection on ticks. Extended boluses
+        // converted to TBR (EB-as-TB) won't have a TB row; state is still correct but the
+        // ViewModel won't auto-refresh on expiry — the next TB/EB DB event catches it.
+        val activeTb = if (state != TbrState.NONE) persistenceLayer.getTemporaryBasalActiveAt(now) else null
+        _tbrFlow.value = TbrDisplayData(
+            state = state,
+            timestamp = activeTb?.timestamp ?: 0L,
+            duration = activeTb?.duration ?: 0L
         )
     }
 
@@ -930,6 +991,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         _tempTargetFlow.value = null
         _profileFlow.value = null
         _runningModeFlow.value = null
+        _tbrFlow.value = null
         // Secondary graph flows
         _iobGraphFlow.value = IobGraphData(emptyList(), emptyList())
         _absIobGraphFlow.value = AbsIobGraphData(emptyList())

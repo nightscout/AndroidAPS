@@ -103,8 +103,6 @@
     <string name="permission_bluetooth_description">Application needs bluetooth permission to communicate with pump</string>
 
     <!-- Insulin -->
-    <string name="insulin_plugin">Insulin</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">Unknown</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -113,7 +111,6 @@
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
-    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
 
     <!-- Concentration -->
     <string name="u10">U10</string>

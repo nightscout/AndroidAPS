@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Bolus constraint applied</string>
     <string name="carbs_constraint_applied">Carbs constraint applied</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="time_offset">Time offset</string>
-    <string name="remind_to_bolus_later">Remind to bolus later</string>
 
-    <string name="a11y_carb_reminder">Set reminder to carbs time</string>
 
     <!--    Widget-->
     <string name="configure">Configure opacity</string>
@@ -38,8 +35,6 @@
     <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
     <string name="do_you_want_recalculate_tdd_stats">Do you want to recalculate TDD stats?</string>
     <string name="calculation_in_progress">Calculation in progress</string>
-    <string name="invalid_age">Invalid age entry</string>
-    <string name="invalid_weight">Invalid weight entry</string>
     <string name="age">Age</string>
     <string name="weight_label">Weight</string>
 
@@ -50,14 +45,8 @@
     <string name="bg_sensor">Sensor</string>
 
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Total</string>
 
     <!-- SiteRotationDialog -->
-    <string name="site_front">Front</string>
-    <string name="site_back">Back</string>
     <string name="site_man">Man</string>
     <string name="site_woman">Woman</string>
     <string name="site_child">Child</string>
@@ -65,14 +54,12 @@
     <string name="user_profile_description">User Profile Description is used to show most frequent sites available for a man, a woman or a child</string>
     <string name="site_management">Site Management Profile</string>
     <string name="site_management_description">You will set here if you want to manage Pump site, CGM site or both. This setting will be used to automatically send the site management dialog on each detected new entry</string>
-    <string name="record_site_change">Record Site Location</string>
     <string name="update_site_change">Update Site Location</string>
     <string name="edit_site">Edit</string>
     <string name="record_site_location">Site Location: %1$s</string>
     <string name="record_site_arrow">Site Arrow: %1$s</string>
     <string name="record_site_note">Note: %1$s</string>
     <string name="delete_site_note">Note deleted</string>
-    <string name="site_filter_info">Select Therapy event type you want to see: Cannula Change and/or Sensor Change</string>
 
     <!-- FillDialog -->
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
@@ -81,18 +68,14 @@
     <string name="fill_prime_amount">Prime amount</string>
     <string name="fill_pump_units_note">Prime amount is in pump units</string>
     <string name="fill_insulin_change">Switch insulin to: %1$s (profile switch will be applied)</string>
-    <string name="fill_current_insulin">Current insulin</string>
-    <string name="fill_change_insulin">Change insulin</string>
 
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Do not bolus, record only</string>
 
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Missing Insulin Name</string>
     <string name="insulin_name_exists">Insulin Name %1$s already exists, select a new name</string>
     <string name="a11y_add_new_insulin">Add new insulin</string>
     <string name="a11y_delete_current_insulin">Delete current insulin</string>
-    <string name="save_or_reset_changes_first">Save or reset current changes first</string>
     <string name="activate_insulin_no_profile">No active profile found</string>
     <string name="activate_insulin_new_insulin">New insulin: %1$s</string>
     <string name="activate_insulin_remaining">Remaining: %1$d min</string>
@@ -126,46 +109,26 @@
     <string name="duration10h">10 hours</string>
 
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">correct outcome with %</string>
-    <string name="a11_correction_units">correct outcome with units</string>
-    <string name="two_hours">2h</string>
-    <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="missing_carbs">Missing %1$d g</string>
     <string name="wizard_carbs_type_bread_desc">100% immediate carbs, no extended carbs</string>
     <string name="wizard_carbs_type_desc">Carbs reduced by %1$d%%, added eCarbs %2$d%% delayed %3$dmin for %4$dh</string>
     <string name="wizard_include_info">Tap to include/exclude from calculation:\n• BG — blood glucose (ON at start)\n• TT — temp target (ON at start)\n• Trend — BG trend (last state remembered)\n• IOB — insulin on board (ON at start)\n• COB — carbs on board (last state remembered)</string>
-    <string name="wizard_bg_age">BG age: %1$d min</string>
-    <string name="a11y_current_bg">current blood glucose</string>
-    <string name="carb_time_label">Carb time</string>
-    <string name="a11y_set_carb_timer">set carb timer alarm</string>
-    <string name="show_calculation">Show calculation</string>
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Carbs:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="meal_bolus">Meal</string>
-    <string name="prime">Prime</string>
     <string name="carbs_and_bolus">Carbs and bolus</string>
     <string name="show_invalidated">Show invalidated</string>
     <string name="hide_invalidated">Hide invalidated</string>
     <string name="careportal_remove_started_events">Remove AAPS started entries</string>
-    <string name="hide_loop">Hide loop</string>
-    <string name="show_loop">Show loop</string>
     <string name="user_entry">User entry</string>
     <string name="clone_label">Clone</string>
     <string name="add_new_profile">Add new profile</string>
-    <string name="show_profile">Show profile</string>
     <string name="edit_label">Edit</string>
-    <string name="edit_profile">Edit profile</string>
     <string name="activate_label">Activate</string>
     <string name="activate_profile">Activate profile</string>
     <string name="remove_label">Remove</string>
     <string name="active_profile_indicator">ACTIVE</string>
-    <string name="remaining_time_label">Remaining</string>
     <string name="confirm_remove_profile">Remove profile \"%1$s\"?</string>
     <string name="confirm_clone_profile">Clone profile \"%1$s\"?</string>
     <string name="tbr_type_flag_extended">E</string>
@@ -191,21 +154,16 @@
     <string name="format_with_tdd_and_pct">Age: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Age: %1$d Weight: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV Default profile</string>
-    <string name="invalid_pct">Invalid % entry</string>
 
     <!-- Other dialogs -->
-    <string name="basal_rate">Basal rate</string>
 
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">only on watch</string>
-    <string name="a11y_only_on_phone">only on phone</string>
     <string name="overview_edit_quickwizard_button_text">Button text</string>
     <string name="quick_wizard_mode_wizard">Wizard</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Carbs</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Positive IOB only</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
 
     <!--    History browser-->
     <string name="history_now">Now</string>
@@ -268,7 +226,6 @@
 
     <!-- Toolbar configuration -->
     <string name="quick_launch_selected_actions">Selected actions</string>
-    <string name="quick_launch_available_actions">Available actions</string>
     <string name="quick_launch_no_dynamic_items">No items available</string>
     <string name="quick_launch_category_treatment">Treatment</string>
     <string name="quick_launch_category_care">Care Portal</string>
@@ -282,10 +239,7 @@
     <string name="quick_launch_no_tt_presets">Add Temp Target presets to use them here</string>
     <string name="quick_launch_no_profiles">Create profiles in Local Profile to use them here</string>
     <string name="quick_launch_edit_profile_preset">Edit profile preset</string>
-    <string name="quick_launch_profile_percentage">Percentage</string>
-    <string name="quick_launch_profile_duration">Duration</string>
     <string name="quick_launch_profile_permanent">Permanent</string>
-    <string name="quick_launch_profile_confirm">Activate profile %1$s?</string>
     <string name="quick_launch_profile_confirm_pct">%1$d%%</string>
     <string name="quick_launch_profile_confirm_dur">%1$d min</string>
     <string name="select_arrow">Select Arrow</string>

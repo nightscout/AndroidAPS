@@ -21,6 +21,11 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.overview.graph.OverviewDataCache
+import app.aaps.core.interfaces.overview.graph.ProfileDisplayData
+import app.aaps.core.interfaces.overview.graph.RunningModeDisplayData
+import app.aaps.core.interfaces.overview.graph.TbrDisplayData
+import app.aaps.core.interfaces.overview.graph.TbrState
+import app.aaps.core.interfaces.overview.graph.TempTargetDisplayData
 import app.aaps.core.interfaces.overview.graph.TempTargetState
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
@@ -52,13 +57,16 @@ import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -92,8 +100,9 @@ class MainViewModel @Inject constructor(
     private val protectionCheck: ProtectionCheck
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MainUiState())
-    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
+    // Event-driven state (drawer, dialogs, simple-mode preference). Imperative .update{} calls
+    // from user actions and preference observers land here.
+    private val _eventState = MutableStateFlow(EventState())
 
     /** Toolbar items as a separate StateFlow to avoid unnecessary recompositions of the main UI */
     private val _quickLaunchItems = MutableStateFlow<List<ResolvedQuickLaunchItem>>(emptyList())
@@ -107,7 +116,8 @@ class MainViewModel @Inject constructor(
     val appIcon: Int get() = iconsProvider.getIcon()
     val calcProgressFlow: StateFlow<Int> = overviewDataCache.calcProgressFlow
 
-    // Ticker for time-based progress updates (every 30 seconds)
+    // Ticker for time-based progress updates (every 30 seconds). Cold flow — only runs while
+    // the chipStateFlow it feeds has subscribers (via uiState's WhileSubscribed below).
     private val progressTicker = flow {
         while (true) {
             emit(dateUtil.now())
@@ -115,102 +125,142 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    // Flow-derived chip state: ticker + cache flows + expiry detection. Cold.
+    private val chipStateFlow: Flow<ChipState> = combine(
+        overviewDataCache.tempTargetFlow,
+        overviewDataCache.profileFlow,
+        overviewDataCache.runningModeFlow,
+        overviewDataCache.tbrFlow,
+        progressTicker
+    ) { ttData, profileData, rmData, tbrData, now ->
+        buildChipState(ttData, profileData, rmData, tbrData, now)
+    }
+
+    /**
+     * Derived UI state. Combines event-driven state with ticker-derived chip state.
+     * `WhileSubscribed(5_000)` stops the upstream combine (and thus the progressTicker) 5s
+     * after the last observer disappears — real battery savings when the overview isn't
+     * on screen. 5s grace handles config changes (rotation, dark-mode) without thrashing.
+     */
+    val uiState: StateFlow<MainUiState> = combine(_eventState, chipStateFlow) { ev, chip ->
+        MainUiState(
+            isDrawerOpen = ev.isDrawerOpen,
+            isSimpleMode = ev.isSimpleMode,
+            showAboutDialog = ev.showAboutDialog,
+            showMaintenanceSheet = ev.showMaintenanceSheet,
+            showAuthFailedDialog = ev.showAuthFailedDialog,
+            isProfileLoaded = chip.isProfileLoaded,
+            profileName = chip.profileName,
+            isProfileModified = chip.isProfileModified,
+            profileProgress = chip.profileProgress,
+            tempTargetText = chip.tempTargetText,
+            tempTargetState = chip.tempTargetState,
+            tempTargetProgress = chip.tempTargetProgress,
+            tempTargetReason = chip.tempTargetReason,
+            runningMode = chip.runningMode,
+            runningModeText = chip.runningModeText,
+            runningModeProgress = chip.runningModeProgress,
+            tbrState = chip.tbrState,
+            quickWizardItems = chip.quickWizardItems
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MainUiState())
+
     init {
         preferences.observe(BooleanKey.GeneralSimpleMode)
-            .onEach { simple -> _uiState.update { it.copy(isSimpleMode = simple) } }
+            .onEach { simple -> _eventState.update { it.copy(isSimpleMode = simple) } }
             .launchIn(viewModelScope)
-        observeTempTargetAndProfile()
         observeQuickLaunch()
     }
 
     /**
-     * Observe TempTarget, Profile, and RunningMode from cache, combined with ticker for progress updates.
-     * Progress and display text are computed from raw timestamp/duration data on each tick.
+     * Pure transform from raw cache data + tick time to ChipState. Side-effect: calls
+     * cache.refresh*() when a row's `timestamp + duration` has passed, since DB-change
+     * observers don't emit on expiry.
      */
-    private fun observeTempTargetAndProfile() {
-        combine(
-            overviewDataCache.tempTargetFlow,
-            overviewDataCache.profileFlow,
-            overviewDataCache.runningModeFlow,
-            progressTicker
-        ) { ttData, profileData, rmData, now ->
-            // Detect expired TT: cache still says ACTIVE but time has passed
-            val ttExpired = ttData != null && ttData.state == TempTargetState.ACTIVE && ttData.duration > 0
-                && now >= ttData.timestamp + ttData.duration
-            if (ttExpired) {
-                overviewDataCache.refreshTempTarget()
+    private suspend fun buildChipState(
+        ttData: TempTargetDisplayData?,
+        profileData: ProfileDisplayData?,
+        rmData: RunningModeDisplayData?,
+        tbrData: TbrDisplayData?,
+        now: Long
+    ): ChipState {
+        // Detect expired chips and schedule a cache refresh. Duration >= 30 days is
+        // effectively permanent (e.g. loop disabled uses Int.MAX_VALUE minutes).
+        val ttExpired = ttData != null && ttData.state == TempTargetState.ACTIVE && ttData.duration > 0
+            && now >= ttData.timestamp + ttData.duration
+        if (ttExpired) overviewDataCache.refreshTempTarget()
+
+        val profileExpired = profileData != null && profileData.duration > 0
+            && now >= profileData.timestamp + profileData.duration
+        if (profileExpired) overviewDataCache.refreshProfile()
+
+        val rmIsFinite = rmData != null && rmData.duration > 0 && rmData.duration < T.days(30).msecs()
+        val rmExpired = rmIsFinite && now >= rmData!!.timestamp + rmData.duration
+        if (rmExpired) overviewDataCache.refreshRunningMode()
+
+        val tbrExpired = tbrData != null && tbrData.state != TbrState.NONE && tbrData.duration > 0
+            && now >= tbrData.timestamp + tbrData.duration
+        if (tbrExpired) overviewDataCache.refreshTbr()
+
+        // TT progress and display text
+        val ttProgress = if (ttData != null && ttData.duration > 0 && !ttExpired) {
+            val elapsed = now - ttData.timestamp
+            (elapsed.toFloat() / ttData.duration.toFloat()).coerceIn(0f, 1f)
+        } else 0f
+
+        val ttText = if (ttData != null && !ttExpired) {
+            if (ttData.state == TempTargetState.ACTIVE && ttData.duration > 0) {
+                "${ttData.targetRangeText} ${dateUtil.untilString(ttData.timestamp + ttData.duration, rh)}"
+            } else {
+                ttData.targetRangeText
             }
+        } else ""
 
-            // Compute TT progress and display text from raw timing data
-            val ttProgress = if (ttData != null && ttData.duration > 0 && !ttExpired) {
-                val elapsed = now - ttData.timestamp
-                (elapsed.toFloat() / ttData.duration.toFloat()).coerceIn(0f, 1f)
-            } else 0f
+        // Profile progress and display text
+        val profileProgress = if (profileData != null && profileData.duration > 0 && !profileExpired) {
+            val elapsed = now - profileData.timestamp
+            (elapsed.toFloat() / profileData.duration.toFloat()).coerceIn(0f, 1f)
+        } else 0f
 
-            val ttText = if (ttData != null && !ttExpired) {
-                if (ttData.state == TempTargetState.ACTIVE && ttData.duration > 0) {
-                    "${ttData.targetRangeText} ${dateUtil.untilString(ttData.timestamp + ttData.duration, rh)}"
-                } else {
-                    ttData.targetRangeText
-                }
-            } else ""
-
-            // Compute profile progress and display text from raw timing data
-            val profileProgress = if (profileData != null && profileData.duration > 0) {
-                val elapsed = now - profileData.timestamp
-                (elapsed.toFloat() / profileData.duration.toFloat()).coerceIn(0f, 1f)
-            } else 0f
-
-            val profileText = if (profileData != null && profileData.profileName.isNotEmpty()) {
-                if (profileData.duration > 0) {
-                    "${profileData.profileName} ${dateUtil.untilString(profileData.timestamp + profileData.duration, rh)}"
-                } else {
-                    profileData.profileName
-                }
-            } else ""
-
-            // Compute running mode progress and display text from raw timing data
-            // Duration >= 30 days is effectively permanent (e.g. loop disabled uses Int.MAX_VALUE minutes)
-            val rmIsFinite = rmData != null && rmData.duration > 0 && rmData.duration < T.days(30).msecs()
-            val rmProgress = if (rmIsFinite) {
-                val elapsed = now - rmData.timestamp
-                (elapsed.toFloat() / rmData.duration.toFloat()).coerceIn(0f, 1f)
-            } else 0f
-
-            val rmText = if (rmData != null) {
-                val modeName = getModeNameString(rmData.mode)
-                if (rmData.mode.mustBeTemporary() && rmIsFinite) {
-                    "$modeName ${dateUtil.untilString(rmData.timestamp + rmData.duration, rh)}"
-                } else {
-                    modeName
-                }
-            } else ""
-
-            // QuickWizard state
-            val qwItems = computeQuickWizardItems(rmData?.mode)
-
-            _uiState.update {
-                it.copy(
-                    // TempTarget state
-                    tempTargetText = ttText,
-                    tempTargetState = if (ttExpired) TempTargetChipState.None
-                    else ttData?.state?.toChipState() ?: TempTargetChipState.None,
-                    tempTargetProgress = ttProgress,
-                    tempTargetReason = if (ttExpired) null else ttData?.reason,
-                    // Profile state
-                    isProfileLoaded = profileData?.isLoaded ?: false,
-                    profileName = profileText,
-                    isProfileModified = profileData?.isModified ?: false,
-                    profileProgress = profileProgress,
-                    // Running mode state
-                    runningMode = rmData?.mode ?: RM.Mode.DISABLED_LOOP,
-                    runningModeText = rmText,
-                    runningModeProgress = rmProgress,
-                    // QuickWizard state
-                    quickWizardItems = qwItems
-                )
+        val profileText = if (profileData != null && profileData.profileName.isNotEmpty()) {
+            if (profileData.duration > 0 && !profileExpired) {
+                "${profileData.profileName} ${dateUtil.untilString(profileData.timestamp + profileData.duration, rh)}"
+            } else {
+                profileData.profileName
             }
-        }.launchIn(viewModelScope)
+        } else ""
+
+        // Running mode progress and display text
+        val rmProgress = if (rmIsFinite && !rmExpired) {
+            val elapsed = now - rmData!!.timestamp
+            (elapsed.toFloat() / rmData.duration.toFloat()).coerceIn(0f, 1f)
+        } else 0f
+
+        val rmText = if (rmData != null) {
+            val modeName = getModeNameString(rmData.mode)
+            if (rmData.mode.mustBeTemporary() && rmIsFinite && !rmExpired) {
+                "$modeName ${dateUtil.untilString(rmData.timestamp + rmData.duration, rh)}"
+            } else {
+                modeName
+            }
+        } else ""
+
+        return ChipState(
+            isProfileLoaded = profileData?.isLoaded ?: false,
+            profileName = profileText,
+            isProfileModified = profileData?.isModified ?: false,
+            profileProgress = profileProgress,
+            tempTargetText = ttText,
+            tempTargetState = if (ttExpired) TempTargetChipState.None
+            else ttData?.state?.toChipState() ?: TempTargetChipState.None,
+            tempTargetProgress = ttProgress,
+            tempTargetReason = if (ttExpired) null else ttData?.reason,
+            runningMode = rmData?.mode ?: RM.Mode.DISABLED_LOOP,
+            runningModeText = rmText,
+            runningModeProgress = rmProgress,
+            tbrState = if (tbrExpired) TbrState.NONE else tbrData?.state ?: TbrState.NONE,
+            quickWizardItems = computeQuickWizardItems(rmData?.mode)
+        )
     }
 
     private suspend fun computeQuickWizardItems(runningMode: RM.Mode?): List<QuickWizardItem> {
@@ -435,24 +485,24 @@ class MainViewModel @Inject constructor(
 
     // Drawer state
     fun openDrawer() {
-        _uiState.update { it.copy(isDrawerOpen = true) }
+        _eventState.update { it.copy(isDrawerOpen = true) }
     }
 
     fun closeDrawer() {
-        _uiState.update { it.copy(isDrawerOpen = false) }
+        _eventState.update { it.copy(isDrawerOpen = false) }
     }
 
     // About dialog state
     fun setShowAboutDialog(show: Boolean) {
-        _uiState.update { it.copy(showAboutDialog = show) }
+        _eventState.update { it.copy(showAboutDialog = show) }
     }
 
     fun setShowMaintenanceSheet(show: Boolean) {
-        _uiState.update { it.copy(showMaintenanceSheet = show) }
+        _eventState.update { it.copy(showMaintenanceSheet = show) }
     }
 
     fun setShowAuthFailedDialog(show: Boolean) {
-        _uiState.update { it.copy(showAuthFailedDialog = show) }
+        _eventState.update { it.copy(showAuthFailedDialog = show) }
     }
 
     // Build about dialog data
@@ -618,3 +668,36 @@ class MainViewModel @Inject constructor(
     }
 
 }
+
+/**
+ * Event-driven subset of MainUiState: updated imperatively by user actions and preference
+ * observers. Kept in a MutableStateFlow because these fields are not derived from other flows.
+ */
+private data class EventState(
+    val isDrawerOpen: Boolean = false,
+    val isSimpleMode: Boolean = true,
+    val showAboutDialog: Boolean = false,
+    val showMaintenanceSheet: Boolean = false,
+    val showAuthFailedDialog: Boolean = false
+)
+
+/**
+ * Flow-derived subset of MainUiState: produced by combining the cache flows with the 30s
+ * progressTicker. Computed declaratively so the ticker auto-pauses via WhileSubscribed when
+ * uiState has no observers.
+ */
+private data class ChipState(
+    val isProfileLoaded: Boolean = false,
+    val profileName: String = "",
+    val isProfileModified: Boolean = false,
+    val profileProgress: Float = 0f,
+    val tempTargetText: String = "",
+    val tempTargetState: TempTargetChipState = TempTargetChipState.None,
+    val tempTargetProgress: Float = 0f,
+    val tempTargetReason: TT.Reason? = null,
+    val runningMode: RM.Mode = RM.Mode.DISABLED_LOOP,
+    val runningModeText: String = "",
+    val runningModeProgress: Float = 0f,
+    val tbrState: TbrState = TbrState.NONE,
+    val quickWizardItems: List<QuickWizardItem> = emptyList()
+)
