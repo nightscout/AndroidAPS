@@ -278,7 +278,7 @@ private fun SiteRotationManagementContent(
                         positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
                         tooltip = {
                             PlainTooltip {
-                                Text(stringResource(R.string.site_filter_info))
+                                Text(stringResource(CoreUiR.string.site_filter_info))
                             }
                         },
                         state = tooltipState

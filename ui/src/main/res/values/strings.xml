@@ -60,7 +60,6 @@
     <string name="record_site_arrow">Site Arrow: %1$s</string>
     <string name="record_site_note">Note: %1$s</string>
     <string name="delete_site_note">Note deleted</string>
-    <string name="site_filter_info">Select Therapy event type you want to see: Cannula Change and/or Sensor Change</string>
 
     <!-- FillDialog -->
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>

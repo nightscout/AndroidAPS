@@ -113,7 +113,6 @@
     <string name="edit_short">EDIT</string>
     <string name="preconditions">Preconditions:</string>
     <string name="user_action">User action</string>
-    <string name="count_selected">%1$d selected</string>
     <string name="system_automation">System automation</string>
     <string name="run_automations">Run automations</string>
     <string name="add_automation">Add rule</string>
