@@ -39,8 +39,6 @@
     <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
     <string name="doyouwantresetstart">Θέλετε έναρξη επαναφοράς στόχου? Μπορεί να χάσετε την πρόοδό σας.</string>
-    <string name="objectives_next_button">Επόμενο</string>
-    <string name="objectives_previous_button">Προηγούμενο</string>
     <string name="objectives_button_unfinish">Επαναφορά ολοκληρωμένης κατάστασης</string>
     <string name="objectives_button_unstart">Επαναφορά κατάστασης εκκίνησης</string>
 </resources>
