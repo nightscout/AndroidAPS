@@ -56,5 +56,4 @@
     <string name="time_last_week">Vorige week</string>
     <string name="time_last_month">Vorige maand</string>
     <!-- Pump History -->
-    <string name="pump_history_type">Type:</string>
 </resources>
