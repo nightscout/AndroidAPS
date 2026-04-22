@@ -56,5 +56,4 @@
     <string name="time_last_week">過去一週</string>
     <string name="time_last_month">過去一個月</string>
     <!-- Pump History -->
-    <string name="pump_history_type">類型：</string>
 </resources>
