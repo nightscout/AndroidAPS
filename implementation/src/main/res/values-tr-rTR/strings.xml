@@ -18,11 +18,8 @@
     <string name="carbs_short" comment="max 6 characters">Karbonhidrat</string>
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">Son bağl: %1$d dak. önce</string>
-    <string name="short_status_alert">Alarm: %1$s</string>
     <string name="short_status_last_bolus">SonBolus: %1$sÜ @ %2$s</string>
     <string name="short_status_temp_basal">Geçici: %1$s</string>
-    <string name="short_status_extended">Uzt.: %1$s</string>
-    <string name="short_status_reservoir">Rezerv: %1$dÜ</string>
     <string name="short_status_battery">Pil: %1$d%%</string>
     <string name="short_status_not_initialized">Pompa başlatılamadı</string>
     <!--    Permissions-->
