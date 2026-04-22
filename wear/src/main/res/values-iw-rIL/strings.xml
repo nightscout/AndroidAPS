@@ -6,10 +6,6 @@
     <string name="label_temp_target_tile">AAPS (מטרה זמנית)</string>
     <string name="label_quick_wizard_tile">AAPS (אשף מהיר)</string>
     <string name="label_user_action_tile">AAPS(פעולת משתמש)</string>
-    <string name="label_warning_sync">אין נתונים!</string>
-    <string name="label_warning_old">נתונים ישנים!</string>
-    <string name="label_warning_since">מאז %1$s</string>
-    <string name="label_warning_sync_aaps">סנכרנו עם AAPS!</string>
     <string name="msg_warning_sync">לא התקבלו נתונים מאז %1$s! בדקו אם AAPS בטלפון שולח נתונים לשעון</string>
     <string name="msg_warning_old">נתוני AAPS מלפני %1$s! בדקו את החיישן, הגדרות xDrip, NS, AAPS או אחר!</string>
     <string name="pref_vibrate_on_bolus">רטט במתן בולוס</string>
@@ -70,7 +66,6 @@
     <string name="menu_none">ללא</string>
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>
-    <string name="quick_wizard_short">XL</string>
     <string name="action_tempt_confirmation">התבקש ערך מטרה זמני</string>
     <string name="action_quick_wizard_confirmation">התבקש אשף מהיר</string>
     <string name="action_user_action_confirmation">נחוצה פעולת משתמש</string>
@@ -82,7 +77,6 @@
     <string name="action_profile_switch_confirmation">התבקשה החלפת פרופיל</string>
     <string name="action_carbs">פחמימות</string>
     <string name="action_ecarbs">פחמימות ממושכות</string>
-    <string name="action_duration_h">משך [h]</string>
     <string name="action_insulin">אינסולין</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
     <string name="action_preset_2">הגדרה מראש 2</string>
@@ -119,7 +113,6 @@
     <string name="color_name_gray">אפור</string>
     <string name="color_name_bluegray">כחול-אפור</string>
     <string name="color_name_white">לבן</string>
-    <string name="color_name_black">שחור</string>
     <string name="color_name_multicolor">צבעוני</string>
     <string name="pref_simplify_ui">פשט את הממשק</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
@@ -147,8 +140,6 @@
     <string name="tile_no_config">אין הגדרה</string>
     <string name="wear_control_not_enabled">שליטה משעון Wear אינה מאופשרת</string>
     <string name="wear_control_no_data">אין נתונים זמינים</string>
-    <string name="increment">תוספת</string>
-    <string name="decrement">הפחתה</string>
     <string name="abbreviation_average">ממוצע</string>
     <string name="no_iob_u">-- יח\'</string>
     <string name="no_cob_g">-- גר\'</string>
@@ -163,8 +154,6 @@
     <string name="hour_short">ש\'</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">ישן</string>
-    <string name="old_warning">!ישן!</string>
     <string name="pref_heartRateSampling">דופק</string>
     <string name="pref_stepsSampling">הפעלת ספירת צעדים</string>
     <string name="tile_tempt_1">ערך מטרה זמני 1</string>
