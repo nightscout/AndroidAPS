@@ -11,11 +11,9 @@
     <string name="gettingpumpsettings">Získavam nastavenia pumpy</string>
     <string name="gettingpumptime">Získavam čas z pumpy</string>
     <string name="largetimediff">Veľký rozdiel v čase:\nČas v pumpe sa líši minimálne o 1,5 h.\nProsím upravte čas v pumpe manuálne a vymažte históriu pumpy.\nPokiaľ je to potrebné, pozastavte uzavretý okruh aspoň na \"DIA\" hodín.</string>
-    <string name="largetimedifftitle">Veľký rozdiel v čase</string>
     <string name="approachingdailylimit">Blíži sa denný limit inzulínu</string>
     <string name="startingbolus">Spúšťam podávanie bolusu</string>
     <string name="waitingforestimatedbolusend">Čakanie na predpokladaný koniec bolusu</string>
-    <string name="gettingbolusstatus">Získavam stav bolusov</string>
     <string name="stoppingtempbasal">Zastavujem dočasný bazál</string>
     <string name="settingtempbasal">Nastavujem dočasný bazál</string>
     <string name="settingextendedbolus">Nastavujem predĺžený bolus</string>
@@ -30,10 +28,8 @@
     <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
     <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$s</string>
     <string name="selectedpump">Vybraná pumpa</string>
-    <string name="diaconn_g8_bluetooth_status">Stav Bluetooth</string>
     <string name="bolus_step">Krok bolusu</string>
     <string name="basal_step">Krok bazálu</string>
-    <string name="diaconn_g8_user_options">UŽIVATEĽSKÉ NASTAVENIA</string>
     <string name="pairfirst">Prosím spárujte pumpu s telefónom!</string>
     <string name="processinghistory">"Spracúvam udalosť "</string>
     <string name="diaconn_g8_history_tempbasal">Dočasný Bazál</string>
