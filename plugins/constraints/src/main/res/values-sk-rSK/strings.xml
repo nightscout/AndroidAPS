@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Zmena letného času za menej ako 24 hodín</string>
     <string name="dst_loop_disabled_warning">Zmena letného času za menej ako 3 hodiny - Uzavretý okruh pozastavený</string>
-    <string name="dst_loop_disabled_error">Zmena letného času (DST) nastala pred menej ako 3 hodinami. Uzavretá slučka dočasne deaktivovaná, automaticky sa opäť aktivuje 3 hodiny po zmene letného času</string>
     <!-- Storage constraint -->
     <string name="disk_full">Uvoľnite aspoň %1$d MB z interného úložiska! Uzavretý okruh zakázaný!</string>
     <!-- Version Checker -->
@@ -41,8 +40,6 @@
     <string name="objectives_shortname">CIEĽ</string>
     <string name="description_objectives">Výukový program</string>
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
-    <string name="objectives_next_button">Ďalej</string>
-    <string name="objectives_previous_button">Späť</string>
     <string name="objectives_button_unfinish">Vymazanie dokončené</string>
     <string name="objectives_button_unstart">Vymazanie začaté</string>
 </resources>
