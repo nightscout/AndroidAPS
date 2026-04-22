@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(Brak połączonego zegarka)</string>
     <string name="pump_status">Status pompy</string>
     <string name="loop_status">Status pętli</string>
-    <string name="wizard_result">Kalkulator:\nInsulina: %1$.2fU\nWęgle: %2$dg</string>
     <string name="quick_wizard_not_available">Wybrany szybki bolus nie jest już dostępny, odśwież swój kafelek</string>
     <string name="quick_wizard_message">Szybki bolus: %1$s\nInsulina: %2$.2fU\nWęgle: %3$dg</string>
     <string name="user_action_not_available">Wybranaa akcja użytkownika %1$s nie jest już dostępna, odśwież swój kafelek</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">Cel tymczasowy:\n\nMin: %1$s\nMax: %2$s\nCzas trwania: %3$d min</string>
     <string name="wear_action_tempt_manual_message">Cel tymczasowy:\n\nCel: %1$s\nCzas trwania: %2$d min</string>
     <string name="wear_action_tempt_preset_message">Cel tymczasowy:\n\nPowód: %1$s\nCel: %2$s\nCzas trwania: %3$d min</string>
-    <string name="no_success">nie udało się - proszę sprawdzić telefon</string>
     <string name="wear_wizard_settings_summary">Obliczenia uwzględnione w wynikach kreatora:</string>
     <string name="wear_general_settings">Ustawienia ogólne</string>
     <string name="wear_custom_watchface_settings">Ustawienia niestandardowej tarczy</string>
@@ -124,10 +122,6 @@
     <string name="today">Dziś</string>
     <string name="weighted">ważone</string>
     <string name="full_xdrip_sync_comment">Wykonać pełną synchronizację? Może ona trochę potrwać i aż do jej zakończenia nie zobaczysz nowych danych w xDrip+.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient nie jest obsługiwany dla tej akcji</string>
-    <string name="wear_action_loop_state_requires_duration">Ta akcja wymaga podania czasu trwania</string>
-    <string name="wear_action_loop_state_pump_suspended">Pompa jest wstrzymana!</string>
-    <string name="wear_action_loop_state_profile_invalid">Nieprawidłowy profil!</string>
     <string name="wear_action_loop_state_unauthorized">Proszę spróbować ponownie.</string>
     <string name="wear_action_loop_state_invalid">Żądanie nieprawidłowego stanu pętli</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nCzas trwania: %2$d min</string>
