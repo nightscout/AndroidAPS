@@ -25,7 +25,6 @@
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Tạo dữ liệu đường huyết ngẫu nhiên (chỉ dùng cho chế độ Demo)</string>
     <string name="random_bg_short">Đường huyết</string>
-    <string name="direction">direction</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Nhận dữ liệu đường huyết từ ứng dụng Syai/Ottai.</string>
