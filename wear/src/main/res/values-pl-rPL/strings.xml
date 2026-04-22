@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS(Koło)</string>
     <string name="label_watchface_digital_style">AAPS(StylCyfrowy)</string>
     <string name="label_watchface_custom">AAPS(niestandardowy)</string>
-    <string name="label_actions_tile">AAPS(Ustawienia)</string>
-    <string name="label_temp_target_tile">AAPS(Cel Tymczasowy)</string>
-    <string name="label_quick_wizard_tile">AAPS(Szybki kreator)</string>
-    <string name="label_user_action_tile">AAPS(Akcja Użytkownika)</string>
     <string name="msg_warning_sync">Nie otrzymano danych od %1$s! Sprawdź czy AAPS na telefonie wysyła dane do zegarka</string>
     <string name="msg_warning_old">Dane z AAPS są %1$s stare! Sprawdź swój sensor, xDrip+, NS, konfigurację AAPS i inne ustawienia!</string>
     <string name="pref_vibrate_on_bolus">Wibruj przy Bolusie</string>
