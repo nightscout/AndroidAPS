@@ -26,6 +26,74 @@
     <string name="short_status_battery">Bat: %1$d%%</string>
     <string name="short_status_not_initialized">Pumpa není inicializována</string>
     <!--    Permissions-->
+    <string name="permission_battery_title">Optimalizace baterie</string>
+    <string name="permission_battery_description">Aplikace musí být vyjmuta z optimalizace baterie, aby spolehlivě běžela na pozadí</string>
+    <string name="permission_directory_title">Adresář AAPS</string>
+    <string name="permission_directory_description">Vyberte adresář pro nastavení aplikace a soubory záznamů</string>
+    <string name="permission_notifications_title">Oznámení</string>
+    <string name="permission_notifications_description">Vyžadováno pro zobrazování výstrah, alarmů a aktualizací stavu pumpy</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
+    <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="pump_base_basal_rate_cu">%1$.2f\u00a0CU/h</string>
+    <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
+    <string name="exported_to_cloud">Nastavení úspěšně exportováno do cloudového úložiště</string>
+    <string name="export_to_cloud_failed">Export do cloudového úložiště selhal</string>
+    <string name="csv_uploaded_to_cloud">Uživatelské záznamy CSV úspěšně nahrány do cloudového úložiště</string>
+    <string name="exported">Předvolby exportovány</string>
+    <string name="exported_failed">Export předvoleb selhal!</string>
+    <string name="filenotfound">Soubor nenalezen</string>
+    <string name="ue_exported">Uživatelské záznamy exportovány</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportováno před %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">exportováno v %1$s</string>
+    <string name="exported_less_than_hour_ago">exportováno před méně než hodinou</string>
+    <string name="metadata_warning_different_flavour">Předvolby byly vytvořeny v jiné variantě AAPS (%1$s), zatímco vy máte: %2$s.\n\nNěkterá nastavení mohou chybět nebo být neplatná – po importu prosím zkontrolujte a aktualizujte své předvolby.</string>
+    <string name="metadata_warning_different_device">Předvolby byly vytvořeny na jiném zařízení. Je to v pořádku, pokud importujete ze staršího/jiného telefonu, ale ujistěte se, že importované předvolby jsou správné!</string>
+    <string name="metadata_warning_old_export">Importované předvolby jsou již %1$s dnů staré! Možná máte aktuálnější předvolby nebo jste zvolili nesprávný soubor? Nezapomeňte předvolby pravidelně exportovat!</string>
+    <string name="metadata_warning_date_format">Neplatný formát data a času!</string>
+    <string name="metadata_warning_different_version">Předvolby z jiné vedlejší verze aplikace. Je to v pořádku, pokud importujete po aktualizaci, ale po importu zkontrolujte, zda jsou předvolby stále správné!</string>
+    <string name="metadata_urgent_different_version">Předvolby z jiné hlavní verze aplikace. Hlavní verze se výrazně liší a mohou mít nekompatibilní předvolby! Po importu se ujistěte, že předvolby jsou stále správné!</string>
+    <string name="prefdecrypt_settings_tampered">Soubor nastavení byl pozměněn</string>
+    <string name="prefdecrypt_settings_secure">Soubor nastavení je zabezpečený</string>
+    <string name="prefdecrypt_settings_unencrypted">Používá se nezabezpečený, nešifrovaný formát nastavení</string>
+    <string name="prefdecrypt_wrong_json">Chyba formátu JSON, chybí povinné pole (format, content, metadata nebo security)</string>
+    <string name="prefdecrypt_wrong_password">Chyba dešifrování, zadané heslo nemůže dešifrovat soubor</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Chybí kontrolní součet (hash) souboru, nelze ověřit pravost nastavení!</string>
+    <string name="prefdecrypt_issue_modified">Soubor byl po exportu upraven!</string>
+    <string name="prefdecrypt_issue_parsing">Chyba dešifrování, analýza předvoleb selhala!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrování, zadané heslo je neplatné nebo byl soubor nastavení upraven! Může se stát, že importovaný soubor byl exportován s jiným hlavním heslem.</string>
+    <string name="prefdecrypt_issue_wrong_format">Chybí konfigurace šifrování, formát nastavení je neplatný!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný nebo nespecifikovaný šifrovací algoritmus!</string>
+    <string name="metadata_label_format">Formát souboru</string>
+    <string name="metadata_label_created_at">Vytvořeno</string>
+    <string name="metadata_label_aaps_version">Verze AAPS</string>
+    <string name="metadata_label_aaps_flavour">Varianta sestavení</string>
+    <string name="metadata_label_device_name">Jméno pacienta exportujícího zařízení</string>
+    <string name="metadata_label_device_model">Model exportujícího zařízení</string>
+    <string name="metadata_label_encryption">Šifrování souboru</string>
+    <string name="metadata_format_new">Nový šifrovaný formát</string>
+    <string name="metadata_format_other">Neznámý formát exportu</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Chyba přístupu k souborovému systému. Vyberte správně adresář AAPS.</string>
+    <string name="backup_to_google_drive">Zálohovat na Google Drive</string>
+    <string name="csv_upload_failed">Nahrání uživatelských záznamů CSV do cloudového úložiště selhalo</string>
+    <string name="csv_upload_error">Při nahrávání CSV do cloudu došlo k chybě</string>
+    <string name="uploading_to_cloud">Nahrávání do cloudu…</string>
+    <string name="cloud_directory_path">Cloudový adresář: %1$s</string>
+    <string name="google_drive_token_refresh_failed">Nelze obnovit přístupový token Google Drive</string>
+    <string name="google_drive_token_refresh_error">Nelze obnovit přístupový token Google Drive: %1$s</string>
+    <string name="google_drive_connection_test_failed">Test připojení Google Drive selhal</string>
+    <string name="google_drive_connect_error">Nelze se připojit ke Google Drive: %1$s</string>
+    <string name="google_drive_list_folders_failed">Nelze zobrazit seznam složek Google Drive</string>
+    <string name="google_drive_list_folders_error">Chyba při zobrazování složek: %1$s</string>
+    <string name="google_drive_upload_no_id">Nahrávání uspělo, ale nebylo vráceno žádné id</string>
+    <string name="google_drive_upload_verify_failed">Ověření nahrávání selhalo</string>
+    <string name="google_drive_upload_failed">Nahrávání selhalo: %1$s</string>
+    <string name="google_drive_upload_error">Chyba při nahrávání souboru: %1$s</string>
+    <string name="google_drive_folder_access_error">Nelze vytvořit nebo přistupovat k cílové složce: %1$s</string>
+    <string name="google_drive_list_settings_failed">Nelze zobrazit seznam souborů nastavení</string>
+    <string name="google_drive_list_settings_error">Chyba při zobrazování souborů nastavení: %1$s</string>
+    <string name="google_drive_download_failed">Stažení souboru selhalo</string>
+    <string name="google_drive_download_error">Chyba při stahování souboru: %1$s</string>
+    <string name="google_drive_authorized">Google Drive autorizován</string>
+    <string name="google_drive_reauth_required">Vymažte nastavení a znovu autorizujte Google Drive</string>
 </resources>
