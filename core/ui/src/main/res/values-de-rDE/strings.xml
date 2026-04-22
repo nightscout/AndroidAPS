@@ -6,7 +6,6 @@
     <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
     <string name="invalid_input">Ungültige Eingabedaten</string>
     <string name="constraint_applied">Beschränkung angewendet!</string>
-    <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pumpe nicht erreichbar</string>
     <string name="insulin_unit_shortname">IE</string>
@@ -17,7 +16,6 @@
     <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
     <string name="event_type">Ereignistyp</string>
-    <string name="reload">Neu laden</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Speichern</string>
@@ -44,13 +42,11 @@
     <string name="success">Erfolgreich</string>
     <string name="advanced_settings_title">Erweiterte Einstellungen</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
-    <string name="aps_mode_title">APS-Modus</string>
     <string name="extended_bolus">Verzögerter Bolus</string>
     <string name="paused">Pausiert</string>
     <string name="tdd_total">TDD Gesamt</string>
     <string name="tdd_old_data">Veraltete Daten</string>
     <string name="goingtodeliver">Werde %1$.2f IE abgeben</string>
-    <string name="waitingforpump">Warte auf Pumpe</string>
     <string name="androidaps_start">AAPS gestartet</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
@@ -77,7 +73,6 @@
     <string name="target_long_label">BZ Ziel</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
     <string name="exit">Verlassen</string>
@@ -99,9 +94,6 @@
     <string name="time">Zeit</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
     <string name="notes_label">Notizen</string>
-    <string name="remove_button">Löschen</string>
-    <string name="add_new">Neu hinzufügen</string>
-    <string name="addnew_above">Neu oben hinzufügen</string>
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <string name="bg_label">BZ</string>
     <string name="calibration">Kalibrierung</string>
@@ -111,8 +103,6 @@
     <string name="pumpsuspended">Pumpe pausiert</string>
     <string name="notconfigured">Nicht konfiguriert</string>
     <string name="loopsuspended">Loop pausiert</string>
-    <string name="trend_arrow">Trendpfeil</string>
-    <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">angef.</string>
     <string name="a11y_arrow_double_down">schnell fallend</string>
     <string name="a11y_arrow_single_down">fallend</string>
@@ -127,17 +117,12 @@
     <string name="a11y_inrange">im Zielbereich</string>
     <string name="a11y_low">niedrig</string>
     <string name="average">Durchschnitt</string>
-    <string name="none"><![CDATA[<nichts>]]></string>
-    <string name="remove_label">ENTFERNEN</string>
     <string name="activate_profile">Aktiviere Profil</string>
     <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
     <string name="profile">Profil</string>
-    <string name="select_for_removal">Zum Entfernen auswählen</string>
     <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
-    <string name="bg_trend_label">15 min Trend</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus-IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
     <string name="invalid">Ungültig</string>
@@ -180,7 +165,6 @@
     <string name="nochangerequested">Keine Anpassung benötigt</string>
     <!--    Insulin / Concentration-->
     <!--    ProfileSwitch-->
-    <string name="zerovalueinprofile">Ungültiges Profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min.</string>
     <!--    Translator-->
@@ -218,7 +202,6 @@
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
-    <string name="unknown">unbekannt</string>
     <string name="eatingsoon">Bald essen</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivität</string>
@@ -241,13 +224,6 @@
     <string name="carbsreq">%1$d g zusätzliche Kohlenhydrate innerhalb von %2$d Minuten erforderlich</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
-    <string name="ratio">Verhältnis</string>
-    <string name="amount_days"># Tage</string>
-    <string name="weight">Gewichtung</string>
-    <string name="warning_Message">Möglicherweise ungenau, wenn zum Befüllen ein Bolus verwendet wurde!</string>
-    <string name="olddata_Message">Veraltete Daten, bitte klicke auf \"NEU LADEN\"</string>
-    <string name="tbb">Tägl. Basalmenge</string>
-    <string name="tbb2">Tägl. Basalmenge * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Zeiterkennung</string>
     <!-- User Entry -->
@@ -317,7 +293,6 @@
     <string name="uel_stat_reset">STATISTIKEN ZURÜCKGESETZT</string>
     <string name="uel_delete_logs">LOGS LÖSCHEN</string>
     <string name="uel_delete_future_treatments">BEHANDLUNGEN IN DER ZUKUNFT ENTFERNEN</string>
-    <string name="delete_future_treatments">Zukünftige Behandlungen löschen</string>
     <string name="uel_export_settings">EINSTELLUNGEN EXPORTIEREN</string>
     <string name="uel_import_settings">EINSTELLUNGEN IMPORTIEREN</string>
     <string name="uel_reset_databases">DATENBANK ZURÜCKSETZEN</string>
@@ -332,7 +307,6 @@
     <string name="uel_exit_aaps">AAPS BEENDEN</string>
     <string name="uel_plugin_enabled">PLUGIN AKTIVIERT</string>
     <string name="uel_plugin_disabled">PLUGIN DEAKTIVIERT</string>
-    <string name="uel_unknown">UNBEKANNT</string>
     <string name="ue_string">Zeichenfolge</string>
     <string name="ue_source">Quelle</string>
     <string name="ue_utc_offset">UTC-Abstand</string>
@@ -341,7 +315,6 @@
     <string name="ue_none">Keine Einheit</string>
     <string name="uel_loop_change">LOOP GEÄNDERT</string>
     <string name="uel_loop_removed">LOOP ENTFERNT</string>
-    <string name="uel_other">ANDERE</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil unteres Ziel</string>
     <string name="profile_high_target">Profil oberes Ziel</string>
@@ -371,8 +344,6 @@
     <string name="set_profile">PROFIL SETZEN</string>
     <string name="set_user_settings">NUTZER-EINSTELLUNGEN SETZEN</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f IE</string>
-    <string name="start_pump">PUMPE STARTEN</string>
-    <string name="stop_pump">PUMPE STOPPEN</string>
     <string name="temp_basal_absolute">TEMP BASAL %1$.2f IE/h %2$d min</string>
     <string name="temp_basal_percent">TEMP BASAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFICATION</string>
@@ -383,8 +354,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="a11y_file">Datei</string>
-    <string name="a11y_user">Nutzer</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Anpassungstage :</string>
@@ -402,7 +371,6 @@
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
     <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
     <string name="carb_equal_zero_no_action">Kohlenhydrate = 0. Keine Aktion!</string>
-    <string name="wizard_no_insulin_required">Kein Insulin erforderlich!</string>
     <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
     <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
     <string name="wizard_no_cob">Unbekannter COB! BG-Wert fehlt oder wurde App vor kurzem neu gestartet?</string>
@@ -419,7 +387,6 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
     <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
-    <string name="quickwizard">QuickWizard</string>
     <!--    Preferences-->
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
@@ -444,23 +411,17 @@
     <string name="disconnected">Getrennt</string>
     <string name="connecting">Verbinden</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Verbindung zur Pumpe geklickt</string>
-    <string name="reservoir_value">%1$.0f / %2$d IE</string>
     <string name="daily_units">Tägliche Einheiten</string>
-    <string name="pump_icon">Pumpen-Symbol</string>
-    <string name="view_profile">Profil anzeigen</string>
     <string name="pump_history">Pumpen-Historie</string>
-    <string name="stats">Statistik</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pumpentreiber ändern.</string>
     <string name="device_changed" comment="26 characters max for translation">Gerät gewechselt</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">TBR Abgabe-Fehler</string>
-    <string name="not_set_short">Nicht angegeben</string>
     <string name="pump_busy">Pumpe ist beschäftigt</string>
     <string name="connection_error">Pumpen-Verbindungsfehler</string>
     <string name="reading_pump_history">Pumpen-Historie wird gelesen</string>
     <string name="password_cleared">Passwort gelöscht!</string>
     <string name="pairing">Koppeln</string>
-    <string name="initializing">Initialisierung...</string>
     <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
@@ -477,7 +438,6 @@
     <string name="no">Nein</string>
     <string name="close">Schließen</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die importierten Einstellungen entschlüsselt.</string>
     <!-- <unattended_export> -->
     <!-- Export dialog strings -->
     <!-- <unattended_export result messages> -->
@@ -497,8 +457,6 @@
     <string name="ble_not_supported">Bluetooth-Low-Energy nicht unterstützt.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nicht unterstützt oder Gerät nicht verbunden.</string>
     <string name="ble_not_enabled">Bluetooth nicht aktiviert.</string>
-    <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
-    <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
     <!-- Navigation -->
