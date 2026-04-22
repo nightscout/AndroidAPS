@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Bolusspärr aktiverad</string>
     <string name="carbs_constraint_applied">Kolhydratsspärr aktiverad</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Starta \"Träning\"</string>
     <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
     <string name="start_hypo_tt">Starta \"Hypo\"</string>
     <string name="time_offset">KH-tid</string>
-    <string name="remind_to_bolus_later">Påminn om bolus senare</string>
     <!--    Widget-->
     <string name="configure">Konfigurera opacitet</string>
     <string name="widget_description">AAPS-widget</string>
@@ -15,8 +13,6 @@
     <string name="activity_monitor">Aktivitetsövervakare</string>
     <string name="do_you_want_reset_stats">Vill du återställa aktivitetsstatistiken?</string>
     <string name="calculation_in_progress">Beräkning pågår</string>
-    <string name="invalid_age">Ogiltig inmatning (ålder)</string>
-    <string name="invalid_weight">Ogiltig inmatning (vikt)</string>
     <string name="age">Ålder</string>
     <string name="weight_label">Vikt</string>
     <string name="glucose_type">Glukostyp</string>
@@ -24,17 +20,12 @@
     <string name="bg_meter">Mätare</string>
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Total</string>
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Försäkra dig om att mängden motsvarar det som är specificerat för just ditt infusionsset.</string>
     <string name="record_pump_site_change">Logga byte av kanyl</string>
     <string name="record_insulin_cartridge_change">Logga byte av insulinreservoar</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Ge ingen bolus, logga bara</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Återanvänd %1$d%% %2$dtim</string>
     <string name="timeshift_label">Tidsförskjutning</string>
@@ -59,29 +50,14 @@
     <string name="duration3h">3 tim</string>
     <string name="duration10h">10 tim</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">korrigera med %</string>
-    <string name="a11_correction_units">korrigera med enheter</string>
-    <string name="two_hours">2 tim</string>
-    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Saknar %1$dg</string>
-    <string name="a11y_current_bg">nuvarande BG</string>
-    <string name="carb_time_label">KH-tid</string>
-    <string name="a11y_set_carb_timer">ange larm för KH-timer</string>
     <!-- Treatments -->
     <string name="no_records_available">Inga poster tillgängliga</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">KH:</string>
-    <string name="tempbasals_netratio_label_string">Tot:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Korrektion</string>
-    <string name="meal_bolus">Måltid</string>
-    <string name="prime">Förfyllning</string>
     <string name="carbs_and_bolus">Kolhydrater och bolus</string>
     <string name="show_invalidated">Visa ogiltiga</string>
     <string name="hide_invalidated">Dölj ogiltiga</string>
     <string name="careportal_remove_started_events">Ta bort \"AAPS startade\"</string>
-    <string name="hide_loop">Dölj loop</string>
-    <string name="show_loop">Visa loop</string>
     <string name="user_entry">Angivet av användare</string>
     <string name="clone_label">Kopiera</string>
     <!-- ProfileHelperActivity -->
@@ -95,13 +71,8 @@
     <string name="format_with_tdd_and_pct">Ålder: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Ålder: %1$d Vikt: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV-standardprofil</string>
-    <string name="invalid_pct">Ogiltig %-inmatning</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Basaldos</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">endast på klockan</string>
-    <string name="a11y_only_on_phone">endast på telefonen</string>
-    <string name="a11y_drag_and_drop_handle">dra och släpp-handtag</string>
     <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->
