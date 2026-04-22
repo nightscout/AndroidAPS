@@ -532,7 +532,4 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
-    <string name="remove_items">Ta bort objekt</string>
-    <string name="sort_items">Sortera objekt</string>
-
 </resources>
