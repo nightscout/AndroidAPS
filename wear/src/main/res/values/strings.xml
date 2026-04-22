@@ -7,10 +7,6 @@
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="label_user_action_tile">AAPS(User Action)</string>
-    <string name="label_warning_sync">No data!</string>
-    <string name="label_warning_old">Old data!</string>
-    <string name="label_warning_since">Since %1$s</string>
-    <string name="label_warning_sync_aaps">Sync with AAPS!</string>
     <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
     <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
@@ -83,8 +79,6 @@
     <string name="menu_none">None</string>
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
-    <string name="quick_wizard_short">XL</string>
-    <string name="action_duration_minutes">Duration [min]</string>
     <string name="action_tempt_confirmation">Temp Target Requested</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard Requested</string>
     <string name="action_user_action_confirmation">User Action Requested</string>
@@ -102,8 +96,6 @@
     <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage\n[%]</string>
     <string name="action_start_minutes">Start\n[minutes]</string>
-    <string name="action_start_minutes_format">%1$d min</string>
-    <string name="action_duration_h">Duration [h]</string>
     <string name="action_duration_hours">Duration\n[hours]</string>
     <string name="action_duration_hours_format">%1$d h</string>
     <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
@@ -152,7 +144,6 @@
     <string name="color_name_gray">gray</string>
     <string name="color_name_bluegray">blue gray</string>
     <string name="color_name_white">white</string>
-    <string name="color_name_black">black</string>
     <string name="color_name_multicolor">multicolor</string>
     <string name="pref_simplify_ui">Simplify UI</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
@@ -186,7 +177,6 @@
     <string name="wear_control_not_enabled">Wear controls disabled</string>
     <string name="wear_control_no_data">No data available</string>
     <string name="key_preference_id" translatable="false">preference_id</string>
-    <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_bolus_wizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="key_treatments_safety_max_carbs" translatable="false">treatmentssafety_maxcarbs</string>
@@ -238,8 +228,6 @@
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
     <string name="key_last_selected_watchface" translatable="false">last_selected_watchface</string>
-    <string name="increment">increment</string>
-    <string name="decrement">decrement</string>
     <string name="abbreviation_average">avg</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -255,8 +243,6 @@
     <string name="minute_short">m</string>
     <string name="hour_minute">%1$s:%2$s</string>
     <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
-    <string name="old">old</string>
-    <string name="old_warning">!old!</string>
     <string name="error">Error</string>
     <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
@@ -317,7 +303,6 @@
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
     <string name="wizard_result_correction_percentage">%1$d%%</string>
-    <string name="expand_calculation_details">Click to expand calculation details</string>
     <string name="wizard_confirmation_sent">Sent</string>
     <string name="tile_settings">Tile settings</string>
     <string name="loop_status_error">Failed to load status</string>
