@@ -45,7 +45,6 @@
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">RileyLink statistikk</string>
     <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Tilbakestill RileyLink</string>
-    <string name="omnipod_eros_pod_management_button_read_pulse_log">Les Pulslogg</string>
     <string name="omnipod_eros_pod_management_pulse_log">Pulslogg</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">Pulslogg (kopiert til utklippstavlen)</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
