@@ -167,7 +167,4 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
-    <string name="remove_items">Elem eltávolítása</string>
-    <string name="sort_items">Elemek rendezése</string>
-
 </resources>
