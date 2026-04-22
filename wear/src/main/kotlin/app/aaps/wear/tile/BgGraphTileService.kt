@@ -137,7 +137,6 @@ class BgGraphTileService : TileService() {
     }
 
     private fun renderAndCache(data: ComplicationData) {
-        val density = resources.displayMetrics.density
         val widthPx = resources.displayMetrics.widthPixels
         val heightPx = resources.displayMetrics.heightPixels
         val bitmap = renderTileBitmap(data, widthPx, heightPx)
