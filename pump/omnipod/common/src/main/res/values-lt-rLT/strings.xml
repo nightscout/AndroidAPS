@@ -38,7 +38,6 @@
     <string name="omnipod_common_overview_button_silence_alerts">Nutildyti</string>
     <string name="omnipod_common_overview_pod_status">Pod statusas</string>
     <string name="omnipod_common_overview_total_delivered">Iš viso suleista</string>
-    <string name="omnipod_common_overview_total_delivered_value">%1$.2f vv</string>
     <string name="omnipod_common_overview_pod_unique_id">Unikalus ID</string>
     <string name="omnipod_common_overview_lot_number">LOT numeris</string>
     <string name="omnipod_common_overview_pod_sequence_number">Eilės Nr.</string>
