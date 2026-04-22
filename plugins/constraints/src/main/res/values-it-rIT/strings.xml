@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Cambio all\'ora legale/solare in 24h o meno</string>
     <string name="dst_loop_disabled_warning">Cambio all\'ora legale/solare avvenuto meno di 3 ore fa - Loop chiuso disabilitato</string>
-    <string name="dst_loop_disabled_error">Il cambio dell\'ora legale è avvenuto meno di 3 ore fa. Il loop chiuso è disabilitato temporaneamente, si riattiverà automaticamente 3 ore dopo il cambio dell\'ora legale</string>
     <!-- Storage constraint -->
     <string name="disk_full">Libera almeno %1$d MB dalla memoria interna! Loop disabilitato!</string>
     <!-- Version Checker -->
@@ -41,8 +40,6 @@
     <string name="objectives_shortname">OBT</string>
     <string name="description_objectives">Programma di apprendimento</string>
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
-    <string name="objectives_next_button">Avanti</string>
-    <string name="objectives_previous_button">Indietro</string>
     <string name="objectives_button_unfinish">Reset stato completato</string>
     <string name="objectives_button_unstart">Reset stato avviato</string>
 </resources>
