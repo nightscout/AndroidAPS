@@ -28,7 +28,6 @@
     <string name="equil_tone_mode_shake">Sólo vibrar</string>
     <string name="equil_tone_mode_tone">Sólo sonido</string>
     <string name="equil_tone_mode_tone_and_shake">Vibración y sonido</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">¡Esta operación detendrá la infusión de insulina y retraerá el émbolo de la bomba hasta el fondo! ¡Además, eliminará el estado de vinculación!</string>
     <string name="equil_ble_config_confirmation_title">Emparejar bomba parche Equil</string>
     <string name="equil_error">Error de conexión</string>
@@ -115,7 +114,6 @@
     <string name="equil_history_item18">Infusión anormal detenida</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspender</string>
     <string name="equil_common_overview_button_resume_delivery">Reanudar la entrega</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">Hace un momento</string>
     <string name="equil_common_less_than_a_minute_ago">Hace menos de un minuto</string>
     <string name="equil_common_time_ago">%1$s ago</string>
