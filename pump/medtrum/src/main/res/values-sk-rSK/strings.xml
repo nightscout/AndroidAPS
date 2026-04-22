@@ -20,7 +20,6 @@
     <string name="pump_state_label">Stav pumpy</string>
     <string name="active_alarms_label">Aktívne alarmy</string>
     <string name="basal_type_label">Typ bazálu</string>
-    <string name="basal_rate_label">Bazálna dávka</string>
     <string name="pump_type_label">Typ pumpy</string>
     <string name="fw_version_label">Verzia FW</string>
     <string name="patch_no_label">Č. Patch</string>
@@ -76,12 +75,10 @@
     <string name="do_not_attach_to_body">Zatiaľ nepripájajte Patch k telu.</string>
     <string name="half_press_needle">Stlačte tlačítko ihly do polovice. Potom stlačte tlačítko <b>Ďalšia</b> pre spustenie plnenia.</string>
     <string name="wait_for_priming">Počkajte prosím na dokončenie plnenia.</string>
-    <string name="priming_error">Nepodarilo sa dokončiť plnenie, skúste to znovu stlačením tlačítka <b>Opakovať</b>.</string>
     <string name="press_next">Stlačte <b>Ďalšia</b> pre pokračovanie.</string>
     <string name="press_next_to_start_activation">Stlačte <b>Ďalšia</b> pre spustenie aktivácie.</string>
     <string name="remove_safety_lock">Odstráňte bezpečnostný zámok. Pripojte pumpu k telu. Stlačte tlačítko ihly.</string>
     <string name="activating_pump">Aktivácia Patch a nastavenie počiatočného bazálu. Počkajte prosím.</string>
-    <string name="activating_error">Chyba pri aktivácii, stlačte <b>Opakovať</b> pre nový pokus.</string>
     <string name="activating_complete">Nový Patch aktivovaný. Zostáva %.2f jednotiek inzulínu.</string>
     <string name="can_export_settings">Môžete exportovať nastavenia, aby ste mohli neskôr obnoviť túto reláciu pumpy.</string>
     <string name="press_OK_to_return">Stlačte <b>OK</b> pre návrat na hlavnú obrazovku.</string>
