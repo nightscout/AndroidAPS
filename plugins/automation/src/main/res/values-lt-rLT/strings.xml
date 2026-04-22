@@ -53,7 +53,6 @@
     <string name="location_going_out">Kai paliekate zoną, kurios pavadinimas</string>
     <string name="time_range">Laiko intervalas</string>
     <string name="timerange_value">Laikas yra tarp %1$s ir %2$s</string>
-    <string name="between">Tarp </string>
     <string name="add_short">PRIDĖTI</string>
     <string name="temptargetcompared">Laikinas tikslas %1$s</string>
     <string name="btdevicecompared">Bluetooth ryšys su įrenginiu %1$s %2$s</string>
@@ -94,8 +93,6 @@
     <string name="edit_short">Keisti</string>
     <string name="preconditions">Išankstinės sąlygos:</string>
     <string name="user_action">Naudotojo veiksmas</string>
-    <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
-    <string name="count_selected">%1$d pasirinkta</string>
     <string name="system_automation">Sistemos automatizacija</string>
     <string name="run_automations">Paleisti automatizacijas</string>
     <string name="add_automation">Pridėti taisyklę</string>
