@@ -47,7 +47,6 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Tiempo de espera de escaneo alcanzado</string>
     <string name="combov2_pairing_failed_due_to_error">No se pudo emparejar debido al error: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Emparejamiento abortado por razones desconocidas</string>
-    <string name="combov2_pairing_invalid_pin_length">"Longitud del PIN de emparejamiento inválida: Necesita %1$d digits, obtuvo %2$d"</string>
     <string name="combov2_scanning_for_pump">Buscando bomba</string>
     <string name="combov2_establishing_bt_connection">Estableciendo conexión Bluetooth (intento número %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Realizando emparejamiento con la bomba</string>
@@ -67,7 +66,6 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Configuración del perfil basal</string>
     <string name="combov2_setting_tbr_cmddesc">Establecer %1$d%% TBR durante %2$d minutos</string>
     <string name="combov2_cancelling_tbr">Cancelando TBR en curso</string>
-    <string name="combov2_delivering_bolus_cmddesc">Entregando %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Obtener el historial TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Actualizando fecha de la bomba</string>
     <string name="combov2_updating_pump_status_cmddesc">Actualizando estado de la bomba</string>
