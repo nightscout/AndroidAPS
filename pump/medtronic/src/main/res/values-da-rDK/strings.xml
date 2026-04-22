@@ -25,7 +25,6 @@
     <string name="medtronic_error_serial_invalid">Serienummer ugyldig.</string>
     <string name="medtronic_error_pump_type_not_set">Pumpetype ikke angivet.</string>
     <string name="medtronic_error_pump_type_invalid">Pumpetype understøttes ikke.</string>
-    <string name="medtronic_error_pump_frequency_invalid">Pumpetype understøttes ikke.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink adresse ugyldig.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Pumpetype registreret er ikke det samme som konfigureret type.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Basalprofil indstilling er ikke aktiveret på pumpen. Aktiver den på pumpen.</string>
@@ -42,7 +41,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Medtronic Pumpe Historik</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Du annullerede Bolus, efter at det allerede var sat på Pumpe. Da Medtronic Pumpe ikke understøtter annullering, skal du annullere det manuelt. Vælg Stop Afgivelse og derefter Genoptag på pumpen (hvis du stadig vil annullere). Applikationen vil fange ændringerne, ved næste opdatering (i mindre end 5 minutter).</string>
     <string name="medtronic_cmd_cant_read_tbr">Kunne ikke læse den aktuelle TBR.</string>
@@ -74,7 +72,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">Indstil neutrale midlertidige basaler</string>
     <string name="set_neutral_temps_summary">Hvis aktiveret, vil det annullere en midlertidig basal inden udgangen af hver time. Denne metode kan hjælpe med at stoppe nogle pumper i at bippe/vibrere hver time.</string>
-    <string name="mdt_tbr_remaining">%1$.1f E/t (%2$d min. tilbage)</string>
     <string name="invalid_history_data">Ugyldig pumpehistorikdata registreret. Åbn nyt problem og upload logfiler.</string>
     <string name="riley_statistics">RL Statistik</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Klikket: opdater</string>
