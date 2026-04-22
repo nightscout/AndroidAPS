@@ -68,7 +68,6 @@
     <string name="no_watch_connected">(Pas de montre connectée)</string>
     <string name="pump_status">État de la pompe</string>
     <string name="loop_status">Statut du la boucle</string>
-    <string name="wizard_result">Calc. Assistant :\nInsuline : %1$.2fU\nGlucides : %2$dg</string>
     <string name="quick_wizard_not_available">L\'assistant rapide sélectionné n\'est plus disponible, veuillez actualiser l\'écran</string>
     <string name="quick_wizard_message">Assistant : %1$s\nInsuline : %2$.2fU\nGlucides : %3$dg</string>
     <string name="user_action_not_available">L\'action utilisateur %1$s n\'est plus disponible, veuillez actualiser vos cartes</string>
@@ -81,7 +80,6 @@
     <string name="wear_action_tempt_manual_range_message">Cible Temp.:\n\nMin: %1$s\nMax : %2$s\nDurée : %3$d min</string>
     <string name="wear_action_tempt_manual_message">Cible Temp.:\n\nCible: %1$s\nDurée: %2$d min</string>
     <string name="wear_action_tempt_preset_message">Cible Temp.:\n\nRaison: %1$s\nCible : %2$s\nDurée : %3$d min</string>
-    <string name="no_success">échec - veuillez vérifier le téléphone</string>
     <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
     <string name="wear_general_settings">Paramètres généraux</string>
     <string name="wear_custom_watchface_settings">Paramètres du Cadran Personnalisé</string>
@@ -127,10 +125,6 @@
     <string name="today">Aujourd’hui</string>
     <string name="weighted">pondération</string>
     <string name="full_xdrip_sync_comment">Synchronisation complète ? Cela peut prendre plusieurs heures et vous ne verrez pas de nouvelles données dans xDrip+ avant la fin.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient n\'est pas supporté pour cette action</string>
-    <string name="wear_action_loop_state_requires_duration">Cette action nécessite une durée</string>
-    <string name="wear_action_loop_state_pump_suspended">La pompe est suspendue!</string>
-    <string name="wear_action_loop_state_profile_invalid">Profil invalide!</string>
     <string name="wear_action_loop_state_unauthorized">Veuillez réessayer.</string>
     <string name="wear_action_loop_state_invalid">État boucle demandée invalide</string>
     <string name="wear_action_running_mode_title">MODE EN COURS</string>
@@ -159,10 +153,6 @@
     <string name="smscommunicator_otp_reset_btn">Réinitialiser les authentificateurs</string>
     <string name="smscommunicator_otp_reset_title">Réinitialiser la clé de l\'Authentificateur</string>
     <string name="smscommunicator_otp_reset_prompt">Voulez-vous réinitialiser la clé de l\'Authenticateur ? Cela rendra tous authentificateurs configurés invalides, et vous devrez les configurer à nouveau.</string>
-    <string name="smscommunicator_otp_reset_successful">Nouvelle clé de l\'Authenticateur générée ! Veuillez utiliser le QRCode mis à jour pour les authentificateurs.</string>
-    <string name="smscommunicator_otp_export_title">Export de l\'OTP secret</string>
-    <string name="smscommunicator_otp_export_prompt">Êtes-vous sûr de vouloir copier l\'OTP secret dans le presse-papiers ?\n\nVous pouvez en avoir besoin uniquement si votre application d\'authentification a des problèmes pour scanner le QRCode, si vous voulez le saisir manuellement ou si vous voulez configurer un jeton OTP matériel en utilisant une application dédiée.</string>
-    <string name="smscommunicator_otp_export_successful">OTP secret (au format Base32) exporté et copié dans le presse-papiers. Collez-le dans l\'authentificateur ou le graveur OTP matériel !</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installation l\'Authentificateur</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Scannez le code pour configurer les codes OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
