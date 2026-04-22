@@ -28,7 +28,6 @@
     <string name="equil_tone_mode_shake">仅振动</string>
     <string name="equil_tone_mode_tone">仅声音</string>
     <string name="equil_tone_mode_tone_and_shake">振动和铃声</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">此操作将停止胰岛素输注并将泵活塞缩回底部！同时，它还会删除绑定状态！</string>
     <string name="equil_ble_config_confirmation_title">配对 Equil 贴片泵</string>
     <string name="equil_error">连接错误</string>
@@ -115,7 +114,6 @@
     <string name="equil_history_item18">异常输注停止</string>
     <string name="equil_common_overview_button_suspend_delivery">暂停</string>
     <string name="equil_common_overview_button_resume_delivery">恢复输注</string>
-    <string name="equil_common_overview_tbr_value">%1$s @%2$s (%3$d/%4$d min)</string>
     <string name="equil_common_moments_ago">刚刚</string>
     <string name="equil_common_less_than_a_minute_ago">不到一分钟前</string>
     <string name="equil_common_time_ago">%1$s 前</string>
