@@ -104,8 +104,6 @@ Other
     <string name="permission_bluetooth_title">藍牙</string>
     <string name="permission_bluetooth_description">應用程式需要藍牙權限才能與幫浦通訊</string>
     <!-- Insulin -->
-    <string name="insulin_plugin">胰島素</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">未知</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -114,7 +112,6 @@ Other
     <string name="fast_acting_insulin_comment">Novorapid、Novolog、Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">峰值時間 [分鐘]</string>
-    <string name="insulin_oref_peak">活性胰島素曲線峰值時間</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u40">U40</string>
