@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Ενεργός Περιορισμός Bolus</string>
     <string name="carbs_constraint_applied">Ενεργός περιορισμός Υδατανθράκων</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
     <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
     <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
     <string name="time_offset">Χρονική μετατόπιση</string>
-    <string name="remind_to_bolus_later">Υπενθύμιση για Δόση bolus αργότερα</string>
     <!--    Widget-->
     <string name="configure">Ρύθμιση διαφάνειας</string>
     <string name="widget_description">AAPS widget</string>
@@ -15,8 +13,6 @@
     <string name="activity_monitor">Παρακολούθηση δραστηριότητας</string>
     <string name="do_you_want_reset_stats">Θέλετε να επαναφέρετε τα στατιστικά δραστηριότητας;</string>
     <string name="calculation_in_progress">Υπολογισμός σε εξέλιξη</string>
-    <string name="invalid_age">Μη έγκυρη καταχώρηση ηλικίας</string>
-    <string name="invalid_weight">Μη έγκυρη καταχώρηση βάρους</string>
     <string name="age">Ηλικία</string>
     <string name="weight_label">Βάρος</string>
     <string name="glucose_type">Τύπος Γλυκόζης</string>
@@ -24,17 +20,12 @@
     <string name="bg_meter">Μετρητής</string>
     <string name="bg_sensor">Αισθητήρας</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Σύνολο</string>
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Παρακαλώ ελέγξτε ότι η ποσότητα ταιριάζει με τις προδιαγραφές του σετ έγχυσης!</string>
     <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
     <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Επαναχρησιμοποίηση %1$d%% %2$dh</string>
     <string name="timeshift_label">Αλλαγή της ώρας</string>
@@ -59,29 +50,14 @@
     <string name="duration3h">3 ώρες</string>
     <string name="duration10h">10 ώρες</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">διόρθωση αποτελέσματος με %</string>
-    <string name="a11_correction_units">διόρθωση αποτελέσματος με μονάδες</string>
-    <string name="two_hours">2ώρες</string>
-    <string name="result_insulin_carbs">Αποτέλεσμα: %1$s %2$s</string>
     <string name="missing_carbs">Που υπολείπεται%1$d</string>
-    <string name="a11y_current_bg">τρέχουσα γλυκόζη αίματος</string>
-    <string name="carb_time_label">Ώρα γεύματος</string>
-    <string name="a11y_set_carb_timer">ορισμός ειδοποίησης χρονομέτρου υδατανθράκων</string>
     <!-- Treatments -->
     <string name="no_records_available">Δεν υπάρχουν διαθέσιμες εγγραφές</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
-    <string name="tempbasals_netratio_label_string">Αναλογία:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Διόρθωση</string>
-    <string name="meal_bolus">Γεύμα</string>
-    <string name="prime">Πλήρωση</string>
     <string name="carbs_and_bolus">Υδατάνθρακες και bolus</string>
     <string name="show_invalidated">Εμφάνιση ακυρωμένων</string>
     <string name="hide_invalidated">Απόκρυψη ακυρωμένων</string>
     <string name="careportal_remove_started_events">Αφαίρεση καταχωρήσεων έναρξης AAPS</string>
-    <string name="hide_loop">Απόκρυψη κυκλώματος</string>
-    <string name="show_loop">Εμφάνιση κυκλώματος</string>
     <string name="user_entry">Καταχώρηση χρήστη</string>
     <string name="clone_label">Κλώνος</string>
     <!-- ProfileHelperActivity -->
@@ -95,13 +71,8 @@
     <string name="format_with_tdd_and_pct">Ηλικία: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Ηλικία: %1$d Βάρος: %2$.0f Kg</string>
     <string name="dpv_default_profile">Προεπιλεγμένο προφίλ DPV</string>
-    <string name="invalid_pct">Μη Έγκυρη Καταχώρηση %</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Βασικός Ρυθμός</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">μόνο στο ρολόι</string>
-    <string name="a11y_only_on_phone">μόνο στο τηλέφωνο</string>
-    <string name="a11y_drag_and_drop_handle">διαχείριση μεταφοράς και απόθεσης</string>
     <!--    History browser-->
     <!--    Widget-->
     <!--    Permissions-->
