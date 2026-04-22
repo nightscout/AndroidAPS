@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS(Kruhový)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (vlastný)</string>
-    <string name="label_actions_tile">AAPS (Akcie)</string>
-    <string name="label_temp_target_tile">AAPS(Dočasný cieľ)</string>
-    <string name="label_quick_wizard_tile">AAPS(Rýchly bolus)</string>
-    <string name="label_user_action_tile">AAPS (Akcia používateľa)</string>
     <string name="msg_warning_sync">Žiadne dáta od %1$s! Skontroluj, či AAPS na telefóne posiela dáta na hodinky</string>
     <string name="msg_warning_old">AAPS dáta sú %1$s staré! Skontroluj tvoj senzor, xDrip+, NS, AAPS nastavenia atď.!</string>
     <string name="pref_vibrate_on_bolus">Zavibrovať pri boluse</string>
@@ -226,7 +222,6 @@
     <string name="complication_iob_detailed">Detailný IOB</string>
     <string name="complication_uploader_phone_battery">Batéria telefónu/uploadera</string>
     <string name="status_running_mode">Režim prevádzky</string>
-    <string name="label_running_mode_title">AAPS (Režim prevádzky)</string>
     <string name="action_running_mode_selected">Požadovaný režim prevádzky</string>
     <string name="title_activity_disconnect_pump">Odpojiť pumpu</string>
     <string name="title_activity_suspend_loop">Pozastaviť uzavretý okruh</string>
