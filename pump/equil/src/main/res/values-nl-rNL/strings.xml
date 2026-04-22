@@ -21,7 +21,6 @@
     <string name="equil_tone_mode_shake">Alleen trillen</string>
     <string name="equil_tone_mode_tone">Alleen toon</string>
     <string name="equil_tone_mode_tone_and_shake">Trillen en geluid</string>
-    <string name="equil_unit_u">%1$s E</string>
     <string name="equil_ble_config_confirmation_title">Koppel Equil patch pomp</string>
     <string name="equil_error">Communicatiefout</string>
     <string name="equil_change">Vervang pomp</string>
