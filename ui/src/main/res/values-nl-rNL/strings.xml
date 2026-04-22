@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Bolus limiet ingesteld</string>
     <string name="carbs_constraint_applied">Koolhydraten beperking ingesteld</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Start inspanning TT</string>
     <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="time_offset">Tijdverschuiving</string>
-    <string name="remind_to_bolus_later">Herinner later te bolussen</string>
     <!--    Widget-->
     <string name="configure">Configureer transparantie</string>
     <string name="widget_description">AAPS widget</string>
@@ -16,8 +14,6 @@
     <string name="do_you_want_reset_stats">Wil je de activiteitenstatistieken resetten?</string>
     <string name="do_you_want_recalculate_tdd_stats">Wilt u de TDD statistieken opnieuw berekenen?</string>
     <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
-    <string name="invalid_age">Ongeldige leeftijd ingevoerd</string>
-    <string name="invalid_weight">Ongeldige gewicht ingevoerd</string>
     <string name="age">Leeftijd</string>
     <string name="weight_label">Gewicht</string>
     <string name="glucose_type">Glucose type</string>
@@ -25,13 +21,7 @@
     <string name="bg_meter">Meter</string>
     <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Totaal</string>
     <!-- SiteRotationDialog -->
-    <string name="site_front">Voorzijde</string>
-    <string name="site_back">Achterzijde</string>
     <string name="site_man">Man</string>
     <string name="site_woman">Vrouw</string>
     <string name="site_child">Kind</string>
@@ -39,7 +29,6 @@
     <string name="user_profile_description">Het gebruikers profiel wordt gebruikt om meest gebruikte locaties te tonen voor mannen, vrouwen of kinderen</string>
     <string name="site_management">Management profiel voor infuus locaties</string>
     <string name="site_management_description">Hier stellen we in of je infuus locaties voor Pomp, CGM of beide wilt beheren. Deze instelling wordt gebruikt om automatisch een nieuwe beheers dialoog te starten</string>
-    <string name="record_site_change">Site locatie vastleggen</string>
     <string name="edit_site">Bewerk</string>
     <string name="record_site_location">Site locatie: %1$s</string>
     <string name="record_site_arrow">Site pijl %1$s</string>
@@ -50,7 +39,6 @@
     <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
     <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Geen bolus, enkel registreren</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
     <string name="timeshift_label">Tijd verschuiving</string>
@@ -75,29 +63,14 @@
     <string name="duration3h">3 uur</string>
     <string name="duration10h">10 uur</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">corrigeer uitkomt met percentage</string>
-    <string name="a11_correction_units">corrigeer uitkomt met units</string>
-    <string name="two_hours">2u</string>
-    <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
     <string name="missing_carbs">Er ontbreekt %1$d g</string>
-    <string name="a11y_current_bg">huidige bloedglucose</string>
-    <string name="carb_time_label">KH tijdsduur</string>
-    <string name="a11y_set_carb_timer">koolhydraten timer alarm instellen</string>
     <!-- Treatments -->
     <string name="no_records_available">Geen records beschikbaar</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_carbs_label_string">Koolhydraten:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="meal_bolus">Maaltijd</string>
-    <string name="prime">Vullen</string>
     <string name="carbs_and_bolus">Koolhydraten en bolus</string>
     <string name="show_invalidated">Toon ongeldig</string>
     <string name="hide_invalidated">Verberg ongeldig</string>
     <string name="careportal_remove_started_events">Verwijder AAPS is gestart items</string>
-    <string name="hide_loop">Verberg loop</string>
-    <string name="show_loop">Toon loop</string>
     <string name="user_entry">Gebruikersinvoer</string>
     <string name="clone_label">Dupliceren</string>
     <!-- ProfileHelperActivity -->
@@ -111,16 +84,11 @@
     <string name="format_with_tdd_and_pct">Leeftijd: %1$d TDD: %2$.0f E %3$d%%</string>
     <string name="format_with_weight">Leeftijd: %1$d Gewicht: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV Basis profiel</string>
-    <string name="invalid_pct">Ongeldig % invoer</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Basaalstand</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">alleen op smartwatch</string>
-    <string name="a11y_only_on_phone">alleen op telefoon</string>
     <string name="overview_edit_quickwizard_button_text">Knop tekst</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Alleen positieve IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="a11y_drag_and_drop_handle">sleep-modus</string>
     <!--    History browser-->
     <string name="additional_ecarbs">Voeg eCarbs toe</string>
     <string name="confirm_treatment">Bevestig alstublieft de behandeling</string>
