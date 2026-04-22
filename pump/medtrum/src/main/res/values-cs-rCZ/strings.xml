@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch není aktivován</string>
     <string name="pump_setting_failed">Načtení uživatelského nastavení do pumpy selhalo!</string>
     <string name="pump_sync_error">Chyba při synchronizaci historie z pumpy, záznam byl přeskočen. Zkontrolujte, zda je bolus správně synchronizován. Potvrďte, a pokud se chyba vrátí, změňte patch nebo pumpu.</string>
+    <string name="patch_reset_after_primed_error">Po naplnění patche byl zjištěn jeho reset! Odstraňte patch a aktivujte nový.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Naposledy připojeno</string>
     <string name="active_bolus_label">Aktivní bolus</string>
@@ -54,6 +55,7 @@
     <string name="retry">Opakovat</string>
     <string name="step_prepare_patch">Aktivovat Patch</string>
     <string name="step_prepare_patch_connect">Připojit a naplnit</string>
+    <string name="step_select_insulin">Vybrat inzulín</string>
     <string name="step_prime">Naplnit</string>
     <string name="step_priming">Plnění</string>
     <string name="step_priming_complete">Plnění dokončeno</string>
@@ -98,8 +100,17 @@
     <!-- settings-->
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
+    <string name="change_sn">Změnit</string>
     <string name="alarm_setting_title">Nastavení alarmů</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavení alarmů.</string>
+    <string name="alarm_setting_light_vibrate_beep">Blikání, vibrace a pípnutí</string>
+    <string name="alarm_setting_light_vibrate">Blikání a vibrace</string>
+    <string name="alarm_setting_light_beep">Blikání a pípnutí</string>
+    <string name="alarm_setting_light">Blikání</string>
+    <string name="alarm_setting_vibrate_beep">Vibrace a pípnutí</string>
+    <string name="alarm_setting_vibrate">Vibrace</string>
+    <string name="alarm_setting_beep">Pípnutí</string>
+    <string name="alarm_setting_silent">Tiché</string>
     <string name="pump_warning_notification_title">Oznámení o varování pumpy</string>
     <string name="pump_warning_notification_summary">Zobrazit upozornění na nekritická varování pumpy: vybitá baterie, téměř prázdný zásobník (20 jednotek) a brzy dojde inzulin. Doporučeno ponechat zapnuté, když jsou výstrahy pumpy nastaveny na ticho.</string>
     <string name="pump_warning_expiry_hour_title">Varování před vypršením platnosti pumpy [hodiny]</string>
