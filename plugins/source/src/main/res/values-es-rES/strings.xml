@@ -25,7 +25,6 @@
     <string name="random_bg">Glucosa aleatoria</string>
     <string name="description_source_random_bg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
     <string name="random_bg_short">BG</string>
-    <string name="direction">dirección</string>
     <!-- Patched Syai Tag App -->
     <string name="syai_tag_app">Syai</string>
     <string name="description_source_patched_syai_tag_app">Recibir los valores de glucosa de la aplicación Syai/Ottai</string>
