@@ -17,8 +17,6 @@
     <string name="condition">Feltétel:</string>
     <string name="taskname">Feladat neve</string>
     <string name="edit_short">SZERK</string>
-    <string name="remove_selected_items">Kiválasztott elemek törlése</string>
-    <string name="count_selected">%1$d kiválasztva</string>
     <!--    Reminders-->
     <!--    Autotune-->
     <!--    Steps count-->
