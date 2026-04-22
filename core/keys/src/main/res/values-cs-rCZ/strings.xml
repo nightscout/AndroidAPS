@@ -202,7 +202,6 @@
     <string name="pref_title_half_basal_exercise_target">Cvičební cíl s polovičním bazálem</string>
     <string name="half_basal_exercise_target_summary">Nastavte číslo, např. 160, což znamená, že když je dočasný cíl 160 mg/dL a vysoký dočasný cíl zvyšuje citlivost = true, běží na této úrovni 50 %% bazál (120 = 75 %%; 140 = 60 %%).</string>
     <string name="pref_title_iob_threshold_percent">Procento prahu IOB</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procento maxIOB, nad kterým jsou SMB zakázány.\\nVýchozí hodnota: 100 %%\\nS 100 %% je tato funkce efektivně vypnuta.</string>
     <string name="pref_title_dynisf_adjustment_factor">Faktor úpravy DynamicISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Faktor úpravy pro DynamicISF. Nastavte více než 100 % pro agresivnější korekční dávky a méně než 100 % pro méně agresivní korekce.</string>
     <string name="pref_title_autosens_period">Perioda Autosens</string>
@@ -213,7 +212,6 @@
     <string name="pref_title_stale_data_threshold">Práh zastaralých dat</string>
     <string name="pref_title_pump_unreachable_threshold">Práh nedostupnosti pumpy</string>
     <!-- IntKey: Insulin preferences -->
-    <string name="pref_title_insulin_oref_peak">Čas vrcholu</string>
     <!-- IntKey: Autotune preferences -->
     <string name="pref_title_autotune_days">Výchozí dny pro ladění</string>
     <string name="autotune_default_tune_days_summary">Výchozí počet dní dat, které má Autotune zpracovat (až 30)</string>
@@ -323,11 +321,8 @@
     <string name="pref_title_ama_max_iob">Max IOB pro AMA</string>
     <string name="openapsma_max_iob_summary">Tato hodnota se v kontextu OpenAPS nazývá Max IOB\nToto je maximální množství inzulínu [U], které APS může najednou podat.</string>
     <string name="pref_title_max_daily_multiplier">Maximální denní bezpečnostní násobitel</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Výchozí hodnota: 3. Toto je klíčové bezpečnostní omezení OpenAPS. Omezuje vaše bazály na 3× (u těchto lidí) vaši největší bazální dávku. Pravděpodobně toto nebudete muset měnit, ale měli byste vědět, že o tom je řeč u \"3× max denní; 4× aktuální\" bezpečnostních omezení.</string>
     <string name="pref_title_current_basal_multiplier">Aktuální bezpečnostní násobitel bazálu</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Výchozí hodnota: 4. Toto je druhá polovina klíčových bezpečnostních omezení OpenAPS a druhá polovina \"3× max denní; 4× aktuální\". Znamená to, že váš bazál, bez ohledu na max basal nastavený v pumpě, nemůže být vyšší než toto číslo krát aktuální úroveň vašeho bazálu. Toto zabrání uživatelům dostat se do nebezpečné oblasti nastavením příliš vysokého max basal před pochopením fungování algoritmu. Výchozí je 4×; většina lidí to nikdy nebude muset upravovat a pravděpodobně budou muset upravit jiná nastavení, pokud mají pocit, že \"narážejí\" na toto bezpečnostní omezení.</string>
     <string name="pref_title_bolus_snooze_divisor">Dělitel bolus snooze DIA</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Výchozí hodnota: 2\\nBolus snooze se aktivuje po bolusu na jídlo, aby smyčka nepůsobila proti nízkými dočasnými bazály, když jste právě jedli. Příklad zde a výchozí je 2; takže 3hodinové DIA znamená, že bolus snooze bude postupně vypínán po dobu 1,5 hodiny (3DIA/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5m dopad sacharidů</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB min 5m dopad sacharidů</string>
     <string name="openapsama_min_5m_carb_impact_summary">Výchozí hodnota: 3.0 (AMA) nebo 8.0 (SMB). Toto je nastavení pro výchozí dopad absorpce sacharidů za 5 minut. Výchozí očekávaný je 3 mg/dl/5 min. Ovlivňuje, jak rychle se COB snižuje a jaká absorpce sacharidů se předpokládá při výpočtu budoucí predikované glykémie, když glykémie klesá více, než se očekávalo, nebo neroste tolik, jak se očekávalo.</string>
@@ -335,24 +330,13 @@
     <string name="absorption_cutoff_summary">Čas, po kterém je jakékoli jídlo považováno za absorbované. Zbylé sacharidy budou odříznuty.</string>
     <string name="pref_title_absorption_maxtime">Maximální doba absorpce</string>
     <string name="absorption_max_time_summary">Čas v hodinách, kdy se očekává absorbování všech sacharidů z jídla</string>
-    <string name="openapsama_autosens_min_summary">Výchozí hodnota: 0.7\\nDruhá strana bezpečnostních limitů autosens, která nastavuje omezení toho, jak nízko může autosens upravit bazály a jak vysoko může upravit ISF a cíle glykémie.</string>
-    <string name="openapsama_autosens_max_summary">Výchozí hodnota: 1.2\\nToto je násobící omezení pro autosens (a brzy autotune) pro nastavení maximálního limitu 20 %% pro to, jak vysoký může být poměr autosens, což následně určuje, jak vysoko může autosens upravit bazály, jak nízko může upravit ISF a jak nízko může nastavit cíl glykémie.</string>
-    <string name="openapsama_autoISF_min_summary">Podobně jako autosens_min definuje, jak slabý může být ISF.\\n\\nVýchozí hodnota 1.0 efektivně vypíná tento efekt.</string>
-    <string name="openapsama_autoISF_max_summary">Podobně jako autosens_max definuje, jak silný může být ISF.\\n\\nVýchozí hodnota 1.0 efektivně vypíná tento efekt.\\n\\nVAROVÁNÍ: Buďte extrémně opatrní při používání hodnot nad 2.5</string>
     <string name="pref_title_bg_accel_weight">Váha ISF při zrychlení glykémie</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Toto je váha aplikovaná při zrychlování glykémie, která posiluje ISF a tím potenciálně zvyšuje podávání inzulínu.\\n\\nVýchozí hodnota 0.0 efektivně vypíná tento efekt.</string>
     <string name="pref_title_bg_brake_weight">Váha ISF při zpomalení glykémie</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Toto je váha aplikovaná při zpomalování glykémie, která oslabuje ISF a tím potenciálně snižuje podávání inzulínu.\\n\\nVýchozí hodnota 0.0 efektivně vypíná tento efekt.</string>
     <string name="pref_title_low_bg_weight">Váha v nízkém rozsahu glykémie</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Toto je váha aplikovaná, když je glykémie pod cílem, která oslabuje ISF a tím potenciálně snižuje podávání inzulínu.\\n\\nVýchozí hodnota 0.0 efektivně vypíná tento efekt.</string>
     <string name="pref_title_high_bg_weight">Váha ve vysokém rozsahu glykémie</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Toto je váha aplikovaná, když je glykémie nad cílem, která posiluje ISF a tím potenciálně zvyšuje podávání inzulínu.\\n\\nVýchozí hodnota 0.0 efektivně vypíná tento efekt.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Rozsah glykémie pro poměr podávání SMB</string>
-    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Výchozí hodnota: 0. Lineárně rostoucí poměr podávání SMB je mapován na rozsah glykémie [target_bg, target_bg+bg_range].\\nPři target_bg je poměr SMB smb_delivery_ratio_min, při target_bg+bg_range je smb_delivery_ratio_max\\nS 0 je lineárně rostoucí poměr SMB zakázán a používá se pevný smb_delivery_ratio.</string>
     <string name="pref_title_pp_weight">Post-prandiální váha ISF</string>
-    <string name="openapsama_pp_ISF_weight_summary">Toto je váha aplikovaná, když glykémie stoupá, která posiluje ISF a tím potenciálně zvyšuje podávání inzulínu.\\n\\nVýchozí hodnota 0.0 efektivně vypíná tento efekt.</string>
     <string name="pref_title_dura_weight">Váha ISF podle trvání</string>
-    <string name="openapsama_dura_ISF_weight_summary">Toto je váha aplikovaná během déletrvajících, zvýšených glykemických plató, která posiluje ISF a tím potenciálně zvyšuje podávání inzulínu.\\n\\nVýchozí hodnota 0.0 efektivně vypíná tento efekt.</string>
     <string name="pref_title_smb_delivery_ratio">Poměr podávání SMB</string>
     <string name="openapsama_smb_delivery_ratio_summary">Výchozí hodnota: 0.5. Toto je další klíčové bezpečnostní omezení OpenAPS a určuje, jaký podíl z celkového potřebného inzulínu lze podat jako SMB. Toto má zabránit uživatelům dostat se do nebezpečné oblasti nastavováním SMB požadavků z telefonu pečovatele současně. Tuto experimentální hodnotu zvyšujte pomalu a s opatrností.</string>
     <string name="pref_title_smb_delivery_ratio_min">Min poměr podávání SMB</string>
@@ -368,9 +352,6 @@
     <string name="pref_title_lgs_threshold">Práh LGS</string>
     <string name="lgs_threshold_summary">Hodnota glykémie, pod kterou je pozastaven inzulín. Výchozí hodnota používá standardní model cíle. Uživatel může nastavit hodnotu mezi 60 mg/dl (3,3 mmol/l) a 100 mg/dl (5,5 mmol/l). Hodnoty pod 65/3,6 způsobí použití výchozího modelu</string>
     <!-- IntentKey preferences -->
-    <string name="pref_title_link_to_docs">Dokumentace algoritmu</string>
-    <string name="pref_title_otp_setup">Nastavení Authenticatoru</string>
-    <string name="pref_title_quick_wizard_settings">Nastavení Rychlých bolusů</string>
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Rozsah pro vizualizaci</string>
 </resources>
