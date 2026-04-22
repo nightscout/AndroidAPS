@@ -50,6 +50,7 @@
     <string name="omnipod_common_overview_pod_active_alerts">Výstrahy aktivního Podu</string>
     <string name="omnipod_common_overview_firmware_version">Verze firmwaru</string>
     <string name="omnipod_common_overview_time_on_pod">Čas na Podu</string>
+    <string name="omnipod_common_overview_temp_basal_concentration_value">%1$s @%2$s (%3$d/%4$d minut)</string>
     <string name="omnipod_common_uncertain">neznámé</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_deactivate_pod">Deaktivovat Pod</string>
@@ -99,6 +100,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Zvuk pro nejistý dočasný bazál povolen</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Zvuk oznámení pro nejistý SMB povolen</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Zvuk oznámení pro nejistý bolus povolen</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Zvuk oznámení o pozastavení výdeje povolen</string>
     <string name="omnipod_dash_use_bonding">Bond BT zařízení na Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Žádný aktivní Pod</string>
@@ -122,6 +124,8 @@
     <string name="omnipod_common_cmd_set_basal_schedule">Nastavit plán bazálu</string>
     <string name="omnipod_common_cmd_set_bolus">Poslat bolus</string>
     <string name="omnipod_common_cmd_cancel_bolus">Zrušit bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Nastavit dočasný bazál</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Zrušit dočasný bazál</string>
     <string name="omnipod_common_cmd_discard_pod">Vyřadit Pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Zjistit stav Podu</string>
     <string name="omnipod_common_cmd_set_time">Nastavit čas</string>
@@ -130,10 +134,17 @@
     <string name="omnipod_common_cmd_read_pulse_log">Číst protokol pulsů</string>
     <string name="omnipod_common_cmd_suspend_delivery">Pozastavit dodávání inzulínu</string>
     <string name="omnipod_common_cmd_resume_delivery">Obnovit dodávání inzulínu</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Zrušit dočasný bazál (uživatelem)</string>
     <string name="omnipod_common_cmd_get_pod_info">Zjistit informace o Podu</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nastavit falešné pozastavení dočasného bazálu</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Zrušit falešné pozastavení dočasného bazálu</string>
+    <string name="omnipod_common_cmd_split_tbr">Rozdělit dočasný bazál</string>
     <string name="omnipod_common_cmd_play_test_beep">Přehrát testovací pípnutí</string>
     <string name="omnipod_common_cmd_unknown_entry">Neznámá položka</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Zakázat výstrahy na pozastavení</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Upomínka dokončení párování</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Upomínka dokončení nastavení</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">před chvílí</string>
