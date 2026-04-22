@@ -48,7 +48,6 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Scanarea Combo a atins limita de timp</string>
     <string name="combov2_pairing_failed_due_to_error">Asocierea a eșuat din cauza erorii: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Asociere anulată din motive necunoscute</string>
-    <string name="combov2_pairing_invalid_pin_length">"Lungime PIN invalidă: are nevoie de %1$d cifre, a primit %2$d"</string>
     <string name="combov2_scanning_for_pump">Scanare după pompă</string>
     <string name="combov2_establishing_bt_connection">Se stabilește conexiunea Bluetooth (încercarea nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Se efectuează negocierea cu pompa</string>
@@ -68,7 +67,6 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Se setează profilul bazalei</string>
     <string name="combov2_setting_tbr_cmddesc">Setarea a %1$d%% RBT pentru %2$d minute</string>
     <string name="combov2_cancelling_tbr">Anulare RBT în desfășurare</string>
-    <string name="combov2_delivering_bolus_cmddesc">Livrare bolus %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Preluare istoric TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Se actualizează data pompei</string>
     <string name="combov2_updating_pump_status_cmddesc">Se actualizează starea pompei</string>
