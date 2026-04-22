@@ -39,8 +39,6 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Oplæringsprogram</string>
     <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
-    <string name="objectives_next_button">Næste</string>
-    <string name="objectives_previous_button">Forrige</string>
     <string name="objectives_button_unfinish">Nulstil færdig tilstand</string>
     <string name="objectives_button_unstart">Nulstil startet tilstand</string>
 </resources>
