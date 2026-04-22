@@ -4,7 +4,6 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">在24小时或更少时间内变更\"夏令时\"</string>
     <string name="dst_loop_disabled_warning">夏令时变更在三小时内-已禁用闭环</string>
-    <string name="dst_loop_disabled_error">夏令时(DST)变化发生在3小时之前。暂时禁用关闭循环，将在DST 更改后 3 小时自动重新启用</string>
     <!-- Storage constraint -->
     <string name="disk_full">至少 剩余%1$d MB 内部存储！闭环已禁用！</string>
     <!-- Version Checker -->
@@ -41,8 +40,6 @@
     <string name="objectives_shortname">目标</string>
     <string name="description_objectives">学习计划</string>
     <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
-    <string name="objectives_next_button">下一个</string>
-    <string name="objectives_previous_button">上一个</string>
     <string name="objectives_button_unfinish">重置完成状态</string>
     <string name="objectives_button_unstart">重置开始状态</string>
 </resources>
