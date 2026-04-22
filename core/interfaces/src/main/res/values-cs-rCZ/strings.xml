@@ -100,9 +100,7 @@
     <!-- Permission rationales (used by PumpPluginBase) -->
     <string name="permission_bluetooth_description">Aplikace potřebuje oprávnění Bluetooth pro komunikaci s pumpou</string>
     <!-- Insulin -->
-    <string name="insulin_plugin">Inzulín</string>
     <string name="unknown">Neznámé</string>
     <string name="insulin_peak_time">Čas vrcholu [min]</string>
-    <string name="insulin_oref_peak">Čas vrcholu křivky IOB</string>
     <!-- Concentration -->
 </resources>
