@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Pritaikytas boluso apribojimas</string>
     <string name="carbs_constraint_applied">Pritaikytas AV apribojimas</string>
     <string name="temp_target_short">LT</string>
     <string name="start_activity_tt">Pradėti Aktyvumo LT</string>
     <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
     <string name="start_hypo_tt">Pradėti \"Hipo\" LT</string>
     <string name="time_offset">Laiko poslinkis</string>
-    <string name="remind_to_bolus_later">Priminti apie bolusą vėliau</string>
     <!--    Widget-->
     <string name="configure">Derinti skaidrumą</string>
     <string name="widget_description">AAPS valdiklis</string>
@@ -16,8 +14,6 @@
     <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
     <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
-    <string name="invalid_age">Neteisingas amžiaus įrašas</string>
-    <string name="invalid_weight">Neteisingas svorio įrašas</string>
     <string name="age">Laikas</string>
     <string name="weight_label">Svoris</string>
     <string name="glucose_type">Glikemijos tipas</string>
@@ -25,17 +21,12 @@
     <string name="bg_meter">Matuoklis</string>
     <string name="bg_sensor">Sensorius</string>
     <!-- WizardDialog -->
-    <string name="format_bg_isf">%1$s JIF: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
-    <string name="treatments_wizard_total_label">Viso</string>
     <!-- SiteRotationDialog -->
     <!-- FillDialog -->
     <string name="fill_warning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
     <string name="record_pump_site_change">Įrašas apie infuzijos rinkinio keitimą</string>
     <string name="record_insulin_cartridge_change">Įrašas apie rezervuaro keitimą</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
     <string name="timeshift_label">Laiko perstūmimas</string>
@@ -60,29 +51,14 @@
     <string name="duration3h">3 val.</string>
     <string name="duration10h">10 val.</string>
     <!-- WizardDialog -->
-    <string name="a11_correction_percentage">pakeisti rezultatą %</string>
-    <string name="a11_correction_units">pakeisti rezultatą vienetais</string>
-    <string name="two_hours">2 val</string>
-    <string name="result_insulin_carbs">Rezultatas: %1$s %2$s</string>
     <string name="missing_carbs">Trūksta %1$d g</string>
-    <string name="a11y_current_bg">dabartinė glikemija</string>
-    <string name="carb_time_label">AV laikas</string>
-    <string name="a11y_set_carb_timer">nustatyti AV laiko perspėjimą</string>
     <!-- Treatments -->
     <string name="no_records_available">Nėra įrašų</string>
     <string name="treatments_iob_label_string">AIO:</string>
-    <string name="treatments_carbs_label_string">AV:</string>
-    <string name="tempbasals_netratio_label_string">Santykis:</string>
-    <string name="tempbasals_iob_label_string">AIO:</string>
-    <string name="treatments_wizard_correction_label">Korekcija</string>
-    <string name="meal_bolus">Maistas</string>
-    <string name="prime">Užpildyti sistemą</string>
     <string name="carbs_and_bolus">AV ir bolusai</string>
     <string name="show_invalidated">Rodyti negaliojančius</string>
     <string name="hide_invalidated">Slėpti negaliojančius</string>
     <string name="careportal_remove_started_events">Ištrinti AAPS paleidimo žymas</string>
-    <string name="hide_loop">Slėpti ciklą</string>
-    <string name="show_loop">Rodyti ciklą</string>
     <string name="user_entry">Naudotojo įrašas</string>
     <string name="clone_label">Klonuoti</string>
     <!-- ProfileHelperActivity -->
@@ -96,16 +72,11 @@
     <string name="format_with_tdd_and_pct">Laikas: %1$d BPD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Laikas: %1$d Svoris: %2$.0f kg</string>
     <string name="dpv_default_profile">Numatytasis profilis</string>
-    <string name="invalid_pct">Netinkamas % įrašas</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Valandinė bazė</string>
     <!--QuickWizard-->
-    <string name="a11y_only_on_watch">tik laikrodyje</string>
-    <string name="a11y_only_on_phone">tik telefone</string>
     <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Tik teigiamas AIO</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolusas</string>
-    <string name="a11y_drag_and_drop_handle">nutempti ir padėti</string>
     <!--    History browser-->
     <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
     <string name="confirm_treatment">Patvirtinkite terapiją</string>
