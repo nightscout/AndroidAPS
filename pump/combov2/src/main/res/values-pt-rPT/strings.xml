@@ -45,7 +45,6 @@ para cancelar o emparelhamento)\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Tempo de pesquisa da Combo chegou ao fim</string>
     <string name="combov2_pairing_failed_due_to_error">Emparelhamento falhou devido ao erro: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Emparelhamento cancelado por razões desconhecidas</string>
-    <string name="combov2_pairing_invalid_pin_length">"Comprimento do PIN de emparelhamento inválido: precisa de %1$d dígitos, escreveu %2$d"</string>
     <string name="combov2_scanning_for_pump">A procurar a bomba</string>
     <string name="combov2_establishing_bt_connection">Estabelecendo conexão Bluetooth (tentativa no. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">A executar ligação com a bomba</string>
@@ -65,7 +64,6 @@ para cancelar o emparelhamento)\n
     <string name="combov2_setting_basal_profile_cmddesc">A definir perfil basal</string>
     <string name="combov2_setting_tbr_cmddesc">A definir %1$d%% de DBT por %2$d minutos</string>
     <string name="combov2_cancelling_tbr">A cancelar a basal temporária</string>
-    <string name="combov2_delivering_bolus_cmddesc">A administrar %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">A obter histórico de TID</string>
     <string name="combov2_updating_pump_datetime_cmddesc">A atualizar a data da bomba</string>
     <string name="combov2_updating_pump_status_cmddesc">A obter estado bomba</string>
