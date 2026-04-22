@@ -634,7 +634,4 @@
     <!--    BLE Scan Step (shared pump pairing) -->
     <!-- Graph configuration -->
     <!-- Graph series short names (used as graph labels, keep very short) -->
-    <string name="remove_items">Items verwijderen</string>
-    <string name="sort_items">Sorteer items</string>
-
 </resources>
