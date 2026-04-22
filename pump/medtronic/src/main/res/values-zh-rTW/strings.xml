@@ -42,7 +42,6 @@
     <string name="medtronic_error_serial_invalid">序號無效。</string>
     <string name="medtronic_error_pump_type_not_set">未設定幫浦型號。</string>
     <string name="medtronic_error_pump_type_invalid">幫浦型號不支援。</string>
-    <string name="medtronic_error_pump_frequency_invalid">幫浦頻率不支援。</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink 地址無效。</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">偵測到的幫浦型號與配置的型號不同。</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">幫浦上未啟用基礎率設定。請在幫浦上啟用它。</string>
@@ -59,7 +58,6 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
-    <string name="medtronic_pump_history">Medtronic 幫浦歷史紀錄</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">您取消了胰島素注射，在幫浦上已設置後。由於 Medtronic 幫浦不支援取消，您需要手動取消它。將幫浦置於暫停模式，然後再恢復（如果您仍希望取消）。應用程序將在下一次更新時接收變更（少於 5 分鐘）。</string>
     <string name="medtronic_cmd_cant_read_tbr">無法讀取目前臨時基礎率。</string>
@@ -91,8 +89,6 @@
     <!-- combo_notification_check_time_date -->
     <string name="set_neutral_temps_title">設置中性臨時基礎率</string>
     <string name="set_neutral_temps_summary">如果啟用，將在每小時結束前取消臨時基礎率。這種方法可以幫助防止某些幫浦在整點發出聲音/震動。</string>
-    <string name="medtronic_tbr_remaining">%1$s（剩餘 %2$d 分鐘）</string>
-    <string name="mdt_tbr_remaining">%1$.1f U/h（剩餘 %2$d 分鐘）</string>
     <string name="invalid_history_data">偵測到無效的幫浦歷史紀錄資料。打開新問題並提供日誌。</string>
     <string name="riley_statistics">RL 統計</string>
     <string name="clicked_refresh" comment="26 characters max for translation">點擊重新整理</string>
