@@ -92,8 +92,6 @@
     <string name="permission_bluetooth_title">Bluetooth</string>
     <string name="permission_bluetooth_description">Ứng dụng cần quyền Bluetooth để giao tiếp với bơm insulin</string>
     <!-- Insulin -->
-    <string name="insulin_plugin">Insulin</string>
-    <string name="insulin_shortname">INS</string>
     <string name="unknown">Không xác định</string>
     <string name="rapid_acting_oref">Novorapid</string>
     <string name="lyumjev">Lyumjev</string>
@@ -102,7 +100,6 @@
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <string name="insulin_peak_time">Thời gian đạt đỉnh [phút]</string>
-    <string name="insulin_oref_peak">Thời gian đạt đỉnh IOB</string>
     <!-- Concentration -->
     <string name="u10">U10</string>
     <string name="u40">U40</string>
