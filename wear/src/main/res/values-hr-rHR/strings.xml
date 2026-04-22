@@ -14,8 +14,6 @@
     <string name="status_tdd">TDD</string>
     <string name="activity_IOB">Aktivni inzulin</string>
     <string name="temp_target_cancel">Otkaži</string>
-    <string name="increment">povećanje</string>
-    <string name="decrement">smanjenje</string>
     <string name="abbreviation_average">prosječno</string>
     <string name="no_iob_u">U</string>
     <string name="no_cob_g">--g</string>
