@@ -19,7 +19,6 @@
     <string name="pump_state_label">Pompa durumu</string>
     <string name="active_alarms_label">Aktif alarmlar</string>
     <string name="basal_type_label">Bazal tipi</string>
-    <string name="basal_rate_label">Bazal oranı</string>
     <string name="pump_type_label">Pompa tipi</string>
     <string name="fw_version_label">Sürüm</string>
     <string name="patch_no_label">Patch no</string>
@@ -73,12 +72,10 @@
     <string name="do_not_attach_to_body">Patch\'i henüz gövdeye takmayın.</string>
     <string name="half_press_needle">İğne düğmesine yarım basın. Daha sonra hazırlamayı başlatmak için <b>İleri</b>\'ye dokunun.</string>
     <string name="wait_for_priming">Lütfen pompa hazırlanırken bekleyin.</string>
-    <string name="priming_error">Hazırlanamadı. Tekrar denemek için <b>Tekrar Dene</b>\'ye basın.</string>
     <string name="press_next">Devam etmek için <b>İleri</b>\'ye basın.</string>
     <string name="press_next_to_start_activation">Etkinleştirmeyi başlatmak için <b>İleri</b>\'ye basın.</string>
     <string name="remove_safety_lock">Güvenlik kilidini çıkarın. Pompayı gövdeye takın. İğne düğmesine basın.</string>
     <string name="activating_pump">Pompa etkinleştiriliyor ve başlangıç bazal hızı ayarlanıyor. Lütfen bekleyin.</string>
-    <string name="activating_error">Etkinleştirilemedi. Tekrar denemek için <b>Tekrar Dene</b>\'ye basın.</string>
     <string name="activating_complete">Yeni patch etkinleştirildi. %.2f ünite kaldı.</string>
     <string name="can_export_settings">Bu pompa oturumunu daha sonra kurtarabilmek için ayarları dışa aktarabilirsiniz.</string>
     <string name="press_OK_to_return">Ana ekrana dönmek için <b>Tamam</b>\'a basın.</string>
