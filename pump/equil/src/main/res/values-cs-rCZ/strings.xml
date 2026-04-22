@@ -28,7 +28,6 @@
     <string name="equil_tone_mode_shake">Pouze vibrovat</string>
     <string name="equil_tone_mode_tone">Pouze zvuky</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrace a zvuky</string>
-    <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unbind_content">Tato operace zastaví infuzi inzulínu a zasune píst pumpy až na doraz! Kromě toho vymaže stav spárování!</string>
     <string name="equil_ble_config_confirmation_title">Spárovat Equil patch pumpu</string>
     <string name="equil_error">Chyba připojení</string>
