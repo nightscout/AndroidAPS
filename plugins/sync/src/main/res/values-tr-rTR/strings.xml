@@ -63,7 +63,6 @@
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
     <string name="pump_status">Pompa durumu</string>
     <string name="loop_status">Döngü durumu</string>
-    <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
     <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
     <string name="user_action_not_available">Seçili Kullanıcı Eylemi %1$s artık mevcut değil, lütfen kutucuğu yenileyin</string>
@@ -76,7 +75,6 @@
     <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\n\nMin: %1$s\nMaks: %2$s\nSüre: %3$d dk</string>
     <string name="wear_action_tempt_manual_message">GeçiciHedef\n\nHedef: %1$s\nSüre: %2$d dk</string>
     <string name="wear_action_tempt_preset_message">GeçiciHedef\n\nSebep: %1$s\nHedef: %2$s\nSüre: %3$d dk</string>
-    <string name="no_success">başarısız - lütfen telefonu kontrol edin</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
     <string name="wear_custom_watchface_settings">Özel Saat arayüzü Ayarları</string>
@@ -118,10 +116,6 @@
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
     <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
-    <string name="wear_action_loop_state_no_nsclient">AAPSClient bu eylemi desteklemiyor</string>
-    <string name="wear_action_loop_state_requires_duration">Bu eylemin süreye ihtiyacı var..</string>
-    <string name="wear_action_loop_state_pump_suspended">Pompa durduruldu!</string>
-    <string name="wear_action_loop_state_profile_invalid">Profil geçersiz!</string>
     <string name="wear_action_loop_state_unauthorized">Lütfen tekrar deneyin.</string>
     <string name="wear_action_loop_state_invalid">Geçersiz döngü durumu talep edildi</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nSüre: %2$d dk</string>
@@ -137,9 +131,6 @@
     <string name="smscommunicator_otp_reset_btn">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
     <string name="smscommunicator_otp_reset_title">Kimlik Doğrulayıcı Anahtarını Sıfırla</string>
     <string name="smscommunicator_otp_reset_prompt">Kimlik Doğrulayıcı (Authenticator) anahtarını sıfırlamak istediğinizden emin misiniz? Şu anda yapılandırılmış tüm Kimlik Doğrulayıcıları geçersiz kılar ve bunları yeniden ayarlamanız gerekir.</string>
-    <string name="smscommunicator_otp_reset_successful"></string>
-    <string name="smscommunicator_otp_export_prompt">OTP secret panoya kopyalamak istediğinizden emin misiniz?\n\nYalnızca kimlik doğrulama uygulamanızın QRCode\'u tarama sorunları varsa, bunu elle girmek veya uygulamayı kullanarak OTP donanımı yapılandırmak istiyorsanız buna ihtiyacınız olabilir.</string>
-    <string name="smscommunicator_otp_export_successful">OTP secret (Base32 formatında) dışa aktarıldı ve panoya kopyalandı. Doğrulayıcıya veya OTP donanım yazıcısına yapıştırın!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Kimlik Doğrulayıcıyı (Authenticator) yükleyin</string>
     <string name="smscommunicator_otp_reset_header">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
     <string name="smscommunicator_otp_install_info">Her takipçi telefonuna, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
