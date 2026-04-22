@@ -16,7 +16,6 @@
     <string name="pump_state_label">Pumpstatus</string>
     <string name="active_alarms_label">Aktiva larm</string>
     <string name="basal_type_label">Basaltyp</string>
-    <string name="basal_rate_label">Basaldos</string>
     <string name="pump_type_label">Pumptyp</string>
     <string name="fw_version_label">FW-version</string>
     <string name="patch_no_label">Patch-nr</string>
@@ -68,12 +67,10 @@
     <string name="do_not_attach_to_body">Fäst inte podden på kroppen ännu.</string>
     <string name="half_press_needle">Halvtryck på nålknappen. Tryck sedan på <b>Nästa</b> för att börja prima.</string>
     <string name="wait_for_priming">Vänta på att förfyllning ska slutföras.</string>
-    <string name="priming_error">Det gick inte att förfylla, tryck på <b>Försök igen</b> för att försöka igen.</string>
     <string name="press_next">Tryck på <b>Nästa</b> för att fortsätta.</string>
     <string name="press_next_to_start_activation">Tryck på <b>Nästa</b> för att starta aktivering.</string>
     <string name="remove_safety_lock">Ta bort säkerhetslåset. Fäst pumpen på kroppen. Tryck på nålknappen.</string>
     <string name="activating_pump">Aktiverar pump och ställer in basaldos. Vänligen vänta.</string>
-    <string name="activating_error">Det gick inte att aktivera, tryck på <b>Försök igen</b> för att försöka igen.</string>
     <string name="activating_complete">Ny pod aktiverad. %.2f enheter återstår.</string>
     <string name="press_OK_to_return">Tryck på <b>OK</b> för att återgå till huvudskärmen.</string>
     <string name="deactivate_sure">Är du säker på att du vill inaktivera nuvarande pod?</string>
