@@ -1,43 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disabled_loop">Boucle désactivée</string>
-    <string name="calculator_label">Assistant</string>
     <string name="nav_history_browser">Historique</string>
     <string name="sensor_label">Capteur</string>
-    <string name="age_label">âge:</string>
-    <string name="level_label">niveau:</string>
     <string name="insulin_label">Insuline</string>
     <string name="pb_label">Pile pompe</string>
     <string name="cannula">Canule</string>
     <string name="patch_pump">Pompe patch</string>
     <!-- Overview -->
-    <string name="a11y_insulin_label">insuline</string>
-    <string name="a11y_bg_quality">qualité de la glycémie</string>
-    <string name="a11y_blood_glucose">glycémie</string>
-    <string name="a11y_bg_outdated">obsolète</string>
     <!-- overview moved to core:ui module -->
-    <string name="data_status">État des données Gly</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Prédictions</string>
-    <string name="overview_show_treatments">Traitements</string>
-    <string name="overview_show_heartRate">Fréquence Cardiaque</string>
-    <string name="overview_show_deviation_slope">Pente de déviations</string>
-    <string name="overview_show_activity">Activité</string>
-    <string name="overview_show_bgi">Impact glycémique</string>
-    <string name="overview_show_sensitivity">AutoSens</string>
-    <string name="overview_show_deviations">Déviations</string>
-    <string name="overview_show_cob">Glucides actifs</string>
-    <string name="overview_show_iob">Insuline Active</string>
-    <string name="overview_show_basals">Basals</string>
-    <string name="overview_show_abs_insulin">Insuline absolue</string>
-    <string name="overview_show_variable_sens">SI variable</string>
-    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
-    <string name="treatments_shortname">TRAIT</string>
-    <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
-    <string name="overview_show_steps">Pas</string>
 </resources>
