@@ -635,7 +635,6 @@
     <string name="bolus_advisor">大剂量向导</string>
     <string name="bolus_advisor_message">您当前血糖偏高。建议暂时不要进食，等待血糖降至正常。是否现在进行校正推注，并在适宜进食时提醒您？此操作将不会记录碳水化合物，收到提醒后您必须再次使用向导。</string>
     <string name="cobvsiob">活性碳水vs活性胰岛素</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 检测到碳水化合物吸收缓慢：%2$d%%的时间。再次检查你的计算。COB可能被高估，因此可以给予更多胰岛素!!!!!</font>]]></string>
     <string name="slowabsorptiondetected_plain">!!!!!检测到碳水化合物吸收缓慢：%1$d%%的时间。仔细检查你的计算。COB可能被高估，因此可能注射过多的胰岛素！！！！！</string>
     <string name="bolus_constraint_applied_warn">已应用推注限制： %1$.2f U 到 %2$.2f U</string>
     <string name="bolus_recorded_only">仅记录大剂量数值(泵不会输注)</string>
