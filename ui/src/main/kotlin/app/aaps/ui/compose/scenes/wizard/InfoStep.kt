@@ -69,9 +69,9 @@ private fun InfoStepPreMealPreview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun InfoStepSwimmingPreview() {
+private fun InfoStepBathingPreview() {
     MaterialTheme {
-        InfoStep(state = previewState.copy(template = SceneTemplate.SWIMMING), onBack = {}, onNext = {})
+        InfoStep(state = previewState.copy(template = SceneTemplate.BATHING), onBack = {}, onNext = {})
     }
 }
 

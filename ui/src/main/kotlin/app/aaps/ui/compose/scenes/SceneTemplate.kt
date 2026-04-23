@@ -69,6 +69,19 @@ enum class SceneTemplate(
         defaultActions = emptyList()
     ),
 
+    POST_EXERCISE_NIGHT(
+        nameResId = R.string.scene_template_post_exercise_night,
+        descResId = R.string.scene_wizard_post_exercise_night_desc,
+        infoResId = R.string.scene_wizard_info_post_exercise_night,
+        icon = "sleep",
+        defaultDurationMinutes = 600, // 10 hours — covers sleep + post-exercise safety buffer
+        defaultActions = listOf(
+            SceneAction.ProfileSwitch(profileName = "", percentage = 75),
+            SceneAction.TempTarget(reason = TT.Reason.HYPOGLYCEMIA, targetMgdl = 120.0),
+            SceneAction.SmbToggle(enabled = false)
+        )
+    ),
+
     PRE_MEAL(
         nameResId = R.string.scene_template_pre_meal,
         descResId = R.string.scene_wizard_pre_meal_desc,
@@ -106,10 +119,10 @@ enum class SceneTemplate(
         )
     ),
 
-    SWIMMING(
-        nameResId = R.string.scene_template_swimming,
-        descResId = R.string.scene_wizard_swimming_desc,
-        infoResId = R.string.scene_wizard_info_swimming,
+    BATHING(
+        nameResId = R.string.scene_template_bathing,
+        descResId = R.string.scene_wizard_bathing_desc,
+        infoResId = R.string.scene_wizard_info_bathing,
         icon = "swim",
         defaultDurationMinutes = 60,
         defaultActions = listOf(

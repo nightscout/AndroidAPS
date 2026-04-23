@@ -23,6 +23,11 @@
     <string name="scene_wizard_sleep_desc">Tighter target for better overnight control.</string>
     <string name="scene_wizard_info_sleep">Overnight is when many people experience undetected highs or lows. A slightly tighter target during sleep lets the algorithm make finer corrections throughout the night. Pair this with a profile that reflects your nighttime basal needs for best results.</string>
 
+    <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Post-exercise Night</string>
+    <string name="scene_wizard_post_exercise_night_desc">Reduced profile, higher target, SMB off — protects against delayed overnight lows after activity.</string>
+    <string name="scene_wizard_info_post_exercise_night">After physical activity, muscles keep refilling glycogen stores for many hours — insulin sensitivity can stay elevated for 24–48h, with the highest risk of nocturnal hypoglycemia 6–12h after exercise. A reduced profile lowers basal delivery throughout the night, a higher temporary target gives the algorithm a safety buffer, and disabling SMB prevents the algorithm from over-correcting brief rises. Activate this scene at bedtime on days you exercised, especially after longer sessions or when you added new activities. Keep fast carbs at the bedside and consider setting an alarm for a middle-of-the-night check.</string>
+
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
     <string name="scene_template_pre_meal">Pre-meal</string>
     <string name="scene_wizard_pre_meal_desc">Lower target to get ahead of the post-meal spike.</string>
@@ -38,10 +43,10 @@
     <string name="scene_wizard_driving_desc">Slightly higher target to stay safe behind the wheel.</string>
     <string name="scene_wizard_info_driving">Safe driving requires stable blood glucose above 5.0 mmol/L (90 mg/dL). In some countries, checking before and during long drives is a legal requirement. A slightly higher target gives the algorithm a safety buffer — it will work to keep you above the level where concentration and reaction time start to decline. If you go low while driving, pull over immediately, treat the hypo, and wait at least 45 minutes after glucose returns to normal before continuing.</string>
 
-    <!-- Swimming: Disconnected Pump — 1h -->
-    <string name="scene_template_swimming">Swimming</string>
-    <string name="scene_wizard_swimming_desc">Disconnect pump for swimming, showering, or water activities.</string>
-    <string name="scene_wizard_info_swimming">When you disconnect your pump, insulin delivery stops completely — no basal, no boluses, no corrections. The algorithm switches to disconnected mode and stops making adjustments. This is normal for short periods like showering or swimming. When the scene ends, the pump reconnects and the algorithm resumes automatically. Keep disconnects short — without basal insulin, blood glucose will start rising within 1–2 hours.</string>
+    <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Bathing</string>
+    <string name="scene_wizard_bathing_desc">Disconnect pump for showering, swimming, baths, or any water activity.</string>
+    <string name="scene_wizard_info_bathing">When you disconnect your pump, insulin delivery stops completely — no basal, no boluses, no corrections. The algorithm switches to disconnected mode and stops making adjustments. This is normal for short periods like showering, bathing, or swimming. When the scene ends, the pump reconnects and the algorithm resumes automatically. Keep disconnects short — without basal insulin, blood glucose will start rising within 1–2 hours.</string>
 
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Luteal Phase</string>
