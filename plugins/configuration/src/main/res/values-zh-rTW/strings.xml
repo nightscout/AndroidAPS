@@ -31,6 +31,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">請在下方配置您的RileyLink。選擇RileyLink後，一旦RileyLink狀態顯示為“已連線”，即可繼續設置。這可能需要一分鐘。\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b> 您可以在幫浦設置完成後繼續設置。\n</string>
     <string name="startobjective">開始您的第一個目標</string>
+    <string name="open_objectives">開啟目標</string>
     <string name="setupwizard_permissions">權限</string>
     <string name="setupwizard_profile_info">使用你的基礎率、胰島素-碳水比 (IC)、胰島素敏感度 (ISF) 與目標值建立一個設定檔。之後可以新增多個設定檔。</string>
     <string name="setupwizard_permissions_info">AAPS 需要儲存空間存取與其他權限才能正常運作。請在下方授予所需權限。</string>
