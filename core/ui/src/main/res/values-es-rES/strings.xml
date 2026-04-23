@@ -574,7 +574,6 @@
     <string name="bolus_advisor">Asistente de bolo</string>
     <string name="bolus_advisor_message">Tienes la glucosa alta. En lugar de comer ahora, se recomienda esperar a tener un mejor valor de glucosa. ¿Quieres poner un bolo de corrección ahora y recibir un aviso cuando sea un buen momento para comer? En este caso no se registrarán los carbohidratos y deberás utilizar el asistente de bolos después de recibir la notificación.</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>¡Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Comprueba de nuevo el cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="slowabsorptiondetected_plain">¡¡¡Absorción lenta de hidratos detectada: %1$d%% del tiempo. Revisa tus cálculos. Los COB pueden estar sobreestimados y el sistema podría darte demasiada insulina!!!</string>
     <string name="bolus_constraint_applied_warn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">El bolo sólo se anotará (no será entregado por la bomba)</string>
