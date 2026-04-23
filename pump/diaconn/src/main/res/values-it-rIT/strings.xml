@@ -11,9 +11,11 @@
     <string name="gettingpumpsettings">Ricezione impostazioni micro</string>
     <string name="gettingpumptime">Ricezione ora micro</string>
     <string name="largetimediff">Grande differenza oraria:\nL\'ora nel micro differisce per più di 1h e 30m. \nRegola l\'ora manualmente e assicurati che la lettura dello storico dal micro non causi comportamenti imprevisti.\nSe possibile, cancella lo storico del micro prima di cambiare l\'ora oppure disabilita il loop chiuso per un tempo corrispondente al tuo valore DIA.</string>
+    <string name="largetimedifftitle">Grande differenza oraria</string>
     <string name="approachingdailylimit">Si avvicina il limite giornaliero di insulina</string>
     <string name="startingbolus">Avvio erogazione bolo</string>
     <string name="waitingforestimatedbolusend">In attesa della fine stimata del bolo</string>
+    <string name="gettingbolusstatus">Ricezione stato bolo</string>
     <string name="stoppingtempbasal">Stop basale temporanea</string>
     <string name="settingtempbasal">Impostazione basale temporanea</string>
     <string name="settingextendedbolus">Impostazione bolo esteso</string>
