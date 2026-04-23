@@ -28,9 +28,14 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="exitwizard">Ignorer l\'assistant de configuration</string>
     <string name="setupwizard_sensitivity_description">Le plugin de Sensibilité est utilisé pour la détection de la Sensibilité et de calcul de glucides actifs. Pour plus d’informations visitez :</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/fr/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
+    <string name="setupwizard_aps_description">Sélectionnez un des algorithmes disponibles. Ils sont triés du plus ancien au plus récent. L\'algorithme plus récent est généralement plus puissant. N\'oubliez pas de lire la documentation OpenAPS et de le configurer avant de l\'utiliser.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Veuillez configurer votre RileyLink ci-dessous. Après avoir sélectionné un RileyLink, il sera possible de continuer l\'installation une fois que le statut de RileyLink sera « Connecté ». Cela peut prendre une minute.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Remarque :</b> Vous pouvez continuer l\'installation une fois la pompe configurée.\n</string>
     <string name="startobjective">Démarrez votre premier objectif</string>
+    <string name="open_objectives">Ouvrir les objectifs</string>
+    <string name="setupwizard_permissions">Autorisations</string>
+    <string name="setupwizard_profile_info">Créez un profil avec vos taux de basal, G/I, SI et valeurs cibles. Vous pourrez ajouter plusieurs profils plus tard.</string>
+    <string name="setupwizard_permissions_info">AAPS a besoin d\'un accès au stockage et d\'autorisations pour fonctionner correctement. Veuillez accorder les autorisations requises ci-dessous.</string>
     <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
     <string name="readstatus">Statut de lecture</string>
     <!-- Provider-agnostic cloud export/import strings -->
@@ -38,6 +43,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
     <string name="configbuilder_aps_description">Quel algorithme APS doit faire les ajustements de thérapie?</string>
+    <string name="configbuilder_sync_description">Plugins de téléversement, synchronisation et communication.</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
     <string name="configbuilder_sensitivity_description">Quel algorithme de Sensibilité doit être utilisé ?</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AAPS copiera les paramètres basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres basal dans AAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres basal sur votre pompe, appuyez sur Annuler et reporter la selection de la pompe à une date ultérieure.</string>
@@ -52,6 +58,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <!-- maintenance_email moved to core:keys module -->
     <!-- Google Drive Storage -->
     <!-- Import source selection dialog -->
+    <string name="loading">Chargement…</string>
+    <string name="warning_wrong_directory_selected">Mauvais répertoire sélectionné</string>
+    <string name="warning_wrong_directory_message">Vous avez sélectionné le sous-répertoire \"%1$s\" au lieu du répertoire racine AAPS. Veuillez sélectionner le répertoire parent AAPS. L\'application va automatiquement créer et gérer les sous-répertoires.</string>
     <!-- Google Drive error messages (used by GoogleDriveManager) -->
     <!-- Provider-agnostic cloud storage strings -->
     <!-- Authorization status strings -->
