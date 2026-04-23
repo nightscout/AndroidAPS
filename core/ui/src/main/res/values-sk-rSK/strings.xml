@@ -635,7 +635,6 @@
     <string name="bolus_advisor">Bolusový poradca</string>
     <string name="bolus_advisor_message">Máte vysokú glykémiu. Namiesto jedla doporučujeme počkať na lepšiu glykémiu a pripomenúť, keď bude čas na jedlo. Prajete si poslať korekčný bolus a pripomenúť, keď bude čas na jedlo? V tomto prípade nebudú zapísané žiadne sacharidy, a neskôr musíte opäť spustiť kalkulačku, akonáhle vám to pripomenieme.</string>
     <string name="cobvsiob">COB vs. IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
     <string name="slowabsorptiondetected_plain">!!!!! Detekovaná pomalá absorbcia sacharidov: %1$d%% času. Radšej dvakrát skontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</string>
     <string name="bolus_constraint_applied_warn">Použité obmedzenie bolusu: %1$.2f U na %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
