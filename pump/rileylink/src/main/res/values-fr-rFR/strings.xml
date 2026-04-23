@@ -8,6 +8,7 @@
     <string name="pump_status_error_comm">Erreur de communication</string>
     <string name="pump_status_timeout_comm">Délai de communication dépassé</string>
     <string name="pump_status_invalid_config">Configuration invalide</string>
+    <string name="medtronic_pump_encoding_title">Encodage Medtronic</string>
     <string name="medtronic_pump_encoding_4b6b_local">Encodage logiciel 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Encodage matériel 4b6b</string>
     <string name="medtronic_pump_frequency_us_ca">États-Unis &amp; Canada (916 MHz)</string>
