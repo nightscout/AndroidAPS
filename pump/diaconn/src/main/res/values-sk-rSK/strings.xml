@@ -11,9 +11,11 @@
     <string name="gettingpumpsettings">Získavam nastavenia pumpy</string>
     <string name="gettingpumptime">Získavam čas z pumpy</string>
     <string name="largetimediff">Veľký rozdiel v čase:\nČas v pumpe sa líši minimálne o 1,5 h.\nProsím upravte čas v pumpe manuálne a vymažte históriu pumpy.\nPokiaľ je to potrebné, pozastavte uzavretý okruh aspoň na \"DIA\" hodín.</string>
+    <string name="largetimedifftitle">Veľký rozdiel v čase</string>
     <string name="approachingdailylimit">Blíži sa denný limit inzulínu</string>
     <string name="startingbolus">Spúšťam podávanie bolusu</string>
     <string name="waitingforestimatedbolusend">Čakanie na predpokladaný koniec bolusu</string>
+    <string name="gettingbolusstatus">Načítavam stav bolusov</string>
     <string name="stoppingtempbasal">Zastavujem dočasný bazál</string>
     <string name="settingtempbasal">Nastavujem dočasný bazál</string>
     <string name="settingextendedbolus">Nastavujem predĺžený bolus</string>

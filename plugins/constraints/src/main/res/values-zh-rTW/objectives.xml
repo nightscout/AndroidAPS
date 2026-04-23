@@ -70,6 +70,9 @@
     <string name="objectives_exam_learned_breadgrams">僅允許使用克作為碳水化合物輸入單位。</string>
     <string name="objectives_exam_learned_ecarbs">延長碳水化合物是幫浦世界中延長注射的替代品。</string>
     <string name="objectives_exam_learned_nsclient">遠端監控和控制是可能的，但不是所有功能都必須遠端可用。</string>
+    <string name="objectives_exam_learned_concentration1">使用 50% 的設定檔搭配 U200 胰島素，將導致必須長期進行換算：對於以胰島素筆進行的外部注射必須換算，且 AAPS 或 NS 提供的所有標準報表都會不正確，需要換算為國際單位（IU）供醫療團隊使用。</string>
+    <string name="objectives_exam_learned_concentration2">從使用 50% 設定檔的 U200 切換到使用胰島素濃度功能的 U200，將需要建立更強的設定檔、停用 DynISF 一週，並訓練自己以國際單位來思考。</string>
+    <string name="objectives_exam_learned_concentration3">只有在更換胰島素或貼片時，才能變更胰島素濃度。但更重要的是，尤其對管路型幫浦，切勿透過幫浦本身的操作介面直接進行注射。</string>
     <string name="answerdisabledto">回答停用至：%1$s</string>
     <string name="wronganswer">答案錯誤！</string>
     <string name="unfinshed_button">下一個未完成</string>

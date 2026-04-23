@@ -3,10 +3,10 @@
     <string name="label_watchface_circle">AAPS(Cerc)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (Personalizat)</string>
-    <string name="label_actions_tile">AAPS(Acțiuni)</string>
-    <string name="label_temp_target_tile">AAPS(Țintă Temporară)</string>
-    <string name="label_quick_wizard_tile">AAPS(Asistent Rapid)</string>
-    <string name="label_user_action_tile">AAPS(Acțiune Utilizator)</string>
+    <string name="label_actions_tile">Acțiuni</string>
+    <string name="label_temp_target_tile">Țintă temporară</string>
+    <string name="label_quick_wizard_tile">Asistent rapid</string>
+    <string name="label_user_action_tile">Acțiune utilizator</string>
     <string name="msg_warning_sync">Nu au fost primite date de acum %1$s! Verificați că AAPS pe telefon trimite date către ceas</string>
     <string name="msg_warning_old">Datele AAPS sunt vechi de %1$s! Verificați senzorul, xDrip+, NS, configurația AAPS sau altele!</string>
     <string name="pref_vibrate_on_bolus">Vibrare la Bolus</string>
@@ -227,7 +227,8 @@
     <string name="complication_iob_detailed">IoB Detaliat</string>
     <string name="complication_uploader_phone_battery">Baterie Încărcător date/Telefon</string>
     <string name="status_running_mode">Mod de rulare</string>
-    <string name="label_running_mode_title">AAPS(Mod de rulare)</string>
+    <string name="label_running_mode_title">Mod de funcționare</string>
+    <string name="label_bg_graph_tile">Grafic glicemie</string>
     <string name="action_running_mode_selected">Mod de rulare solicitat</string>
     <string name="title_activity_disconnect_pump">Deconectează pompa</string>
     <string name="title_activity_suspend_loop">Suspendă bucla</string>

@@ -9,6 +9,8 @@
     <!--    Widget-->
     <string name="configure">配置透明度</string>
     <string name="widget_description">AAPS 小工具</string>
+    <string name="widget_bg_graph_description">AAPS 血糖圖表</string>
+    <string name="widget_compact_bg_description">AAPS 血糖 + IOB + COB （精簡）</string>
     <!--     Activities-->
     <string name="activity_monitor">活動監視器</string>
     <string name="time_range">時間範圍</string>
@@ -146,6 +148,9 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">僅使用正 IOB</string>
     <string name="overview_edit_quickwizard_superbolus">超級注射</string>
     <!--    History browser-->
+    <string name="history_now">現在</string>
+    <string name="a11y_history_previous_window">上一個視窗</string>
+    <string name="a11y_history_next_window">下一個視窗</string>
     <string name="additional_ecarbs">新增 eCarbs</string>
     <string name="calculator_options">計算機選項</string>
     <string name="use_bg">使用 血糖</string>
@@ -220,4 +225,8 @@
     <string name="loop_accept_set_basal_question">接受新的臨時基礎率：</string>
     <string name="loop_accept_perform">執行</string>
     <!-- Widget chip labels for RM.Mode, kept terse to fit the pill -->
+    <string name="widget_rm_lgs">LGS</string>
+    <string name="widget_rm_disabled">停用</string>
+    <string name="widget_rm_suspended">已暫停</string>
+    <string name="widget_rm_resume">恢復</string>
 </resources>

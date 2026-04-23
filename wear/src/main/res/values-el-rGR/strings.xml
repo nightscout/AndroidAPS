@@ -3,9 +3,6 @@
     <string name="label_watchface_circle">AAPS(Κυκλικό)</string>
     <string name="label_watchface_digital_style">AAPS(ψηφιακό)</string>
     <string name="label_watchface_custom">AAPS(προσαρμοσμένα_χαρακτηριστικά)</string>
-    <string name="label_actions_tile">AAPS( Ενέργειες)</string>
-    <string name="label_temp_target_tile">AAPS(προσωρινός_στόχος)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="msg_warning_sync">Δεν ελήφθησαν δεδομένα από τις %1$s! Ελέγξτε αν το AAPS στο τηλέφωνο στέλνει δεδομένα στο ρολόι</string>
     <string name="msg_warning_old">Τα δεδομένα AAPS είναι %1$s παλιά! Ελέγξτε τον αισθητήρα, το xDrip +, το NS, το AAPS ή άλλα!</string>
     <string name="pref_vibrate_on_bolus">Δόνηση στην Δόση Bolus</string>

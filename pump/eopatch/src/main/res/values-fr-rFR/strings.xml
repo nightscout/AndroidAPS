@@ -9,6 +9,7 @@
     <string name="eopatch_ble_status">État BT</string>
     <string name="eopatch_serial_number">Numéro de série</string>
     <string name="eopatch_expiration_time">Date d\'expiration</string>
+    <string name="eopatch_not_activated">Non activé</string>
     <string name="eopatch_base_basal_rate">Débit de Basal</string>
     <string name="eopatch_temp_basal_rate">Débit de Basal Temp.</string>
     <string name="invalid_basal_rate">Le basal du profil est inférieur à 0,05 U/h. EOPatch a une quantité d\'injection minimale de 0,05 U. Veuillez réessayer après avoir défini des débits de basal supérieurs à la quantité d\'injection minimale.</string>
@@ -37,17 +38,21 @@
     <string name="patch_wake_up">Remplissage de l\'insuline</string>
     <string name="patch_wake_up_desc_1">Remplissez le nouveau Patch d\'insuline à température ambiante. Vérifiez l\'angle de seringue.</string>
     <string name="patch_wake_up_desc_2">1 bip pour vérifier.</string>
+    <string name="patch_wake_up_pairing_info">Lors de l\'appairage, deux fenêtres Android apparaîtront. Vous devez confirmer les deux pour terminer l\'appairage Bluetooth.</string>
     <string name="patch_start_pairing">Démarrer l\'appairage</string>
     <string name="patch_connect_new">Appairage du Patch</string>
     <string name="patch_connect_new_desc">Le nouveau Patch est en cours d\'appairage.\Maintenez le Patch et le Smartphone le plus près possible</string>
     <string name="patch_remove_needle_cap">Préparez-vous à coller le Patch</string>
     <string name="patch_remove_needle_cap_desc_1">Retirez le ruban adhésif, puis appuyez sur «Suivant».</string>
+    <string name="patch_remove_needle_cap_desc_2">Si une aiguille s\'accroche, appuyez sur «Abandonner».</string>
+    <string name="patch_remove_needle_cap_desc_3">Si le patch est mouillé ou sale, ou que son ruban adhésif est plié, appuyez sur « Abandonner».</string>
     <string name="patch_remove_protection_tape">Coller le Patch</string>
     <string name="patch_remove_protection_tape_desc_1">Nettoyez et séchez le site d\'application, puis collez le patch sur la peau.</string>
     <string name="patch_remove_protection_tape_desc_2">Vérifiez le site de la perfusion et appuyez sur «Démarrer la vérification de sécurité».</string>
     <string name="patch_start_safety_check">Démarrer la vérification de sécurité</string>
     <string name="patch_safety_check">Contrôle de sécurité…</string>
     <string name="patch_safety_check_desc_1">Cela prend environ 30 secondes.</string>
+    <string name="patch_safety_check_desc_2">Pour une utilisation sûre, n\'enlevez pas le cache de l\'Aiguille tant que le contrôle de sécurité n\'est pas terminé !</string>
     <string name="patch_rotate_knob">Insertion de l\'aiguille</string>
     <string name="patch_rotate_knob_desc_1">Faire pivoter le levier d\'action de l\'Aiguille de plus de 100° pour insérer l\'aiguille et ensuite faire pivoter complètement pour l\'enlever</string>
     <string name="patch_rotate_knob_desc_2">Vérifiez s\'il y a 1 bip puis appuyez sur «Suivant».</string>
@@ -59,6 +64,7 @@
     <string name="patch_activate_reminder_desc">L\'activation du Patch n\'est pas terminée.\n Continuer.</string>
     <string name="patch_communication_check_helper_1">Rapprochez votre appareil du patch.</string>
     <string name="patch_communication_check_helper_2">Veuillez vous déplacer à un autre endroit et réessayer.</string>
+    <string name="patch_safety_check_failed_desc">La vérification de sécurité a échoué. Veuillez réessayer.</string>
     <string name="patch_communication_failed">Erreur de communication</string>
     <string name="patch_communication_succeed">Communication réussie</string>
     <string name="patch_communication_succeed_message">Connecté avec le Patch.</string>
@@ -77,9 +83,17 @@
     <string name="needle_insertion_error_3">Appuyez sur « Supprimer » pour désactiver le Patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Durée de suspension Basal</string>
     <string name="string_resume_insulin_delivery_title">Reprendre l\'injection d\'insuline</string>
+    <string name="string_resume_insulin_delivery_message">Fin de suspension de l\'insuline.\nAppuyez sur \"Confirmer\" pour reprendre l\'injection d\'insuline.\n\nL\'injection de l\'insuline ne reprendra que si vous appuyez sur \"Confirmer\".\nSi vous ne cliquez pas sur \"Confirmer\", vous pourriez développer une hyperglycémie.</string>
     <string name="string_suspended_insulin_delivery_message">Injection d\'insuline suspendue.</string>
     <string name="string_resumed_insulin_delivery_message">L\'injection de l\'insuline redémarrée.</string>
     <string name="string_temp_basal_remained_hhmm">temps restant: %1$s:%2$s</string>
+    <string name="string_pause_failed">La pause a échouée.</string>
     <string name="string_resume_failed">Échec de la reprise.</string>
+    <string name="wizard_exit_activation_warning">Quitter l\'assistant d\'activation ? Le Patch peut être dans un état incomplet et peut nécessiter un nouveau patch.</string>
+    <string name="wizard_exit_deactivation_warning">Quitter l\'assistant de désactivation ? Le Patch peut rester actif et continuer à injecter de l\'insuline.</string>
+    <string name="patch_force_reset">Forcer la réinitialisation</string>
+    <string name="patch_force_reset_confirm">Cela effacera localement l\'état du Patch sans lui envoyer de commandes. À utiliser uniquement si la désactivation normale échoue. Le Patch continuera à injecter de l\'insuline jusqu\'à ce que sa batterie soit épuisée ou qu\'il soit éteint manuellement.</string>
     <!-- Permission rationales -->
+    <string name="permission_exact_alarm_title">Alarmes exactes</string>
+    <string name="permission_exact_alarm_description">L\'application a besoin d\'une autorisation pour planifier les alarmes exactes pour la gestion du Patch</string>
 </resources>

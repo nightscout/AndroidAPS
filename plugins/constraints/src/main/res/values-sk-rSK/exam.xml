@@ -196,4 +196,20 @@
     <string name="other_medication_label">Ostatné lieky. Prečítajte si prosím nižšie uvedené prehlásenie a potom zaškrtnite políčko pre prijatie prehlásenia.</string>
     <string name="other_medication_text">AAPS znižuje bazály, alebo pozastavuje podávanie inzulínu, aby sa zvýšila hladina cukru v krvi. Lieky zo skupiny inhibítorov SGLT2 (gliflozíny) môžu zabrániť očakávanému zvýšeniu hodnoty glykémie a tak môžu produkovať nebezpečný nedostatok inzulínu (ketoacidózu).
 \nBežné značky sú: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\n. Týmto sľubujem, že tieto lieky neberiem pri používaní AAPS, alebo deaktivujem uzavretý okruh pred užívaním týchto liekov.</string>
+    <string name="concentration_feature_label">Správa koncentrácie inzulínu</string>
+    <string name="u200_with_profile">Kým AAPS začal podporovať koncentrácie inzulínu, užívatelia používali U200 nastavením 50% profilu, aby rozdelili všetky hodnoty na polovicu. Ktoré odpovede sú v tomto nastavení pravdivé?</string>
+    <string name="u200_with_profile_reports">Moja interná databáza AAPS a reporty z NS sú chybné, všetky hodnoty (bolusy, baz. dávky, CDD) musia byť vynásobené 2, aby ukazovali skutočný stav, najmä pre lékarov a zdravotnícky tím.</string>
+    <string name="u200_with_profile_pens">Nemusím riešiť žiadny prepočet medzi AAPS a perom, pokiaľ použijem pero U200 k podaniu externého bolusu.</string>
+    <string name="u200_with_profile_pens2">Nech už je pre externý bolus použité akékoľvek pero (U100 nebo U200), musím pre každý externý bolus prepočítať medzi množstvom vypočítaným AAPS a množstvom, ktoré si na pere zvolím.</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/cs/latest/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Používali ste provizorné riešenie s 50% profilom a U200 a chcete prejsť na novú funkciu Koncentrácia inzulínu. Ktoré odpovede sú pravdivé?</string>
+    <string name="switch_u200_profile_any_time">Môžem prepnúť kedykoľvek, v pumpe už mám správny inzulín U200.</string>
+    <string name="switch_u200_profile_ps">Musím si pripraviť dvakrát agresivnejší profil (200 % oproti súčasnému profilu) a tento nový profil synchronizovať po ďalšej výmene Patchu/zásobníka, keď je zvolený inzulín U200.</string>
+    <string name="switch_u200_profile_dynisf">Musím vypnúť funkciu DynISF aspoň na týždeň, aby CDD bola dokonale konzistentná so skutočnou hodnotou CDD vypočítanou v medzinárodných jednotkách.</string>
+    <string name="switch_u200_profile_mental">Po prepnutí budem musieť byť niekoľko týždňov veľmi opatrný, aby si môj mozok zvykol premýšľať v medzinárodných jednotkách pri bolusoch, bazálnych dávkach a hodnôt CDD.</string>
+    <string name="switch_u100_u200">Aktuálne používate U100 a plánujete prejsť na inú koncentráciu pomocou novej funkcie Koncentrácia inzulínu. Čo by ste mali urobiť?</string>
+    <string name="switch_u100_u200_profile">Musím upraviť svoj profil.</string>
+    <string name="switch_u100_u200_tube">Nemal by som nikdy používať uživateľské rozhranie pumpy (pri pumpách s hadičkou) k podávaniu bolusov.</string>
+    <string name="switch_u100_u200_pen">Aj po prepnutí musím riešiť prepočet medzi AAPS a externými bolusmi perom.</string>
+    <string name="switch_u100_u200_change">Koncentráciu inzulínu je možné prepnúť iba pri výmene inzulínu v zásobníku alebo pri výmene Patchu/Podu.</string>
 </resources>

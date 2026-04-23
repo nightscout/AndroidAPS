@@ -203,6 +203,7 @@
     <string name="pref_title_half_basal_exercise_target">Țină exercițiu, înjumătățire exercițiu</string>
     <string name="half_basal_exercise_target_summary">Setat la un număr, spre exemplu 160, înseamnă că atunci când Ținta Temporară este de 160 mg/dL și Ținta Temporară ridicată crește sensibilitatea = adevărat, se execută 50%% bazală la acest nivel (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Pragul procentual IOB</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procentul de maxIOB peste care SMB-urile sunt dezactivate.\nValoarea implicită: 100%\nCu 100% această caracteristică este de fapt dezactivată.</string>
     <string name="pref_title_dynisf_adjustment_factor">Factor de ajustare DynamicISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Factor de ajustare pentru DynamicISF. Setează peste 100% pentru doze de corecție mai agresive, și sub 100% pentru corecții mai puțin agresive.</string>
     <string name="pref_title_autosens_period">Perioadă Autosens</string>
@@ -357,6 +358,7 @@
     <string name="pref_title_ama_max_iob">IOB maxim pentru SMB</string>
     <string name="openapsma_max_iob_summary">Această valoare se numește Max IOB în contextul OpenAPS\nAceasta este insulina maximă în [U] pe care APS o poate livra imediat.</string>
     <string name="pref_title_max_daily_multiplier">Multiplicator maxim de siguranță zilnic</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3 Aceasta este o limită cheie de siguranță OpenAPS. Ceea ce face este să limiteze bazalele dumneavoastră la a fi de 3x (pentru această persoană) din cea mai mare rată bazală. Probabil că nu va trebui să schimbaţi acest lucru, dar trebuie să ştiți că asta se discută despre \"3x max zilnic; 4x curent” pentru plafoanele de siguranță.</string>
     <string name="pref_title_current_basal_multiplier">Multiplicator de siguranță pentru bazala curentă</string>
     <string name="pref_title_bolus_snooze_divisor">Divizor DIA pentru amânarea alertei de bolus</string>
     <string name="pref_title_ama_min_5m_carbs_impact">Impactul minim al carbohidraților pe 5 minute (Advanced Meal Assist - AMA)</string>

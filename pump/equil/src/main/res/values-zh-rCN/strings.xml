@@ -19,7 +19,7 @@
     <string name="equil_title_serial">设备配对</string>
     <string name="equil_title_fill">充盈/填充</string>
     <string name="equil_title_attach">安装泵</string>
-    <string name="equil_title_air">套管预充</string>
+    <string name="equil_title_air">导管预充</string>
     <string name="equil_title_unpair_detach">移除泵</string>
     <string name="equil_title_unpair_confirm">确认取消配对</string>
     <string name="equil_title_history_events">历史事件</string>
@@ -141,7 +141,7 @@
     <string name="equil_insert">请填充储药器，直到针尖有胰岛素滴落</string>
     <string name="equil_insert2">泵不能在泵地底板上。</string>
     <string name="equil_attach">请将泵附在底板上</string>
-    <string name="equil_hint2">填充套管</string>
+    <string name="equil_hint2">填充导管</string>
     <string name="equil_pump_updated">泵已更新</string>
     <string name="equil_replace_reservoir">储药器已空，请更换储药器</string>
     <string name="error_mustbe6hexadidits">必须是 6 个字符，ABCDEF0123456789</string>

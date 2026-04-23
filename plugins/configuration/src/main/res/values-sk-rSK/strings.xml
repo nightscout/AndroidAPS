@@ -31,6 +31,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svoj RileyLink nižšie. Po výbere RileyLinku bude možné pokračovať v nastavení, akonáhle je stav RileyLinku \"Pripojené\". Táto akcia môže chvíľku trvať.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
+    <string name="open_objectives">Otvoriť Ciele</string>
     <string name="setupwizard_permissions">Povolenia</string>
     <string name="setupwizard_profile_info">Vytvorte si profil s Vašimi bazálnymi dávkami (BR), sacharidovo-inzulínovými prevodmi (IC), cistlivosťami (ISF) a cieľovými hodnotami (TT). Neskôr môžete pridať viacero profilov.</string>
     <string name="setupwizard_permissions_info">AAPS potrebuje prístup k úložisku a povolenia na to, aby pracovalo správne. Prosím udeľte potrebné povolenia nižšie.</string>

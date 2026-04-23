@@ -175,6 +175,7 @@
     <string name="a11y_low">basso</string>
     <string name="average">Media</string>
     <string name="tir">Tempo nell’intervallo</string>
+    <string name="remove_label">Rimuovi</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="activate_insulin">Attiva insulina</string>
     <string name="reset">Reset</string>
@@ -231,6 +232,7 @@
     <string name="not_available_full">Non disponibile</string>
     <string name="engineering_mode_enabled">Engineering mode abilitata</string>
     <string name="back">Indietro</string>
+    <string name="next">Prossimo</string>
     <string name="show_hide_records">Nascondi record di loop</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
@@ -334,6 +336,7 @@
     <string name="glucosetype_finger">Dito</string>
     <string name="glucosetype_sensor">Sensore</string>
     <string name="manual">Manuale</string>
+    <string name="unknown">Sconosciuto</string>
     <string name="eatingsoon">Pasto a breve</string>
     <string name="hypo">Ipoglicemia</string>
     <string name="activity">Attività</string>
@@ -543,6 +546,8 @@
     <string name="set_profile">IMPOSTA PROFILO</string>
     <string name="set_user_settings">CONFIGURA IMPOSTAZIONI UTENTE</string>
     <string name="smb_bolus_u">BOLO SMB %1$.2f U</string>
+    <string name="start_pump">Avvia micro</string>
+    <string name="stop_pump">Stoppa micro</string>
     <string name="temp_basal_absolute">BASALE TEMPORANEA %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">BASALE TEMPORANEA %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFICATION</string>
@@ -569,7 +574,6 @@
     <string name="bolus_advisor">Consiglio bolo</string>
     <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed ricevere un promemoria quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. I COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="slowabsorptiondetected_plain">!!!!! Rilevato assorbimento lento dei carboidrati: %1$d%% del tempo. Ricontrolla il tuo calcolo. I COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</string>
     <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
@@ -598,6 +602,7 @@
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="carb_equal_zero_no_action">CHO = 0. Nessuna azione intrapresa!</string>
     <string name="bolus_equal_zero_no_action">Bolo = 0. Nessuna azione intrapresa!</string>
+    <string name="wizard_no_insulin_required">Insulina non necessaria</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
     <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
@@ -653,6 +658,7 @@
     <string name="reading_pump_history">Lettura storico micro</string>
     <string name="password_cleared">Password cancellata!</string>
     <string name="pairing">Associazione</string>
+    <string name="initializing">Inizializzazione…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Avviso</string>
     <string name="retry" comment="Button label to retry a failed operation">Riprova</string>
@@ -671,7 +677,6 @@
     <string name="confirmation">Conferma</string>
     <string name="message">Messaggio</string>
     <string name="ok">OK</string>
-    <string name="next">Prossimo</string>
     <string name="cancel">Annulla</string>
     <string name="dismiss">Cancella</string>
     <string name="yes">Sì</string>

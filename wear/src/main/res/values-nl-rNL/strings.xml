@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS(Cirkel)</string>
     <string name="label_watchface_digital_style">AAPS(DigitaleStijl)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
-    <string name="label_actions_tile">AAPS(Acties)</string>
-    <string name="label_temp_target_tile">AAPS(Tijdelijk Streefdoel)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
-    <string name="label_user_action_tile">AAPS(Gebruikersactie)</string>
     <string name="msg_warning_sync">Geen gegevens ontvangen sinds %1$s! Controleer of AAPS op de telefoon gegevens verstuurt naar horloge</string>
     <string name="msg_warning_old">AAPS gegevens zijn %1$s oud! Controleer je sensor, xDrip+, NS, AAPS instellingen of andere!</string>
     <string name="pref_vibrate_on_bolus">Trillen bij bolus</string>

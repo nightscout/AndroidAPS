@@ -98,6 +98,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Son pour les notifications DBT incertains activé</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Son pour les notifications SMB incertains activé</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Son pour les notifications bolus incertains activé</string>
+    <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Son activé en cas de notification de pause d\'injection</string>
     <string name="omnipod_dash_use_bonding">Appairer BT pour Android 15</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Pas de Pod actif</string>
@@ -133,9 +134,15 @@
     <string name="omnipod_common_cmd_resume_delivery">Reprendre l\'injection</string>
     <string name="omnipod_common_cmd_cancel_tbr">Annuler DBT (par l\'utilisateur)</string>
     <string name="omnipod_common_cmd_get_pod_info">Obtenir infos Pod</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Définir les Faux DBT suspendus</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Annuler les Faux DBT suspendus</string>
+    <string name="omnipod_common_cmd_split_tbr">Diviser DBT</string>
     <string name="omnipod_common_cmd_play_test_beep">Tester bips</string>
     <string name="omnipod_common_cmd_unknown_entry">Entrée inconnue</string>
+    <string name="omnipod_common_disable_suspend_alerts" comment="Custom command label for disabling suspend alerts">Désactiver Suspendre les alertes</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Rappel Terminer Configuration</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">À l\'instant</string>

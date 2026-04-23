@@ -13,6 +13,7 @@
     <string name="patch_not_active">貼片未啟動</string>
     <string name="pump_setting_failed">設定使用者選項到幫浦失敗！</string>
     <string name="pump_sync_error">同步幫浦歷史時發生錯誤，有一筆紀錄已被跳過。請檢查治療標籤以確認是否正確同步了胰島素。如果錯誤持續發生，請更換貼片或幫浦底座。</string>
+    <string name="patch_reset_after_primed_error">在預充後偵測到貼片已重置！請移除該貼片並開始新的貼片。</string>
     <!-- overview fragment -->
     <string name="last_connection_label">上次連線</string>
     <string name="active_bolus_label">啟用中的胰島素劑量</string>

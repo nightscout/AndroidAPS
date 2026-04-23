@@ -3,10 +3,10 @@
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
-    <string name="label_actions_tile">AAPS(Actions)</string>
-    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
-    <string name="label_user_action_tile">AAPS(User Action)</string>
+    <string name="label_actions_tile">Actions</string>
+    <string name="label_temp_target_tile">Temp Target</string>
+    <string name="label_quick_wizard_tile">Quick Wizard</string>
+    <string name="label_user_action_tile">User Action</string>
     <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
     <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>

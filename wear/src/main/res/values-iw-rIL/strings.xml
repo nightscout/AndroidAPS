@@ -2,10 +2,6 @@
 <resources>
     <string name="label_watchface_circle">AAPS (עיגול)</string>
     <string name="label_watchface_digital_style">AAPS (דיגיטלי)</string>
-    <string name="label_actions_tile">AAPS (פעולות)</string>
-    <string name="label_temp_target_tile">AAPS (מטרה זמנית)</string>
-    <string name="label_quick_wizard_tile">AAPS (אשף מהיר)</string>
-    <string name="label_user_action_tile">AAPS(פעולת משתמש)</string>
     <string name="msg_warning_sync">לא התקבלו נתונים מאז %1$s! בדקו אם AAPS בטלפון שולח נתונים לשעון</string>
     <string name="msg_warning_old">נתוני AAPS מלפני %1$s! בדקו את החיישן, הגדרות xDrip, NS, AAPS או אחר!</string>
     <string name="pref_vibrate_on_bolus">רטט במתן בולוס</string>

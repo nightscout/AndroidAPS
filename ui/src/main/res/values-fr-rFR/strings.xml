@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="carbs_constraint_applied">Restriction des glucides appliquée</string>
+    <string name="carbs_constraint_applied">Restriction de bolus appliquée</string>
     <string name="temp_target_short">CT</string>
     <string name="start_activity_tt">Début Activités</string>
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
@@ -206,6 +206,7 @@
     <string name="quick_launch_selected_actions">Actions sélectionnées</string>
     <string name="quick_launch_no_dynamic_items">Aucun élément disponible</string>
     <string name="quick_launch_category_treatment">Traitement</string>
+    <string name="quick_launch_category_care">Careportal</string>
     <string name="quick_launch_category_profile">Profil</string>
     <string name="quick_launch_category_temp_target">Modèles Cibles Temp</string>
     <string name="quick_launch_category_quick_wizard">Assistant rapide</string>

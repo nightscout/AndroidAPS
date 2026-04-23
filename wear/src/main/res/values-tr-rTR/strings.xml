@@ -3,10 +3,6 @@
     <string name="label_watchface_circle">AAPS(Daire)</string>
     <string name="label_watchface_digital_style">AAPS(DijitalStil)</string>
     <string name="label_watchface_custom">AAPS(Özel)</string>
-    <string name="label_actions_tile">AAPS(Eylemler)</string>
-    <string name="label_temp_target_tile">AAPS(Geçici Hedef)</string>
-    <string name="label_quick_wizard_tile">AAPS(Hızlı Asistan)</string>
-    <string name="label_user_action_tile">AAPS(Kullanıcı Eylemi)</string>
     <string name="msg_warning_sync">%1$s\' den bu yana veri alınmıyor! Telefondaki AAPS \' nin veri gönderip göndermediğini kontrol edin</string>
     <string name="msg_warning_old">AAPS verileri %1$s eski! Sensörleri denetleyin, xDrip+, NS, AAPS yapılandırma ya da diğerleri!</string>
     <string name="pref_vibrate_on_bolus">Bolus\'ta Titreşim</string>

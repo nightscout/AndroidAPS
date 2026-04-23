@@ -175,6 +175,7 @@
     <string name="a11y_low">nízka</string>
     <string name="average">Priemer</string>
     <string name="tir">Čas v rozsahu</string>
+    <string name="remove_label">Odstrániť</string>
     <string name="activate_profile">Aktivovať profil</string>
     <string name="activate_insulin">Aktivuj inzulín</string>
     <string name="reset">Resetovať</string>
@@ -231,6 +232,7 @@
     <string name="not_available_full">Nedostupný</string>
     <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
     <string name="back">Späť</string>
+    <string name="next">Ďalej</string>
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
@@ -300,6 +302,65 @@
     <string name="temporary_target">Dočasný cieľ</string>
     <string name="temporary_targets">Dočasné ciele</string>
     <string name="running_mode">Režim spustenia</string>
+    <string name="scene">Scéna</string>
+    <string name="scenes">Scény</string>
+    <string name="scene_desc">Predvoľby situácií — aktivujte viac akcií naraz</string>
+    <string name="scene_activate">Aktivovať</string>
+    <string name="scene_deactivate">Ukončiť scénu</string>
+    <string name="scene_active">Aktívna</string>
+    <string name="scene_ended">Scéna ukončená</string>
+    <string name="scene_confirm_activate">Aktivovať scénu \"%1$s\"?</string>
+    <string name="scene_confirm_deactivate">Ukončiť scénu \"%1$s\" a vrátiť zmeny?</string>
+    <string name="scene_conflict_active_tt">Aktívny dočasný cieľ bude nahradený</string>
+    <string name="scene_conflict_active_profile">Aktívne prepnutie profilu bude nahradené</string>
+    <string name="scene_conflict_active_scene">Aktivna scéna \"%1$s\" bude najskôr ukončená</string>
+    <string name="scene_action_tt">Dočasný cieľ: %1$s</string>
+    <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
+    <string name="scene_action_smb_on">Povoliť SMB</string>
+    <string name="scene_action_smb_off">Zakázať SMB</string>
+    <string name="scene_action_loop_mode">Režim uzavretého okruhu: %1$s</string>
+    <string name="scene_action_careportal">Log: %1$s</string>
+    <string name="scene_time_remaining">zostáva %1$s</string>
+    <string name="scene_management">Správa scén</string>
+    <string name="scene_management_desc">Vytvorenie, úprava a správa scén</string>
+    <string name="scene_action_count">%1$d akcií</string>
+    <string name="scene_start_from_template">Začnite od šablóny</string>
+    <string name="scene_editor_reason">Dôvod</string>
+    <string name="scene_editor_target">Cieľ</string>
+    <string name="scene_editor_tt_preset">Predvoľba DC</string>
+    <string name="scene_editor_no_tt_presets">Žiadné predvoľby DC nie sú nastavené</string>
+    <string name="scene_editor_select_tt_preset">Vyberte predvoľbu</string>
+    <string name="scene_editor_percentage">Percento</string>
+    <string name="scene_editor_profile">Profil</string>
+    <string name="scene_editor_keep_current_profile">-- Zachovať súčasnú --</string>
+    <string name="scene_editor_mode">Režim</string>
+    <string name="scene_editor_event_type">Typ udalosti</string>
+    <string name="scene_editor_note">Poznámka</string>
+    <string name="scene_icon">Ikona</string>
+    <string name="scene_editor_enabled">Povolené</string>
+    <string name="scene_editor_disabled">Zakázané</string>
+    <string name="scene_summary">%1$d akcií, %2$s</string>
+    <string name="scene_some_actions_failed">Niektoré akcie zlyhali</string>
+    <string name="scene_no_active">Žiadna aktívna scéna</string>
+    <string name="scene_some_reverts_failed">Niektoré návraty akcií zlyhali</string>
+    <string name="scene_no_profile_store">Nie je k dispozícii úložisko profilov</string>
+    <string name="scene_no_actions">Scéna nemá žiadne akcie</string>
+    <string name="scene_profile_not_found">Profil \"%1$s\" nebol nájdený</string>
+    <string name="scene_revert_tt">Zrušiť dočasný cieľ</string>
+    <string name="scene_revert_profile">Vrátiť profil na %1$s %2$d%%</string>
+    <string name="scene_revert_smb_on">Znovu povoliť SMB</string>
+    <string name="scene_revert_smb_off">Zakázať SMB</string>
+    <string name="scene_revert_loop_mode">Zrušiť prepísanie režimu uzavretého okruhu</string>
+    <string name="scene_careportal_no_revert">Záznamy portálu starostlivosti se nevrátia</string>
+    <string name="careportal_sickness">Choroba</string>
+    <string name="careportal_stress">Stres</string>
+    <string name="careportal_pre_period">Pred menštruáciou</string>
+    <string name="careportal_alcohol">Alkohol</string>
+    <string name="careportal_cortisone">Kortizón</string>
+    <string name="careportal_feeling_low">Pocit Hypo</string>
+    <string name="careportal_feeling_high">Pocit Hyper</string>
+    <string name="careportal_falling_asleep">Zaspávanie</string>
+    <string name="careportal_waking_up">Prebúdzanie</string>
     <string name="careportal_temporarytargetvalue">Hodnota dočasného cieľa</string>
     <string name="careportal_temporarytargetcancel">Zrušiť dočasný cieľ</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
@@ -334,6 +395,7 @@
     <string name="glucosetype_finger">Prst</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Iný</string>
+    <string name="unknown">Neznáme</string>
     <string name="eatingsoon">Pred jedlom</string>
     <string name="hypo">Hypoglykémia</string>
     <string name="activity">Aktivita</string>
@@ -503,6 +565,8 @@
     <string name="uel_running_mode">REŽIM UZAVRETÉHO OKRUHU</string>
     <string name="uel_running_mode_removed">REŽIM UZAVRETÉHO OKRUHU ODSTRÁNENÝ</string>
     <string name="uel_running_mode_updarted">REŽIM UZAVRETÉHO OKRUHU AKTUALIZOVANÝ</string>
+    <string name="uel_scene_activated">SCÉNA AKTIVOVANÁ</string>
+    <string name="uel_scene_deactivated">SCÉNA DEAKTIVOVANÁ</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Dolný cieľ profilu</string>
     <string name="profile_high_target">Horný cieľ profilu</string>
@@ -543,6 +607,8 @@
     <string name="set_profile">NASTAVIŤ PROFIL</string>
     <string name="set_user_settings">NASTAVIŤ POUŽ. NASTAVENIA</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
+    <string name="start_pump">Spustiť pumpu</string>
+    <string name="stop_pump">Zastaviť pumpu</string>
     <string name="temp_basal_absolute">DOČAS. BAZÁL %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">DOČAS. BAZÁL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT NASTAVIŤ TBR CEZ OZNÁMENIE</string>
@@ -569,7 +635,6 @@
     <string name="bolus_advisor">Bolusový poradca</string>
     <string name="bolus_advisor_message">Máte vysokú glykémiu. Namiesto jedla doporučujeme počkať na lepšiu glykémiu a pripomenúť, keď bude čas na jedlo. Prajete si poslať korekčný bolus a pripomenúť, keď bude čas na jedlo? V tomto prípade nebudú zapísané žiadne sacharidy, a neskôr musíte opäť spustiť kalkulačku, akonáhle vám to pripomenieme.</string>
     <string name="cobvsiob">COB vs. IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
     <string name="slowabsorptiondetected_plain">!!!!! Detekovaná pomalá absorbcia sacharidov: %1$d%% času. Radšej dvakrát skontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</string>
     <string name="bolus_constraint_applied_warn">Použité obmedzenie bolusu: %1$.2f U na %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
@@ -598,6 +663,7 @@
     <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
     <string name="carb_equal_zero_no_action">Sacharidy = 0. Žiadna akcia!</string>
     <string name="bolus_equal_zero_no_action">Bolus = 0. Žiadna akcia!</string>
+    <string name="wizard_no_insulin_required">Nie je požadovaný žiadny inzulín</string>
     <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
     <string name="wizard_no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="wizard_no_cob">Neznáme COB! Chýbajú glykémie, alebo bola práve reštartovaná aplikácia?</string>
@@ -653,6 +719,7 @@
     <string name="reading_pump_history">Načítavam históriu z pumpy</string>
     <string name="password_cleared">Heslo vymazané!</string>
     <string name="pairing">Párovanie</string>
+    <string name="initializing">Inicializácia…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Upozornenie</string>
     <string name="retry" comment="Button label to retry a failed operation">Opakovať</string>
@@ -671,7 +738,6 @@
     <string name="confirmation">Potvrdenie</string>
     <string name="message">Správa</string>
     <string name="ok">OK</string>
-    <string name="next">Ďalej</string>
     <string name="cancel">Zrušiť</string>
     <string name="dismiss">Zamietnuť</string>
     <string name="yes">Áno</string>
