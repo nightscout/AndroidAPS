@@ -362,7 +362,6 @@
     <string name="bolus_advisor">Assistente de bolus</string>
     <string name="bolus_advisor_message">Sua glicemia está alta. Em vez de comer agora, é recomendado esperar por uma glicemia melhor. Quer fazer um bolus de correção agora e ser lembrado de quando for hora de comer? Neste caso, nenhum carboidrato será registrado e você deverá usar o assistente novamente quando lembrarmos você.</string>
     <string name="cobvsiob">CA vs IA</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="bolus_constraint_applied_warn">Restrição de bólus aplicada: %1$.2f U para %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus será apenas registrado (não administrado pela bomba)</string>
     <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>
