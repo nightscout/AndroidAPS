@@ -44,7 +44,8 @@ class AidexPlugin @Inject constructor(
     ownPreferences = emptyList(),
     aapsLogger, rh,preferences
 ), BgSource {
-
+    //用于存储传感器电量（0-100），默认 -1 表示不支持
+    override var sensorBatteryLevel: Int = -1
     // Allow only for pumpcontrol or dev & engineering_mode
     override fun specialEnableCondition(): Boolean {
         // return config.APS.not() || config.isDev() && config.isEngineeringMode()
@@ -82,6 +83,10 @@ class AidexPlugin @Inject constructor(
 
             val bgValueTarget = if (bgType.equals("mg/dl")) bgValue else bgValue * Constants.MMOLL_TO_MGDL
 
+            val battery = bundle.getInt(Intents.AIDEX_SENSOR_BATTERY, -1)
+            if (battery != -1) {
+                aidexPlugin.sensorBatteryLevel = battery // 更新全局状态
+            }
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
 
             glucoseValues += GV(

@@ -65,5 +65,8 @@ interface Intents {
         var AIDEX_TIMESTAMP = "com.microtechmd.cgms.aidex.Time" // epoch in ms
         var AIDEX_TRANSMITTER_SN = "com.microtechmd.cgms.aidex.TransmitterSerialNumber"
         var AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
+
+        var AIDEX_SENSOR_BATTERY = "com.microtechmd.cgms.aidex.SensorBattery"
+
     }
 }
