@@ -14,6 +14,10 @@
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
     <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
+
+    <string name="aidex">微泰CGM</string>
+    <string name="aidex_short">微泰</string>
+    <string name="description_source_aidex">从微泰app 接收血糖值</string>
     <!-- Patched Syai Tag App -->
     <!-- Patched SI App -->
     <!-- Patched Sino App -->
