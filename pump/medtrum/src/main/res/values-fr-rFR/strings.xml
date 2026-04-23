@@ -13,6 +13,7 @@
     <string name="patch_not_active">Patch non activé</string>
     <string name="pump_setting_failed">La configuration des paramètres de la pompe a échoué!</string>
     <string name="pump_sync_error">Erreur lors de la synchronisation de l\'historique de la pompe, un enregistrement a été ignoré. Vérifiez l\'onglet de traitement pour vérifier si le bolus est correctement synchronisé. Mettez en veille et si l\'erreur continue d\'apparaître, changer le patch ou la pompe.</string>
+    <string name="patch_reset_after_primed_error">Le Patch a été réinitialisé après l\'amorçage ! Supprimez le Patch et démarrez un nouveau Patch.</string>
     <!-- overview fragment -->
     <string name="last_connection_label">Dernière connexion</string>
     <string name="active_bolus_label">Bolus actif</string>
@@ -53,6 +54,7 @@
     <string name="retry">Réessayer</string>
     <string name="step_prepare_patch">Activer le Patch</string>
     <string name="step_prepare_patch_connect">Connecter et remplir</string>
+    <string name="step_select_insulin">Sélectionner l\'insuline</string>
     <string name="step_prime">Amorcer</string>
     <string name="step_priming">Amorçage</string>
     <string name="step_priming_complete">Amorçage terminé</string>
@@ -95,8 +97,17 @@
     <!-- settings-->
     <string name="sn_input_title">Numéro de série</string>
     <string name="sn_input_invalid">Numéro de série invalide !</string>
+    <string name="change_sn">Changer</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
+    <string name="alarm_setting_light_vibrate_beep">Lumière, vibreur et bip</string>
+    <string name="alarm_setting_light_vibrate">Lumière et vibreur</string>
+    <string name="alarm_setting_light_beep">Lumière et bip</string>
+    <string name="alarm_setting_light">Lumière</string>
+    <string name="alarm_setting_vibrate_beep">Vibreur et bip</string>
+    <string name="alarm_setting_vibrate">Vibreur</string>
+    <string name="alarm_setting_beep">Bip</string>
+    <string name="alarm_setting_silent">Silencieux</string>
     <string name="pump_warning_notification_title">Notification sur l\'alerte pompe</string>
     <string name="pump_warning_notification_summary">Afficher une notification sur les avertissements non critiques de la pompe : pile faible, réservoir faible (20 unités) et expire bientôt. Il est recommandé de laisser activé lorsque les alarmes de la pompe sont réglées sur silencieux.</string>
     <string name="pump_warning_expiry_hour_title">Avertissement d\'expiration de la pompe [hours]</string>
