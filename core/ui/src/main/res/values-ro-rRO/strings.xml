@@ -231,6 +231,7 @@
     <string name="not_available_full">Indisponibil</string>
     <string name="engineering_mode_enabled">Mod inginer activat</string>
     <string name="back">Înapoi</string>
+    <string name="next">Înainte</string>
     <string name="show_hide_records">Ascundeți înregistrările buclei</string>
     <!--    Protection-->
     <string name="wrongpassword">Parola greșită</string>
@@ -671,7 +672,6 @@
     <string name="confirmation">Confirmare</string>
     <string name="message">Mesaj</string>
     <string name="ok">OK</string>
-    <string name="next">Înainte</string>
     <string name="cancel">Renunțați</string>
     <string name="dismiss">Renunțați</string>
     <string name="yes">Da</string>
