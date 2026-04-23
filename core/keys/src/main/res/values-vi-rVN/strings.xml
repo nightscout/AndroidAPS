@@ -202,6 +202,7 @@
     <string name="pref_title_half_basal_exercise_target">Mục tiêu tập luyện với 50% liều nền</string>
     <string name="half_basal_exercise_target_summary">Đặt thành một số, ví dụ 160, có nghĩa là khi mục tiêu tạm thời là 160 mg/dL và tùy chọn \'High temptarget raises sensitivity=true\' được bật, Aaps sẽ chạy 50%% liều nền ở mức này (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Ngưỡng phần trăm IOB</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Phần trăm của maxIOB mà vượt quá mức đó thì SMB sẽ bị vô hiệu hóa.\nGiá trị mặc định: 100%\nVới 100%, tính năng này thực tế sẽ bị tắt.</string>
     <string name="pref_title_dynisf_adjustment_factor">Hệ số điều chỉnh DynamicISF</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Hệ số điều chỉnh cho DynamicISF. Đặt lớn hơn 100% để có liều hiệu chỉnh mạnh hơn, và nhỏ hơn 100% để có liều hiệu chỉnh nhẹ hơn.</string>
     <string name="pref_title_autosens_period">Khoảng thời gian Autosens</string>
@@ -356,8 +357,11 @@
     <string name="pref_title_ama_max_iob">IOB tối đa cho AMA</string>
     <string name="openapsma_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB.\n Đây là lượng insulin tối đa [U] mà APS có thể đưa vào cùng một lúc.</string>
     <string name="pref_title_max_daily_multiplier">Hệ số an toàn tối đa hằng ngày</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Giá trị mặc định: 3. Đây là một giới hạn an toàn quan trọng của OpenAPS. Thiết lập này giới hạn liều nền tối đa ở mức gấp 3 lần tốc độ liều nền cao nhất của bạn (đối với người này). Bạn có thể sẽ không cần thay đổi giá trị này, nhưng nên biết rằng đây chính là điều được nhắc đến trong giới hạn an toàn “3x tối đa hằng ngày; 4x hiện tại”.</string>
     <string name="pref_title_current_basal_multiplier">Hệ số an toàn của liều nền hiện tại</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Giá trị mặc định: 4. Đây là nửa còn lại của các giới hạn an toàn quan trọng trong OpenAPS, đồng thời là phần còn lại của giới hạn an toàn “3x tối đa hằng ngày; 4x hiện tại”. Điều này có nghĩa là liều nền của bạn, bất kể mức liều nền tối đa được cài trên bơm, sẽ không thể cao hơn số lần này nhân với mức liều nền hiện tại của bạn. Mục đích là để ngăn người dùng rơi vào tình huống nguy hiểm do đặt mức basal tối đa quá cao trước khi hiểu cách thuật toán hoạt động. Một lần nữa, giá trị mặc định là 4x; hầu hết mọi người sẽ không cần điều chỉnh giá trị này mà thay vào đó có nhiều khả năng cần điều chỉnh các cài đặt khác nếu cảm thấy mình thường xuyên chạm tới giới hạn an toàn này.</string>
     <string name="pref_title_bolus_snooze_divisor">Hệ số chia DIA khi hoãn bolus</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Giá trị mặc định: 2\nTạm hoãn bolus sẽ được kích hoạt sau khi bạn tiêm liều bolus cho bữa ăn, để loop không phản ứng ngược bằng cách giảm liều nền tạm thời khi bạn vừa ăn xong. Ví dụ ở đây và cũng là giá trị mặc định là 2; vì vậy với DIA là 3 giờ, tính năng tạm hoãn liều bolus sẽ được giảm dần trong vòng 1,5 giờ (3DIA/2).</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA: ảnh hưởng carbs tối thiểu 5 phút</string>
     <string name="pref_title_smb_min_5m_carbs_impact">SMB: ảnh hưởng carbs tối thiểu 5 phút</string>
     <string name="openapsama_min_5m_carb_impact_summary">Giá trị mặc định: 3,0 (AMA) hoặc 8,0 (SMB). Đây là cài đặt cho mức ảnh hưởng hấp thụ carb mặc định trong mỗi 5 phút. Giá trị mặc định là 3mg/dl/5 phút. Thông số này ảnh hưởng đến tốc độ giảm của COB, và lượng hấp thụ carb được giả định khi tính toán dự đoán đường huyết trong dự kiến, trong trường hợp đường huyết giảm nhiều hơn dự kiến hoặc không tăng như mong đợi.</string>
