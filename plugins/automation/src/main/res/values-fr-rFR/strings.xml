@@ -10,6 +10,7 @@
     <string name="automation_discard_title">Annuler les modifications ?</string>
     <string name="automation_discard_message">La règle est incomplète et ne peut pas être enregistrée. Ignorer vos modifications ?</string>
     <string name="automation_discard_confirm">Annuler</string>
+    <string name="automation_category_time">Temps &amp; planning</string>
     <string name="automation_category_glucose">Glycémie &amp; traitement</string>
     <string name="automation_category_device">État du périphérique</string>
     <string name="automation_category_sensors">Capteurs &amp; connectivité</string>
