@@ -347,9 +347,20 @@
     <string name="scene_no_actions">Scena nu are acțiuni</string>
     <string name="scene_profile_not_found">Profilul \"%1$s\" nu a fost găsit</string>
     <string name="scene_revert_tt">Anulați ținta temporară</string>
-    <string name="scene_revert_profile">Reveniți profilul la %1$s %2$d%%</string>
+    <string name="scene_revert_profile">Restabiliți profilul la %1$s %2$d%%</string>
     <string name="scene_revert_smb_on">Reactivați SMB</string>
     <string name="scene_revert_smb_off">Dezactivați SMB</string>
+    <string name="scene_revert_loop_mode">Anulați suprascrierea modului de buclă</string>
+    <string name="scene_careportal_no_revert">Intrările din CarePortal nu vor fi readuse la starea anterioară</string>
+    <string name="careportal_sickness">Boală</string>
+    <string name="careportal_stress">Stres</string>
+    <string name="careportal_pre_period">Pre-menstruație</string>
+    <string name="careportal_alcohol">Alcool</string>
+    <string name="careportal_cortisone">Cortizon</string>
+    <string name="careportal_feeling_low">Senzație de hipoglicemie</string>
+    <string name="careportal_feeling_high">Senzație de hiperglicemie</string>
+    <string name="careportal_falling_asleep">Somnolență</string>
+    <string name="careportal_waking_up">Trezire</string>
     <string name="careportal_temporarytargetvalue">Valoare țintă temporară</string>
     <string name="careportal_temporarytargetcancel">Oprire țintă temporară</string>
     <string name="boluswizard">Asistent bolusare</string>
@@ -384,6 +395,7 @@
     <string name="glucosetype_finger">Deget</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Manual</string>
+    <string name="unknown">Necunoscut</string>
     <string name="eatingsoon">Mănânc în curând</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Exercițiu fizic</string>
@@ -553,6 +565,8 @@
     <string name="uel_running_mode">MODUL DE RULARE</string>
     <string name="uel_running_mode_removed">MODUL DE RULARE ȘTERS</string>
     <string name="uel_running_mode_updarted">MODUL DE RULARE ACTUALIZAT</string>
+    <string name="uel_scene_activated">SCENĂ ACTIVATĂ</string>
+    <string name="uel_scene_deactivated">SCENĂ DEZACTIVATĂ</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil ținta joasă</string>
     <string name="profile_high_target">Profil țintă ridicată</string>
@@ -593,6 +607,8 @@
     <string name="set_profile">SETARE PROFIL</string>
     <string name="set_user_settings">CONFIGURARE SETĂRI UTILIZATOR</string>
     <string name="smb_bolus_u">BOLUS SMB %1$.2f U</string>
+    <string name="start_pump">Porniți pompa</string>
+    <string name="stop_pump">Opriți pompa</string>
     <string name="temp_basal_absolute">BAZALĂ TEMPORARĂ %1$.2f U/h %2$d min</string>
     <string name="temp_basal_percent">BAZALĂ TEMPORARĂ %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">SETARE RBT INSIGHT CONFORM NOTIFICĂRII</string>
@@ -619,7 +635,6 @@
     <string name="bolus_advisor">Consilier bolus</string>
     <string name="bolus_advisor_message">Ai glicemia crescută. În loc să mănânci acum, este recomandat să aştepţi o glicemie mai bună. Vrei să faci un bolus de corecție acum și să îți reamintesc când este timpul să mănânci? În acest caz, niciun carbohidrat nu va fi înregistrat și trebuie să utilizezi din nou calculatorul de vbolus când îți voi reaminti.</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
     <string name="slowabsorptiondetected_plain">!!!!! S-a detectat o absorbție lentă de carbohidrați: %1$d%% din timp. Verificați de două ori calculul. COB poate fi supraestimat, astfel încât mai multă insulină poate fi administrată !!!!!</string>
     <string name="bolus_constraint_applied_warn">Este aplicată limitarea bolusului %1$.2f U la %2$.2f U</string>
     <string name="bolus_recorded_only">Bolusul va fi doar consemnat (nu va fi livrat de pompă)</string>
@@ -648,6 +663,7 @@
     <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
     <string name="carb_equal_zero_no_action">Carbohidrați = 0. Nicio acțiune efectuată!</string>
     <string name="bolus_equal_zero_no_action">Bolus = 0. Nicio acțiune întreprinsă!</string>
+    <string name="wizard_no_insulin_required">Nu este necesară insulină</string>
     <string name="wizard_no_actual_bg">Nicio glicemie recentă pe care să se bazeze calculul!</string>
     <string name="wizard_no_active_profile">Niciun profil activ stabilit!</string>
     <string name="wizard_no_cob">COB necunoscut! Lipsesc datele de glicemie sau aplicația a fost repornită de curând?</string>
@@ -703,6 +719,7 @@
     <string name="reading_pump_history">Se citește istoricul din pompă</string>
     <string name="password_cleared">Parolă ștearsă!</string>
     <string name="pairing">Asociere</string>
+    <string name="initializing">Se inițializează…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">Avertisment</string>
     <string name="retry" comment="Button label to retry a failed operation">Reîncercați</string>
