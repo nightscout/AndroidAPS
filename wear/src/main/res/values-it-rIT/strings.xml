@@ -3,6 +3,10 @@
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Personalizzato)</string>
+    <string name="label_actions_tile">Azioni</string>
+    <string name="label_temp_target_tile">Target Temporaneo</string>
+    <string name="label_quick_wizard_tile">Procedura Guidata Veloce</string>
+    <string name="label_user_action_tile">Azione utente</string>
     <string name="msg_warning_sync">Nessun dato ricevuto da %1$s! Controlla se AAPS sul telefono invia i dati allo smartwatch</string>
     <string name="msg_warning_old">I dati di AAPS sono vecchi di %1$s ! Controlla il tuo sensore, xDrip+, NS, la configurazione di AAPS o altro!</string>
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
@@ -222,6 +226,8 @@
     <string name="complication_iob_detailed">IoB Dettagliato</string>
     <string name="complication_uploader_phone_battery">Caricamento/Batteria Telefono</string>
     <string name="status_running_mode">Modalità esecuzione</string>
+    <string name="label_running_mode_title">Modalità esecuzione</string>
+    <string name="label_bg_graph_tile">Grafico BG</string>
     <string name="action_running_mode_selected">Modalità di esecuzione richiesta</string>
     <string name="title_activity_disconnect_pump">Disconnetti micro</string>
     <string name="title_activity_suspend_loop">Sospendi loop</string>
