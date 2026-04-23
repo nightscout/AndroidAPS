@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">Qu\'est-ce qu\'il y a de vrai pour le DAI (Durée Action Insuline)?</string>
     <string name="dia_label_exam">Durée d\'Action de l\'Insuline (DAI)</string>
+    <string name="dia_profile">Vous devez définir la valeur de DAI dans le gestionnaire d\'insulines.</string>
     <string name="dia_minimumis5h">La valeur minimale autorisée est de 5 heures.</string>
     <string name="dia_hint1">https://wiki.aaps.app/fr/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Si vous êtes convaincu que la valeur de DAI utilisée dans votre pompe avant AAPS marche bien, il n\'y a pas besoin de la changer lorsque vous commencez à utiliser la boucle.</string>
@@ -75,7 +76,9 @@
     <string name="prerequisites2_supportedcgm">Une MGC prise en charge et une application appropriée pour recevoir des valeurs de glycémie sur le téléphone/appareil.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/ComponentOverview.html</string>
     <string name="update_label">Mise à jour d\'AAPS</string>
+    <string name="update_git">Vous devez avoir Git installé et configuré sur votre ordinateur ou compiler le code avec le navigateur.</string>
     <string name="update_asap">Lorsque des versions mises à jour d\'AAPS sont disponibles, les versions précédentes peuvent avoir des fonctionnalités limitées à distance après une période donnée.</string>
+    <string name="update_keys">Si vous compilez le code avec Android Studio, vous devez enregistrer et noter l\'emplacement de votre magasin de clés et utiliser la même clé de signature pour les mises à jour que pour votre installation précédente.</string>
     <string name="update_askfriend">Si vous avez des difficultés à construire l\'apk, vous pouvez installer un apk qui a été construit par un ami.</string>
     <string name="update_hint1">https://wiki.aaps.app/fr/latest/Maintenance/UpdateToNewVersion.html</string>
     <string name="troubleshooting_label">Résolution de problèmes</string>
@@ -197,4 +200,16 @@
     <string name="u200_with_profile">Avant que AAPS ne prenne en charge les concentrations d\'insuline, les utilisateurs ont utilisé de l\'U200 en définissant un profil de 50% pour réduire de moitié toutes les valeurs. Dans cette configuration, quelles réponses sont vraies ?</string>
     <string name="u200_with_profile_reports">Ma base de données interne d\'AAPS et les rapports NS sont devenus incorrects, toutes les valeurs (boluses, débits, débits, TDD) doivent être multipliées par 2 pour voir le statut réel, en particulier pour les médecins et l\'équipe de santé.</string>
     <string name="u200_with_profile_pens">Je n\'ai pas à gérer de conversion entre AAPS et le stylo, si j\'utilise un stylo U200 pour injecter un bolus externe.</string>
+    <string name="u200_with_profile_pens2">Quel que soit le stylo utilisé pour injecter un bolus externe (U100 ou U200), je dois convertir entre le montant calculé par AAPS et le montant que je sélectionne sur le stylo pour chaque bolus externe.</string>
+    <string name="concentration_hint1">https://wiki.aaps.app/en/dev/AdvancedOptions/InsulinConcentration.html</string>
+    <string name="switch_u200_profile">Vous avez utilisé la solution de contournement avec un profil à 50 % pour utiliser de l\'U200 et vous souhaitez passer à la nouvelle fonction de concentration d\'insuline. Quelles réponses sont vraies ?</string>
+    <string name="switch_u200_profile_any_time">Je peux changer à tout moment, j\'ai déjà l\'insuline U200 dans ma pompe.</string>
+    <string name="switch_u200_profile_ps">Je dois préparer un profil deux fois plus agressif (200% par rapport au profil par défaut actuel) et synchroniser ce nouveau profil après le prochain changement de patch/réservoir lorsque l\'insuline U200 est sélectionnée.</string>
+    <string name="switch_u200_profile_dynisf">Je dois désactiver la fonction DynISF pendant au moins une semaine pour que le DTQ soit parfaitement cohérent avec la valeur DTQ réelle calculée en Unités Internationales.</string>
+    <string name="switch_u200_profile_mental">Après le changement, je vais devoir être très prudent pendant plusieurs semaines, afin de faire en sorte que mon cerveau soit habitué à penser en Unités Internationales en ce qui concerne les bolus, les débits de base et les valeurs de DTQ.</string>
+    <string name="switch_u100_u200">Vous utilisez actuellement de l\'U100 et prévoyez de passer à une autre concentration en utilisant la nouvelle fonction de concentration de l\'insuline. Que dois-je faire?</string>
+    <string name="switch_u100_u200_profile">Je dois modifier mon profil.</string>
+    <string name="switch_u100_u200_tube">Je ne dois en aucun cas utiliser l\'interface utilisateur de la pompe (pompes tubulaires) pour injecter des bolus.</string>
+    <string name="switch_u100_u200_pen">Après le changemen j\'ai encore besoin de gérer la conversion entre AAPS et les bolus externes effectués avec des stylos.</string>
+    <string name="switch_u100_u200_change">La concentration de l\'insuline ne peut être modifiée que lorsque l\'on change l\'insuline dans le réservoir ou quand on change le Patch/POD.</string>
 </resources>
