@@ -302,6 +302,9 @@
     <string name="temporary_target">Midlertidig mål</string>
     <string name="temporary_targets">Midlertidige mål</string>
     <string name="running_mode">Kjøremodus</string>
+    <string name="careportal_sickness">Sykdom</string>
+    <string name="careportal_stress">Stress</string>
+    <string name="careportal_alcohol">Alkohol</string>
     <string name="careportal_temporarytargetvalue">Midlertidig målverdi</string>
     <string name="careportal_temporarytargetcancel">Avbryt midlertidig mål</string>
     <string name="boluswizard">Boluskalkulator</string>
