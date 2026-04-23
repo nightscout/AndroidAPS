@@ -3,6 +3,10 @@
     <string name="label_watchface_circle">AAPS (Cercle)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
     <string name="label_watchface_custom">AAPS (perso)</string>
+    <string name="label_actions_tile">Actions</string>
+    <string name="label_temp_target_tile">Cible Temp</string>
+    <string name="label_quick_wizard_tile">Assistant</string>
+    <string name="label_user_action_tile">Action Utilisateur</string>
     <string name="msg_warning_sync">Aucune donnée deçues depuis %1$s! Vérifez sur le téléphone si AAPS envoie les données à la montre</string>
     <string name="msg_warning_old">Données AAPS anciennes de %1$s ! Vérifiez votre capteur, les configurations xDrip+, NS, AAPS ou autre !</string>
     <string name="pref_vibrate_on_bolus">Vibrer sur Bolus</string>
@@ -223,6 +227,8 @@
     <string name="complication_iob_detailed">IA détaillée</string>
     <string name="complication_uploader_phone_battery">Batterie téléphone</string>
     <string name="status_running_mode">Mode de fonctionnement</string>
+    <string name="label_running_mode_title">Mode</string>
+    <string name="label_bg_graph_tile">Graphique Glycémie</string>
     <string name="action_running_mode_selected">Mode de fonctionnement demandé</string>
     <string name="title_activity_disconnect_pump">Déconnecter la pompe</string>
     <string name="title_activity_suspend_loop">Suspendre la boucle</string>
