@@ -574,7 +574,6 @@
     <string name="bolus_advisor">Bolusveiviser</string>
     <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjonsbolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke boluskalkulatoren igjen når vi gir deg en påminnelse.</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Advarsel: Oppdaget treg absorpsjon av karbohydrater: %2$d%% av tiden. Dobbeltsjekk din beregning. COB kan være misvisende og du risikerer å få for mye insulin !!</font>]]></string>
     <string name="slowabsorptiondetected_plain">!!!!! Langsom karboabsorpsjon oppdaget: %1$d%% av tiden. Dobbeltsjekk beregningen din. COB kan overestimeres, og dermed kan mer insulin gis !!!!!</string>
     <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
