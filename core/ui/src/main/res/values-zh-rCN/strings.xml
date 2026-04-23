@@ -175,6 +175,7 @@
     <string name="a11y_low">低</string>
     <string name="average">平均</string>
     <string name="tir">在目标范围的时间</string>
+    <string name="remove_label">删除</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="activate_insulin">启用胰岛素</string>
     <string name="reset">重置</string>
@@ -326,14 +327,15 @@
     <string name="treatment_announcement_desc">添加通知</string>
     <string name="treatment_sensor_insert_desc">记录 CGM 传感器插入</string>
     <string name="treatment_battery_change_desc">记录泵电池更换</string>
-    <string name="treatment_cannula_change_desc">记录套管/输注管路更换</string>
-    <string name="treatment_fill_desc">充盈套管</string>
+    <string name="treatment_cannula_change_desc">记录导管/输注管路更换</string>
+    <string name="treatment_fill_desc">充盈导管</string>
     <string name="temp_basal">临时基础率</string>
     <string name="user_entry">用户条目</string>
     <string name="aaps">AAPS</string>
     <string name="glucosetype_finger">手指</string>
     <string name="glucosetype_sensor">传感器</string>
     <string name="manual">手动</string>
+    <string name="unknown">未知</string>
     <string name="eatingsoon">很快吃饭</string>
     <string name="hypo">低</string>
     <string name="activity">活动</string>
@@ -543,6 +545,8 @@
     <string name="set_profile">设置配置文件</string>
     <string name="set_user_settings">用户设置参数</string>
     <string name="smb_bolus_u">SMB剂量 %1$.2f U</string>
+    <string name="start_pump">开始泵</string>
+    <string name="stop_pump">停止泵</string>
     <string name="temp_basal_absolute">临时基础率 %1$.2f U/h %2$d 分</string>
     <string name="temp_basal_percent">临时基础率 %1$d%% %2$d 分</string>
     <string name="insight_set_tbr_over_notification">设置临时基础率超过时通知</string>
@@ -598,6 +602,7 @@
     <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
     <string name="carb_equal_zero_no_action">碳水化合物 = 0。未采取任何措施！</string>
     <string name="bolus_equal_zero_no_action">大剂量 = 0。未采取任何措施！</string>
+    <string name="wizard_no_insulin_required">不需要胰岛素</string>
     <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
     <string name="wizard_no_active_profile">没有激活的个人配置文件！</string>
     <string name="wizard_no_cob">未知的活性碳水！血糖读取缺失或最近重新启动了应用程序？</string>
@@ -653,6 +658,7 @@
     <string name="reading_pump_history">读取泵历史记录</string>
     <string name="password_cleared">密码已清除！</string>
     <string name="pairing">配对中</string>
+    <string name="initializing">初始化…</string>
     <string name="secs" comment="second short">%1$d s</string>
     <string name="warning" comment="Generic warning dialog title">警告</string>
     <string name="retry" comment="Button label to retry a failed operation">重试</string>
