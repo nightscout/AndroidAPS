@@ -20,8 +20,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.diaconn.DiaconnG8Pump
@@ -88,7 +88,7 @@ class BLECommonService @Inject internal constructor(
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
+            rxBus.send(EventShowSnackbar(context.getString(app.aaps.core.ui.R.string.need_connect_permission), EventShowSnackbar.Type.Error))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }

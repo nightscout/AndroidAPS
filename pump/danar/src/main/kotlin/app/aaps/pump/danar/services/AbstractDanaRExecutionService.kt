@@ -23,10 +23,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.toast.ToastUtils.errorToast
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
@@ -188,7 +188,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
         val deviceName = preferences.get(DanaStringNonKey.RName)
         mRfcommSocket = rfcommTransport.getSocketForDevice(deviceName)
         if (mRfcommSocket == null) {
-            errorToast(context.applicationContext, R.string.devicenotfound)
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.devicenotfound), EventShowSnackbar.Type.Error))
         }
     }
 

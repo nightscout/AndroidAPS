@@ -21,6 +21,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +36,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -91,6 +91,7 @@ import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -106,8 +107,11 @@ import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.LocalProfileUtil
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.ProtectionHost
 import app.aaps.core.ui.compose.ScreenMode
+import app.aaps.core.ui.compose.dialogs.GlobalDialogHost
+import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.NavigationRequest
@@ -126,6 +130,7 @@ import app.aaps.plugins.configuration.setupwizard.SWDefinition
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.ui.compose.automationSheet.AutomationViewModel
+import app.aaps.ui.compose.careDialog.CareportalEventType
 import app.aaps.ui.compose.configuration.ConfigurationViewModel
 import app.aaps.ui.compose.fillDialog.FillPreselect
 import app.aaps.ui.compose.insulinManagement.InsulinManagementViewModel
@@ -241,10 +246,11 @@ class ComposeMainActivity : AppCompatActivity() {
                 val directoryName = pathAfterColon.substringAfterLast("/", pathAfterColon)
                 val managedSubdirectories = listOf("preferences", "extra", "exports", "temp")
                 if (managedSubdirectories.any { it.equals(directoryName, ignoreCase = true) }) {
-                    uiInteraction.showError(
-                        this,
-                        rh.gs(app.aaps.plugins.configuration.R.string.warning_wrong_directory_selected),
-                        rh.gs(app.aaps.plugins.configuration.R.string.warning_wrong_directory_message, directoryName)
+                    rxBus.send(
+                        EventShowDialog.Error(
+                            title = rh.gs(app.aaps.plugins.configuration.R.string.warning_wrong_directory_selected),
+                            message = rh.gs(app.aaps.plugins.configuration.R.string.warning_wrong_directory_message, directoryName)
+                        )
                     )
                     return@registerForActivityResult
                 }
@@ -290,36 +296,50 @@ class ComposeMainActivity : AppCompatActivity() {
             LocalVisibilityContext provides visibilityContext
         ) {
             AapsTheme {
-                val initProgress by config.initProgressFlow.collectAsStateWithLifecycle()
+                val rootSnackbarHostState = remember { SnackbarHostState() }
+                CompositionLocalProvider(LocalSnackbarHostState provides rootSnackbarHostState) {
+                    val initProgress by config.initProgressFlow.collectAsStateWithLifecycle()
 
-                AnimatedVisibility(
-                    visible = !initProgress.done,
-                    exit = fadeOut()
-                ) {
-                    val splashSnackbarHostState = remember { SnackbarHostState() }
-                    LaunchedEffect(Unit) {
-                        config.initSnackbarFlow.collect { message ->
-                            splashSnackbarHostState.showSnackbar(message)
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        AnimatedVisibility(
+                            visible = !initProgress.done,
+                            exit = fadeOut()
+                        ) {
+                            LaunchedEffect(Unit) {
+                                config.initSnackbarFlow.collect { message ->
+                                    rootSnackbarHostState.showSnackbar(message)
+                                }
+                            }
+                            SplashScreen(initProgress)
                         }
-                    }
-                    SplashScreen(initProgress, splashSnackbarHostState)
-                }
 
-                AnimatedVisibility(
-                    visible = initProgress.done,
-                    enter = fadeIn()
-                ) {
-                    AppContent(navController)
+                        AnimatedVisibility(
+                            visible = initProgress.done,
+                            enter = fadeIn()
+                        ) {
+                            AppContent(navController)
+                        }
+
+                        // Root-level snackbar host — subscribes to EventShowSnackbar
+                        // and is the single visible SnackbarHost across every screen.
+                        GlobalSnackbarHost(
+                            rxBus = rxBus,
+                            hostState = rootSnackbarHostState,
+                            modifier = Modifier.align(Alignment.BottomCenter)
+                        )
+
+                        // Root-level dialog host — subscribes to EventShowDialog and
+                        // renders one modal dialog at a time.
+                        GlobalDialogHost(rxBus = rxBus)
+                    }
                 }
             }
         }
     }
 
     @Composable
-    private fun SplashScreen(progress: InitProgress, snackbarHostState: SnackbarHostState) {
-        Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) }
-        ) { paddingValues ->
+    private fun SplashScreen(progress: InitProgress) {
+        Scaffold { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -414,17 +434,20 @@ class ComposeMainActivity : AppCompatActivity() {
             preferences = preferences,
             checkPassword = cryptoUtil::checkPassword,
             showBiometric = { activity, titleRes, onGranted, onCancelled, onDenied ->
-                BiometricCheck.biometricPrompt(activity, titleRes, onGranted, onCancelled, onDenied, passwordCheck)
+                BiometricCheck.biometricPrompt(activity, titleRes, rxBus, onGranted, onCancelled, onDenied, passwordCheck)
             },
             showBiometricSimple = { activity, titleRes, onSuccess, onFallback, onCancel ->
-                BiometricCheck.biometricPromptSimple(activity, titleRes, onSuccess, onFallback, onCancel)
+                BiometricCheck.biometricPromptSimple(activity, titleRes, rxBus, onSuccess, onFallback, onCancel)
             }
         )
 
         // Permissions bottom sheet
         val permState by permissionsViewModel.uiState.collectAsStateWithLifecycle()
 
-        val snackbarHostState = remember { SnackbarHostState() }
+        // Sheet-scoped snackbar state (separate from the root host so messages
+        // triggered from the permissions flow render inside the modal sheet,
+        // and never duplicate on the activity's root host).
+        val permissionsSnackbarHostState = remember { SnackbarHostState() }
 
         LaunchedEffect(Unit) {
             permissionsViewModel.sideEffect.collect { effect ->
@@ -442,14 +465,14 @@ class ComposeMainActivity : AppCompatActivity() {
                                         }
                                     )
                                 } catch (_: ActivityNotFoundException) {
-                                    snackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
+                                    permissionsSnackbarHostState.showSnackbar(getString(app.aaps.plugins.configuration.R.string.alert_dialog_permission_battery_optimization_failed))
                                 }
 
                             effect.group.permissions.contains(PluginStore.PERMISSION_SELECT_DIRECTORY)                  ->
                                 try {
                                     accessTree?.launch(null)
                                 } catch (_: Exception) {
-                                    snackbarHostState.showSnackbar(getString(app.aaps.ui.R.string.permission_directory_picker_error))
+                                    permissionsSnackbarHostState.showSnackbar(getString(app.aaps.ui.R.string.permission_directory_picker_error))
                                 }
 
                             effect.group.permissions.contains(DexcomPlugin.PERMISSION)                                  ->
@@ -474,10 +497,10 @@ class ComposeMainActivity : AppCompatActivity() {
                         }
 
                     is PermissionsSideEffect.ShowError               ->
-                        snackbarHostState.showSnackbar(effect.message)
+                        permissionsSnackbarHostState.showSnackbar(effect.message)
 
                     is PermissionsSideEffect.PermanentlyDenied       -> {
-                        val result = snackbarHostState.showSnackbar(
+                        val result = permissionsSnackbarHostState.showSnackbar(
                             message = getString(app.aaps.ui.R.string.permission_denied_go_to_settings),
                             actionLabel = getString(app.aaps.ui.R.string.permission_open_settings),
                         )
@@ -496,7 +519,7 @@ class ComposeMainActivity : AppCompatActivity() {
         if (permState.showSheet) {
             PermissionsSheet(
                 items = permState.items,
-                snackbarHostState = snackbarHostState,
+                snackbarHostState = permissionsSnackbarHostState,
                 onRequestPermission = { permissionsViewModel.requestPermission(it) },
                 onDismiss = { permissionsViewModel.dismissSheet() }
             )
@@ -1022,13 +1045,13 @@ class ComposeMainActivity : AppCompatActivity() {
             ElementType.CALIBRATION             -> navController.navigate(AppRoute.CalibrationDialog.route)
 
             // Careportal
-            ElementType.BG_CHECK                -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BGCHECK.ordinal))
-            ElementType.SENSOR_INSERT           -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.SENSOR_INSERT.ordinal))
-            ElementType.BATTERY_CHANGE          -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.BATTERY_CHANGE.ordinal))
-            ElementType.NOTE                    -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.NOTE.ordinal))
-            ElementType.EXERCISE                -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.EXERCISE.ordinal))
-            ElementType.QUESTION                -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.QUESTION.ordinal))
-            ElementType.ANNOUNCEMENT            -> navController.navigate(AppRoute.CareDialog.createRoute(UiInteraction.EventType.ANNOUNCEMENT.ordinal))
+            ElementType.BG_CHECK                -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.BGCHECK.ordinal))
+            ElementType.SENSOR_INSERT           -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.SENSOR_INSERT.ordinal))
+            ElementType.BATTERY_CHANGE          -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.BATTERY_CHANGE.ordinal))
+            ElementType.NOTE                    -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.NOTE.ordinal))
+            ElementType.EXERCISE                -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.EXERCISE.ordinal))
+            ElementType.QUESTION                -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.QUESTION.ordinal))
+            ElementType.ANNOUNCEMENT            -> navController.navigate(AppRoute.CareDialog.createRoute(CareportalEventType.ANNOUNCEMENT.ordinal))
             ElementType.SITE_ROTATION           -> navController.navigate(AppRoute.SiteRotationManagement.route)
 
             // Settings

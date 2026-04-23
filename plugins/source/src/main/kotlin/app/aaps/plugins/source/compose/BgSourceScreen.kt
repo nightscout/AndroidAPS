@@ -46,7 +46,6 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.SelectableListToolbar
 import app.aaps.core.ui.compose.ToolbarConfig
-import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.icons.Ns
 import app.aaps.ui.compose.components.ContentContainer
@@ -140,13 +139,6 @@ internal fun BgSourceScreen(
                     }
                 )
             }
-
-            // Error display
-            AapsSnackbarHost(
-                message = uiState.snackbarMessage,
-                onDismiss = { viewModel.clearSnackbar() },
-                modifier = Modifier.align(Alignment.BottomCenter)
-            )
         }
     }
 }

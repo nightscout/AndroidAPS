@@ -50,7 +50,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.DateTimeSection
 import app.aaps.core.ui.compose.EventTimeRow
@@ -161,7 +160,7 @@ fun CareDialogScreen(
 @Composable
 private fun CareDialogContent(
     uiState: CareDialogUiState,
-    eventType: UiInteraction.EventType,
+    eventType: CareportalEventType,
     dateString: String,
     timeString: String,
     onMeterTypeChange: (TE.MeterType) -> Unit,
@@ -398,24 +397,24 @@ private fun DurationSection(
 
 // Extension functions for EventType mapping
 
-fun UiInteraction.EventType.titleResId(): Int = when (this) {
-    UiInteraction.EventType.BGCHECK        -> CoreUiR.string.careportal_bgcheck
-    UiInteraction.EventType.SENSOR_INSERT  -> CoreUiR.string.cgm_sensor_insert
-    UiInteraction.EventType.BATTERY_CHANGE -> CoreUiR.string.pump_battery_change
-    UiInteraction.EventType.NOTE           -> CoreUiR.string.careportal_note
-    UiInteraction.EventType.EXERCISE       -> CoreUiR.string.careportal_exercise
-    UiInteraction.EventType.QUESTION       -> CoreUiR.string.careportal_question
-    UiInteraction.EventType.ANNOUNCEMENT   -> CoreUiR.string.careportal_announcement
+fun CareportalEventType.titleResId(): Int = when (this) {
+    CareportalEventType.BGCHECK        -> CoreUiR.string.careportal_bgcheck
+    CareportalEventType.SENSOR_INSERT  -> CoreUiR.string.cgm_sensor_insert
+    CareportalEventType.BATTERY_CHANGE -> CoreUiR.string.pump_battery_change
+    CareportalEventType.NOTE           -> CoreUiR.string.careportal_note
+    CareportalEventType.EXERCISE       -> CoreUiR.string.careportal_exercise
+    CareportalEventType.QUESTION       -> CoreUiR.string.careportal_question
+    CareportalEventType.ANNOUNCEMENT   -> CoreUiR.string.careportal_announcement
 }
 
-fun UiInteraction.EventType.icon(): ImageVector = when (this) {
-    UiInteraction.EventType.BGCHECK        -> IcBgCheck
-    UiInteraction.EventType.SENSOR_INSERT  -> IcCgmInsert
-    UiInteraction.EventType.BATTERY_CHANGE -> IcPumpBattery
-    UiInteraction.EventType.NOTE           -> IcNote
-    UiInteraction.EventType.EXERCISE       -> IcActivity
-    UiInteraction.EventType.QUESTION       -> IcQuestion
-    UiInteraction.EventType.ANNOUNCEMENT   -> IcAnnouncement
+fun CareportalEventType.icon(): ImageVector = when (this) {
+    CareportalEventType.BGCHECK        -> IcBgCheck
+    CareportalEventType.SENSOR_INSERT  -> IcCgmInsert
+    CareportalEventType.BATTERY_CHANGE -> IcPumpBattery
+    CareportalEventType.NOTE           -> IcNote
+    CareportalEventType.EXERCISE       -> IcActivity
+    CareportalEventType.QUESTION       -> IcQuestion
+    CareportalEventType.ANNOUNCEMENT   -> IcAnnouncement
 }
 
 @Preview(showBackground = true)
@@ -424,12 +423,12 @@ private fun CareDialogScreenPreview() {
     MaterialTheme {
         CareDialogContent(
             uiState = CareDialogUiState(
-                eventType = UiInteraction.EventType.BGCHECK,
+                eventType = CareportalEventType.BGCHECK,
                 bgValue = 120.0,
                 glucoseUnits = GlucoseUnit.MGDL,
                 showNotesFromPreferences = true
             ),
-            eventType = UiInteraction.EventType.BGCHECK,
+            eventType = CareportalEventType.BGCHECK,
             dateString = "25/02/2026",
             timeString = "14:30",
             onMeterTypeChange = {},

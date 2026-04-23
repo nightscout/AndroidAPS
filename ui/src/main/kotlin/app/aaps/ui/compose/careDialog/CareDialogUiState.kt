@@ -3,11 +3,10 @@ package app.aaps.ui.compose.careDialog
 import androidx.compose.runtime.Immutable
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
-import app.aaps.core.interfaces.ui.UiInteraction
 
 @Immutable
 data class CareDialogUiState(
-    val eventType: UiInteraction.EventType = UiInteraction.EventType.BGCHECK,
+    val eventType: CareportalEventType = CareportalEventType.BGCHECK,
 
     // BG section (visible for BGCHECK, QUESTION, ANNOUNCEMENT)
     val meterType: TE.MeterType = TE.MeterType.FINGER,
@@ -38,27 +37,27 @@ data class CareDialogUiState(
 /** BG section visible for BGCHECK, QUESTION, ANNOUNCEMENT */
 val CareDialogUiState.showBgSection: Boolean
     get() = eventType in setOf(
-        UiInteraction.EventType.BGCHECK,
-        UiInteraction.EventType.QUESTION,
-        UiInteraction.EventType.ANNOUNCEMENT
+        CareportalEventType.BGCHECK,
+        CareportalEventType.QUESTION,
+        CareportalEventType.ANNOUNCEMENT
     )
 
 /** Duration section visible for NOTE, EXERCISE */
 val CareDialogUiState.showDurationSection: Boolean
     get() = eventType in setOf(
-        UiInteraction.EventType.NOTE,
-        UiInteraction.EventType.EXERCISE
+        CareportalEventType.NOTE,
+        CareportalEventType.EXERCISE
     )
 
 /** Site rotation section visible for SENSOR_INSERT when CGM site rotation is enabled */
 val CareDialogUiState.showSiteRotationSection: Boolean
-    get() = eventType == UiInteraction.EventType.SENSOR_INSERT && siteRotationManageCgm
+    get() = eventType == CareportalEventType.SENSOR_INSERT && siteRotationManageCgm
 
 /** Notes always visible for NOTE, QUESTION, ANNOUNCEMENT, EXERCISE (independent of prefs) */
 val CareDialogUiState.showNotesSection: Boolean
     get() = eventType in setOf(
-        UiInteraction.EventType.NOTE,
-        UiInteraction.EventType.QUESTION,
-        UiInteraction.EventType.ANNOUNCEMENT,
-        UiInteraction.EventType.EXERCISE
+        CareportalEventType.NOTE,
+        CareportalEventType.QUESTION,
+        CareportalEventType.ANNOUNCEMENT,
+        CareportalEventType.EXERCISE
     ) || showNotesFromPreferences

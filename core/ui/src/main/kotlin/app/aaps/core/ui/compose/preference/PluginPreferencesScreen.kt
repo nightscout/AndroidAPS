@@ -12,8 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,6 +29,7 @@ import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ComposeScreenContent
+import app.aaps.core.ui.compose.LocalSnackbarHostState
 import kotlinx.coroutines.launch
 
 /**
@@ -164,7 +163,7 @@ private fun SinglePluginPreferencesRenderer(
     }
 
     val sectionState = rememberPreferenceSectionState()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = LocalSnackbarHostState.current
     val snackbarScope = rememberCoroutineScope()
     val onShowMessage: (String) -> Unit = { message ->
         snackbarScope.launch { snackbarHostState.showSnackbar(message) }
@@ -194,7 +193,6 @@ private fun SinglePluginPreferencesRenderer(
                 }
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         val listState = rememberLazyListState()

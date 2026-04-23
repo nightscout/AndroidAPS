@@ -6,7 +6,6 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.compose.ScreenMode
-import app.aaps.core.ui.compose.SnackbarMessage
 
 /**
  * UI state for TempTargetManagementScreen
@@ -66,10 +65,7 @@ data class TempTargetManagementUiState(
     // ===== Loading/Error state =====
 
     /** Loading indicator */
-    val isLoading: Boolean = true,
-
-    /** Error message if loading/saving failed */
-    val snackbarMessage: SnackbarMessage? = null
+    val isLoading: Boolean = true
 )
 
 /**

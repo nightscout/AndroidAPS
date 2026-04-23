@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.Bluetooth
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventBTChange
-import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.R
@@ -69,7 +69,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.bondedDevices?.forEach { s.add(it.name) }
         } else {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
+            rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.need_connect_permission), EventShowSnackbar.Type.Error))
         }
         return s
     }

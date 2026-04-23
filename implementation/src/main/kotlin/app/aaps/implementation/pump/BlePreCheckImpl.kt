@@ -11,7 +11,9 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.BlePreCheckResult
-import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.utils.extensions.safeEnable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,7 +21,8 @@ import javax.inject.Singleton
 @Singleton
 class BlePreCheckImpl @Inject constructor(
     private val context: Context,
-    private val uiInteraction: UiInteraction,
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger
 ) : BlePreCheck {
 
@@ -31,7 +34,7 @@ class BlePreCheckImpl @Inject constructor(
 
     override fun prerequisitesCheck(activity: AppCompatActivity, additionalPermissions: List<String>?): Boolean {
         if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            uiInteraction.showOkDialog(context = activity, title = app.aaps.core.ui.R.string.message, message = app.aaps.core.ui.R.string.ble_not_supported)
+            rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.message), message = rh.gs(app.aaps.core.ui.R.string.ble_not_supported)))
             return false
         } else {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
@@ -49,7 +52,7 @@ class BlePreCheckImpl @Inject constructor(
             // Ensures Bluetooth is available on the device and it is enabled.
             bluetoothAdapter?.safeEnable(3000)
             if (bluetoothAdapter?.isEnabled != true) {
-                uiInteraction.showOkDialog(context = activity, title = app.aaps.core.ui.R.string.message, message = app.aaps.core.ui.R.string.ble_not_enabled)
+                rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.message), message = rh.gs(app.aaps.core.ui.R.string.ble_not_enabled)))
                 return false
             }
         }

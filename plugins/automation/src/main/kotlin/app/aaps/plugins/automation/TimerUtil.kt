@@ -3,12 +3,16 @@ package app.aaps.plugins.automation
 import android.content.Context
 import android.content.Intent
 import android.provider.AlarmClock
-import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton class TimerUtil @Inject constructor(
-    private val context: Context
+    private val context: Context,
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus
 ) {
 
     /**
@@ -26,7 +30,7 @@ import javax.inject.Singleton
                 context.startActivity(this)
             }
         } catch (_: Exception) {
-            ToastUtils.errorToast(context, R.string.error_setting_reminder)
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.error_setting_reminder), EventShowSnackbar.Type.Error))
         }
     }
 }

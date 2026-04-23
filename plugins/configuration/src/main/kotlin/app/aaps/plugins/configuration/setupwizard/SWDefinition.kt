@@ -145,7 +145,6 @@ class SWDefinition @Inject constructor(
             .add(swInfoTextProvider.get().label(R.string.setupwizard_units_prompt))
             .add(
                 swRadioButtonProvider.get()
-                    .option(uiInteraction.unitsEntries, uiInteraction.unitsValues)
                     .preference(StringKey.GeneralUnits)
             )
             .validator { preferences.get(StringKey.GeneralUnits).isNotEmpty() }

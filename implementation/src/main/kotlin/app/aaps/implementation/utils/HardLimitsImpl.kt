@@ -1,6 +1,5 @@
 package app.aaps.implementation.utils
 
-import android.content.Context
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -11,12 +10,13 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
-import app.aaps.core.ui.toast.ToastUtils
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -30,9 +30,9 @@ class HardLimitsImpl @Inject constructor(
     private val notificationManager: NotificationManager,
     private val preferences: Preferences,
     private val rh: ResourceHelper,
-    private val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
+    private val rxBus: RxBus,
     @ApplicationScope private val appScope: CoroutineScope
 ) : HardLimits {
 
@@ -82,7 +82,7 @@ class HardLimitsImpl @Inject constructor(
                     listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                 )
             }
-            ToastUtils.errorToast(context, msg)
+            rxBus.send(EventShowSnackbar(msg, EventShowSnackbar.Type.Warning))
             notificationManager.post(NotificationId.TOAST_ALARM, msg, soundRes = app.aaps.core.ui.R.raw.error)
         }
         return newValue

@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -43,7 +44,6 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.compose.icons.IcPluginCombo
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -717,7 +717,7 @@ class ComboV2Plugin @Inject constructor(
                     connectionSetupJob = null
                     disconnectInternal(forceDisconnect = true)
 
-                    ToastUtils.showToastInUiThread(context, rh.gs(R.string.combov2_could_not_connect))
+                    rxBus.send(EventShowSnackbar(rh.gs(R.string.combov2_could_not_connect), EventShowSnackbar.Type.Error))
                 } else {
                     connectionSetupJob = null
                     // In case the pump queue issued a disconnect while the checks
@@ -732,7 +732,7 @@ class ComboV2Plugin @Inject constructor(
             notificationManager.post(NotificationId.BLUETOOTH_NOT_ENABLED, R.string.combov2_bluetooth_disabled)
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMP, "Connection failure: $e")
-            ToastUtils.showToastInUiThread(context, rh.gs(R.string.combov2_could_not_connect))
+            rxBus.send(EventShowSnackbar(rh.gs(R.string.combov2_could_not_connect), EventShowSnackbar.Type.Error))
             disconnectInternal(forceDisconnect = true)
         }
     }
@@ -1459,7 +1459,7 @@ class ComboV2Plugin @Inject constructor(
                         // Notifications on the AAPS overview fragment are not useful here
                         // because the pairing activity obscures that fragment. So, instead,
                         // alert the user by showing the notification via the toaster.
-                        ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_enabled)
+                        rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.ble_not_enabled), EventShowSnackbar.Type.Error))
                         ComboCtlPumpManager.PairingResult.ExceptionDuringPairing(e)
                     }
                 }

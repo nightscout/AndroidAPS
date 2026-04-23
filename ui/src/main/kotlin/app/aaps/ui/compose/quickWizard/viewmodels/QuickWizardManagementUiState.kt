@@ -3,7 +3,6 @@ package app.aaps.ui.compose.quickWizard.viewmodels
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.core.ui.compose.ScreenMode
-import app.aaps.core.ui.compose.SnackbarMessage
 
 /**
  * UI state for QuickWizard management screen
@@ -15,7 +14,6 @@ data class QuickWizardManagementUiState(
     val selectedGuid: String = "",
     val currentCardIndex: Int = 0,
     val hasUnsavedChanges: Boolean = false,
-    val snackbarMessage: SnackbarMessage? = null,
 
     // Editor fields (match EditQuickWizardDialog fields)
     val editorMode: QuickWizardMode = QuickWizardMode.WIZARD,

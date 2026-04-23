@@ -4,32 +4,21 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.RawRes
 import app.aaps.ComposeMainActivity
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.activities.ErrorActivity
-import app.aaps.ui.dialogs.AlertDialogs
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
 import dagger.Reusable
 import javax.inject.Inject
 
-@Suppress("DEPRECATION")
 @Reusable
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
-    rxBus: RxBus,
-    private val alarmSoundServiceHelper: AlarmSoundServiceHelper,
-    preferences: Preferences
+    private val alarmSoundServiceHelper: AlarmSoundServiceHelper
 ) : UiInteraction {
-
-    private val alertDialogs: AlertDialogs = AlertDialogs(preferences, rxBus)
 
     override val mainActivity: Class<*> = ComposeMainActivity::class.java
     override val errorHelperActivity: Class<*> = ErrorActivity::class.java
-
-    override val unitsEntries = arrayOf<CharSequence>("mg/dL", "mmol/L")
-    override val unitsValues = arrayOf<CharSequence>("mg/dl", "mmol")
 
     override fun runAlarm(status: String, title: String, @RawRes soundId: Int) {
         val i = Intent(context, errorHelperActivity)
@@ -46,37 +35,5 @@ class UiInteractionImpl @Inject constructor(
 
     override fun stopAlarm(reason: String) {
         alarmSoundServiceHelper.stopAlarm(reason)
-    }
-
-    override fun showOkDialog(context: Context, title: String, message: String, onFinish: (() -> Unit)?) {
-        alertDialogs.showOkDialog(context, title, message, onFinish)
-    }
-
-    override fun showOkDialog(context: Context, title: Int, message: Int, onFinish: (() -> Unit)?) {
-        alertDialogs.showOkDialog(context, title, message, onFinish)
-    }
-
-    override fun showOkCancelDialog(context: Context, title: Int, message: Int, ok: (() -> Unit)?, cancel: (() -> Unit)?, icon: Int?) {
-        alertDialogs.showOkCancelDialog(context, title, message, ok, cancel, icon)
-    }
-
-    override fun showOkCancelDialog(context: Context, title: String, message: String, ok: (() -> Unit)?, cancel: (() -> Unit)?, icon: Int?) {
-        alertDialogs.showOkCancelDialog(context, title, message, ok, cancel, icon)
-    }
-
-    override fun showOkCancelDialog(context: Context, title: String, message: String, secondMessage: String, ok: (() -> Unit)?, cancel: (() -> Unit)?, icon: Int?) {
-        alertDialogs.showOkCancelDialog(context, title, message, secondMessage, ok, cancel, icon)
-    }
-
-    override fun showYesNoCancel(context: Context, title: Int, message: Int, yes: (() -> Unit)?, no: (() -> Unit)?) {
-        alertDialogs.showYesNoCancel(context, title, message, yes, no)
-    }
-
-    override fun showYesNoCancel(context: Context, title: String, message: String, yes: (() -> Unit)?, no: (() -> Unit)?) {
-        alertDialogs.showYesNoCancel(context, title, message, yes, no)
-    }
-
-    override fun showError(context: Context, title: String, message: String, positiveButton: Int?, ok: (() -> Unit)?, cancel: (() -> Unit)?) {
-        alertDialogs.showError(context, title, message, positiveButton, ok, cancel)
     }
 }

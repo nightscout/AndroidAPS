@@ -17,11 +17,12 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.MealLink
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
@@ -48,7 +49,8 @@ class BolusCarbsViewModel @Inject constructor(
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(BolusCarbsUiState())
@@ -105,18 +107,13 @@ class BolusCarbsViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         mealLinks = mealLinks,
-                        isLoading = false,
-                        snackbarMessage = null
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load bolus/carbs data", e)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading bolus/carbs data")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading bolus/carbs data", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -135,13 +132,6 @@ class BolusCarbsViewModel @Inject constructor(
             .debounce(1000L) // 1 second debounce
             .onEach { loadData() }
             .launchIn(viewModelScope)
-    }
-
-    /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -210,7 +200,7 @@ class BolusCarbsViewModel @Inject constructor(
             } else {
                 val carbs = ml.carbs
                 if (carbs != null) {
-                    "${rh.gs(R.string.carbs)}: ${rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
+                    "${rh.gs(R.string.carbs)}: ${rh.gs(R.string.format_carbs, carbs.amount.toInt())}\n${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(carbs.timestamp)}"
                 } else {
                     rh.gs(R.string.confirm_remove_multiple_items, selected.size)
                 }
@@ -265,10 +255,11 @@ class BolusCarbsViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete treatments", e)
-                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting treatments")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting treatments", EventShowSnackbar.Type.Error))
             }
         }
     }
+
     /**
      * Get toolbar configuration for current state
      */
@@ -301,5 +292,4 @@ data class BolusCarbsUiState(
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
     val selectedItems: Set<MealLink> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null
 )

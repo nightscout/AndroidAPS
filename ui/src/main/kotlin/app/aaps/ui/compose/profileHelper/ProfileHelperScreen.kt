@@ -52,6 +52,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.graph.profile.ProfileCompareContent
+import app.aaps.core.graph.profile.buildBasalRows
+import app.aaps.core.graph.profile.buildIcRows
+import app.aaps.core.graph.profile.buildIsfRows
+import app.aaps.core.graph.profile.buildTargetRows
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
@@ -61,11 +66,6 @@ import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
-import app.aaps.core.graph.profile.ProfileCompareContent
-import app.aaps.core.graph.profile.buildBasalRows
-import app.aaps.core.graph.profile.buildIcRows
-import app.aaps.core.graph.profile.buildIsfRows
-import app.aaps.core.graph.profile.buildTargetRows
 import app.aaps.ui.compose.profileManagement.viewmodels.ProfileHelperViewModel
 import app.aaps.ui.compose.stats.TddStatsCompose
 
@@ -87,7 +87,7 @@ fun ProfileHelperScreen(
     viewModel: ProfileHelperViewModel,
     onBackClick: () -> Unit
 ) {
-    val context = LocalContext.current
+    LocalContext.current
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
 
@@ -146,7 +146,6 @@ fun ProfileHelperScreen(
         showCloneAction = showCloneAction,
         onCloneClick = {
             viewModel.copyToLocal(
-                context,
                 ages[cloneIndex],
                 tdds[cloneIndex],
                 weights[cloneIndex],

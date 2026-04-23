@@ -20,6 +20,7 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.StringPreferenceKey
 import app.aaps.core.objects.crypto.CryptoUtil
@@ -28,7 +29,6 @@ import app.aaps.core.ui.compose.LocalPreferences
 import app.aaps.core.ui.compose.dialogs.QueryAnyPasswordDialog
 import app.aaps.core.ui.compose.dialogs.QueryPasswordDialog
 import app.aaps.core.ui.compose.dialogs.SetPasswordDialog
-import app.aaps.core.ui.toast.ToastUtils
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -117,7 +117,7 @@ class PasswordCheckImpl @Inject constructor(
                                     }
                                 } else {
                                     val msg = if (pinInput) app.aaps.core.ui.R.string.wrongpin else app.aaps.core.ui.R.string.wrongpassword
-                                    ToastUtils.errorToast(context, context.getString(msg))
+                                    rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Error))
                                     fail?.invoke()
                                 }
                             },
@@ -166,12 +166,12 @@ class PasswordCheckImpl @Inject constructor(
                             onConfirm = { enteredPassword, enteredPassword2 ->
                                 if (enteredPassword != enteredPassword2) {
                                     val msg = if (pinInput) app.aaps.core.ui.R.string.pin_dont_match else app.aaps.core.ui.R.string.passwords_dont_match
-                                    ToastUtils.errorToast(context, context.getString(msg))
+                                    rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Error))
                                 } else if (enteredPassword.isNotEmpty()) {
                                     preferences.put(preference, cryptoUtil.hashPassword(enteredPassword))
                                     exportPasswordDataStore.clearPasswordDataStore(context)
                                     val msg = if (pinInput) app.aaps.core.ui.R.string.pin_set else app.aaps.core.ui.R.string.password_set
-                                    ToastUtils.okToast(context, context.getString(msg))
+                                    rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Success))
                                     dialog.dismiss()
                                     CoroutineScope(Dispatchers.Main).launch {
                                         delay(100)
@@ -181,7 +181,7 @@ class PasswordCheckImpl @Inject constructor(
                                     if (preferences.getIfExists(preference) != null) {
                                         preferences.remove(preference)
                                         val msg = if (pinInput) app.aaps.core.ui.R.string.pin_cleared else app.aaps.core.ui.R.string.password_cleared
-                                        ToastUtils.graphicalToast(context, context.getString(msg), app.aaps.core.ui.R.drawable.ic_toast_delete_confirm)
+                                        rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Success))
                                         dialog.dismiss()
                                         CoroutineScope(Dispatchers.Main).launch {
                                             delay(100)
@@ -189,7 +189,7 @@ class PasswordCheckImpl @Inject constructor(
                                         }
                                     } else {
                                         val msg = if (pinInput) app.aaps.core.ui.R.string.pin_not_changed else app.aaps.core.ui.R.string.password_not_changed
-                                        ToastUtils.warnToast(context, context.getString(msg))
+                                        rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Warning))
                                         dialog.dismiss()
                                         CoroutineScope(Dispatchers.Main).launch {
                                             delay(100)
@@ -200,7 +200,7 @@ class PasswordCheckImpl @Inject constructor(
                             },
                             onCancel = {
                                 val msg = if (pinInput) app.aaps.core.ui.R.string.pin_not_changed else app.aaps.core.ui.R.string.password_not_changed
-                                ToastUtils.infoToast(context, msg)
+                                rxBus.send(EventShowSnackbar(context.getString(msg), EventShowSnackbar.Type.Info))
                                 dialog.dismiss()
                                 CoroutineScope(Dispatchers.Main).launch {
                                     delay(100)

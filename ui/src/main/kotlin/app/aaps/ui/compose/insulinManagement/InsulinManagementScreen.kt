@@ -67,7 +67,6 @@ import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.NumberInputRow
 import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.icons.IcPluginInsulin
@@ -143,7 +142,7 @@ fun InsulinManagementScreen(
                     scrollToPage = effect.index
                 }
 
-                is InsulinManagementViewModel.SideEffect.NavigateBack   -> {
+                is InsulinManagementViewModel.SideEffect.NavigateBack    -> {
                     onNavigateBack()
                 }
             }
@@ -459,13 +458,6 @@ fun InsulinManagementScreen(
                         }
                 }
             }
-
-            // Snackbar
-            AapsSnackbarHost(
-                message = uiState.snackbarMessage,
-                onDismiss = { viewModel.clearSnackbar() },
-                modifier = Modifier.align(Alignment.BottomCenter)
-            )
         }
     }
 }

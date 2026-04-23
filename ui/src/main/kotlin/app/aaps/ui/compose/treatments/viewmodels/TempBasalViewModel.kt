@@ -16,13 +16,14 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.extensions.toStringFull
 import app.aaps.core.objects.extensions.toTemporaryBasal
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +50,8 @@ class TempBasalViewModel @Inject constructor(
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TempBasalUiState())
@@ -103,18 +105,13 @@ class TempBasalViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         tempBasals = tempBasals,
-                        isLoading = false,
-                        snackbarMessage = null
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load temp basals", e)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading temp basals")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading temp basals", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -129,13 +126,6 @@ class TempBasalViewModel @Inject constructor(
             .debounce(1000L) // 1 second debounce
             .onEach { loadData() }
             .launchIn(viewModelScope)
-    }
-
-    /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -252,7 +242,7 @@ class TempBasalViewModel @Inject constructor(
                 loadData()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to delete temp basals", e)
-                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting temp basals")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting temp basals", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -288,6 +278,5 @@ data class TempBasalUiState(
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
-    val selectedItems: Set<TB> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null
+    val selectedItems: Set<TB> = emptySet()
 )

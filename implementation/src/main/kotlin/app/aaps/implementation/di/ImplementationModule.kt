@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.pump.PumpStatusProvider
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpWithConcentration
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
-import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
@@ -80,7 +79,6 @@ import app.aaps.implementation.pump.PumpStatusProviderImpl
 import app.aaps.implementation.pump.PumpSyncImplementation
 import app.aaps.implementation.pump.PumpWithConcentrationImpl
 import app.aaps.implementation.pump.TemporaryBasalStorageImpl
-import app.aaps.implementation.pump.WarnColorsImpl
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.ReceiverStatusStoreImpl
 import app.aaps.implementation.resources.IconsProviderImplementation
@@ -139,7 +137,6 @@ class ImplementationModule {
         @Binds fun bindSecureEncrypt(secureEncryptImpl: SecureEncryptImpl): SecureEncrypt
         @Binds fun bindLoggerUtils(loggerUtilsImpl: LoggerUtilsImpl): LoggerUtils
         @Binds fun bindProfiler(profilerImpl: ProfilerImpl): Profiler
-        @Binds fun bindWarnColors(warnColorsImpl: WarnColorsImpl): WarnColors
         @Binds fun bindHardLimits(hardLimitsImpl: HardLimitsImpl): HardLimits
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
         @Binds fun bindBlePreCheck(blePreCheckImpl: BlePreCheckImpl): BlePreCheck

@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanKey
@@ -52,7 +51,7 @@ class CareDialogViewModel @Inject constructor(
     val uiState: StateFlow<CareDialogUiState> = _uiState.asStateFlow()
 
     init {
-        val eventType = UiInteraction.EventType.entries[savedStateHandle.get<Int>("eventTypeOrdinal") ?: 0]
+        val eventType = CareportalEventType.entries[savedStateHandle.get<Int>("eventTypeOrdinal") ?: 0]
         val units = profileFunction.getUnits()
         val currentBg = profileUtil.fromMgdlToUnits(
             glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0
@@ -74,7 +73,7 @@ class CareDialogViewModel @Inject constructor(
                 siteRotationManageCgm = siteRotation
             )
         }
-        if (eventType == UiInteraction.EventType.SENSOR_INSERT && siteRotation) {
+        if (eventType == CareportalEventType.SENSOR_INSERT && siteRotation) {
             loadLastSensorLocation()
         }
     }
@@ -190,7 +189,7 @@ class CareDialogViewModel @Inject constructor(
 
         val eventTime = state.eventTime - (state.eventTime % 1000)
 
-        val isSensorChange = eventType == UiInteraction.EventType.SENSOR_INSERT
+        val isSensorChange = eventType == CareportalEventType.SENSOR_INSERT
         val location = if (isSensorChange) state.siteLocation.takeIf { it != TE.Location.NONE } else null
         val arrow = if (isSensorChange) state.siteArrow.takeIf { it != TE.Arrow.NONE } else null
 
@@ -245,23 +244,23 @@ class CareDialogViewModel @Inject constructor(
 
     }
 
-    private fun UiInteraction.EventType.toTEType(): TE.Type = when (this) {
-        UiInteraction.EventType.BGCHECK        -> TE.Type.FINGER_STICK_BG_VALUE
-        UiInteraction.EventType.SENSOR_INSERT  -> TE.Type.SENSOR_CHANGE
-        UiInteraction.EventType.BATTERY_CHANGE -> TE.Type.PUMP_BATTERY_CHANGE
-        UiInteraction.EventType.NOTE           -> TE.Type.NOTE
-        UiInteraction.EventType.EXERCISE       -> TE.Type.EXERCISE
-        UiInteraction.EventType.QUESTION       -> TE.Type.QUESTION
-        UiInteraction.EventType.ANNOUNCEMENT   -> TE.Type.ANNOUNCEMENT
+    private fun CareportalEventType.toTEType(): TE.Type = when (this) {
+        CareportalEventType.BGCHECK        -> TE.Type.FINGER_STICK_BG_VALUE
+        CareportalEventType.SENSOR_INSERT  -> TE.Type.SENSOR_CHANGE
+        CareportalEventType.BATTERY_CHANGE -> TE.Type.PUMP_BATTERY_CHANGE
+        CareportalEventType.NOTE           -> TE.Type.NOTE
+        CareportalEventType.EXERCISE       -> TE.Type.EXERCISE
+        CareportalEventType.QUESTION       -> TE.Type.QUESTION
+        CareportalEventType.ANNOUNCEMENT   -> TE.Type.ANNOUNCEMENT
     }
 
-    private fun UiInteraction.EventType.toSource(): Sources = when (this) {
-        UiInteraction.EventType.BGCHECK        -> Sources.BgCheck
-        UiInteraction.EventType.SENSOR_INSERT  -> Sources.SensorInsert
-        UiInteraction.EventType.BATTERY_CHANGE -> Sources.BatteryChange
-        UiInteraction.EventType.NOTE           -> Sources.Note
-        UiInteraction.EventType.EXERCISE       -> Sources.Exercise
-        UiInteraction.EventType.QUESTION       -> Sources.Question
-        UiInteraction.EventType.ANNOUNCEMENT   -> Sources.Announcement
+    private fun CareportalEventType.toSource(): Sources = when (this) {
+        CareportalEventType.BGCHECK        -> Sources.BgCheck
+        CareportalEventType.SENSOR_INSERT  -> Sources.SensorInsert
+        CareportalEventType.BATTERY_CHANGE -> Sources.BatteryChange
+        CareportalEventType.NOTE           -> Sources.Note
+        CareportalEventType.EXERCISE       -> Sources.Exercise
+        CareportalEventType.QUESTION       -> Sources.Question
+        CareportalEventType.ANNOUNCEMENT   -> Sources.Announcement
     }
 }

@@ -4,22 +4,8 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 /**
- * Sealed class representing different types of snackbar messages.
- * Each type has appropriate styling (color, icon) applied automatically.
- *
- * @property message The text message to display
- */
-sealed class SnackbarMessage(open val message: String) {
-
-    data class Error(override val message: String) : SnackbarMessage(message)
-    data class Warning(override val message: String) : SnackbarMessage(message)
-    data class Info(override val message: String) : SnackbarMessage(message)
-    data class Success(override val message: String) : SnackbarMessage(message)
-}
-
-/**
  * Color scheme for snackbar messages.
- * Provides consistent colors for different message types.
+ * Provides consistent colors for different message types (Error / Warning / Info / Success).
  */
 data class SnackbarColors(
     val errorContainer: Color,
@@ -32,9 +18,7 @@ data class SnackbarColors(
     val onSuccessContainer: Color
 )
 
-/**
- * Light mode snackbar colors.
- */
+/** Light mode snackbar colors. */
 internal val LightSnackbarColors = SnackbarColors(
     errorContainer = Color(0xFFFFDAD6),
     onErrorContainer = Color(0xFF410002),
@@ -46,9 +30,7 @@ internal val LightSnackbarColors = SnackbarColors(
     onSuccessContainer = Color(0xFF1B5E20)
 )
 
-/**
- * Dark mode snackbar colors.
- */
+/** Dark mode snackbar colors. */
 internal val DarkSnackbarColors = SnackbarColors(
     errorContainer = Color(0xFF93000A),
     onErrorContainer = Color(0xFFFFDAD6),
@@ -60,7 +42,5 @@ internal val DarkSnackbarColors = SnackbarColors(
     onSuccessContainer = Color(0xFFC8E6C9)
 )
 
-/**
- * CompositionLocal providing snackbar colors based on current theme.
- */
+/** CompositionLocal providing snackbar colors based on current theme. */
 internal val LocalSnackbarColors = compositionLocalOf { LightSnackbarColors }

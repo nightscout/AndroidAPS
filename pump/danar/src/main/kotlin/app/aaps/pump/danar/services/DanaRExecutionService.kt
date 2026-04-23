@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
 import app.aaps.pump.dana.keys.DanaIntKey
@@ -251,7 +251,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
                     SystemClock.sleep(1000)
                 }
                 if (!isConnected) {
-                    ToastUtils.errorToast(context, app.aaps.core.ui.R.string.treatmentdeliveryerror)
+                    rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), EventShowSnackbar.Type.Error))
                     bolusProgressData.updateProgress(bolusProgressData.state.value?.percent ?: 0, bolusProgressData.state.value?.status ?: "", 0.0)
                     return false
                 }

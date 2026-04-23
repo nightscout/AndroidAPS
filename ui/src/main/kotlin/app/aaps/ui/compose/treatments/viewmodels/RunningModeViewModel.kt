@@ -14,10 +14,11 @@ import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.SelectableListToolbar
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.ToolbarConfig
 import app.aaps.ui.compose.treatments.viewmodels.TreatmentConstants.TREATMENT_HISTORY_DAYS
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,8 @@ class RunningModeViewModel @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RunningModeUiState())
@@ -77,18 +79,13 @@ class RunningModeViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         runningModes = runningModes,
-                        isLoading = false,
-                        snackbarMessage = null
+                        isLoading = false
                     )
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.UI, "Failed to load running modes", e)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error loading running modes")
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error loading running modes", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -103,13 +100,6 @@ class RunningModeViewModel @Inject constructor(
             .debounce(1000L) // 1 second debounce
             .onEach { loadData() }
             .launchIn(viewModelScope)
-    }
-
-    /**
-     * Clear error state
-     */
-    fun clearSnackbar() {
-        _uiState.update { it.copy(snackbarMessage = null) }
     }
 
     /**
@@ -205,7 +195,7 @@ class RunningModeViewModel @Inject constructor(
                 exitSelectionMode()
                 loadData()
             } catch (e: Exception) {
-                _uiState.update { it.copy(snackbarMessage = SnackbarMessage.Error(e.message ?: "Unknown error deleting running modes")) }
+                rxBus.send(EventShowSnackbar(e.message ?: "Unknown error deleting running modes", EventShowSnackbar.Type.Error))
             }
         }
     }
@@ -241,6 +231,5 @@ data class RunningModeUiState(
     val isLoading: Boolean = true,
     val showInvalidated: Boolean = false,
     val isRemovingMode: Boolean = false,
-    val selectedItems: Set<RM> = emptySet(),
-    val snackbarMessage: SnackbarMessage? = null
+    val selectedItems: Set<RM> = emptySet()
 )

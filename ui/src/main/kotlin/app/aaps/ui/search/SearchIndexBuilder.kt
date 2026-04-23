@@ -200,13 +200,13 @@ class SearchIndexBuilder @Inject constructor(
         }
     }
 
-    private data class ParentScreenInfo(val key: String, val iconResId: Int?, val plugin: PluginBase?)
+    private data class ParentScreenInfo(val key: String, val plugin: PluginBase?)
 
     private fun collectPreferenceKeys(entries: MutableList<SearchIndexEntry>, seenKeys: MutableSet<String>) {
         // Get all preference keys from registered enums
         val allKeys = preferences.getAllPreferenceKeys()
 
-        // Build a map of preference key to parent screen info (key + icon + plugin)
+        // Build a map of preference key to parent screen info (screen key + owning plugin)
         val parentScreenMap = buildParentScreenMap()
 
         allKeys.forEach { prefKey ->
@@ -230,7 +230,7 @@ class SearchIndexBuilder @Inject constructor(
         providers.forEach { provider ->
             provider.getSearchableItems().forEach { item ->
                 if (item is SearchableItem.Category) {
-                    collectPreferenceKeysFromScreen(item.screenDef, item.screenDef.key, item.screenDef.iconResId, null, map)
+                    collectPreferenceKeysFromScreen(item.screenDef, item.screenDef.key, null, map)
                 }
             }
         }
@@ -239,7 +239,7 @@ class SearchIndexBuilder @Inject constructor(
         activePlugin.getPluginsList().forEach { plugin ->
             val content = plugin.getPreferenceScreenContent()
             if (content is PreferenceSubScreenDef) {
-                collectPreferenceKeysFromScreen(content, content.key, content.iconResId, plugin, map)
+                collectPreferenceKeysFromScreen(content, content.key, plugin, map)
             }
         }
 
@@ -249,19 +249,14 @@ class SearchIndexBuilder @Inject constructor(
     private fun collectPreferenceKeysFromScreen(
         screen: PreferenceSubScreenDef,
         screenKey: String,
-        screenIconResId: Int?,
         plugin: PluginBase?,
         map: MutableMap<String, ParentScreenInfo>
     ) {
         screen.items.forEach { item ->
             when (item) {
-                is PreferenceKey          -> map[item.key] = ParentScreenInfo(screenKey, screenIconResId, plugin)
+                is PreferenceKey          -> map[item.key] = ParentScreenInfo(screenKey, plugin)
 
-                is PreferenceSubScreenDef -> {
-                    // Use subscreen's icon if available, otherwise inherit from parent
-                    val iconToUse = item.iconResId ?: screenIconResId
-                    collectPreferenceKeysFromScreen(item, item.key, iconToUse, plugin, map)
-                }
+                is PreferenceSubScreenDef -> collectPreferenceKeysFromScreen(item, item.key, plugin, map)
 
                 else                      -> { /* ignore other types */
                 }

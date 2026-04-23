@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
@@ -39,6 +40,8 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
@@ -51,13 +54,12 @@ import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.objects.wizard.QuickWizardMode
 import app.aaps.ui.compose.alertDialogs.AboutDialogData
-import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.ui.compose.quickLaunch.QuickLaunchResolver
+import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
+import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
 import app.aaps.ui.compose.scenes.ActiveSceneManager
 import app.aaps.ui.compose.scenes.SceneExecutor
 import app.aaps.ui.compose.scenes.SceneRepository
-import app.aaps.ui.compose.quickLaunch.QuickLaunchSerializer
-import app.aaps.ui.compose.quickLaunch.ResolvedQuickLaunchItem
 import app.aaps.ui.compose.tempTarget.toTTPresetsWithNameRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -104,7 +106,8 @@ class MainViewModel @Inject constructor(
     private val protectionCheck: ProtectionCheck,
     private val sceneRepository: SceneRepository,
     private val sceneExecutor: SceneExecutor,
-    private val activeSceneManager: ActiveSceneManager
+    private val activeSceneManager: ActiveSceneManager,
+    private val rxBus: RxBus
 ) : ViewModel() {
 
     // Event-driven state (drawer, dialogs, simple-mode preference). Imperative .update{} calls
@@ -414,29 +417,30 @@ class MainViewModel @Inject constructor(
             }
         }
 
-        uiInteraction.showOkCancelDialog(
-            context = context,
-            title = entry.buttonText(),
-            message = message,
-            ok = {
-                uel.log(
-                    Action.BOLUS, Sources.QuickWizard,
-                    entry.buttonText(),
-                    ValueWithUnit.Insulin(insulinAfterConstraints)
-                )
-                val detailedBolusInfo = DetailedBolusInfo().apply {
-                    eventType = app.aaps.core.data.model.TE.Type.CORRECTION_BOLUS
-                    this.insulin = insulinAfterConstraints
-                }
-                commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                        }
+        rxBus.send(
+            EventShowDialog.OkCancel(
+                title = entry.buttonText(),
+                message = message,
+                onOk = {
+                    uel.log(
+                        Action.BOLUS, Sources.QuickWizard,
+                        entry.buttonText(),
+                        ValueWithUnit.Insulin(insulinAfterConstraints)
+                    )
+                    val detailedBolusInfo = DetailedBolusInfo().apply {
+                        eventType = app.aaps.core.data.model.TE.Type.CORRECTION_BOLUS
+                        this.insulin = insulinAfterConstraints
                     }
-                })
-                entry.markAsUsed()
-            }
+                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                            }
+                        }
+                    })
+                    entry.markAsUsed()
+                }
+            )
         )
     }
 
@@ -448,30 +452,31 @@ class MainViewModel @Inject constructor(
             append(rh.gs(app.aaps.core.ui.R.string.carbs) + ": ${carbs}g")
         }
 
-        uiInteraction.showOkCancelDialog(
-            context = context,
-            title = entry.buttonText(),
-            message = message,
-            ok = {
-                uel.log(
-                    Action.CARBS, Sources.QuickWizard,
-                    entry.buttonText(),
-                    ValueWithUnit.Gram(carbs)
-                )
-                val detailedBolusInfo = DetailedBolusInfo().apply {
-                    eventType = app.aaps.core.data.model.TE.Type.CARBS_CORRECTION
-                    this.carbs = carbs.toDouble()
-                    carbsTimestamp = dateUtil.now()
-                }
-                commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                        }
+        rxBus.send(
+            EventShowDialog.OkCancel(
+                title = entry.buttonText(),
+                message = message,
+                onOk = {
+                    uel.log(
+                        Action.CARBS, Sources.QuickWizard,
+                        entry.buttonText(),
+                        ValueWithUnit.Gram(carbs)
+                    )
+                    val detailedBolusInfo = DetailedBolusInfo().apply {
+                        eventType = app.aaps.core.data.model.TE.Type.CARBS_CORRECTION
+                        this.carbs = carbs.toDouble()
+                        carbsTimestamp = dateUtil.now()
                     }
-                })
-                entry.markAsUsed()
-            }
+                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                            }
+                        }
+                    })
+                    entry.markAsUsed()
+                }
+            )
         )
     }
 

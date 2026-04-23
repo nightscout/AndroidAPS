@@ -1,6 +1,5 @@
 package app.aaps.core.ui.compose.dialogs
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
@@ -34,7 +32,6 @@ import app.aaps.core.ui.R
  * @param secondMessage Optional secondary message in accent color
  * @param icon Optional ImageVector icon
  * @param iconTint Optional tint color for the icon
- * @param iconId Optional drawable resource for an icon (deprecated, use [icon] instead)
  * @param onConfirm Called when OK is clicked
  * @param onDismiss Called when Cancel is clicked or dialog is dismissed
  */
@@ -45,7 +42,6 @@ fun OkCancelDialog(
     secondMessage: String? = null,
     icon: ImageVector? = null,
     iconTint: Color = MaterialTheme.colorScheme.primary,
-    @DrawableRes iconId: Int? = null, // deprecated: use icon instead
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -57,14 +53,6 @@ fun OkCancelDialog(
                     imageVector = icon,
                     contentDescription = null,
                     tint = iconTint,
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-        } ?: iconId?.let {
-            {
-                Icon(
-                    painter = painterResource(id = iconId),
-                    contentDescription = null,
                     modifier = Modifier.size(48.dp)
                 )
             }
@@ -124,7 +112,6 @@ fun OkCancelDialog(
     secondMessage: String? = null,
     icon: ImageVector? = null,
     iconTint: Color = MaterialTheme.colorScheme.primary,
-    @DrawableRes iconId: Int? = null,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -136,14 +123,6 @@ fun OkCancelDialog(
                     imageVector = icon,
                     contentDescription = null,
                     tint = iconTint,
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-        } ?: iconId?.let {
-            {
-                Icon(
-                    painter = painterResource(id = iconId),
-                    contentDescription = null,
                     modifier = Modifier.size(48.dp)
                 )
             }

@@ -13,15 +13,13 @@ import app.aaps.core.keys.interfaces.PreferenceKey
  * @param titleResId String resource ID for the screen title
  * @param items List of preference items (keys and/or nested subscreens)
  * @param summaryResId Optional string resource ID for summary shown in parent list
- * @param iconResId Optional drawable resource ID for the icon shown next to the title
- * @param icon Optional Compose ImageVector icon (preferred over iconResId)
+ * @param icon Optional Compose ImageVector icon shown next to the title
  */
 data class PreferenceSubScreenDef(
     val key: String,
     val titleResId: Int,
     val items: List<PreferenceItem> = emptyList(),
     val summaryResId: Int? = null,
-    val iconResId: Int? = null,
     val icon: ImageVector? = null
 ) : PreferenceItem {
 

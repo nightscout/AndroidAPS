@@ -175,6 +175,7 @@ class InsightComposeContent(
                 PairWizardHost(
                     blePreCheck = blePreCheck,
                     pumpSync = pumpSync,
+                    rxBus = rxBus,
                     onFinish = { currentScreen = InsightScreen.OVERVIEW }
                 )
             }
@@ -186,6 +187,7 @@ class InsightComposeContent(
 private fun PairWizardHost(
     blePreCheck: BlePreCheck,
     pumpSync: PumpSync,
+    rxBus: RxBus,
     onFinish: () -> Unit
 ) {
     var bleReady by remember { mutableStateOf(false) }
@@ -204,6 +206,7 @@ private fun PairWizardHost(
         InsightPairState(
             context = context,
             pumpSync = pumpSync,
+            rxBus = rxBus,
             scope = coroutineScope
         )
     }

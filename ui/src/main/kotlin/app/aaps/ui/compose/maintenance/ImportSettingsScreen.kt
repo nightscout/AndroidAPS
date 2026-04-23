@@ -41,13 +41,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -56,12 +52,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportDecryptResult
 import app.aaps.core.interfaces.maintenance.PrefsFile
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ImportSummaryItem
-import app.aaps.core.ui.compose.SnackbarMessage
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.dialogs.AapsSnackbarHost
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.R as CoreUiR
 
@@ -69,6 +64,7 @@ import app.aaps.core.ui.R as CoreUiR
 fun ImportSettingsScreen(
     viewModel: ImportViewModel,
     prefFileList: FileListProvider,
+    rxBus: RxBus,
     onClose: () -> Unit
 ) {
     val step by viewModel.importStep.collectAsStateWithLifecycle()
@@ -115,6 +111,7 @@ fun ImportSettingsScreen(
         is ImportStep.Review         -> {
             ImportReviewContent(
                 state = currentStep,
+                rxBus = rxBus,
                 onMasterPasswordChanged = { viewModel.onMasterPasswordChanged(it) },
                 onDecryptionPasswordChanged = { viewModel.onDecryptionPasswordChanged(it) },
                 onDecrypt = { viewModel.decrypt() },
@@ -273,7 +270,7 @@ private fun ImportFileCard(
                 val formatEntry = metadata.entries.find { it.key.key == "format" }
                 if (formatEntry != null) {
                     Icon(
-                        painter = painterResource(id = formatEntry.key.icon),
+                        imageVector = formatEntry.key.icon,
                         contentDescription = null,
                         modifier = Modifier
                             .padding(start = 5.dp, end = 6.dp)
@@ -302,7 +299,7 @@ private fun ImportFileCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource(id = metaKey.icon),
+                        imageVector = metaKey.icon,
                         contentDescription = null,
                         modifier = Modifier
                             .padding(start = iconStartPadding, end = 8.dp)
@@ -327,7 +324,7 @@ private fun ImportFileCard(
             ) {
                 metadata.entries.find { it.key.key == "created_at" }?.let { (metaKey, metaEntry) ->
                     Icon(
-                        painter = painterResource(id = metaKey.icon),
+                        imageVector = metaKey.icon,
                         contentDescription = null,
                         modifier = Modifier
                             .padding(start = iconStartPadding, end = 8.dp)
@@ -400,6 +397,7 @@ private fun SourceBadge(source: ImportSource) {
 @Composable
 private fun ImportReviewContent(
     state: ImportStep.Review,
+    rxBus: RxBus,
     onMasterPasswordChanged: (String) -> Unit,
     onDecryptionPasswordChanged: (String) -> Unit,
     onDecrypt: () -> Unit,
@@ -409,15 +407,8 @@ private fun ImportReviewContent(
     val focusManager = LocalFocusManager.current
     val successResult = state.decryptResult as? ImportDecryptResult.Success
     val canImport = successResult != null && successResult.importPossible
-    var snackbarMessage by remember { mutableStateOf<SnackbarMessage?>(null) }
 
     Scaffold(
-        snackbarHost = {
-            AapsSnackbarHost(
-                message = snackbarMessage,
-                onDismiss = { snackbarMessage = null }
-            )
-        },
         topBar = {
             AapsTopAppBar(
                 title = { Text(stringResource(CoreUiR.string.import_setting)) },
@@ -462,7 +453,7 @@ private fun ImportReviewContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // File details card
-            FileDetailsCard(file = state.file, source = state.fileSource, onSnackbarMessage = { snackbarMessage = it })
+            FileDetailsCard(file = state.file, source = state.fileSource, rxBus = rxBus)
 
             // Master password (shown only if user has a local master password — we try it first
             // as a shortcut for "importing your own backup". No local master pw → skip straight
@@ -620,7 +611,7 @@ private fun ImportReviewContent(
                         // Only show entries with warnings or errors
                         if (problemEntries.isNotEmpty()) {
                             problemEntries.forEach { (metaKey, metaEntry) ->
-                                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry, onSnackbarMessage = { snackbarMessage = it })
+                                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry, rxBus = rxBus)
                             }
                         }
                     }
@@ -634,7 +625,7 @@ private fun ImportReviewContent(
 private fun FileDetailsCard(
     file: PrefsFile,
     source: ImportSource,
-    onSnackbarMessage: (SnackbarMessage) -> Unit = {}
+    rxBus: RxBus
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -658,7 +649,7 @@ private fun FileDetailsCard(
 
             // Show all metadata
             file.metadata.entries.forEach { (metaKey, metaEntry) ->
-                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry, onSnackbarMessage = onSnackbarMessage)
+                ImportSummaryItem(metaKey = metaKey, metaEntry = metaEntry, rxBus = rxBus)
             }
         }
     }

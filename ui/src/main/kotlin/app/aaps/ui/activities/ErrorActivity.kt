@@ -22,11 +22,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,6 +57,8 @@ import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
 import app.aaps.core.ui.compose.LocalDateUtil
 import app.aaps.core.ui.compose.LocalPreferences
+import app.aaps.core.ui.compose.LocalSnackbarHostState
+import app.aaps.core.ui.compose.dialogs.GlobalSnackbarHost
 import app.aaps.ui.services.AlarmSoundService
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
@@ -89,35 +93,44 @@ class ErrorActivity : DaggerAppCompatActivity() {
         aapsLogger.debug("Error activity displayed: $title - $status")
 
         setContent {
+            val snackbarHostState = remember { SnackbarHostState() }
             CompositionLocalProvider(
                 LocalPreferences provides preferences,
                 LocalDateUtil provides dateUtil,
-                LocalConfig provides config
+                LocalConfig provides config,
+                LocalSnackbarHostState provides snackbarHostState
             ) {
                 AapsTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = Color.Transparent
-                    ) {
-                        ErrorScreen(
-                            title = title,
-                            status = status,
-                            appIcon = appIcon,
-                            onOk = {
-                                uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
-                                stopAlarm("Dismiss")
-                                finish()
-                            },
-                            onMute = {
-                                uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
-                                stopAlarm("Mute")
-                            },
-                            onMute5Min = {
-                                uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
-                                stopAlarm("Mute 5 min")
-                                handler.postDelayed({ startAlarm() }, T.mins(5).msecs())
-                            },
-                            onStart = { startAlarm() }
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = Color.Transparent
+                        ) {
+                            ErrorScreen(
+                                title = title,
+                                status = status,
+                                appIcon = appIcon,
+                                onOk = {
+                                    uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
+                                    stopAlarm("Dismiss")
+                                    finish()
+                                },
+                                onMute = {
+                                    uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
+                                    stopAlarm("Mute")
+                                },
+                                onMute5Min = {
+                                    uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
+                                    stopAlarm("Mute 5 min")
+                                    handler.postDelayed({ startAlarm() }, T.mins(5).msecs())
+                                },
+                                onStart = { startAlarm() }
+                            )
+                        }
+                        GlobalSnackbarHost(
+                            rxBus = rxBus,
+                            hostState = snackbarHostState,
+                            modifier = Modifier.align(Alignment.BottomCenter)
                         )
                     }
                 }

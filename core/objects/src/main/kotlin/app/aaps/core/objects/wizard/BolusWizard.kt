@@ -2,6 +2,11 @@ package app.aaps.core.objects.wizard
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
@@ -35,6 +40,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.rx.events.EventShowDialog
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -42,14 +48,12 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.objects.extensions.highValueToUnitsToString
 import app.aaps.core.objects.extensions.lowValueToUnitsToString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.utils.JsonHelper
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
-import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -324,72 +328,110 @@ class BolusWizard @Inject constructor(
         )
     }
 
-    private fun confirmMessageAfterConstraints(context: Context, advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null): String {
+    private fun confirmMessageAfterConstraints(advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null): AnnotatedString {
+        // XML theme-invariant palette (identical in values/ and values-night/), inlined
+        // here so this domain class stays independent of any context/theme lookup.
+        val bolusColor = Color(0xFF1EA3E5)
+        val carbsColor = Color(0xFFFB8C00)
+        val cobAlertColor = Color(0xFF7484E2)
+        val warningColor = Color(0xFFFF1A1A)
+        val infoColor = Color(0xFF77DD77)
 
-        val actions: LinkedList<String> = LinkedList()
-        if (insulinAfterConstraints > 0) {
-            val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
-            actions.add(
-                rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulinAfterConstraints).formatColor
-                    (context, rh, app.aaps.core.ui.R.attr.bolusColor) + pct
-            )
-        }
-        if (carbs > 0 && !advisor) {
-            var timeShift = ""
-            if (carbTime > 0) {
-                timeShift += " (+" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
-            } else if (carbTime < 0) {
-                timeShift += " (" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
+        return buildAnnotatedString {
+            var needsSeparator = false
+            fun newLine() {
+                if (needsSeparator) append("\n")
+                needsSeparator = true
             }
-            actions.add(
-                rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs)
-                    .formatColor(context, rh, app.aaps.core.ui.R.attr.carbsColor) + timeShift
-            )
-        }
-        if (insulinFromCOB > 0) {
-            actions.add(
-                rh.gs(app.aaps.core.ui.R.string.cobvsiob) + ": " + rh.gs(
-                    app.aaps.core.ui.R.string.formatsignedinsulinunits,
-                    -insulinFromBolusIOB - insulinFromBasalIOB + insulinFromCOB + insulinFromBG
-                ).formatColor(
-                    context, rh, app.aaps.core.ui.R.attr
-                        .cobAlertColor
-                )
-            )
-            val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
-            if (absorptionRate > .25)
-                actions.add(rh.gs(app.aaps.core.ui.R.string.slowabsorptiondetected, rh.gac(context, app.aaps.core.ui.R.attr.cobAlertColor), (absorptionRate * 100).toInt()))
-        }
-        if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-            actions.add(
-                rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints)
-                    .formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
-            )
-        if (config.AAPSCLIENT && insulinAfterConstraints > 0)
-            actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-        if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
-            actions.add(rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
-        if (advisor)
-            actions.add(rh.gs(app.aaps.core.ui.R.string.advisoralarm).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
 
-        if (quickWizardEntry != null) {
-            val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
-            if (eCarbsYesNo == QuickWizardEntry.YES) {
-                val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage, "time", 0)
-                val duration = JsonHelper.safeGetInt(quickWizardEntry.storage, "duration", 0)
-                val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage, "carbs2", 0)
-
-                if (carbs2 > 0) {
-                    val ecarbsMessage = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
-
-                    actions.add(
-                        rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs) + ": " + ecarbsMessage.formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor)
+            if (insulinAfterConstraints > 0) {
+                newLine()
+                val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
+                append(rh.gs(app.aaps.core.ui.R.string.bolus))
+                append(": ")
+                withStyle(SpanStyle(color = bolusColor)) {
+                    append(rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulinAfterConstraints))
+                }
+                append(pct)
+            }
+            if (carbs > 0 && !advisor) {
+                newLine()
+                val timeShift = when {
+                    carbTime > 0 -> " (+" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
+                    carbTime < 0 -> " (" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
+                    else         -> ""
+                }
+                append(rh.gs(app.aaps.core.ui.R.string.carbs))
+                append(": ")
+                withStyle(SpanStyle(color = carbsColor)) {
+                    append(rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs))
+                }
+                append(timeShift)
+            }
+            if (insulinFromCOB > 0) {
+                newLine()
+                append(rh.gs(app.aaps.core.ui.R.string.cobvsiob))
+                append(": ")
+                withStyle(SpanStyle(color = cobAlertColor)) {
+                    append(
+                        rh.gs(
+                            app.aaps.core.ui.R.string.formatsignedinsulinunits,
+                            -insulinFromBolusIOB - insulinFromBasalIOB + insulinFromCOB + insulinFromBG
+                        )
                     )
+                }
+                val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
+                if (absorptionRate > .25) {
+                    newLine()
+                    withStyle(SpanStyle(color = cobAlertColor)) {
+                        append(rh.gs(app.aaps.core.ui.R.string.slowabsorptiondetected_plain, (absorptionRate * 100).toInt()))
+                    }
+                }
+            }
+            if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
+                newLine()
+                withStyle(SpanStyle(color = warningColor)) {
+                    append(rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints))
+                }
+            }
+            if (config.AAPSCLIENT && insulinAfterConstraints > 0) {
+                newLine()
+                withStyle(SpanStyle(color = warningColor)) {
+                    append(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only))
+                }
+            }
+            if (useAlarm && !advisor && carbs > 0 && carbTime > 0) {
+                newLine()
+                withStyle(SpanStyle(color = infoColor)) {
+                    append(rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime))
+                }
+            }
+            if (advisor) {
+                newLine()
+                withStyle(SpanStyle(color = infoColor)) {
+                    append(rh.gs(app.aaps.core.ui.R.string.advisoralarm))
+                }
+            }
+
+            if (quickWizardEntry != null) {
+                val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
+                if (eCarbsYesNo == QuickWizardEntry.YES) {
+                    val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage, "time", 0)
+                    val duration = JsonHelper.safeGetInt(quickWizardEntry.storage, "duration", 0)
+                    val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage, "carbs2", 0)
+
+                    if (carbs2 > 0) {
+                        newLine()
+                        val ecarbsMessage = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
+                        append(rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs))
+                        append(": ")
+                        withStyle(SpanStyle(color = infoColor)) {
+                            append(ecarbsMessage)
+                        }
+                    }
                 }
             }
         }
-
-        return actions.joinToString("<br/>")
     }
 
     fun confirmAndExecute(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
@@ -404,23 +446,24 @@ class BolusWizard @Inject constructor(
             if (carbs > 0.0)
                 automation.removeAutomationEventEatReminder()
             if (preferences.get(BooleanKey.OverviewUseBolusAdvisor) && profileUtil.convertToMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
-                uiInteraction.showYesNoCancel(
-                    context = ctx,
-                    title = app.aaps.core.ui.R.string.bolus_advisor,
-                    message = app.aaps.core.ui.R.string.bolus_advisor_message,
-                    yes = { bolusAdvisorProcessing(ctx) },
-                    no = { commonProcessing(ctx, quickWizardEntry) }
+                rxBus.send(
+                    EventShowDialog.YesNoCancel(
+                        title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor),
+                        message = rh.gs(app.aaps.core.ui.R.string.bolus_advisor_message),
+                        onYes = { bolusAdvisorProcessing(ctx) },
+                        onNo = { commonProcessing(ctx, quickWizardEntry) }
+                    )
                 )
             else
                 commonProcessing(ctx, quickWizardEntry)
         } else {
-            uiInteraction.showOkDialog(context = ctx, title = app.aaps.core.ui.R.string.boluswizard, message = app.aaps.core.ui.R.string.no_action_selected)
+            rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = rh.gs(app.aaps.core.ui.R.string.no_action_selected)))
         }
     }
 
     private fun bolusAdvisorProcessing(ctx: Context) {
-        val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = true)
-        uiInteraction.showOkCancelDialog(context = ctx, title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = confirmMessage, ok = {
+        val confirmMessage = confirmMessageAfterConstraints(advisor = true)
+        rxBus.send(EventShowDialog.OkCancel(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = confirmMessage, onOk = {
             DetailedBolusInfo().apply {
                 eventType = TE.Type.CORRECTION_BOLUS
                 insulin = insulinAfterConstraints
@@ -450,7 +493,7 @@ class BolusWizard @Inject constructor(
                     })
                 }
             }
-        })
+        }))
     }
 
     fun explainShort(): String {
@@ -482,8 +525,8 @@ class BolusWizard @Inject constructor(
         val pump = activePlugin.activePump
         val now = dateUtil.now()
 
-        val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = false, quickWizardEntry)
-        uiInteraction.showOkCancelDialog(context = ctx, title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = confirmMessage, ok = {
+        val confirmMessage = confirmMessageAfterConstraints(advisor = false, quickWizardEntry)
+        rxBus.send(EventShowDialog.OkCancel(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = confirmMessage, onOk = {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
                     if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS)) {
@@ -562,7 +605,7 @@ class BolusWizard @Inject constructor(
             if (quickWizardEntry != null) {
                 scheduleECarbsFromQuickWizard(quickWizardEntry)
             }
-        })
+        }))
     }
 
     private fun scheduleECarbsFromQuickWizard(quickWizardEntry: QuickWizardEntry) {

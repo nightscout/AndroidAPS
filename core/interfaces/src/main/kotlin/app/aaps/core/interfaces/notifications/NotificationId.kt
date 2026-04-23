@@ -131,6 +131,7 @@ enum class NotificationId(
     AAPS_DIR_NOT_SELECTED(92, NORMAL, SYSTEM),
     GOOGLE_DRIVE_ERROR(1100, URGENT, SYSTEM),
     SETTINGS_EXPORT_RESULT(-2, INFO, SYSTEM),
+    SNACKBAR_FALLBACK(1200, NORMAL, SYSTEM, allowMultiple = true),
 
     // Automation
     AUTOMATION_MESSAGE(-1, URGENT, AUTOMATION, allowMultiple = true);

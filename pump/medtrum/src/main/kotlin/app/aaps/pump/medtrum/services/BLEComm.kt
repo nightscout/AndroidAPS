@@ -23,8 +23,9 @@ import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.interfaces.Preferences
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.medtrum.comm.ManufacturerData
 import app.aaps.pump.medtrum.comm.ReadDataPacket
 import app.aaps.pump.medtrum.comm.WriteCommandPackets
@@ -47,7 +48,8 @@ interface BLECommCallback {
 class BLEComm @Inject internal constructor(
     private val aapsLogger: AAPSLogger,
     private val context: Context,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val rxBus: RxBus
 ) {
 
     companion object {
@@ -94,7 +96,7 @@ class BLEComm @Inject internal constructor(
     @Synchronized
     fun startScan(): Boolean {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
+            rxBus.send(EventShowSnackbar(context.getString(app.aaps.core.ui.R.string.need_connect_permission), EventShowSnackbar.Type.Error))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permissions")
             return false
         }
@@ -123,7 +125,7 @@ class BLEComm @Inject internal constructor(
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
+            rxBus.send(EventShowSnackbar(context.getString(app.aaps.core.ui.R.string.need_connect_permission), EventShowSnackbar.Type.Error))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }

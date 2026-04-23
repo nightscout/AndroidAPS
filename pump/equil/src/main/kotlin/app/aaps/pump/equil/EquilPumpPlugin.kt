@@ -33,11 +33,11 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.compose.icons.IcPluginEquil
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.compose.EquilComposeContent
 import app.aaps.pump.equil.data.BolusProfile
 import app.aaps.pump.equil.data.RunMode
@@ -141,8 +141,8 @@ class EquilPumpPlugin @Inject constructor(
                 CmdAlarmSet(mode, aapsLogger, preferences, equilManager),
                 object : Callback() {
                     override fun run() {
-                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
-                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                        if (result.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
+                        else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
                     }
                 })
         }.launchIn(newScope)
@@ -152,8 +152,8 @@ class EquilPumpPlugin @Inject constructor(
                 CmdSettingSet(constraintsChecker.getMaxBolusAllowed().value(), constraintsChecker.getMaxBasalAllowed(profile).value(), aapsLogger, preferences, equilManager),
                 object : Callback() {
                     override fun run() {
-                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
-                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                        if (result.success) rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_pump_updated), EventShowSnackbar.Type.Info))
+                        else rxBus.send(EventShowSnackbar(rh.gs(R.string.equil_error), EventShowSnackbar.Type.Error))
                     }
                 })
         }.launchIn(newScope)
