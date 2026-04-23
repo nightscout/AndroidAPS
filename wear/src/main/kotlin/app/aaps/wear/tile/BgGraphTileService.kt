@@ -20,9 +20,12 @@ import androidx.wear.tiles.TileService
 import app.aaps.wear.R
 import app.aaps.wear.data.ComplicationData
 import app.aaps.wear.data.ComplicationDataRepository
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.interaction.activities.BgGraphActivity
+import app.aaps.wear.interaction.activities.LoopStatusActivity
 import app.aaps.wear.interaction.activities.formatTtDuration
 import app.aaps.wear.interaction.activities.renderBgGraph
+import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.utils.DisplayFormat
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -47,6 +50,7 @@ class BgGraphTileService : TileService() {
 
     @Inject lateinit var complicationDataRepository: ComplicationDataRepository
     @Inject lateinit var displayFormat: DisplayFormat
+    @Inject lateinit var sp: SP
 
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
@@ -94,6 +98,7 @@ class BgGraphTileService : TileService() {
             Tile.Builder()
                 .setResourcesVersion(resourceVersion.get().toString())
                 .setTileTimeline(Timeline.fromLayoutElement(buildLayout()))
+                .setFreshnessIntervalMillis(60_000)
                 .build()
         )
 
@@ -162,7 +167,13 @@ class BgGraphTileService : TileService() {
                                     .setAndroidActivity(
                                         ActionBuilders.AndroidActivity.Builder()
                                             .setPackageName(packageName)
-                                            .setClassName(BgGraphActivity::class.java.name)
+                                            .setClassName(
+                                                when (sp.getString("tile_bg_graph_tap_action", "bg_graph")) {
+                                                    "menu"        -> MainMenuActivity::class.java.name
+                                                    "loop_status" -> LoopStatusActivity::class.java.name
+                                                    else          -> BgGraphActivity::class.java.name
+                                                }
+                                            )
                                             .build()
                                     )
                                     .build()
@@ -197,7 +208,7 @@ class BgGraphTileService : TileService() {
                 canvas = composeCanvas,
                 size = Size(widthPx.toFloat(), graphHeightPx.toFloat())
             ) {
-                renderBgGraph(data, 3)
+                renderBgGraph(data, sp.getString("tile_bg_graph_hours", "3").toIntOrNull() ?: 3)
             }
         }
 

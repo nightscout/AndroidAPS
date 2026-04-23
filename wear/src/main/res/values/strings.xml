@@ -64,6 +64,7 @@
     <string name="pref_moreWatchfaceSettings">More Watchface settings</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Look into Watchface configuration, please.</string>
     <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt_long">Temp Target</string>
     <string name="menu_wizard">Calculator</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Treatment</string>
@@ -285,6 +286,11 @@
     <string name="key_running_mode_data" translatable="false">loop_states</string>
     <string name="label_running_mode_title">Running mode</string>
     <string name="label_bg_graph_tile">BG Graph</string>
+    <string name="tile_tap_action">Tap action</string>
+    <string name="tile_graph_time_range">Time range</string>
+    <string name="tile_tap_bg_graph">BG Graph</string>
+    <string name="tile_tap_main_menu">Main Menu</string>
+    <string name="tile_tap_loop_status">Loop Status</string>
     <string name="action_running_mode_selected">Running mode requested</string>
     <string name="title_activity_disconnect_pump">Disconnect pump</string>
     <string name="title_activity_suspend_loop">Suspend Loop</string>
