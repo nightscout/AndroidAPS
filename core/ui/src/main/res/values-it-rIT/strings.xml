@@ -232,6 +232,7 @@
     <string name="not_available_full">Non disponibile</string>
     <string name="engineering_mode_enabled">Engineering mode abilitata</string>
     <string name="back">Indietro</string>
+    <string name="next">Prossimo</string>
     <string name="show_hide_records">Nascondi record di loop</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
@@ -677,7 +678,6 @@
     <string name="confirmation">Conferma</string>
     <string name="message">Messaggio</string>
     <string name="ok">OK</string>
-    <string name="next">Prossimo</string>
     <string name="cancel">Annulla</string>
     <string name="dismiss">Cancella</string>
     <string name="yes">Sì</string>
