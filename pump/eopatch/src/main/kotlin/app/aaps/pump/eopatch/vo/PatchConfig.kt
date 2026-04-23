@@ -8,7 +8,7 @@ import app.aaps.pump.eopatch.GsonHelper
 import app.aaps.pump.eopatch.code.PatchLifecycle
 import app.aaps.pump.eopatch.core.define.IPatchConstant.Companion.WARRANTY_OPERATING_LIFE_MILLI
 import app.aaps.pump.eopatch.keys.EopatchStringNonKey
-import com.google.android.gms.common.internal.Preconditions
+import com.google.common.base.Preconditions
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
