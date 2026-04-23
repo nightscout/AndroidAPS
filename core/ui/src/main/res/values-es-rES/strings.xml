@@ -232,6 +232,7 @@
     <string name="not_available_full">No disponible</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
     <string name="back">Atrás</string>
+    <string name="next">Siguiente</string>
     <string name="show_hide_records">Ocultar registros del Lazo</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
@@ -677,7 +678,6 @@
     <string name="confirmation">Confirmación</string>
     <string name="message">Mensaje</string>
     <string name="ok">Ok</string>
-    <string name="next">Siguiente</string>
     <string name="cancel">Cancelar</string>
     <string name="dismiss">Descartar</string>
     <string name="yes">Si</string>
