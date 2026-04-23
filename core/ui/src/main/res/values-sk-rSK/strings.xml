@@ -231,6 +231,7 @@
     <string name="not_available_full">Nedostupný</string>
     <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
     <string name="back">Späť</string>
+    <string name="next">Ďalej</string>
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
@@ -671,7 +672,6 @@
     <string name="confirmation">Potvrdenie</string>
     <string name="message">Správa</string>
     <string name="ok">OK</string>
-    <string name="next">Ďalej</string>
     <string name="cancel">Zrušiť</string>
     <string name="dismiss">Zamietnuť</string>
     <string name="yes">Áno</string>
