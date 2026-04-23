@@ -11,9 +11,11 @@
     <string name="gettingpumpsettings">獲取幫浦設置</string>
     <string name="gettingpumptime">獲取幫浦時間</string>
     <string name="largetimediff">時間差異過大:\n幫浦時間超過 1.5 小時。\n請手動調整幫浦時間並確保讀取歷史紀錄時不會產生異常行為。\n若可能，請在更改時間前移除幫浦的歷史紀錄或在最後一個錯誤的歷史紀錄後停用閉環模式至少一個 DIA，但至少要從現在開始一個 DIA。</string>
+    <string name="largetimedifftitle">時間差異過大</string>
     <string name="approachingdailylimit">接近每日胰島素限制</string>
     <string name="startingbolus">開始注射</string>
     <string name="waitingforestimatedbolusend">等待預估的注射結束</string>
+    <string name="gettingbolusstatus">正在取得注射狀態</string>
     <string name="stoppingtempbasal">停止臨時基礎速率</string>
     <string name="settingtempbasal">設置臨時基礎速率</string>
     <string name="settingextendedbolus">設置延長注射</string>
