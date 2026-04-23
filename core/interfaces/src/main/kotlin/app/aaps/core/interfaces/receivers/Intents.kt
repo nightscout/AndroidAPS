@@ -56,5 +56,14 @@ interface Intents {
         const val SINO_APP = "cn.diyaps.sharing.SINO_APP"
         // Patched Syai Tag App -> AAPS
         const val SYAI_APP = "info.nightscout.androidaps.action.SYAI_TAG_APP"
+
+        // Aidex -> AAPS
+        var AIDEX_NEW_BG_ESTIMATE = "com.microtechmd.cgms.aidex.action.BgEstimate"
+        var AIDEX_BG_TYPE = "com.microtechmd.cgms.aidex.BgType"
+        var AIDEX_BG_VALUE = "com.microtechmd.cgms.aidex.BgValue"
+        var AIDEX_BG_SLOPE_NAME = "com.microtechmd.cgms.aidex.BgSlopeName"
+        var AIDEX_TIMESTAMP = "com.microtechmd.cgms.aidex.Time" // epoch in ms
+        var AIDEX_TRANSMITTER_SN = "com.microtechmd.cgms.aidex.TransmitterSerialNumber"
+        var AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
     }
 }
