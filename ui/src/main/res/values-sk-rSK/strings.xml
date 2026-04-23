@@ -9,6 +9,8 @@
     <!--    Widget-->
     <string name="configure">Konfigurovať priehľadnosť</string>
     <string name="widget_description">AAPS widget</string>
+    <string name="widget_bg_graph_description">Graf glykémie AAPS</string>
+    <string name="widget_compact_bg_description">AAPS GLY + IOB + COB (kompaktné)</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktivity</string>
     <string name="time_range">Časový rozsah</string>
