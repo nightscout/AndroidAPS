@@ -230,6 +230,11 @@
     <string name="status_running_mode">Kjøremodus</string>
     <string name="label_running_mode_title">Kjøremodus</string>
     <string name="label_bg_graph_tile">Glukosegraf</string>
+    <string name="tile_tap_action">Handling ved trykk</string>
+    <string name="tile_graph_time_range">Tidsrom</string>
+    <string name="tile_tap_bg_graph">Glukosegraf</string>
+    <string name="tile_tap_main_menu">Hovedmeny</string>
+    <string name="tile_tap_loop_status">Loopstatus</string>
     <string name="action_running_mode_selected">Kjøremodus forespurt</string>
     <string name="title_activity_disconnect_pump">Koble fra pumpen</string>
     <string name="title_activity_suspend_loop">Pause loop</string>
