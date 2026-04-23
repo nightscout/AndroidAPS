@@ -435,7 +435,6 @@
     <string name="bolus_advisor">Bolusadviseur</string>
     <string name="bolus_advisor_message">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je laten weten wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je er aan herinneren.</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
     <string name="bolus_constraint_applied_warn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
