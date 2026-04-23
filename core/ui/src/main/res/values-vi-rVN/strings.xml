@@ -231,6 +231,7 @@
     <string name="not_available_full">Không khả dụng</string>
     <string name="engineering_mode_enabled">Chế độ bảo trì đã được bật</string>
     <string name="back">Quay lại</string>
+    <string name="next">Tiếp theo</string>
     <string name="show_hide_records">Ẩn các bản ghi vòng lặp</string>
     <!--    Protection-->
     <string name="wrongpassword">Sai mật khẩu</string>
@@ -671,7 +672,6 @@
     <string name="confirmation">Xác nhận</string>
     <string name="message">Nội dụng tin nhắn</string>
     <string name="ok">ĐỒNG Ý</string>
-    <string name="next">Tiếp theo</string>
     <string name="cancel">Hủy</string>
     <string name="dismiss">Bỏ qua</string>
     <string name="yes">Có</string>
