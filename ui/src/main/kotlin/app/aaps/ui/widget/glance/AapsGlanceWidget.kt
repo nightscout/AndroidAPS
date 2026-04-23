@@ -112,7 +112,7 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                 text = state.deltaText,
                 style = TextStyle(
                     color = ColorProvider(TextMuted),
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
@@ -127,7 +127,7 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                     text = state.bgText,
                     style = TextStyle(
                         color = ColorProvider(bgColor),
-                        fontSize = 48.sp,
+                        fontSize = 44.sp,
                         fontWeight = FontWeight.Bold,
                         textDecoration = if (state.strikeThrough) TextDecoration.LineThrough else TextDecoration.None
                     )
@@ -152,7 +152,7 @@ private fun BgPanel(state: WidgetRenderState, modifier: GlanceModifier) {
                 text = state.timeAgoText,
                 style = TextStyle(
                     color = ColorProvider(TextMuted),
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
