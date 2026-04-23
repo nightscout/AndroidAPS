@@ -232,6 +232,7 @@
     <string name="not_available_full">Ikke tilgjengelig</string>
     <string name="engineering_mode_enabled">Engineering mode aktivert</string>
     <string name="back">Bakside</string>
+    <string name="next">Neste</string>
     <string name="show_hide_records">Skjul loop-poster</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
@@ -677,7 +678,6 @@
     <string name="confirmation">Bekreftelse</string>
     <string name="message">Melding</string>
     <string name="ok">OK</string>
-    <string name="next">Neste</string>
     <string name="cancel">Avbryt</string>
     <string name="dismiss">Forkast</string>
     <string name="yes">Ja</string>
