@@ -362,7 +362,6 @@
     <string name="bolus_advisor">Bolusguide</string>
     <string name="bolus_advisor_message">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrigeringsbolus nu och få en påminnelse när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
     <string name="cobvsiob">COB kontra IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
     <string name="bolus_constraint_applied_warn">Bolusbegränsning tillämpad: %1$.2f U till %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus kommer bara att loggas (inte levereras av pumpen)</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
