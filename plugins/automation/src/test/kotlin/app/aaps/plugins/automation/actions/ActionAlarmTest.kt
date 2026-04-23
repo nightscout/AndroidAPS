@@ -36,7 +36,7 @@ class ActionAlarmTest : TestBaseWithProfile() {
     fun setup() {
         whenever(rh.gs(app.aaps.core.ui.R.string.alarm)).thenReturn("Alarm")
         whenever(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), any())).thenReturn("Alarm: %s")
-        timerUtil = TimerUtil(context)
+        timerUtil = TimerUtil(context, rh, rxBus)
         sut = ActionAlarm(injector)
     }
 

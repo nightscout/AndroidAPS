@@ -1,7 +1,6 @@
 package app.aaps.core.objects.wizard
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -434,7 +433,7 @@ class BolusWizard @Inject constructor(
         }
     }
 
-    fun confirmAndExecute(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
+    fun confirmAndExecute(quickWizardEntry: QuickWizardEntry? = null) {
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
             if (accepted) {
                 aapsLogger.debug(LTag.UI, "guarding: already accepted")
@@ -450,18 +449,18 @@ class BolusWizard @Inject constructor(
                     EventShowDialog.YesNoCancel(
                         title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor),
                         message = rh.gs(app.aaps.core.ui.R.string.bolus_advisor_message),
-                        onYes = { bolusAdvisorProcessing(ctx) },
-                        onNo = { commonProcessing(ctx, quickWizardEntry) }
+                        onYes = { bolusAdvisorProcessing() },
+                        onNo = { commonProcessing(quickWizardEntry) }
                     )
                 )
             else
-                commonProcessing(ctx, quickWizardEntry)
+                commonProcessing(quickWizardEntry)
         } else {
             rxBus.send(EventShowDialog.Ok(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = rh.gs(app.aaps.core.ui.R.string.no_action_selected)))
         }
     }
 
-    private fun bolusAdvisorProcessing(ctx: Context) {
+    private fun bolusAdvisorProcessing() {
         val confirmMessage = confirmMessageAfterConstraints(advisor = true)
         rxBus.send(EventShowDialog.OkCancel(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = confirmMessage, onOk = {
             DetailedBolusInfo().apply {
@@ -520,7 +519,7 @@ class BolusWizard @Inject constructor(
     }
 
     @SuppressLint("CheckResult")
-    private fun commonProcessing(ctx: Context, quickWizardEntry: QuickWizardEntry? = null) {
+    private fun commonProcessing(quickWizardEntry: QuickWizardEntry? = null) {
         val profile = runBlocking { profileFunction.getProfile() } ?: return
         val pump = activePlugin.activePump
         val now = dateUtil.now()

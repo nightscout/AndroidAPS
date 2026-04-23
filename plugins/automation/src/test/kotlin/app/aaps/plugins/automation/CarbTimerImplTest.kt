@@ -64,7 +64,7 @@ class CarbTimerImplTest : TestBase() {
         whenever(rh.gs(anyInt())).thenReturn("")
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
-        timerUtil = TimerUtil(context)
+        timerUtil = TimerUtil(context, rh, rxBus)
         automationPlugin = AutomationPlugin(
             injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore, uel, localProfileManager
         )

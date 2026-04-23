@@ -202,7 +202,7 @@ class MainViewModel @Inject constructor(
         // permanent TT uses Long.MAX_VALUE — avoid Long-overflow in expiry math).
         val ttIsFinite = ttData != null && ttData.state == TempTargetState.ACTIVE
             && ttData.duration > 0 && ttData.duration < T.days(30).msecs()
-        val ttExpired = ttIsFinite && now >= ttData!!.timestamp + ttData.duration
+        val ttExpired = ttIsFinite && now >= ttData.timestamp + ttData.duration
         if (ttExpired) overviewDataCache.refreshTempTarget()
 
         val profileExpired = profileData != null && profileData.duration > 0
@@ -210,7 +210,7 @@ class MainViewModel @Inject constructor(
         if (profileExpired) overviewDataCache.refreshProfile()
 
         val rmIsFinite = rmData != null && rmData.duration > 0 && rmData.duration < T.days(30).msecs()
-        val rmExpired = rmIsFinite && now >= rmData!!.timestamp + rmData.duration
+        val rmExpired = rmIsFinite && now >= rmData.timestamp + rmData.duration
         if (rmExpired) overviewDataCache.refreshRunningMode()
 
         val tbrExpired = tbrData != null && tbrData.state != TbrState.NONE && tbrData.duration > 0
@@ -219,7 +219,7 @@ class MainViewModel @Inject constructor(
 
         // TT progress and display text
         val ttProgress = if (ttIsFinite && !ttExpired) {
-            val elapsed = now - ttData!!.timestamp
+            val elapsed = now - ttData.timestamp
             (elapsed.toFloat() / ttData.duration.toFloat()).coerceIn(0f, 1f)
         } else 0f
 
@@ -247,7 +247,7 @@ class MainViewModel @Inject constructor(
 
         // Running mode progress and display text
         val rmProgress = if (rmIsFinite && !rmExpired) {
-            val elapsed = now - rmData!!.timestamp
+            val elapsed = now - rmData.timestamp
             (elapsed.toFloat() / rmData.duration.toFloat()).coerceIn(0f, 1f)
         } else 0f
 
@@ -376,29 +376,29 @@ class MainViewModel @Inject constructor(
      * Execute QuickWizard by GUID: re-validates at execution time and calls confirmAndExecute.
      * Needs Activity context for the confirmation dialog.
      */
-    fun executeQuickWizard(context: android.content.Context, guid: String) {
+    fun executeQuickWizard(guid: String) {
         viewModelScope.launch {
             val entry = quickWizard.get(guid) ?: return@launch
             if (!entry.isActive()) return@launch
             when (entry.mode()) {
-                QuickWizardMode.WIZARD  -> executeQuickWizardMode(context, entry)
-                QuickWizardMode.INSULIN -> executeInsulinMode(context, entry)
-                QuickWizardMode.CARBS   -> executeCarbsMode(context, entry)
+                QuickWizardMode.WIZARD  -> executeQuickWizardMode(entry)
+                QuickWizardMode.INSULIN -> executeInsulinMode(entry)
+                QuickWizardMode.CARBS   -> executeCarbsMode(entry)
             }
         }
     }
 
-    private suspend fun executeQuickWizardMode(context: android.content.Context, entry: QuickWizardEntry) {
+    private suspend fun executeQuickWizardMode(entry: QuickWizardEntry) {
         val bg = iobCobCalculator.ads.actualBg() ?: return
         val profile = profileFunction.getProfile() ?: return
         val profileName = profileFunction.getProfileName()
         val wizard = entry.doCalc(profile, profileName, bg)
         if (wizard.calculatedTotalInsulin > 0.0 && entry.carbs() > 0) {
-            wizard.confirmAndExecute(context, entry)
+            wizard.confirmAndExecute(entry)
         }
     }
 
-    private fun executeInsulinMode(context: android.content.Context, entry: QuickWizardEntry) {
+    private fun executeInsulinMode(entry: QuickWizardEntry) {
         val pump = activePlugin.activePump
         if (!pump.isInitialized() || pump.isSuspended()) return
 
@@ -444,7 +444,7 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    private fun executeCarbsMode(context: android.content.Context, entry: QuickWizardEntry) {
+    private fun executeCarbsMode(entry: QuickWizardEntry) {
         val carbs = entry.carbs()
         if (carbs <= 0) return
 

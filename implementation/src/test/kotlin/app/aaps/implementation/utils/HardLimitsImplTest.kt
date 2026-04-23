@@ -1,6 +1,5 @@
 package app.aaps.implementation.utils
 
-import android.content.Context
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationAction
 import app.aaps.core.interfaces.notifications.NotificationId
@@ -29,7 +28,6 @@ class HardLimitsImplTest : TestBase() {
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var context: Context
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtil: DateUtil
 
@@ -38,7 +36,7 @@ class HardLimitsImplTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        hardLimits = HardLimitsImpl(aapsLogger, notificationManager, preferences, rh, context, persistenceLayer, dateUtil, testScope)
+        hardLimits = HardLimitsImpl(aapsLogger, notificationManager, preferences, rh, persistenceLayer, dateUtil, rxBus, testScope)
         whenever(dateUtil.now()).thenReturn(1000L)
         runTest {
             whenever(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(any(), any(), any(), any(), any(), any())).thenReturn(PersistenceLayer.TransactionResult())
