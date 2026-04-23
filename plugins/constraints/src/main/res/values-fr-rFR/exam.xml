@@ -193,4 +193,8 @@
     <string name="other_medication_label">Autres médicaments. Veuillez lire l\'énoncé ci-dessous et cocher la case pour accepter la déclaration.</string>
     <string name="other_medication_text">AAPS réduit le débit de basal ou suspend l\'injection d\'insuline pour augmenter le taux de sucre dans le sang. Les médicaments du groupe d\'inhibiteurs SGLT2 (gliflozins) peuvent empêcher l\'augmentation de la glycémie et ainsi produire une carence dangereuse en insuline conduisant à une acidocétose DKA.
 \nLes noms de marque communes sont : Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nJe m\'engage à ne pas prendre ces médicaments lors de l\'utilisation d\'AAPS ou à désactiver la boucle avant de les utiliser.</string>
+    <string name="concentration_feature_label">Gestion de la concentration d\'insuline</string>
+    <string name="u200_with_profile">Avant que AAPS ne prenne en charge les concentrations d\'insuline, les utilisateurs ont utilisé de l\'U200 en définissant un profil de 50% pour réduire de moitié toutes les valeurs. Dans cette configuration, quelles réponses sont vraies ?</string>
+    <string name="u200_with_profile_reports">Ma base de données interne d\'AAPS et les rapports NS sont devenus incorrects, toutes les valeurs (boluses, débits, débits, TDD) doivent être multipliées par 2 pour voir le statut réel, en particulier pour les médecins et l\'équipe de santé.</string>
+    <string name="u200_with_profile_pens">Je n\'ai pas à gérer de conversion entre AAPS et le stylo, si j\'utilise un stylo U200 pour injecter un bolus externe.</string>
 </resources>
