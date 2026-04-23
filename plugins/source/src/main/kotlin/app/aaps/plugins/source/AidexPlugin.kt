@@ -47,7 +47,8 @@ class AidexPlugin @Inject constructor(
 
     // Allow only for pumpcontrol or dev & engineering_mode
     override fun specialEnableCondition(): Boolean {
-        return config.APS.not() || config.isDev() && config.isEngineeringMode()
+        // return config.APS.not() || config.isDev() && config.isEngineeringMode()
+        return true
     }
 
     // cannot be inner class because of needed injection
