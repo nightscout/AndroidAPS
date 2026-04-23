@@ -635,7 +635,6 @@
     <string name="bolus_advisor">Gợi ý bolus</string>
     <string name="bolus_advisor_message">Bạn đang có đường huyết cao. Thay vì ăn ngay, nên chờ đến khi đường huyết ổn định hơn. Bạn có muốn thực hiện bolus chỉnh sửa ngay và được nhắc khi đến giờ ăn? Trong trường hợp này, không có carbs nào được ghi nhận và bạn sẽ phải sử dụng wizard một lần nữa khi được nhắc.</string>
     <string name="cobvsiob">COB với IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Phát hiện hấp thụ carb chậm: %2$d%% thời gian. Kiểm tra lại tính toán của bạn. COB có thể bị đánh giá quá cao, dẫn đến việc bơm insulin nhiều hơn !!!!!</font>]]></string>
     <string name="slowabsorptiondetected_plain">!!!!! Phát hiện hấp thu carb chậm trong %1$d%% thời gian. Hãy kiểm tra lại phép tính của bạn. COB có thể bị ước tính cao, do đó có thể dẫn đến việc cung cấp nhiều insulin hơn !!!!!</string>
     <string name="bolus_constraint_applied_warn">Giới hạn bolus đã áp dụng: %1$.2f U đến %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus chỉ được ghi lại (không tiêm qua pump)</string>
