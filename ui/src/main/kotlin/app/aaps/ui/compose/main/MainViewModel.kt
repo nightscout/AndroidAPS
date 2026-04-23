@@ -195,9 +195,11 @@ class MainViewModel @Inject constructor(
         now: Long
     ): ChipState {
         // Detect expired chips and schedule a cache refresh. Duration >= 30 days is
-        // effectively permanent (e.g. loop disabled uses Int.MAX_VALUE minutes).
-        val ttExpired = ttData != null && ttData.state == TempTargetState.ACTIVE && ttData.duration > 0
-            && now >= ttData.timestamp + ttData.duration
+        // effectively permanent (e.g. loop disabled uses Int.MAX_VALUE minutes, or scene
+        // permanent TT uses Long.MAX_VALUE — avoid Long-overflow in expiry math).
+        val ttIsFinite = ttData != null && ttData.state == TempTargetState.ACTIVE
+            && ttData.duration > 0 && ttData.duration < T.days(30).msecs()
+        val ttExpired = ttIsFinite && now >= ttData!!.timestamp + ttData.duration
         if (ttExpired) overviewDataCache.refreshTempTarget()
 
         val profileExpired = profileData != null && profileData.duration > 0
@@ -213,13 +215,13 @@ class MainViewModel @Inject constructor(
         if (tbrExpired) overviewDataCache.refreshTbr()
 
         // TT progress and display text
-        val ttProgress = if (ttData != null && ttData.duration > 0 && !ttExpired) {
-            val elapsed = now - ttData.timestamp
+        val ttProgress = if (ttIsFinite && !ttExpired) {
+            val elapsed = now - ttData!!.timestamp
             (elapsed.toFloat() / ttData.duration.toFloat()).coerceIn(0f, 1f)
         } else 0f
 
         val ttText = if (ttData != null && !ttExpired) {
-            if (ttData.state == TempTargetState.ACTIVE && ttData.duration > 0) {
+            if (ttIsFinite) {
                 "${ttData.targetRangeText} ${dateUtil.untilString(ttData.timestamp + ttData.duration, rh)}"
             } else {
                 ttData.targetRangeText
