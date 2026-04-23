@@ -158,8 +158,6 @@ class MainViewModel @Inject constructor(
             showAuthFailedDialog = ev.showAuthFailedDialog,
             isProfileLoaded = chip.isProfileLoaded,
             profileName = chip.profileName,
-            rawProfileName = chip.rawProfileName,
-            profilePercentage = chip.profilePercentage,
             profilePsId = chip.profilePsId,
             isProfileModified = chip.isProfileModified,
             profileProgress = chip.profileProgress,
@@ -260,8 +258,6 @@ class MainViewModel @Inject constructor(
         return ChipState(
             isProfileLoaded = profileData?.isLoaded ?: false,
             profileName = profileText,
-            rawProfileName = profileData?.profileName ?: "",
-            profilePercentage = profileData?.percentage ?: 100,
             profilePsId = profileData?.originalPsId ?: 0,
             isProfileModified = profileData?.isModified ?: false,
             profileProgress = profileProgress,
@@ -771,8 +767,6 @@ private data class EventState(
 private data class ChipState(
     val isProfileLoaded: Boolean = false,
     val profileName: String = "",
-    val rawProfileName: String = "",
-    val profilePercentage: Int = 100,
     val profilePsId: Long = 0,
     val isProfileModified: Boolean = false,
     val profileProgress: Float = 0f,

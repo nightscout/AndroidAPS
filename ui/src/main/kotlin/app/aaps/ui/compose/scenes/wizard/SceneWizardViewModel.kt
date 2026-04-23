@@ -19,7 +19,7 @@ import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.ui.compose.scenes.SceneRepository
 import app.aaps.ui.compose.scenes.SceneTemplate
-import app.aaps.ui.compose.tempTarget.toTTPresets
+import app.aaps.core.interfaces.tempTargets.toTTPresets
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.Scene
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import kotlinx.coroutines.delay
 
@@ -89,19 +90,19 @@ internal fun ActiveSceneBannerContent(
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(horizontal = AapsSpacing.medium, vertical = AapsSpacing.small)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(AapsSpacing.large)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = SceneIcons.fromKey(state.scene.icon).icon,
                     contentDescription = null,
                     tint = if (expired) MaterialTheme.colorScheme.onSurfaceVariant else AapsTheme.elementColors.scene,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(AapsSpacing.chipIconSize)
                 )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
@@ -145,7 +146,7 @@ internal fun ActiveSceneBannerContent(
                     progress = { 1f - (remainingMs.toFloat() / totalMs.toFloat()) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
+                        .padding(top = AapsSpacing.medium)
                 )
             }
         }

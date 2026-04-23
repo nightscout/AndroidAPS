@@ -41,7 +41,7 @@ class SceneExpiryWorker(
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-            .setSmallIcon(app.aaps.core.objects.R.drawable.ic_notif_aaps)
+            .setSmallIcon(app.aaps.core.ui.R.drawable.ic_notif_aaps)
             .setContentTitle(applicationContext.getString(app.aaps.core.ui.R.string.scene_ended))
             .setContentText(sceneName)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

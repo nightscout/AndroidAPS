@@ -11,9 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.ui.compose.scenes.LoopModeEditor
@@ -49,7 +49,7 @@ internal fun LoopModeStep(
             enter = fadeIn() + expandVertically(),
             exit = fadeOut() + shrinkVertically()
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
                 LoopModeEditor(
                     action = state.loopModeAction,
                     onUpdate = onUpdate

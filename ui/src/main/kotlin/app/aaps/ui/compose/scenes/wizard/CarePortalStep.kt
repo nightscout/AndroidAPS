@@ -12,10 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TE
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.ui.compose.scenes.CarePortalEditor
@@ -52,7 +52,7 @@ internal fun CarePortalStep(
             enter = fadeIn() + expandVertically(),
             exit = fadeOut() + shrinkVertically()
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
                 CarePortalEditor(
                     action = state.carePortalAction,
                     onUpdate = onUpdate,

@@ -40,6 +40,7 @@ import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TTPreset
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.NumberInputRow
 
 // --- Helpers ---
@@ -298,7 +299,7 @@ internal fun SceneIconPicker(
             .fillMaxWidth()
             .clickable { expanded = !expanded }
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(AapsSpacing.large)) {
             // Collapsed: selected icon + label + expand arrow
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -306,7 +307,7 @@ internal fun SceneIconPicker(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
@@ -335,17 +336,17 @@ internal fun SceneIconPicker(
 
             // Expanded: categorized grid
             AnimatedVisibility(visible = expanded) {
-                Column(modifier = Modifier.padding(top = 8.dp)) {
+                Column(modifier = Modifier.padding(top = AapsSpacing.medium)) {
                     SceneIcons.categories.forEach { category ->
                         Text(
                             text = category.name,
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 8.dp)
+                            modifier = Modifier.padding(top = AapsSpacing.medium)
                         )
                         FlowRow(
-                            modifier = Modifier.padding(top = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            modifier = Modifier.padding(top = AapsSpacing.small),
+                            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.extraSmall)
                         ) {
                             category.icons.forEach { entry ->
                                 SceneIconButton(entry, entry.key == selectedKey) {

@@ -19,10 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.pump.StepProgressIndicator
 
@@ -58,13 +58,13 @@ fun SceneWizardScreen(
                 StepProgressIndicator(
                     totalSteps = totalSteps,
                     currentStep = state.currentStep - editOffset, // 0-indexed for the shared indicator
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge)
                 )
             } else if (state.currentStep == SceneWizardViewModel.STEP_INFO) {
                 StepProgressIndicator(
                     totalSteps = SceneWizardViewModel.TOTAL_STEPS,
                     currentStep = 0,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = AapsSpacing.extraLarge)
                 )
             }
 

@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.aaps.core.ui.compose.AapsTheme
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
@@ -33,7 +33,7 @@ internal fun SceneBadge(modifier: Modifier = Modifier) {
             contentDescription = null,
             tint = sceneColor,
             modifier = Modifier
-                .padding(2.dp)
+                .padding(AapsSpacing.extraSmall)
                 .size(12.dp)
         )
     }

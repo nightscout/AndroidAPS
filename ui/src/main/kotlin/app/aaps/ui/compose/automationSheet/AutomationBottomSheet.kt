@@ -171,7 +171,7 @@ fun AutomationBottomSheet(
                         },
                         leadingContent = {
                             TonalIcon(
-                                painter = rememberVectorPainter(sceneIcon),
+                                icon = sceneIcon,
                                 color = sceneColor
                             )
                         },

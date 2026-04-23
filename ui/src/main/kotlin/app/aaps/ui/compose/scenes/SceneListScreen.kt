@@ -2,6 +2,7 @@ package app.aaps.ui.compose.scenes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,6 +44,7 @@ import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TT
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.navigation.ElementType
@@ -111,7 +113,7 @@ fun SceneListScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(32.dp),
+                    .padding(AapsSpacing.xxLarge),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -123,7 +125,7 @@ fun SceneListScreen(
                     text = stringResource(R.string.scene_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = AapsSpacing.medium)
                 )
             }
         } else {
@@ -131,8 +133,8 @@ fun SceneListScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                contentPadding = PaddingValues(AapsSpacing.medium),
+                verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)
             ) {
                 items(scenes, key = { it.id }) { scene ->
                     val isActive = activeState?.scene?.id == scene.id
@@ -184,8 +186,8 @@ internal fun SceneCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(AapsSpacing.large),
+            horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -250,19 +252,19 @@ private fun SceneActivationDialog(
                     Text(
                         text = "\u2022 $summary",
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(vertical = 2.dp)
+                        modifier = Modifier.padding(vertical = AapsSpacing.extraSmall)
                     )
                 }
 
                 // Conflicts in accent color
                 if (state.conflicts.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(AapsSpacing.large))
                     state.conflicts.forEach { conflict ->
                         Text(
                             text = "\u26A0 $conflict",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(vertical = 2.dp)
+                            modifier = Modifier.padding(vertical = AapsSpacing.extraSmall)
                         )
                     }
                 }
@@ -299,7 +301,7 @@ private fun SceneDeactivationDialog(
                     Text(
                         text = "\u2022 $summary",
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(vertical = 2.dp)
+                        modifier = Modifier.padding(vertical = AapsSpacing.extraSmall)
                     )
                 }
             }

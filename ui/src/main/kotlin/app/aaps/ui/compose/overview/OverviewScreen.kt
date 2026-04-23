@@ -39,8 +39,6 @@ private val SPLIT_LAYOUT_MIN_WIDTH: Dp = 720.dp
 @Composable
 fun OverviewScreen(
     profileName: String,
-    rawProfileName: String = "",
-    profilePercentage: Int = 100,
     profilePsId: Long = 0,
     isProfileModified: Boolean,
     profileProgress: Float,

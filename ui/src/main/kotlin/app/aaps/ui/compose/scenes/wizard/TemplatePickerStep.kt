@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.ui.compose.scenes.SceneTemplate
@@ -36,7 +37,7 @@ internal fun TemplatePickerStep(onSelect: (SceneTemplate) -> Unit) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(AapsSpacing.medium))
 
         SceneTemplate.entries.forEach { template ->
             val templateName = stringResource(template.nameResId)
@@ -49,8 +50,8 @@ internal fun TemplatePickerStep(onSelect: (SceneTemplate) -> Unit) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        .padding(AapsSpacing.extraLarge),
+                    horizontalArrangement = Arrangement.spacedBy(AapsSpacing.large),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
