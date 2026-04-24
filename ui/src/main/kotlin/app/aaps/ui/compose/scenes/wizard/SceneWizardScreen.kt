@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
@@ -33,6 +33,7 @@ fun SceneWizardScreen(
     viewModel: SceneWizardViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val chainTargets by viewModel.availableChainTargets.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -82,9 +83,9 @@ fun SceneWizardScreen(
                 modifier = Modifier.weight(1f)
             ) { step ->
                 when (step) {
-                    SceneWizardViewModel.STEP_TEMPLATE   -> TemplatePickerStep(onSelect = viewModel::selectTemplate)
-                    SceneWizardViewModel.STEP_INFO        -> InfoStep(state, viewModel::back, viewModel::next)
-                    SceneWizardViewModel.STEP_PROFILE     -> ProfileStep(
+                    SceneWizardViewModel.STEP_TEMPLATE -> TemplatePickerStep(onSelect = viewModel::selectTemplate)
+                    SceneWizardViewModel.STEP_INFO -> InfoStep(state, viewModel::back, viewModel::next)
+                    SceneWizardViewModel.STEP_PROFILE -> ProfileStep(
                         state = state, onToggle = viewModel::setProfileEnabled,
                         onUpdate = viewModel::updateProfileAction, profileNames = viewModel.profileNames,
                         onBack = viewModel::back, onNext = viewModel::next
@@ -97,31 +98,38 @@ fun SceneWizardScreen(
                         onBack = viewModel::back, onNext = viewModel::next
                     )
 
-                    SceneWizardViewModel.STEP_SMB         -> SmbStep(
+                    SceneWizardViewModel.STEP_SMB -> SmbStep(
                         state = state, onToggle = viewModel::setSmbEnabled,
                         onUpdate = viewModel::updateSmbAction,
                         onBack = viewModel::back, onNext = viewModel::next
                     )
 
-                    SceneWizardViewModel.STEP_LOOP_MODE   -> LoopModeStep(
+                    SceneWizardViewModel.STEP_LOOP_MODE -> LoopModeStep(
                         state = state, onToggle = viewModel::setLoopModeEnabled,
                         onUpdate = viewModel::updateLoopModeAction,
                         onBack = viewModel::back, onNext = viewModel::next
                     )
 
-                    SceneWizardViewModel.STEP_CAREPORTAL  -> CarePortalStep(
+                    SceneWizardViewModel.STEP_CAREPORTAL -> CarePortalStep(
                         state = state, onToggle = viewModel::setCarePortalEnabled,
                         onUpdate = viewModel::updateCarePortalAction,
                         translateEventType = viewModel::translateEventType,
                         onBack = viewModel::back, onNext = viewModel::next
                     )
 
-                    SceneWizardViewModel.STEP_DURATION    -> DurationStep(
+                    SceneWizardViewModel.STEP_DURATION -> DurationStep(
                         state = state, onSetDuration = viewModel::setDuration,
                         onBack = viewModel::back, onNext = viewModel::next
                     )
 
-                    SceneWizardViewModel.STEP_NAME_ICON   -> NameIconStep(
+                    SceneWizardViewModel.STEP_CHAIN -> ChainStep(
+                        state = state,
+                        availableTargets = chainTargets,
+                        onSetChainTarget = viewModel::setChainTarget,
+                        onBack = viewModel::back, onNext = viewModel::next
+                    )
+
+                    SceneWizardViewModel.STEP_NAME_ICON -> NameIconStep(
                         state = state, onSetName = viewModel::setName,
                         onSetIcon = viewModel::setIcon,
                         onBack = viewModel::back, onFinish = { if (viewModel.save()) onFinished() }

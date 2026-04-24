@@ -163,16 +163,16 @@ class SceneSerializerTest : TestBase() {
     }
 
     @Test
-    fun sceneEndAction_suggestScene_roundTrip() {
+    fun sceneEndAction_chainScene_roundTrip() {
         val scene = Scene(
             id = "s1",
             name = "Pre-Meal",
-            endAction = SceneEndAction.SuggestScene("post-meal-id")
+            endAction = SceneEndAction.ChainScene("post-meal-id")
         )
 
         val restored = listOf(scene).toJson().toScenes()[0]
-        assertThat(restored.endAction).isInstanceOf(SceneEndAction.SuggestScene::class.java)
-        assertThat((restored.endAction as SceneEndAction.SuggestScene).sceneId).isEqualTo("post-meal-id")
+        assertThat(restored.endAction).isInstanceOf(SceneEndAction.ChainScene::class.java)
+        assertThat((restored.endAction as SceneEndAction.ChainScene).sceneId).isEqualTo("post-meal-id")
     }
 
     @Test

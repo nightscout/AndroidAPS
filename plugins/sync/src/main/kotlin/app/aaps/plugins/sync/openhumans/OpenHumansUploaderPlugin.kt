@@ -1,17 +1,9 @@
 package app.aaps.plugins.sync.openhumans
 
-import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.util.DisplayMetrics
 import android.view.WindowManager
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -25,6 +17,9 @@ import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.NotificationAction
+import app.aaps.core.interfaces.notifications.NotificationId
+import app.aaps.core.interfaces.notifications.NotificationManager
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -64,6 +59,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
+import app.aaps.core.ui.R as CoreUiR
 
 @Singleton
 class OpenHumansUploaderPlugin @Inject internal constructor(
@@ -73,6 +69,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     internal val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val openHumansAPI: OpenHumansAPI,
+    private val notificationManager: NotificationManager,
     internal val stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
@@ -108,7 +105,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         super.onStart()
         val newScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope = newScope
-        setupNotificationChannels()
         if (openHumansState != null) scheduleWorker(false)
         merge(
             preferences.observe(BooleanKey.OpenHumansWifiOnly).drop(1).map {},
@@ -625,54 +621,22 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         openHumansState = null
     }
 
-    private fun setupNotificationChannels() {
-        val notificationManagerCompat = NotificationManagerCompat.from(context)
-        notificationManagerCompat.createNotificationChannel(
-            NotificationChannel(
-                NOTIFICATION_CHANNEL_WORKER,
-                rh.gs(R.string.open_humans_uploading),
-                NotificationManager.IMPORTANCE_MIN
-            )
-        )
-        notificationManagerCompat.createNotificationChannel(
-            NotificationChannel(
-                NOTIFICATION_CHANNEL_MESSAGES,
-                rh.gs(R.string.open_humans_notifications),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-        )
-    }
-
     private suspend fun handleSignOut() {
-        val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_MESSAGES)
-            .setContentTitle(rh.gs(R.string.you_have_been_signed_out_of_open_humans))
-            .setContentText(rh.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose))
-            .setStyle(NotificationCompat.BigTextStyle())
-            .setSmallIcon(R.drawable.open_humans_notification)
-            .setAutoCancel(true)
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    context,
-                    0,
-                    Intent(context, OHLoginActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    },
-                    PendingIntent.FLAG_IMMUTABLE
-                )
+        notificationManager.post(
+            id = NotificationId.OPEN_HUMANS_SIGNED_OUT,
+            text = rh.gs(R.string.you_have_been_signed_out_of_open_humans)
+                + "\n" + rh.gs(R.string.click_here_to_sign_in_again_if_this_wasnt_on_purpose),
+            actions = listOf(
+                NotificationAction(CoreUiR.string.login) {
+                    val intent = Intent(context, OHLoginActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(intent)
+                }
             )
-            .build()
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            NotificationManagerCompat.from(context).notify(SIGNED_OUT_NOTIFICATION_ID, notification)
-            withContext(Dispatchers.Main) {
-                logout()
-            }
+        )
+        withContext(Dispatchers.Main) {
+            logout()
         }
     }
 
@@ -683,9 +647,6 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
         const val WORK_NAME_PERIODIC = "Open Humans Periodic"
         const val WORK_NAME_MANUAL = "Open Humans Manual"
-        const val NOTIFICATION_CHANNEL_WORKER = "OpenHumansWorker"
-        const val NOTIFICATION_CHANNEL_MESSAGES = "OpenHumansMessages"
-        const val SIGNED_OUT_NOTIFICATION_ID = 3125
     }
 
     override fun getPreferenceScreenContent() = PreferenceSubScreenDef(

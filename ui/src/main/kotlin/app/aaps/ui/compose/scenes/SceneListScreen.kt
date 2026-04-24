@@ -39,10 +39,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
+import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.data.model.TT
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
@@ -147,11 +148,15 @@ fun SceneListScreen(
                         scene.actions.size,
                         viewModel.formatMinutes(scene.defaultDurationMinutes)
                     )
+                    val chainTargetId = (scene.endAction as? SceneEndAction.ChainScene)?.sceneId
+                    val chainTargetName = chainTargetId?.let { id -> scenes.firstOrNull { it.id == id }?.name }
                     SceneCard(
                         scene = scene,
                         subtitle = subtitle,
                         isActive = isActive,
                         isInvalid = isInvalid,
+                        chainTargetName = chainTargetName,
+                        chainMissing = chainTargetId != null && chainTargetName == null,
                         onActivate = { viewModel.requestActivation(scene) },
                         onDeactivate = { viewModel.requestDeactivation() },
                         onEdit = { onNavigateToEditor(scene.id) },
@@ -170,6 +175,8 @@ internal fun SceneCard(
     subtitle: String,
     isActive: Boolean,
     isInvalid: Boolean = false,
+    chainTargetName: String? = null,
+    chainMissing: Boolean = false,
     onActivate: () -> Unit,
     onDeactivate: () -> Unit,
     onEdit: () -> Unit,
@@ -217,6 +224,19 @@ internal fun SceneCard(
                     color = if (isInvalid) MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
                     else MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                when {
+                    chainMissing            -> Text(
+                        text = stringResource(R.string.scene_chain_target_missing),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+
+                    chainTargetName != null -> Text(
+                        text = stringResource(R.string.scene_chain_indicator, chainTargetName),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
             Row {
                 if (isActive) {

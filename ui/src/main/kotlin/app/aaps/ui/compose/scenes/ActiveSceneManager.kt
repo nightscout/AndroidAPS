@@ -2,6 +2,8 @@ package app.aaps.ui.compose.scenes
 
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,8 @@ import javax.inject.Singleton
 @Singleton
 class ActiveSceneManager @Inject constructor(
     private val preferences: Preferences,
-    private val sceneRepository: SceneRepository
+    private val sceneRepository: SceneRepository,
+    private val aapsLogger: AAPSLogger
 ) {
 
     private val _activeSceneState = MutableStateFlow<ActiveSceneState?>(null)
@@ -38,6 +41,7 @@ class ActiveSceneManager @Inject constructor(
 
     /** Set the active scene state (called by SceneExecutor on activation) */
     fun setActive(state: ActiveSceneState) {
+        aapsLogger.info(LTag.UI, "XXXX ActiveSceneManager.setActive('${state.scene.name}')")
         _activeSceneState.value = state
         _expired.value = false
         persistActiveState(state)
@@ -45,11 +49,13 @@ class ActiveSceneManager @Inject constructor(
 
     /** Mark scene as expired (non-duration actions reverted, banner stays for dismiss) */
     fun setExpired() {
+        aapsLogger.info(LTag.UI, "XXXX ActiveSceneManager.setExpired() — scene='${_activeSceneState.value?.scene?.name}'")
         _expired.value = true
     }
 
     /** Clear the active scene (called by SceneExecutor on deactivation or dismiss) */
     fun clearActive() {
+        aapsLogger.info(LTag.UI, "XXXX ActiveSceneManager.clearActive() — was='${_activeSceneState.value?.scene?.name}'")
         _activeSceneState.value = null
         _expired.value = false
         preferences.put(StringNonKey.ActiveScene, "")

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
+import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -66,6 +67,7 @@ class SceneListViewModel @Inject constructor(
 
     private fun validateScenes(sceneList: List<Scene>): Set<String> {
         val profileList = localProfileManager.profile?.getProfileList()?.map { it.toString() } ?: emptyList()
+        val knownIds = sceneList.mapTo(mutableSetOf()) { it.id }
         val invalid = mutableSetOf<String>()
         for (scene in sceneList) {
             if (scene.actions.isEmpty()) {
@@ -79,6 +81,10 @@ class SceneListViewModel @Inject constructor(
                         break
                     }
                 }
+            }
+            val chain = scene.endAction as? SceneEndAction.ChainScene
+            if (chain != null && chain.sceneId !in knownIds) {
+                invalid.add(scene.id)
             }
         }
         return invalid

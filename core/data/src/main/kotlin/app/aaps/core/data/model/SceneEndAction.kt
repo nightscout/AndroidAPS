@@ -8,6 +8,6 @@ sealed class SceneEndAction {
     /** Show a notification that the scene has ended */
     data object Notification : SceneEndAction()
 
-    /** Suggest activating another scene */
-    data class SuggestScene(val sceneId: String) : SceneEndAction()
+    /** Auto-activate another scene when this one expires (ignored on manual end) */
+    data class ChainScene(val sceneId: String) : SceneEndAction()
 }

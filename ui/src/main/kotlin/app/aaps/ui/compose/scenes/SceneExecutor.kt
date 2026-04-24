@@ -19,11 +19,11 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -58,33 +58,65 @@ class SceneExecutor @Inject constructor(
      * @return Result of the execution
      */
     suspend fun activate(scene: Scene, durationMinutes: Int = scene.defaultDurationMinutes): SceneExecutionResult {
-        // Deactivate any currently active scene first (without reverting)
+        aapsLogger.info(LTag.UI, "XXXX activate() entry scene='${scene.name}' id=${scene.id} duration=${durationMinutes}min actions=${scene.actions.size}")
+        // Deactivate any currently active scene first (without reverting).
+        // If the previous scene has already expired, its expiry worker is either currently running
+        // (chained activation — we're inside that worker) or already finished. Calling cancelUniqueWork
+        // on the running worker would cancel our own coroutine scope and break all subsequent
+        // persistenceLayer calls with JobCancellationException. REPLACE policy on the new
+        // scheduleExpiryWorker handles any leftover work.
         if (activeSceneManager.isActive()) {
-            cancelExpiryWorker()
+            val previouslyExpired = activeSceneManager.expired.value
+            aapsLogger.info(LTag.UI, "XXXX activate() — clearing previous active scene '${activeSceneManager.getActiveState()?.scene?.name}' expired=$previouslyExpired")
+            if (!previouslyExpired) cancelExpiryWorker()
             activeSceneManager.clearActive()
+        } else {
+            aapsLogger.info(LTag.UI, "XXXX activate() — no previous active scene")
         }
 
         val now = dateUtil.now()
         val durationMs = T.mins(durationMinutes.toLong()).msecs()
+        aapsLogger.info(LTag.UI, "XXXX activate() now=$now durationMs=$durationMs")
 
         // Capture prior state before making changes
-        val priorState = capturePriorState(scene)
+        aapsLogger.info(LTag.UI, "XXXX activate() calling capturePriorState()")
+        val priorState = try {
+            capturePriorState(scene)
+        } catch (e: Throwable) {
+            aapsLogger.error(LTag.UI, "XXXX activate() capturePriorState FAILED", e)
+            throw e
+        }
+        aapsLogger.info(LTag.UI, "XXXX activate() capturePriorState() returned: $priorState")
 
         // Execute each action
         val actionResults = mutableListOf<SceneExecutionResult.ActionResult>()
-        for (action in scene.actions) {
-            val result = executeAction(action, durationMinutes, now)
+        for ((idx, action) in scene.actions.withIndex()) {
+            aapsLogger.info(LTag.UI, "XXXX activate() executing action $idx/${scene.actions.size}: ${action::class.simpleName}")
+            val result = try {
+                executeAction(action, durationMinutes, now)
+            } catch (e: Throwable) {
+                aapsLogger.error(LTag.UI, "XXXX activate() executeAction #$idx FAILED", e)
+                throw e
+            }
+            aapsLogger.info(LTag.UI, "XXXX activate() action $idx result: success=${result.success} err=${result.errorMessage}")
             actionResults.add(result)
         }
 
         // Query record IDs of what we just created (for override detection at revert time)
-        val updatedPriorState = priorState.copy(
-            sceneTtId = if (scene.actions.any { it is SceneAction.TempTarget })
-                persistenceLayer.getTemporaryTargetActiveAt(now)?.id else null,
-            scenePsId = actionResults.firstOrNull { it.action is SceneAction.ProfileSwitch }?.psId,
-            sceneRunningModeId = if (scene.actions.any { it is SceneAction.LoopModeChange })
-                persistenceLayer.getRunningModeActiveAt(now).id.takeIf { it > 0 } else null
-        )
+        aapsLogger.info(LTag.UI, "XXXX activate() computing updatedPriorState")
+        val updatedPriorState = try {
+            priorState.copy(
+                sceneTtId = if (scene.actions.any { it is SceneAction.TempTarget })
+                    persistenceLayer.getTemporaryTargetActiveAt(now)?.id else null,
+                scenePsId = actionResults.firstOrNull { it.action is SceneAction.ProfileSwitch }?.psId,
+                sceneRunningModeId = if (scene.actions.any { it is SceneAction.LoopModeChange })
+                    persistenceLayer.getRunningModeActiveAt(now).id.takeIf { it > 0 } else null
+            )
+        } catch (e: Throwable) {
+            aapsLogger.error(LTag.UI, "XXXX activate() updatedPriorState FAILED", e)
+            throw e
+        }
+        aapsLogger.info(LTag.UI, "XXXX activate() updatedPriorState computed")
 
         // Set active state (with record IDs for override detection)
         val activeState = ActiveSceneState(
@@ -93,11 +125,15 @@ class SceneExecutor @Inject constructor(
             durationMs = durationMs,
             priorState = updatedPriorState
         )
+        aapsLogger.info(LTag.UI, "XXXX activate() setting active state for '${scene.name}'")
         activeSceneManager.setActive(activeState)
 
         // Schedule expiry notification if duration-based
         if (durationMs > 0) {
+            aapsLogger.info(LTag.UI, "XXXX activate() scheduling expiry worker in ${durationMs}ms")
             scheduleExpiryWorker(scene.name, durationMs)
+        } else {
+            aapsLogger.info(LTag.UI, "XXXX activate() durationMs==0, no expiry worker scheduled (indefinite)")
         }
 
         // Log user entry
@@ -162,18 +198,26 @@ class SceneExecutor @Inject constructor(
      * Marks the scene as expired so the banner shows "Dismiss" instead of "End Scene".
      */
     suspend fun onExpiry() {
-        val activeState = activeSceneManager.getActiveState() ?: return
+        aapsLogger.info(LTag.UI, "XXXX onExpiry() entry")
+        val activeState = activeSceneManager.getActiveState()
+        if (activeState == null) {
+            aapsLogger.info(LTag.UI, "XXXX onExpiry() — no active state, returning")
+            return
+        }
+        aapsLogger.info(LTag.UI, "XXXX onExpiry() scene='${activeState.scene.name}' endAction=${activeState.scene.endAction}")
 
         val now = dateUtil.now()
 
         // Only revert actions that have no duration and persist until manually reverted
         for (action in activeState.scene.actions) {
             if (action is SceneAction.SmbToggle) {
+                aapsLogger.info(LTag.UI, "XXXX onExpiry() reverting SmbToggle")
                 revertAction(action, activeState.priorState, now)
             }
         }
 
         // Mark as expired (keep state for banner display) instead of clearing
+        aapsLogger.info(LTag.UI, "XXXX onExpiry() calling setExpired()")
         activeSceneManager.setExpired()
 
         // Log
@@ -201,18 +245,20 @@ class SceneExecutor @Inject constructor(
 
         for (action in scene.actions) {
             when (action) {
-                is SceneAction.SmbToggle      -> {
+                is SceneAction.SmbToggle       -> {
                     smbEnabled = preferences.get(BooleanKey.ApsUseSmb)
                 }
 
-                is SceneAction.ProfileSwitch  -> {
+                is SceneAction.ProfileSwitch   -> {
                     val profile = profileFunction.getProfile()
-                    profileName = profileFunction.getProfileName()
+                    // Use ORIGINAL (base) name so revert targets a valid profile-store entry,
+                    // not a display name with temp-% suffix like "Test (60%)".
+                    profileName = profileFunction.getOriginalProfileName()
                     profilePercentage = profile?.percentage ?: 100
                     profileTimeShiftHours = profile?.timeshift ?: 0
                 }
 
-                is SceneAction.LoopModeChange -> {
+                is SceneAction.LoopModeChange  -> {
                     // Capture current running mode — will be used for revert
                     // The actual mode is managed by LoopPlugin, we just store what to revert to
                     runningMode = null // Will use RESUME on revert which cancels any running mode
@@ -241,7 +287,7 @@ class SceneExecutor @Inject constructor(
     ): SceneExecutionResult.ActionResult {
         return try {
             when (action) {
-                is SceneAction.TempTarget       -> {
+                is SceneAction.TempTarget      -> {
                     val ttDuration = if (sceneDurationMinutes > 0) T.mins(sceneDurationMinutes.toLong()).msecs() else Long.MAX_VALUE
                     val tempTarget = TT(
                         timestamp = now,
@@ -263,9 +309,11 @@ class SceneExecutor @Inject constructor(
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
-                is SceneAction.ProfileSwitch    -> {
+                is SceneAction.ProfileSwitch   -> {
                     val store = localProfileManager.profile
-                    val profileName = action.profileName.ifEmpty { profileFunction.getProfileName() }
+                    // Use the BASE profile name as fallback — getProfileName() returns the display name
+                    // including temp-% suffix (e.g. "Test (60%)"), which doesn't exist in the profile store.
+                    val profileName = action.profileName.ifEmpty { profileFunction.getOriginalProfileName() }
                     if (store != null) {
                         val ps = profileFunction.createProfileSwitch(
                             profileStore = store,
@@ -284,18 +332,23 @@ class SceneExecutor @Inject constructor(
                             ),
                             iCfg = insulin.iCfg
                         )
-                        SceneExecutionResult.ActionResult(action, success = ps != null, psId = ps?.id)
+                        SceneExecutionResult.ActionResult(
+                            action = action,
+                            success = ps != null,
+                            psId = ps?.id,
+                            errorMessage = if (ps == null) "createProfileSwitch returned null for '$profileName'" else null
+                        )
                     } else {
                         SceneExecutionResult.ActionResult(action, success = false, errorMessage = rh.gs(app.aaps.core.ui.R.string.scene_no_profile_store))
                     }
                 }
 
-                is SceneAction.SmbToggle        -> {
+                is SceneAction.SmbToggle       -> {
                     preferences.put(BooleanKey.ApsUseSmb, action.enabled)
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
-                is SceneAction.LoopModeChange   -> {
+                is SceneAction.LoopModeChange  -> {
                     persistenceLayer.insertOrUpdateRunningMode(
                         runningMode = RM(
                             timestamp = now,
@@ -310,7 +363,7 @@ class SceneExecutor @Inject constructor(
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
-                is SceneAction.CarePortalEvent  -> {
+                is SceneAction.CarePortalEvent -> {
                     val te = TE(
                         timestamp = now,
                         type = action.type,
@@ -345,7 +398,7 @@ class SceneExecutor @Inject constructor(
     ): SceneExecutionResult.ActionResult {
         return try {
             when (action) {
-                is SceneAction.TempTarget       -> {
+                is SceneAction.TempTarget      -> {
                     // Check if scene's TT is still active (not manually overridden)
                     val currentTt = persistenceLayer.getTemporaryTargetActiveAt(now)
                     if (priorState.sceneTtId != null && currentTt?.id == priorState.sceneTtId) {
@@ -362,7 +415,7 @@ class SceneExecutor @Inject constructor(
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
-                is SceneAction.ProfileSwitch    -> {
+                is SceneAction.ProfileSwitch   -> {
                     // Check if scene's profile is still active (PS id tracking via EPS.originalPsId)
                     val currentEps = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)
                     val profileStillFromScene = priorState.scenePsId != null &&
@@ -392,12 +445,12 @@ class SceneExecutor @Inject constructor(
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
-                is SceneAction.SmbToggle        -> {
+                is SceneAction.SmbToggle       -> {
                     priorState.smbEnabled?.let { preferences.put(BooleanKey.ApsUseSmb, it) }
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
-                is SceneAction.LoopModeChange   -> {
+                is SceneAction.LoopModeChange  -> {
                     // Check if scene's running mode is still active (not manually overridden)
                     val currentRm = persistenceLayer.getRunningModeActiveAt(now)
                     if (priorState.sceneRunningModeId != null && currentRm.id == priorState.sceneRunningModeId) {
@@ -413,7 +466,7 @@ class SceneExecutor @Inject constructor(
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
 
-                is SceneAction.CarePortalEvent  -> {
+                is SceneAction.CarePortalEvent -> {
                     // CarePortal events are informational — no revert needed
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
@@ -427,6 +480,7 @@ class SceneExecutor @Inject constructor(
     private fun scheduleExpiryWorker(sceneName: String, delayMs: Long) {
         try {
             val workerClass = Class.forName("app.aaps.receivers.SceneExpiryWorker")
+
             @Suppress("UNCHECKED_CAST")
             val request = OneTimeWorkRequest.Builder(workerClass as Class<androidx.work.ListenableWorker>)
                 .setInitialDelay(delayMs, TimeUnit.MILLISECONDS)

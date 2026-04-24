@@ -69,30 +69,30 @@ private fun List<SceneAction>.toJsonArray(): JSONArray {
     forEach { action ->
         val obj = JSONObject()
         when (action) {
-            is SceneAction.TempTarget       -> obj.apply {
+            is SceneAction.TempTarget      -> obj.apply {
                 put("type", "temp_target")
                 put("reason", action.reason.text)
                 put("targetMgdl", action.targetMgdl)
             }
 
-            is SceneAction.ProfileSwitch    -> obj.apply {
+            is SceneAction.ProfileSwitch   -> obj.apply {
                 put("type", "profile_switch")
                 put("profileName", action.profileName)
                 put("percentage", action.percentage)
                 put("timeShiftHours", action.timeShiftHours)
             }
 
-            is SceneAction.SmbToggle        -> obj.apply {
+            is SceneAction.SmbToggle       -> obj.apply {
                 put("type", "smb_toggle")
                 put("enabled", action.enabled)
             }
 
-            is SceneAction.LoopModeChange   -> obj.apply {
+            is SceneAction.LoopModeChange  -> obj.apply {
                 put("type", "loop_mode")
                 put("mode", action.mode.name)
             }
 
-            is SceneAction.CarePortalEvent  -> obj.apply {
+            is SceneAction.CarePortalEvent -> obj.apply {
                 put("type", "careportal")
                 put("teType", action.type.text)
                 put("note", action.note)
@@ -145,8 +145,9 @@ private fun JSONArray.toSceneActions(): List<SceneAction> {
 private fun SceneEndAction.toJson(): JSONObject = JSONObject().apply {
     when (this@toJson) {
         is SceneEndAction.Notification -> put("type", "notification")
-        is SceneEndAction.SuggestScene -> {
-            put("type", "suggest_scene")
+
+        is SceneEndAction.ChainScene   -> {
+            put("type", "chain_scene")
             put("sceneId", sceneId)
         }
     }
@@ -154,6 +155,6 @@ private fun SceneEndAction.toJson(): JSONObject = JSONObject().apply {
 
 private fun JSONObject.toSceneEndAction(): SceneEndAction =
     when (optString("type", "notification")) {
-        "suggest_scene" -> SceneEndAction.SuggestScene(getString("sceneId"))
-        else            -> SceneEndAction.Notification
+        "chain_scene" -> SceneEndAction.ChainScene(getString("sceneId"))
+        else          -> SceneEndAction.Notification
     }

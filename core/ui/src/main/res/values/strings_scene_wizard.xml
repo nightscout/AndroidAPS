@@ -80,4 +80,21 @@
     <!-- Scene wizard: UI labels -->
     <string name="scene_wizard_include_action">Include %1$s in scene</string>
     <string name="scene_wizard_finish">Finish</string>
+
+    <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Follow-up scene</string>
+    <string name="scene_wizard_chain_info">Optionally chain another scene to auto-activate when this one expires. Manual stop does not trigger the follow-up. The follow-up runs only if the target is enabled and the pump is available; otherwise you will get a notification.</string>
+    <string name="scene_chain_none">None</string>
+
+    <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Chained scene was deleted</string>
+
+    <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">Scene \"%1$s\" ended</string>
+    <string name="scene_chained_format">Scene chained: %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s ended — follow-up skipped: %2$s</string>
+    <string name="scene_chain_skipped_deleted">target scene was deleted</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" is disabled</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d of %4$d actions failed</string>
 </resources>
