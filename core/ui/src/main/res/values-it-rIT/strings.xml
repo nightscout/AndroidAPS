@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Devono essere 4 caratteri tra ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Trattamenti</string>
+    <string name="treatments_history">Cronologia trattamenti</string>
     <string name="treatments_desc">Visualizza e gestisci la cronologia dei trattamenti</string>
     <string name="nav_configuration">Configurazione</string>
     <string name="nav_configuration_desc">Imposta la tua configurazione (CGM, Pump, ...) e abilita funzionalità</string>
@@ -825,6 +826,7 @@
     <string name="nav_exit">Esci</string>
     <string name="open_navigation">Apri navigazione</string>
     <string name="nav_history_browser">Navigatore della cronologia</string>
+    <string name="nav_history_browser_desc">Sfoglia grafici storici</string>
     <string name="appearance">Aspetto</string>
     <string name="manage">Gestisci</string>
     <string name="localprofile">Profilo</string>
