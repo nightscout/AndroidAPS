@@ -19,6 +19,7 @@ import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.compose.navigation.ElementAvailability
 import app.aaps.core.interfaces.tempTargets.toTTPresets
+import app.aaps.ui.compose.scenes.SceneIcons
 import app.aaps.ui.compose.scenes.SceneRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -64,6 +65,10 @@ class QuickLaunchResolver @Inject constructor(
             }
         } ?: action.elementType.icon()
 
+        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)
+            ?.let { SceneIcons.fromKey(it.icon).icon }
+            ?: action.elementType?.icon() ?: Icons.Default.Extension
+
         else                                   -> action.elementType?.icon() ?: Icons.Default.Extension
     }
 
@@ -85,7 +90,7 @@ class QuickLaunchResolver @Inject constructor(
             profileList?.any { it.toString() == action.profileName } == true
         }
 
-        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId) != null
+        is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)?.isEnabled == true
 
         is QuickLaunchAction.PluginAction      -> {
             val plugin = findPlugin(action.className)

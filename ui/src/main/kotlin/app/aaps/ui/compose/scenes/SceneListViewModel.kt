@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -34,6 +36,8 @@ class SceneListViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val localProfileManager: LocalProfileManager,
+    private val loop: Loop,
+    private val activePlugin: ActivePlugin,
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
     private val translator: Translator
@@ -109,6 +113,21 @@ class SceneListViewModel @Inject constructor(
 
     fun requestActivation(scene: Scene) {
         viewModelScope.launch {
+            // Validation: scene disabled
+            if (!scene.isEnabled) return@launch
+
+            // Validation: pump disconnected / loop suspended
+            if (loop.runningMode.isSuspended()) {
+                _dialogState.value = DialogState.ValidationError(rh.gs(R.string.pump_disconnected))
+                return@launch
+            }
+
+            // Validation: pump not ready or no profile
+            if (!activePlugin.activePump.isInitialized() || profileFunction.getProfile() == null) {
+                _dialogState.value = DialogState.ValidationError(rh.gs(R.string.pump_not_initialized_profile_not_set))
+                return@launch
+            }
+
             // Validation: no actions
             if (scene.actions.isEmpty()) {
                 _dialogState.value = DialogState.ValidationError(rh.gs(R.string.scene_no_actions))
@@ -170,6 +189,11 @@ class SceneListViewModel @Inject constructor(
 
     fun deleteScene(sceneId: String) {
         sceneRepository.deleteScene(sceneId)
+    }
+
+    fun toggleEnabled(sceneId: String) {
+        val scene = sceneRepository.getScene(sceneId) ?: return
+        sceneRepository.saveScene(scene.copy(isEnabled = !scene.isEnabled))
     }
 
     // --- Summary builders ---

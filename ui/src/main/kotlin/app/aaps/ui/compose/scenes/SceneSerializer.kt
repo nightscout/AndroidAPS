@@ -22,6 +22,7 @@ fun List<Scene>.toJson(): String {
             put("icon", scene.icon)
             put("defaultDurationMinutes", scene.defaultDurationMinutes)
             put("isDeletable", scene.isDeletable)
+            put("isEnabled", scene.isEnabled)
             put("sortOrder", scene.sortOrder)
             put("actions", scene.actions.toJsonArray())
             put("endAction", scene.endAction.toJson())
@@ -49,6 +50,7 @@ fun String.toScenes(): List<Scene> {
                     icon = obj.optString("icon", "star"),
                     defaultDurationMinutes = obj.optInt("defaultDurationMinutes", 60),
                     isDeletable = obj.optBoolean("isDeletable", true),
+                    isEnabled = obj.optBoolean("isEnabled", true),
                     sortOrder = obj.optInt("sortOrder", 0),
                     actions = obj.optJSONArray("actions")?.toSceneActions() ?: emptyList(),
                     endAction = obj.optJSONObject("endAction")?.toSceneEndAction() ?: SceneEndAction.Notification

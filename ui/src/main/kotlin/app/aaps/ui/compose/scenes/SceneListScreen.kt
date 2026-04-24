@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -47,6 +48,7 @@ import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
+import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.labelResId
 
@@ -82,7 +84,8 @@ fun SceneListScreen(
         }
 
         is SceneListViewModel.DialogState.ValidationError     -> {
-            SceneValidationErrorDialog(
+            OkDialog(
+                title = stringResource(R.string.error),
                 message = state.message,
                 onDismiss = viewModel::dismissDialog
             )
@@ -152,7 +155,8 @@ fun SceneListScreen(
                         onActivate = { viewModel.requestActivation(scene) },
                         onDeactivate = { viewModel.requestDeactivation() },
                         onEdit = { onNavigateToEditor(scene.id) },
-                        onDelete = { viewModel.deleteScene(scene.id) }
+                        onDelete = { viewModel.deleteScene(scene.id) },
+                        onToggleEnabled = { viewModel.toggleEnabled(scene.id) }
                     )
                 }
             }
@@ -169,7 +173,8 @@ internal fun SceneCard(
     onActivate: () -> Unit,
     onDeactivate: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onToggleEnabled: () -> Unit = {}
 ) {
     val nameColor = when {
         isInvalid -> MaterialTheme.colorScheme.error
@@ -190,6 +195,10 @@ internal fun SceneCard(
             horizontalArrangement = Arrangement.spacedBy(AapsSpacing.medium),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Checkbox(
+                checked = scene.isEnabled,
+                onCheckedChange = { onToggleEnabled() }
+            )
             Icon(
                 imageVector = SceneIcons.fromKey(scene.icon).icon,
                 contentDescription = null,
@@ -215,7 +224,7 @@ internal fun SceneCard(
                         Icon(Icons.Default.Stop, contentDescription = stringResource(R.string.scene_deactivate))
                     }
                 } else {
-                    IconButton(onClick = onActivate) {
+                    IconButton(onClick = onActivate, enabled = scene.isEnabled) {
                         Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.scene_activate))
                     }
                 }
@@ -317,31 +326,6 @@ private fun SceneDeactivationDialog(
             }
         },
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
-    )
-}
-
-@Composable
-private fun SceneValidationErrorDialog(
-    message: String,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(stringResource(R.string.error))
-        },
-        text = {
-            Text(
-                text = message,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.ok))
-            }
-        },
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     )
 }
 

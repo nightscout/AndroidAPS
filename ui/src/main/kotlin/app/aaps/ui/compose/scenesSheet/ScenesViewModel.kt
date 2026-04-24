@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.automationSheet
+package app.aaps.ui.compose.scenesSheet
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -19,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -39,18 +40,19 @@ data class AutomationActionItem(
 data class SceneSheetItem(
     val id: String,
     val name: String,
-    val actionCount: Int
+    val actionCount: Int,
+    val iconKey: String
 )
 
 @Immutable
-data class AutomationUiState(
+data class ScenesUiState(
     val items: List<AutomationActionItem> = emptyList(),
     val sceneItems: List<SceneSheetItem> = emptyList()
 )
 
 @HiltViewModel
 @Stable
-class AutomationViewModel @Inject constructor(
+class ScenesViewModel @Inject constructor(
     private val automation: Automation,
     private val activePlugin: ActivePlugin,
     private val loop: Loop,
@@ -60,8 +62,8 @@ class AutomationViewModel @Inject constructor(
     private val sceneRepository: SceneRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(AutomationUiState())
-    val uiState: StateFlow<AutomationUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ScenesUiState())
+    val uiState: StateFlow<ScenesUiState> = _uiState.asStateFlow()
 
     init {
         setupEventListeners()
@@ -70,9 +72,11 @@ class AutomationViewModel @Inject constructor(
 
     private fun setupEventListeners() {
         rxBus.toFlow(EventRefreshOverview::class.java)
-            .onEach { refreshState() }.launchIn(viewModelScope)
+            .drop(1).onEach { refreshState() }.launchIn(viewModelScope)
         rxBus.toFlow(EventAutomationDataChanged::class.java)
-            .onEach { refreshState() }.launchIn(viewModelScope)
+            .drop(1).onEach { refreshState() }.launchIn(viewModelScope)
+        sceneRepository.scenesFlow
+            .drop(1).onEach { refreshState() }.launchIn(viewModelScope)
     }
 
     fun refreshState() {
@@ -98,11 +102,12 @@ class AutomationViewModel @Inject constructor(
                     actionIcons = event.actionIcons().toList()
                 )
             }
-            val scenes = sceneRepository.getScenes().map { scene ->
+            val scenes = sceneRepository.getScenes().filter { it.isEnabled }.map { scene ->
                 SceneSheetItem(
                     id = scene.id,
                     name = scene.name,
-                    actionCount = scene.actions.size
+                    actionCount = scene.actions.size,
+                    iconKey = scene.icon
                 )
             }
             _uiState.update { it.copy(items = items, sceneItems = scenes) }

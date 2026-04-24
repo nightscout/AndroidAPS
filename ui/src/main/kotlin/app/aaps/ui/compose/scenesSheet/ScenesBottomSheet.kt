@@ -1,4 +1,4 @@
-package app.aaps.ui.compose.automationSheet
+package app.aaps.ui.compose.scenesSheet
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,13 +29,13 @@ import app.aaps.core.ui.compose.consumeOverscroll
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.icon
+import app.aaps.ui.compose.scenes.SceneIcons
 import androidx.compose.material3.HorizontalDivider
 import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AutomationBottomSheet(
+fun ScenesBottomSheet(
     onDismiss: () -> Unit,
     automationItems: List<AutomationActionItem>,
     onItemClick: (AutomationActionItem) -> Unit,
@@ -62,7 +62,7 @@ fun AutomationBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(CoreUiR.string.automation),
+                    text = stringResource(CoreUiR.string.scenes),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
@@ -140,22 +140,7 @@ fun AutomationBottomSheet(
             if (sceneItems.isNotEmpty()) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(CoreUiR.string.scenes),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
                 val sceneColor = ElementType.SCENE.color()
-                val sceneIcon = ElementType.SCENE.icon()
                 sceneItems.forEach { item ->
                     ListItem(
                         headlineContent = {
@@ -171,7 +156,7 @@ fun AutomationBottomSheet(
                         },
                         leadingContent = {
                             TonalIcon(
-                                icon = sceneIcon,
+                                icon = SceneIcons.fromKey(item.iconKey).icon,
                                 color = sceneColor
                             )
                         },

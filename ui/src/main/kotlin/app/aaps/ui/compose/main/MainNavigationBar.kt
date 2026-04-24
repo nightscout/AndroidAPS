@@ -102,12 +102,12 @@ fun MainNavigationBar(
                     ) {
                         Icon(
                             imageVector = IcAutomation,
-                            contentDescription = stringResource(CoreUiR.string.automation),
+                            contentDescription = stringResource(CoreUiR.string.scenes),
                             modifier = Modifier.size(24.dp)
                         )
                     }
                 },
-                label = { Text(text = stringResource(CoreUiR.string.automation)) },
+                label = { Text(text = stringResource(CoreUiR.string.scenes)) },
                 colors = navColors
             )
         }

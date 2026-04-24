@@ -126,6 +126,31 @@ class SceneSerializerTest : TestBase() {
     }
 
     @Test
+    fun isEnabled_roundTrip() {
+        val enabled = Scene(id = "e", name = "Enabled", isEnabled = true)
+        val disabled = Scene(id = "d", name = "Disabled", isEnabled = false)
+
+        val restored = listOf(enabled, disabled).toJson().toScenes()
+        assertThat(restored[0].isEnabled).isTrue()
+        assertThat(restored[1].isEnabled).isFalse()
+    }
+
+    @Test
+    fun isEnabled_missingField_defaultsTrue() {
+        // Legacy JSON without isEnabled — should default to true
+        val json = JSONArray().apply {
+            put(JSONObject().apply {
+                put("id", "legacy")
+                put("name", "Legacy")
+            })
+        }.toString()
+
+        val restored = json.toScenes()
+        assertThat(restored).hasSize(1)
+        assertThat(restored[0].isEnabled).isTrue()
+    }
+
+    @Test
     fun sceneEndAction_notification_roundTrip() {
         val scene = Scene(
             id = "n1",

@@ -20,6 +20,8 @@ data class Scene(
     val endAction: SceneEndAction = SceneEndAction.Notification,
     /** Whether this scene can be deleted (false for templates until customized) */
     val isDeletable: Boolean = true,
+    /** Whether this scene is enabled (disabled scenes are hidden from quick-launch/sheet and can't be activated) */
+    val isEnabled: Boolean = true,
     /** Display order (lower = higher priority) */
     val sortOrder: Int = 0
 )
