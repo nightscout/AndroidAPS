@@ -23,8 +23,17 @@ class SyncNsRunningModeTransaction(private val runningModes: List<RunningMode>) 
                     database.runningModeDao.updateExistingEntry(current)
                     result.invalidated.add(current)
                 }
-                // Allow update duration to shorter only
-                if (current.duration != runningMode.duration && runningMode.duration < current.duration) {
+                // Allow update duration to shorter only.
+                // Guard: autoForced rows (SUSPENDED_BY_PUMP, constraint-forced modes) are
+                // locally determined by each device from its own pump/constraints state.
+                // Remote clients (including older versions that rewrite durations based on
+                // their non-authoritative local pump.isSuspended()) must not be allowed to
+                // shorten them here — otherwise the chip on the authoritative device
+                // flips to the truncated value on every NS round-trip.
+                if (!current.autoForced &&
+                    current.duration != runningMode.duration &&
+                    runningMode.duration < current.duration
+                ) {
                     current.duration = runningMode.duration
                     database.runningModeDao.updateExistingEntry(current)
                     result.updatedDuration.add(current)

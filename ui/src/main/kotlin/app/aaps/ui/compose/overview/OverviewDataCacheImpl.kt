@@ -99,6 +99,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
@@ -259,8 +260,14 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         }
 
         if (observeDatabase) {
-            // Load initial data from database
+            // Load initial data from database.
+            // Gated on app init: updateTbrFromDatabase -> iobCobCalculator.getBasalData ->
+            // PluginStore.activePumpInternal throws "No pump selected" when the cache is
+            // constructed before ConfigBuilder.initialize() has populated the active pump.
+            // initProgressFlow is a StateFlow, so if init is already done this returns
+            // immediately; otherwise it suspends until it completes.
             scope.launch {
+                config.initProgressFlow.first { it.done }
                 aapsLogger.debug(LTag.UI, "OverviewDataCache: Loading initial data")
                 updateBgInfoFromDatabase()
                 updateProfileFromDatabase()

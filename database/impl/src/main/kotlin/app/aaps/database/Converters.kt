@@ -112,7 +112,7 @@ class Converters {
     fun fromPumpType(pumpType: InterfaceIDs.PumpType?) = pumpType?.name
 
     @TypeConverter
-    fun toPumpType(pumpType: String?) = pumpType?.let { InterfaceIDs.PumpType.valueOf(it) }
+    fun toPumpType(pumpType: String?) = pumpType?.let { InterfaceIDs.PumpType.fromString(it) }
 
     @TypeConverter
     fun fromAlgorithm(algorithm: APSResult.Algorithm?) = algorithm?.name

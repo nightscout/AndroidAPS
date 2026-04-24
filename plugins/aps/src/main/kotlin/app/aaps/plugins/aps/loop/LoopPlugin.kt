@@ -343,34 +343,40 @@ class LoopPlugin @Inject constructor(
         val loopInvocationAllowed = constraintChecker.isLoopInvocationAllowed()
         val lgsModeForced = constraintChecker.isLgsForced()
 
-        // Suspended pump found but suspended running mode not set
-        if (activePlugin.activePump.isSuspended() && runningMode.mode != RM.Mode.SUSPENDED_BY_PUMP) {
-            suspendLoop(
-                mode = RM.Mode.SUSPENDED_BY_PUMP,
-                autoForced = true,
-                reasons = rh.gs(app.aaps.core.ui.R.string.pumpsuspended),
-                durationInMinutes = Int.MAX_VALUE,
-                action = Action.SUSPEND,
-                source = Sources.Loop
-            )
-            rxBus.send(EventRefreshOverview("runningModePreCheck"))
-            return
-        }
-        // Pump not suspended anymore but running mode is suspended by pump -> end running mode
-        if (!activePlugin.activePump.isSuspended() && runningMode.mode == RM.Mode.SUSPENDED_BY_PUMP) {
-            runningMode.duration = dateUtil.now() - runningMode.timestamp
-            @SuppressLint("CheckResult")
-            runBlocking {
-                persistenceLayer.insertOrUpdateRunningMode(
-                    runningMode = runningMode,
-                    action = Action.PUMP_RUNNING,
-                    source = Sources.Loop,
-                    listValues = listOf(ValueWithUnit.SimpleString(rh.gs(app.aaps.core.ui.R.string.pump_running)))
+        // Pump-state reconciliation: only on the device that actually owns the pump.
+        // Followers (config.APS=false) must not react to their own local activePump.isSuspended()
+        // state because they have no real pump — doing so rewrites NS-synced SUSPENDED_BY_PUMP
+        // rows with garbage durations and triggers a cross-device feedback loop.
+        if (config.APS) {
+            // Suspended pump found but suspended running mode not set
+            if (activePlugin.activePump.isSuspended() && runningMode.mode != RM.Mode.SUSPENDED_BY_PUMP) {
+                suspendLoop(
+                    mode = RM.Mode.SUSPENDED_BY_PUMP,
+                    autoForced = true,
+                    reasons = rh.gs(app.aaps.core.ui.R.string.pumpsuspended),
+                    durationInMinutes = Int.MAX_VALUE,
+                    action = Action.SUSPEND,
+                    source = Sources.Loop
                 )
+                rxBus.send(EventRefreshOverview("runningModePreCheck"))
+                return
             }
-            // re-run to process other conditions
-            runningModePreCheck()
-            return
+            // Pump not suspended anymore but running mode is suspended by pump -> end running mode
+            if (!activePlugin.activePump.isSuspended() && runningMode.mode == RM.Mode.SUSPENDED_BY_PUMP) {
+                runningMode.duration = dateUtil.now() - runningMode.timestamp
+                @SuppressLint("CheckResult")
+                runBlocking {
+                    persistenceLayer.insertOrUpdateRunningMode(
+                        runningMode = runningMode,
+                        action = Action.PUMP_RUNNING,
+                        source = Sources.Loop,
+                        listValues = listOf(ValueWithUnit.SimpleString(rh.gs(app.aaps.core.ui.R.string.pump_running)))
+                    )
+                }
+                // re-run to process other conditions
+                runningModePreCheck()
+                return
+            }
         }
 
         var action = Action.CLOSED_LOOP_MODE
