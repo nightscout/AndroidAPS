@@ -1194,14 +1194,12 @@ class DataHandlerMobile @Inject constructor(
     private fun handleAvailableRunningModes() {
         if (!runBlocking { profileFunction.isProfileValid("WearDataHandler_LoopChangeState") }) return
 
-        val disconnectDurs = if (!config.AAPSCLIENT) {
-            val pumpDescription = activePlugin.activePump.pumpDescription
-            arrayListOf<Int>().apply {
-                if (pumpDescription.tempDurationStep15mAllowed) add(15)
-                if (pumpDescription.tempDurationStep30mAllowed) add(30)
-                for (i in listOf(1, 2, 3)) add(i * 60)
-            }
-        } else emptyList()
+        val pumpDescription = activePlugin.activePump.pumpDescription
+        val disconnectDurs = arrayListOf<Int>().apply {
+            if (pumpDescription.tempDurationStep15mAllowed) add(15)
+            if (pumpDescription.tempDurationStep30mAllowed) add(30)
+            for (i in listOf(1, 2, 3)) add(i * 60)
+        }
 
         fun mapMode(mode: RM.Mode): AvailableRunningMode? =
             when (mode) {
@@ -1210,9 +1208,7 @@ class DataHandlerMobile @Inject constructor(
                 RM.Mode.OPEN_LOOP         -> AvailableRunningMode(AvailableRunningMode.RunningMode.LOOP_OPEN)
                 RM.Mode.DISABLED_LOOP     -> AvailableRunningMode(AvailableRunningMode.RunningMode.LOOP_DISABLE)
                 RM.Mode.SUPER_BOLUS       -> null
-                RM.Mode.DISCONNECTED_PUMP -> if (config.AAPSCLIENT) null
-                else AvailableRunningMode(AvailableRunningMode.RunningMode.PUMP_DISCONNECT, disconnectDurs)
-
+                RM.Mode.DISCONNECTED_PUMP -> AvailableRunningMode(AvailableRunningMode.RunningMode.PUMP_DISCONNECT, disconnectDurs)
                 RM.Mode.SUSPENDED_BY_PUMP -> null
                 RM.Mode.SUSPENDED_BY_USER -> AvailableRunningMode(AvailableRunningMode.RunningMode.LOOP_USER_SUSPEND, listOf(1, 2, 3, 10).map { it * 60 })
                 RM.Mode.SUSPENDED_BY_DST  -> null
@@ -1224,8 +1220,7 @@ class DataHandlerMobile @Inject constructor(
 
         val allStates = loop.allowedNextModes().mapNotNull { mapMode(it) }
         // LOOP_DISABLE is dropped when LOOP_USER_SUSPEND is present to fit within 4 tile slots.
-        // AAPSClient has no PUMP_DISCONNECT, so the slot is free and both can be shown.
-        val states = if (!config.AAPSCLIENT && allStates.any { it.state == AvailableRunningMode.RunningMode.LOOP_USER_SUSPEND })
+        val states = if (allStates.any { it.state == AvailableRunningMode.RunningMode.LOOP_USER_SUSPEND })
             allStates.filter { it.state != AvailableRunningMode.RunningMode.LOOP_DISABLE }
         else allStates
         lastAuthorizedRunningModeChangeTS = System.currentTimeMillis()
