@@ -14,6 +14,7 @@
     <string name="pref_display_settings">Skjerm</string>
     <string name="pref_graph_settings">Graf</string>
     <string name="pref_interface_settings">Grensesnitt</string>
+    <string name="pref_tile_settings">Fliser</string>
     <string name="pref_others_settings">Annet</string>
     <string name="pref_complication_settings">Komplikasjon</string>
     <string name="pref_show_date">Vis dato</string>
