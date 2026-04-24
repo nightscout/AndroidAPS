@@ -825,7 +825,6 @@
     <string name="nav_exit">Salir</string>
     <string name="open_navigation">Abrir navegación</string>
     <string name="nav_history_browser">Explorador de historial</string>
-    <string name="nav_history_browser_desc">Explorar datos históricos y gráficas</string>
     <string name="appearance">Apariencia</string>
     <string name="manage">Administrar</string>
     <string name="localprofile">Perfil</string>
