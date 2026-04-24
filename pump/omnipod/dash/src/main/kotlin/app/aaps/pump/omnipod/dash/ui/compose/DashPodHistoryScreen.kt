@@ -115,7 +115,7 @@ fun DashPodHistoryScreen(
                     )
                 }
 
-                items(itemsForDay, key = { it.displayTimestamp() }) { record ->
+                items(itemsForDay, key = { it.id }) { record ->
                     DashHistoryCard(record, rh, profileUtil, dateUtil)
                 }
             }
