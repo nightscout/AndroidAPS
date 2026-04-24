@@ -825,7 +825,6 @@
     <string name="nav_exit">Thoát</string>
     <string name="open_navigation">Mở điều hướng</string>
     <string name="nav_history_browser">Xem lịch sử</string>
-    <string name="nav_history_browser_desc">Duyệt dữ liệu và biểu đồ lịch sử</string>
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Hồ sơ</string>
