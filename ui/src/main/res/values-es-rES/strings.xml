@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carbs_constraint_applied">Restricción aplicada en carbohidratos</string>
+    <string name="no_temp_basal_running">No hay basal temporal activa</string>
     <string name="temp_target_short">OT</string>
     <string name="start_activity_tt">Iniciar OT Actividad</string>
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
