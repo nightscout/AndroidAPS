@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Må være 4 tegn fra ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Behandlinger</string>
+    <string name="treatments_history">Behandlingshistorikk</string>
     <string name="treatments_desc">Vis og administrer behandlingshistorikk</string>
     <string name="nav_configuration">Konfigurasjon</string>
     <string name="nav_configuration_desc">Sett opp konfigurasjonen din (sensor, pumpe, ...) og aktiver funksjoner</string>
@@ -825,6 +826,7 @@
     <string name="nav_exit">Avslutt</string>
     <string name="open_navigation">Åpne meny</string>
     <string name="nav_history_browser">Historikkleser</string>
+    <string name="nav_history_browser_desc">Bla gjennom historiske grafer</string>
     <string name="appearance">Utseende</string>
     <string name="manage">Administrer</string>
     <string name="localprofile">Profil</string>
