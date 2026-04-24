@@ -73,7 +73,7 @@
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_last_run">Dernier run :</string>
     <string name="autotune_warning">Avertissement :</string>
-    <string name="autotune_ic_warning">Le profil sélectionné %1$d valeurs de G/I. Autotune va utiliser la moyenne %2$.2f g/U</string>
+    <string name="autotune_ic_warning">Le profil sélectionné a %1$d valeurs de G/I. Autotune va utiliser la moyenne %2$.2f g/U</string>
     <string name="autotune_isf_warning">Le profil sélectionné a %1$d valeurs de SI. Autotune va utiliser la moyenne %2$.1f %3$s/U</string>
     <string name="autotune_error">Erreur dans les données d\'entrée, essayez de relancer le calcul ou réduire le nombre de jours</string>
     <string name="autotune_error_more_days">Erreur dans les données de saisie, augmenter le nombre de jours</string>

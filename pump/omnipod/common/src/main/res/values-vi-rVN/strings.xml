@@ -148,7 +148,7 @@
     <string name="omnipod_common_moments_ago">Vừa nãy</string>
     <string name="omnipod_common_less_than_a_minute_ago">Chưa đầy một phút trước</string>
     <string name="omnipod_common_composite_time">%1$s và %2$s</string>
-    <string name="omnipod_common_time_ago">%1$d giây trước</string>
+    <string name="omnipod_common_time_ago">%1$s trước</string>
     <plurals name="omnipod_common_minutes">
         <item quantity="other">%1$d phút</item>
     </plurals>

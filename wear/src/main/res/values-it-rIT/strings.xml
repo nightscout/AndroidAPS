@@ -64,6 +64,7 @@
     <string name="pref_moreWatchfaceSettings">Più impostazioni watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Controlla configurazione watchface.</string>
     <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt_long">Target Temporaneo</string>
     <string name="menu_wizard">Calcolatore</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Trattamento</string>
@@ -228,6 +229,11 @@
     <string name="status_running_mode">Modalità esecuzione</string>
     <string name="label_running_mode_title">Modalità esecuzione</string>
     <string name="label_bg_graph_tile">Grafico BG</string>
+    <string name="tile_tap_action">Azione al tocco</string>
+    <string name="tile_graph_time_range">Intervallo di tempo</string>
+    <string name="tile_tap_bg_graph">Grafico BG</string>
+    <string name="tile_tap_main_menu">Menu principale</string>
+    <string name="tile_tap_loop_status">Stato loop</string>
     <string name="action_running_mode_selected">Modalità di esecuzione richiesta</string>
     <string name="title_activity_disconnect_pump">Disconnetti micro</string>
     <string name="title_activity_suspend_loop">Sospendi loop</string>
