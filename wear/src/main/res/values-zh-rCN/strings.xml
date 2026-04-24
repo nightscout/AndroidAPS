@@ -64,6 +64,7 @@
     <string name="pref_moreWatchfaceSettings">更多手表表盘设置</string>
     <string name="pref_lookInYourWatchfaceConfiguration">请查看手表表盘配置。</string>
     <string name="menu_tempt">临时目标</string>
+    <string name="menu_tempt_long">临时目标</string>
     <string name="menu_wizard">计算器</string>
     <string name="menu_wizard_short">计算</string>
     <string name="menu_treatment">治疗</string>
@@ -229,6 +230,11 @@
     <string name="status_running_mode">运行模式</string>
     <string name="label_running_mode_title">运行模式</string>
     <string name="label_bg_graph_tile">血糖图表</string>
+    <string name="tile_tap_action">点击操作</string>
+    <string name="tile_graph_time_range">时间范围</string>
+    <string name="tile_tap_bg_graph">血糖图表</string>
+    <string name="tile_tap_main_menu">主菜单</string>
+    <string name="tile_tap_loop_status">闭环状态</string>
     <string name="action_running_mode_selected">已请求运行模式</string>
     <string name="title_activity_disconnect_pump">断开泵连接</string>
     <string name="title_activity_suspend_loop">暂停闭环</string>
