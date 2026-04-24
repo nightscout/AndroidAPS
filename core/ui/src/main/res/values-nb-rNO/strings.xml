@@ -354,7 +354,13 @@
     <string name="scene_careportal_no_revert">Oppføringer i helseportal vil ikke bli tilbakestilt</string>
     <string name="careportal_sickness">Sykdom</string>
     <string name="careportal_stress">Stress</string>
+    <string name="careportal_pre_period">Premenstruell</string>
     <string name="careportal_alcohol">Alkohol</string>
+    <string name="careportal_cortisone">Kortison</string>
+    <string name="careportal_feeling_low">Føles lavt</string>
+    <string name="careportal_feeling_high">Føles høyt</string>
+    <string name="careportal_falling_asleep">Sovner</string>
+    <string name="careportal_waking_up">Våkner</string>
     <string name="careportal_temporarytargetvalue">Midlertidig målverdi</string>
     <string name="careportal_temporarytargetcancel">Avbryt midlertidig mål</string>
     <string name="boluswizard">Boluskalkulator</string>
@@ -559,6 +565,8 @@
     <string name="uel_running_mode">KJØREMODUS</string>
     <string name="uel_running_mode_removed">KJØREMODUS SLETTET</string>
     <string name="uel_running_mode_updarted">KJØREMODUS OPPDATERT</string>
+    <string name="uel_scene_activated">SCENE AKTIVERT</string>
+    <string name="uel_scene_deactivated">SCENE DEAKTIVERT</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil lavt mål</string>
     <string name="profile_high_target">Profil høyt mål</string>
