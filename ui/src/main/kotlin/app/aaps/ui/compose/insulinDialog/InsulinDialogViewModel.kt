@@ -28,15 +28,17 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
+import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.interfaces.tempTargets.ttDurationMinutes
-import app.aaps.core.interfaces.tempTargets.ttTargetMgdl
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -73,7 +75,8 @@ class InsulinDialogViewModel @Inject constructor(
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    hardLimits: HardLimits
+    hardLimits: HardLimits,
+    private val runningModeGuard: RunningModeGuard
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsulinDialogUiState())
@@ -340,6 +343,7 @@ class InsulinDialogViewModel @Inject constructor(
                     automation.removeAutomationEventBolusReminder()
                 }
             } else {
+                if (runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)) return
                 uel.log(
                     Action.BOLUS, Sources.InsulinDialog,
                     notes,

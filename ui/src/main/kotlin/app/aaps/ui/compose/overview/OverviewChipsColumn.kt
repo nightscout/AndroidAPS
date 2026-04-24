@@ -52,6 +52,7 @@ fun OverviewChipsColumn(
     iobUiState: IobUiState,
     cobUiState: CobUiState,
     onNavigate: (NavigationRequest) -> Unit,
+    onTbrChipClick: () -> Unit,
     modifier: Modifier = Modifier,
     trailingContent: @Composable (RowScope.() -> Unit)? = null
 ) {
@@ -86,7 +87,8 @@ fun OverviewChipsColumn(
                             tempTargetReason = tempTargetReason,
                             tempTargetSceneManaged = tempTargetSceneManaged,
                             tbrState = tbrState,
-                            onNavigate = onNavigate
+                            onNavigate = onNavigate,
+                            onTbrChipClick = onTbrChipClick
                         )
                     }
                     Row(
@@ -112,7 +114,8 @@ fun OverviewChipsColumn(
                 tempTargetReason = tempTargetReason,
                 tempTargetSceneManaged = tempTargetSceneManaged,
                 tbrState = tbrState,
-                onNavigate = onNavigate
+                onNavigate = onNavigate,
+                onTbrChipClick = onTbrChipClick
             )
         }
         IobCobChipsRow(
@@ -139,7 +142,8 @@ private fun NarrowChips(
     tempTargetReason: TT.Reason?,
     tempTargetSceneManaged: Boolean,
     tbrState: TbrState,
-    onNavigate: (NavigationRequest) -> Unit
+    onNavigate: (NavigationRequest) -> Unit,
+    onTbrChipClick: () -> Unit
 ) {
     if (runningModeText.isNotEmpty()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -189,7 +193,7 @@ private fun NarrowChips(
         }
         TbrChip(
             state = tbrState,
-            onClick = { onNavigate(NavigationRequest.Element(ElementType.TEMP_BASAL)) }
+            onClick = onTbrChipClick
         )
     }
 }

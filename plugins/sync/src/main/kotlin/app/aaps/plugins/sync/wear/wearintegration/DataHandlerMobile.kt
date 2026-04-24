@@ -84,6 +84,8 @@ import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.objects.extensions.valueToUnits
+import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
@@ -142,6 +144,7 @@ class DataHandlerMobile @Inject constructor(
     private val bolusWizardProvider: Provider<BolusWizard>,
     private val pumpStatusProvider: PumpStatusProvider,
     private val ch: ConcentrationHelper,
+    private val runningModeGuard: RunningModeGuard,
     @ApplicationScope private val appScope: CoroutineScope
 ) {
 
@@ -1899,6 +1902,14 @@ class DataHandlerMobile @Inject constructor(
         detailedBolusInfo.notes = notes
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs != 0.0) {
 
+            // Pre-check: if the mode forbids a new bolus, surface the rejection to Wear
+            // without touching commandQueue.
+            if (detailedBolusInfo.insulin > 0) {
+                runningModeGuard.rejectionMessage(TbrGate.CommandKind.BOLUS)?.let {
+                    sendError(it)
+                    return
+                }
+            }
             val action = when {
                 amount == 0.0     -> Action.CARBS
                 carbs == 0        -> Action.BOLUS
@@ -1936,6 +1947,10 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun doFillBolus(amount: Double) {
+        runningModeGuard.rejectionMessage(TbrGate.CommandKind.BOLUS)?.let {
+            sendError(it)
+            return
+        }
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.bolusType = BS.Type.PRIMING

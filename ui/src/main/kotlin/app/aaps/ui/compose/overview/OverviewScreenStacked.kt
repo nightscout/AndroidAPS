@@ -22,7 +22,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TT
-import app.aaps.ui.compose.scenes.ActiveSceneBanner
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalConfig
@@ -34,6 +33,7 @@ import app.aaps.ui.compose.overview.aapsClient.AapsClientStatusCard
 import app.aaps.ui.compose.overview.graphs.GraphViewModel
 import app.aaps.ui.compose.overview.graphs.GraphsSection
 import app.aaps.ui.compose.overview.statusLights.StatusViewModel
+import app.aaps.ui.compose.scenes.ActiveSceneBanner
 
 @Composable
 fun OverviewScreenStacked(
@@ -58,6 +58,7 @@ fun OverviewScreenStacked(
     statusViewModel: StatusViewModel,
     statusLightsDef: PreferenceSubScreenDef,
     onNavigate: (NavigationRequest) -> Unit,
+    onTbrChipClick: () -> Unit,
     paddingValues: PaddingValues,
     activeSceneState: ActiveSceneState? = null,
     sceneExpired: Boolean = false,
@@ -131,6 +132,7 @@ fun OverviewScreenStacked(
                 iobUiState = iobUiState,
                 cobUiState = cobUiState,
                 onNavigate = onNavigate,
+                onTbrChipClick = onTbrChipClick,
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)

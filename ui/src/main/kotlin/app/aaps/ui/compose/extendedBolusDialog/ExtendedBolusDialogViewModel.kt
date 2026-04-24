@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.objects.runningMode.TbrGate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -33,7 +35,8 @@ class ExtendedBolusDialogViewModel @Inject constructor(
     private val commandQueue: CommandQueue,
     private val uel: UserEntryLogger,
     private val rh: ResourceHelper,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val runningModeGuard: RunningModeGuard
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ExtendedBolusDialogUiState())
@@ -118,6 +121,8 @@ class ExtendedBolusDialogViewModel @Inject constructor(
         val insulinAfterConstraints = constraintChecker.applyExtendedBolusConstraints(
             ConstraintObject(state.insulin, aapsLogger)
         ).value()
+
+        if (runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.EXTENDED_BOLUS)) return
 
         uel.log(
             action = Action.EXTENDED_BOLUS, source = Sources.ExtendedBolusDialog,

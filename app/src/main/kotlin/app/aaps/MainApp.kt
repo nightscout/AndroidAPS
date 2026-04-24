@@ -76,6 +76,8 @@ import app.aaps.database.AppRepository
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
+import app.aaps.plugins.aps.loop.runningMode.RunningModeExpiryScheduler
+import app.aaps.plugins.aps.loop.runningMode.RunningModeReconciler
 import app.aaps.plugins.constraints.objectives.keys.ObjectivesLongComposedKey
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.receivers.BTReceiver
@@ -148,6 +150,8 @@ class MainApp : Application(), HasAndroidInjector {
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
     @Inject lateinit var widgetUpdater: WidgetUpdater
+    @Inject lateinit var runningModeReconciler: RunningModeReconciler
+    @Inject lateinit var runningModeExpiryScheduler: RunningModeExpiryScheduler
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
     private lateinit var insulinLabel: String
@@ -216,6 +220,12 @@ class MainApp : Application(), HasAndroidInjector {
                 config.updateInitProgress(getString(R.string.initializing_plugins))
                 pluginStore.plugins = plugins
                 configBuilder.initialize()
+
+                // Running-mode reconciler + expiry scheduler. Start after plugins are registered:
+                // the reconciler's startup-drift check reads the active pump, which requires
+                // pluginStore.plugins to be populated. Both internally gated by config.APS.
+                runningModeReconciler.start()
+                runningModeExpiryScheduler.start()
 
                 // Data migrations (DB I/O)
                 dataMigrations()

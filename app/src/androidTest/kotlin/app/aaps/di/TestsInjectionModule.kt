@@ -4,6 +4,7 @@ import app.aaps.CobExtendedCarbsTest
 import app.aaps.LoopTest
 import app.aaps.ReplayApsResultsTest
 import app.aaps.RunningConfigurationTest
+import app.aaps.RunningModeReconcilerIntegrationTest
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.hilt.migration.DisableInstallInCheck
@@ -19,4 +20,5 @@ abstract class TestsInjectionModule {
     @ContributesAndroidInjector abstract fun contributesLoopTest(): LoopTest
     @ContributesAndroidInjector abstract fun contributesRunningConfigurationTest(): RunningConfigurationTest
     @ContributesAndroidInjector abstract fun contributesCobExtendedCarbsTest(): CobExtendedCarbsTest
+    @ContributesAndroidInjector abstract fun contributesRunningModeReconcilerIntegrationTest(): RunningModeReconcilerIntegrationTest
 }

@@ -50,6 +50,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.highValueToUnitsToString
 import app.aaps.core.objects.extensions.lowValueToUnitsToString
 import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.core.utils.JsonHelper
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
@@ -78,7 +80,8 @@ class BolusWizard @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val runningModeGuard: RunningModeGuard
 ) {
 
     var timeStamp = dateUtil.now()
@@ -435,6 +438,12 @@ class BolusWizard @Inject constructor(
 
     fun confirmAndExecute(quickWizardEntry: QuickWizardEntry? = null) {
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
+            // Pre-check the running mode gate for the insulin path; if the mode forbids
+            // a new bolus, show a snackbar and skip the confirmation flow entirely so the
+            // user never hits the alarm-on-failure callback.
+            if (calculatedTotalInsulin > 0.0 &&
+                runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)
+            ) return
             if (accepted) {
                 aapsLogger.debug(LTag.UI, "guarding: already accepted")
                 return
@@ -745,6 +754,11 @@ class BolusWizard @Inject constructor(
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
         }
+        // Pre-check: if the mode forbids a new bolus, show a snackbar and skip without ever
+        // hitting commandQueue (avoids the alarm-on-failure callback path).
+        if (calculatedTotalInsulin > 0.0 &&
+            runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)
+        ) return
         accepted = true
         if (calculatedTotalInsulin > 0.0)
             automation.removeAutomationEventBolusReminder()
@@ -847,6 +861,9 @@ class BolusWizard @Inject constructor(
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
         }
+        if (calculatedTotalInsulin > 0.0 &&
+            runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)
+        ) return
         accepted = true
         if (calculatedTotalInsulin > 0.0)
             automation.removeAutomationEventBolusReminder()

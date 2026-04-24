@@ -48,6 +48,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.implementation.R
 import app.aaps.implementation.queue.commands.CommandBolus
@@ -164,6 +165,41 @@ class CommandQueueImplementation @Inject constructor(
 
     private fun executingNowError(): PumpEnactResult =
         pumpEnactResultProvider.get().success(false).enacted(false).comment(R.string.executing_right_now)
+
+    /**
+     * Running-mode gate: reject commands that contradict the currently active running mode.
+     * Returns true if the command was rejected (caller should return false); false if allowed.
+     * Fails open on read errors — the gate is a belt, not the only line; upstream checks already
+     * handle most suspended-mode paths in [LoopPlugin.invoke] and [applySMBRequest].
+     */
+    private fun rejectedByRunningModeGate(kind: TbrGate.CommandKind, callback: Callback?): Boolean {
+        val mode = try {
+            runBlocking { persistenceLayer.getRunningModeActiveAt(dateUtil.now()) }.mode
+        } catch (e: Throwable) {
+            aapsLogger.warn(LTag.PUMPQUEUE, "Running-mode gate: failed to read active mode, allowing command: ${e.message}")
+            return false
+        }
+        val decision = TbrGate.check(mode, kind)
+        if (decision is TbrGate.Decision.Reject) {
+            val commentRes = when (decision.reason) {
+                TbrGate.Reason.PUMP_DISCONNECTED       -> app.aaps.core.ui.R.string.pump_disconnected
+                TbrGate.Reason.LOOP_SUSPENDED_USER,
+                TbrGate.Reason.LOOP_SUSPENDED_DST,
+                TbrGate.Reason.SUPER_BOLUS_ACTIVE      -> app.aaps.core.ui.R.string.loopsuspended
+
+                TbrGate.Reason.PUMP_REPORTED_SUSPENDED -> app.aaps.core.ui.R.string.pumpsuspended
+            }
+            aapsLogger.debug(
+                LTag.PUMPQUEUE,
+                "Command rejected by running-mode gate: mode=$mode, kind=$kind, reason=${decision.reason}"
+            )
+            callback?.result(
+                pumpEnactResultProvider.get().success(false).enacted(false).comment(commentRes)
+            )?.run()
+            return true
+        }
+        return false
+    }
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -334,6 +370,8 @@ class CommandQueueImplementation @Inject constructor(
             }
 
         }
+        // Running-mode gate: reject bolus if current mode forbids new delivery.
+        if (rejectedByRunningModeGate(TbrGate.CommandKind.BOLUS, callback)) return false
         val type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
             if (bolusInQueue()) {
@@ -402,6 +440,8 @@ class CommandQueueImplementation @Inject constructor(
 
     // returns true if command is queued
     override fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean {
+        val gateKind = if (absoluteRate == 0.0) TbrGate.CommandKind.TEMP_BASAL_ZERO else TbrGate.CommandKind.TEMP_BASAL_NONZERO
+        if (rejectedByRunningModeGate(gateKind, callback)) return false
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
             return false
@@ -417,6 +457,8 @@ class CommandQueueImplementation @Inject constructor(
 
     // returns true if command is queued
     override fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean {
+        val gateKind = if (percent == 0) TbrGate.CommandKind.TEMP_BASAL_ZERO else TbrGate.CommandKind.TEMP_BASAL_NONZERO
+        if (rejectedByRunningModeGate(gateKind, callback)) return false
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
             return false
@@ -432,6 +474,7 @@ class CommandQueueImplementation @Inject constructor(
 
     // returns true if command is queued
     override fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?): Boolean {
+        if (rejectedByRunningModeGate(TbrGate.CommandKind.EXTENDED_BOLUS, callback)) return false
         if (isRunning(CommandType.EXTENDEDBOLUS)) {
             callback?.result(executingNowError())?.run()
             return false

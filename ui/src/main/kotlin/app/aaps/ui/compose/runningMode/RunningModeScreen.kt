@@ -142,11 +142,11 @@ fun RunningModeScreen(
                 )
             }
 
-            // Pump Disconnect Section (only in APS mode)
-            val showPumpSection = state.isApsMode && (
+            // Pump Disconnect Section. Available on follower (AAPSCLIENT) too — the mode write
+            // propagates via NS sync to the main phone whose reconciler enacts it on the pump.
+            val showPumpSection =
                 state.allowedNextModes.contains(RM.Mode.DISCONNECTED_PUMP) ||
                     (state.allowedNextModes.contains(RM.Mode.RESUME) && state.currentMode == RM.Mode.DISCONNECTED_PUMP)
-                )
             if (showPumpSection) {
                 PumpDisconnectSection(
                     currentMode = state.currentMode,

@@ -23,6 +23,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.RunningModeGuard
+import app.aaps.core.objects.runningMode.TbrGate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -50,7 +52,8 @@ class TreatmentDialogViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
-    private val hardLimits: HardLimits
+    private val hardLimits: HardLimits,
+    private val runningModeGuard: RunningModeGuard
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TreatmentDialogUiState())
@@ -208,6 +211,7 @@ class TreatmentDialogViewModel @Inject constructor(
             }
         } else {
             if (detailedBolusInfo.insulin > 0) {
+                if (runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)) return
                 uel.log(
                     action = action,
                     source = Sources.TreatmentDialog,
