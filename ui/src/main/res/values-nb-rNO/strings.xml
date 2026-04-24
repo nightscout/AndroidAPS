@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
+    <string name="no_temp_basal_running">Ingen midlertidig basal kjører</string>
     <string name="temp_target_short">Midlertidig mål</string>
     <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
     <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
