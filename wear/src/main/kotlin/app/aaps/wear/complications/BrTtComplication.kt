@@ -106,5 +106,7 @@ class BrTtComplication : ModernBaseComplicationProviderService() {
         )
     }
 
+    override fun getComplicationAction(): ComplicationAction = ComplicationAction.TEMP_TARGET
+
     override fun getProviderCanonicalName(): String = BrTtComplication::class.java.canonicalName!!
 }
