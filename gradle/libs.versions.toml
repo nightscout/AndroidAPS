@@ -32,7 +32,7 @@ android-library = { id = "com.android.library" }
 klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
 moduleDependencyGraph = { id = "com.savvasdalkitsis.module-dependency-graph", version = "0.12" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
-ksp = { id = "com.google.devtools.ksp", version = "2.3.6" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.7" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
