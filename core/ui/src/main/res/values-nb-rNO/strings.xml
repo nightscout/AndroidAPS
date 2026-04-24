@@ -825,7 +825,6 @@
     <string name="nav_exit">Avslutt</string>
     <string name="open_navigation">Åpne meny</string>
     <string name="nav_history_browser">Historikkleser</string>
-    <string name="nav_history_browser_desc">Bla gjennom historiske data og grafer</string>
     <string name="appearance">Utseende</string>
     <string name="manage">Administrer</string>
     <string name="localprofile">Profil</string>
