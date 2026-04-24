@@ -57,6 +57,7 @@ import app.aaps.pump.omnipod.common.keys.DashStringNonPreferenceKey
 import app.aaps.pump.omnipod.common.keys.OmnipodBooleanPreferenceKey
 import app.aaps.pump.omnipod.common.keys.OmnipodIntPreferenceKey
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
+import app.aaps.pump.omnipod.common.queue.command.CommandDeliverBasalCorrection
 import app.aaps.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import app.aaps.pump.omnipod.common.queue.command.CommandPlayTestBeep
@@ -516,6 +517,65 @@ class OmnipodDashPumpPlugin @Inject constructor(
         super.onStop()
         scope?.cancel()
         scope = null
+    }
+
+    private fun deliverBasalCorrection(): PumpEnactResult {
+        if (!podStateManager.needsBasalCorrection()) {
+            aapsLogger.info(LTag.PUMP, "Basal correction no longer appropriate")
+            return pumpEnactResultProvider.get().success(true).enacted(false).comment("Basal correction no longer appropriate")
+        }
+        
+        // Set cooldown to prevent duplicate corrections
+        podStateManager.lastBasalCorrectionTime = System.currentTimeMillis()
+        
+        val requestedInsulinAmount = PodConstants.POD_PULSE_BOLUS_UNITS
+
+        val availableInsulin = reservoirLevel.value.cU
+        if (requestedInsulinAmount > availableInsulin) {
+            aapsLogger.info(LTag.PUMP, "Basal correction skipped: not enough insulin in reservoir ($requestedInsulinAmount > $availableInsulin)")
+            return pumpEnactResultProvider.get().success(false).enacted(false).comment("Not enough insulin in reservoir")
+        }
+        if (podStateManager.deliveryStatus?.bolusDeliveringActive() == true) {
+            aapsLogger.info(LTag.PUMP, "Basal correction skipped: bolus already in progress")
+            return pumpEnactResultProvider.get().success(false).enacted(false).comment("Bolus already in progress")
+        }
+        try {
+            bolusDeliveryInProgress = true
+            podStateManager.basalCorrectionInProgress = true
+            aapsLogger.info(LTag.PUMP, "Delivering basal correction")
+
+            return executeProgrammingCommand(
+                historyEntry = history.createRecord(
+                    commandType = OmnipodCommandType.SET_BOLUS,
+                    bolusRecord = BolusRecord(
+                        requestedInsulinAmount,
+                        BolusType.DEFAULT
+                    )
+                ),
+                activeCommandEntry = { historyId ->
+                    podStateManager.createActiveCommand(
+                        historyId,
+                        requestedBolus = requestedInsulinAmount
+                    )
+                },
+                command = omnipodManager.bolus(
+                    requestedInsulinAmount,
+                    confirmationBeeps = false,
+                    completionBeeps = false
+                ).filter { podEvent -> podEvent.isCommandSent() }
+                    .ignoreElements(),
+                post = waitForBolusDeliveryToComplete(requestedInsulinAmount, BS.Type.NORMAL)
+                    .doOnSuccess { delivered ->
+                        aapsLogger.info(LTag.PUMP, "Basal correction delivered: $delivered U")
+                    }
+                    .ignoreElement()
+            ).doOnError { e ->
+                aapsLogger.error(LTag.PUMP, "Basal correction delivery failed", e)
+            }.toPumpEnactResultImpl()
+        } finally {
+            bolusDeliveryInProgress = false
+            podStateManager.basalCorrectionInProgress = false
+        }
     }
 
     private fun observeDeliverySuspended(): Completable = Completable.defer {
@@ -1029,6 +1089,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
             is CommandDisableSuspendAlerts     ->
                 disableSuspendAlerts()
 
+            is CommandDeliverBasalCorrection   ->
+                deliverBasalCorrection()
+
             else                               -> {
                 aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
                 pumpEnactResultProvider.get().success(false).enacted(false).comment(
@@ -1303,6 +1366,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     }
                     aapsLogger.info(LTag.PUMP, "syncStopTemporaryBasalWithPumpId ret=$ret pumpId=${historyEntry.pumpId()}")
                     podStateManager.tempBasal = null
+
+                    // Evaluate basal drift correction after confirmed temp basal cancel
+                    if (podStateManager.needsBasalCorrection()) {
+                        commandQueue.customCommand(CommandDeliverBasalCorrection(), null)
+                    }
                 }
                 notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
             }
@@ -1367,6 +1435,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     }
                 } else {
                     podStateManager.tempBasal = command.tempBasal
+
+                    // Evaluate basal drift correction after confirmed temp basal set
+                    if (!commandQueue.isCustomCommandInQueue(CommandDeliverBasalCorrection::class.java) &&
+                        podStateManager.needsBasalCorrection()
+                    ) {
+                        commandQueue.customCommand(CommandDeliverBasalCorrection(), null)
+                    }
                 }
                 notificationManager.dismiss(NotificationId.OMNIPOD_TBR_ALERTS)
             }
