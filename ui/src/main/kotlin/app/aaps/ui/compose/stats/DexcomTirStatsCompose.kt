@@ -1,19 +1,32 @@
 package app.aaps.ui.compose.stats
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.aaps.core.interfaces.stats.DexcomTIR
+import app.aaps.core.ui.R
+import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.LocalProfileUtil
 import kotlin.math.roundToInt
 
@@ -114,6 +127,76 @@ fun DexcomTirStatsCompose(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp)
+            )
+
+            DexcomTirBarCompose(
+                veryLowPct = dexcomTir.veryLowPct(),
+                lowPct = dexcomTir.lowPct(),
+                inRangePct = dexcomTir.inRangePct(),
+                highPct = dexcomTir.highPct(),
+                veryHighPct = dexcomTir.veryHighPct(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun DexcomTirBarCompose(
+    veryLowPct: Double,
+    lowPct: Double,
+    inRangePct: Double,
+    highPct: Double,
+    veryHighPct: Double,
+    modifier: Modifier = Modifier
+) {
+    val colors = AapsTheme.generalColors
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.tir),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 6.dp)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(24.dp)
+                .clip(RoundedCornerShape(4.dp))
+        ) {
+            BarSegment(pct = veryLowPct, color = colors.bgVeryLow)
+            BarSegment(pct = lowPct, color = colors.bgLow)
+            BarSegment(pct = inRangePct, color = colors.bgInRange)
+            BarSegment(pct = highPct, color = colors.bgHigh)
+            BarSegment(pct = veryHighPct, color = colors.bgVeryHigh)
+        }
+    }
+}
+
+@Composable
+private fun RowScope.BarSegment(pct: Double, color: Color) {
+    if (pct <= 0.0) return
+    val textColor = if (color.luminance() > 0.5f) Color.Black else Color.White
+    Box(
+        modifier = Modifier
+            .weight(pct.toFloat())
+            .fillMaxHeight()
+            .background(color)
+            .clip(RoundedCornerShape(0.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        if (pct >= 8.0) {
+            Text(
+                text = String.format("%d%%", pct.roundToInt()),
+                color = textColor,
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
             )
         }
     }

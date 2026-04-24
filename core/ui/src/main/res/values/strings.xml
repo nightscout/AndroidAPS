@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Must be 4 characters of ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Treatments</string>
+    <string name="treatments_history">Treatments history</string>
     <string name="treatments_desc">View and manage treatment history</string>
     <string name="nav_configuration">Configuration</string>
     <string name="nav_configuration_desc">Setup your configuration (CGM, Pump, ...) end enable features</string>
@@ -872,7 +873,7 @@
     <string name="nav_exit">Exit</string>
     <string name="open_navigation">Open navigation</string>
     <string name="nav_history_browser">History browser</string>
-    <string name="nav_history_browser_desc">Browse historical data and graphs</string>
+    <string name="nav_history_browser_desc">Browse historical graphs</string>
     <string name="appearance">Appearance</string>
     <string name="manage">Manage</string>
     <string name="localprofile">Profile</string>

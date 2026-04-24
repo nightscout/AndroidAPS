@@ -70,6 +70,8 @@ data class GeneralColors(
     val bgHigh: Color,
     val bgInRange: Color,
     val bgLow: Color,
+    val bgVeryLow: Color,
+    val bgVeryHigh: Color,
     val bgTargetRangeArea: Color,
     val originalBgValue: Color,
     val iobPrediction: Color,
@@ -129,6 +131,8 @@ val LightGeneralColors = GeneralColors(
     bgHigh = Color(0xFFFB8C00),              // orange for high BG (matches @color/high in values)
     bgInRange = Color(0xFF00FF00),           // pure green for in-range BG (matches @color/inRange)
     bgLow = Color(0xFFFF0000),               // pure red for low BG (matches @color/low)
+    bgVeryLow = Color(0xFF8B0000),           // dark red for very low BG (Dexcom TIR 5-range)
+    bgVeryHigh = Color(0xFFD84315),          // deep orange-red for very high BG (Dexcom TIR 5-range)
     bgTargetRangeArea = Color(0x2800FF00),   // green with ~16% alpha for target range area (matches @color/inRangeBackground)
     originalBgValue = Color(0xFFFFFFFF),     // white for regular CGM readings (matches originalBgValueColor attr)
     iobPrediction = Color(0xFF1E88E5),       // blue for IOB predictions (matches iobColor attr)
@@ -184,6 +188,8 @@ val DarkGeneralColors = GeneralColors(
     bgHigh = Color(0xFFFFFF00),              // yellow for high BG (dark mode, matches @color/high in values-night)
     bgInRange = Color(0xFF00FF00),           // pure green for in-range BG (matches @color/inRange - same in both modes)
     bgLow = Color(0xFFFF0000),               // pure red for low BG (matches @color/low - same in both modes)
+    bgVeryLow = Color(0xFFB71C1C),           // dark red for very low BG (dark mode, Dexcom TIR 5-range)
+    bgVeryHigh = Color(0xFFFB8C00),          // orange for very high BG (dark mode, differentiates from yellow bgHigh)
     bgTargetRangeArea = Color(0x4000FF00),   // green with ~25% alpha for target range area (matches @color/inRangeBackground in values-night)
     originalBgValue = Color(0xFFFFFFFF),     // white for regular CGM readings (same in both modes)
     iobPrediction = Color(0xFF64B5F6),       // lighter blue for IOB predictions (dark mode)

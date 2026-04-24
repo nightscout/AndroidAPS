@@ -198,7 +198,7 @@ fun ElementType.labelResId(): Int = when (this) {
     ElementType.PUMP                    -> R.string.pump
     ElementType.SETTINGS                -> R.string.settings
     ElementType.QUICK_LAUNCH_CONFIG     -> R.string.quick_launch_configure
-    ElementType.TREATMENTS              -> R.string.treatments
+    ElementType.TREATMENTS              -> R.string.treatments_history
     ElementType.STATISTICS              -> R.string.statistics
     ElementType.TDD_CYCLE_PATTERN       -> R.string.tdd_cycle_pattern
     ElementType.PROFILE_HELPER          -> R.string.nav_profile_helper
