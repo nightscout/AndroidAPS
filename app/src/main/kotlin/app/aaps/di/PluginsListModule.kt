@@ -38,6 +38,7 @@ import app.aaps.plugins.source.RandomBgPlugin
 import app.aaps.plugins.source.SyaiPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
+import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.sync.nsclient.NSClientPlugin
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
@@ -313,6 +314,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(477)
     abstract fun bindNotificationReaderPlugin(plugin: NotificationReaderPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(478)
+    abstract fun bindInstaraPlugin(plugin: InstaraPlugin): PluginBase
 
     @Binds
     @AllConfigs

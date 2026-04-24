@@ -14,6 +14,7 @@ import app.aaps.core.data.model.NE
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SC
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TE
@@ -1534,6 +1535,17 @@ interface PersistenceLayer {
      */
     suspend fun insertOrUpdateApsResult(apsResult: APSResult): TransactionResult<APSResult>
 
+    /**
+     * Generic glucose lookup by (sourceSensor, pumpId).
+     * Intended for plugins that persist a source-specific hardware/event id in InterfaceIDs.pumpId.
+     */
+    suspend fun getGlucoseValueByPumpIdAndSource(source: SourceSensor, pumpId: Long): GV?
+
+    /**
+     * Generic glucose lookup by (sourceSensor, pumpId range).
+     * Caller owns any vendor-specific interpretation of pumpId semantics.
+     */
+    suspend fun getGlucoseValuesByPumpIdRange(source: SourceSensor, startPumpId: Long, endPumpId: Long): List<GV>
 }
 
 /**

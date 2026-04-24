@@ -458,4 +458,8 @@
     <!--    Appearance preferences-->
     <string name="prefs_range_title">Range for visualization</string>
 
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara historical data request</string>
+    <string name="pref_summary_instara_history_request">Request possible missing historical data in background</string>
+
 </resources>

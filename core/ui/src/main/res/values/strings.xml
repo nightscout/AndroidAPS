@@ -1062,5 +1062,8 @@
     <string name="remove_items">Remove Items</string>
     <string name="sort_items">Sort Items</string>
 
+    <!-- Instara preferences -->
+    <string name="instara_history_request_settings_title">Instara historical data request</string>
+    <string name="instara_history_request_enabled_title">Request possible missing historical data in background</string>
 
 </resources>
