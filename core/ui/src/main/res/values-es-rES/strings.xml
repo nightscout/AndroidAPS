@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Debe tener 4 caracteres de ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Tratamientos</string>
+    <string name="treatments_history">Historial de tratamientos</string>
     <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
     <string name="nav_configuration">Configuración</string>
     <string name="nav_configuration_desc">Configura tus ajustes (MCG, Bomba, ...) y activa las funciones</string>
@@ -825,6 +826,7 @@
     <string name="nav_exit">Salir</string>
     <string name="open_navigation">Abrir navegación</string>
     <string name="nav_history_browser">Explorador de historial</string>
+    <string name="nav_history_browser_desc">Explorar gráficos históricos</string>
     <string name="appearance">Apariencia</string>
     <string name="manage">Administrar</string>
     <string name="localprofile">Perfil</string>
