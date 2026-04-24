@@ -825,7 +825,6 @@
     <string name="nav_exit">Ukončiť</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="nav_history_browser">Prehliadač histórie</string>
-    <string name="nav_history_browser_desc">Prehliadať dáta a grafy z histórie</string>
     <string name="appearance">Vzhľad</string>
     <string name="manage">Spravovať</string>
     <string name="localprofile">Profil</string>
