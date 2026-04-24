@@ -203,6 +203,7 @@
     <string name="pref_title_half_basal_exercise_target">Halv basal treningsmålverdi</string>
     <string name="half_basal_exercise_target_summary">Sett til et tall, f.eks. 160, som betyr at når midlertidig mål er 160 mg/dL og Høyt midlertidig mål øker sensitivitet=sann, kjøres 50%% basal på dette nivået (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">IOB-terskelprosent</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">SMB blir deaktivert hvis IOB er over denne prosentandelen av MaksIOB.\nStandard verdi: 100%\nVed 100% blir denne funksjonen deaktivert.</string>
     <string name="pref_title_dynisf_adjustment_factor">DynamiskISF-justeringsfaktor</string>
     <string name="dyn_isf_adjust_summary" formatted="false">Justeringsfaktor for DynamiskISF. Verdier over 100% vil gi mer aggressive korreksjonsdoser, mens verdier under 100% vil gi mindre aggressive korreksjoner.</string>
     <string name="pref_title_autosens_period">Autosens-periode</string>
@@ -357,6 +358,7 @@
     <string name="pref_title_ama_max_iob">Maks IOB for AMA</string>
     <string name="openapsma_max_iob_summary">Denne verdien kalles Maks IOB i OpenAPS-sammenheng\nDette er maksimal insulin i [E] som APS kan levere på én gang.</string>
     <string name="pref_title_max_daily_multiplier">Maks daglig sikkerhetsmultiplikator</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3 Dette er en grunnleggende sikkerhetsfunksjon i OpenAPS. Den begrenser basalraten til å være 3x den høyeste basalraten fra profilen. Du vil sannsynligvis ikke trenge å endre denne innstillingen, men du bør være klar over at det er dette som diskuteres som \"3x daglig; 4x nåværende\" som sikkerhetsfunksjoner.</string>
     <string name="pref_title_current_basal_multiplier">Nåværende basal sikkerhetsmultiplikator</string>
     <string name="pref_title_bolus_snooze_divisor">Bolus snooze DIA-divisor</string>
     <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5 min karboabsorpsjonsvirkning</string>

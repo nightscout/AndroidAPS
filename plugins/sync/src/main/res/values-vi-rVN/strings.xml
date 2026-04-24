@@ -230,7 +230,7 @@
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Liều bolus:</string>
     <string name="sms_basal">Liều nền:</string>
-    <string name="sms_min_ago">%1$d phút trước</string>
+    <string name="sms_min_ago">%1$dphút trước</string>
     <string name="sms_loop_suspended_for">Tạm dừng (%1$d phút)</string>
     <string name="sms_read_status_failed">Đọc trạng thái thất bại</string>
     <string name="sms_profile_switch_created">Đã tạo chuyển đổi Hồ sơ</string>

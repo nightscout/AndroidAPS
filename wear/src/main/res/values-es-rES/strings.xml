@@ -64,6 +64,7 @@
     <string name="pref_moreWatchfaceSettings">Más ajustes de la esfera del reloj</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Mira en la configuración de la esfera del reloj, por favor</string>
     <string name="menu_tempt">ObjetivoT</string>
+    <string name="menu_tempt_long">Objetivo temporal</string>
     <string name="menu_wizard">Calculadora</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Tratamiento</string>
@@ -229,6 +230,11 @@
     <string name="status_running_mode">Modo de funcionamiento</string>
     <string name="label_running_mode_title">Modo de funcionamiento</string>
     <string name="label_bg_graph_tile">Gráfico de glucemia</string>
+    <string name="tile_tap_action">Acción al tocar</string>
+    <string name="tile_graph_time_range">Intervalo de tiempo</string>
+    <string name="tile_tap_bg_graph">Gráfico de glucemia</string>
+    <string name="tile_tap_main_menu">Menú principal</string>
+    <string name="tile_tap_loop_status">Estado del lazo</string>
     <string name="action_running_mode_selected">Modo de funcionamiento solicitado</string>
     <string name="title_activity_disconnect_pump">Desconectar bomba</string>
     <string name="title_activity_suspend_loop">Suspender lazo</string>

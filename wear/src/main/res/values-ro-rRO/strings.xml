@@ -64,6 +64,7 @@
     <string name="pref_moreWatchfaceSettings">Mai multe setări cadran ceas</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Uitați-vă în configurarea cadranului de ceas, vă rugăm.</string>
     <string name="menu_tempt">ŢintăTemporară</string>
+    <string name="menu_tempt_long">Țintă temporară</string>
     <string name="menu_wizard">Calculator</string>
     <string name="menu_wizard_short">Calculator</string>
     <string name="menu_treatment">Tratament</string>
@@ -229,6 +230,11 @@
     <string name="status_running_mode">Mod de rulare</string>
     <string name="label_running_mode_title">Mod de funcționare</string>
     <string name="label_bg_graph_tile">Grafic glicemie</string>
+    <string name="tile_tap_action">Atingeți acțiunea</string>
+    <string name="tile_graph_time_range">Interval de timp</string>
+    <string name="tile_tap_bg_graph">Grafic glicemie</string>
+    <string name="tile_tap_main_menu">Meniul principal</string>
+    <string name="tile_tap_loop_status">Stare buclă</string>
     <string name="action_running_mode_selected">Mod de rulare solicitat</string>
     <string name="title_activity_disconnect_pump">Deconectează pompa</string>
     <string name="title_activity_suspend_loop">Suspendă bucla</string>

@@ -25,6 +25,7 @@ import app.aaps.wear.interaction.menus.FillMenuActivity
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.menus.PreferenceMenuActivity
 import app.aaps.wear.interaction.menus.StatusMenuActivity
+import app.aaps.wear.interaction.menus.TileMenuActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -54,6 +55,7 @@ abstract class WearActivitiesModule {
 
     @ContributesAndroidInjector abstract fun contributesFillMenuActivity(): FillMenuActivity
     @ContributesAndroidInjector abstract fun contributesPreferenceMenuActivity(): PreferenceMenuActivity
+    @ContributesAndroidInjector abstract fun contributesTileMenuActivity(): TileMenuActivity
     @ContributesAndroidInjector abstract fun contributesMainMenuActivity(): MainMenuActivity
     @ContributesAndroidInjector abstract fun contributesStatusMenuActivity(): StatusMenuActivity
     @ContributesAndroidInjector abstract fun contributesQuickSnoozeActivity(): QuickSnoozeActivity

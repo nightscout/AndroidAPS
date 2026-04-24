@@ -9,8 +9,8 @@
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Thay trình điều khiển Bơm.</string>
     <!--    DateUtil-->
-    <string name="minago">%1$d phút trước</string>
-    <string name="secago">%1$d giây trước</string>
+    <string name="minago">%1$dm trước</string>
+    <string name="secago">%1$ds trước</string>
     <string name="minago_long">%1$d phút trước</string>
     <string name="hoursago">%1$.1f giờ trước</string>
     <string name="days_ago">%1$.1f ngày trước</string>
