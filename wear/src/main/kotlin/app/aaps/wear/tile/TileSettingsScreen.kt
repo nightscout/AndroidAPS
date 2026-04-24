@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +22,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -98,6 +102,14 @@ fun TileSettingsScreen(title: String, rows: List<TileSettingRow>) {
 @Composable
 private fun OptionPickerScreen(row: TileSettingRow, onPick: (String) -> Unit) {
     val scrollState = rememberScrollState()
+    val density = LocalDensity.current
+    var selectedItemY by remember { mutableStateOf(-1) }
+    LaunchedEffect(selectedItemY) {
+        if (selectedItemY > 0) {
+            val bufferPx = with(density) { 20.dp.roundToPx() }
+            scrollState.scrollTo((selectedItemY - bufferPx).coerceAtLeast(0))
+        }
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -118,6 +130,7 @@ private fun OptionPickerScreen(row: TileSettingRow, onPick: (String) -> Unit) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .onGloballyPositioned { if (isSelected) selectedItemY = it.positionInParent().y.toInt() }
                         .background(if (isSelected) SelectedBg else SettingBg, shape = RoundedCornerShape(8.dp))
                         .clickable { onPick(option.value) }
                         .padding(horizontal = 12.dp, vertical = 10.dp)
