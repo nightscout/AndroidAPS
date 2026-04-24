@@ -688,6 +688,10 @@
             android:label="@string/menu_settings"
             android:theme="@style/WearAppCompatDark" />
         <activity
+            android:name=".interaction.menus.TileMenuActivity"
+            android:exported="false"
+            android:theme="@style/WearAppCompatDark" />
+        <activity
             android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
             android:label="@string/menu_treatment"
