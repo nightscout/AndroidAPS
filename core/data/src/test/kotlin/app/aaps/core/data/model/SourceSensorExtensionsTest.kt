@@ -35,7 +35,13 @@ class SourceSensorExtensionsTest {
     }
 
     @Test
-    fun `eversense does not support advanced filtering`() {
+    fun `eversense 365 and e3 support advanced filtering`() {
+        assertThat(SourceSensor.EVERSENSE_365.advancedFilteringSupported()).isTrue()
+        assertThat(SourceSensor.EVERSENSE_E3.advancedFilteringSupported()).isTrue()
+    }
+
+    @Test
+    fun `eversense legacy does not support advanced filtering`() {
         assertThat(SourceSensor.EVERSENSE.advancedFilteringSupported()).isFalse()
     }
 

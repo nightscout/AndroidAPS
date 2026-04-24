@@ -31,6 +31,8 @@ enum class SourceSensor(val text: String) {
     SIBIONIC("SI App"),
     SINO("Sino App"),
     EVERSENSE("Eversense"),
+    EVERSENSE_E3("Eversense E3"),
+    EVERSENSE_365("Eversense 365"),
     AIDEX("GlucoRx Aidex"),
     SYAI_TAG("Syai Tag"),
     RANDOM("Random"),
