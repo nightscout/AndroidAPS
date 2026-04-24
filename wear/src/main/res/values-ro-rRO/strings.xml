@@ -14,6 +14,7 @@
     <string name="pref_display_settings">Afișaj</string>
     <string name="pref_graph_settings">Grafic</string>
     <string name="pref_interface_settings">Interfață</string>
+    <string name="pref_tile_settings">Dale</string>
     <string name="pref_others_settings">Altele</string>
     <string name="pref_complication_settings">Complicație</string>
     <string name="pref_show_date">Afișați data</string>
