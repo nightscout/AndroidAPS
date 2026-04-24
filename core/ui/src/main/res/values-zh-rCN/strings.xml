@@ -825,7 +825,6 @@
     <string name="nav_exit">退出</string>
     <string name="open_navigation">打开导航栏</string>
     <string name="nav_history_browser">历史浏览</string>
-    <string name="nav_history_browser_desc">浏览历史数据和图表</string>
     <string name="appearance">外观</string>
     <string name="manage">管理</string>
     <string name="localprofile">配置文件</string>
