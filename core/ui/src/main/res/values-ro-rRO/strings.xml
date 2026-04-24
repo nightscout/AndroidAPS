@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Trebuie să conțină 4 caractere din șirul ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Tratamente</string>
+    <string name="treatments_history">Istoricul tratamentelor</string>
     <string name="treatments_desc">Vedeți și gestionați istoricul tratamentului</string>
     <string name="nav_configuration">Configurație</string>
     <string name="nav_configuration_desc">Creați-vă configurația (senzor, pompă, șamd) și activați funcțiile</string>
@@ -825,6 +826,7 @@
     <string name="nav_exit">Ieșiți</string>
     <string name="open_navigation">Deschideți navigare</string>
     <string name="nav_history_browser">Vizualizare istoric</string>
+    <string name="nav_history_browser_desc">Răsfoiți graficele istorice</string>
     <string name="appearance">Aspect</string>
     <string name="manage">Gestionați</string>
     <string name="localprofile">Profil</string>
