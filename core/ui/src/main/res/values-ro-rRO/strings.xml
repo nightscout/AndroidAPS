@@ -825,7 +825,6 @@
     <string name="nav_exit">Ieșiți</string>
     <string name="open_navigation">Deschideți navigare</string>
     <string name="nav_history_browser">Vizualizare istoric</string>
-    <string name="nav_history_browser_desc">Răsfoiți datele istorice și graficele</string>
     <string name="appearance">Aspect</string>
     <string name="manage">Gestionați</string>
     <string name="localprofile">Profil</string>
