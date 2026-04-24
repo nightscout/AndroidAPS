@@ -825,7 +825,6 @@
     <string name="nav_exit">離開</string>
     <string name="open_navigation">開啟導覽選單</string>
     <string name="nav_history_browser">歷史瀏覽</string>
-    <string name="nav_history_browser_desc">瀏覽歷史資料與圖表</string>
     <string name="appearance">外觀</string>
     <string name="manage">管理</string>
     <string name="localprofile">設定檔</string>
