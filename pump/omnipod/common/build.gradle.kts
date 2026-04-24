@@ -24,6 +24,8 @@ dependencies {
     api(libs.androidx.navigation.fragment)
     api(libs.com.google.android.material)
 
+    testImplementation(project(":shared:tests"))
+
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.android.processor)
 }
