@@ -84,7 +84,6 @@
     <string name="disabled_loop">Döngü Devredışı</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
     <string name="suspendloop">Döngüyü duraklat</string>
-    <string name="duration_min_label">Süre [min]</string>
     <string name="notification">Bildirim</string>
     <string name="noprofile">Henüz NS\'tan profil yüklenmedi</string>
     <string name="exists">var</string>
