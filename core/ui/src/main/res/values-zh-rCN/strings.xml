@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">必须是4位字符，在ABCDEF0123456789中选用</string>
     <!--    General-->
     <string name="treatments">治疗</string>
+    <string name="treatments_history">治疗历史</string>
     <string name="treatments_desc">查看和管理治疗记录</string>
     <string name="nav_configuration">配置</string>
     <string name="nav_configuration_desc">设置您的配置（CGM、泵等）并启用功能</string>
@@ -825,6 +826,7 @@
     <string name="nav_exit">退出</string>
     <string name="open_navigation">打开导航栏</string>
     <string name="nav_history_browser">历史浏览</string>
+    <string name="nav_history_browser_desc">浏览历史图表</string>
     <string name="appearance">外观</string>
     <string name="manage">管理</string>
     <string name="localprofile">配置文件</string>
