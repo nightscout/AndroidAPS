@@ -14,7 +14,7 @@
     <string name="pref_display_settings">Pantalla</string>
     <string name="pref_graph_settings">Gráfico</string>
     <string name="pref_interface_settings">Interfaz</string>
-    <string name="pref_tile_settings">Paneles</string>
+    <string name="pref_tile_settings">Tarjetas</string>
     <string name="pref_others_settings">Otros</string>
     <string name="pref_complication_settings">Complicaciones</string>
     <string name="pref_show_date">Mostrar fecha</string>
