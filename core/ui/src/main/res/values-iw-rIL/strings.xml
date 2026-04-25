@@ -82,7 +82,6 @@
     <string name="disableloop">השבתת לולאה</string>
     <string name="resumeloop">חידוש לולאה</string>
     <string name="suspendloop">השהיית הלולאה</string>
-    <string name="duration_min_label">משך [min]</string>
     <string name="notification">התראה</string>
     <string name="noprofile">פרופיל הנייטסקאוט טרם נטען</string>
     <string name="exists">קיים</string>
