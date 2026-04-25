@@ -54,6 +54,9 @@
     <string name="xdrip_local_broadcasts_summary">Gửi dữ liệu đường huyết và điều trị tới xDrip+. Nguồn dữ liệu ‘xDrip+ Sync Follower’ phải được chọn và chức năng chấp nhận dữ liệu phải được bật trong Settings - Inter-app settings - Accept Glucose/Treatments</string>
     <string name="xdrip_local_broadcasts_title">Cho phép gửi dữ liệu tới xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Ứng dụng cùng chạy bên ngoài</string>
+    <string name="tizen_short">CAB</string>
+    <string name="tizen_description">Cho phép phát dữ liệu tới nhiều ứng dụng cùng chạy bên ngoài</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Kết nối với thiết bị Garmin (Fenix, Edge, …)</string>
