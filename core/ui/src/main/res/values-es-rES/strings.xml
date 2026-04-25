@@ -195,7 +195,7 @@
     <string name="site_rotation">Rotación del sitio</string>
     <string name="edit_site">Editar</string>
     <string name="select_arrow">Seleccionar flecha</string>
-    <string name="site_filter_info">Selecciona el tipo de evento de terapia que quieres ver: Cambio de cánula y/o Cambio de sensor</string>
+    <string name="site_filter_info">Selecciona el tipo de evento de terapia que quieres ver: cambio de cánula y/o cambio de sensor</string>
     <string name="selected_location">Seleccionado: %1$s</string>
     <string name="last_site_location">Última zona: %1$s</string>
     <string name="pick_site">Elegir zona</string>
