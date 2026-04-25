@@ -35,7 +35,11 @@
     <string name="patched_sino_app">Sino app</string>
     <string name="description_source_patched_sino_app">Motta BS-verdier fra den patchede appen Sino.</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Motta glukoseverdier fra Instara-appen.</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Forespør historiske data fra Instara</string>
+    <string name="pref_summary_instara_history_request">Forespør mulig manglende historiske data i bakgrunnen</string>
     <!-- Notification Reader -->
     <string name="notification_reader">Varslingsleser</string>
     <string name="description_source_notification_reader">Les BS-verdier fra varsler lagt ut av offisielle sensor-apper (Dexcom, Medtronic, Eversense osv.).</string>
