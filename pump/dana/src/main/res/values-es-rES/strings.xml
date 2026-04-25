@@ -99,7 +99,7 @@
     <string name="rs_loginsulinchange_title">Registrar cambios de reservorio</string>
     <string name="rs_loginsulinchange_summary">Añadir evento \"Cambio de Insulina\" al portal de cuidados cuando se detecte en el historial</string>
     <string name="rs_logcanulachange_title">Registro de cambio de cánula</string>
-    <string name="rs_logcanulachange_summary">Añadir evento \"Cambio de Cánula\" al portal de cuidados cuando se detecte en el historial</string>
+    <string name="rs_logcanulachange_summary">Añadir evento \"Cambio de cánula\" al portal de cuidados cuando se detecte en el historial</string>
     <string name="press_ok_on_the_pump">Pulse Aceptar en la bomba\ny entre 2 números visualizados\nMantener la pantalla en la bomba ON pulsando el botón menos hasta que termine de introducir el código.</string>
     <string name="num1pin">1: (12 dígitos)</string>
     <string name="num2pin">2: (8 dígitos)</string>
