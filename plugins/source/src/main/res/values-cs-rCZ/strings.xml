@@ -34,6 +34,8 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Aplikace Sino</string>
     <string name="description_source_patched_sino_app">Přijímat glykémie z upravené aplikace Sino.</string>
+    <!-- Instara App -->
+    <!-- Instara preferences -->
     <!-- Notification Reader -->
     <string name="notification_reader">Čtečka oznámení</string>
     <string name="description_source_notification_reader">Čte hodnoty glykémie z oznámení zasílaných oficiálními CGM aplikacemi (Dexcom, Medtronic, Eversense atd.).</string>
