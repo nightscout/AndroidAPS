@@ -34,6 +34,8 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Sino app</string>
     <string name="description_source_patched_sino_app">Motta BS-verdier fra den patchede appen Sino.</string>
+    <!-- Instara App -->
+    <!-- Instara preferences -->
     <!-- Notification Reader -->
     <string name="notification_reader">Varslingsleser</string>
     <string name="description_source_notification_reader">Les BS-verdier fra varsler lagt ut av offisielle sensor-apper (Dexcom, Medtronic, Eversense osv.).</string>
