@@ -132,7 +132,6 @@
     <string name="disabled_loop">Lazo deshabilitado</string>
     <string name="resumeloop">Reanudar el lazo</string>
     <string name="suspendloop">Suspender lazo</string>
-    <string name="duration_min_label">Duración [min]</string>
     <string name="notification">Notificación</string>
     <string name="noprofile">Ningún perfil cargado desde Nightscout</string>
     <string name="exists">existe</string>
