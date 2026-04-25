@@ -6,8 +6,8 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.automation.services.LocationServiceHelper
-import app.aaps.plugins.automation.TimerUtil
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -23,12 +23,13 @@ class AutomationPluginTest : TestBaseWithProfile() {
     @Mock lateinit var timerUtil: TimerUtil
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var uel: UserEntryLogger
+    @Mock lateinit var sceneApi: SceneAutomationApi
     private lateinit var automationPlugin: AutomationPlugin
 
     @BeforeEach fun prepare() {
         automationPlugin = AutomationPlugin(
             injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker,
-            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore, uel, localProfileManager
+            aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil, receiverStatusStore, uel, localProfileManager, sceneApi
         )
     }
 

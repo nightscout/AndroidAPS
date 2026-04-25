@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.aaps.core.data.model.Scene
 import app.aaps.core.ui.compose.icons.IcAutomation
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
@@ -47,6 +48,7 @@ fun AutomationEditScreen(
     state: AutomationEditUiState,
     liveActions: List<Action>,
     profileNames: List<String>,
+    sceneOptions: List<Scene>,
     tick: Int,
     onTitleChange: (String) -> Unit,
     onUserActionChange: (Boolean) -> Unit,
@@ -76,6 +78,8 @@ fun AutomationEditScreen(
                 liveActions = liveActions,
                 readOnly = state.readOnly,
                 profileNames = profileNames,
+                sceneOptions = sceneOptions,
+                tick = tick,
                 onRemoveAction = onRemoveAction,
                 onAddAction = onAddAction,
                 onActionChanged = onActionChanged
@@ -223,6 +227,8 @@ private fun ActionsSection(
     liveActions: List<Action>,
     readOnly: Boolean,
     profileNames: List<String>,
+    sceneOptions: List<Scene>,
+    tick: Int,
     onRemoveAction: (Int) -> Unit,
     onAddAction: () -> Unit,
     onActionChanged: () -> Unit
@@ -246,6 +252,8 @@ private fun ActionsSection(
                     shortDescription = headerTitle,
                     readOnly = readOnly,
                     profileNames = profileNames,
+                    sceneOptions = sceneOptions,
+                    tick = tick,
                     onRemove = { onRemoveAction(index) },
                     onChange = onActionChanged
                 )
@@ -271,6 +279,8 @@ private fun InlineActionCard(
     shortDescription: String,
     readOnly: Boolean,
     profileNames: List<String>,
+    sceneOptions: List<Scene>,
+    tick: Int,
     onRemove: () -> Unit,
     onChange: () -> Unit
 ) {
@@ -310,6 +320,8 @@ private fun InlineActionCard(
                 ActionEditor(
                     action = action,
                     profileNames = profileNames,
+                    sceneOptions = sceneOptions,
+                    tick = tick,
                     onChange = onChange
                 )
             }
@@ -358,6 +370,7 @@ private fun PreviewAutomationEditScreenNew() {
             onActionChanged = {},
             liveActions = emptyList(),
             profileNames = emptyList(),
+            sceneOptions = emptyList(),
             tick = 0
         )
     }
@@ -378,6 +391,7 @@ private fun PreviewAutomationEditScreenEdit() {
             onActionChanged = {},
             liveActions = emptyList(),
             profileNames = emptyList(),
+            sceneOptions = emptyList(),
             tick = 0
         )
     }
@@ -398,6 +412,7 @@ private fun PreviewAutomationEditScreenReadOnly() {
             onActionChanged = {},
             liveActions = emptyList(),
             profileNames = emptyList(),
+            sceneOptions = emptyList(),
             tick = 0
         )
     }
@@ -418,6 +433,7 @@ private fun PreviewAutomationEditScreenUserAction() {
             onActionChanged = {},
             liveActions = emptyList(),
             profileNames = emptyList(),
+            sceneOptions = emptyList(),
             tick = 0
         )
     }

@@ -6,11 +6,14 @@ import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
+import app.aaps.plugins.automation.actions.ActionDisableScene
 import app.aaps.plugins.automation.actions.ActionDummy
+import app.aaps.plugins.automation.actions.ActionEnableScene
 import app.aaps.plugins.automation.actions.ActionNotification
 import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
+import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
@@ -39,6 +42,7 @@ import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
 import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
+import app.aaps.plugins.automation.triggers.TriggerSceneActive
 import app.aaps.plugins.automation.triggers.TriggerSensorAge
 import app.aaps.plugins.automation.triggers.TriggerStepsCount
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
@@ -85,6 +89,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerPumpLastConnectionInjector(): TriggerPumpLastConnection
     @ContributesAndroidInjector abstract fun triggerBTDeviceInjector(): TriggerBTDevice
     @ContributesAndroidInjector abstract fun triggerRecurringTimeInjector(): TriggerRecurringTime
+    @ContributesAndroidInjector abstract fun triggerSceneActiveInjector(): TriggerSceneActive
     @ContributesAndroidInjector abstract fun triggerTempTargetInjector(): TriggerTempTarget
     @ContributesAndroidInjector abstract fun triggerTempTargetValueInjector(): TriggerTempTargetValue
     @ContributesAndroidInjector abstract fun triggerTime(): TriggerTime
@@ -105,6 +110,9 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun actionSendSMSInjector(): ActionSendSMS
     @ContributesAndroidInjector abstract fun actionStartTempTargetInjector(): ActionStartTempTarget
     @ContributesAndroidInjector abstract fun actionStopTempTargetInjector(): ActionStopTempTarget
+    @ContributesAndroidInjector abstract fun actionRunSceneInjector(): ActionRunScene
+    @ContributesAndroidInjector abstract fun actionEnableSceneInjector(): ActionEnableScene
+    @ContributesAndroidInjector abstract fun actionDisableSceneInjector(): ActionDisableScene
     @ContributesAndroidInjector abstract fun actionDummyInjector(): ActionDummy
     @ContributesAndroidInjector abstract fun contributesLocationService(): LocationService
 

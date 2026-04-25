@@ -18,10 +18,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,6 +94,7 @@ fun NumberInputRow(
     valueFormat: DecimalFormat? = null,
     decimalPlaces: Int = 0,
     enabled: Boolean = true,
+    compact: Boolean = false,
     onTextChange: ((String) -> Unit)? = null,
 ) {
     val effectiveValueFormat = valueFormat ?: remember(decimalPlaces) {
@@ -128,6 +131,7 @@ fun NumberInputRow(
             formatAsInt = formatAsInt,
             valueFormat = effectiveValueFormat,
             enabled = enabled,
+            compact = compact,
             onTextChange = onTextChange,
             modifier = modifier
         )
@@ -240,11 +244,12 @@ private fun DirectNumberInputRow(
     formatAsInt: Boolean,
     valueFormat: DecimalFormat,
     enabled: Boolean,
+    compact: Boolean,
     onTextChange: ((String) -> Unit)?,
     modifier: Modifier
 ) {
     val focusManager = LocalFocusManager.current
-    val label = stringResource(labelResId)
+    val label = if (labelResId != 0) stringResource(labelResId) else ""
     // Track whether the field is focused for editing
     var isFocused by remember { mutableStateOf(false) }
     var textFieldValue by remember {
@@ -294,9 +299,24 @@ private fun DirectNumberInputRow(
         }
     }
 
+    // Flush pending text when leaving composition (e.g., user presses back without
+    // tapping Done or shifting focus first — onFocusChanged might never fire).
+    val latestTextProvider by rememberUpdatedState({ textFieldValue.text })
+    val latestIsFocused by rememberUpdatedState(isFocused)
+    DisposableEffect(Unit) {
+        onDispose {
+            if (latestIsFocused) validateAndCommit(latestTextProvider())
+        }
+    }
+
     fun stepValue(direction: Int) {
         val newValue = roundToStep(value + direction * step, step)
             .coerceIn(valueRange)
+        // Update local text immediately so the field reflects the new value even if the
+        // parent tree skips recomposition and the `value` prop never flows back here.
+        val text = if (newValue == 0.0) "" else valueFormat.format(newValue)
+        textFieldValue = TextFieldValue(text)
+        isError = false
         onValueChange(newValue)
     }
 
@@ -320,7 +340,7 @@ private fun DirectNumberInputRow(
                     if (isError) isError = false
                     onTextChange?.invoke(newValue.text)
                 },
-                label = { Text(label) },
+                label = if (label.isNotEmpty()) ({ Text(label) }) else null,
                 singleLine = true,
                 enabled = enabled,
                 isError = isError,
@@ -354,23 +374,26 @@ private fun DirectNumberInputRow(
                         isFocused = focusState.isFocused
                     }
             )
-            // Range and formatted display
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = if (isError) errorMessage else rangeText,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (isError) MaterialTheme.colorScheme.error
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                if (showFormattedDisplay && !isError) {
+            // Range and formatted display — hidden in compact mode (e.g., when nested in a row).
+            // Errors still surface so the user isn't stuck.
+            if (!compact || isError) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
-                        text = formattedDisplay,
+                        text = if (isError) errorMessage else rangeText,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
+                        color = if (isError) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    if (showFormattedDisplay && !isError) {
+                        Text(
+                            text = formattedDisplay,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
         }

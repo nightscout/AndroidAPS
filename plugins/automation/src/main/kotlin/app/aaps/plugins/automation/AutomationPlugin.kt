@@ -19,12 +19,14 @@ import app.aaps.core.interfaces.plugin.PermissionGroup
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.core.interfaces.rx.events.EventBTChange
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.StringKey
@@ -35,10 +37,13 @@ import app.aaps.core.utils.DeferredForegroundStart
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
+import app.aaps.plugins.automation.actions.ActionDisableScene
+import app.aaps.plugins.automation.actions.ActionEnableScene
 import app.aaps.plugins.automation.actions.ActionNotification
 import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
+import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
@@ -120,7 +125,8 @@ class AutomationPlugin @Inject constructor(
     private val timerUtil: TimerUtil,
     private val receiverStatusStore: ReceiverStatusStore,
     private val uel: UserEntryLogger,
-    private val localProfileManager: app.aaps.core.interfaces.profile.LocalProfileManager
+    private val localProfileManager: LocalProfileManager,
+    private val sceneApi: SceneAutomationApi
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -133,7 +139,8 @@ class AutomationPlugin @Inject constructor(
                 injector = injector,
                 uel = uel,
                 rh = rh,
-                localProfileManager = localProfileManager
+                localProfileManager = localProfileManager,
+                sceneApi = sceneApi
             )
         }
         .icon(IcPluginAutomation)
@@ -434,7 +441,10 @@ class AutomationPlugin @Inject constructor(
             ActionProfileSwitchPercent(injector),
             ActionProfileSwitch(injector),
             ActionSendSMS(injector),
-            ActionSMBChange(injector)
+            ActionSMBChange(injector),
+            ActionRunScene(injector),
+            ActionEnableScene(injector),
+            ActionDisableScene(injector)
         )
         if (config.isEngineeringMode() && config.isDev())
             actions.add(ActionRunAutotune(injector))

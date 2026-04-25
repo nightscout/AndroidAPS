@@ -278,7 +278,7 @@ internal fun roundToStep(value: Double, step: Double): Double {
  * Speed increases progressively the longer the button is held.
  */
 @Composable
-internal fun RepeatingIconButton(
+fun RepeatingIconButton(
     onClick: () -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,

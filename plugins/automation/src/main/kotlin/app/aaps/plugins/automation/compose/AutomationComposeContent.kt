@@ -36,6 +36,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -58,7 +59,8 @@ class AutomationComposeContent(
     private val injector: HasAndroidInjector,
     private val uel: UserEntryLogger,
     @Suppress("unused") private val rh: ResourceHelper,
-    private val localProfileManager: app.aaps.core.interfaces.profile.LocalProfileManager
+    private val localProfileManager: app.aaps.core.interfaces.profile.LocalProfileManager,
+    private val sceneApi: SceneAutomationApi
 ) : ComposablePluginContent {
 
     @Composable
@@ -399,11 +401,13 @@ class AutomationComposeContent(
         var showActionSheet by remember { mutableStateOf(false) }
         var actionTick by remember { mutableStateOf(0) }
         val profileNames = localProfileNames()
+        val sceneOptions = sceneApi.getScenes()
 
         AutomationEditScreen(
             state = editState,
             liveActions = holder.workingEvent().actions.toList(),
             profileNames = profileNames,
+            sceneOptions = sceneOptions,
             tick = actionTick,
             onTitleChange = holder::editTitleChanged,
             onUserActionChange = holder::editUserActionChanged,
@@ -426,8 +430,7 @@ class AutomationComposeContent(
                 options = options,
                 onPick = { opt ->
                     instantiateAction(opt.className)?.let { newAction ->
-                        holder.workingEvent().addAction(newAction)
-                        holder.onWorkingEventChanged()
+                        holder.addAction(newAction)
                         actionTick++
                     }
                 },

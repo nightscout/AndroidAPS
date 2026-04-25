@@ -92,6 +92,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 TriggerProfilePercent::class.java.simpleName     -> TriggerProfilePercent(injector).fromJSON(data.toString())
                 TriggerPumpLastConnection::class.java.simpleName -> TriggerPumpLastConnection(injector).fromJSON(data.toString())
                 TriggerRecurringTime::class.java.simpleName      -> TriggerRecurringTime(injector).fromJSON(data.toString())
+                TriggerSceneActive::class.java.simpleName        -> TriggerSceneActive(injector).fromJSON(data.toString())
                 TriggerTempTarget::class.java.simpleName         -> TriggerTempTarget(injector).fromJSON(data.toString())
                 TriggerTempTargetValue::class.java.simpleName    -> TriggerTempTargetValue(injector).fromJSON(data.toString())
                 TriggerTime::class.java.simpleName               -> TriggerTime(injector).fromJSON(data.toString())

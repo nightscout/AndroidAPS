@@ -4,6 +4,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
 
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -20,6 +21,7 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var smsCommunicator: SmsCommunicator
     @Mock lateinit var loop: Loop
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var sceneApi: SceneAutomationApi
 
     init {
         addInjector {
@@ -62,6 +64,15 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.persistenceLayer = persistenceLayer
                 it.dateUtil = dateUtil
                 it.profileFunction = profileFunction
+            }
+            if (it is ActionRunScene) {
+                it.sceneApi = sceneApi
+            }
+            if (it is ActionEnableScene) {
+                it.sceneApi = sceneApi
+            }
+            if (it is ActionDisableScene) {
+                it.sceneApi = sceneApi
             }
             if (it is Trigger) {
                 it.rh = rh

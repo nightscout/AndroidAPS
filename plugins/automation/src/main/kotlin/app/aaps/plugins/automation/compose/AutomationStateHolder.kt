@@ -2,12 +2,13 @@ package app.aaps.plugins.automation.compose
 
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
 import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.compose.icons.IcUserOptions
 import app.aaps.plugins.automation.AutomationEventObject
 import app.aaps.plugins.automation.AutomationPlugin
-import app.aaps.core.interfaces.rx.events.EventAutomationDataChanged
+import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerLocation
@@ -223,6 +224,12 @@ class AutomationStateHolder(
 
     fun editEnabledChanged(checked: Boolean) {
         workingEvent.isEnabled = checked
+        recomputeEventDirty()
+        refreshEditState()
+    }
+
+    fun addAction(action: Action) {
+        workingEvent.addAction(action)
         recomputeEventDirty()
         refreshEditState()
     }

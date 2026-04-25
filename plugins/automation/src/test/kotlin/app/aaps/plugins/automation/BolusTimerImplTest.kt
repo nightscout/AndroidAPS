@@ -11,12 +11,12 @@ import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.automation.services.LocationServiceHelper
 import app.aaps.plugins.automation.triggers.Trigger
-import app.aaps.plugins.automation.TimerUtil
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -44,6 +44,7 @@ class BolusTimerImplTest : TestBase() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var localProfileManager: LocalProfileManager
+    @Mock lateinit var sceneApi: SceneAutomationApi
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
@@ -63,7 +64,7 @@ class BolusTimerImplTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         automationPlugin = AutomationPlugin(
             injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil,
-            activePlugin, timerUtil, receiverStatusStore, uel, localProfileManager
+            activePlugin, timerUtil, receiverStatusStore, uel, localProfileManager, sceneApi
         )
     }
 

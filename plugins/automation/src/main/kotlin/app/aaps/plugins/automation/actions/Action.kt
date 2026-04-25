@@ -17,7 +17,7 @@ abstract class Action(val injector: HasAndroidInjector) {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var pumpEnactResultProvider: Provider<PumpEnactResult>
 
-    var precondition: Trigger? = null
+    open var precondition: Trigger? = null
 
     abstract fun friendlyName(): Int
     abstract fun shortDescription(): String
@@ -65,12 +65,15 @@ abstract class Action(val injector: HasAndroidInjector) {
                 ActionAlarm::class.java.simpleName                -> ActionAlarm(injector).fromJSON(data.toString())
                 ActionSettingsExport::class.java.simpleName       -> ActionSettingsExport(injector).fromJSON(data.toString())
                 ActionCarePortalEvent::class.java.simpleName      -> ActionCarePortalEvent(injector).fromJSON(data.toString())
+                ActionDisableScene::class.java.simpleName         -> ActionDisableScene(injector).fromJSON(data.toString())
                 ActionDummy::class.java.simpleName                -> ActionDummy(injector).fromJSON(data.toString())
+                ActionEnableScene::class.java.simpleName          -> ActionEnableScene(injector).fromJSON(data.toString())
                 ActionSMBChange::class.java.simpleName            -> ActionSMBChange(injector).fromJSON(data.toString())
                 ActionNotification::class.java.simpleName         -> ActionNotification(injector).fromJSON(data.toString())
                 ActionProfileSwitch::class.java.simpleName        -> ActionProfileSwitch(injector).fromJSON(data.toString())
                 ActionProfileSwitchPercent::class.java.simpleName -> ActionProfileSwitchPercent(injector).fromJSON(data.toString())
                 ActionRunAutotune::class.java.simpleName          -> ActionRunAutotune(injector).fromJSON(data.toString())
+                ActionRunScene::class.java.simpleName             -> ActionRunScene(injector).fromJSON(data.toString())
                 ActionSendSMS::class.java.simpleName              -> ActionSendSMS(injector).fromJSON(data.toString())
                 ActionStartTempTarget::class.java.simpleName      -> ActionStartTempTarget(injector).fromJSON(data.toString())
                 ActionStopProcessing::class.java.simpleName       -> ActionStopProcessing(injector).fromJSON(data.toString())

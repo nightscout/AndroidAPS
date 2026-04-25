@@ -198,6 +198,7 @@ private fun ConnectorCard(
                     } else {
                         LeafCard(
                             trigger = child,
+                            tick = tick,
                             bondedDevices = bondedDevices,
                             onPickLocationFromMap = onPickLocationFromMap,
                             onRemove = {
@@ -248,11 +249,13 @@ private fun ConnectorCard(
 @Composable
 private fun LeafCard(
     trigger: Trigger,
+    tick: Int,
     bondedDevices: List<String>,
     onPickLocationFromMap: (TriggerLocation) -> Unit,
     onRemove: () -> Unit,
     onChange: () -> Unit
 ) {
+    @Suppress("UNUSED_EXPRESSION") tick // force re-execution when a sibling field mutates
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
         shape = CardDefaults.elevatedShape,
@@ -286,6 +289,7 @@ private fun LeafCard(
             TriggerEditor(
                 trigger = trigger,
                 onChange = onChange,
+                tick = tick,
                 bondedDevices = bondedDevices,
                 onPickLocationFromMap = onPickLocationFromMap
             )
