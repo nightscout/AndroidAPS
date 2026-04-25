@@ -22,7 +22,6 @@ dependencies {
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
-    implementation(project(":implementation"))
 
     testImplementation(project(":shared:tests"))
 
@@ -34,9 +33,5 @@ dependencies {
     api(platform(libs.androidx.compose.bom))
 
     api(libs.androidx.ui)
-    api(libs.androidx.ui.graphics)
     api(libs.androidx.ui.tooling)
-    api(libs.androidx.ui.tooling.preview)
-    api(libs.androidx.compose.material3)
-
 }

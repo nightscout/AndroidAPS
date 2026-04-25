@@ -28,10 +28,8 @@ dependencies {
     implementation(project(":pump:common"))
     implementation(project(":pump:omnipod:common"))
 
-    api(libs.androidx.room)
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
-    api(libs.com.github.guepardoapps.kulid)
+    implementation(libs.androidx.room.rxjava3)
 
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)

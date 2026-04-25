@@ -11,10 +11,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:keys"))
-    implementation(project(":core:utils"))
     implementation(project(":pump:dana"))
     implementation(project(":pump:danar"))
 

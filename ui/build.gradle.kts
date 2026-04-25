@@ -22,13 +22,11 @@ dependencies {
     implementation(project(":core:keys"))
     implementation(project(":core:objects"))
     implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
 
     testImplementation(project(":shared:tests"))
 
-    api(libs.com.google.android.material)
     api(platform(libs.androidx.compose.bom))
-    api(libs.androidx.activity.compose)
+    implementation(libs.androidx.activity.compose)
     api(libs.androidx.compose.material3)
     api(libs.androidx.compose.material.icons.extended)
     api(libs.androidx.compose.runtime)
@@ -38,8 +36,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.sh.calvin.reorderable)
     implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.glance.material3)
-    api(libs.androidx.core)
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.androidx.core)
     api(libs.kotlinx.datetime)
 
     api(libs.com.squareup.okhttp3.okhttp)

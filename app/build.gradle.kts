@@ -99,7 +99,7 @@ android {
         testInstrumentationRunner = "app.aaps.runners.InjectedTestRunner"
     }
 
-    flavorDimensions.add("standard")
+    flavorDimensions += "standard"
     productFlavors {
         create("full") {
             isDefault = true
@@ -171,7 +171,6 @@ dependencies {
     implementation(project(":shared:impl"))
     implementation(project(":core:data"))
     implementation(project(":core:objects"))
-    implementation(project(":core:graph"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
     implementation(project(":core:nssdk"))
@@ -239,7 +238,7 @@ dependencies {
     ksp(libs.com.google.dagger.hilt.compiler)
 
     // MainApp
-    api(libs.com.uber.rxdogtag2.rxdogtag)
+    implementation(libs.com.uber.rxdogtag2.rxdogtag)
     // Remote config
     api(libs.com.google.firebase.config)
     // Navigation Compose

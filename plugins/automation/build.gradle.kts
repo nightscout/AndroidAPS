@@ -29,11 +29,10 @@ dependencies {
     testImplementation(project(":plugins:main"))
     testImplementation(project(":pump:virtual"))
 
-    api(libs.androidx.constraintlayout)
     api(libs.com.google.android.gms.playservices.location)
-    api(libs.kotlin.reflect)
+    implementation(libs.kotlin.reflect)
     // OpenStreetMap for map picker
-    api(libs.org.osmdroid)
+    implementation(libs.org.osmdroid)
 
     // Compose dependencies
     api(platform(libs.androidx.compose.bom))

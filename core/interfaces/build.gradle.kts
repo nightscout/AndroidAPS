@@ -36,7 +36,7 @@ dependencies {
     api(libs.org.apache.commons.lang3)
     api(libs.net.danlew.android.joda)
 
-    //RxBus
+    //RxBus / RxJava base
     api(libs.io.reactivex.rxjava3.rxkotlin)
 
     testImplementation(libs.io.reactivex.rxjava3.rxandroid)

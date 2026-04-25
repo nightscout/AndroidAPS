@@ -34,9 +34,6 @@ dependencies {
     api(libs.kotlinx.datetime)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    // Phone checker
-    api(libs.com.scottyab.rootbeer.lib)
-
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)

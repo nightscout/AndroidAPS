@@ -21,10 +21,7 @@ dependencies {
     implementation(project(":pump:dana"))
 
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
-
-    api(libs.androidx.media3.common)
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))

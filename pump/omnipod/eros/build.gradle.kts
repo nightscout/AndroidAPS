@@ -29,9 +29,8 @@ dependencies {
     implementation(project(":pump:common"))
     implementation(project(":pump:rileylink"))
 
-    api(libs.androidx.room)
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
+    implementation(libs.androidx.room.rxjava3)
 
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
