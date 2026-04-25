@@ -81,7 +81,6 @@
     <string name="disableloop">Deaktivér loop</string>
     <string name="resumeloop">Genoptag loop</string>
     <string name="suspendloop">Suspendér Loop</string>
-    <string name="duration_min_label">Varighed [min]</string>
     <string name="notification">Notifikation</string>
     <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
     <string name="exists">eksisterer</string>
