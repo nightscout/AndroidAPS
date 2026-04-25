@@ -116,9 +116,11 @@ fun BgGraphCompose(
 
     // Colors from theme (stable - won't change)
     val regularColor = AapsTheme.generalColors.originalBgValue
+    val veryLowColor = AapsTheme.generalColors.bgVeryLow
     val lowColor = AapsTheme.generalColors.bgLow
     val inRangeColor = AapsTheme.generalColors.bgInRange
     val highColor = AapsTheme.generalColors.bgHigh
+    val veryHighColor = AapsTheme.generalColors.bgVeryHigh
     val basalColor = AapsTheme.elementColors.tempBasal
     val targetLineColor = AapsTheme.elementColors.tempTarget
     val activityColor = AapsTheme.elementColors.activity
@@ -305,8 +307,8 @@ fun BgGraphCompose(
         bucketedData.associateBy { timestampToX(it.timestamp, minTimestamp) }
     }
 
-    val bucketedPointProvider = remember(bucketedLookup, lowColor, inRangeColor, highColor) {
-        BucketedPointProvider(bucketedLookup, lowColor, inRangeColor, highColor)
+    val bucketedPointProvider = remember(bucketedLookup, veryLowColor, lowColor, inRangeColor, highColor, veryHighColor) {
+        BucketedPointProvider(bucketedLookup, veryLowColor, lowColor, inRangeColor, highColor, veryHighColor)
     }
 
     // Time formatter and axis configuration

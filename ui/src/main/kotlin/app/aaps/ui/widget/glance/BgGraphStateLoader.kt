@@ -79,9 +79,11 @@ class BgGraphStateLoader @Inject constructor(
         )
 
         val colors = BgGraphColors(
+            veryLow = rh.gc(app.aaps.core.ui.R.color.widget_very_low),
             low = rh.gc(app.aaps.core.ui.R.color.widget_low),
             inRange = rh.gc(app.aaps.core.ui.R.color.widget_inrange),
-            high = rh.gc(app.aaps.core.ui.R.color.widget_high)
+            high = rh.gc(app.aaps.core.ui.R.color.widget_high),
+            veryHigh = rh.gc(app.aaps.core.ui.R.color.widget_very_high)
         )
 
         // Current BG + trend (same logic as WidgetStateLoader)
@@ -89,9 +91,11 @@ class BgGraphStateLoader @Inject constructor(
         val bgText = lastBg?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) }
             ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
         val bgColor = when {
-            lastBgData.isLow()  -> colors.low
-            lastBgData.isHigh() -> colors.high
-            else                -> colors.inRange
+            lastBgData.isVeryLow()  -> colors.veryLow
+            lastBgData.isLow()      -> colors.low
+            lastBgData.isVeryHigh() -> colors.veryHigh
+            lastBgData.isHigh()     -> colors.high
+            else                    -> colors.inRange
         }
         val strikeThrough = !lastBgData.isActualBg()
         val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)

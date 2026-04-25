@@ -447,14 +447,18 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         }
 
         val bgMgdl = lastGv.recalculated
+        val veryHighMark = preferences.get(UnitDoubleKey.OverviewVeryHighMark)
         val highMark = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMark = preferences.get(UnitDoubleKey.OverviewLowMark)
+        val veryLowMark = preferences.get(UnitDoubleKey.OverviewVeryLowMark)
         val valueInUnits = profileUtil.fromMgdlToUnits(bgMgdl)
 
         val bgRange = when {
-            valueInUnits > highMark -> BgRange.HIGH
-            valueInUnits < lowMark  -> BgRange.LOW
-            else                    -> BgRange.IN_RANGE
+            valueInUnits > veryHighMark -> BgRange.VERYHIGH
+            valueInUnits > highMark     -> BgRange.HIGH
+            valueInUnits < veryLowMark  -> BgRange.VERYLOW
+            valueInUnits < lowMark      -> BgRange.LOW
+            else                        -> BgRange.IN_RANGE
         }
 
         val isOutdated = lastGv.timestamp < dateUtil.now() - 9 * 60 * 1000L

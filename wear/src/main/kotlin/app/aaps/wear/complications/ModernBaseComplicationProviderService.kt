@@ -213,8 +213,10 @@ abstract class ModernBaseComplicationProviderService : ComplicationDataSourceSer
                 avgDeltaDetailed = "+3.1",
                 sgvLevel = 0L,
                 sgv = 120.0,
+                veryHigh = 240.0,
                 high = 180.0,
                 low = 70.0,
+                veryLow = 55.0,
                 color = 0
             ),
             statusData = app.aaps.core.interfaces.rx.weardata.EventData.Status(

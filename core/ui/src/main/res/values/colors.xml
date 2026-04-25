@@ -29,7 +29,9 @@
 
     <!-- Widget runtime has no dark mode; these are always read from the default colors.xml. -->
     <color name="widget_inrange">#00FF00</color>
-    <color name="widget_low">#FF0000</color>
+    <color name="widget_very_low">#FF0000</color>
+    <color name="widget_low">#FFFF00</color>
     <color name="widget_high">#FFFF00</color>
+    <color name="widget_very_high">#FF0000</color>
 
 </resources>

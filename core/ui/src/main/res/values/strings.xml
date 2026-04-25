@@ -171,8 +171,10 @@
     <string name="a11y_arrow_double_up">rising rapidly</string>
     <string name="a11y_arrow_none">none</string>
     <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_very_high">very high</string>
     <string name="a11y_high">high</string>
     <string name="a11y_inrange">in range</string>
+    <string name="a11y_very_low">very low</string>
     <string name="a11y_low">low</string>
     <string name="average">Average</string>
     <string name="tir">Time in Range</string>

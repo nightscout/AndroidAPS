@@ -426,7 +426,9 @@ class MainApp : Application(), HasAndroidInjector {
         // set values for different builds
         // 3.3
         if (preferences.get(UnitDoubleKey.OverviewLowMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewLowMark)
+        if (preferences.get(UnitDoubleKey.OverviewVeryLowMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewVeryLowMark)
         if (preferences.get(UnitDoubleKey.OverviewHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewHighMark)
+        if (preferences.get(UnitDoubleKey.OverviewVeryHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewVeryHighMark)
         if (preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
             preferences.put(BooleanKey.GeneralSimpleMode, !preferences.get(BooleanNonKey.GeneralSetupWizardProcessed))
         // Migrate from OpenAPSSMBDynamicISFPlugin

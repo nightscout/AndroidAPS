@@ -30,6 +30,11 @@ class LastBgDataImpl @Inject constructor(
         iobCobCalculator.ads.bucketedData?.firstOrNull()
             ?: runBlocking { persistenceLayer.getLastGlucoseValue() }?.let { InMemoryGlucoseValue.fromGv(it) }
 
+    override fun isVeryLow(): Boolean =
+        lastBg()?.let { lastBg ->
+            lastBg.valueToUnits(profileFunction.getUnits()) < preferences.get(UnitDoubleKey.OverviewVeryLowMark)
+        } == true
+
     override fun isLow(): Boolean =
         lastBg()?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) < preferences.get(UnitDoubleKey.OverviewLowMark)
@@ -40,9 +45,16 @@ class LastBgDataImpl @Inject constructor(
             lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewHighMark)
         } == true
 
+    override fun isVeryHigh(): Boolean =
+        lastBg()?.let { lastBg ->
+            lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewVeryHighMark)
+        } == true
+
     override fun lastBgDescription(): String =
         when {
+            isVeryLow()  -> rh.gs(app.aaps.core.ui.R.string.a11y_very_low)
             isLow()  -> rh.gs(app.aaps.core.ui.R.string.a11y_low)
+            isVeryHigh() -> rh.gs(app.aaps.core.ui.R.string.a11y_very_high)
             isHigh() -> rh.gs(app.aaps.core.ui.R.string.a11y_high)
             else     -> rh.gs(app.aaps.core.ui.R.string.a11y_inrange)
         }

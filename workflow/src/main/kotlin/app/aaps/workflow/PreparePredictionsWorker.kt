@@ -71,8 +71,10 @@ class PreparePredictionsWorker(
             data.overviewData.endTime = data.overviewData.toTime
         }
 
+        val veryHighMarkInUnits = preferences.get(UnitDoubleKey.OverviewVeryHighMark)
         val highMarkInUnits = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMarkInUnits = preferences.get(UnitDoubleKey.OverviewLowMark)
+        val veryLowMarkInUnits = preferences.get(UnitDoubleKey.OverviewVeryLowMark)
 
         val predictionDataPoints = apsResult?.predictionsAsGv
             ?.filter { it.value >= 40 }
@@ -82,9 +84,11 @@ class PreparePredictionsWorker(
                     timestamp = gv.timestamp,
                     value = valueInUnits,
                     range = when {
-                        valueInUnits > highMarkInUnits -> BgRange.HIGH
-                        valueInUnits < lowMarkInUnits  -> BgRange.LOW
-                        else                           -> BgRange.IN_RANGE
+                        valueInUnits > veryHighMarkInUnits -> BgRange.VERYHIGH
+                        valueInUnits > highMarkInUnits     -> BgRange.HIGH
+                        valueInUnits < veryLowMarkInUnits  -> BgRange.VERYLOW
+                        valueInUnits < lowMarkInUnits      -> BgRange.LOW
+                        else                               -> BgRange.IN_RANGE
                     },
                     type = when (gv.sourceSensor) {
                         SourceSensor.IOB_PREDICTION   -> BgType.IOB_PREDICTION

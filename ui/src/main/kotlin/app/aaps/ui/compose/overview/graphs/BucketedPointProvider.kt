@@ -19,15 +19,19 @@ import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 @Immutable
 class BucketedPointProvider(
     private val dataLookup: Map<Double, BgDataPoint>,
+    veryLowColor: Color,
     lowColor: Color,
     inRangeColor: Color,
-    highColor: Color
+    highColor: Color,
+    veryHighColor: Color
 ) : LineCartesianLayer.PointProvider {
 
     // Pre-build point components for efficiency
+    private val veryLowPoint = createFilledPoint(veryLowColor)
     private val lowPoint = createFilledPoint(lowColor)
     private val inRangePoint = createFilledPoint(inRangeColor)
     private val highPoint = createFilledPoint(highColor)
+    private val veryHighPoint = createFilledPoint(veryHighColor)
 
     private fun createFilledPoint(color: Color) = LineCartesianLayer.Point(
         component = ShapeComponent(
@@ -45,9 +49,11 @@ class BucketedPointProvider(
         val dataPoint = dataLookup[entry.x] ?: return inRangePoint // fallback
 
         return when (dataPoint.range) {
+            BgRange.VERYLOW  -> veryLowPoint
             BgRange.LOW      -> lowPoint
             BgRange.IN_RANGE -> inRangePoint
             BgRange.HIGH     -> highPoint
+            BgRange.VERYHIGH -> veryHighPoint
         }
     }
 
