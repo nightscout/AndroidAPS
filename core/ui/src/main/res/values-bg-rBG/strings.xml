@@ -81,7 +81,6 @@
     <string name="disableloop">Изключи Loop</string>
     <string name="resumeloop">Възстанови loop</string>
     <string name="suspendloop">Изключи APS</string>
-    <string name="duration_min_label">Продължителност [мин.]</string>
     <string name="notification">Известие</string>
     <string name="noprofile">Още не е зареден профила от NS</string>
     <string name="exists">съществува</string>
