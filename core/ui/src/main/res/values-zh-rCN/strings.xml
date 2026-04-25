@@ -132,7 +132,6 @@
     <string name="disabled_loop">禁用闭环</string>
     <string name="resumeloop">恢复闭环</string>
     <string name="suspendloop">暂停闭环</string>
-    <string name="duration_min_label">持续时间 [min]</string>
     <string name="notification">通知</string>
     <string name="noprofile">尚未从 NS 加载配置文件</string>
     <string name="exists">存在</string>
