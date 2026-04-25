@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
-    <string name="phone_checker" translatable="false">PhoneChecker</string>
-
     <!-- DST Helper -->
     <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
     <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
