@@ -54,6 +54,9 @@
     <string name="xdrip_local_broadcasts_summary">将血糖和治疗数据发送至 xDrip+。必须选择数据源“xDrip+ Sync Follower”，并在“设置”-“应用间设置”-“接受血糖/治疗”中启用数据接收功能</string>
     <string name="xdrip_local_broadcasts_title">启用广播到 xDrip+。</string>
     <!--    DataBroadcast-->
+    <string name="tizen">外部配套应用</string>
+    <string name="tizen_short">CAB</string>
+    <string name="tizen_description">启用数据广播到各种外部配套应用</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">连接到Garmin设备（Fenix、Edge...）</string>
