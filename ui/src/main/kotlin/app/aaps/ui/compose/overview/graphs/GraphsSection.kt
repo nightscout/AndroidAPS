@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.overview.graph.GraphConfig
 import app.aaps.core.interfaces.overview.graph.SecondaryGraph
 import app.aaps.core.interfaces.overview.graph.SeriesType
@@ -108,6 +109,7 @@ fun GraphsSection(
     val bgZoomState = rememberVicoZoomState(
         zoomEnabled = true,
         initialZoom = Zoom.x(DEFAULT_GRAPH_ZOOM_MINUTES),
+        minZoom = Zoom.x(Constants.GRAPH_TIME_RANGE_HOURS * 60.0),
         maxZoom = Zoom.x(MIN_GRAPH_ZOOM_MINUTES)
     )
 
