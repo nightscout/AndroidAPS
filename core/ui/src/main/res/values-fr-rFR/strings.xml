@@ -88,7 +88,6 @@
     <string name="disabled_loop">Désactiver la boucle</string>
     <string name="resumeloop">Reprendre la boucle</string>
     <string name="suspendloop">Suspendre la boucle</string>
-    <string name="duration_min_label">Durée [min]</string>
     <string name="notification">Notification</string>
     <string name="noprofile">Pas encore de profil téléchargé depuis NS</string>
     <string name="exists">existe</string>
