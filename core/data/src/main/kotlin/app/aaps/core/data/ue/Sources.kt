@@ -43,6 +43,7 @@ enum class Sources {
     SyaiTag,
     SiBionic,
     Sino,
+    Instara,            // From Instara Plugin
     NotificationReader,
     LocalProfile,       //From LocalProfile plugin
     Loop,               //From Loop plugin

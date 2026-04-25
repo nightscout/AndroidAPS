@@ -125,6 +125,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Glimp               -> IcPluginGlimp
         Sources.Glunovo             -> IcPluginGlunovo
         Sources.Insight             -> IcPluginInsight
+        Sources.Instara             -> IcGenericCgm
         Sources.Insulin             -> IcPluginInsulin
         Sources.InsulinDialog       -> IcBolus
         Sources.Intelligo           -> IcPluginIntelligo
