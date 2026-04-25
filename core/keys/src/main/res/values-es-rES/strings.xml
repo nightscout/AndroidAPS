@@ -34,7 +34,7 @@
     <!-- BG Source preferences -->
     <string name="pref_title_bg_source_upload_to_ns">Subir datos de glucemia a Nightscout</string>
     <string name="pref_title_bg_source_create_sensor_change">Registrar cambio de sensor</string>
-    <string name="pref_summary_bg_source_create_sensor_change">Crea un evento de terapia de cambio de sensor cuando se inserta el sensor.</string>
+    <string name="pref_summary_bg_source_create_sensor_change">Crea un evento de terapia de cambio de sensor cuando se inserta el sensor</string>
     <!-- APS preferences -->
     <string name="pref_title_aps_use_dynamic_sensitivity">Usar sensibilidad dinámica</string>
     <string name="pref_summary_aps_use_dynamic_sensitivity">Usa DynamicISF para el ajuste de la sensibilidad en lugar de Autosens.</string>
