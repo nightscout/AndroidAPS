@@ -132,7 +132,6 @@
     <string name="disabled_loop">Deaktivert loop</string>
     <string name="resumeloop">Gjenoppta loop</string>
     <string name="suspendloop">Pause loop</string>
-    <string name="duration_min_label">Varighet [min]</string>
     <string name="notification">Varsling</string>
     <string name="noprofile">Ingen profil innlest fra NS enda</string>
     <string name="exists">finnes</string>
