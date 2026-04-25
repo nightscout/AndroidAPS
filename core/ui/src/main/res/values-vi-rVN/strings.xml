@@ -132,7 +132,6 @@
     <string name="disabled_loop">Vô hiệu hóa vòng lặp</string>
     <string name="resumeloop">Khởi động lại vòng lặp</string>
     <string name="suspendloop">Tạm dừng vòng lặp</string>
-    <string name="duration_min_label">Thời lượng [phút]</string>
     <string name="notification">Thông báo</string>
     <string name="noprofile">Chưa tải Hồ sơ nào từ NS</string>
     <string name="exists">tồn tại</string>
