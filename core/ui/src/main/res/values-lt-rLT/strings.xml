@@ -83,7 +83,6 @@
     <string name="disableloop">Išjungti Ciklą</string>
     <string name="resumeloop">Atnaujinti ciklą</string>
     <string name="suspendloop">Sustabdyti ciklą</string>
-    <string name="duration_min_label">Trukmė [min]</string>
     <string name="notification">Pranešimas</string>
     <string name="noprofile">Dar negautas joks profilis iš NS</string>
     <string name="exists">egzistuoja</string>
