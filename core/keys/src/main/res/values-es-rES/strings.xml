@@ -24,7 +24,7 @@
     <string name="pref_summary_use_super_bolus">Habilita la función de súper bolo, la cual toma prestada insulina de la basal para una administración inmediata.</string>
     <!-- Pump preferences -->
     <string name="pref_title_bt_watchdog">Guardián BT</string>
-    <string name="pref_summary_bt_watchdog">Desactiva el Bluetooth del teléfono durante un segundo si no es posible conectar con la bomba. Esto puede ayudar en algunos teléfonos donde el protocolo (stack) de Bluetooth se bloquea.</string>
+    <string name="pref_summary_bt_watchdog">Desactiva el Bluetooth del teléfono durante un segundo si no es posible conectar con la bomba. Esto puede ayudar en algunos teléfonos donde el protocolo (stack) de Bluetooth se bloquea</string>
     <!-- Alert preferences -->
     <string name="pref_title_alert_missed_bg_reading">Alertar si no se reciben datos de glucemia (BG)</string>
     <string name="pref_title_alert_pump_unreachable">Alerta si la bomba no es alcanzable</string>
@@ -95,7 +95,7 @@
     <string name="pref_title_ns_receive_cgm">Recibir datos de MCG desde NS</string>
     <string name="pref_summary_ns_receive_cgm">Aceptar lecturas del MCG desde Nightscout</string>
     <string name="pref_title_ns_receive_profile_store">Recibir perfiles almacenados desde NS</string>
-    <string name="pref_summary_ns_receive_profile_store">Aceptar actualizaciones de perfiles almacenados desde Nightscout.</string>
+    <string name="pref_summary_ns_receive_profile_store">Aceptar actualizaciones de perfiles almacenados desde Nightscout</string>
     <string name="pref_title_ns_receive_temp_target">Recibir objetivos temporales desde NS</string>
     <string name="pref_summary_ns_receive_temp_target">Aceptar cambios de objetivos temporales desde Nightscout</string>
     <string name="pref_title_ns_receive_profile_switch">Recibir cambios de perfil desde NS</string>
@@ -109,7 +109,7 @@
     <string name="pref_title_ns_receive_running_mode">Recibir modo de ejecución desde NS</string>
     <string name="pref_summary_ns_receive_running_mode">Aceptar cambios del modo de ejecución desde Nightscout</string>
     <string name="pref_title_ns_receive_tbr_eb">Recibir TBR/EB desde NS</string>
-    <string name="pref_summary_ns_receive_tbr_eb">Aceptar tasas basales temporales y bolos extendidos desde Nightscout.</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Aceptar tasas basales temporales y bolos extendidos desde Nightscout</string>
     <string name="pref_title_ns_notifications_from_alarms">Alarmas de NS</string>
     <string name="pref_title_ns_notifications_from_announcements">Avisos de Nightscout</string>
     <string name="pref_title_ns_use_cellular">Usar datos móviles</string>
@@ -395,13 +395,13 @@ Conceptos cl</string>
     <string name="pref_title_dura_weight">Peso de la duración del ISF</string>
     <string name="openapsama_dura_ISF_weight_summary">Este es el peso aplicado durante mesetas de glucosa elevadas y prolongadas, el cual refuerza el ISF, aumentando así potencialmente el suministro de insulina\n\nEl valor por defecto de 0.0 desactiva efectivamente este efecto</string>
     <string name="pref_title_smb_delivery_ratio">Ratio de suministro de SMB</string>
-    <string name="openapsama_smb_delivery_ratio_summary">Valor predeterminado: 0.5. Este es otro límite de seguridad clave de OpenAPS y especifica qué proporción del total de insulina requerida se puede suministrar como SMB. Esto es para evitar que las personas entren en una situación peligrosa al configurar solicitudes de SMB desde el teléfono de los cuidadores al mismo tiempo. Aumente este valor experimental de forma lenta y con precaución.</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Valor predeterminado: 0.5. Este es otro límite de seguridad clave de OpenAPS y especifica qué proporción del total de insulina requerida se puede suministrar como SMB. Esto es para evitar que las personas entren en una situación peligrosa al configurar solicitudes de SMB desde el teléfono de los cuidadores al mismo tiempo. Aumente este valor experimental de forma lenta y con precaución</string>
     <string name="pref_title_smb_delivery_ratio_min">Ratio mínimo de suministro de SMB</string>
     <string name="openapsama_smb_delivery_ratio_min_summary">Valor predeterminado: 0.5. Este es el extremo inferior de una proporción que aumenta linealmente, en lugar del valor fijo mencionado anteriormente.</string>
     <string name="pref_title_smb_delivery_ratio_max">Ratio máximo de suministro de SMB</string>
     <string name="openapsama_smb_delivery_ratio_max_summary">Valor predeterminado: 0.5. Este es el extremo superior de una proporción que aumenta linealmente, en lugar del valor fijo mencionado anteriormente</string>
     <string name="pref_title_smb_max_range_extension">Extensión de rango máximo de SMB</string>
-    <string name="openapsama_smb_max_range_extension_summary">Valor predeterminado: 1. Este es otro límite de seguridad clave de OpenAPS y especifica por qué factor se pueden exceder los 120 minutos regulares de maxSMB/maxUAM. Aumente este valor experimental de forma lenta y con precaución.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valor predeterminado: 1. Este es otro límite de seguridad clave de OpenAPS y especifica por qué factor se pueden exceder los 120 minutos regulares de maxSMB/maxUAM. Aumente este valor experimental de forma lenta y con precaución</string>
     <!-- UnitDoubleKey: Overview preferences -->
     <string name="pref_title_low_mark">Marca de glucosa baja</string>
     <string name="pref_title_high_mark">Marca de glucosa alta</string>
