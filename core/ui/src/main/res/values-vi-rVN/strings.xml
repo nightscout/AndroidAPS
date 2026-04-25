@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Phải gồm 4 ký tự trong tập ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Điều trị</string>
+    <string name="treatments_history">Lịch sử điều trị</string>
     <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
     <string name="nav_configuration">Cấu hình</string>
     <string name="nav_configuration_desc">Thiết lập cấu hình (CGM, bơm insulin, ...) và bật các tính năng</string>
@@ -825,6 +826,7 @@
     <string name="nav_exit">Thoát</string>
     <string name="open_navigation">Mở điều hướng</string>
     <string name="nav_history_browser">Xem lịch sử</string>
+    <string name="nav_history_browser_desc">Xem các biểu đồ lịch sử</string>
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Hồ sơ</string>
