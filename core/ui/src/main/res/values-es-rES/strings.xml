@@ -592,7 +592,7 @@
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
     <string name="error_in_basal_values">Error en los valores de basal</string>
     <string name="error_in_target_values">Error en los valores de objetivo</string>
-    <string name="profile_name_contains_dot">Algunos nombres de perfil contienen puntos.\nEsto no es compatible con Nightscout.\nLos perfiles no se subirán a Nightscout.</string>
+    <string name="profile_name_contains_dot">Algunos nombres de perfil contienen puntos.\nEsto no es compatible con Nightscout.\nLos perfiles no se subirán a Nightscout</string>
     <string name="invalid_profile_not_accepted">Perfil inválido %1$s no aceptado desde Nightscout</string>
     <string name="errors">Errores</string>
     <!-- Command Queue + readStatus reasons -->
