@@ -132,7 +132,6 @@
     <string name="disabled_loop">Buclă dezactivată</string>
     <string name="resumeloop">Reporniți bucla</string>
     <string name="suspendloop">Suspendați bucla</string>
-    <string name="duration_min_label">Durată [min]</string>
     <string name="notification">Notificare</string>
     <string name="noprofile">Nu s-a încărcat încă un profil din NS</string>
     <string name="exists">există</string>
