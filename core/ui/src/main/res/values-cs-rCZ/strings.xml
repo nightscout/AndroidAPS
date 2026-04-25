@@ -87,7 +87,6 @@
     <string name="disabled_loop">Smyčka zakázána</string>
     <string name="resumeloop">Obnovit smyčku</string>
     <string name="suspendloop">Pozastavit smyčku</string>
-    <string name="duration_min_label">Trvání [min]</string>
     <string name="notification">Oznámení</string>
     <string name="noprofile">Dosud nebyl načten profil z NS</string>
     <string name="exists">existuje</string>
