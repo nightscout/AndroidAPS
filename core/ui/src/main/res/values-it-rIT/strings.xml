@@ -132,7 +132,6 @@
     <string name="disabled_loop">Loop disabilitato</string>
     <string name="resumeloop">Riprendi loop</string>
     <string name="suspendloop">Sospendi loop</string>
-    <string name="duration_min_label">Durata [min]</string>
     <string name="notification">Notifica</string>
     <string name="noprofile">Nessun profilo ancora caricato da NS</string>
     <string name="exists">esiste</string>
