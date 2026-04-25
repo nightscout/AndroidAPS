@@ -7,7 +7,7 @@
     <string name="treatments_history">Historial de tratamientos</string>
     <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
     <string name="nav_configuration">Configuración</string>
-    <string name="nav_configuration_desc">Configura tus ajustes (MCG, Bomba, ...) y activa las funciones</string>
+    <string name="nav_configuration_desc">Configura tus ajustes (MCG, bomba, etc.) y activa las funciones</string>
     <string name="count_selected">%1$d seleccionado</string>
     <string name="delete">Borrar</string>
     <string name="show_invalidated">Mostrar invalidados</string>
@@ -302,7 +302,7 @@
     <string name="pump_battery_change">Cambio de batería de la bomba</string>
     <string name="temporary_target">Objetivo temporal</string>
     <string name="temporary_targets">Objetivos temporales</string>
-    <string name="running_mode">Modo en ejecución</string>
+    <string name="running_mode">Modo de funcionamiento</string>
     <string name="scene">Escena</string>
     <string name="scenes">Escenas</string>
     <string name="scene_desc">Ajustes de situación — activar múltiples acciones a la vez</string>
@@ -368,7 +368,7 @@
     <string name="treatment_desc">Registrar insulina y carbohidratos juntos</string>
     <string name="treatment_insulin_desc">Administrar bolo manualmente</string>
     <string name="treatment_carbs_desc">Registrar carbohidratos sin insulina</string>
-    <string name="treatment_calculator_desc">Calcular bolo</string>
+    <string name="treatment_calculator_desc">Calcular el bolo de comida</string>
     <string name="insulin_management">Insulina</string>
     <string name="manage_insulin_desc">Gestionar y activar configuraciones de insulina</string>
     <string name="concentration_disable_blocked">No se puede desactivar el soporte de concentración mientras existan insulinas que no sean U100. Elimine primero todas las configuraciones de insulina que no sean U100 y cambie a un perfil U100.</string>
@@ -563,9 +563,9 @@
     <string name="uel_store_insulin">ALMACENAR INSULINA</string>
     <string name="uel_change_insulin_concentration">CAMBIAR CONCENTRACIÓN DE INSULINA</string>
     <string name="uel_insulin_removed">INSULINA RETIRADA</string>
-    <string name="uel_running_mode">MODO DE EJECUCIÓN</string>
-    <string name="uel_running_mode_removed">MODO DE EJECUCIÓN ELIMINADO</string>
-    <string name="uel_running_mode_updarted">MODO DE EJECUCIÓN ACTUALIZADO</string>
+    <string name="uel_running_mode">MODO DE FUNCIONAMIENTO</string>
+    <string name="uel_running_mode_removed">MODO DE FUNCIONAMIENTO ELIMINADO</string>
+    <string name="uel_running_mode_updarted">MODO DE FUNCIONAMIENTO ACTUALIZADO</string>
     <string name="uel_scene_activated">ESCENA ACTIVADA</string>
     <string name="uel_scene_deactivated">ESCENA DESACTIVADA</string>
     <!-- HardLimits -->
@@ -837,7 +837,7 @@
     <string name="tdd_cycle_pattern">Patrón de ciclo de insulina total diaria</string>
     <string name="tdd_cycle_pattern_desc">Superponer totales diarios de insulina en ciclos de 28 días para detectar patrones recurrentes</string>
     <string name="nav_profile_helper">Ayudante de perfil</string>
-    <string name="nav_profile_helper_desc">Crea tu perfil basándote en el peso o en la TDD (Dosis Diaria Total)</string>
+    <string name="nav_profile_helper_desc">Crea tu perfil basándote en el peso o en la TDD</string>
     <string name="quick_launch_configure">Configurar Lanzamiento Rápido</string>
     <string name="quick_launch_configure_desc">Personalizar botones de acción rápida en la vista general</string>
     <!-- Alerts -->
@@ -948,7 +948,7 @@
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <!--    Maintenance-->
     <string name="maintenance">Mantenimiento</string>
-    <string name="description_maintenance">Proporciona varias funciones de mantenimiento (ej. envío de registros, eliminación de registros).</string>
+    <string name="description_maintenance">Proporciona varias funciones de mantenimiento (ej. envío de registros, eliminación de registros, etc.)</string>
     <string name="log_files">Archivos de registro</string>
     <string name="delete_logs">Eliminar registros</string>
     <string name="logs_deleted">Registros eliminados</string>
@@ -982,7 +982,7 @@
     <string name="graph_add">Añadir gráfico</string>
     <string name="graph_new">Nuevo gráfico</string>
     <string name="graph_number">Gráfico %1$d</string>
-    <string name="graph_bg">Gráfica de BG</string>
+    <string name="graph_bg">Gráfica de glucosa</string>
     <string name="graph_height">Altura del gráfico [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
