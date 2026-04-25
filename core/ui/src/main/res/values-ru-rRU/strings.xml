@@ -84,7 +84,6 @@
     <string name="disabled_loop">Цикл отключен</string>
     <string name="resumeloop">Возобновить цикл</string>
     <string name="suspendloop">Приостановить цикл</string>
-    <string name="duration_min_label">Длительность (мин)</string>
     <string name="notification">Уведомление</string>
     <string name="noprofile">Профиль еще не загружен из NS</string>
     <string name="exists">существует</string>
