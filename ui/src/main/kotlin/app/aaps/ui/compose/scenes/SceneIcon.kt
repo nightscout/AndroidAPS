@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.scenes
 
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsBike
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
@@ -31,13 +32,22 @@ import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material.icons.filled.Pool
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Rowing
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.ScubaDiving
 import androidx.compose.material.icons.filled.SelfImprovement
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Skateboarding
 import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.SportsGolf
+import androidx.compose.material.icons.filled.SportsGymnastics
+import androidx.compose.material.icons.filled.SportsHandball
+import androidx.compose.material.icons.filled.SportsRugby
+import androidx.compose.material.icons.filled.SportsSoccer
+import androidx.compose.material.icons.filled.SportsTennis
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Surfing
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -56,6 +66,7 @@ import app.aaps.core.ui.compose.icons.IcTtEatingSoon
 import app.aaps.core.ui.compose.icons.IcTtHigh
 import app.aaps.core.ui.compose.icons.IcTtHypo
 import app.aaps.core.ui.compose.icons.IcTtManual
+import app.aaps.ui.R
 
 /**
  * Available icons for scenes, organized by category.
@@ -68,7 +79,7 @@ data class SceneIconEntry(
 )
 
 data class SceneIconCategory(
-    val name: String,
+    @StringRes val name: Int,
     val icons: List<SceneIconEntry>
 )
 
@@ -98,6 +109,15 @@ object SceneIcons {
     private val HIKING = SceneIconEntry("hiking", Icons.Default.Hiking, "Hiking")
     private val BIKE = SceneIconEntry("bike", Icons.AutoMirrored.Filled.DirectionsBike, "Bike")
     private val SKATEBOARD = SceneIconEntry("skateboard", Icons.Default.Skateboarding, "Skateboard")
+    private val TENNIS = SceneIconEntry("tennis", Icons.Default.SportsTennis, "Tennis")
+    private val SOCCER = SceneIconEntry("soccer", Icons.Default.SportsSoccer, "Football")
+    private val RUGBY = SceneIconEntry("baseball", Icons.Default.SportsRugby, "Rugby")
+    private val HANDBALL = SceneIconEntry("basketball", Icons.Default.SportsHandball, "Handball")
+    private val GYMNASTICS = SceneIconEntry("volleyball", Icons.Default.SportsGymnastics, "Gymnastics")
+    private val GOLF = SceneIconEntry("golf", Icons.Default.SportsGolf, "Golf")
+    private val SCUBADIVING = SceneIconEntry("scubadiving", Icons.Default.ScubaDiving, "ScubaDiving")
+    private val ROWING = SceneIconEntry("rowing", Icons.Default.Rowing, "Rowing")
+    private val SURFING = SceneIconEntry("surfing", Icons.Default.Surfing, "Surfing")
 
     // --- Material: Health ---
     private val HOSPITAL = SceneIconEntry("hospital", Icons.Default.LocalHospital, "Hospital")
@@ -150,7 +170,7 @@ object SceneIcons {
         TT_HIGH, TT_ACTIVITY, TT_EATING, TT_HYPO, TT_MANUAL, PROFILE, LOOP, SMB, BOLUS, CARBS,
         TBR, ACTIVITY_AAPS, NOTE, AUTOMATION, CALIBRATION,
         // Material
-        EXERCISE, FITNESS, POOL, HIKING, BIKE, SKATEBOARD,
+        EXERCISE, FITNESS, POOL, HIKING, BIKE, SKATEBOARD, TENNIS, SOCCER, RUGBY, HANDBALL, GYMNASTICS, GOLF, SCUBADIVING, ROWING, SURFING,
         HOSPITAL, MEDICATION, MONITOR_HEART, THERMOSTAT, BLOOD_TYPE, HEALTH_SAFETY, HEALING,
         MEAL, CAFE, LUNCH, BAKERY,
         SLEEP, NIGHT, NIGHTS_STAY, HOTEL, SEAT_FLAT,
@@ -167,18 +187,17 @@ object SceneIcons {
     /** All icons organized by category for the picker UI */
     val categories: List<SceneIconCategory> = listOf(
         SceneIconCategory(
-            "AAPS", listOf(
+            R.string.scene_cat_aaps, listOf(
                 TT_HIGH, TT_ACTIVITY, TT_EATING, TT_HYPO, TT_MANUAL, PROFILE, LOOP, SMB, BOLUS, CARBS,
                 TBR, ACTIVITY_AAPS, NOTE, AUTOMATION, CALIBRATION
             )
         ),
-        SceneIconCategory("Activity", listOf(EXERCISE, FITNESS, POOL, HIKING, BIKE, SKATEBOARD)),
-        SceneIconCategory("Health", listOf(HOSPITAL, MEDICATION, MONITOR_HEART, THERMOSTAT, BLOOD_TYPE, HEALTH_SAFETY, HEALING)),
-        SceneIconCategory("Food", listOf(MEAL, CAFE, LUNCH, BAKERY)),
-        SceneIconCategory("Sleep", listOf(SLEEP, NIGHT, NIGHTS_STAY, HOTEL, SEAT_FLAT)),
-        SceneIconCategory("Daily Life", listOf(WORK, SCHOOL, HOME, CAR, FLIGHT, SHOPPING)),
-        SceneIconCategory("Wellness", listOf(RELAX, SPA, HEART, PSYCHOLOGY)),
-        SceneIconCategory("General", listOf(STAR, SPEED, ALARM, EVENT, FLAG, BOOKMARK, LABEL))
+        SceneIconCategory(R.string.scene_cat_activity, listOf(EXERCISE, FITNESS, POOL, HIKING, BIKE, SKATEBOARD, TENNIS, SOCCER, RUGBY, HANDBALL, GYMNASTICS, GOLF, SCUBADIVING, ROWING, SURFING)),
+        SceneIconCategory(R.string.scene_cat_health, listOf(HOSPITAL, MEDICATION, MONITOR_HEART, THERMOSTAT, BLOOD_TYPE, HEALTH_SAFETY, HEALING)),
+        SceneIconCategory(R.string.scene_cat_food, listOf(MEAL, CAFE, LUNCH, BAKERY)),
+        SceneIconCategory(R.string.scene_cat_sleep, listOf(SLEEP, NIGHT, NIGHTS_STAY, HOTEL, SEAT_FLAT)),
+        SceneIconCategory(R.string.scene_cat_dailylife, listOf(WORK, SCHOOL, HOME, CAR, FLIGHT, SHOPPING)),
+        SceneIconCategory(R.string.scene_cat_wellness, listOf(RELAX, SPA, HEART, PSYCHOLOGY)),
+        SceneIconCategory(R.string.scene_cat_general, listOf(STAR, SPEED, ALARM, EVENT, FLAG, BOOKMARK, LABEL))
     )
-
 }

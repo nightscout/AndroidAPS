@@ -70,7 +70,15 @@
     <string name="fill_pump_units_note">Prime amount is in pump units</string>
     <string name="fill_insulin_change">Switch insulin to: %1$s (profile switch will be applied)</string>
 
-    <!-- InsulinDialog -->
+    <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Activity</string>
+    <string name="scene_cat_health">Health</string>
+    <string name="scene_cat_food">Food</string>
+    <string name="scene_cat_sleep">Sleep</string>
+    <string name="scene_cat_dailylife">Daily Life</string>
+    <string name="scene_cat_wellness">Wellness</string>
+    <string name="scene_cat_general">General</string>
 
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Missing Insulin Name</string>

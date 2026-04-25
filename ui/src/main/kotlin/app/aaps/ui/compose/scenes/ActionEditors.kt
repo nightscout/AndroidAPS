@@ -339,7 +339,7 @@ internal fun SceneIconPicker(
                 Column(modifier = Modifier.padding(top = AapsSpacing.medium)) {
                     SceneIcons.categories.forEach { category ->
                         Text(
-                            text = category.name,
+                            text = stringResource(category.name),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(top = AapsSpacing.medium)
