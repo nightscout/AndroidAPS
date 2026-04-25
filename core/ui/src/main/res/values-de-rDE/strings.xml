@@ -82,7 +82,6 @@
     <string name="disableloop">Loop deaktivieren</string>
     <string name="resumeloop">Loop fortsetzen</string>
     <string name="suspendloop">Loop pausieren</string>
-    <string name="duration_min_label">Dauer [min]</string>
     <string name="notification">Benachrichtigung</string>
     <string name="noprofile">Bisher noch kein Profil von Nightscout geladen</string>
     <string name="exists">vorhanden</string>
