@@ -73,7 +73,6 @@
     <string name="disableloop">Desactivar llaç</string>
     <string name="resumeloop">Reprendre llaç</string>
     <string name="suspendloop">Aturar el llaç</string>
-    <string name="duration_min_label">Durada [min]</string>
     <string name="notification">Avís</string>
     <string name="noprofile">Encara cap perfil carregat des de NS</string>
     <string name="exists">existeix</string>
