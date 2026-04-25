@@ -84,7 +84,6 @@
     <string name="disabled_loop">Loop uitgeschakeld</string>
     <string name="resumeloop">Hervat loop</string>
     <string name="suspendloop">Onderbreek loop</string>
-    <string name="duration_min_label">Duur [min]</string>
     <string name="notification">Notificatie</string>
     <string name="noprofile">Nog geen profiel geladen van NS</string>
     <string name="exists">bestaand</string>
