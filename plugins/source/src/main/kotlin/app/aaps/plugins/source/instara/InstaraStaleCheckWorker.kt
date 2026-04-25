@@ -12,8 +12,6 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +54,11 @@ class InstaraStaleCheckWorker(
             return@withContext Result.success()
         }
 
-        val enabledNow = preferences.get(BooleanKey.InstaraHistoryRequestEnabled)
+        // Ensure Instara plugin-local keys are registered even if worker starts before plugin init
+        preferences.registerPreferences(InstaraBooleanKey::class.java)
+        preferences.registerPreferences(InstaraStringKey::class.java)
+
+        val enabledNow = preferences.get(InstaraBooleanKey.HistoryRequestEnabled)
         val now = System.currentTimeMillis()
 
         aapsLogger.debug(LTag.CORE, "Instara check START enabled=$enabledNow workId=$id attempt=$runAttemptCount now=$now")
@@ -175,7 +177,7 @@ class InstaraStaleCheckWorker(
     private data class DeviceMeta(val sgvStart: Long, val sgvMark: Int)
 
     private fun readLatestDevicePrefixFromMeta(): Long? {
-        val raw = preferences.get(StringNonKey.InstaraDeviceMetaJson)
+        val raw = preferences.get(InstaraStringKey.DeviceMetaJson)
         val root = try {
             JSONObject(raw)
         } catch (_: Throwable) {
@@ -187,7 +189,7 @@ class InstaraStaleCheckWorker(
     }
 
     private fun readDeviceMeta(devicePrefix: Long): DeviceMeta? {
-        val raw = preferences.get(StringNonKey.InstaraDeviceMetaJson)
+        val raw = preferences.get(InstaraStringKey.DeviceMetaJson)
         val root = try {
             JSONObject(raw)
         } catch (_: Throwable) {

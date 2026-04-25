@@ -34,15 +34,4 @@ enum class StringNonKey(
     GoogleDriveFolderId(key = "google_drive_folder_id", defaultValue = ""),
     GoogleDriveRefreshToken(key = "google_drive_refresh_token", defaultValue = ""),
 
-    /**
-     * Instara per-device meta storage (NO DB schema changes).
-     * JSON format (keyed by devicePrefix as string):
-     * {
-     *   "31000399": {"sgvStart": 3100039900003, "sgvMark": 6048}
-     * }
-     * - sgvStart: the first sgvId for that device, defined as the sgvId of the first row that carries sgvMark != null.
-     * - sgvMark : device-level total mark/count for that device (can differ across devices).
-     * exportable=false because it’s internal state derived from device traffic.
-     */
-    InstaraDeviceMetaJson(key = "instara_device_meta_json", defaultValue = "{}", exportable = false),
 }

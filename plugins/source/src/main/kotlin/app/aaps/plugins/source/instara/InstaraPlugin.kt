@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcGenericCgm
@@ -54,7 +53,8 @@ class InstaraPlugin @Inject constructor(
         .pluginName(app.aaps.plugins.source.R.string.instara_app)
         .preferencesVisibleInSimpleMode(false)
         .description(app.aaps.plugins.source.R.string.description_source_instara_app),
-    ownPreferences = emptyList(),
+    // Register Instara plugin-local preference/non-preference key enums
+    ownPreferences = listOf(InstaraBooleanKey::class.java, InstaraStringKey::class.java),
     aapsLogger, rh, preferences, config
 ), BgSource {
 
@@ -66,7 +66,7 @@ class InstaraPlugin @Inject constructor(
         titleResId = pluginDescription.pluginName,
         items = listOf(
             BooleanKey.BgSourceUploadToNs,
-            BooleanKey.InstaraHistoryRequestEnabled
+            InstaraBooleanKey.HistoryRequestEnabled
         ),
         icon = pluginDescription.icon
     )
@@ -162,7 +162,7 @@ class InstaraPlugin @Inject constructor(
          */
         private fun overwriteDeviceMeta(devicePrefix: Long, sgvStart: Long, sgvMark: Int) {
             // Read existing meta JSON
-            val raw = preferences.get(StringNonKey.InstaraDeviceMetaJson)
+            val raw = preferences.get(InstaraStringKey.DeviceMetaJson)
             val existingRoot = try {
                 JSONObject(raw)
             } catch (_: Throwable) {
@@ -180,7 +180,7 @@ class InstaraPlugin @Inject constructor(
                 put("sgvStart", sgvStart)
                 put("sgvMark", sgvMark)
             })
-            preferences.put(StringNonKey.InstaraDeviceMetaJson, root.toString())
+            preferences.put(InstaraStringKey.DeviceMetaJson, root.toString())
         }
 
         @SuppressLint("CheckResult")
@@ -329,7 +329,7 @@ class InstaraPlugin @Inject constructor(
                     overwriteDeviceMeta(latestDevicePrefix, latestDeviceStartWithMark, latestDeviceMark)
 
                     // Ensure worker is scheduled (new device can arrive after previous completion)
-                    val enabled = preferences.get(BooleanKey.InstaraHistoryRequestEnabled)
+                    val enabled = preferences.get(InstaraBooleanKey.HistoryRequestEnabled)
                     InstaraStaleCheckWorker.ensureScheduled(instaraPlugin.appContext(), enabled = enabled)
                 }
 
