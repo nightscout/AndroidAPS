@@ -23,7 +23,6 @@ import app.aaps.core.objects.extensions.shiftBlock
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.aps.autotune.data.ATProfile
-import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -70,7 +69,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         whenever(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
         whenever(preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)).thenReturn(false)
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.iCfg, false)!!
         // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
         for (i in aapsPreppedGlucose.crData.indices)
             assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
@@ -103,7 +102,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         whenever(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
         whenever(preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)).thenReturn(false)           // CategorizeUAM as Basal = False
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.iCfg, false)!!
         // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
         for (i in aapsPreppedGlucose.crData.indices)
             assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
@@ -136,7 +135,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         whenever(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
         whenever(preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)).thenReturn(true)           // CategorizeUAM as Basal = True
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.iCfg, false)!!
         // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
         for (i in aapsPreppedGlucose.crData.indices)
             assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
@@ -165,7 +164,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
             val units = GlucoseUnit.fromText(txtUnits)
             val dia = JsonHelper.safeGetDoubleAllowNull(jsonObject, "dia") ?: return null
             val peak = JsonHelper.safeGetIntAllowNull(jsonObject, "insulinPeakTime") ?: return null
-            val localInsulin = LocalInsulin("insulin", peak, dia)
+            val iCfg = ICfg("insulin", peak, dia, 1.0)
             val timezone = TimeZone.getTimeZone(JsonHelper.safeGetString(jsonObject, "timezone", "UTC"))
             val isfJson = jsonObject.getJSONObject("isfProfile")
             val isfBlocks = ArrayList<Block>(1).also {
@@ -192,7 +191,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 glucoseUnit = units,
                 timeZone = timezone
             )
-            return ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), localInsulin)
+            return ATProfile(preferences, profileUtil, dateUtil, rh, profileStoreProvider, aapsLogger).with(ProfileSealed.Pure(pure, activePlugin), iCfg)
         } catch (_: Exception) {
             return null
         }
@@ -304,7 +303,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneFS
     ) {
 
-        override fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal {
+        override fun getIOB(time: Long, iCfg: ICfg): IobTotal {
             val bolusIob = IobTotal(time)
             iobOapsCalculation.forEach {
                 if (it.time == time)

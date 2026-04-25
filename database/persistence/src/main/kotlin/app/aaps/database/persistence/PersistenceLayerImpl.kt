@@ -14,6 +14,7 @@ import app.aaps.core.data.model.NE
 import app.aaps.core.data.model.PS
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.SC
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TE
@@ -2413,5 +2414,13 @@ class PersistenceLayerImpl @Inject constructor(
             aapsLogger.error(LTag.DATABASE, "Error while saving APSResult", e)
             throw e
         }
+    }
+
+    override suspend fun getGlucoseValueByPumpIdAndSource(source: SourceSensor, pumpId: Long): GV? = withContext(Dispatchers.IO) {
+        repository.getGlucoseValueByPumpIdAndSource(source.name, pumpId)?.fromDb()
+    }
+
+    override suspend fun getGlucoseValuesByPumpIdRange(source: SourceSensor, startPumpId: Long, endPumpId: Long): List<GV> = withContext(Dispatchers.IO) {
+        repository.getGlucoseValuesByPumpIdRange(source.name, startPumpId, endPumpId).map { it.fromDb() }
     }
 }

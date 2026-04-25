@@ -814,6 +814,12 @@ class AppRepository @Inject internal constructor(
     suspend fun getApsResults(start: Long, end: Long): List<APSResult> =
         database.apsResultDao.getApsResults(start, end)
 
+    suspend fun getGlucoseValueByPumpIdAndSource(source: String, pumpId: Long): GlucoseValue? =
+        database.glucoseValueDao.getGlucoseValueByPumpIdAndSource(source, pumpId)
+
+    suspend fun getGlucoseValuesByPumpIdRange(source: String, startPumpId: Long, endPumpId: Long): List<GlucoseValue> =
+        database.glucoseValueDao.getGlucoseValuesByPumpIdRange(source, startPumpId, endPumpId)
+
     /**
      * Clean up Flow scope and release resources
      *

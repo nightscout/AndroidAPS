@@ -750,10 +750,9 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun init(cwf: CustomWatchface) = entries.forEach {
-                it.cwf = cwf
-                it.arrowCustom = null
-
+            fun init(cwf: CustomWatchface) = entries.forEach { trendArrow ->
+                trendArrow.cwf = cwf
+                trendArrow.arrowCustom = trendArrow.customDrawable?.let { cwf.resDataMap[it.fileName]?.toDrawable(cwf.resources) } ?: ResourcesCompat.getDrawable(cwf.resources, trendArrow.icon, cwf.theme)
             }
 
             fun drawable() = entries.firstOrNull { it.symbol == it.cwf.singleBg[0].slopeArrow }?.arrowCustom ?: NONE.arrowCustom
@@ -766,7 +765,6 @@ class CustomWatchface : BaseWatchFace() {
 
         lateinit var cwf: CustomWatchface
         var arrowCustom: Drawable? = null
-            get() = field ?: customDrawable?.let { cwf.resDataMap[it.fileName]?.toDrawable(cwf.resources)?.also { arrowCustom = it } } ?: ResourcesCompat.getDrawable(cwf.resources, icon, cwf.theme)
     }
 
     private enum class GravityMap(val key: String, val gravity: Int) {
