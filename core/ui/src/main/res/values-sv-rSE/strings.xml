@@ -81,7 +81,6 @@
     <string name="disableloop">Inaktivera loop</string>
     <string name="resumeloop">Återuppta loop</string>
     <string name="suspendloop">Pausa loop</string>
-    <string name="duration_min_label">Duration [min]</string>
     <string name="notification">Avisering</string>
     <string name="noprofile">Ingen profil laddad från Nightscout ännu</string>
     <string name="exists">finns</string>
