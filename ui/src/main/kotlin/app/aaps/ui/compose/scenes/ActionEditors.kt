@@ -323,7 +323,7 @@ internal fun SceneIconPicker(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = selected.label,
+                            text = stringResource(selected.label),
                             style = MaterialTheme.typography.titleSmall
                         )
                     }
@@ -371,7 +371,7 @@ internal fun SceneIconButton(
     IconButton(onClick = { onIconSelected(entry.key) }) {
         Icon(
             imageVector = entry.icon,
-            contentDescription = entry.label,
+            contentDescription = stringResource(entry.label),
             tint = if (isSelected) MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
             modifier = Modifier.size(if (isSelected) 28.dp else 24.dp)
