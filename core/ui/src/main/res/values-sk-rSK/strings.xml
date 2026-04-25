@@ -131,7 +131,6 @@
     <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
     <string name="resumeloop">Pokračovať v uzavretom okruhu</string>
     <string name="suspendloop">Pozastaviť uzavretý okruh</string>
-    <string name="duration_min_label">Trvanie [min]</string>
     <string name="notification">Notifikácia</string>
     <string name="noprofile">Zatiaľ nebol načítaný žiadny profil z NS</string>
     <string name="exists">existuje</string>
