@@ -14,6 +14,7 @@
     <string name="pref_display_settings">显示</string>
     <string name="pref_graph_settings">图表</string>
     <string name="pref_interface_settings">界面</string>
+    <string name="pref_tile_settings">磁贴</string>
     <string name="pref_others_settings">其他</string>
     <string name="pref_complication_settings">复杂功能</string>
     <string name="pref_show_date">显示日期</string>
