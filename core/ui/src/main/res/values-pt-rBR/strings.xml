@@ -81,7 +81,6 @@
     <string name="disableloop">Desativar loop</string>
     <string name="resumeloop">Retomar loop</string>
     <string name="suspendloop">Suspender loop</string>
-    <string name="duration_min_label">Duração [min]</string>
     <string name="notification">Notificação</string>
     <string name="noprofile">Nenhum perfil carregado de NS ainda</string>
     <string name="exists">existe</string>
