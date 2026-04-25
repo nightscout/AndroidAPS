@@ -82,7 +82,6 @@
     <string name="disableloop">Loop 중지하기</string>
     <string name="resumeloop">Loop 재실행</string>
     <string name="suspendloop">Loop 일시중지</string>
-    <string name="duration_min_label">기간 [min]</string>
     <string name="notification">공지</string>
     <string name="noprofile">아직 NS에서 프로파일을 로드하지 못했습니다.</string>
     <string name="exists">존재합니다.</string>
