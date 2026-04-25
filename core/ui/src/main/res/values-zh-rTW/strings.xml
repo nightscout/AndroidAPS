@@ -131,7 +131,6 @@
     <string name="disabled_loop">循環停用</string>
     <string name="resumeloop">恢復循環</string>
     <string name="suspendloop">暫停循環</string>
-    <string name="duration_min_label">持續時間 [分鐘]</string>
     <string name="notification">通知</string>
     <string name="noprofile">尚未從 NS 載入設定檔</string>
     <string name="exists">存在</string>
