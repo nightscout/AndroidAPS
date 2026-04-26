@@ -60,7 +60,7 @@
     <string name="fill_prime_amount">Quantité d\'amorçage</string>
     <string name="fill_pump_units_note">La quantité d\'amorçage est dans les unités de la pompe</string>
     <string name="fill_insulin_change">Changer l\'insuline en : %1$s (le changement de profil sera appliqué)</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Nom de l\'insuline manquant</string>
     <string name="insulin_name_exists">Le nom d\'insuline %1$s existe déjà, sélectionnez un nouveau nom</string>
