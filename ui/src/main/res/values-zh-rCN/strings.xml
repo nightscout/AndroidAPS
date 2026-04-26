@@ -61,7 +61,7 @@
     <string name="fill_prime_amount">预注剂量</string>
     <string name="fill_pump_units_note">预注剂量以泵单位表示</string>
     <string name="fill_insulin_change">将胰岛素切换为：%1$s（将套用配置切换）</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="missing_insulin_name">缺少胰岛素名称</string>
     <string name="insulin_name_exists">胰岛素名称 %1$s 已存在，请选择新的名称</string>
