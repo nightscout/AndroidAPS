@@ -176,9 +176,6 @@
     <string name="careportal_question_message">Ερώτηση : %1$s</string>
     <string name="careportal_exercise_message">Άσκηση : %1$s</string>
     <string name="careportal_pump_site_change">Αλλαγή σημείου αντλίας</string>
-    <string name="cgm_sensor_insert">Εισαγωγή Αισθητήρα CGM</string>
-    <string name="careportal_cgmsensorstart">Έναρξη Αισθητήρα CGM</string>
-    <string name="careportal_cgm_sensor_stop">Διακοπή Αισθητήρα CGM</string>
     <string name="careportal_dad_alert">Ειδοποίηση D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Αλλαγή Αμπούλας Ινσουλίνης</string>
     <string name="careportal_profileswitch">Αλλαγή Προφίλ</string>
