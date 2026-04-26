@@ -281,11 +281,8 @@
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
     <string name="careportal_pump_site_change">Cambio de zona de la bomba</string>
-    <string name="cgm_sensor_insert">Inserción del sensor MCG</string>
     <string name="careportal_pump_site_management">Sitios de la bomba</string>
     <string name="careportal_cgm_site_management">Sitios del MCG</string>
-    <string name="careportal_cgmsensorstart">Inicio del sensor MCG</string>
-    <string name="careportal_cgm_sensor_stop">Parada del sensor MCG</string>
     <string name="careportal_dad_alert">D.A.D Alerta</string>
     <string name="careportal_insulin_cartridge_change">Cambio de cartucho de insulina</string>
     <string name="careportal_profileswitch">Cambio de perfil</string>
@@ -321,7 +318,6 @@
     <string name="scene_action_loop_mode">Modo de lazo: %1$s</string>
     <string name="scene_action_careportal">Registro: %1$s</string>
     <string name="scene_time_remaining">%1$s restante</string>
-    <string name="scene_management">Gestión de escenas</string>
     <string name="scene_management_desc">Crear, editar y gestionar escenas</string>
     <string name="scene_action_count">%1$d acciones</string>
     <string name="scene_start_from_template">Empezar desde plantilla</string>
