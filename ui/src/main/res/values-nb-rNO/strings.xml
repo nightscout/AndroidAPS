@@ -102,6 +102,20 @@
     <string name="surfing_icon_label">Surfing</string>
     <string name="hospital_icon_label">Sykehus</string>
     <string name="medication_icon_label">Medisinering</string>
+    <string name="monitor_heart_icon_label">Overvåk</string>
+    <string name="thermostat_icon_label">Termostat</string>
+    <string name="blood_type_icon_label">Blod</string>
+    <string name="health_safety_icon_label">Helse</string>
+    <string name="healing_icon_label">Helbredelse</string>
+    <string name="meal_icon_label">Restaurant</string>
+    <string name="cafe_icon_label">Kaffe</string>
+    <string name="lunch_icon_label">Lunsj</string>
+    <string name="bakery_icon_label">Bakeri</string>
+    <string name="sleep_icon_label">Søvn</string>
+    <string name="night_icon_label">Natt</string>
+    <string name="nights_stay_icon_label">Natt opphold</string>
+    <string name="hotel_icon_label">Hotell</string>
+    <string name="seat_flat_icon_label">Hvile</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Mangler insulinnavn</string>
     <string name="insulin_name_exists">Insulinnavnet %1$s finnes allerede. Velg et nytt navn</string>
