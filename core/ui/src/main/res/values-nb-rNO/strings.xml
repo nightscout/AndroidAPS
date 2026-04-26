@@ -281,8 +281,11 @@
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
     <string name="careportal_pump_site_change">Bytte av pumpens kanyle</string>
+    <string name="cgm_sensor_insert">Bytte av sensor</string>
     <string name="careportal_pump_site_management">Pumpeområder</string>
     <string name="careportal_cgm_site_management">Sensor-områder</string>
+    <string name="careportal_cgmsensorstart">Sensorstart</string>
+    <string name="careportal_cgm_sensor_stop">Sensorstopp</string>
     <string name="careportal_dad_alert">Logg varsel fra diabetes-hund</string>
     <string name="careportal_insulin_cartridge_change">Bytte insulinreservoar</string>
     <string name="careportal_profileswitch">Profilbytte</string>
@@ -318,6 +321,7 @@
     <string name="scene_action_loop_mode">Loop-modus: %1$s</string>
     <string name="scene_action_careportal">Logg: %1$s</string>
     <string name="scene_time_remaining">%1$s gjenstår</string>
+    <string name="scene_management">Scener</string>
     <string name="scene_management_desc">Lage, endre og håndtere scener</string>
     <string name="scene_action_count">%1$d handlinger</string>
     <string name="scene_start_from_template">Start fra mal</string>
@@ -396,7 +400,7 @@
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivitet</string>
     <string name="wear">Klokke</string>
-    <string name="automation">Automatisering</string>
+    <string name="automation">Automasjon</string>
     <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
     <string name="preset_settings">Forhåndsinnstilte innstillinger</string>
@@ -757,7 +761,7 @@
     <string name="export_result_message_failed">Eksport av innstillinger MISLYKTES!</string>
     <string name="export_result_message_about_to_expire">Innstillinger eksportert: passord er i ferd med å utløpe snart. Eksporter manuelt og skriv inn passord på nytt.</string>
     <string name="export_result_message_expired">Eksport av innstillinger avbrutt: passord utløpt. Eksporter manuelt og skriv inn passord på nytt!</string>
-    <string name="export_result_message_disabled">Advarsel (automatisering): Eksport av innstillinger er ikke aktivert!</string>
+    <string name="export_result_message_disabled">Advarsel (automasjon): Eksport av innstillinger er ikke aktivert!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Skyeksporten var vellykket</string>
     <string name="export_cloud_failed">Skyeksport MISLYKKET!</string>
