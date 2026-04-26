@@ -124,8 +124,8 @@
     <string name="pref_title_ns_use_ws">Usar WebSockets</string>
     <string name="pref_summary_ns_use_ws">Usar WebSockets para comunicación en tiempo real con Nightscout</string>
     <!-- OpenHumans preferences -->
-    <string name="pref_title_openhumans_wifi_only">Solo WiFi</string>
-    <string name="pref_title_openhumans_charging_only">Solo durante la carga</string>
+    <string name="pref_title_openhumans_wifi_only">Sólo WiFi</string>
+    <string name="pref_title_openhumans_charging_only">Sólo durante la carga</string>
     <!-- xDrip preferences -->
     <string name="pref_title_xdrip_send_status">Enviar estado a xDrip+</string>
     <string name="pref_title_xdrip_send_detailed_iob">Enviar IOB detallado</string>
