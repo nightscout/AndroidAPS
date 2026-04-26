@@ -281,11 +281,8 @@
     <string name="careportal_question_message">问题 : %1$s</string>
     <string name="careportal_exercise_message">运动 : %1$s</string>
     <string name="careportal_pump_site_change">泵位置变更</string>
-    <string name="cgm_sensor_insert">植入CGM传感器</string>
     <string name="careportal_pump_site_management">泵位置</string>
     <string name="careportal_cgm_site_management">CGM 位置</string>
-    <string name="careportal_cgmsensorstart">CGM 传感器启动</string>
-    <string name="careportal_cgm_sensor_stop">CGM 传感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警告</string>
     <string name="careportal_insulin_cartridge_change">更换储药器</string>
     <string name="careportal_profileswitch">配置文件切换</string>
@@ -321,7 +318,6 @@
     <string name="scene_action_loop_mode">闭环模式：%1$s</string>
     <string name="scene_action_careportal">日志：%1$s</string>
     <string name="scene_time_remaining">剩余%1$s</string>
-    <string name="scene_management">情景管理</string>
     <string name="scene_management_desc">创建、编辑和管理情景</string>
     <string name="scene_action_count">%1$d 个动作</string>
     <string name="scene_start_from_template">从模板开始</string>
