@@ -225,6 +225,9 @@ dependencies {
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
     androidTestImplementation(libs.kotlinx.coroutines.test)
+    // Rhino is needed by the openAPS adapter test fixtures under app/src/androidTest
+    // (these files reference org.mozilla.javascript.* classes directly).
+    androidTestImplementation(libs.org.mozilla.rhino)
 
     debugImplementation(libs.com.squareup.leakcanary.android)
 
