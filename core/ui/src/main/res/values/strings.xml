@@ -290,11 +290,11 @@
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercise : %1$s</string>
     <string name="careportal_pump_site_change">Pump Site Change</string>
-    <string name="cgm_sensor_insert">CGM Sensor Insert</string>
+    <string name="cgm_sensor_insert">Sensor Insert</string>
     <string name="careportal_pump_site_management">Pump Sites</string>
     <string name="careportal_cgm_site_management">CGM Sites</string>
-    <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
-    <string name="careportal_cgm_sensor_stop">CGM Sensor Stop</string>
+    <string name="careportal_cgmsensorstart">Sensor Start</string>
+    <string name="careportal_cgm_sensor_stop">Sensor Stop</string>
     <string name="careportal_dad_alert">D.A.D. Alert</string>
     <string name="careportal_insulin_cartridge_change">Insulin Cartridge Change</string>
     <string name="careportal_profileswitch">Profile switch</string>
