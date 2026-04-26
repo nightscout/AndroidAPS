@@ -17,6 +17,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -125,6 +126,13 @@ class KeepAliveWorker(
             // If this happens do nothing
             // It's causing false Pump unreachable alerts
             if (lastRun + T.mins(4).msecs() > dateUtil.now()) return Result.success(workDataOf("Error" to "Schedule broken. Ignoring"))
+        }
+
+        // Gate the plugin-touching work behind app init — without this, a worker that fires
+        // after a reboot before MainApp's init scope has populated pluginStore.plugins crashes.
+        if (!config.awaitInitialized()) {
+            aapsLogger.debug(LTag.CORE, "KeepAlive: app not yet initialized, retrying")
+            return Result.retry()
         }
 
         if (lastRun != 0L && dateUtil.now() - lastRun > T.mins(10).msecs()) {

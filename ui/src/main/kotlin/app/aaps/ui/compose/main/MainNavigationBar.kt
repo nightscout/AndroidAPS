@@ -1,5 +1,6 @@
 package app.aaps.ui.compose.main
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fastfood
@@ -58,8 +59,9 @@ fun MainNavigationBar(
     )
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
+        windowInsets = WindowInsets(0),
         modifier = modifier
     ) {
         // Treatment action button (opens bottom sheet)

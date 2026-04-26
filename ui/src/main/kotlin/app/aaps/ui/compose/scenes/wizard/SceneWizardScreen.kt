@@ -45,7 +45,7 @@ fun SceneWizardScreen(
                 title = { Text(stringResource(R.string.scene)) },
                 navigationIcon = {
                     IconButton(onClick = onCancel) {
-                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.close))
                     }
                 }
             )

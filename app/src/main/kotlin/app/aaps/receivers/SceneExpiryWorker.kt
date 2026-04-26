@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import app.aaps.core.data.model.SceneEndAction
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationId
 import app.aaps.core.interfaces.notifications.NotificationManager
@@ -36,13 +38,25 @@ class SceneExpiryWorker(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var notificationManager: NotificationManager
+    @Inject lateinit var config: Config
 
     override suspend fun doWorkAndLog(): Result {
+        if (!config.awaitInitialized()) {
+            aapsLogger.info(LTag.UI, "SceneExpiryWorker: app not yet initialized, retrying")
+            return Result.retry()
+        }
         val sceneName = inputData.getString(KEY_SCENE_NAME) ?: "Scene"
         aapsLogger.info(LTag.UI, "XXXX SceneExpiryWorker fired for '$sceneName'")
         val activeState = activeSceneManager.getActiveState()
         if (activeState == null) {
             aapsLogger.info(LTag.UI, "XXXX no active state — worker exiting")
+            return Result.success()
+        }
+        // If a previous run already expired this scene (e.g. WorkManager retried
+        // after we returned Result.retry from the init gate), skip — re-running
+        // onExpiry could double-activate a chained scene.
+        if (activeSceneManager.isExpired()) {
+            aapsLogger.info(LTag.UI, "XXXX scene already expired — worker exiting")
             return Result.success()
         }
         aapsLogger.info(LTag.UI, "XXXX active=${activeState.scene.name} id=${activeState.scene.id} endAction=${activeState.scene.endAction}")

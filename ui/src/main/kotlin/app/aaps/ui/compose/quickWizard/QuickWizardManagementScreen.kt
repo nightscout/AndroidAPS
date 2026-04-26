@@ -55,8 +55,6 @@ import app.aaps.core.ui.compose.ScreenMode
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
@@ -170,20 +168,7 @@ fun QuickWizardManagementScreen(
         Scaffold(
             topBar = {
                 AapsTopAppBar(
-                    title = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = ElementType.QUICK_WIZARD_MANAGEMENT.icon(),
-                                contentDescription = null,
-                                tint = ElementType.QUICK_WIZARD_MANAGEMENT.color(),
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT.labelResId()))
-                        }
-                    },
+                    title = { Text(stringResource(ElementType.QUICK_WIZARD_MANAGEMENT.labelResId())) },
                     navigationIcon = {
                         IconButton(onClick = {
                             if (!isPlayMode && viewModel.hasUnsavedChanges()) {

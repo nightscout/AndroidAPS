@@ -168,6 +168,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "CancelBolus received from ${it.sourceNodeId}")
+                           if (!config.appInitialized) return@subscribe
                            activePlugin.activePump.stopBolusDelivering()
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -175,6 +176,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "OpenLoopRequestConfirmed received from ${it.sourceNodeId}")
+                           if (!config.appInitialized) return@subscribe
                            loop.acceptChangeRequest()
                            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                        }, fabricPrivacy::logException)
@@ -341,6 +343,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionFillConfirmed received $it from ${it.sourceNodeId}")
+                           if (!config.appInitialized) return@subscribe
                            if (constraintChecker.applyBolusConstraints(ConstraintObject(it.insulin, aapsLogger)).value() - it.insulin != 0.0) {
                                rxBus.send(EventShowSnackbar("aborting: previously applied constraint changed", EventShowSnackbar.Type.Warning))
                                sendError("aborting: previously applied constraint changed")
@@ -1348,6 +1351,13 @@ class DataHandlerMobile @Inject constructor(
 
     fun resendData(from: String) {
         aapsLogger.debug(LTag.WEAR, "Sending data to wear from $from")
+        // Wear can request a resend before MainApp's init scope has populated pluginStore.plugins
+        // (e.g. immediately after device reboot). Skip until the active pump is selectable —
+        // the wear app will retry on its next state change.
+        if (!config.appInitialized) {
+            aapsLogger.debug(LTag.WEAR, "Skipping resendData — app not yet initialized")
+            return
+        }
         // SingleBg
         iobCobCalculator.ads.lastBg()?.let { rxBus.send(EventMobileToWear(getSingleBG(it))) }
         // Preferences

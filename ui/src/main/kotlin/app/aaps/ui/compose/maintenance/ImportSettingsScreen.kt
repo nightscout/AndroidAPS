@@ -19,7 +19,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Cloud
@@ -78,7 +77,7 @@ fun ImportSettingsScreen(
                         title = { Text(stringResource(CoreUiR.string.import_setting)) },
                         navigationIcon = {
                             IconButton(onClick = { viewModel.cancelImport(); onClose() }) {
-                                Icon(Icons.Default.Close, contentDescription = null)
+                                Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiR.string.close))
                             }
                         }
                     )
@@ -155,7 +154,7 @@ private fun ImportFilePickerContent(
                 title = { Text(stringResource(CoreUiR.string.import_setting)) },
                 navigationIcon = {
                     IconButton(onClick = onClose) {
-                        Icon(Icons.Default.Close, contentDescription = null)
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiR.string.close))
                     }
                 }
             )
@@ -414,7 +413,7 @@ private fun ImportReviewContent(
                 title = { Text(stringResource(CoreUiR.string.import_setting)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(CoreUiR.string.close))
                     }
                 }
             )

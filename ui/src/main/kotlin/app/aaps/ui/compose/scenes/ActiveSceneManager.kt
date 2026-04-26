@@ -64,6 +64,12 @@ class ActiveSceneManager @Inject constructor(
     /** Check if any scene is currently active */
     fun isActive(): Boolean = _activeSceneState.value != null
 
+    /** True once [setExpired] has been called for the current active scene.
+     *  Stays true until [clearActive]. Used by [SceneExpiryWorker] to make
+     *  retried runs idempotent — onExpiry's revert + chain-activation must
+     *  not happen twice. */
+    fun isExpired(): Boolean = _expired.value
+
     /** Get the current active state */
     fun getActiveState(): ActiveSceneState? = _activeSceneState.value
 

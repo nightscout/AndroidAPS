@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -236,6 +237,9 @@ class ComposeMainActivity : AppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Must run before super.onCreate — sets WindowCompat.setDecorFitsSystemWindows(window, false)
+        // and the system bar appearance. AndroidX activity 1.8+ supports calling this pre-super.
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         // Activity result launchers (from base class)
