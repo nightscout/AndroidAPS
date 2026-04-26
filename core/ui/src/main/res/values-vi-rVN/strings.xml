@@ -281,11 +281,8 @@
     <string name="careportal_question_message">Câu hỏi: %1$s</string>
     <string name="careportal_exercise_message">Bài tập luyện : %1$s</string>
     <string name="careportal_pump_site_change">Thay vị trí kim truyền</string>
-    <string name="cgm_sensor_insert">Gắn cảm biến CGM</string>
     <string name="careportal_pump_site_management">Vị trí tiêm</string>
     <string name="careportal_cgm_site_management">Vị trí CGM</string>
-    <string name="careportal_cgmsensorstart">Kích hoạt cảm biến CGM</string>
-    <string name="careportal_cgm_sensor_stop">Dừng cảm biến CGM</string>
     <string name="careportal_dad_alert">Cảnh báo D.A.D</string>
     <string name="careportal_insulin_cartridge_change">Thay ống chứa insulin</string>
     <string name="careportal_profileswitch">Chuyển Hồ sơ</string>
@@ -321,7 +318,6 @@
     <string name="scene_action_loop_mode">Chế độ vòng lặp: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">%1$s còn lại</string>
-    <string name="scene_management">Quản lý Bối cảnh</string>
     <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các Bối cảnh</string>
     <string name="scene_action_count">%1$d hành động</string>
     <string name="scene_start_from_template">Bắt đầu từ mẫu</string>
