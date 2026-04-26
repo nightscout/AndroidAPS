@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.wear
 
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
@@ -14,12 +15,13 @@ class WearPluginTest : TestBaseWithProfile() {
     @Mock lateinit var dataHandlerMobile: DataHandlerMobile
     @Mock lateinit var dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var scenes: SceneAutomationApi
 
     private lateinit var wearPlugin: WearPlugin
     private lateinit var rateLimit: RateLimit
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
-        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, BolusProgressData(), persistenceLayer)
+        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config, BolusProgressData(), persistenceLayer, scenes)
     }
 }
