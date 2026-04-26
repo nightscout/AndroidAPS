@@ -35,7 +35,11 @@
     <string name="patched_sino_app">Sino App</string>
     <string name="description_source_patched_sino_app">從修改版 Sino App 接收血糖資料。</string>
     <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">從 Instara App 接收血糖數值。</string>
     <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Instara 歷史資料請求</string>
+    <string name="pref_summary_instara_history_request">在背景請求可能遺失的歷史資料</string>
     <!-- Notification Reader -->
     <string name="notification_reader">通知讀取器</string>
     <string name="description_source_notification_reader">從官方 CGM 應用程式（Dexcom、Medtronic、Eversense 等）發出的通知讀取血糖數值。</string>
