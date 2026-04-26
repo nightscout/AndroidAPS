@@ -60,6 +60,9 @@ jobs:
     name: Build AAPS
     runs-on: ubuntu-latest
     steps:
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  
       - name: Decode Secrets Keystore Set and Oauth2 to Env
         run: |
           if [ -n "${{ secrets.KEYSTORE_SET }}" ]; then
