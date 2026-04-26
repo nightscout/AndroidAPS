@@ -22,7 +22,6 @@ import app.aaps.core.keys.unitLabelResId
 import app.aaps.core.keys.valueResId
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalPreferences
-import app.aaps.core.ui.compose.SliderWithButtons
 import java.text.DecimalFormat
 
 /**
@@ -93,7 +92,7 @@ fun AdaptiveDoublePreferenceItem(
                     color = theme.summaryColor
                 )
             }
-            SliderWithButtons(
+            PreferenceSliderWithButtons(
                 value = value,
                 onValueChange = { newValue ->
                     if (visibility.enabled) {

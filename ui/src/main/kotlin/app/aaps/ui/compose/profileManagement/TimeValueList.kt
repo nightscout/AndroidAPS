@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.LocalDateUtil
-import app.aaps.core.ui.compose.SliderWithButtons
+import app.aaps.core.ui.compose.PlusMinusEdit
 import app.aaps.core.ui.compose.pickers.HourWheelPicker
 import app.aaps.ui.compose.profileManagement.viewmodels.TimeValue
 import java.text.DecimalFormat
@@ -163,13 +163,12 @@ private fun TimeValueRow(
 
             Spacer(Modifier.width(8.dp))
 
-            // Value slider with +/- buttons and clickable value
-            SliderWithButtons(
+            // Editable value with +/- stepper buttons
+            PlusMinusEdit(
                 value = value,
                 onValueChange = onValueChange,
                 valueRange = minValue..maxValue,
                 step = step,
-                showValue = true,
                 valueFormat = valueFormat,
                 modifier = Modifier.weight(1f)
             )
@@ -382,7 +381,7 @@ private fun TargetValueRow(
             }
         }
 
-        // Low value slider with +/- buttons and clickable value
+        // Low value editable stepper
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -395,19 +394,17 @@ private fun TargetValueRow(
                 modifier = Modifier.width(40.dp)
             )
 
-            SliderWithButtons(
+            PlusMinusEdit(
                 value = lowValue,
                 onValueChange = onLowValueChange,
                 valueRange = minValue..maxValue,
                 step = step,
-                showValue = true,
                 valueFormat = valueFormat,
-                dialogLabel = stringResource(R.string.target_low_label),
                 modifier = Modifier.weight(1f)
             )
         }
 
-        // High value slider with +/- buttons and clickable value
+        // High value editable stepper
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -420,14 +417,12 @@ private fun TargetValueRow(
                 modifier = Modifier.width(40.dp)
             )
 
-            SliderWithButtons(
+            PlusMinusEdit(
                 value = highValue,
                 onValueChange = onHighValueChange,
                 valueRange = minValue..maxValue,
                 step = step,
-                showValue = true,
                 valueFormat = valueFormat,
-                dialogLabel = stringResource(R.string.target_high_label),
                 modifier = Modifier.weight(1f)
             )
         }

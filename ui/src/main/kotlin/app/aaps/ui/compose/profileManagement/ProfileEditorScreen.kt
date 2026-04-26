@@ -59,9 +59,8 @@ import app.aaps.core.interfaces.profile.ProfileErrorType
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsTopAppBar
-import app.aaps.core.ui.compose.SliderWithButtons
+import app.aaps.core.ui.compose.PlusMinusEdit
 import app.aaps.core.ui.compose.clearFocusOnTap
-import app.aaps.core.ui.compose.dialogs.ValueInputDialog
 import app.aaps.core.ui.compose.navigation.ElementType
 import app.aaps.core.ui.compose.navigation.color
 import app.aaps.core.ui.compose.navigation.icon
@@ -84,11 +83,13 @@ fun ProfileEditorScreen(
     if (showUnsavedChangesDialog) {
         UnsavedChangesDialog(
             onSave = {
+                focusManager.clearFocus()
                 viewModel.saveProfile()
                 showUnsavedChangesDialog = false
                 onBackClick()
             },
             onDiscard = {
+                focusManager.clearFocus()
                 viewModel.resetProfile()
                 showUnsavedChangesDialog = false
                 onBackClick()
@@ -132,7 +133,10 @@ fun ProfileEditorScreen(
                 actions = {
                     if (state.isEdited) {
                         // Reset button
-                        IconButton(onClick = { viewModel.resetProfile() }) {
+                        IconButton(onClick = {
+                            focusManager.clearFocus()
+                            viewModel.resetProfile()
+                        }) {
                             Icon(
                                 Icons.Default.Refresh,
                                 contentDescription = stringResource(R.string.reset)
@@ -140,7 +144,10 @@ fun ProfileEditorScreen(
                         }
                         // Save button
                         IconButton(
-                            onClick = { viewModel.saveProfile() },
+                            onClick = {
+                                focusManager.clearFocus()
+                                viewModel.saveProfile()
+                            },
                             enabled = state.isValid
                         ) {
                             Icon(
@@ -419,7 +426,6 @@ private fun DiaContent(
     minDia: Double,
     maxDia: Double
 ) {
-    var showDialog by remember { mutableStateOf(false) }
     val valueFormat = remember { DecimalFormat("0.0") }
 
     ElevatedCard(
@@ -437,43 +443,25 @@ private fun DiaContent(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = stringResource(R.string.dia),
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Text(
-                    text = "${valueFormat.format(dia)} h",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable { showDialog = true }
+                PlusMinusEdit(
+                    value = dia,
+                    onValueChange = onDiaChange,
+                    valueRange = minDia..maxDia,
+                    step = 0.1,
+                    valueFormat = valueFormat,
+                    unitLabel = "h",
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
                 )
             }
-
-            SliderWithButtons(
-                value = dia,
-                onValueChange = onDiaChange,
-                valueRange = minDia..maxDia,
-                step = 0.1,
-                modifier = Modifier.fillMaxWidth()
-            )
         }
-    }
-
-    if (showDialog) {
-        ValueInputDialog(
-            currentValue = dia,
-            valueRange = minDia..maxDia,
-            step = 0.1,
-            label = stringResource(R.string.dia),
-            unitLabel = "h",
-            valueFormat = valueFormat,
-            onValueConfirm = onDiaChange,
-            onDismiss = { showDialog = false }
-        )
     }
 }
 

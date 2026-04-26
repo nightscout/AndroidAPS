@@ -44,13 +44,6 @@ internal fun DurationStep(
             onValueChange = { onSetDuration(it.toInt()) },
             valueRange = 0.0..4320.0,
             step = 5.0,
-            controlPoints = listOf(
-                0.0 to 0.0,
-                0.3 to 60.0,
-                0.6 to 480.0,
-                0.85 to 1440.0,
-                1.0 to 4320.0
-            ),
             valueFormatResId = R.string.mins,
             formatAsInt = true
         )
