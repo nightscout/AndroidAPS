@@ -61,7 +61,7 @@
     <string name="fill_prime_amount">Cantidad de cebado</string>
     <string name="fill_pump_units_note">La cantidad de cebado se expresa en unidades de la bomba</string>
     <string name="fill_insulin_change">Cambiar insulina a: %1$s (se aplicará el cambio de perfil)</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Nombre de insulina no especificado</string>
     <string name="insulin_name_exists">El nombre de insulina %1$s ya existe, seleccione un nombre nuevo</string>
