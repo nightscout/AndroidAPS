@@ -176,9 +176,6 @@
     <string name="careportal_question_message">Questão : %1$s</string>
     <string name="careportal_exercise_message">Exercício : %1$s</string>
     <string name="careportal_pump_site_change">Mudança de Cateter</string>
-    <string name="cgm_sensor_insert">Colocação Sensor CGM</string>
-    <string name="careportal_cgmsensorstart">Início do Sensor CGM</string>
-    <string name="careportal_cgm_sensor_stop">Parar Sensor CGM</string>
     <string name="careportal_dad_alert">Alertar D.A.D. (Alerta cão apoio a pesso)</string>
     <string name="careportal_insulin_cartridge_change">Mudança de Cartucho de Insulina</string>
     <string name="careportal_profileswitch">Troca de Perfil</string>
