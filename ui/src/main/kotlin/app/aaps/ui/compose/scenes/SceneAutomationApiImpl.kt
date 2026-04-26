@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.model.Scene
 import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.scenes.SceneAutomationResult
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,6 +14,8 @@ class SceneAutomationApiImpl @Inject constructor(
     private val sceneExecutor: SceneExecutor,
     private val activeSceneManager: ActiveSceneManager
 ) : SceneAutomationApi {
+
+    override val scenesFlow: StateFlow<String> get() = sceneRepository.scenesFlow
 
     override fun isAnySceneActive(): Boolean = activeSceneManager.isActive()
 

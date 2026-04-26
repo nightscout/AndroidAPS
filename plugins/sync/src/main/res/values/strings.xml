@@ -77,6 +77,7 @@
     <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="user_action_not_available">Selected User Action %1$s is no longer available, please refresh your tile</string>
+    <string name="scene_not_available">Scene %1$s is no longer available, please refresh your tile</string>
     <string name="wear_action_tempt_cancel_message">Cancel running TempTarget?</string>
     <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
     <string name="wear_action_tempt_zero_message">Zero-TempTarget - cancel running TempTarget?</string>

@@ -141,6 +141,12 @@ sealed class EventData : Event() {
     data class ActionUserActionConfirmed(val id: Int, val title: String) : EventData()
 
     @Serializable
+    data class ActionScenePreCheck(val id: String, val title: String) : EventData()
+
+    @Serializable
+    data class ActionSceneConfirmed(val id: String, val title: String) : EventData()
+
+    @Serializable
     data class RunningModeRequest(val timeStamp: Long) : EventData()
 
     @Serializable
@@ -412,6 +418,19 @@ sealed class EventData : Event() {
         data class UserActionEntry(
             val timeStamp: Long,
             val id: Int,
+            val title: String
+        ) : EventData()
+    }
+
+    @Serializable
+    data class SceneList(
+        val entries: ArrayList<SceneEntry>
+    ) : EventData() {
+
+        @Serializable
+        data class SceneEntry(
+            val timeStamp: Long,
+            val id: String,
             val title: String
         ) : EventData()
     }

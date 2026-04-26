@@ -2,10 +2,11 @@ package app.aaps.core.interfaces.scenes
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.model.Scene
+import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Surface exposed to the automation plugin so scene actions can list, run, enable
- * and disable scenes without depending on the :ui module.
+ * Surface exposed to the automation plugin and the wear-sync plugin so scene
+ * actions can list, run, enable and disable scenes without depending on :ui.
  */
 interface SceneAutomationApi {
 
@@ -14,6 +15,10 @@ interface SceneAutomationApi {
 
     /** Scene by id, or null if not found. */
     fun getScene(id: String): Scene?
+
+    /** Observable serialized scene list — emits on add / update / delete.
+     *  Consumers (e.g. wear-sync) treat this as an opaque "scenes changed" signal. */
+    val scenesFlow: StateFlow<String>
 
     /**
      * Activate a scene. Fails if missing or disabled.
