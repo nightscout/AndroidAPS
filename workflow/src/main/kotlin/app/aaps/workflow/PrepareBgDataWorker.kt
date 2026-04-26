@@ -60,9 +60,9 @@ class PrepareBgDataWorker(
                     timestamp = bg.timestamp,
                     value = valueInUnits,
                     range = when {
-                        valueInUnits > veryHighMarkInUnits -> BgRange.VERYHIGH
+                        valueInUnits > veryHighMarkInUnits -> BgRange.VERY_HIGH
                         valueInUnits > highMarkInUnits     -> BgRange.HIGH
-                        valueInUnits < veryLowMarkInUnits  -> BgRange.VERYLOW
+                        valueInUnits < veryLowMarkInUnits  -> BgRange.VERY_LOW
                         valueInUnits < lowMarkInUnits      -> BgRange.LOW
                         else                               -> BgRange.IN_RANGE
                     },

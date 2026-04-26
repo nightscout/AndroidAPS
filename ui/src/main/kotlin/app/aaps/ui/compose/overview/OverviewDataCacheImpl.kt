@@ -454,9 +454,9 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         val valueInUnits = profileUtil.fromMgdlToUnits(bgMgdl)
 
         val bgRange = when {
-            valueInUnits > veryHighMark -> BgRange.VERYHIGH
+            valueInUnits > veryHighMark -> BgRange.VERY_HIGH
             valueInUnits > highMark     -> BgRange.HIGH
-            valueInUnits < veryLowMark  -> BgRange.VERYLOW
+            valueInUnits < veryLowMark  -> BgRange.VERY_LOW
             valueInUnits < lowMark      -> BgRange.LOW
             else                        -> BgRange.IN_RANGE
         }

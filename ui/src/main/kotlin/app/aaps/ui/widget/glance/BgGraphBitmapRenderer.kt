@@ -66,11 +66,11 @@ class BgGraphBitmapRenderer {
     }
 
     private fun colorForRange(range: BgRange, colors: BgGraphColors): Int = when (range) {
-        BgRange.VERYLOW  -> colors.veryLow
-        BgRange.LOW      -> colors.low
-        BgRange.IN_RANGE -> colors.inRange
-        BgRange.HIGH     -> colors.high
-        BgRange.VERYHIGH -> colors.veryHigh
+        BgRange.VERY_LOW  -> colors.veryLow
+        BgRange.LOW       -> colors.low
+        BgRange.IN_RANGE  -> colors.inRange
+        BgRange.HIGH      -> colors.high
+        BgRange.VERY_HIGH -> colors.veryHigh
     }
 
     companion object {

@@ -49,11 +49,11 @@ class BucketedPointProvider(
         val dataPoint = dataLookup[entry.x] ?: return inRangePoint // fallback
 
         return when (dataPoint.range) {
-            BgRange.VERYLOW  -> veryLowPoint
-            BgRange.LOW      -> lowPoint
-            BgRange.IN_RANGE -> inRangePoint
-            BgRange.HIGH     -> highPoint
-            BgRange.VERYHIGH -> veryHighPoint
+            BgRange.VERY_LOW  -> veryLowPoint
+            BgRange.LOW       -> lowPoint
+            BgRange.IN_RANGE  -> inRangePoint
+            BgRange.HIGH      -> highPoint
+            BgRange.VERY_HIGH -> veryHighPoint
         }
     }
 
