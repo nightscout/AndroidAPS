@@ -61,7 +61,7 @@
     <string name="fill_prime_amount">Prime-mengde</string>
     <string name="fill_pump_units_note">Prime-mengden er i pumpeenheter</string>
     <string name="fill_insulin_change">Bytt insulin til: %1$s (profilbytte vil bli brukt)</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Mangler insulinnavn</string>
     <string name="insulin_name_exists">Insulinnavnet %1$s finnes allerede. Velg et nytt navn</string>
