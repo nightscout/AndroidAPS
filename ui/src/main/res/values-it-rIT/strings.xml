@@ -61,7 +61,7 @@
     <string name="fill_prime_amount">Quantità inizializzazione</string>
     <string name="fill_pump_units_note">La quantità iniziale è nelle unità del micro</string>
     <string name="fill_insulin_change">Cambia insulina a: %1$s (verrà applicato lo switch del profilo)</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Nome Insulina Mancante</string>
     <string name="insulin_name_exists">Il nome dell\'insulina %1$s esiste già, seleziona un nuovo nome</string>
