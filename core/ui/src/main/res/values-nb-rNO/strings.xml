@@ -281,11 +281,8 @@
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
     <string name="careportal_pump_site_change">Bytte av pumpens kanyle</string>
-    <string name="cgm_sensor_insert">Bytte av sensor</string>
     <string name="careportal_pump_site_management">Pumpeområder</string>
     <string name="careportal_cgm_site_management">Sensor-områder</string>
-    <string name="careportal_cgmsensorstart">Sensorstart</string>
-    <string name="careportal_cgm_sensor_stop">Sensorstopp</string>
     <string name="careportal_dad_alert">Logg varsel fra diabetes-hund</string>
     <string name="careportal_insulin_cartridge_change">Bytte insulinreservoar</string>
     <string name="careportal_profileswitch">Profilbytte</string>
@@ -321,7 +318,6 @@
     <string name="scene_action_loop_mode">Loop-modus: %1$s</string>
     <string name="scene_action_careportal">Logg: %1$s</string>
     <string name="scene_time_remaining">%1$s gjenstår</string>
-    <string name="scene_management">Scener</string>
     <string name="scene_management_desc">Lage, endre og håndtere scener</string>
     <string name="scene_action_count">%1$d handlinger</string>
     <string name="scene_start_from_template">Start fra mal</string>
