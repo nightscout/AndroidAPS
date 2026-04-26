@@ -56,6 +56,20 @@
     <string name="pref_title_aps_sensitivity_raises_target">Sensibilité augmente la Cible</string>
     <string name="pref_summary_aps_sensitivity_raises_target">Quand une sensibilité est détectée, augmentation de la glycémie cible.</string>
     <string name="pref_title_aps_resistance_lowers_target">Résistance diminue la cible</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Quand une résistance est détectée, baisse de la glycémie cible.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Toujours utiliser le delta moyen court</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Toujours utiliser un delta moyen court au lieu de delta simple pour le calcul de la glycémie.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF ajuste la sensibilité</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Ajuster les calculs de sensibilité avec DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens ajuste aussi les Cibles</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Autoriser Autosens à ajuster la Cible Gly en plus de la basale et de la SI.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Cible Temp haute augmente la sensibilité</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Les cibles temporaires élevées augmenteront la sensibilité à l\'insuline.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Cibles Temp basses diminuent la sensibilité</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Les cibles temporaires basses diminueront la sensibilité à l\'insuline.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Activer AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Activer les ajustements de SI basés sur la pondération AutoISF.</string>
+    <string name="pref_title_aps_smb_on_even_target">Activer SMB avec une Cible paire</string>
     <!-- Maintenance preferences -->
     <!-- Autotune preferences -->
     <!-- SMS preferences -->
