@@ -295,10 +295,36 @@
     <string name="scene_action_tt">Cible Temp : %1$s</string>
     <string name="scene_action_profile">Profil : %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Activer SMB</string>
+    <string name="scene_action_smb_off">Désactiver SMB</string>
+    <string name="scene_action_loop_mode">Mode Boucle : %1$s</string>
+    <string name="scene_action_careportal">Note : %1$s</string>
+    <string name="scene_time_remaining">%1$s restants</string>
+    <string name="scene_management">Scénarii</string>
+    <string name="scene_management_desc">Créer, éditer et gérer les scénarii</string>
+    <string name="scene_careportal_no_revert">Les entrées CarePortal ne seront pas annulées</string>
+    <string name="careportal_sickness">Maladie</string>
+    <string name="careportal_stress">Stress</string>
+    <string name="careportal_pre_period">Prémenstruel</string>
+    <string name="careportal_alcohol">Alcool</string>
+    <string name="careportal_cortisone">Cortisone</string>
+    <string name="careportal_feeling_low">Se sentir faible</string>
+    <string name="careportal_feeling_high">Se sentir haut</string>
+    <string name="careportal_falling_asleep">Endormissement</string>
+    <string name="careportal_waking_up">Réveil</string>
     <string name="careportal_temporarytargetvalue">Valeur de Cible Temporaire</string>
     <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="boluswizard">Assistant Bolus</string>
+    <string name="treatment_desc">Enregistrez ensemble insuline et glucides</string>
+    <string name="treatment_insulin_desc">Injecter le bolus manuellement</string>
+    <string name="treatment_carbs_desc">Enregistrer les glucides sans insuline</string>
+    <string name="treatment_calculator_desc">Calculer le bolus</string>
     <string name="insulin_management">Insuline</string>
+    <string name="manage_insulin_desc">Gérer et activer les insulines</string>
+    <string name="concentration_disable_blocked">Impossible de désactiver la gestion de la concentration alors que les insulines non-U100 existent. Supprimez toutes les insulines non-U100 et activez une insuline U100 d\'abord.</string>
+    <string name="simple_mode_blocked_by_concentration">Impossible d\'activer le mode simple en utilisant une insuline non-U100. Passez d\'abord à l\'insuline U100.</string>
+    <string name="manage_profile_desc">Gérer et activer les profils</string>
+    <string name="manage_temp_target_desc">Gérer et définir des Cibles Temporaires</string>
+    <string name="manage_temp_basal_desc">Définir Basale Temporaire</string>
     <string name="manage_extended_bolus_desc">Démarrer l\'injection du bolus étendu</string>
     <string name="glucosetype_finger">Doigt</string>
     <string name="glucosetype_sensor">Capteur</string>
@@ -468,6 +494,7 @@
     <string name="uel_running_mode">MODE EN COURS</string>
     <string name="uel_running_mode_removed">MODE EN COURS SUPPRIMÉ</string>
     <string name="uel_running_mode_updarted">MODE EN COURS MISE À JOUR</string>
+    <string name="uel_scene_activated">SCÉNARIO ACTIVÉ</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Cible basse du profil</string>
     <string name="profile_high_target">Cible haute du profil</string>
@@ -659,7 +686,21 @@
     <string name="maintenance_delete_logs_desc">Supprimer les anciens fichiers journaux</string>
     <string name="maintenance_aaps_directory_desc">Sélectionnez le dossier de stockage local</string>
     <string name="maintenance_cloud_directory_desc">Configurer le stockage cloud (Google Drive)</string>
+    <string name="maintenance_export_desc">Enregistrer les paramètres dans un fichier chiffré</string>
+    <string name="maintenance_import_desc">Restaurer les paramètres depuis la sauvegarde</string>
+    <string name="maintenance_export_csv_desc">Exporter l\'historique des traitements en feuille de calcul</string>
+    <string name="maintenance_cleanup_db_desc">Supprimer les anciennes entrées de la base de données</string>
+    <string name="maintenance_reset_aps_results_desc">Effacer les résultats des algorithmes</string>
+    <string name="maintenance_reset_db_desc">Effacer toutes les bases de données et redémarrer</string>
     <!-- Cloud directory dialog (Compose) -->
+    <string name="select_storage_type">Sélectionnez le type de stockage</string>
+    <string name="clear_cloud_action">Effacer les paramètres</string>
+    <string name="clear_cloud_settings">Effacer les paramètres du Cloud</string>
+    <string name="clear_cloud_settings_message">Cela passera au stockage local et effacera les autorisations. Continuer ?</string>
+    <string name="cloud_connection_failed">Échec de la connexion au stockage cloud</string>
+    <string name="cloud_reauthorize_message">La connexion au stockage cloud a échoué. Voulez-vous vous authentifier à nouveau ?</string>
+    <string name="reauthorize">Se réauthentifier</string>
+    <string name="cloud_auth_success">Authentification du stockage cloud réussie</string>
     <string name="format_hour_minute">%1$dh%2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Heure de l\'événement</string>
@@ -675,6 +716,7 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Préférences du plugin</string>
     <!-- Navigation -->
+    <string name="nav_history_browser_desc">Parcourir l\'historique des graphes</string>
     <!-- Alerts -->
     <!-- Actions Screen -->
     <!-- Site Rotation -->
@@ -716,6 +758,10 @@
     <!--    Playback-->
     <string name="audio_playback_attribution">"AAPS joue l'audio"</string>
     <!-- ProfileEditor -->
+    <string name="ic_dynamic_label_warning">Votre algorithme peut fournir le calcul dynamique de la G/I. Les valeurs ci-dessous sont utilisées comme solution de secours en cas de données manquantes ou comme valeur de référence</string>
+    <string name="isf_dynamic_label_warning">Votre algorithme peut fournir le calcul dynamique de la SI. Les valeurs ci-dessous sont utilisées comme solution de secours en cas de données manquantes ou comme valeur de référence</string>
+    <string name="add_time_block">Ajouter un bloc horaire</string>
+    <string name="remove_entry">Supprimer l\'entrée</string>
     <!--    Search-->
     <!--    Food Management -->
     <string name="food_management">Aliments</string>
@@ -743,6 +789,8 @@
     <string name="graph_new">Nouveau graphique</string>
     <string name="graph_number">Graphique %1$d</string>
     <string name="graph_bg">Graphique Glycémie</string>
+    <string name="graph_height">Hauteur du graphique [dp]</string>
+    <string name="predictions_shortname" comment="Short label for Predictions graph series">PRÉD</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>
     <!-- Graph series short names (used as graph labels, keep very short) -->
     <string name="deviation_shortname" comment="Short label for Deviations graph series">DEV</string>
@@ -754,4 +802,6 @@
     <string name="sensitivity_shortname" comment="Short label for Sensitivity/Autosens graph series">SENS%</string>
     <string name="variable_sensitivity_shortname" comment="Short label for Variable Sensitivity graph series">V_SI</string>
     <string name="steps_shortname" comment="Short label for Steps graph series">PAS</string>
+    <string name="remove_items">Supprimer les entrées</string>
+    <string name="sort_items">Trier les entrées</string>
 </resources>
