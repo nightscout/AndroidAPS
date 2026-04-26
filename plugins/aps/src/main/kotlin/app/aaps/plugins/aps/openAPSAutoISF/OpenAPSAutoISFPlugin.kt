@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
-import app.aaps.core.interfaces.aps.GlucoseStatusAutoIsf
 import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
@@ -546,7 +545,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
     suspend fun autoISF(profile: Profile): Double {
         val sens = profile.getProfileIsfMgdl()
-        val glucose_status = glucoseStatusProvider.glucoseStatusData as GlucoseStatusAutoIsf?
+        val glucose_status = glucoseStatusCalculatorAutoIsf.getGlucoseStatusData(allowOldData = false)
 
         val high_temptarget_raises_sensitivity = exerciseMode || highTemptargetRaisesSensitivity
         var target_bg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TARGET_BG[0], HardLimits.LIMIT_TARGET_BG[1])
