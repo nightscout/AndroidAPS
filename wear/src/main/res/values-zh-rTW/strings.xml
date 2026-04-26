@@ -14,6 +14,7 @@
     <string name="pref_display_settings">顯示</string>
     <string name="pref_graph_settings">圖表</string>
     <string name="pref_interface_settings">介面</string>
+    <string name="pref_tile_settings">面板</string>
     <string name="pref_others_settings">其他</string>
     <string name="pref_complication_settings">複雜功能</string>
     <string name="pref_show_date">顯示日期</string>
@@ -64,6 +65,7 @@
     <string name="pref_moreWatchfaceSettings">更多錶盤設定</string>
     <string name="pref_lookInYourWatchfaceConfiguration">請查看錶盤設定。</string>
     <string name="menu_tempt">臨時目標</string>
+    <string name="menu_tempt_long">臨時目標</string>
     <string name="menu_wizard">計算機</string>
     <string name="menu_wizard_short">計算</string>
     <string name="menu_treatment">治療</string>
@@ -229,6 +231,11 @@
     <string name="status_running_mode">執行模式</string>
     <string name="label_running_mode_title">執行模式</string>
     <string name="label_bg_graph_tile">血糖圖表</string>
+    <string name="tile_tap_action">輕觸動作</string>
+    <string name="tile_graph_time_range">時間範圍</string>
+    <string name="tile_tap_bg_graph">血糖圖表</string>
+    <string name="tile_tap_main_menu">主選單</string>
+    <string name="tile_tap_loop_status">循環狀態</string>
     <string name="action_running_mode_selected">已請求執行模式</string>
     <string name="title_activity_disconnect_pump">中斷幫浦連線</string>
     <string name="title_activity_suspend_loop">暫停循環</string>
