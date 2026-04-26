@@ -330,7 +330,7 @@
     <string name="scene_action_loop_mode">Loop mode: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">%1$s remaining</string>
-    <string name="scene_management">Scene management</string>
+    <string name="scene_management">Scenes</string>
     <string name="scene_management_desc">Create, edit, and manage scenes</string>
     <string name="scene_action_count">%1$d actions</string>
     <string name="scene_start_from_template">Start from template</string>
