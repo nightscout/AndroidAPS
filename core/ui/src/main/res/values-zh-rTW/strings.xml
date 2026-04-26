@@ -281,11 +281,8 @@
     <string name="careportal_question_message">問題：%1$s</string>
     <string name="careportal_exercise_message">運動：%1$s</string>
     <string name="careportal_pump_site_change">幫浦位置更改</string>
-    <string name="cgm_sensor_insert">CGM 傳感器植入</string>
     <string name="careportal_pump_site_management">幫浦植入部位</string>
     <string name="careportal_cgm_site_management">CGM 植入部位</string>
-    <string name="careportal_cgmsensorstart">CGM 傳感器啟動</string>
-    <string name="careportal_cgm_sensor_stop">CGM 傳感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警報</string>
     <string name="careportal_insulin_cartridge_change">胰島素匣更換</string>
     <string name="careportal_profileswitch">設定檔切換</string>
@@ -321,7 +318,6 @@
     <string name="scene_action_loop_mode">循環模式: %1$s</string>
     <string name="scene_action_careportal">記錄: %1$s</string>
     <string name="scene_time_remaining">剩餘 %1$s</string>
-    <string name="scene_management">場景管理</string>
     <string name="scene_management_desc">建立、編輯與管理場景</string>
     <string name="scene_action_count">%1$d 個動作</string>
     <string name="scene_start_from_template">從範本開始</string>
