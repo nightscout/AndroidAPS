@@ -116,6 +116,23 @@
     <string name="nights_stay_icon_label">Natt opphold</string>
     <string name="hotel_icon_label">Hotell</string>
     <string name="seat_flat_icon_label">Hvile</string>
+    <string name="work_icon_label">Arbeid</string>
+    <string name="school_icon_label">Skole</string>
+    <string name="home_icon_label">Hjemme</string>
+    <string name="car_icon_label">Bilkjøring</string>
+    <string name="flight_icon_label">Flyreise</string>
+    <string name="shopping_icon_label">Shopping</string>
+    <string name="relax_icon_label">Meditere</string>
+    <string name="spa_icon_label">Spa</string>
+    <string name="heart_icon_label">Hjerte</string>
+    <string name="psychology_icon_label">Sinn</string>
+    <string name="star_icon_label">Stjerne</string>
+    <string name="speed_icon_label">Hastighet</string>
+    <string name="alarm_icon_label">Alarm</string>
+    <string name="event_icon_label">Hendelse</string>
+    <string name="flag_icon_label">Flagg</string>
+    <string name="bookmark_icon_label">Bokmerke</string>
+    <string name="label_icon_label">Merke</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Mangler insulinnavn</string>
     <string name="insulin_name_exists">Insulinnavnet %1$s finnes allerede. Velg et nytt navn</string>
