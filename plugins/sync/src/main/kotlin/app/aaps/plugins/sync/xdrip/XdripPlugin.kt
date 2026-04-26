@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.sync.DataSyncSelector
@@ -229,7 +230,7 @@ class XdripPlugin @Inject constructor(
                 .append("|")
                 .append(decimalFormatter.to2Decimal(basalIob.basaliob))
                 .append(")")
-        if (preferences.get(BooleanKey.XdripSendBgi) && glucoseStatusProvider.glucoseStatusData != null && loop.lastRun != null) {
+        if (preferences.get(BooleanKey.XdripSendBgi) && glucoseStatusProvider.glucoseStatusData != null && loop.lastRun != null && (profile as? ProfileSealed)?.aps != null) {
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("XdripPlugin"))
             status.append(" ")
                 .append(if (bgi >= 0) "+" else "")

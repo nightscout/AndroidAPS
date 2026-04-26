@@ -1415,6 +1415,7 @@ class DataHandlerMobile @Inject constructor(
         val temps = arrayListOf<EventData.TreatmentData.TempBasal>()
         val boluses = arrayListOf<EventData.TreatmentData.Treatment>()
         val predictions = arrayListOf<EventData.SingleBg>()
+        if (!config.appInitialized) return
         val profile = runBlocking { profileFunction.getProfile() } ?: return
         var beginBasalSegmentTime = startTimeWindow
         var runningTime = startTimeWindow
