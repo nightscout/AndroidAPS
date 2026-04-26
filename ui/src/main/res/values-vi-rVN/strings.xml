@@ -61,7 +61,7 @@
     <string name="fill_prime_amount">Lượng insulin mồi</string>
     <string name="fill_pump_units_note">Lượng insulin mồi tính theo đơn vị của bơm</string>
     <string name="fill_insulin_change">Chuyển insulin sang: %1$s (sẽ áp dụng chuyển hồ sơ)</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Thiếu tên insulin</string>
     <string name="insulin_name_exists">Tên insulin %1$s đã tồn tại, vui lòng chọn tên khác</string>
