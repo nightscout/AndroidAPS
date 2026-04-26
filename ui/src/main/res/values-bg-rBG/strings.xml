@@ -26,7 +26,7 @@
     <string name="fill_warning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
     <string name="record_pump_site_change">Запис смяна на сет</string>
     <string name="record_insulin_cartridge_change">Запис смяна на резервоар</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
     <string name="timeshift_label">Време на отместване</string>
