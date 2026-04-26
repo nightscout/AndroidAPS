@@ -21,7 +21,8 @@ fun IobCobChipsRow(
         modifier = modifier.fillMaxWidth()
     ) { constraints ->
         val spacingPx = spacingDp.roundToPx()
-        val availableWidth = constraints.maxWidth - spacingPx
+        val isWidthBounded = constraints.hasBoundedWidth
+        val availableWidth = if (isWidthBounded) (constraints.maxWidth - spacingPx).coerceAtLeast(0) else 0
 
         // First pass: measure intrinsic widths with icons
         val withIcons = subcompose("withIcons") {
@@ -32,7 +33,7 @@ fun IobCobChipsRow(
         val totalWithIcons = intrinsicsWithIcons.sum()
 
         // If chips with icons don't fit, hide icons to free up space
-        val showIcons = totalWithIcons <= availableWidth
+        val showIcons = if (isWidthBounded) totalWithIcons <= availableWidth else true
 
         val measurables = if (showIcons) {
             withIcons
@@ -48,15 +49,20 @@ fun IobCobChipsRow(
 
         // Scale each chip proportionally so they fill 100% of available space
         val placeables = measurables.mapIndexed { i, measurable ->
-            val w = if (totalIntrinsic > 0)
-                (intrinsics[i].toLong() * availableWidth / totalIntrinsic).toInt()
-            else
-                availableWidth / measurables.size
+            val w = if (isWidthBounded) {
+                if (totalIntrinsic > 0)
+                    (intrinsics[i].toLong() * availableWidth / totalIntrinsic).toInt()
+                else
+                    availableWidth / measurables.size
+            } else {
+                intrinsics[i]
+            }
             measurable.measure(constraints.copy(minWidth = w, maxWidth = w))
         }
 
-        val height = placeables.maxOf { it.height }
-        layout(constraints.maxWidth, height) {
+        val height = if (placeables.isEmpty()) 0 else placeables.maxOf { it.height }
+        val layoutWidth = if (isWidthBounded) constraints.maxWidth else placeables.sumOf { it.width } + (if (placeables.size > 1) (placeables.size - 1) * spacingPx else 0)
+        layout(layoutWidth, height) {
             var x = 0
             placeables.forEachIndexed { i, placeable ->
                 placeable.place(x, 0)
