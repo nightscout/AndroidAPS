@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carbs_constraint_applied">Restriction de bolus appliquée</string>
+    <string name="no_temp_basal_running">Pas basal temp en cours</string>
     <string name="temp_target_short">CT</string>
     <string name="start_activity_tt">Début Activités</string>
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
@@ -61,6 +62,35 @@
     <string name="fill_pump_units_note">La quantité d\'amorçage est dans les unités de la pompe</string>
     <string name="fill_insulin_change">Changer l\'insuline en : %1$s (le changement de profil sera appliqué)</string>
     <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Activité</string>
+    <string name="scene_cat_health">Santé</string>
+    <string name="scene_cat_food">Aliments</string>
+    <string name="scene_cat_sleep">Sommeil</string>
+    <string name="scene_cat_dailylife">Vie Quotidienne</string>
+    <string name="scene_cat_wellness">Bien-être</string>
+    <string name="scene_cat_general">Général</string>
+    <string name="aaps_tt_high_icon_label">Cible Temp</string>
+    <string name="aaps_tt_activity_icon_label">CT Activité</string>
+    <string name="aaps_tt_eating_icon_label">CT Repas Imminent</string>
+    <string name="aaps_tt_hypo_icon_label">CT Hypo</string>
+    <string name="aaps_tt_manual_icon_label">CT Manuelle</string>
+    <string name="aaps_profile_icon_label">Profil</string>
+    <string name="aaps_loop_icon_label">Boucle</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolus</string>
+    <string name="aaps_carbs_icon_label">Glucides</string>
+    <string name="aaps_tbr_icon_label">Basal Temp</string>
+    <string name="aaps_activity_icon_label">Exercice</string>
+    <string name="aaps_automation_icon_label">Automatisation</string>
+    <string name="aaps_calibration_icon_label">Étalonnage</string>
+    <string name="exercise_icon_label">Course à pied</string>
+    <string name="swim_icon_label">Natation</string>
+    <string name="hiking_icon_label">Randonnée</string>
+    <string name="bike_icon_label">Vélo</string>
+    <string name="skateboard_icon_label">Skateboard</string>
+    <string name="tennis_icon_label">Tennis</string>
+    <string name="soccer_icon_label">Football</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Nom de l\'insuline manquant</string>
     <string name="insulin_name_exists">Le nom d\'insuline %1$s existe déjà, sélectionnez un nouveau nom</string>
