@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.AppRepository
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
@@ -140,7 +141,8 @@ class PersistenceLayerImpl @Inject constructor(
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
     private val config: Config,
-    private val apsResultProvider: Provider<APSResult>
+    private val apsResultProvider: Provider<APSResult>,
+    private val fabricPrivacy: FabricPrivacy
 ) : PersistenceLayer {
 
     private val compositeDisposable = CompositeDisposable()
@@ -2397,8 +2399,20 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getApsResults(start, end).map { it.fromDb(apsResultProvider) }
     }
 
+    private val nonFiniteFieldRegex = Regex("(\\w+)=(NaN|Infinity|-Infinity)\\b")
+
+    private fun reportNonFiniteRtFields(apsResult: APSResult) {
+        val tokens = nonFiniteFieldRegex.findAll(apsResult.rawData().toString()).map { it.value }.toList()
+        if (tokens.isEmpty()) return
+        val msg = "APSResult RT non-finite algorithm=${apsResult.algorithm} ts=${apsResult.date} fields=$tokens"
+        aapsLogger.warn(LTag.APS, msg)
+        fabricPrivacy.logMessage(msg)
+        fabricPrivacy.logException(IllegalStateException(msg))
+    }
+
     override suspend fun insertOrUpdateApsResult(apsResult: APSResult): PersistenceLayer.TransactionResult<APSResult> = withContext(Dispatchers.IO) {
         try {
+            reportNonFiniteRtFields(apsResult)
             val result = repository.runTransactionForResultSuspend(InsertOrUpdateApsResultTransaction(apsResult.toDb()))
             val transactionResult = PersistenceLayer.TransactionResult<APSResult>()
             result.inserted.forEach {
