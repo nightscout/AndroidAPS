@@ -335,7 +335,10 @@ private fun WizardDialogContent(
         },
         bottomBar = {
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 enabled = uiState.okVisible,
                 modifier = Modifier
                     .fillMaxWidth()

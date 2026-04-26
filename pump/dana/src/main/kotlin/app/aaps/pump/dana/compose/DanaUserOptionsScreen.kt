@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,10 +76,14 @@ private fun DanaUserOptionsContent(
     onLowReservoirChange: (Double) -> Unit = {},
     onSave: () -> Unit = {}
 ) {
+    val focusManager = LocalFocusManager.current
     Scaffold(
         bottomBar = {
             Button(
-                onClick = onSave,
+                onClick = {
+                    focusManager.clearFocus()
+                    onSave()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .imePadding()

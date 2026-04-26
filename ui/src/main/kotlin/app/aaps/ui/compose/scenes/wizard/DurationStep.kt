@@ -3,6 +3,7 @@ package app.aaps.ui.compose.scenes.wizard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.ui.R
@@ -17,9 +18,16 @@ internal fun DurationStep(
     onBack: () -> Unit,
     onNext: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     WizardStepLayout(
-        secondaryButton = WizardButton(text = stringResource(R.string.back), onClick = onBack),
-        primaryButton = WizardButton(text = stringResource(R.string.next), onClick = onNext)
+        secondaryButton = WizardButton(
+            text = stringResource(R.string.back),
+            onClick = { focusManager.clearFocus(); onBack() }
+        ),
+        primaryButton = WizardButton(
+            text = stringResource(R.string.next),
+            onClick = { focusManager.clearFocus(); onNext() }
+        )
     ) {
         Text(
             text = stringResource(R.string.duration),

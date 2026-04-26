@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,6 +35,9 @@ fun SceneWizardScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val chainTargets by viewModel.availableChainTargets.collectAsStateWithLifecycle()
+    val focusManager = LocalFocusManager.current
+    val onBack: () -> Unit = { focusManager.clearFocus(); viewModel.back() }
+    val onNext: () -> Unit = { focusManager.clearFocus(); viewModel.next() }
 
     Scaffold(
         topBar = {
@@ -84,55 +88,59 @@ fun SceneWizardScreen(
             ) { step ->
                 when (step) {
                     SceneWizardViewModel.STEP_TEMPLATE -> TemplatePickerStep(onSelect = viewModel::selectTemplate)
-                    SceneWizardViewModel.STEP_INFO -> InfoStep(state, viewModel::back, viewModel::next)
+                    SceneWizardViewModel.STEP_INFO -> InfoStep(state, onBack, onNext)
                     SceneWizardViewModel.STEP_PROFILE -> ProfileStep(
                         state = state, onToggle = viewModel::setProfileEnabled,
                         onUpdate = viewModel::updateProfileAction, profileNames = viewModel.profileNames,
-                        onBack = viewModel::back, onNext = viewModel::next
+                        onBack = onBack, onNext = onNext
                     )
 
                     SceneWizardViewModel.STEP_TEMP_TARGET -> TempTargetStep(
                         state = state, onToggle = viewModel::setTtEnabled,
                         onUpdate = viewModel::updateTtAction, ttPresets = viewModel.ttPresets,
                         formatBgWithUnits = viewModel::formatBgWithUnits,
-                        onBack = viewModel::back, onNext = viewModel::next
+                        onBack = onBack, onNext = onNext
                     )
 
                     SceneWizardViewModel.STEP_SMB -> SmbStep(
                         state = state, onToggle = viewModel::setSmbEnabled,
                         onUpdate = viewModel::updateSmbAction,
-                        onBack = viewModel::back, onNext = viewModel::next
+                        onBack = onBack, onNext = onNext
                     )
 
                     SceneWizardViewModel.STEP_LOOP_MODE -> LoopModeStep(
                         state = state, onToggle = viewModel::setLoopModeEnabled,
                         onUpdate = viewModel::updateLoopModeAction,
-                        onBack = viewModel::back, onNext = viewModel::next
+                        onBack = onBack, onNext = onNext
                     )
 
                     SceneWizardViewModel.STEP_CAREPORTAL -> CarePortalStep(
                         state = state, onToggle = viewModel::setCarePortalEnabled,
                         onUpdate = viewModel::updateCarePortalAction,
                         translateEventType = viewModel::translateEventType,
-                        onBack = viewModel::back, onNext = viewModel::next
+                        onBack = onBack, onNext = onNext
                     )
 
                     SceneWizardViewModel.STEP_DURATION -> DurationStep(
                         state = state, onSetDuration = viewModel::setDuration,
-                        onBack = viewModel::back, onNext = viewModel::next
+                        onBack = onBack, onNext = onNext
                     )
 
                     SceneWizardViewModel.STEP_CHAIN -> ChainStep(
                         state = state,
                         availableTargets = chainTargets,
                         onSetChainTarget = viewModel::setChainTarget,
-                        onBack = viewModel::back, onNext = viewModel::next
+                        onBack = onBack, onNext = onNext
                     )
 
                     SceneWizardViewModel.STEP_NAME_ICON -> NameIconStep(
                         state = state, onSetName = viewModel::setName,
                         onSetIcon = viewModel::setIcon,
-                        onBack = viewModel::back, onFinish = { if (viewModel.save()) onFinished() }
+                        onBack = onBack,
+                        onFinish = {
+                            focusManager.clearFocus()
+                            if (viewModel.save()) onFinished()
+                        }
                     )
                 }
             }

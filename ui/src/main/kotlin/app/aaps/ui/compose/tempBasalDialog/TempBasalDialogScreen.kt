@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -124,6 +125,7 @@ private fun TempBasalDialogContent(
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -153,7 +155,10 @@ private fun TempBasalDialogContent(
         bottomBar = {
             val hasAction = if (uiState.isPercentPump) uiState.basalPercent != 100.0 else uiState.basalAbsolute > 0.0
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 enabled = hasAction || uiState.durationMinutes > 0.0,
                 modifier = Modifier
                     .fillMaxWidth()

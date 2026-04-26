@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.CircularProgressIndicator
@@ -200,7 +200,7 @@ private fun SiteRotationManagementContent(
                     if (isEditing) {
                         IconButton(onClick = onConfirmEdit) {
                             Icon(
-                                imageVector = Icons.Default.Check,
+                                imageVector = Icons.Default.Save,
                                 contentDescription = stringResource(CoreUiR.string.save),
                                 tint = MaterialTheme.colorScheme.primary
                             )

@@ -20,12 +20,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -255,9 +255,12 @@ fun TempTargetManagementScreen(
                         } else {
                             // Save button (shown when editor has unsaved changes in EDIT mode)
                             if (uiState.selectedPreset != null && viewModel.hasUnsavedChanges()) {
-                                IconButton(onClick = { viewModel.saveCurrentPreset() }) {
+                                IconButton(onClick = {
+                                    focusManager.clearFocus()
+                                    viewModel.saveCurrentPreset()
+                                }) {
                                     Icon(
-                                        imageVector = Icons.Filled.Check,
+                                        imageVector = Icons.Default.Save,
                                         contentDescription = stringResource(app.aaps.core.ui.R.string.save),
                                         tint = MaterialTheme.colorScheme.primary
                                     )

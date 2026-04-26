@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -132,6 +133,7 @@ private fun ExtendedBolusDialogContent(
     onNavigateBack: () -> Unit,
     onConfirmClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             AapsTopAppBar(
@@ -160,7 +162,10 @@ private fun ExtendedBolusDialogContent(
         },
         bottomBar = {
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 enabled = uiState.insulin > 0.0,
                 modifier = Modifier
                     .fillMaxWidth()

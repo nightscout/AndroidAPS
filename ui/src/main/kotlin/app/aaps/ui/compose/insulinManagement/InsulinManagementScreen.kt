@@ -198,7 +198,10 @@ fun InsulinManagementScreen(
                 actions = {
                     if (!isPlayMode) {
                         IconButton(
-                            onClick = { viewModel.saveCurrentInsulin() },
+                            onClick = {
+                                focusManager.clearFocus()
+                                viewModel.saveCurrentInsulin()
+                            },
                             enabled = hasUnsavedChanges
                         ) {
                             Icon(

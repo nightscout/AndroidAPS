@@ -204,7 +204,10 @@ private fun CareDialogContent(
         },
         bottomBar = {
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .imePadding()

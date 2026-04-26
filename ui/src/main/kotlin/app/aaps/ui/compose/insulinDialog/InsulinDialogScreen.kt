@@ -267,7 +267,10 @@ private fun InsulinDialogContent(
         },
         bottomBar = {
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 enabled = uiState.confirmEnabled,
                 modifier = Modifier
                     .fillMaxWidth()

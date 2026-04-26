@@ -341,7 +341,10 @@ private fun ProfileHelperContent(
         },
         bottomBar = {
             Button(
-                onClick = onCloneClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onCloneClick()
+                },
                 enabled = showCloneAction,
                 modifier = Modifier
                     .fillMaxWidth()

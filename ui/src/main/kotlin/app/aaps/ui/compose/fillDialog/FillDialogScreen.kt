@@ -295,7 +295,10 @@ private fun FillDialogContent(
         },
         bottomBar = {
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 enabled = uiState.hasAction,
                 modifier = Modifier
                     .fillMaxWidth()

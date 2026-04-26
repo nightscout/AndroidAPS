@@ -138,7 +138,10 @@ private fun CalibrationDialogContent(
         },
         bottomBar = {
             Button(
-                onClick = onConfirmClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onConfirmClick()
+                },
                 enabled = uiState.hasValidBg,
                 modifier = Modifier
                     .fillMaxWidth()

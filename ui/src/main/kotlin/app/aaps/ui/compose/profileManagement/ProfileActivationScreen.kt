@@ -250,7 +250,10 @@ fun ProfileActivationScreen(
         },
         bottomBar = {
             Button(
-                onClick = { showConfirmDialog = true },
+                onClick = {
+                    focusManager.clearFocus()
+                    showConfirmDialog = true
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .imePadding()

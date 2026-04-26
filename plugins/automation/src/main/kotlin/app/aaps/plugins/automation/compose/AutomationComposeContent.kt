@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -205,6 +206,7 @@ class AutomationComposeContent(
         holder: AutomationStateHolder,
         setToolbarConfig: (ToolbarConfig) -> Unit
     ) {
+        val focusManager = LocalFocusManager.current
         val backDesc = stringResource(app.aaps.core.ui.R.string.back)
         val saveDesc = stringResource(app.aaps.core.ui.R.string.save)
         val title = stringResource(R.string.condition).trimEnd(':')
@@ -228,7 +230,13 @@ class AutomationComposeContent(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { holder.closeTriggerEditor() }, enabled = dirty) {
+                        IconButton(
+                            onClick = {
+                                focusManager.clearFocus()
+                                holder.closeTriggerEditor()
+                            },
+                            enabled = dirty
+                        ) {
                             Icon(Icons.Default.Save, contentDescription = saveDesc)
                         }
                     }
@@ -327,6 +335,7 @@ class AutomationComposeContent(
         setToolbarConfig: (ToolbarConfig) -> Unit,
         activity: FragmentActivity?
     ) {
+        val focusManager = LocalFocusManager.current
         val editState by holder.editState.collectAsStateWithLifecycle()
         val route by holder.route.collectAsStateWithLifecycle()
         val isNew = (route as? AutomationRoute.Edit)?.position == -1
@@ -360,7 +369,10 @@ class AutomationComposeContent(
                     actions = {
                         if (!editState.readOnly) {
                             IconButton(
-                                onClick = { holder.save() },
+                                onClick = {
+                                    focusManager.clearFocus()
+                                    holder.save()
+                                },
                                 enabled = dirty && canSave
                             ) {
                                 Icon(Icons.Default.Save, contentDescription = saveDesc)
@@ -384,6 +396,7 @@ class AutomationComposeContent(
                         }) { Text(stringResource(R.string.automation_discard_confirm)) }
                         if (canSave) {
                             TextButton(onClick = {
+                                focusManager.clearFocus()
                                 showDiscardConfirm = false
                                 holder.save()
                             }) { Text(stringResource(app.aaps.core.ui.R.string.save)) }
