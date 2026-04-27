@@ -87,13 +87,28 @@ class LocationService : DaggerService() {
             return START_NOT_STICKY
         }
         aapsLogger.debug("Starting LocationService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
-        startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        // Even with permissions granted, the system can still reject the FGS-location promotion
+        // if the app left foreground between startForegroundService() and this onStartCommand
+        // delivery and ACCESS_BACKGROUND_LOCATION was revoked in the meantime. Catch the
+        // SecurityException so a permission/state race doesn't crash the process.
+        try {
+            startForeground(notificationHolder.notificationID, notificationHolder.notification)
+        } catch (e: SecurityException) {
+            aapsLogger.error(LTag.LOCATION, "FGS-location start denied by system, stopping", e)
+            stopSelf()
+            return START_NOT_STICKY
+        }
         return START_STICKY
     }
 
-    private fun hasLocationPermission(): Boolean =
-        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    private fun hasLocationPermission(): Boolean {
+        val hasFineOrCoarse =
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasBackground =
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return hasFineOrCoarse && hasBackground
+    }
 
     override fun onCreate() {
         super.onCreate()

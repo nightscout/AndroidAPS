@@ -63,8 +63,18 @@ class LocationServiceHelper @Inject constructor(
     fun stopService(context: Context) =
         context.stopService(Intent(context, LocationService::class.java))
 
-    private fun hasLocationPermission(context: Context): Boolean =
-        ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    private fun hasLocationPermission(context: Context): Boolean {
+        // FGS type=location on Android 14+ (targetSdk 34+) requires the app to either be in
+        // the foreground OR have ACCESS_BACKGROUND_LOCATION at the moment startForeground()
+        // runs. Because startForegroundService → onStartCommand is async, we can't guarantee
+        // the foreground state holds. Require BACKGROUND_LOCATION up-front so we never
+        // attempt an FGS-location start that would crash with SecurityException.
+        val hasFineOrCoarse =
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasBackground =
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return hasFineOrCoarse && hasBackground
+    }
 
 }
