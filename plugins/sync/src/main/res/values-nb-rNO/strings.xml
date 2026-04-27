@@ -71,6 +71,7 @@
     <string name="quick_wizard_not_available">Den valgte hurtigknappen er ikke lenger tilgjengelig, oppdater klokkeflis</string>
     <string name="quick_wizard_message">Hurtigknapp: %1$s\nBolus: %2$.2fE\nKarbo: %3$dg</string>
     <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
+    <string name="scene_not_available">Scene %1$s finnes ikke lenger</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende midlertidig mål?</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
     <string name="wear_action_tempt_zero_message">Null minutter i varighet - avbryt gjeldende midlertidig mål?</string>
