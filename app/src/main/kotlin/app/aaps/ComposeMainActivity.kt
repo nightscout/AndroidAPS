@@ -237,8 +237,9 @@ class ComposeMainActivity : AppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Must run before super.onCreate — sets WindowCompat.setDecorFitsSystemWindows(window, false)
-        // and the system bar appearance. AndroidX activity 1.8+ supports calling this pre-super.
+        // Bar icon color is kept in sync with the AAPS-effective theme reactively
+        // from inside AapsTheme via a SideEffect on WindowInsetsControllerCompat,
+        // so a plain enableEdgeToEdge() here is enough.
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
