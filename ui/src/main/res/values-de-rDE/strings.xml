@@ -25,7 +25,7 @@
     <string name="fill_warning">Bitte vergewissere Dich, dass die Füllmenge den Eigenschaften des Katheters entspricht!</string>
     <string name="record_pump_site_change">Katheter-Wechsel erfassen</string>
     <string name="record_insulin_cartridge_change">Reservoir-Wechsel erfassen</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Erneut verwenden %1$d%% %2$dh</string>
     <string name="timeshift_label">Zeitverschiebung</string>

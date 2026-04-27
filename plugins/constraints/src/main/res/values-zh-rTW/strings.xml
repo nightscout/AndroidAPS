@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">24小時內或更短時間內將進行夏令時間變更</string>
     <string name="dst_loop_disabled_warning">夏令時間變更在3小時內 - 已停用閉環</string>

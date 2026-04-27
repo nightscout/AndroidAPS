@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">必须是4位字符，在ABCDEF0123456789中选用</string>
     <!--    General-->
     <string name="treatments">治疗</string>
+    <string name="treatments_history">治疗历史</string>
     <string name="treatments_desc">查看和管理治疗记录</string>
     <string name="nav_configuration">配置</string>
     <string name="nav_configuration_desc">设置您的配置（CGM、泵等）并启用功能</string>
@@ -131,7 +132,6 @@
     <string name="disabled_loop">禁用闭环</string>
     <string name="resumeloop">恢复闭环</string>
     <string name="suspendloop">暂停闭环</string>
-    <string name="duration_min_label">持续时间 [min]</string>
     <string name="notification">通知</string>
     <string name="noprofile">尚未从 NS 加载配置文件</string>
     <string name="exists">存在</string>
@@ -281,11 +281,11 @@
     <string name="careportal_question_message">问题 : %1$s</string>
     <string name="careportal_exercise_message">运动 : %1$s</string>
     <string name="careportal_pump_site_change">泵位置变更</string>
-    <string name="cgm_sensor_insert">植入CGM传感器</string>
+    <string name="cgm_sensor_insert">传感器植入</string>
     <string name="careportal_pump_site_management">泵位置</string>
     <string name="careportal_cgm_site_management">CGM 位置</string>
-    <string name="careportal_cgmsensorstart">CGM 传感器启动</string>
-    <string name="careportal_cgm_sensor_stop">CGM 传感器停止</string>
+    <string name="careportal_cgmsensorstart">传感器启动</string>
+    <string name="careportal_cgm_sensor_stop">传感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警告</string>
     <string name="careportal_insulin_cartridge_change">更换储药器</string>
     <string name="careportal_profileswitch">配置文件切换</string>
@@ -321,7 +321,7 @@
     <string name="scene_action_loop_mode">闭环模式：%1$s</string>
     <string name="scene_action_careportal">日志：%1$s</string>
     <string name="scene_time_remaining">剩余%1$s</string>
-    <string name="scene_management">情景管理</string>
+    <string name="scene_management">情景</string>
     <string name="scene_management_desc">创建、编辑和管理情景</string>
     <string name="scene_action_count">%1$d 个动作</string>
     <string name="scene_start_from_template">从模板开始</string>
@@ -825,7 +825,7 @@
     <string name="nav_exit">退出</string>
     <string name="open_navigation">打开导航栏</string>
     <string name="nav_history_browser">历史浏览</string>
-    <string name="nav_history_browser_desc">浏览历史数据和图表</string>
+    <string name="nav_history_browser_desc">浏览历史图表</string>
     <string name="appearance">外观</string>
     <string name="manage">管理</string>
     <string name="localprofile">配置文件</string>

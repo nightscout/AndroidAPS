@@ -84,7 +84,6 @@
     <string name="disabled_loop">Döngü Devredışı</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
     <string name="suspendloop">Döngüyü duraklat</string>
-    <string name="duration_min_label">Süre [min]</string>
     <string name="notification">Bildirim</string>
     <string name="noprofile">Henüz NS\'tan profil yüklenmedi</string>
     <string name="exists">var</string>
@@ -196,9 +195,6 @@
     <string name="careportal_question_message">Soru : %1$s</string>
     <string name="careportal_exercise_message">Alıştırma : %1$s</string>
     <string name="careportal_pump_site_change">Pompa Kanül Değişimi</string>
-    <string name="cgm_sensor_insert">CGM Sensör Yerleştir</string>
-    <string name="careportal_cgmsensorstart">CGM sensörü Başlat</string>
-    <string name="careportal_cgm_sensor_stop">CGM Sensör Durdurma</string>
     <string name="careportal_dad_alert">D.A.D Alarmı</string>
     <string name="careportal_insulin_cartridge_change">İnsülin Rezervuar Değişimi</string>
     <string name="careportal_profileswitch">Profil değiştir</string>

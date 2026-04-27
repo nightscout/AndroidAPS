@@ -23,7 +23,7 @@
     <string name="fill_warning">Assegureu-vos que la quantitat coincideix amb la indicada pel vostre set d\'infusió!</string>
     <string name="record_pump_site_change">Anotar canvi de cànula</string>
     <string name="record_insulin_cartridge_change">Anotar canvi reservori d\'insulina</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Reutilitzar %1$d%% %2$dh</string>
     <string name="timeshift_label">Decalatge horari</string>

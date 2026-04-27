@@ -7,6 +7,7 @@
     <string name="label_temp_target_tile">临时目标</string>
     <string name="label_quick_wizard_tile">快速向导</string>
     <string name="label_user_action_tile">用户操作</string>
+    <string name="label_scene_tile">情景</string>
     <string name="msg_warning_sync">自 %1$s以来未收到任何数据! 检查手机上的 AAPS 是否发送数据到手表。</string>
     <string name="msg_warning_old">AAPS 数据为 %1$s之前! 请检查传感器， xDrip+， NS， AAPS 配置或其他!</string>
     <string name="pref_vibrate_on_bolus">大剂量时震动</string>
@@ -14,6 +15,7 @@
     <string name="pref_display_settings">显示</string>
     <string name="pref_graph_settings">图表</string>
     <string name="pref_interface_settings">界面</string>
+    <string name="pref_tile_settings">磁贴</string>
     <string name="pref_others_settings">其他</string>
     <string name="pref_complication_settings">复杂功能</string>
     <string name="pref_show_date">显示日期</string>
@@ -83,6 +85,7 @@
     <string name="action_tempt_confirmation">临时目标请求</string>
     <string name="action_quick_wizard_confirmation">快速向导请求</string>
     <string name="action_user_action_confirmation">请求用户操作</string>
+    <string name="action_scene_confirmation">激活情景</string>
     <string name="action_treatment_confirmation">治疗请求</string>
     <string name="action_bolus_confirmation">大剂量请求</string>
     <string name="action_wizard_confirmation">计算请求</string>

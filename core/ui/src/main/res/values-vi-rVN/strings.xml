@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Phải gồm 4 ký tự trong tập ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Điều trị</string>
+    <string name="treatments_history">Lịch sử điều trị</string>
     <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
     <string name="nav_configuration">Cấu hình</string>
     <string name="nav_configuration_desc">Thiết lập cấu hình (CGM, bơm insulin, ...) và bật các tính năng</string>
@@ -131,7 +132,6 @@
     <string name="disabled_loop">Vô hiệu hóa vòng lặp</string>
     <string name="resumeloop">Khởi động lại vòng lặp</string>
     <string name="suspendloop">Tạm dừng vòng lặp</string>
-    <string name="duration_min_label">Thời lượng [phút]</string>
     <string name="notification">Thông báo</string>
     <string name="noprofile">Chưa tải Hồ sơ nào từ NS</string>
     <string name="exists">tồn tại</string>
@@ -281,11 +281,8 @@
     <string name="careportal_question_message">Câu hỏi: %1$s</string>
     <string name="careportal_exercise_message">Bài tập luyện : %1$s</string>
     <string name="careportal_pump_site_change">Thay vị trí kim truyền</string>
-    <string name="cgm_sensor_insert">Gắn cảm biến CGM</string>
     <string name="careportal_pump_site_management">Vị trí tiêm</string>
     <string name="careportal_cgm_site_management">Vị trí CGM</string>
-    <string name="careportal_cgmsensorstart">Kích hoạt cảm biến CGM</string>
-    <string name="careportal_cgm_sensor_stop">Dừng cảm biến CGM</string>
     <string name="careportal_dad_alert">Cảnh báo D.A.D</string>
     <string name="careportal_insulin_cartridge_change">Thay ống chứa insulin</string>
     <string name="careportal_profileswitch">Chuyển Hồ sơ</string>
@@ -302,18 +299,18 @@
     <string name="temporary_target">Mục tiêu Tạm thời</string>
     <string name="temporary_targets">Mục tiêu tạm thời</string>
     <string name="running_mode">Chế độ đang chạy</string>
-    <string name="scene">Cảnh</string>
-    <string name="scenes">Các cảnh</string>
+    <string name="scene">Bối cảnh</string>
+    <string name="scenes">Các Bối cảnh</string>
     <string name="scene_desc">Thiết lập sẵn theo tình huống — kích hoạt nhiều hành động cùng lúc</string>
     <string name="scene_activate">Kích hoạt</string>
-    <string name="scene_deactivate">Kết thúc cảnh</string>
+    <string name="scene_deactivate">Kết thúc Bối cảnh</string>
     <string name="scene_active">Kích hoạt</string>
-    <string name="scene_ended">Cảnh đã kết thúc</string>
-    <string name="scene_confirm_activate">Kích hoạt cảnh “%1$s”?</string>
-    <string name="scene_confirm_deactivate">Kết thúc cảnh “%1$s” và hoàn tác các thay đổi?</string>
+    <string name="scene_ended">Bối cảnh đã kết thúc</string>
+    <string name="scene_confirm_activate">Kích hoạt Bối cảnh “%1$s”?</string>
+    <string name="scene_confirm_deactivate">Kết thúc Bối cảnh “%1$s” và hoàn tác các thay đổi?</string>
     <string name="scene_conflict_active_tt">Mục tiêu tạm thời đang hoạt động sẽ được thay thế</string>
     <string name="scene_conflict_active_profile">Chuyển đổi hồ sơ đang hoạt động sẽ được thay thế</string>
-    <string name="scene_conflict_active_scene">Cảnh đang hoạt động “%1$s” sẽ được kết thúc trước</string>
+    <string name="scene_conflict_active_scene">Bối cảnh đang hoạt động “%1$s” sẽ được kết thúc trước</string>
     <string name="scene_action_tt">Mục tiêu tạm thời: %1$s</string>
     <string name="scene_action_profile">Hồ sơ: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Kích hoạt SMB</string>
@@ -321,8 +318,7 @@
     <string name="scene_action_loop_mode">Chế độ vòng lặp: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">%1$s còn lại</string>
-    <string name="scene_management">Quản lý cảnh</string>
-    <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các cảnh</string>
+    <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các Bối cảnh</string>
     <string name="scene_action_count">%1$d hành động</string>
     <string name="scene_start_from_template">Bắt đầu từ mẫu</string>
     <string name="scene_editor_reason">Lý do</string>
@@ -341,10 +337,10 @@
     <string name="scene_editor_disabled">Vô hiệu hoá</string>
     <string name="scene_summary">%1$d hành động, %2$s</string>
     <string name="scene_some_actions_failed">Một số hành động thất bại</string>
-    <string name="scene_no_active">Không có cảnh nào đang hoạt động</string>
+    <string name="scene_no_active">Không có Bối cảnh nào đang hoạt động</string>
     <string name="scene_some_reverts_failed">Một số hành động hoàn tác thất bại</string>
     <string name="scene_no_profile_store">Không có kho hồ sơ khả dụng</string>
-    <string name="scene_no_actions">Cảnh không có hành động nào</string>
+    <string name="scene_no_actions">Bối cảnh không có hành động nào</string>
     <string name="scene_profile_not_found">Không tìm thấy hồ sơ “%1$s”</string>
     <string name="scene_revert_tt">Hủy mục tiêu tạm thời</string>
     <string name="scene_revert_profile">Hoàn nguyên hồ sơ về %1$s %2$d%%</string>
@@ -565,8 +561,8 @@
     <string name="uel_running_mode">RUNNING MODE</string>
     <string name="uel_running_mode_removed">ĐÃ XÓA CHẾ ĐỘ THỂ DỤC</string>
     <string name="uel_running_mode_updarted">ĐÃ CẬP NHẬT CHẾ ĐỘ THỂ DỤC</string>
-    <string name="uel_scene_activated">ĐÃ KÍCH HOẠT CẢNH</string>
-    <string name="uel_scene_deactivated">ĐÃ TẮT CẢNH</string>
+    <string name="uel_scene_activated">ĐÃ KÍCH HOẠT BỐI CẢNH</string>
+    <string name="uel_scene_deactivated">ĐÃ TẮT BỐI CẢNH</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Hồ sơ Mục tiêu Thấp</string>
     <string name="profile_high_target">Hồ sơ Mục tiêu Cao</string>
@@ -825,7 +821,7 @@
     <string name="nav_exit">Thoát</string>
     <string name="open_navigation">Mở điều hướng</string>
     <string name="nav_history_browser">Xem lịch sử</string>
-    <string name="nav_history_browser_desc">Duyệt dữ liệu và biểu đồ lịch sử</string>
+    <string name="nav_history_browser_desc">Xem các biểu đồ lịch sử</string>
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
     <string name="localprofile">Hồ sơ</string>

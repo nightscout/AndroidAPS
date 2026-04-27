@@ -4,9 +4,10 @@
     <string name="error_mustbe4hexadidits">Debe tener 4 caracteres de ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Tratamientos</string>
+    <string name="treatments_history">Historial de tratamientos</string>
     <string name="treatments_desc">Ver y gestionar el historial de tratamientos</string>
     <string name="nav_configuration">Configuración</string>
-    <string name="nav_configuration_desc">Configura tus ajustes (MCG, Bomba, ...) y activa las funciones</string>
+    <string name="nav_configuration_desc">Configura tus ajustes (MCG, bomba, etc.) y activa las funciones</string>
     <string name="count_selected">%1$d seleccionado</string>
     <string name="delete">Borrar</string>
     <string name="show_invalidated">Mostrar invalidados</string>
@@ -131,7 +132,6 @@
     <string name="disabled_loop">Lazo deshabilitado</string>
     <string name="resumeloop">Reanudar el lazo</string>
     <string name="suspendloop">Suspender lazo</string>
-    <string name="duration_min_label">Duración [min]</string>
     <string name="notification">Notificación</string>
     <string name="noprofile">Ningún perfil cargado desde Nightscout</string>
     <string name="exists">existe</string>
@@ -194,7 +194,7 @@
     <string name="site_rotation">Rotación del sitio</string>
     <string name="edit_site">Editar</string>
     <string name="select_arrow">Seleccionar flecha</string>
-    <string name="site_filter_info">Selecciona el tipo de evento de terapia que quieres ver: Cambio de cánula y/o Cambio de sensor</string>
+    <string name="site_filter_info">Selecciona el tipo de evento de terapia que quieres ver: cambio de cánula y/o cambio de sensor</string>
     <string name="selected_location">Seleccionado: %1$s</string>
     <string name="last_site_location">Última zona: %1$s</string>
     <string name="pick_site">Elegir zona</string>
@@ -281,11 +281,11 @@
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
     <string name="careportal_pump_site_change">Cambio de zona de la bomba</string>
-    <string name="cgm_sensor_insert">Inserción del sensor MCG</string>
+    <string name="cgm_sensor_insert">Inserción de sensor</string>
     <string name="careportal_pump_site_management">Sitios de la bomba</string>
     <string name="careportal_cgm_site_management">Sitios del MCG</string>
-    <string name="careportal_cgmsensorstart">Inicio del sensor MCG</string>
-    <string name="careportal_cgm_sensor_stop">Parada del sensor MCG</string>
+    <string name="careportal_cgmsensorstart">Inicio de sensor</string>
+    <string name="careportal_cgm_sensor_stop">Parada de sensor</string>
     <string name="careportal_dad_alert">D.A.D Alerta</string>
     <string name="careportal_insulin_cartridge_change">Cambio de cartucho de insulina</string>
     <string name="careportal_profileswitch">Cambio de perfil</string>
@@ -301,7 +301,7 @@
     <string name="pump_battery_change">Cambio de batería de la bomba</string>
     <string name="temporary_target">Objetivo temporal</string>
     <string name="temporary_targets">Objetivos temporales</string>
-    <string name="running_mode">Modo en ejecución</string>
+    <string name="running_mode">Modo de funcionamiento</string>
     <string name="scene">Escena</string>
     <string name="scenes">Escenas</string>
     <string name="scene_desc">Ajustes de situación — activar múltiples acciones a la vez</string>
@@ -321,7 +321,7 @@
     <string name="scene_action_loop_mode">Modo de lazo: %1$s</string>
     <string name="scene_action_careportal">Registro: %1$s</string>
     <string name="scene_time_remaining">%1$s restante</string>
-    <string name="scene_management">Gestión de escenas</string>
+    <string name="scene_management">Escenas</string>
     <string name="scene_management_desc">Crear, editar y gestionar escenas</string>
     <string name="scene_action_count">%1$d acciones</string>
     <string name="scene_start_from_template">Empezar desde plantilla</string>
@@ -367,7 +367,7 @@
     <string name="treatment_desc">Registrar insulina y carbohidratos juntos</string>
     <string name="treatment_insulin_desc">Administrar bolo manualmente</string>
     <string name="treatment_carbs_desc">Registrar carbohidratos sin insulina</string>
-    <string name="treatment_calculator_desc">Calcular bolo</string>
+    <string name="treatment_calculator_desc">Calcular el bolo de comida</string>
     <string name="insulin_management">Insulina</string>
     <string name="manage_insulin_desc">Gestionar y activar configuraciones de insulina</string>
     <string name="concentration_disable_blocked">No se puede desactivar el soporte de concentración mientras existan insulinas que no sean U100. Elimine primero todas las configuraciones de insulina que no sean U100 y cambie a un perfil U100.</string>
@@ -562,9 +562,9 @@
     <string name="uel_store_insulin">ALMACENAR INSULINA</string>
     <string name="uel_change_insulin_concentration">CAMBIAR CONCENTRACIÓN DE INSULINA</string>
     <string name="uel_insulin_removed">INSULINA RETIRADA</string>
-    <string name="uel_running_mode">MODO DE EJECUCIÓN</string>
-    <string name="uel_running_mode_removed">MODO DE EJECUCIÓN ELIMINADO</string>
-    <string name="uel_running_mode_updarted">MODO DE EJECUCIÓN ACTUALIZADO</string>
+    <string name="uel_running_mode">MODO DE FUNCIONAMIENTO</string>
+    <string name="uel_running_mode_removed">MODO DE FUNCIONAMIENTO ELIMINADO</string>
+    <string name="uel_running_mode_updarted">MODO DE FUNCIONAMIENTO ACTUALIZADO</string>
     <string name="uel_scene_activated">ESCENA ACTIVADA</string>
     <string name="uel_scene_deactivated">ESCENA DESACTIVADA</string>
     <!-- HardLimits -->
@@ -591,7 +591,7 @@
     <string name="error_in_isf_values">Error en los valores de Sensibilidad (ISF)</string>
     <string name="error_in_basal_values">Error en los valores de basal</string>
     <string name="error_in_target_values">Error en los valores de objetivo</string>
-    <string name="profile_name_contains_dot">Algunos nombres de perfil contienen puntos.\nEsto no es compatible con Nightscout.\nLos perfiles no se subirán a Nightscout.</string>
+    <string name="profile_name_contains_dot">Algunos nombres de perfil contienen puntos.\nEsto no es compatible con Nightscout.\nLos perfiles no se subirán a Nightscout</string>
     <string name="invalid_profile_not_accepted">Perfil inválido %1$s no aceptado desde Nightscout</string>
     <string name="errors">Errores</string>
     <!-- Command Queue + readStatus reasons -->
@@ -825,7 +825,7 @@
     <string name="nav_exit">Salir</string>
     <string name="open_navigation">Abrir navegación</string>
     <string name="nav_history_browser">Explorador de historial</string>
-    <string name="nav_history_browser_desc">Explorar datos históricos y gráficas</string>
+    <string name="nav_history_browser_desc">Explorar gráficos históricos</string>
     <string name="appearance">Apariencia</string>
     <string name="manage">Administrar</string>
     <string name="localprofile">Perfil</string>
@@ -836,7 +836,7 @@
     <string name="tdd_cycle_pattern">Patrón de ciclo de insulina total diaria</string>
     <string name="tdd_cycle_pattern_desc">Superponer totales diarios de insulina en ciclos de 28 días para detectar patrones recurrentes</string>
     <string name="nav_profile_helper">Ayudante de perfil</string>
-    <string name="nav_profile_helper_desc">Crea tu perfil basándote en el peso o en la TDD (Dosis Diaria Total)</string>
+    <string name="nav_profile_helper_desc">Crea tu perfil basándote en el peso o en la TDD</string>
     <string name="quick_launch_configure">Configurar Lanzamiento Rápido</string>
     <string name="quick_launch_configure_desc">Personalizar botones de acción rápida en la vista general</string>
     <!-- Alerts -->
@@ -947,7 +947,7 @@
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <!--    Maintenance-->
     <string name="maintenance">Mantenimiento</string>
-    <string name="description_maintenance">Proporciona varias funciones de mantenimiento (ej. envío de registros, eliminación de registros).</string>
+    <string name="description_maintenance">Proporciona varias funciones de mantenimiento (ej. envío de registros, eliminación de registros, etc.)</string>
     <string name="log_files">Archivos de registro</string>
     <string name="delete_logs">Eliminar registros</string>
     <string name="logs_deleted">Registros eliminados</string>
@@ -981,7 +981,7 @@
     <string name="graph_add">Añadir gráfico</string>
     <string name="graph_new">Nuevo gráfico</string>
     <string name="graph_number">Gráfico %1$d</string>
-    <string name="graph_bg">Gráfica de BG</string>
+    <string name="graph_bg">Gráfica de glucosa</string>
     <string name="graph_height">Altura del gráfico [dp]</string>
     <string name="predictions_shortname" comment="Short label for Predictions graph series">PRED</string>
     <string name="basal_shortname" comment="Short label for Basal, used in graph labels">BAS</string>

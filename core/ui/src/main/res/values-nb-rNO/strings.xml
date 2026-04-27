@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Må være 4 tegn fra ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Behandlinger</string>
+    <string name="treatments_history">Behandlingshistorikk</string>
     <string name="treatments_desc">Vis og administrer behandlingshistorikk</string>
     <string name="nav_configuration">Konfigurasjon</string>
     <string name="nav_configuration_desc">Sett opp konfigurasjonen din (sensor, pumpe, ...) og aktiver funksjoner</string>
@@ -131,7 +132,6 @@
     <string name="disabled_loop">Deaktivert loop</string>
     <string name="resumeloop">Gjenoppta loop</string>
     <string name="suspendloop">Pause loop</string>
-    <string name="duration_min_label">Varighet [min]</string>
     <string name="notification">Varsling</string>
     <string name="noprofile">Ingen profil innlest fra NS enda</string>
     <string name="exists">finnes</string>
@@ -400,7 +400,7 @@
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivitet</string>
     <string name="wear">Klokke</string>
-    <string name="automation">Automatisering</string>
+    <string name="automation">Automasjon</string>
     <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
     <string name="preset_settings">Forhåndsinnstilte innstillinger</string>
@@ -761,7 +761,7 @@
     <string name="export_result_message_failed">Eksport av innstillinger MISLYKTES!</string>
     <string name="export_result_message_about_to_expire">Innstillinger eksportert: passord er i ferd med å utløpe snart. Eksporter manuelt og skriv inn passord på nytt.</string>
     <string name="export_result_message_expired">Eksport av innstillinger avbrutt: passord utløpt. Eksporter manuelt og skriv inn passord på nytt!</string>
-    <string name="export_result_message_disabled">Advarsel (automatisering): Eksport av innstillinger er ikke aktivert!</string>
+    <string name="export_result_message_disabled">Advarsel (automasjon): Eksport av innstillinger er ikke aktivert!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Skyeksporten var vellykket</string>
     <string name="export_cloud_failed">Skyeksport MISLYKKET!</string>
@@ -825,7 +825,7 @@
     <string name="nav_exit">Avslutt</string>
     <string name="open_navigation">Åpne meny</string>
     <string name="nav_history_browser">Historikkleser</string>
-    <string name="nav_history_browser_desc">Bla gjennom historiske data og grafer</string>
+    <string name="nav_history_browser_desc">Bla gjennom historiske grafer</string>
     <string name="appearance">Utseende</string>
     <string name="manage">Administrer</string>
     <string name="localprofile">Profil</string>

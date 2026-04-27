@@ -54,9 +54,9 @@
     <string name="xdrip_local_broadcasts_summary">Enviar datos de glucosa y tratamientos a xDrip+. La fuente de datos \"xDrip+ Sync Follower\" debe estar seleccionada y la aceptación de datos debe estar activada en Ajustes - Ajustes entre aplicaciones - Aceptar glucosa/tratamientos</string>
     <string name="xdrip_local_broadcasts_title">Activar las transmisiones a xDrip+</string>
     <!--    DataBroadcast-->
-    <string name="tizen">Samsung Tizen</string>
-    <string name="tizen_short">TIZ</string>
-    <string name="tizen_description">Transmitir datos a la aplicación G-Watch Wear de Samsung (Tizen OS)</string>
+    <string name="tizen">Aplicaciones complementarias externas</string>
+    <string name="tizen_short">CAB</string>
+    <string name="tizen_description">Permite la transmisión de datos a varias aplicaciones complementarias externas</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Conexión al dispositivo Garmin (Fénix, Edge, …)</string>
@@ -127,7 +127,7 @@
     <string name="full_xdrip_sync_comment">¿Sincronización completa? Puede tardar un rato y hasta que no finalice, no aparecerán los nuevos datos en xDrip+.</string>
     <string name="wear_action_loop_state_unauthorized">Por favor, inténtalo de nuevo.</string>
     <string name="wear_action_loop_state_invalid">Estado del lazo solicitado inválido</string>
-    <string name="wear_action_running_mode_title">MODO DE EJECUCIÓN</string>
+    <string name="wear_action_running_mode_title">MODO DE FUNCIONAMIENTO</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nDuración: %2$d min</string>
     <string name="wear_action_loop_state_now_closed">Lazo cerrado</string>
     <string name="wear_action_loop_state_now_lgs">Suspensión por glucosa baja (LGS)</string>

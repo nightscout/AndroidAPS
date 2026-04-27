@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">必須為 4 個由 ABCDEF0123456789 組成的字元</string>
     <!--    General-->
     <string name="treatments">治療</string>
+    <string name="treatments_history">治療紀錄</string>
     <string name="treatments_desc">查看並管理治療紀錄</string>
     <string name="nav_configuration">組態</string>
     <string name="nav_configuration_desc">設定您的組態（CGM、幫浦…）並啟用功能</string>
@@ -131,7 +132,6 @@
     <string name="disabled_loop">循環停用</string>
     <string name="resumeloop">恢復循環</string>
     <string name="suspendloop">暫停循環</string>
-    <string name="duration_min_label">持續時間 [分鐘]</string>
     <string name="notification">通知</string>
     <string name="noprofile">尚未從 NS 載入設定檔</string>
     <string name="exists">存在</string>
@@ -281,11 +281,8 @@
     <string name="careportal_question_message">問題：%1$s</string>
     <string name="careportal_exercise_message">運動：%1$s</string>
     <string name="careportal_pump_site_change">幫浦位置更改</string>
-    <string name="cgm_sensor_insert">CGM 傳感器植入</string>
     <string name="careportal_pump_site_management">幫浦植入部位</string>
     <string name="careportal_cgm_site_management">CGM 植入部位</string>
-    <string name="careportal_cgmsensorstart">CGM 傳感器啟動</string>
-    <string name="careportal_cgm_sensor_stop">CGM 傳感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警報</string>
     <string name="careportal_insulin_cartridge_change">胰島素匣更換</string>
     <string name="careportal_profileswitch">設定檔切換</string>
@@ -321,7 +318,6 @@
     <string name="scene_action_loop_mode">循環模式: %1$s</string>
     <string name="scene_action_careportal">記錄: %1$s</string>
     <string name="scene_time_remaining">剩餘 %1$s</string>
-    <string name="scene_management">場景管理</string>
     <string name="scene_management_desc">建立、編輯與管理場景</string>
     <string name="scene_action_count">%1$d 個動作</string>
     <string name="scene_start_from_template">從範本開始</string>
@@ -825,7 +821,7 @@
     <string name="nav_exit">離開</string>
     <string name="open_navigation">開啟導覽選單</string>
     <string name="nav_history_browser">歷史瀏覽</string>
-    <string name="nav_history_browser_desc">瀏覽歷史資料與圖表</string>
+    <string name="nav_history_browser_desc">瀏覽歷史圖表</string>
     <string name="appearance">外觀</string>
     <string name="manage">管理</string>
     <string name="localprofile">設定檔</string>

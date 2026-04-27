@@ -14,6 +14,7 @@
     <string name="pref_display_settings">Hiển thị</string>
     <string name="pref_graph_settings">Đồ thị</string>
     <string name="pref_interface_settings">Giao diện</string>
+    <string name="pref_tile_settings">Các mục</string>
     <string name="pref_others_settings">Khác</string>
     <string name="pref_complication_settings">Ô hiển thị</string>
     <string name="pref_show_date">Hiển thị ngày</string>
@@ -64,6 +65,7 @@
     <string name="pref_moreWatchfaceSettings">Thêm cài đặt mặt đồng hồ</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Hãy xem lại phần cài đặt mặt đồng hồ.</string>
     <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt_long">Mục tiêu tạm thời</string>
     <string name="menu_wizard">Calculator</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Treatment</string>
@@ -229,6 +231,11 @@
     <string name="status_running_mode">Chế độ thể dục</string>
     <string name="label_running_mode_title">Chế độ thể dục</string>
     <string name="label_bg_graph_tile">Biểu đồ BG</string>
+    <string name="tile_tap_action">Hoạt động khi chạm</string>
+    <string name="tile_graph_time_range">Khoảng thời gian</string>
+    <string name="tile_tap_bg_graph">Biểu đồ đường huyết</string>
+    <string name="tile_tap_main_menu">Menu chính</string>
+    <string name="tile_tap_loop_status">Trạng thái vòng lặp</string>
     <string name="action_running_mode_selected">Đã yêu cầu chế độ thể dục</string>
     <string name="title_activity_disconnect_pump">Ngắt kết nối bơm</string>
     <string name="title_activity_suspend_loop">Tạm dừng vòng lặp</string>

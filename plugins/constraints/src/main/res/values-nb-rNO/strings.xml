@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Sommer/vintertid inntreffer innen 24t</string>
     <string name="dst_loop_disabled_warning">Sommer/vintertid inntraff for mindre enn 3 timer siden - Lukket loop er midlertidig deaktivert</string>

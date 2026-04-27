@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Devono essere 4 caratteri tra ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Trattamenti</string>
+    <string name="treatments_history">Cronologia trattamenti</string>
     <string name="treatments_desc">Visualizza e gestisci la cronologia dei trattamenti</string>
     <string name="nav_configuration">Configurazione</string>
     <string name="nav_configuration_desc">Imposta la tua configurazione (CGM, Pump, ...) e abilita funzionalità</string>
@@ -131,7 +132,6 @@
     <string name="disabled_loop">Loop disabilitato</string>
     <string name="resumeloop">Riprendi loop</string>
     <string name="suspendloop">Sospendi loop</string>
-    <string name="duration_min_label">Durata [min]</string>
     <string name="notification">Notifica</string>
     <string name="noprofile">Nessun profilo ancora caricato da NS</string>
     <string name="exists">esiste</string>
@@ -284,8 +284,8 @@
     <string name="cgm_sensor_insert">Inserimento sensore</string>
     <string name="careportal_pump_site_management">Siti del micro</string>
     <string name="careportal_cgm_site_management">Siti del CGM</string>
-    <string name="careportal_cgmsensorstart">Avvio sensore</string>
-    <string name="careportal_cgm_sensor_stop">Arresto Sensore CGM</string>
+    <string name="careportal_cgmsensorstart">Attiva sensore</string>
+    <string name="careportal_cgm_sensor_stop">Arresto Sensore</string>
     <string name="careportal_dad_alert">Avviso D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Cambio cartuccia insulina</string>
     <string name="careportal_profileswitch">Cambio profilo</string>
@@ -321,7 +321,7 @@
     <string name="scene_action_loop_mode">Modalità Loop: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">%1$s rimanenti</string>
-    <string name="scene_management">Gestione delle scene</string>
+    <string name="scene_management">Scene</string>
     <string name="scene_management_desc">Crea, modifica e gestisci scene</string>
     <string name="scene_action_count">Azioni %1$d</string>
     <string name="scene_start_from_template">Inizia da un modello</string>
@@ -825,7 +825,7 @@
     <string name="nav_exit">Esci</string>
     <string name="open_navigation">Apri navigazione</string>
     <string name="nav_history_browser">Navigatore della cronologia</string>
-    <string name="nav_history_browser_desc">Sfoglia i dati storici e i grafici</string>
+    <string name="nav_history_browser_desc">Sfoglia grafici storici</string>
     <string name="appearance">Aspetto</string>
     <string name="manage">Gestisci</string>
     <string name="localprofile">Profilo</string>

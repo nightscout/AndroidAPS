@@ -60,7 +60,7 @@
     <string name="diaconn_g8_loginsulinchange_title">Registrar cambios de reservorio</string>
     <string name="diaconn_g8_loginsulinchange_summary">Añadir evento \"Cambio de Insulina\" al portal del cuidador, cuando se detecte en el historial</string>
     <string name="diaconn_g8_logcanulachange_title">Registrar cambio de aguja</string>
-    <string name="diaconn_g8_logcanulachange_summary">Añadir evento \"Cambio de Cánula\" al portal del cuidador, cuando se detecte en el historial</string>
+    <string name="diaconn_g8_logcanulachange_summary">Añadir evento \"Cambio de cánula\" al portal del cuidador, cuando se detecte en el historial</string>
     <string name="diaconn_g8_logbatterychange_summary">Añadir evento \"Cambio de batería\" al portal del cuidador, cuando se detecte en el historial</string>
     <string name="diaconn_g8_logbatterychange_title">Registrar cambio de batería</string>
     <string name="diaconn_g8_logsyncinprogress">Sincronización de registro en progreso</string>

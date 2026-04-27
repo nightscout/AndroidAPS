@@ -87,7 +87,6 @@
     <string name="disabled_loop">Smyčka zakázána</string>
     <string name="resumeloop">Obnovit smyčku</string>
     <string name="suspendloop">Pozastavit smyčku</string>
-    <string name="duration_min_label">Trvání [min]</string>
     <string name="notification">Oznámení</string>
     <string name="noprofile">Dosud nebyl načten profil z NS</string>
     <string name="exists">existuje</string>
@@ -203,11 +202,8 @@
     <string name="careportal_question_message">Otázka: %1$s</string>
     <string name="careportal_exercise_message">Cvičení : %1$s</string>
     <string name="careportal_pump_site_change">Výměna setu</string>
-    <string name="cgm_sensor_insert">Výměna senzoru</string>
     <string name="careportal_pump_site_management">Místa aplikace setu</string>
     <string name="careportal_cgm_site_management">Místa aplikace senzoru</string>
-    <string name="careportal_cgmsensorstart">Znovu spuštění senzoru</string>
-    <string name="careportal_cgm_sensor_stop">Zastavení senzoru</string>
     <string name="careportal_dad_alert">Hlášení psa</string>
     <string name="careportal_insulin_cartridge_change">Výměna inzulínu</string>
     <string name="careportal_profileswitch">Přepnutí profilu</string>

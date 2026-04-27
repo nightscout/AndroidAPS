@@ -25,7 +25,7 @@
     <string name="fill_warning">Sørg for, at mængden svarer til specifikationen på dit infusionssæt!</string>
     <string name="record_pump_site_change">Registrer skift af infusionssæt</string>
     <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Genbrug %1$d%% %2$dt</string>
     <string name="timeshift_label">Tidsskift</string>

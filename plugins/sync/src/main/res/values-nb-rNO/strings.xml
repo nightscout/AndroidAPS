@@ -54,9 +54,9 @@
     <string name="xdrip_local_broadcasts_summary">Send data om glukose og behandling til xDrip+. Velg datakilde \"xDrip+ Sync Følger\" og aktiver mottak av data under Innstillinger - Inter-app innstillinger - Aksepter glukose/behandlinger</string>
     <string name="xdrip_local_broadcasts_title">Aktiver sending til xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="tizen">Samsung Tizen</string>
-    <string name="tizen_short">TIZ</string>
-    <string name="tizen_description">Kringkast data til Samsung\'s G-Watch Wear app (Tizen OS)</string>
+    <string name="tizen">Eksterne hjelpeapper</string>
+    <string name="tizen_short">CAB</string>
+    <string name="tizen_description">Aktiverer deling av data til ulike eksterne hjelpeapper</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Tilkobling til Garmin-enheter (Fenix, Edge,…)</string>
@@ -71,6 +71,7 @@
     <string name="quick_wizard_not_available">Den valgte hurtigknappen er ikke lenger tilgjengelig, oppdater klokkeflis</string>
     <string name="quick_wizard_message">Hurtigknapp: %1$s\nBolus: %2$.2fE\nKarbo: %3$dg</string>
     <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
+    <string name="scene_not_available">Scene %1$s finnes ikke lenger</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende midlertidig mål?</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
     <string name="wear_action_tempt_zero_message">Null minutter i varighet - avbryt gjeldende midlertidig mål?</string>

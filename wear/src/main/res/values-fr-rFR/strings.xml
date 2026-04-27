@@ -7,6 +7,7 @@
     <string name="label_temp_target_tile">Cible Temp</string>
     <string name="label_quick_wizard_tile">Assistant</string>
     <string name="label_user_action_tile">Action Utilisateur</string>
+    <string name="label_scene_tile">Scénario</string>
     <string name="msg_warning_sync">Aucune donnée deçues depuis %1$s! Vérifez sur le téléphone si AAPS envoie les données à la montre</string>
     <string name="msg_warning_old">Données AAPS anciennes de %1$s ! Vérifiez votre capteur, les configurations xDrip+, NS, AAPS ou autre !</string>
     <string name="pref_vibrate_on_bolus">Vibrer sur Bolus</string>
@@ -14,6 +15,7 @@
     <string name="pref_display_settings">Affichage</string>
     <string name="pref_graph_settings">Graphique</string>
     <string name="pref_interface_settings">Interface</string>
+    <string name="pref_tile_settings">Tuiles</string>
     <string name="pref_others_settings">Autres</string>
     <string name="pref_complication_settings">Complication</string>
     <string name="pref_show_date">Afficher Date</string>
@@ -64,6 +66,7 @@
     <string name="pref_moreWatchfaceSettings">Plus de paramètres</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Veuillez regardez dans la configuration du cadran.</string>
     <string name="menu_tempt">Cible Temp</string>
+    <string name="menu_tempt_long">Cible Temp</string>
     <string name="menu_wizard">Assistant</string>
     <string name="menu_wizard_short">Assist.</string>
     <string name="menu_treatment">Traitement</string>
@@ -82,6 +85,7 @@
     <string name="action_tempt_confirmation">Cible Temp demandée</string>
     <string name="action_quick_wizard_confirmation">Assistant rapide demandé</string>
     <string name="action_user_action_confirmation">Action de l\'utilisateur demandée</string>
+    <string name="action_scene_confirmation">Activer scénario</string>
     <string name="action_treatment_confirmation">Traitement demandé</string>
     <string name="action_bolus_confirmation">Bolus demandé</string>
     <string name="action_wizard_confirmation">Calcul demandé</string>
@@ -229,6 +233,11 @@
     <string name="status_running_mode">Mode de fonctionnement</string>
     <string name="label_running_mode_title">Mode</string>
     <string name="label_bg_graph_tile">Graphique Glycémie</string>
+    <string name="tile_tap_action">Action du clic</string>
+    <string name="tile_graph_time_range">Période de temps</string>
+    <string name="tile_tap_bg_graph">Graphique Gly</string>
+    <string name="tile_tap_main_menu">Menu principal</string>
+    <string name="tile_tap_loop_status">Statut de la boucle</string>
     <string name="action_running_mode_selected">Mode de fonctionnement demandé</string>
     <string name="title_activity_disconnect_pump">Déconnecter la pompe</string>
     <string name="title_activity_suspend_loop">Suspendre la boucle</string>

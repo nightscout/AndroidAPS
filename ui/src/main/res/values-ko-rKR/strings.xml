@@ -25,7 +25,7 @@
     <string name="fill_warning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
     <string name="record_pump_site_change">펌프 위치 변경 기록</string>
     <string name="record_insulin_cartridge_change">인슐린 카트리지 변경 기록</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">%1$d%%를 %2$dh 동안 재사용하기</string>
     <string name="timeshift_label">시간 이동</string>

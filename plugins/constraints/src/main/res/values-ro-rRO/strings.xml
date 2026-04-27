@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Schimbare oră vară/iarnă în mai puțin de 24h</string>
     <string name="dst_loop_disabled_warning">Schimbare oră vară/iarnă în mai puțin de 3 ore - buclă închisă dezactivată</string>

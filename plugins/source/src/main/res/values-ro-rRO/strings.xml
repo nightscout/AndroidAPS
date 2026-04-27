@@ -34,6 +34,8 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Aplicația Sino</string>
     <string name="description_source_patched_sino_app">Primiți date glicemice din aplicația Sino modificată.</string>
+    <!-- Instara App -->
+    <!-- Instara preferences -->
     <!-- Notification Reader -->
     <string name="notification_reader">Cititor notificări</string>
     <string name="description_source_notification_reader">Citiți valorile glicemiei din notificările publicate de aplicațiile oficiale CGM (Dexcom, Medtronic, Eversense șamd).</string>

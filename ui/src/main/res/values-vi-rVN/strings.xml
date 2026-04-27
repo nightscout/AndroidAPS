@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carbs_constraint_applied">Giới hạn Carbs đã bật</string>
+    <string name="no_temp_basal_running">Không có liều nền tạm thời nào đang chạy</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Bắt đầu hoạt động thể lực (TT)</string>
     <string name="start_eating_soon_tt">Sắp ăn (TT)</string>
@@ -60,7 +61,7 @@
     <string name="fill_prime_amount">Lượng insulin mồi</string>
     <string name="fill_pump_units_note">Lượng insulin mồi tính theo đơn vị của bơm</string>
     <string name="fill_insulin_change">Chuyển insulin sang: %1$s (sẽ áp dụng chuyển hồ sơ)</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Thiếu tên insulin</string>
     <string name="insulin_name_exists">Tên insulin %1$s đã tồn tại, vui lòng chọn tên khác</string>

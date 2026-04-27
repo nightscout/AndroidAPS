@@ -33,7 +33,7 @@
     <string name="fill_warning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>
     <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
     <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
     <string name="timeshift_label">Zaman kaydırma</string>

@@ -4,6 +4,7 @@
     <string name="error_mustbe4hexadidits">Musí byť zo 4 znakov z ABCDEF0123456789</string>
     <!--    General-->
     <string name="treatments">Ošetrenia</string>
+    <string name="treatments_history">História ošetrení</string>
     <string name="treatments_desc">Zobraz a spravuj históriu ošetrení</string>
     <string name="nav_configuration">Konfigurácia</string>
     <string name="nav_configuration_desc">Nastav svoju konfiguráciu (CGM, pumpa, ...) a zapni funkcionality</string>
@@ -131,7 +132,6 @@
     <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
     <string name="resumeloop">Pokračovať v uzavretom okruhu</string>
     <string name="suspendloop">Pozastaviť uzavretý okruh</string>
-    <string name="duration_min_label">Trvanie [min]</string>
     <string name="notification">Notifikácia</string>
     <string name="noprofile">Zatiaľ nebol načítaný žiadny profil z NS</string>
     <string name="exists">existuje</string>
@@ -281,10 +281,10 @@
     <string name="careportal_question_message">Otázka: %1$s</string>
     <string name="careportal_exercise_message">Cvičenie : %1$s</string>
     <string name="careportal_pump_site_change">Výmena setu</string>
-    <string name="cgm_sensor_insert">Výmena senzora</string>
+    <string name="cgm_sensor_insert">Zavedenie senzora</string>
     <string name="careportal_pump_site_management">Miesto aplikovania setu</string>
     <string name="careportal_cgm_site_management">Miesto aplikácie senzora</string>
-    <string name="careportal_cgmsensorstart">Spustenie senzora</string>
+    <string name="careportal_cgmsensorstart">Štart senzora</string>
     <string name="careportal_cgm_sensor_stop">Zastavenie senzora</string>
     <string name="careportal_dad_alert">Hlásenie strážneho psa</string>
     <string name="careportal_insulin_cartridge_change">Výmena inzulínu</string>
@@ -321,7 +321,7 @@
     <string name="scene_action_loop_mode">Režim uzavretého okruhu: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">zostáva %1$s</string>
-    <string name="scene_management">Správa scén</string>
+    <string name="scene_management">Scény</string>
     <string name="scene_management_desc">Vytvorenie, úprava a správa scén</string>
     <string name="scene_action_count">%1$d akcií</string>
     <string name="scene_start_from_template">Začnite od šablóny</string>
@@ -825,7 +825,7 @@
     <string name="nav_exit">Ukončiť</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="nav_history_browser">Prehliadač histórie</string>
-    <string name="nav_history_browser_desc">Prehliadať dáta a grafy z histórie</string>
+    <string name="nav_history_browser_desc">Prehliadať grafy z histórie</string>
     <string name="appearance">Vzhľad</string>
     <string name="manage">Spravovať</string>
     <string name="localprofile">Profil</string>

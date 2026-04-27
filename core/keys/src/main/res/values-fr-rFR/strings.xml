@@ -56,48 +56,357 @@
     <string name="pref_title_aps_sensitivity_raises_target">Sensibilité augmente la Cible</string>
     <string name="pref_summary_aps_sensitivity_raises_target">Quand une sensibilité est détectée, augmentation de la glycémie cible.</string>
     <string name="pref_title_aps_resistance_lowers_target">Résistance diminue la cible</string>
+    <string name="pref_summary_aps_resistance_lowers_target">Quand une résistance est détectée, baisse de la glycémie cible.</string>
+    <string name="pref_title_aps_always_use_short_deltas">Toujours utiliser le delta moyen court</string>
+    <string name="pref_summary_aps_always_use_short_deltas">Toujours utiliser un delta moyen court au lieu de delta simple pour le calcul de la glycémie.</string>
+    <string name="pref_title_aps_dynisf_adjust_sensitivity">DynamicISF ajuste la sensibilité</string>
+    <string name="pref_summary_aps_dynisf_adjust_sensitivity">Ajuster les calculs de sensibilité avec DynamicISF.</string>
+    <string name="pref_title_aps_autosens_adjust_targets">Autosens ajuste aussi les Cibles</string>
+    <string name="pref_summary_aps_autosens_adjust_targets">Autoriser Autosens à ajuster la Cible Gly en plus de la basale et de la SI.</string>
+    <string name="pref_title_aps_high_tt_raises_sensitivity">Cible Temp haute augmente la sensibilité</string>
+    <string name="pref_summary_aps_high_tt_raises_sensitivity">Les cibles temporaires élevées augmenteront la sensibilité à l\'insuline.</string>
+    <string name="pref_title_aps_low_tt_lowers_sensitivity">Cibles Temp basses diminuent la sensibilité</string>
+    <string name="pref_summary_aps_low_tt_lowers_sensitivity">Les cibles temporaires basses diminueront la sensibilité à l\'insuline.</string>
+    <string name="pref_title_aps_use_autoisf_weights">Activer AutoISF</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Activer les ajustements de SI basés sur la pondération AutoISF.</string>
+    <string name="pref_title_aps_smb_on_even_target">Activer SMB avec une Cible paire</string>
+    <string name="pref_summary_aps_smb_on_even_target">Activation alternative des SMB basée sur la parité de la valeur de glycémie cible.</string>
     <!-- Maintenance preferences -->
+    <string name="pref_title_maintenance_enable_fabric">Activer le rapport de crash Fabric</string>
+    <string name="pref_title_maintenance_enable_export_automation">Activer l\'export automatique des paramètres</string>
     <!-- Autotune preferences -->
+    <string name="pref_title_autotune_auto_switch_profile">Changement de profil automatique</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Activer automatiquement le profil Autotune après le calcul.</string>
+    <string name="pref_title_autotune_categorize_uam_as_basal">Catégoriser UAM en tant que Basal</string>
+    <string name="pref_summary_autotune_categorize_uam_as_basal">Traiter les Repas Non Signalés comme des besoins d\'insuline basale pour les calculs Autotune.</string>
+    <string name="pref_title_autotune_tune_insulin_curve">Ajuster la courbe d\'insuline</string>
+    <string name="pref_title_autotune_circadian_ic_isf">Utiliser les G/I et SI circadiens</string>
+    <string name="pref_summary_autotune_circadian_ic_isf">Applique la variation circadienne au G/I et à la SI dans les calculs Autotune.</string>
+    <string name="pref_title_autotune_additional_log">Journaux supplémentaires</string>
     <!-- SMS preferences -->
+    <string name="pref_title_sms_allow_remote_commands">Autoriser les commandes à distance par SMS</string>
+    <string name="pref_title_sms_report_pump_unreachable">Signaler Pompe hors de portée via SMS</string>
+    <string name="pref_summary_sms_report_pump_unreachable">Envoyer une notification par SMS lorsque la pompe devient inaccessible.</string>
     <!-- Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_status_upload">Télécharger l\'état de la pompe sur NS</string>
     <!-- NS Client preferences -->
+    <string name="pref_title_ns_upload_data">Télécharger des données vers NS</string>
+    <string name="pref_summary_ns_upload_data">Transférer traitements, basales temporaires et autres données vers Nightscout.</string>
+    <string name="pref_title_ns_receive_cgm">Recevoir les données MGC depuis NS</string>
+    <string name="pref_summary_ns_receive_cgm">Accepter les données MGC depuis NS.</string>
+    <string name="pref_title_ns_receive_profile_store">Recevoir les profils sauvegardés depuis NS</string>
+    <string name="pref_summary_ns_receive_profile_store">Accepter la liste des profils sauvegardés depuis Nightscout.</string>
+    <string name="pref_title_ns_receive_temp_target">Recevoir les Cibles Temp depuis NS</string>
+    <string name="pref_summary_ns_receive_temp_target">Accepter les changements de Cibles Temp depuis Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Recevoir les changements de profil depuis NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Accepter les changements de profil depuis Nightscout.</string>
+    <string name="pref_title_ns_receive_insulin">Recevoir l\'insuline depuis NS</string>
+    <string name="pref_summary_ns_receive_insulin">Acceptez les traitements d\'insuline depuis Nightscout.</string>
+    <string name="pref_title_ns_receive_carbs">Recevoir des glucides depuis NS</string>
+    <string name="pref_summary_ns_receive_carbs">Accepter les entrées de glucides depuis Nightscout.</string>
+    <string name="pref_title_ns_receive_therapy_event">Recevoir les événements depuis NS</string>
+    <string name="pref_summary_ns_receive_therapy_event">Accepter les événements de thérapie depuis Nightscout.</string>
+    <string name="pref_title_ns_receive_running_mode">Recevoir le mode de fonctionnement depuis NS</string>
+    <string name="pref_summary_ns_receive_running_mode">Accepter les changements de mode de fonctionnement depuis Nightscout.</string>
+    <string name="pref_title_ns_receive_tbr_eb">Recevoir le DBT/EB depuis NS</string>
+    <string name="pref_summary_ns_receive_tbr_eb">Accepter les débits de base temporaires et les bolus étendus depuis Nightscout.</string>
+    <string name="pref_title_ns_notifications_from_alarms">Alarmes NS</string>
+    <string name="pref_title_ns_notifications_from_announcements">Annonces de NS</string>
+    <string name="pref_title_ns_use_cellular">Utiliser les données mobiles</string>
+    <string name="pref_title_ns_use_roaming">Utiliser l\'itinérance</string>
+    <string name="pref_title_ns_use_wifi">Utiliser le WiFi</string>
+    <string name="pref_title_ns_use_on_battery">Synchroniser sur batterie</string>
+    <string name="pref_title_ns_use_on_charging">Synchroniser pendant la charge</string>
+    <string name="pref_title_ns_log_app_start">Enregistrer les démarrages AAPS dans NS</string>
+    <string name="pref_title_ns_create_announcements_from_errors">Créer des annonces à partir d\'erreurs</string>
+    <string name="pref_title_ns_create_announcements_from_carbs_req">Créer des annonces à partir des glucides requis</string>
+    <string name="pref_title_ns_slow_sync">Utiliser la synchro lente</string>
+    <string name="pref_title_ns_use_ws">Utiliser les websockets</string>
+    <string name="pref_summary_ns_use_ws">Utiliser les websockets pour communiquer en temps réel avec Nightscout.</string>
     <!-- OpenHumans preferences -->
+    <string name="pref_title_openhumans_wifi_only">WiFi uniquement</string>
+    <string name="pref_title_openhumans_charging_only">Charge uniquement</string>
     <!-- xDrip preferences -->
+    <string name="pref_title_xdrip_send_status">Envoyer l\'état à xDrip+</string>
+    <string name="pref_title_xdrip_send_detailed_iob">Envoyer l\'IA détaillée</string>
+    <string name="pref_summary_xdrip_send_detailed_iob">Envoyer les informations IA détaillées à xDrip+ pour les afficher sur les cadrans de montre.</string>
+    <string name="pref_title_xdrip_send_bgi">Afficher IGly</string>
+    <string name="pref_summary_xdrip_send_bgi">Afficher l\'impact glycémique dans la barre d\'état xDrip+.</string>
     <!-- Wear preferences -->
+    <string name="pref_title_wear_control">Contrôle Montre</string>
+    <string name="pref_summary_wear_control">Contrôler AAPS depuis la montre Android Wear.</string>
+    <string name="pref_title_wear_wizard_bg">Inclure Gly dans l\'assistant</string>
+    <string name="pref_title_wear_wizard_tt">Inclure Cible Temp dans l\'assistant</string>
+    <string name="pref_title_wear_wizard_trend">Inclure Tendance dans l\'assistant</string>
+    <string name="pref_title_wear_wizard_cob">Inclure GA dans l\'assistant</string>
+    <string name="pref_title_wear_wizard_iob">Inclure IA dans l\'assistant</string>
+    <string name="pref_title_wear_custom_watchface_authorization">Autoriser les cadrans personnalisés à modifier les paramètres AAPS de la montre</string>
+    <string name="pref_title_wear_notify_on_smb">Notifier en cas de SMB</string>
+    <string name="pref_summary_wear_notify_on_smb">Envoyer des notifications à la montre lorsqu\'un SMB est injecté.</string>
+    <string name="pref_title_wear_broadcast_data">Diffuser les données à la montre</string>
+    <string name="pref_summary_wear_broadcast_data">Diffuser des données AAPS à des applications montre tierces.</string>
     <!-- Wizard preferences -->
+    <string name="pref_title_wizard_calculation_visible">Afficher le calcul de l\'assistant</string>
+    <string name="pref_title_wizard_correction_percent">Utiliser le pourcentage de correction</string>
     <!-- Site rotation preferences -->
+    <string name="pref_title_site_rotation_manage_pump">Gérer la rotation du site de la pompe</string>
+    <string name="pref_title_site_rotation_manage_cgm">Gérer la rotation du site MGC</string>
     <!-- IntKey: Overview preferences -->
+    <string name="pref_title_carbs_button_increment_1">Incrément bouton glucides 1</string>
+    <string name="pref_title_carbs_button_increment_2">Incrément bouton glucides 2</string>
+    <string name="pref_title_carbs_button_increment_3">Incrément bouton glucides 3</string>
+    <string name="carb_increment_button_message">Nombre de glucides à ajouter lorsque vous appuyez sur le bouton</string>
+    <string name="pref_title_cage_warning">Seuil d\'alerte âge canule</string>
+    <string name="pref_title_cage_critical">Seuil critique âge canule</string>
+    <string name="pref_title_iage_warning">Seuil d\'alerte âge insuline</string>
+    <string name="pref_title_iage_critical">Seuil critique âge insuline</string>
+    <string name="pref_title_sage_warning">Seuil d\'alerte âge capteur</string>
+    <string name="pref_title_sage_critical">Seuil critique âge capteur</string>
+    <string name="pref_title_sbat_warning">Seuil d’alerte niveau pile capteur</string>
+    <string name="pref_title_sbat_critical">Seuil critique niveau pile capteur</string>
+    <string name="pref_title_bage_warning">Seuil d\'alerte âge pile pompe</string>
+    <string name="pref_title_bage_critical">Seuil critique âge pile pompe</string>
+    <string name="pref_title_res_warning">Seuil d\'alerte du niveau réservoir</string>
+    <string name="pref_title_res_critical">Seuil critique du niveau réservoir</string>
+    <string name="pref_title_batt_warning">Seuil d’alerte niveau pile pompe</string>
+    <string name="pref_title_batt_critical">Seuil critique niveau pile pompe</string>
+    <string name="pref_title_bolus_percentage">Pourcentage de Bolus</string>
+    <string name="deliverpartofboluswizard">Appliquer cette valeur à la correction de Gly et de glucides dans le résultat de l\'assistant de bolus</string>
+    <string name="pref_title_reset_bolus_percentage_time">Réinitialiser le temps de pourcentage de bolus</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Faire un bolus complet (100%) si la glycémie est plus ancienne que</string>
     <!-- IntKey: Protection preferences -->
+    <string name="pref_title_protection_timeout">Délai d\'attente de la protection</string>
+    <string name="pref_title_protection_type_application">Niveau 0 : Protection de l\'application</string>
+    <string name="pref_summary_protection_type_application">Lancement de l\'appli. Indépendant des autres niveaux</string>
+    <string name="pref_title_protection_type_bolus">Niveau 1 : Protection bolus</string>
+    <string name="pref_summary_protection_type_bolus">Traitements, activation de profil. Nécessite le niveau 2</string>
+    <string name="pref_title_protection_type_settings">Niveau 2 : Protection des paramètres</string>
+    <string name="pref_summary_protection_type_settings">Modification des profils, préférences</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
+    <string name="noprotection">Pas de Protection</string>
+    <string name="biometric">Biométrique</string>
+    <string name="master_password">Mot de passe principal</string>
+    <string name="custom_password">Mot de passe personnalisé</string>
+    <string name="custom_pin">Code PIN personnalisé</string>
     <!-- IntKey: Safety preferences -->
+    <string name="pref_title_max_carbs">Glucides maximum autorisés</string>
     <!-- IntKey: Loop preferences -->
+    <string name="pref_title_open_mode_min_change">Mode boucle ouverte, changement minimum</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <!-- IntKey: APS preferences -->
+    <string name="pref_title_smb_frequency">Intervalle SMB</string>
+    <string name="pref_title_smb_max_minutes">Max. minutes de basal pour limiter le SMB</string>
+    <string name="pref_title_uam_smb_max_minutes">Minutes maximum de basal RNS pour limiter SMB</string>
+    <string name="uam_smb_max_minutes">SMB RNS minutes max</string>
+    <string name="pref_title_carbs_request_threshold">Seuil de glucides requis</string>
+    <string name="carbs_req_threshold_summary">Quantité de glucides minimum en g pour afficher une alerte de suggestion de glucides. Les suggestions inférieures ne déclencheront pas de notification.</string>
+    <string name="pref_title_half_basal_exercise_target">Cible d\'exercice demi-basal</string>
+    <string name="half_basal_exercise_target_summary">Définir un nombre, par ex. 160, ce qui signifie que lorsque la cible temporaire est 160 mg/dL et que la Sensibilité augmente avec cible temporaire haute est activé, 50%% de la basale est injectée dans ce cas (75%%  pour une cible à 120 ; 60%% pour une cible à 140).</string>
+    <string name="pref_title_iob_threshold_percent">Seuil IA en pourcentage</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Pourcentage de maxIA au-dessus de laquelle les SMB sont désactivés.\nValeur par défaut : 100%\nAvec 100% cette fonctionnalité est désactivée.</string>
+    <string name="pref_title_dynisf_adjustment_factor">Facteur d\'ajustement DynamicISF</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Facteur d\'ajustement pour SI dynamique. Définissez plus de 100 % pour des corrections plus agressives et moins de 100 % pour des corrections moins agressives.</string>
+    <string name="pref_title_autosens_period">Période Autosens</string>
+    <string name="openapsama_autosens_period_summary">Le nombre d’heures écoulées pour l\'estimation de Sensibilité (le temps d’absorption des glucides est exclu)</string>
     <!-- IntKey: Maintenance preferences -->
+    <string name="pref_title_logs_amount">Nombre de journaux à envoyer</string>
     <!-- IntKey: Alert preferences -->
+    <string name="pref_title_stale_data_threshold">Seuil sans nouvelle donnée Gly</string>
+    <string name="pref_title_pump_unreachable_threshold">Seuil d\'alerte pompe hors de portée</string>
     <!-- IntKey: Insulin preferences -->
     <!-- IntKey: Autotune preferences -->
+    <string name="pref_title_autotune_days">Nombre de jours par défaut</string>
+    <string name="autotune_default_tune_days_summary">Nombre par défaut de jours de données à traiter par Autotune (jusqu\'à 30)</string>
     <!-- IntKey: SMS preferences -->
+    <string name="pref_title_sms_remote_bolus_distance">Espacement minimal des bolus distants</string>
     <!-- IntKey: BG Source preferences -->
+    <string name="pref_title_random_bg_interval">Intervalle Gly Aléatoire</string>
     <!-- IntKey: NS Client preferences -->
+    <string name="pref_title_alarm_stale_data">Seuil d\'alarme sans nouvelle donnée Gly</string>
+    <string name="pref_title_urgent_alarm_stale_data">Seuil d\'urgence sans nouvelle donnée Gly</string>
     <!-- IntKey: Site rotation preferences -->
+    <string name="pref_title_site_rotation_profile">Profil utilisateur pour la rotation du site</string>
     <!-- StringKey: General preferences -->
+    <string name="pref_title_units">Unités</string>
+    <string name="units_mgdl">mg/dL</string>
+    <string name="units_mmol">mmol/L</string>
+    <string name="units_insulin">U</string>
+    <string name="units_insulin_rate">U/h</string>
+    <string name="units_min">m</string>
+    <string name="units_sec">s</string>
+    <string name="units_hours">h</string>
+    <string name="units_days">jours</string>
+    <string name="units_grams">g</string>
+    <string name="units_kg">kg</string>
+    <string name="units_years">a</string>
+    <string name="units_percent">%</string>
     <!-- Formatted unit strings with value only -->
+    <string name="units_format_grams">%1$d g</string>
+    <string name="units_format_min">%1$d m</string>
+    <string name="units_format_sec">%1$d s</string>
+    <string name="units_format_hours">%1$d h</string>
+    <string name="units_format_hours_double">%1$.0f h</string>
+    <string name="units_format_days">%1$d jours</string>
+    <string name="units_format_percent">%1$d%%</string>
+    <string name="units_format_insulin">%1$.1f U</string>
+    <string name="units_format_insulin_int">%1$d U</string>
+    <string name="units_format_insulin_rate">%1$.1f U/h</string>
+    <string name="units_format_mgdl">%1$s mg/dL</string>
+    <string name="units_format_double">%1$.1f</string>
+    <string name="units_format_double_2">%1$.2f</string>
     <!-- Formatted unit strings with value and range -->
+    <string name="units_format_grams_range">%1$d g (%2$d - %3$d)</string>
+    <string name="units_format_min_range">%1$d m (%2$d - %3$d)</string>
+    <string name="units_format_sec_range">%1$d s (%2$d - %3$d)</string>
+    <string name="units_format_hours_range">%1$d h (%2$d - %3$d)</string>
+    <string name="units_format_hours_double_range">%1$.0f h (%2$.0f - %3$.0f)</string>
+    <string name="units_format_days_range">%1$d jours (%2$d - %3$d)</string>
+    <string name="units_format_percent_range">%1$d%% (%2$d - %3$d)</string>
+    <string name="units_format_insulin_int_range">%1$d U (%2$d - %3$d)</string>
+    <string name="units_format_insulin_range">%1$.1f U (%2$.1f - %3$.1f)</string>
+    <string name="units_format_insulin_rate_range">%1$.1f U/h (%2$.1f - %3$.1f)</string>
+    <string name="units_format_mgdl_range">%1$s mg/dL (%2$s - %3$s)</string>
+    <string name="units_format_double_range">%1$.1f (%2$.1f - %3$.1f)</string>
+    <string name="units_format_double_2_range">%1$.2f (%2$.2f - %3$.2f)</string>
+    <string name="pref_title_language">Langue</string>
+    <string name="lang_default">Système</string>
+    <string name="lang_en">Anglais</string>
+    <string name="lang_af">Africain</string>
+    <string name="lang_bg">Bulgare</string>
+    <string name="lang_cs">Tchèque</string>
+    <string name="lang_de">Allemand</string>
+    <string name="lang_dk">Danois</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_nl">Hollandais</string>
+    <string name="lang_es">Espagnol</string>
+    <string name="lang_el">Grec</string>
+    <string name="lang_ga">Irlandais</string>
+    <string name="lang_it">Italien</string>
+    <string name="lang_ko">Coréen</string>
+    <string name="lang_lt">Lithuanien</string>
+    <string name="lang_nb">Norvégien</string>
+    <string name="lang_pl">Polonais</string>
+    <string name="lang_pt">Portugais</string>
+    <string name="lang_pt_br">Portugais, brésilien</string>
+    <string name="lang_ro">Roumain</string>
+    <string name="lang_ru">Russe</string>
+    <string name="lang_sk">Slovaque</string>
+    <string name="lang_sv">Suédois</string>
+    <string name="lang_tr">Turque</string>
+    <string name="lang_zh_tw">Chinois traditionnel</string>
+    <string name="lang_zh_cn">Chinois simplifié</string>
+    <string name="pref_title_patient_name">Nom</string>
+    <string name="pref_summary_patient_name">Nom pour identifier cette instance AAPS (affichée dans les rapports et la synchronisation)</string>
     <!-- StringKey: Directory preferences -->
+    <string name="pref_title_aaps_directory">Répertoire AAPS</string>
     <!-- StringKey: Protection preferences -->
+    <string name="pref_title_master_password">Mot de passe principal</string>
+    <string name="pref_title_settings_password">Mot de passe des paramètres</string>
+    <string name="pref_title_settings_pin">Paramètres PIN</string>
+    <string name="pref_title_application_password">Mot de passe de l\'application</string>
+    <string name="pref_title_application_pin">PIN de l\'application</string>
+    <string name="pref_title_bolus_password">Mot de passe des bolus</string>
+    <string name="pref_title_bolus_pin">PIN des Bolus</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="pref_summary_theme_switcher">Choisissez le thème sombre, clair ou le thème système</string>
+    <string name="pref_title_app_color_scheme">Thèmes de couleurs de l\'appli</string>
+    <string name="pref_dark_theme">Thème sombre</string>
+    <string name="pref_light_theme">Thème clair</string>
+    <string name="pref_follow_system_theme">Utiliser le thème de l’appareil</string>
     <!-- StringKey: Safety preferences -->
+    <string name="pref_title_patient_age">Âge du patient</string>
     <!-- StringKey: Maintenance preferences -->
+    <string name="maintenance_email">Destinataire de l\'e-mail</string>
+    <string name="pref_title_identification">Identification pour les rapports de crash</string>
     <!-- StringKey: Automation preferences -->
+    <string name="pref_title_automation_location">Service de localisation</string>
+    <string name="automation_location_passive">Utiliser la localisation passive</string>
+    <string name="automation_location_network">Utiliser la localisation par le réseau</string>
+    <string name="automation_location_gps">Utiliser la localisation GPS</string>
     <!-- StringKey: SMS preferences -->
+    <string name="smscommunicator_allowednumbers">Numéros de tél autorisés</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_otp_pin">Code PIN obligatoire à la fin de l\'OTP</string>
+    <string name="smscommunicator_otp_pin_summary">Chiffres supplémentaires qui doivent être mémorisés et collés à la fin de chaque OTP généré</string>
     <!-- StringKey: Virtual pump preferences -->
+    <string name="pref_title_virtual_pump_type">Type de pompe</string>
     <!-- StringKey: NS Client preferences -->
+    <string name="ns_client_url_title">URL Nightscout</string>
+    <string name="ns_client_url_summary">Saisissez votre URL pour Nightscout (de type https://nomdevotresite.votreplatforme.dom)</string>
+    <string name="ns_client_secret_title">API secret de Nightscout</string>
+    <string name="ns_client_secret_summary">Entrez votre API secret Nightscout (min. 12 caractères)</string>
+    <string name="nsclient_token_title">Jeton d\'accès Nightscout</string>
+    <string name="nsclient_token_summary">Entrez votre jeton d\'accès Nightscout (min. 17 caractères)</string>
+    <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="ns_wifi_ssids_summary">SSIDs autorisés (séparés par point-virgule)</string>
     <!-- DoubleKey: Overview preferences -->
+    <string name="pref_title_insulin_button_increment_1">Incrément bouton insuline 1</string>
+    <string name="pref_title_insulin_button_increment_2">Incrément bouton insuline 2</string>
+    <string name="pref_title_insulin_button_increment_3">Incrément bouton insuline 3</string>
+    <string name="insulin_increment_button_message">Quantité d’insuline à ajouter lorsque vous appuyez sur le bouton</string>
     <!-- DoubleKey: Actions preferences -->
+    <string name="pref_title_fill_button_1">Remplir bouton 1</string>
+    <string name="pref_title_fill_button_2">Remplir bouton 2</string>
+    <string name="pref_title_fill_button_3">Remplir bouton 3</string>
     <!-- DoubleKey: Safety preferences -->
+    <string name="pref_title_max_bolus">Bolus maximum</string>
     <!-- DoubleKey: APS preferences -->
+    <string name="pref_title_max_basal">Débit de base maximum</string>
+    <string name="openapsma_max_basal_summary">Cette valeur est appelée Basal max dans le contexte OpenAPS</string>
+    <string name="pref_title_smb_max_iob">IA max pour SMB</string>
+    <string name="openapssmb_max_iob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contexte OpenAPS\nOpenAPS n’ajoutera pas plus d’insuline si l\'IA actuelle est supérieure à cette valeur</string>
+    <string name="pref_title_ama_max_iob">IA max pour AMA</string>
+    <string name="openapsma_max_iob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contexte OpenAPS\nC\'est le maximum d\'insuline en [U] que APS peut délivrer en une seule fois.</string>
+    <string name="pref_title_max_daily_multiplier">Multiplicateur max quotidien de sécurité</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valeur par défaut : 3 Ceci est un paramètre important de sécurité de l’OpenAPS. Ceci va limiter vos débits basal à 3 fois votre débit Basal maximum. Il est probable que vous n’aurez pas besoin de changer cela, mais vous devez être conscient de ce qui est discuté pour les limites de sécurité dans “3x max daily; 4x current”.</string>
+    <string name="pref_title_current_basal_multiplier">Multiplicateur de sécurité basale courante</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le débit de base maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le débit de base actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits de base maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
+    <string name="pref_title_bolus_snooze_divisor">Report de bolus, diviseur de DAI</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Valeur par défaut : 2\nLe report de Bolus est activé apres votre bolus de repas, la boucle ne réagira pas avec des valeurs basses temporaire quand vous venez juste de manger. L’exemple ici et la valeur par défaut est 2 ; donc avec une Durée d\'Action (DAI) de 5 heures signifie que snooze bolus sera graduellement éliminé après 2,5 heures (5/2).</string>
+    <string name="pref_title_ama_min_5m_carbs_impact">AMA min 5m Impact Glycémique</string>
+    <string name="pref_title_smb_min_5m_carbs_impact">SMB min 5m carbs impact</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valeur par défaut : 3.0 (AMA) ou 8.0 (SMB). Il s’agit d’un paramètre décrivant l’absorption des glucides par 5 minutes. La valeur par défaut est de 3mg/dl/5min. Cela influe sur la vitesse calculée de disparition des Glucides Actifs (GA), et comment sera estimée la consommation des glucides pour calculer les valeurs futures de glycémies, lorsque la glycémie chute plus que prévu ou n\'augmente pas autant que calculé.</string>
+    <string name="pref_title_absorption_cutoff">Coupure d\'absorption</string>
+    <string name="absorption_cutoff_summary">Durée où n’importe quel repas est considéré absorbé. Les glucides restants ne seront pas pris en compte.</string>
+    <string name="pref_title_absorption_maxtime">Temps max d\'absorption</string>
+    <string name="absorption_max_time_summary">Durée estimé en heures pour une absorbption totale des glucides d’un repas</string>
+    <string name="pref_title_autosens_min">Autosens min</string>
+    <string name="openapsama_autosens_min_summary">Valeur par défaut: 0,7\nL\'autre volet des limites de sécurité de l\'autosens, c\'est de définir une limite basse sur l\'ajustement des débits de basal et une limite haute sur l\'ajustement de la SI et des cibles Gly effectués par l\'autosens.</string>
+    <string name="pref_title_autosens_max">Autosens max</string>
+    <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20% en limite maximale du ratio Autosens. En consequence, ceci va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI), et la valeur minimale de la cible glycémique.</string>
+    <string name="pref_title_autoisf_min">AutoISF min</string>
+    <string name="openapsama_autoISF_min_summary">Similaire à autosens_min, cela définit à quel point la SI peut devenir faible.\n\nLa valeur par défaut 1.0 désactive cet effet.</string>
+    <string name="pref_title_autoisf_max">AutoISF max</string>
+    <string name="openapsama_autoISF_max_summary">Similaire à autosens_max ceci définit à quel point la SI peut être renforcé.\n\nLa valeur par défaut 1.0 arrête cet effet.\n\nATTENTION : Soyez extrêmement prudent lorsque vous utilisez des valeurs supérieures à 2.5</string>
+    <string name="pref_title_bg_accel_weight">Poids SI d\'accélération Gly</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">C\'est le poids appliqué pendant l\'accélèration de la glycémie et qui renforce la SI pour potentiellement augmenter la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 ferme désactive cet effet.</string>
+    <string name="pref_title_bg_brake_weight">Poids SI de freinage Gly</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">C\'est le poids appliqué lors de la décélération de la glycémie et qui affaiblit la SI en réduisant la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
+    <string name="pref_title_low_bg_weight">Poids de la plage de Gly basse</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">C\'est le poids appliqué quand la glycémie est en dessous de la cible et qui affaiblit la SI en réduisant potentiellement la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
+    <string name="pref_title_high_bg_weight">Poids de la plage de Gly haute</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Il s\'agit du poids appliqué quand la glycémie est au-dessus de la cible et qui renforce la SI pour potentiellement augmenter la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
+    <string name="pref_title_smb_delivery_ratio_bg_range">Injection SMB ratio de la plage Gly</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valeur par défaut : 0. Le facteur d\'injection de SMB augmente linérairement en fonction de la plage de glycémie [target_bg, target_bg+bg_range].\nSur la Cible, le facteur de SMB est la valeur minimale (smb_delivery_ratio_min), sur la Cible+Plage, c\'est le facteur maximal.\nAvec 0 la variation linéraire du facteur SMB est désactivé et la facteur fixe (smb_delivery_ratio) est utilisé.</string>
+    <string name="pref_title_pp_weight">Poids SI postprandiale</string>
+    <string name="openapsama_pp_ISF_weight_summary">Il s\'agit du poids appliqué pendant l\'augmentation de la glycémie et qui renforce la SI pour potentiellement augmenter la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
+    <string name="pref_title_dura_weight">Poids de la durée SI</string>
+    <string name="openapsama_dura_ISF_weight_summary">Il s\'agit du poids appliqué en cas de plateau de glycémie élevé persistant et qui renforce la SI pour potentiellement augmenter la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
+    <string name="pref_title_smb_delivery_ratio">Ratio d\'injection SMB</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Valeur par défaut : 0.5\nCeci est une autre limite de sécurité OpenAPS, et spécifie quelle part de l\'insuline totale requise peut être injectée en tant que SMB. Cela a pour but d\'empêcher d\'aller sur un territoire dangereux si des aidants demandent simultanément des SMB par téléphone. Augmentez cette valeur expérimentale lentement et avec prudence.</string>
+    <string name="pref_title_smb_delivery_ratio_min">Ratio d\'injection SMB mini</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Valeur par défaut: 0,5. Ceci est la valeur minimale du facteur linéaire contrairement au facteur fixe ci-dessus.</string>
+    <string name="pref_title_smb_delivery_ratio_max">Ratio d\'injection SMB maxi</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valeur par défaut: 0,5. Ceci est la valeur maximale du facteur linéaire contrairement au facteur fixe ci-dessus.</string>
+    <string name="pref_title_smb_max_range_extension">Extension de plage SMB maxi</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valeur par défaut : 1 Ceci est une autre clé de sécurité OpenAPS. Elle spécifie par quel facteur vous pouvez dépasser les 120 minutes régulières max-SMB/max-RNS. Augmentez lentement et avec prudence cette valeur expérimentale.</string>
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_low_mark">Marque Gly basse</string>
+    <string name="pref_title_high_mark">Marque Gly élevée</string>
     <!-- UnitDoubleKey: APS preferences -->
+    <string name="pref_title_lgs_threshold">Seuil AGB</string>
+    <string name="lgs_threshold_summary">Valeur glycémique au-dessous de laquelle l\'injection de l\'insuline est suspendu. La valeur par défaut utilise le modèle standard de la cible. L\'utilisateur peut choisir entre 60mg/dl (3.3mmol/l) et 100mg/dl (5.5mmol/l). Les valeurs au-dessous de 65/3.6 déclenchent l\'utilisation du modèle standard</string>
     <!-- IntentKey preferences -->
     <!--    Appearance preferences-->
+    <string name="prefs_range_title">Fourchette de visualisation</string>
 </resources>

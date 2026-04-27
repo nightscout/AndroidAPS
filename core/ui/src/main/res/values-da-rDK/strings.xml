@@ -81,7 +81,6 @@
     <string name="disableloop">Deaktivér loop</string>
     <string name="resumeloop">Genoptag loop</string>
     <string name="suspendloop">Suspendér Loop</string>
-    <string name="duration_min_label">Varighed [min]</string>
     <string name="notification">Notifikation</string>
     <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
     <string name="exists">eksisterer</string>
@@ -177,9 +176,6 @@
     <string name="careportal_question_message">Spørgsmål : %1$s</string>
     <string name="careportal_exercise_message">Motion: %1$s</string>
     <string name="careportal_pump_site_change">Skift indstikssted</string>
-    <string name="cgm_sensor_insert">CGM Sensor Indsæt</string>
-    <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
-    <string name="careportal_cgm_sensor_stop">CGM Sensor Stop</string>
     <string name="careportal_dad_alert">Diabeteshund alarm</string>
     <string name="careportal_insulin_cartridge_change">Skift af insulinampul</string>
     <string name="careportal_profileswitch">Profilskift</string>
