@@ -55,6 +55,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.ImportSummaryItem
+import app.aaps.core.ui.compose.bottomBarSafeArea
 import app.aaps.core.ui.compose.clearFocusOnTap
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.R as CoreUiR
@@ -423,6 +424,7 @@ private fun ImportReviewContent(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .bottomBarSafeArea()
                         .padding(16.dp)
                 ) {
                     val importOk = successResult.importOk
