@@ -344,7 +344,7 @@ class LoopPluginTest : TestBaseWithProfile() {
 
     // region Tests for runningModePreCheck (via public runningModeRecord property)
 
-    private fun setupForPreCheck() {
+    private fun setupForPreCheck() = runTest {
         // Default setup: All constraints pass, pump is not suspended.
         whenever(activePlugin.activePump.isSuspended()).thenReturn(false)
         whenever(constraintChecker.isLoopInvocationAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
@@ -352,10 +352,8 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(constraintChecker.isLgsForced()).thenReturn(ConstraintObject(false, aapsLogger))
 
         // Mock the database calls
-        runTest {
-            whenever(persistenceLayer.insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any()))
-                .thenReturn(PersistenceLayer.TransactionResult())
-        }
+        whenever(persistenceLayer.insertOrUpdateRunningMode(any(), any(), any(), anyOrNull(), any()))
+            .thenReturn(PersistenceLayer.TransactionResult())
 
         // Default the active mode to prevent nulls. The mockCurrentMode helper will override this.
         mockCurrentMode(RM(mode = RM.Mode.DISABLED_LOOP, timestamp = dateUtil.now(), duration = 0))

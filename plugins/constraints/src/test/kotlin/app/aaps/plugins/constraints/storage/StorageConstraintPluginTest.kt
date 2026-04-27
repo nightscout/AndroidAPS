@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -35,7 +36,7 @@ class StorageConstraintPluginTest : TestBase() {
         override fun availableInternalMemorySize(): Long = memSize
     }
 
-    @Test fun isLoopInvocationAllowedTest() {
+    @Test fun isLoopInvocationAllowedTest() = runTest {
         val mocked = MockedStorageConstraintPlugin(aapsLogger, rh, notificationManager)
         // Set free space under 200(Mb) to disable loop
         mocked.memSize = 150L

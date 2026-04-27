@@ -27,6 +27,7 @@ import app.aaps.shared.tests.SharedPreferencesMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.Lazy
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -84,7 +85,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         assertThat(c.value()).isTrue()
     }
 
-    @Test fun notStartedObjective6ShouldLimitClosedLoop() {
+    @Test fun notStartedObjective6ShouldLimitClosedLoop() = runTest {
         objectivesPlugin.objectives[Objectives.CLOSED_LOOP_OBJECTIVE].startedOn = 0
         val c = objectivesPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).contains("Objective 7 not started")
@@ -98,7 +99,7 @@ class ObjectivesPluginTest : TestBaseWithProfile() {
         assertThat(c.value()).isFalse()
     }
 
-    @Test fun notStartedObjective10ShouldLimitSMBMode() {
+    @Test fun notStartedObjective10ShouldLimitSMBMode() = runTest {
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         val c = objectivesPlugin.isSMBModeEnabled(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).contains("Objective 9 not started")

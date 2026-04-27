@@ -24,6 +24,7 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import app.aaps.plugins.constraints.objectives.objectives.Objective.UITask
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -89,7 +91,7 @@ class ObjectivesViewModel @Inject constructor(
             .onEach { updateState() }
             .launchIn(scope)
 
-        updateState()
+        scope.launch { updateState() }
         startUpdateTimer()
     }
 
@@ -102,7 +104,7 @@ class ObjectivesViewModel @Inject constructor(
         }
     }
 
-    fun updateState() {
+    private suspend fun updateState() = withContext(Dispatchers.Default) {
         val objectives = objectivesPlugin.objectives.mapIndexed { index, objective ->
             val tasks = objective.tasks
                 .filter { !it.shouldBeIgnored() }
@@ -111,7 +113,7 @@ class ObjectivesViewModel @Inject constructor(
                         index = taskIndex,
                         name = rh.gs(task.task),
                         isCompleted = task.isCompleted(),
-                        progress = task.progress,
+                        progress = task.progress(),
                         hints = task.hints.map { HintUiItem(rh.gs(it.hint)) },
                         learned = task.learned.map { rh.gs(it.learned) },
                         type = when (task) {
@@ -157,13 +159,15 @@ class ObjectivesViewModel @Inject constructor(
 
     fun onFakeModeToggle(enabled: Boolean) {
         _uiState.value = _uiState.value.copy(isFakeMode = enabled)
-        updateState()
+        scope.launch { updateState() }
     }
 
     fun onReset() {
         objectivesPlugin.reset()
-        updateState()
-        scrollToCurrentObjective()
+        scope.launch {
+            updateState()
+            scrollToCurrentObjective()
+        }
     }
 
     fun onStart(objectiveIndex: Int) {
@@ -171,9 +175,11 @@ class ObjectivesViewModel @Inject constructor(
         receiverStatusStore.updateNetworkStatus()
         if (_uiState.value.isFakeMode) {
             objective.startedOn = dateUtil.now()
-            updateState()
-            scrollToCurrentObjective()
-            rxBus.send(EventSWUpdate(false))
+            scope.launch {
+                updateState()
+                scrollToCurrentObjective()
+                rxBus.send(EventSWUpdate(false))
+            }
         } else {
             scope.launch {
                 val result = ntpVerify()
@@ -199,9 +205,11 @@ class ObjectivesViewModel @Inject constructor(
             // -1000ms: Objective.isAccomplished uses strict `<` comparison with dateUtil.now(),
             // so the timestamp must be strictly in the past for the UI to update immediately.
             objective.accomplishedOn = dateUtil.now() - 1000
-            updateState()
-            scrollToCurrentObjective()
-            rxBus.send(EventSWUpdate(false))
+            scope.launch {
+                updateState()
+                scrollToCurrentObjective()
+                rxBus.send(EventSWUpdate(false))
+            }
         } else {
             scope.launch {
                 val result = ntpVerify()
@@ -264,9 +272,11 @@ class ObjectivesViewModel @Inject constructor(
         )
         objective.startedOn = 0
         _uiState.value = _uiState.value.copy(confirmUnstartDialog = null)
-        updateState()
-        scrollToCurrentObjective()
-        rxBus.send(EventSWUpdate(false))
+        scope.launch {
+            updateState()
+            scrollToCurrentObjective()
+            rxBus.send(EventSWUpdate(false))
+        }
     }
 
     fun onDismissUnstartDialog() {
@@ -276,9 +286,11 @@ class ObjectivesViewModel @Inject constructor(
     fun onUnfinish(objectiveIndex: Int) {
         val objective = objectivesPlugin.objectives[objectiveIndex]
         objective.accomplishedOn = 0
-        updateState()
-        scrollToCurrentObjective()
-        rxBus.send(EventSWUpdate(false))
+        scope.launch {
+            updateState()
+            scrollToCurrentObjective()
+            rxBus.send(EventSWUpdate(false))
+        }
     }
 
     fun onShowLearned(objectiveIndex: Int) {
@@ -299,13 +311,14 @@ class ObjectivesViewModel @Inject constructor(
 
     // Exam sheet
     fun onOpenExam(objectiveIndex: Int, taskIndex: Int) {
-        openExamTask(objectiveIndex, taskIndex)
+        scope.launch { openExamTask(objectiveIndex, taskIndex) }
     }
 
-    private fun openExamTask(objectiveIndex: Int, taskIndex: Int) {
+    private suspend fun openExamTask(objectiveIndex: Int, taskIndex: Int) {
         val objective = objectivesPlugin.objectives[objectiveIndex]
         val visibleTasks = objective.tasks.filter { !it.shouldBeIgnored() }
         val task = visibleTasks[taskIndex] as? ExamTask ?: return
+        val allCompleted = objective.isCompleted()
         _uiState.value = _uiState.value.copy(
             examSheet = ExamSheetState(
                 objectiveIndex = objectiveIndex,
@@ -327,7 +340,7 @@ class ObjectivesViewModel @Inject constructor(
                 canAnswer = !task.answered && task.isEnabledAnswer(),
                 canGoBack = taskIndex > 0,
                 canGoNext = taskIndex < visibleTasks.size - 1,
-                allCompleted = objective.isCompleted
+                allCompleted = allCompleted
             )
         )
     }
@@ -362,8 +375,10 @@ class ObjectivesViewModel @Inject constructor(
         } else {
             task.disabledTo = 0
         }
-        openExamTask(examSheet.objectiveIndex, examSheet.currentTaskIndex)
-        rxBus.send(EventObjectivesUpdateGui())
+        scope.launch {
+            openExamTask(examSheet.objectiveIndex, examSheet.currentTaskIndex)
+            rxBus.send(EventObjectivesUpdateGui())
+        }
     }
 
     fun onExamReset() {
@@ -372,15 +387,17 @@ class ObjectivesViewModel @Inject constructor(
         val visibleTasks = objective.tasks.filter { !it.shouldBeIgnored() }
         val task = visibleTasks[examSheet.currentTaskIndex] as? ExamTask ?: return
         task.answered = false
-        openExamTask(examSheet.objectiveIndex, examSheet.currentTaskIndex)
-        rxBus.send(EventObjectivesUpdateGui())
+        scope.launch {
+            openExamTask(examSheet.objectiveIndex, examSheet.currentTaskIndex)
+            rxBus.send(EventObjectivesUpdateGui())
+        }
     }
 
     fun onExamNavigate(direction: Int) {
         val examSheet = _uiState.value.examSheet ?: return
         val newIndex = examSheet.currentTaskIndex + direction
         if (newIndex in 0 until examSheet.totalTasks) {
-            openExamTask(examSheet.objectiveIndex, newIndex)
+            scope.launch { openExamTask(examSheet.objectiveIndex, newIndex) }
         }
     }
 
@@ -388,17 +405,19 @@ class ObjectivesViewModel @Inject constructor(
         val examSheet = _uiState.value.examSheet ?: return
         val objective = objectivesPlugin.objectives[examSheet.objectiveIndex]
         val visibleTasks = objective.tasks.filter { !it.shouldBeIgnored() }
-        // Search from current+1 to end, then wrap from 0
-        for (i in (examSheet.currentTaskIndex + 1) until visibleTasks.size) {
-            if (!visibleTasks[i].isCompleted()) {
-                openExamTask(examSheet.objectiveIndex, i)
-                return
+        scope.launch {
+            // Search from current+1 to end, then wrap from 0
+            for (i in (examSheet.currentTaskIndex + 1) until visibleTasks.size) {
+                if (!visibleTasks[i].isCompleted()) {
+                    openExamTask(examSheet.objectiveIndex, i)
+                    return@launch
+                }
             }
-        }
-        for (i in 0..examSheet.currentTaskIndex) {
-            if (!visibleTasks[i].isCompleted()) {
-                openExamTask(examSheet.objectiveIndex, i)
-                return
+            for (i in 0..examSheet.currentTaskIndex) {
+                if (!visibleTasks[i].isCompleted()) {
+                    openExamTask(examSheet.objectiveIndex, i)
+                    return@launch
+                }
             }
         }
     }
@@ -412,7 +431,7 @@ class ObjectivesViewModel @Inject constructor(
         val objective = objectivesPlugin.objectives[objectiveIndex]
         val visibleTasks = objective.tasks.filter { !it.shouldBeIgnored() }
         val task = visibleTasks[taskIndex] as? UITask ?: return
-        task.code.invoke(context, task, { updateState() }) { message ->
+        task.code.invoke(context, task, { scope.launch { updateState() } }) { message ->
             _snackbarMessage.value = message
         }
     }

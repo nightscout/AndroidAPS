@@ -114,7 +114,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun notEnabledSMBInPreferencesDisablesSMB() {
+    fun notEnabledSMBInPreferencesDisablesSMB() = runTest {
         whenever(preferences.get(BooleanKey.ApsUseSmb)).thenReturn(false)
         whenever(constraintChecker.isClosedLoopAllowed(anyOrNull())).thenReturn(ConstraintObject(true, aapsLogger))
         val c = openAPSSMBPlugin.isSMBModeEnabled(ConstraintObject(true, aapsLogger))
@@ -123,7 +123,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun openLoopPreventsSMB() {
+    fun openLoopPreventsSMB() = runTest {
         whenever(preferences.get(BooleanKey.ApsUseSmb)).thenReturn(true)
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(false, aapsLogger))
         val c = safetyPlugin.isSMBModeEnabled(ConstraintObject(true, aapsLogger))

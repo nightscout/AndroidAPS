@@ -638,7 +638,7 @@ class DataHandlerMobile @Inject constructor(
             }
 
             OapsResultInfo(
-                changeRequested = result.isChangeRequested && !isLetTempRun,
+                changeRequested = runBlocking { result.isChangeRequested() } && !isLetTempRun,
                 isLetTempRun = isLetTempRun,
                 rate = displayRate,
                 ratePercent = displayPercent,
@@ -1827,7 +1827,7 @@ class DataHandlerMobile @Inject constructor(
                 return rh.gs(R.string.aps_only)
             val usedAPS = activePlugin.activeAPS ?: return rh.gs(R.string.last_aps_result_na)
             val result = usedAPS.lastAPSResult ?: return rh.gs(R.string.last_aps_result_na)
-            ret += if (!result.isChangeRequested) {
+            ret += if (!runBlocking { result.isChangeRequested() }) {
                 rh.gs(app.aaps.core.ui.R.string.nochangerequested) + "\n"
             } else if (result.rate == 0.0 && result.duration == 0) {
                 rh.gs(app.aaps.core.ui.R.string.cancel_temp) + "\n"

@@ -427,8 +427,8 @@ class LoopPlugin @Inject constructor(
         }
     }
 
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
-        if (runBlocking { runningMode() } == RM.Mode.CLOSED_LOOP_LGS)
+    override suspend fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+        if (runningMode() == RM.Mode.CLOSED_LOOP_LGS)
             maxIob.setIfSmaller(
                 HardLimits.MAX_IOB_LGS,
                 rh.gs(app.aaps.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)),
@@ -617,7 +617,7 @@ class LoopPlugin @Inject constructor(
                             }
                         }
                     }
-                    if (resultAfterConstraints.isChangeRequested
+                    if (resultAfterConstraints.isChangeRequested()
                         && !commandQueue.bolusInQueue()
                     ) {
                         val waiting = pumpEnactResultProvider.get()
@@ -671,7 +671,7 @@ class LoopPlugin @Inject constructor(
                     }
                 } else {
                     // LGS
-                    if (resultAfterConstraints.isChangeRequested && allowNotification) {
+                    if (resultAfterConstraints.isChangeRequested() && allowNotification) {
                         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                         builder.setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
                             .setContentTitle(rh.gs(R.string.open_loop_new_suggestion))

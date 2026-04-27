@@ -640,7 +640,7 @@ class MainViewModel @Inject constructor(
             if (result == ProtectionResult.GRANTED) {
                 viewModelScope.launch {
                     val lastRun = loop.lastRun ?: return@launch
-                    if (lastRun.constraintsProcessed?.isChangeRequested == true) {
+                    if (lastRun.constraintsProcessed?.isChangeRequested() == true) {
                         uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
                         loop.invoke("Accept temp button", false)
                         loop.acceptChangeRequest()

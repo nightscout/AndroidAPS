@@ -21,15 +21,14 @@ class Objective3 @Inject constructor(
         tasks.add(MinimumDurationTask(this, T.days(7).msecs()))
         tasks.add(
             object : Task(this, R.string.objectives_manualenacts) {
-                override fun isCompleted(): Boolean {
+                override suspend fun isCompleted(): Boolean {
                     return preferences.get(IntNonKey.ObjectivesManualEnacts) >= MANUAL_ENACTS_NEEDED
                 }
 
-                override val progress: String
-                    get() =
-                        if (preferences.get(IntNonKey.ObjectivesManualEnacts) >= MANUAL_ENACTS_NEEDED)
-                            rh.gs(R.string.completed_well_done)
-                        else preferences.get(IntNonKey.ObjectivesManualEnacts).toString() + " / " + MANUAL_ENACTS_NEEDED
+                override suspend fun progress(): String =
+                    if (preferences.get(IntNonKey.ObjectivesManualEnacts) >= MANUAL_ENACTS_NEEDED)
+                        rh.gs(R.string.completed_well_done)
+                    else preferences.get(IntNonKey.ObjectivesManualEnacts).toString() + " / " + MANUAL_ENACTS_NEEDED
             }.learned(Learned(R.string.objectives_openloop_learned))
         )
     }

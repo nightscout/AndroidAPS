@@ -44,15 +44,14 @@ abstract class Objective(
 
     var tasks: MutableList<Task> = ArrayList()
 
-    val isCompleted: Boolean
-        get() {
-            for (task in tasks) {
-                if (!task.shouldBeIgnored() && !task.isCompleted()) return false
-            }
-            return true
+    suspend fun isCompleted(): Boolean {
+        for (task in tasks) {
+            if (!task.shouldBeIgnored() && !task.isCompleted()) return false
         }
+        return true
+    }
 
-    fun isCompleted(trueTime: Long): Boolean {
+    suspend fun isCompleted(trueTime: Long): Boolean {
         for (task in tasks) {
             if (!task.shouldBeIgnored() && !task.isCompleted(trueTime)) return false
         }
@@ -69,12 +68,12 @@ abstract class Objective(
         var hints = ArrayList<Hint>()
         var learned = ArrayList<Learned>()
 
-        abstract fun isCompleted(): Boolean
+        abstract suspend fun isCompleted(): Boolean
 
-        open fun isCompleted(trueTime: Long): Boolean = isCompleted()
+        open suspend fun isCompleted(trueTime: Long): Boolean = isCompleted()
 
-        open val progress: String
-            get() = rh.gs(if (isCompleted()) R.string.completed_well_done else R.string.not_completed_yet)
+        open suspend fun progress(): String =
+            rh.gs(if (isCompleted()) R.string.completed_well_done else R.string.not_completed_yet)
 
         fun hint(hint: Hint): Task {
             hints.add(hint)
@@ -91,15 +90,15 @@ abstract class Objective(
 
     inner class MinimumDurationTask internal constructor(objective: Objective, private val minimumDuration: Long) : Task(objective, R.string.time_elapsed) {
 
-        override fun isCompleted(): Boolean =
+        override suspend fun isCompleted(): Boolean =
             objective.isStarted && System.currentTimeMillis() - objective.startedOn >= minimumDuration
 
-        override fun isCompleted(trueTime: Long): Boolean {
+        override suspend fun isCompleted(trueTime: Long): Boolean {
             return objective.isStarted && trueTime - objective.startedOn >= minimumDuration
         }
 
-        override val progress: String
-            get() = (getDurationText(System.currentTimeMillis() - objective.startedOn)
+        override suspend fun progress(): String =
+            (getDurationText(System.currentTimeMillis() - objective.startedOn)
                 + " / " + getDurationText(minimumDuration))
 
         private fun getDurationText(duration: Long): String {
@@ -126,7 +125,7 @@ abstract class Objective(
             answered = preferences.get(ObjectivesBooleanComposedKey.AnsweredUi, spIdentifier)
         }
 
-        override fun isCompleted(): Boolean = answered
+        override suspend fun isCompleted(): Boolean = answered
     }
 
     inner class ExamTask internal constructor(objective: Objective, @StringRes task: Int, @StringRes val question: Int, private val spIdentifier: String) : Task(objective, task) {
@@ -148,7 +147,7 @@ abstract class Objective(
             disabledTo = preferences.get(ObjectivesLongComposedKey.DisabledTo, spIdentifier)
         }
 
-        override fun isCompleted(): Boolean = answered
+        override suspend fun isCompleted(): Boolean = answered
 
         fun isEnabledAnswer(): Boolean = disabledTo < dateUtil.now()
 

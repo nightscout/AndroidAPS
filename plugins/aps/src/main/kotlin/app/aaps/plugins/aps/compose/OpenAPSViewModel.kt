@@ -67,7 +67,7 @@ class OpenAPSViewModel(
             .launchIn(scope)
 
         // Initial state from current data
-        updateState()
+        scope.launch { updateState() }
     }
 
     fun onRefresh() {
@@ -77,7 +77,7 @@ class OpenAPSViewModel(
         }
     }
 
-    private fun updateState() {
+    private suspend fun updateState() {
         val lastAPSResult = apsPlugin.lastAPSResult
         if (lastAPSResult == null) {
             _uiState.value = OpenAPSUiState(

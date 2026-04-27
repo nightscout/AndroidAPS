@@ -14,12 +14,12 @@ import app.aaps.core.interfaces.profile.Profile
 interface ConstraintsChecker : PluginConstraints {
 
     fun isLoopInvocationAllowed(): Constraint<Boolean>
-    fun isClosedLoopAllowed(): Constraint<Boolean>
+    suspend fun isClosedLoopAllowed(): Constraint<Boolean>
     fun isLgsForced(): Constraint<Boolean>
     fun isAutosensModeEnabled(): Constraint<Boolean>
-    fun isSMBModeEnabled(): Constraint<Boolean>
+    suspend fun isSMBModeEnabled(): Constraint<Boolean>
     fun isUAMEnabled(): Constraint<Boolean>
-    fun isAdvancedFilteringEnabled(): Constraint<Boolean>
+    suspend fun isAdvancedFilteringEnabled(): Constraint<Boolean>
     fun isSuperBolusEnabled(): Constraint<Boolean>
     fun isAutomationEnabled(): Constraint<Boolean>
     fun isConcentrationEnabled(): Constraint<Boolean>
@@ -32,5 +32,5 @@ interface ConstraintsChecker : PluginConstraints {
     fun getMaxBolusAllowed(): Constraint<Double>
     fun getMaxExtendedBolusAllowed(): Constraint<Double>
     fun getMaxCarbsAllowed(): Constraint<Int>
-    fun getMaxIOBAllowed(): Constraint<Double>
+    suspend fun getMaxIOBAllowed(): Constraint<Double>
 }
