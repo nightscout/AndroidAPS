@@ -24,7 +24,7 @@ enum class UnitDoubleKey(
     OverviewVeryLowMark(key = "very_low_mark", defaultValue = 55.0, minMgdl = 40, maxMgdl =160, titleResId = R.string.pref_title_very_low_mark, showInNsClientMode = false),
     OverviewLowMark(key = "low_mark", defaultValue = 72.0, minMgdl = 25, maxMgdl = 160, titleResId = R.string.pref_title_low_mark, showInNsClientMode = false, hideParentScreenIfHidden = true),
     OverviewHighMark(key = "high_mark", defaultValue = 180.0, minMgdl = 90, maxMgdl = 250, titleResId = R.string.pref_title_high_mark, showInNsClientMode = false),
-    OverviewVeryHighMark(key = "very_high_mark", defaultValue = 400.0, minMgdl =200, maxMgdl =400, titleResId = R.string.pref_title_very_high_mark, showInNsClientMode = false),
+    OverviewVeryHighMark(key = "very_high_mark", defaultValue = 400.0, minMgdl =180, maxMgdl =400, titleResId = R.string.pref_title_very_high_mark, showInNsClientMode = false),
     ApsLgsThreshold(
         key = "lgsThreshold",
         defaultValue = 65.0,
