@@ -59,7 +59,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(config.APS).thenReturn(true)
         loopPlugin = LoopPlugin(
             aapsLogger, rxBus, preferences, config,
-            constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
+            constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             persistenceLayer, runningConfiguration, uiInteraction, notificationManager, pumpEnactResultProvider, processedDeviceStatusData, pumpStatusProvider, decimalFormatter, ch, testScope
         )
         whenever(activePlugin.activePump).thenReturn(virtualPumpPlugin)

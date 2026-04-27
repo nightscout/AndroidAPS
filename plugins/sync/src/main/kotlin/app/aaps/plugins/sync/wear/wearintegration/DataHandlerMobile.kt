@@ -181,7 +181,7 @@ class DataHandlerMobile @Inject constructor(
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "OpenLoopRequestConfirmed received from ${it.sourceNodeId}")
                            if (!config.appInitialized) return@subscribe
-                           loop.acceptChangeRequest()
+                           runBlocking { loop.acceptChangeRequest() }
                            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                        }, fabricPrivacy::logException)
         disposable += rxBus

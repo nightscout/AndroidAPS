@@ -84,7 +84,7 @@ interface Loop {
     /**
      * Open loop mode trigger
      */
-    fun acceptChangeRequest()
+    suspend fun acceptChangeRequest()
 
     /**
      * Returns minutes to end of suspended loop
