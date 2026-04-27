@@ -7,6 +7,7 @@
     <string name="label_temp_target_tile">Target Temporaneo</string>
     <string name="label_quick_wizard_tile">Procedura Guidata Veloce</string>
     <string name="label_user_action_tile">Azione utente</string>
+    <string name="label_scene_tile">Scena</string>
     <string name="msg_warning_sync">Nessun dato ricevuto da %1$s! Controlla se AAPS sul telefono invia i dati allo smartwatch</string>
     <string name="msg_warning_old">I dati di AAPS sono vecchi di %1$s ! Controlla il tuo sensore, xDrip+, NS, la configurazione di AAPS o altro!</string>
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
@@ -83,6 +84,7 @@
     <string name="action_tempt_confirmation">Target temporaneo richiesto</string>
     <string name="action_quick_wizard_confirmation">Calcolatore rapido richiesto</string>
     <string name="action_user_action_confirmation">Azione Utente Richiesta</string>
+    <string name="action_scene_confirmation">Scena Attivata</string>
     <string name="action_treatment_confirmation">Trattamento richiesto</string>
     <string name="action_bolus_confirmation">Bolo richiesto</string>
     <string name="action_wizard_confirmation">Calcolo richiesto</string>
