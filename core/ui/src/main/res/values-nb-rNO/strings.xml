@@ -281,7 +281,7 @@
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
     <string name="careportal_pump_site_change">Bytte av pumpens kanyle</string>
-    <string name="cgm_sensor_insert">Bytte av sensor</string>
+    <string name="cgm_sensor_insert">Sensorbytte</string>
     <string name="careportal_pump_site_management">Pumpeområder</string>
     <string name="careportal_cgm_site_management">Sensor-områder</string>
     <string name="careportal_cgmsensorstart">Sensorstart</string>
