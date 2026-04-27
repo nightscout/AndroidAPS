@@ -71,6 +71,7 @@
     <string name="quick_wizard_not_available">选定的快速向导不再可用，请刷新</string>
     <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
     <string name="user_action_not_available">所选用户动作 %1$s 已不可用，请刷新您的面板</string>
+    <string name="scene_not_available">情景 %1$s 已失效，请刷新磁贴</string>
     <string name="wear_action_tempt_cancel_message">取消运行临时目标？</string>
     <string name="wear_action_tempt_unit_error">手表和手机上使用了不同的单位！</string>
     <string name="wear_action_tempt_zero_message">零-临时目标-取消运行中的临时目标？</string>
