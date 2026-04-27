@@ -51,11 +51,16 @@ class AidexPlugin @Inject constructor(
     ownPreferences = emptyList(),
     aapsLogger, rh,preferences
 ), BgSource {
-    //用于存储传感器电量（0-100），默认 -1 表示不支持
-    override var sensorBatteryLevel: Int = -1
+    @Volatile
+    private var _hasSensorError = false
     companion object {
         var sensorExpiredNotified = false
+        var sensorErrorNotified = false
+        var replaceSensorNotified = false
+        var signalLostNotified = false
     }
+    override fun hasSensorError(): Boolean = _hasSensorError
+
     // Allow only for pumpcontrol or dev & engineering_mode
     override fun specialEnableCondition(): Boolean {
         // return config.APS.not() || config.isDev() && config.isEngineeringMode()
@@ -97,14 +102,10 @@ class AidexPlugin @Inject constructor(
 
             val bgValueTarget = if (bgType.equals("mg/dl")) bgValue else bgValue * Constants.MMOLL_TO_MGDL
 
-            val battery = bundle.getInt(Intents.AIDEX_SENSOR_BATTERY, -1)
-            if (battery != -1) {
-                aidexPlugin.sensorBatteryLevel = battery // 更新全局状态
-                aapsLogger.debug(LTag.BGSOURCE, "Sensor battery level updated: $battery%")
-            }
             val sensorExpired = bundle.getBoolean(Intents.AIDEX_SENSOR_EXPIRED, false)
-            val sensorWarmup = bundle.getBoolean(Intents.AIDEX_SENSOR_WARMUP, false)
-            val sensorStatus = bundle.getString(Intents.AIDEX_SENSOR_STATUS, "")
+            val sensorError = bundle.getBoolean(Intents.EXTRA_SENSOR_ERROR, false)
+            val replaceSensor = bundle.getBoolean(Intents.EXTRA_REPLACE_SENSOR, false)
+            val signalLost = bundle.getBoolean(Intents.EXTRA_SIGNAL_LOST, false)
 
             if (sensorExpired) {
                 aapsLogger.warn(LTag.BGSOURCE, "Sensor expired detected!")
@@ -120,34 +121,52 @@ class AidexPlugin @Inject constructor(
             } else {
                 sensorExpiredNotified = false
             }
-
-            if (sensorWarmup) {
-                aapsLogger.info(LTag.BGSOURCE, "Sensor in warmup period")
-            }
-
-            if (sensorStatus.isNotEmpty()) {
-                aapsLogger.debug(LTag.BGSOURCE, "Sensor status: $sensorStatus")
-            }
-
-            var sensorStartTime: Long? = null
-            if (preferences.get(BooleanKey.BgSourceCreateSensorChange)) {
-                val sensorInsertionTime = bundle.getLong(Intents.AIDEX_SENSOR_INSERTION_TIME, 0)
-                if (sensorInsertionTime > 0) {
-                    sensorStartTime = sensorInsertionTime
-                    aapsLogger.debug(LTag.BGSOURCE, "Sensor insertion time from broadcast: $sensorStartTime")
-                } else if (bundle.containsKey(Intents.AIDEX_SENSOR_ID)) {
-                    val currentTime = dateUtil.now()
-                    sensorStartTime = if (timestamp > 0 && abs(currentTime - timestamp) < T.hours(2).msecs()) {
-                        timestamp
-                    } else {
-                        null
-                    }
-
-                    if (sensorStartTime != null) {
-                        aapsLogger.debug(LTag.BGSOURCE, "Sensor start time estimated: $sensorStartTime")
-                    }
+            if (replaceSensor) {
+                aapsLogger.warn(LTag.BGSOURCE, "Sensor replacement required!")
+                if (!replaceSensorNotified) {
+                    replaceSensorNotified = true
+                    uiInteraction.addNotificationValidFor(
+                        10003,
+                        "Aidex传感器需要更换，请尽快更换新传感器",
+                        Notification.NORMAL,
+                        120
+                    )
                 }
+            } else {
+                replaceSensorNotified = false
             }
+            if (sensorError) {
+                aapsLogger.error(LTag.BGSOURCE, "Sensor error detected!")
+                if (!sensorErrorNotified) {
+                    sensorErrorNotified = true
+                    uiInteraction.addNotificationValidFor(
+                        10002,
+                        "Aidex传感器故障，请检查传感器状态",
+                        Notification.URGENT,
+                        60
+                    )
+                }
+            } else {
+                sensorErrorNotified = false
+            }
+
+
+            if (signalLost) {
+                aapsLogger.warn(LTag.BGSOURCE, "Signal lost detected!")
+                if (!signalLostNotified) {
+                    signalLostNotified = true
+                    uiInteraction.addNotificationValidFor(
+                        10004,
+                        "Aidex传感器信号丢失，请检查连接",
+                        Notification.NORMAL,
+                        30
+                    )
+                }
+            } else {
+                signalLostNotified = false
+            }
+
+            aidexPlugin._hasSensorError = sensorExpired || sensorError || replaceSensor || signalLost
 
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
 

@@ -58,19 +58,20 @@ interface Intents {
         const val SYAI_APP = "info.nightscout.androidaps.action.SYAI_TAG_APP"
 
         // Aidex -> AAPS
-        var AIDEX_NEW_BG_ESTIMATE = "com.microtechmd.cgms.aidex.action.BgEstimate"
-        var AIDEX_BG_TYPE = "com.microtechmd.cgms.aidex.BgType"
-        var AIDEX_BG_VALUE = "com.microtechmd.cgms.aidex.BgValue"
-        var AIDEX_BG_SLOPE_NAME = "com.microtechmd.cgms.aidex.BgSlopeName"
-        var AIDEX_TIMESTAMP = "com.microtechmd.cgms.aidex.Time" // epoch in ms
-        var AIDEX_TRANSMITTER_SN = "com.microtechmd.cgms.aidex.TransmitterSerialNumber"
-        var AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
+        const val AIDEX_NEW_BG_ESTIMATE = "com.microtechmd.cgms.aidex.action.BgEstimate"
+        const val AIDEX_BG_TYPE = "com.microtechmd.cgms.aidex.BgType"
+        const val AIDEX_BG_VALUE = "com.microtechmd.cgms.aidex.BgValue"
+        const val AIDEX_BG_SLOPE_NAME = "com.microtechmd.cgms.aidex.BgSlopeName"
+        const val AIDEX_TIMESTAMP = "com.microtechmd.cgms.aidex.Time" // epoch in ms
+        const val AIDEX_TRANSMITTER_SN = "com.microtechmd.cgms.aidex.TransmitterSerialNumber"
+        const val AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
+        const val AIDEX_SENSOR_EXPIRED = "com.microtechmd.cgms.aidex.SensorExpired"
 
-        var AIDEX_SENSOR_BATTERY = "com.microtechmd.cgms.aidex.SensorBattery"
-        var AIDEX_SENSOR_STATUS = "com.microtechmd.cgms.aidex.SensorStatus"
-        var AIDEX_SENSOR_EXPIRED = "com.microtechmd.cgms.aidex.SensorExpired"
-        var AIDEX_SENSOR_WARMUP = "com.microtechmd.cgms.aidex.SensorWarmup"
-        var AIDEX_SENSOR_INSERTION_TIME = "com.microtechmd.cgms.aidex.SensorInsertionTime"
+        const val EXTRA_SENSOR_ERROR = "com.microtechmd.cgms.aidex.SensorError"
+
+        const val EXTRA_REPLACE_SENSOR = "com.microtechmd.cgms.aidex.ReplaceSensor"
+
+        const val EXTRA_SIGNAL_LOST = "com.microtechmd.cgms.aidex.SignalLost"
 
     }
 }
