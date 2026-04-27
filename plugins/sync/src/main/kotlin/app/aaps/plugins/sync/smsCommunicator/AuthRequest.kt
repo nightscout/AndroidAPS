@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.smsCommunicator
 
-import android.os.SystemClock
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -13,9 +12,19 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.sync.smsCommunicator.otp.OneTimePasswordValidationResult
-import jakarta.inject.Inject
+import kotlinx.coroutines.delay
 
-class AuthRequest @Inject constructor(
+/**
+ * Tracks a single pending SMS confirmation flow: sends the request prompt on
+ * construction and runs [action] when the matching OTP arrives within the
+ * 5-minute window. Pure value object — construct via [SmsCommunicatorPlugin]'s
+ * `authRequest(...)` factory at the call site, no DI needed.
+ */
+class AuthRequest(
+    val requester: Sms, // exposed: SmsCommunicatorPlugin reads requester.phoneNumber to route the reply
+    requestText: String,
+    val confirmCode: String, // exposed: tests read it from messageToConfirm to mint a confirmation reply
+    private val action: SmsAction,
     private val aapsLogger: AAPSLogger,
     private val smsCommunicator: SmsCommunicator,
     private val rh: ResourceHelper,
@@ -24,26 +33,17 @@ class AuthRequest @Inject constructor(
     private val commandQueue: CommandQueue
 ) {
 
-    private var date = dateUtil.now()
+    private val date = dateUtil.now()
     private var processed = false
-    lateinit var requester: Sms
-    lateinit var requestText: String
-    lateinit var confirmCode: String
-    lateinit var action: SmsAction
 
-    fun with(requester: Sms, requestText: String, confirmCode: String, action: SmsAction): AuthRequest {
-        this.requester = requester
-        this.requestText = requestText
-        this.confirmCode = confirmCode
-        this.action = action
+    init {
         smsCommunicator.sendSMS(Sms(requester.phoneNumber, requestText))
-        return this
     }
 
     private fun codeIsValid(toValidate: String): Boolean =
         otp.checkOTP(toValidate) == OneTimePasswordValidationResult.OK
 
-    fun action(codeReceived: String) {
+    suspend fun action(codeReceived: String) {
         if (processed) {
             aapsLogger.debug(LTag.SMS, "Already processed")
             return
@@ -61,7 +61,7 @@ class AuthRequest @Inject constructor(
                 //wait for empty queue
                 while (start + T.mins(3).msecs() > dateUtil.now()) {
                     if (commandQueue.size() == 0) break
-                    SystemClock.sleep(100)
+                    delay(100)
                 }
                 if (commandQueue.size() != 0) {
                     aapsLogger.debug(LTag.SMS, "Command timed out: " + requester.text)

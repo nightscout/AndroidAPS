@@ -57,7 +57,6 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import javax.inject.Provider
 
 @Suppress("SpellCheckingInspection")
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
@@ -97,17 +96,16 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         whenever(preferences.get(StringKey.SmsAllowedNumbers)).thenReturn("1234;5678")
 
-        runTest {
+        runBlocking {
             whenever(
                 persistenceLayer.insertAndCancelCurrentTemporaryTarget(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
             ).thenReturn(PersistenceLayer.TransactionResult<TT>())
         }
         whenever(insulin.iCfg).thenReturn(iCfg)
-        val authRequestProvider = Provider { AuthRequest(aapsLogger, smsCommunicatorPlugin, rh, otp, dateUtil, commandQueue) }
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
             aapsLogger, rh, smsManager, preferences, constraintChecker, rxBus, profileFunction, profileUtil, activePlugin, insulin, localProfileManager,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
-            smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, authRequestProvider, pumpStatusProvider, notificationManager,
+            smbGlucoseStatusProvider, persistenceLayer, decimalFormatter, configBuilder, pumpStatusProvider, notificationManager,
             runningModeGuard, testScope, repository
         )
         smsCommunicatorPlugin.setPluginEnabledBlocking(PluginType.SYNC, true)
@@ -268,9 +266,18 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.isCommand("BOLUS", "")).isTrue()
         smsCommunicatorPlugin.messageToConfirm = null
         assertThat(smsCommunicatorPlugin.isCommand("BLB", "")).isFalse()
-        smsCommunicatorPlugin.messageToConfirm = AuthRequest(aapsLogger, smsCommunicatorPlugin, rh, otp, dateUtil, commandQueue).with(Sms("1234", "ddd"), "RequestText", "ccode", object : SmsAction(false) {
-            override fun run() {}
-        })
+        smsCommunicatorPlugin.messageToConfirm = AuthRequest(
+            requester = Sms("1234", "ddd"),
+            requestText = "RequestText",
+            confirmCode = "ccode",
+            action = object : SmsAction(false) { override suspend fun run() {} },
+            aapsLogger = aapsLogger,
+            smsCommunicator = smsCommunicatorPlugin,
+            rh = rh,
+            otp = otp,
+            dateUtil = dateUtil,
+            commandQueue = commandQueue
+        )
         assertThat(smsCommunicatorPlugin.isCommand("BLB", "1234")).isTrue()
         assertThat(smsCommunicatorPlugin.isCommand("BLB", "2345")).isFalse()
         smsCommunicatorPlugin.messageToConfirm = null
@@ -281,7 +288,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.isAllowedNumber("56")).isFalse()
     }
 
-    @Test fun processSmsTest() = runBlocking {
+    @Test fun processSmsTest() = runTest {
 
         // SMS from not allowed number should be ignored
         smsCommunicatorPlugin.messages = ArrayList()
@@ -367,9 +374,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(sms.ignored).isFalse()
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        runTest {
-            whenever(persistenceLayer.cancelCurrentRunningMode(anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
-        }
+        whenever(persistenceLayer.cancelCurrentRunningMode(anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP RESUME")
         smsCommunicatorPlugin.processSms(sms)
@@ -682,9 +687,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[3].text).contains("set successfully")
 
         //TARGET STOP/CANCEL
-        runTest {
-            whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
-        }
+        whenever(persistenceLayer.cancelCurrentTemporaryTargetIfAny(anyLong(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(PersistenceLayer.TransactionResult())
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "TARGET STOP")
         smsCommunicatorPlugin.processSms(sms)

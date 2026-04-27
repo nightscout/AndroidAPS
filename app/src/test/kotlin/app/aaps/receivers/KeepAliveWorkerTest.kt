@@ -52,6 +52,9 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
         whenever(workManager.getWorkInfos(any())).thenReturn(listenableFuture)
         whenever(listenableFuture.get()).thenReturn(emptyList())
         whenever(workerParameters.inputData).thenReturn(workDataOf("schedule" to "KA_5"))
+        // Short-circuit Config.awaitInitialized() so doWorkAndLog() proceeds past the init gate.
+        // Without this the suspend gate hits initProgressFlow (null on a fresh Mock) and NPEs.
+        whenever(config.appInitialized).thenReturn(true)
     }
 
     // Helper to create the worker instance directly
