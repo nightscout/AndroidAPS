@@ -63,7 +63,7 @@ class RunningModeManagementViewModel @Inject constructor(
     fun loadState() {
         viewModelScope.launch {
             try {
-                val runningModeRecord = loop.runningModeRecord
+                val runningModeRecord = loop.runningModeRecord()
                 val currentMode = runningModeRecord.mode
                 val allowedModes = loop.allowedNextModes()
                 val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription

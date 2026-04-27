@@ -45,19 +45,19 @@ interface Loop {
     var closedLoopEnabled: Constraint<Boolean>?
 
     /**
-     * Current running mode
+     * Current running mode (queries persistence — must be called from a coroutine).
      */
-    val runningMode: RM.Mode
+    suspend fun runningMode(): RM.Mode
 
     /**
-     * Current running mode
+     * Current running mode (queries persistence — must be called from a coroutine).
      */
-    val runningModeRecord: RM
+    suspend fun runningModeRecord(): RM
 
     /**
      * Allowed next (following) modes according to current running mode
      */
-    fun allowedNextModes(): List<RM.Mode>
+    suspend fun allowedNextModes(): List<RM.Mode>
 
     /**
      * Handle RunningMode change
@@ -65,7 +65,7 @@ interface Loop {
      * @param durationInMinutes Duration for new mode in minutes
      * @return true if change is successful
      */
-    fun handleRunningModeChange(newRM: RM.Mode, action: Action, source: Sources, listValues: List<ValueWithUnit> = emptyList(), durationInMinutes: Int = 0, profile: Profile): Boolean
+    suspend fun handleRunningModeChange(newRM: RM.Mode, action: Action, source: Sources, listValues: List<ValueWithUnit> = emptyList(), durationInMinutes: Int = 0, profile: Profile): Boolean
 
     /**
      * Timestamp of last loop run triggered by new BG
@@ -89,7 +89,7 @@ interface Loop {
     /**
      * Returns minutes to end of suspended loop
      */
-    fun minutesToEndOfSuspend(): Int
+    suspend fun minutesToEndOfSuspend(): Int
 
     fun disableCarbSuggestions(durationMinutes: Int)
 

@@ -25,7 +25,6 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -199,9 +198,9 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `allowedNextModes returns emptyList if profile is invalid`() {
+    fun `allowedNextModes returns emptyList if profile is invalid`() = runTest {
         // Arrange
-        runBlocking { whenever(profileFunction.isProfileValid(any())).thenReturn(false) }
+        whenever(profileFunction.isProfileValid(any())).thenReturn(false)
         mockCurrentMode(RM.Mode.OPEN_LOOP) // Any mode
 
         // Act
@@ -212,9 +211,9 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `allowedNextModes for OPEN_LOOP returns correct base list`() {
+    fun `allowedNextModes for OPEN_LOOP returns correct base list`() = runTest {
         // Arrange
-        runBlocking { whenever(profileFunction.isProfileValid(any())).thenReturn(true) }
+        whenever(profileFunction.isProfileValid(any())).thenReturn(true)
         whenever(constraintChecker.isLoopInvocationAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         mockCurrentMode(RM.Mode.OPEN_LOOP)
@@ -235,9 +234,9 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `allowedNextModes for CLOSED_LOOP returns correct base list`() {
+    fun `allowedNextModes for CLOSED_LOOP returns correct base list`() = runTest {
         // Arrange
-        runBlocking { whenever(profileFunction.isProfileValid(any())).thenReturn(true) }
+        whenever(profileFunction.isProfileValid(any())).thenReturn(true)
         whenever(constraintChecker.isLoopInvocationAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         whenever(constraintChecker.isLgsForced()).thenReturn(ConstraintObject(false, aapsLogger))
@@ -259,9 +258,9 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `allowedNextModes for SUSPENDED_BY_USER returns correct base list`() {
+    fun `allowedNextModes for SUSPENDED_BY_USER returns correct base list`() = runTest {
         // Arrange
-        runBlocking { whenever(profileFunction.isProfileValid(any())).thenReturn(true) }
+        whenever(profileFunction.isProfileValid(any())).thenReturn(true)
         whenever(constraintChecker.isLoopInvocationAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         mockCurrentMode(RM.Mode.SUSPENDED_BY_USER)
@@ -278,9 +277,9 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `allowedNextModes for DISCONNECTED_PUMP returns correct base list`() {
+    fun `allowedNextModes for DISCONNECTED_PUMP returns correct base list`() = runTest {
         // Arrange
-        runBlocking { whenever(profileFunction.isProfileValid(any())).thenReturn(true) }
+        whenever(profileFunction.isProfileValid(any())).thenReturn(true)
         whenever(constraintChecker.isLoopInvocationAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         mockCurrentMode(RM.Mode.DISCONNECTED_PUMP)
@@ -320,9 +319,9 @@ class LoopPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `allowedNextModes removes CLOSED_LOOP when closed loop is not allowed`() {
+    fun `allowedNextModes removes CLOSED_LOOP when closed loop is not allowed`() = runTest {
         // Arrange
-        runBlocking { whenever(profileFunction.isProfileValid(any())).thenReturn(true) }
+        whenever(profileFunction.isProfileValid(any())).thenReturn(true)
         whenever(constraintChecker.isLoopInvocationAllowed()).thenReturn(ConstraintObject(true, aapsLogger))
         mockCurrentMode(RM.Mode.OPEN_LOOP)
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(false, aapsLogger))
@@ -376,7 +375,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(activePlugin.activePump.isSuspended()).thenReturn(true)
 
         // Act
-        loopPlugin.runningModeRecord // Accessing the property triggers the pre-check
+        loopPlugin.runningModeRecord() // Accessing the property triggers the pre-check
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -408,7 +407,7 @@ class LoopPluginTest : TestBaseWithProfile() {
             .thenReturn(previousMode)
 
         // Act
-        loopPlugin.runningModeRecord // Accessing the property triggers the pre-check
+        loopPlugin.runningModeRecord() // Accessing the property triggers the pre-check
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -435,7 +434,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(constraintChecker.isLoopInvocationAllowed()).thenReturn(ConstraintObject(false, aapsLogger))
 
         // Act
-        loopPlugin.runningModeRecord
+        loopPlugin.runningModeRecord()
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -459,7 +458,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(false, aapsLogger))
 
         // Act
-        loopPlugin.runningModeRecord
+        loopPlugin.runningModeRecord()
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -491,7 +490,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         whenever(rh.gs(app.aaps.core.ui.R.string.mode_reverted)).thenReturn("Mode reverted")
 
         // Act
-        loopPlugin.runningModeRecord
+        loopPlugin.runningModeRecord()
 
         // Assert
         val modeCaptor = argumentCaptor<RM>()
@@ -516,7 +515,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         // All constraints are passing and pump is not suspended (from default setup)
 
         // Act
-        loopPlugin.runningModeRecord
+        loopPlugin.runningModeRecord()
 
         // Assert
         // Verify that no *new* running mode was inserted.

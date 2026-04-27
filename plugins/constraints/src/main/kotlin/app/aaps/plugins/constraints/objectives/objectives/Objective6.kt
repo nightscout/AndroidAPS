@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.plugins.constraints.R
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,7 +26,9 @@ class Objective6 @Inject constructor(
         tasks.add(MinimumDurationTask(this, T.days(1).msecs()))
         tasks.add(
             object : Task(this, R.string.closedmodeenabled) {
-                override fun isCompleted(): Boolean = loop.runningMode == RM.Mode.CLOSED_LOOP
+                // Task.isCompleted() is a sync interface method called from UI/objective evaluation.
+                // Localized runBlocking is consistent with other objectives (e.g. Objective0:81).
+                override fun isCompleted(): Boolean = runBlocking { loop.runningMode() } == RM.Mode.CLOSED_LOOP
             })
         tasks.add(
             object : Task(this, R.string.maxiobset) {

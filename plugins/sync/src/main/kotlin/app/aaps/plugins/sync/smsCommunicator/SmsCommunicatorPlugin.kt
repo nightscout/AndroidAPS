@@ -301,7 +301,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_command_not_allowed)))
                     else if (commandQueue.bolusInQueue()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_another_bolus_in_queue)))
                     else if (divided.size == 2 && dateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)))
-                    else if (divided.size == 2 && loop.runningMode.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.pumpsuspended)))
+                    else if (divided.size == 2 && loop.runningMode().isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.pumpsuspended)))
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
@@ -381,12 +381,15 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                         override fun run() {
-                            val result = loop.handleRunningModeChange(
-                                newRM = RM.Mode.DISABLED_LOOP,
-                                action = Action.LOOP_DISABLED,
-                                source = Sources.SMS,
-                                profile = profile
-                            )
+                            // TODO: SmsAction.run() is sync; runBlocking matches existing pattern in this file.
+                            val result = runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.DISABLED_LOOP,
+                                    action = Action.LOOP_DISABLED,
+                                    source = Sources.SMS,
+                                    profile = profile
+                                )
+                            }
                             val replyText = rh.gs(R.string.smscommunicator_loop_has_been_disabled) + " " +
                                 rh.gs(if (result) R.string.smscommunicator_tempbasal_canceled else R.string.smscommunicator_tempbasal_cancel_failed)
                             sendSMS(Sms(receivedSms.phoneNumber, replyText))
@@ -399,7 +402,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
             "STATUS"          -> {
                 val reply =
-                    when (loop.runningMode) {
+                    when (loop.runningMode()) {
                         RM.Mode.DISABLED_LOOP     -> rh.gs(app.aaps.core.ui.R.string.loopisdisabled)
                         RM.Mode.OPEN_LOOP         -> rh.gs(R.string.smscommunicator_loop_is_enabled) + " - " + rh.gs(app.aaps.core.ui.R.string.openloop)
                         RM.Mode.CLOSED_LOOP       -> rh.gs(R.string.smscommunicator_loop_is_enabled) + " - " + rh.gs(app.aaps.core.ui.R.string.closedloop)
@@ -423,12 +426,15 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                         override fun run() {
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.RESUME,
-                                action = Action.RESUME,
-                                source = Sources.SMS,
-                                profile = profile
-                            )
+                            // TODO: SmsAction.run() is sync; runBlocking matches existing pattern in this file.
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.RESUME,
+                                    action = Action.RESUME,
+                                    source = Sources.SMS,
+                                    profile = profile
+                                )
+                            }
                             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_loop_resumed)))
                         }
                     })
@@ -457,13 +463,16 @@ class SmsCommunicatorPlugin @Inject constructor(
                             commandQueue.cancelTempBasal(enforceNew = true, callback = object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                        loop.handleRunningModeChange(
-                                            newRM = RM.Mode.SUSPENDED_BY_USER,
-                                            durationInMinutes = anInteger(),
-                                            action = Action.SUSPEND,
-                                            source = Sources.SMS,
-                                            profile = profile
-                                        )
+                                        // TODO: Callback.run() is sync; runBlocking matches existing pattern in this file.
+                                        runBlocking {
+                                            loop.handleRunningModeChange(
+                                                newRM = RM.Mode.SUSPENDED_BY_USER,
+                                                durationInMinutes = anInteger(),
+                                                action = Action.SUSPEND,
+                                                source = Sources.SMS,
+                                                profile = profile
+                                            )
+                                        }
                                         val replyText = rh.gs(R.string.smscommunicator_loop_suspended) + " " +
                                             rh.gs(if (result.success) R.string.smscommunicator_tempbasal_canceled else R.string.smscommunicator_tempbasal_cancel_failed)
                                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -489,12 +498,15 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                         override fun run() {
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.CLOSED_LOOP_LGS,
-                                action = Action.LGS_LOOP_MODE,
-                                source = Sources.SMS,
-                                profile = profile
-                            )
+                            // TODO: SmsAction.run() is sync; runBlocking matches existing pattern in this file.
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.CLOSED_LOOP_LGS,
+                                    action = Action.LGS_LOOP_MODE,
+                                    source = Sources.SMS,
+                                    profile = profile
+                                )
+                            }
                             val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend))
                             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                         }
@@ -512,12 +524,15 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                         override fun run() {
-                            loop.handleRunningModeChange(
-                                newRM = RM.Mode.CLOSED_LOOP,
-                                action = Action.CLOSED_LOOP_MODE,
-                                source = Sources.SMS,
-                                profile = profile
-                            )
+                            // TODO: SmsAction.run() is sync; runBlocking matches existing pattern in this file.
+                            runBlocking {
+                                loop.handleRunningModeChange(
+                                    newRM = RM.Mode.CLOSED_LOOP,
+                                    action = Action.CLOSED_LOOP_MODE,
+                                    source = Sources.SMS,
+                                    profile = profile
+                                )
+                            }
                             val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, rh.gs(app.aaps.core.ui.R.string.closedloop))
                             sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                         }
@@ -598,7 +613,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                     override fun run() {
                         val profile = runBlocking { profileFunction.getProfile() } ?: return
-                        loop.handleRunningModeChange(newRM = RM.Mode.RESUME, action = Action.RECONNECT, source = Sources.SMS, profile = profile)
+                        // TODO: SmsAction.run() is sync; runBlocking matches existing pattern in this file.
+                        runBlocking { loop.handleRunningModeChange(newRM = RM.Mode.RESUME, action = Action.RECONNECT, source = Sources.SMS, profile = profile) }
                         sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_reconnect)))
                     }
                 })
@@ -621,13 +637,16 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = authRequestProvider.get().with(receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                     override fun run() {
                         val profile = runBlocking { profileFunction.getProfile() } ?: return
-                        loop.handleRunningModeChange(
-                            durationInMinutes = duration,
-                            profile = profile,
-                            newRM = RM.Mode.DISCONNECTED_PUMP,
-                            action = Action.DISCONNECT,
-                            source = Sources.SMS
-                        )
+                        // TODO: SmsAction.run() is sync; runBlocking matches existing pattern in this file.
+                        runBlocking {
+                            loop.handleRunningModeChange(
+                                durationInMinutes = duration,
+                                profile = profile,
+                                newRM = RM.Mode.DISCONNECTED_PUMP,
+                                action = Action.DISCONNECT,
+                                source = Sources.SMS
+                            )
+                        }
                         sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_pump_disconnected)))
                     }
                 })

@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.ui.R
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,7 +35,12 @@ class RunningModeGuard @Inject constructor(
      * Garmin callback, etc.).
      */
     fun rejectionMessage(kind: TbrGate.CommandKind): String? {
-        val decision = TbrGate.check(loop.runningMode, kind)
+        // TODO: Loop.runningMode() is now suspend; this guard is invoked from many synchronous
+        // entry points (Compose ViewModels' non-suspend handlers, BolusWizard.confirmAndExecute,
+        // SmsCommunicator, Wear DataHandlerMobile). The underlying call is a fast persistence read.
+        // Localizing runBlocking here avoids cascading suspend through dozens of call sites.
+        val mode = runBlocking { loop.runningMode() }
+        val decision = TbrGate.check(mode, kind)
         return (decision as? TbrGate.Decision.Reject)?.let { rh.gs(it.reason.toStringRes()) }
     }
 

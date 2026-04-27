@@ -4,13 +4,13 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import androidx.compose.runtime.Immutable
-import app.aaps.core.graph.profile.ProfileViewerData
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.graph.profile.ProfileViewerData
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -291,13 +291,15 @@ class AutotuneViewModel(
     fun onProfileSwitchClick() {
         val tunedProfile = autotunePlugin.tunedProfile ?: return
         autotunePlugin.updateProfile(tunedProfile)
-        if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP) {
-            _uiState.value = _uiState.value.copy(
-                dialogState = DialogState.PumpDisconnected(rh.gs(app.aaps.core.ui.R.string.not_available_full))
-            )
-            return
+        scope.launch {
+            if (loop.runningMode() == RM.Mode.DISCONNECTED_PUMP) {
+                _uiState.value = _uiState.value.copy(
+                    dialogState = DialogState.PumpDisconnected(rh.gs(app.aaps.core.ui.R.string.not_available_full))
+                )
+                return@launch
+            }
+            _uiState.value = _uiState.value.copy(dialogState = DialogState.ProfileSwitch(tunedProfile.profileName))
         }
-        _uiState.value = _uiState.value.copy(dialogState = DialogState.ProfileSwitch(tunedProfile.profileName))
     }
 
     fun onProfileSwitchConfirm() {

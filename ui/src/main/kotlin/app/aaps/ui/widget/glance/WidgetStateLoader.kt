@@ -164,7 +164,7 @@ class WidgetStateLoader @Inject constructor(
             }
         }
 
-        val mode = loop.runningMode
+        val mode = loop.runningMode()
         val runningModeText = rh.gs(
             when (mode) {
                 RM.Mode.OPEN_LOOP         -> app.aaps.core.ui.R.string.openloop

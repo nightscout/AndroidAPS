@@ -123,7 +123,7 @@ class SceneListViewModel @Inject constructor(
             if (!scene.isEnabled) return@launch
 
             // Validation: pump disconnected / loop suspended
-            if (loop.runningMode.isSuspended()) {
+            if (loop.runningMode().isSuspended()) {
                 _dialogState.value = DialogState.ValidationError(rh.gs(R.string.pump_disconnected))
                 return@launch
             }
@@ -154,7 +154,7 @@ class SceneListViewModel @Inject constructor(
             }
 
             // Build action summaries
-            val summaries = scene.actions.map { buildActionSummary(it, scene.defaultDurationMinutes) }
+            val summaries = scene.actions.map { buildActionSummary(it) }
 
             // Detect conflicts
             val conflicts = detectConflicts(scene)
@@ -204,7 +204,7 @@ class SceneListViewModel @Inject constructor(
 
     // --- Summary builders ---
 
-    private fun buildActionSummary(action: SceneAction, sceneDurationMinutes: Int): String {
+    private fun buildActionSummary(action: SceneAction): String {
         return when (action) {
             is SceneAction.TempTarget      -> {
                 val targetStr = "${profileUtil.fromMgdlToStringInUnits(action.targetMgdl)} ${profileUtil.units.asText}"

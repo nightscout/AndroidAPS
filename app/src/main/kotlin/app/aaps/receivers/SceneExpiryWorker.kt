@@ -88,7 +88,7 @@ class SceneExpiryWorker(
         }
         aapsLogger.info(LTag.UI, "XXXX target resolved: name='${target.name}' enabled=${target.isEnabled} actions=${target.actions.size} duration=${target.defaultDurationMinutes}min")
 
-        val loopSuspended = loop.runningMode.isSuspended()
+        val loopSuspended = loop.runningMode().isSuspended()
         val pumpInit = activePlugin.activePump.isInitialized()
         val profile = profileFunction.getProfile()
         aapsLogger.info(LTag.UI, "XXXX preconditions: loopSuspended=$loopSuspended pumpInit=$pumpInit profile=${profile != null}")

@@ -84,8 +84,10 @@ ActionsTestBase : TestBaseWithProfile() {
     @BeforeEach
     fun mock() {
         whenever(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        runBlocking { whenever(profileFunction.getProfile()).thenReturn(effectiveProfile) }
-        whenever(loop.handleRunningModeChange(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyInt(), anyOrNull())).thenReturn(true)
+        runBlocking {
+            whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
+            whenever(loop.handleRunningModeChange(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyInt(), anyOrNull())).thenReturn(true)
+        }
 
         whenever(rh.gs(app.aaps.core.ui.R.string.ok)).thenReturn("OK")
         whenever(rh.gs(app.aaps.core.ui.R.string.error)).thenReturn("Error")

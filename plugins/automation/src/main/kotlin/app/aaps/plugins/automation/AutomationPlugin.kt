@@ -290,7 +290,8 @@ class AutomationPlugin @Inject constructor(
         /*
          * Running mode must report running to process automation events.
          */
-        if (loop.runningMode.isSuspended() || !loop.runningMode.isLoopRunning()) {
+        val runningMode = loop.runningMode()
+        if (runningMode.isSuspended() || !runningMode.isLoopRunning()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop suspended")
             executionLog.add(rh.gs(app.aaps.core.ui.R.string.loopsuspended))
             rxBus.send(EventAutomationUpdateGui())

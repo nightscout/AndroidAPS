@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -53,6 +54,8 @@ import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.core.utils.JsonHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import javax.inject.Inject
@@ -81,7 +84,8 @@ class BolusWizard @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
-    private val runningModeGuard: RunningModeGuard
+    private val runningModeGuard: RunningModeGuard,
+    @ApplicationScope private val appScope: CoroutineScope
 ) {
 
     var timeStamp = dateUtil.now()
@@ -537,33 +541,40 @@ class BolusWizard @Inject constructor(
         rxBus.send(EventShowDialog.OkCancel(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = confirmMessage, onOk = {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
-                    if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS)) {
-                        loop.handleRunningModeChange(
-                            durationInMinutes = 2 * 60,
-                            profile = profile,
-                            newRM = RM.Mode.SUPER_BOLUS,
-                            action = Action.SUPERBOLUS_TBR,
-                            source = Sources.WizardDialog
-                        )
-                        rxBus.send(EventRefreshOverview("WizardDialog"))
-                    }
+                    // onOk fires on the UI thread. Loop.allowedNextModes() / handleRunningModeChange
+                    // are suspend and do real work (DB + state machine), so we hop off Main via
+                    // appScope.launch. Order is preserved within the coroutine: mode-change
+                    // completes before the temp-basal command is enqueued. The bolus path below
+                    // uses the same commandQueue so it serializes after either way.
+                    appScope.launch {
+                        if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS)) {
+                            loop.handleRunningModeChange(
+                                durationInMinutes = 2 * 60,
+                                profile = profile,
+                                newRM = RM.Mode.SUPER_BOLUS,
+                                action = Action.SUPERBOLUS_TBR,
+                                source = Sources.WizardDialog
+                            )
+                            rxBus.send(EventRefreshOverview("WizardDialog"))
+                        }
 
-                    if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                        commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-                            override fun run() {
-                                if (!result.success) {
-                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                        if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                            commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
+                                override fun run() {
+                                    if (!result.success) {
+                                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                                    }
                                 }
-                            }
-                        })
-                    } else {
-                        commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-                            override fun run() {
-                                if (!result.success) {
-                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                            })
+                        } else {
+                            commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
+                                override fun run() {
+                                    if (!result.success) {
+                                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
                     }
                 }
                 DetailedBolusInfo().apply {

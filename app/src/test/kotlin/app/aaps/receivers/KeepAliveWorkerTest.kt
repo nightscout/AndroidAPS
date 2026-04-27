@@ -81,7 +81,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     fun `checkPump requests status when connection is outdated`() = runTest {
         // Arrange
         worker = createWorker()
-        whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
         whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch)
         whenever(profileFunction.getProfile()).thenReturn(effectiveProfile)
         whenever(commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)).thenReturn(true)
@@ -98,7 +98,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     fun `checkPump sends profile switch event if profile is mismatched`() = runTest {
         // Arrange
         worker = createWorker()
-        whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
         whenever(profileFunction.getRequestedProfile()).thenReturn(profileSwitch)
         testPumpPlugin.isProfileSet = false
 
@@ -113,7 +113,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     fun `checkPump does nothing if mode is DISCONNECTED_PUMP`() = runTest {
         // Arrange
         worker = createWorker()
-        whenever(loop.runningMode).thenReturn(RM.Mode.DISCONNECTED_PUMP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.DISCONNECTED_PUMP)
         testPumpPlugin.lastData = now - T.mins(20).msecs()
 
         // Act
@@ -128,7 +128,7 @@ class KeepAliveWorkerTest : TestBaseWithProfile() {
     fun `checkAPS schedules device status upload if BG is missing`() = runTest {
         // Arrange
         worker = createWorker()
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
         whenever(ads.actualBg()).thenReturn(null)
 
         // Act

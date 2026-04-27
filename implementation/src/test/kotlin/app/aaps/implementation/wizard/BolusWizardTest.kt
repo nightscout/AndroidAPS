@@ -20,6 +20,8 @@ import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -92,7 +94,8 @@ class BolusWizardTest : TestBaseWithProfile() {
     private fun createWizard() = BolusWizard(
         aapsLogger, rh, rxBus, preferences, profileFunction, profileUtil, constraintChecker, activePlugin,
         commandQueue, loop, iobCobCalculator, dateUtil, config, uel, automation, glucoseStatusProvider, uiInteraction,
-        persistenceLayer, decimalFormatter, processedDeviceStatusData, runningModeGuard
+        persistenceLayer, decimalFormatter, processedDeviceStatusData, runningModeGuard,
+        CoroutineScope(Dispatchers.Unconfined)
     )
 
     // ==========================================

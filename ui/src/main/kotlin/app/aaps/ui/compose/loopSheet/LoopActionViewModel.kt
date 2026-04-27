@@ -73,7 +73,7 @@ class LoopActionViewModel @Inject constructor(
         val available = resultAvailable &&
             pump.isInitialized() &&
             profile != null &&
-            loop.runningMode == RM.Mode.OPEN_LOOP &&
+            loop.runningMode() == RM.Mode.OPEN_LOOP &&
             (loop as PluginBase).isEnabled()
 
         _uiState.update {

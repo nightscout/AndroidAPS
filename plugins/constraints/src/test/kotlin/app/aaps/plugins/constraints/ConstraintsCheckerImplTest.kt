@@ -210,9 +210,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     // Safety & Objectives
     // 2x Safety & Objectives
     @Test
-    fun isClosedLoopAllowedTest() {
+    fun isClosedLoopAllowedTest() = runTest {
         whenever(config.isEngineeringModeOrRelease()).thenReturn(true)
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
         objectivesPlugin.objectives[Objectives.CLOSED_LOOP_OBJECTIVE].startedOn = 0
         val c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
@@ -252,11 +252,11 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 
     // Safety & Objectives
     @Test
-    fun isSMBModeEnabledTest() {
+    fun isSMBModeEnabledTest() = runTest {
         openAPSSMBPlugin.setPluginEnabledBlocking(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         whenever(preferences.get(BooleanKey.ApsUseSmb)).thenReturn(false)
-        whenever(loop.runningMode).thenReturn(RM.Mode.OPEN_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.OPEN_LOOP)
 //        whenever(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true))
         val c = constraintChecker.isSMBModeEnabled()
         assertThat(c.reasonList).hasSize(3) // 2x Safety & Objectives
@@ -361,9 +361,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 
     // applyMaxIOBConstraints tests
     @Test
-    fun iobAMAShouldBeLimited() {
+    fun iobAMAShouldBeLimited() = runTest {
         // No limit by default
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
         whenever(preferences.get(DoubleKey.ApsAmaMaxIob)).thenReturn(1.5)
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("teenage")
         openAPSAMAPlugin.setPluginEnabledBlocking(PluginType.APS, true)
@@ -377,9 +377,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun iobSMBShouldBeLimited() {
+    fun iobSMBShouldBeLimited() = runTest {
         // No limit by default
-        whenever(loop.runningMode).thenReturn(RM.Mode.CLOSED_LOOP)
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
         whenever(preferences.get(DoubleKey.ApsSmbMaxIob)).thenReturn(3.0)
         whenever(preferences.get(StringKey.SafetyAge)).thenReturn("teenage")
         openAPSSMBPlugin.setPluginEnabledBlocking(PluginType.APS, true)
