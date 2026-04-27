@@ -7,6 +7,7 @@
     <string name="label_temp_target_tile">Țintă temporară</string>
     <string name="label_quick_wizard_tile">Asistent rapid</string>
     <string name="label_user_action_tile">Acțiune utilizator</string>
+    <string name="label_scene_tile">Scenă</string>
     <string name="msg_warning_sync">Nu au fost primite date de acum %1$s! Verificați că AAPS pe telefon trimite date către ceas</string>
     <string name="msg_warning_old">Datele AAPS sunt vechi de %1$s! Verificați senzorul, xDrip+, NS, configurația AAPS sau altele!</string>
     <string name="pref_vibrate_on_bolus">Vibrare la Bolus</string>
@@ -84,6 +85,7 @@
     <string name="action_tempt_confirmation">Țintă temporară solicitată</string>
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
+    <string name="action_scene_confirmation">Activați scena</string>
     <string name="action_treatment_confirmation">Tratament solicitat</string>
     <string name="action_bolus_confirmation">Bolus solicitat</string>
     <string name="action_wizard_confirmation">Calcul solicitat</string>
