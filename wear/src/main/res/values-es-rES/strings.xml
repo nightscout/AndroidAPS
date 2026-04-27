@@ -7,6 +7,7 @@
     <string name="label_temp_target_tile">Objetivo temporal</string>
     <string name="label_quick_wizard_tile">Asistente rápido</string>
     <string name="label_user_action_tile">Acción del usuario</string>
+    <string name="label_scene_tile">Escena</string>
     <string name="msg_warning_sync">No se han recibido datos desde %1$s. Comprobar si AAPS, (en el teléfono) envía los datos al reloj</string>
     <string name="msg_warning_old">Los datos de AAPS son %1$s antiguos. Comprueba el sensor, xDrip+, NS, configuración de AAPS y otros</string>
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
@@ -84,6 +85,7 @@
     <string name="action_tempt_confirmation">Objetivo Temporal Solicitado</string>
     <string name="action_quick_wizard_confirmation">Asistente Rápido Solicitado</string>
     <string name="action_user_action_confirmation">Acción de usuario solicitada</string>
+    <string name="action_scene_confirmation">Activar escena</string>
     <string name="action_treatment_confirmation">Tratamiento Solicitado</string>
     <string name="action_bolus_confirmation">Bolo Solicitado</string>
     <string name="action_wizard_confirmation">Calculadora Solicitada</string>
