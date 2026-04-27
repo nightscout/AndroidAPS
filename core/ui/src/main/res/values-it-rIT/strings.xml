@@ -281,8 +281,11 @@
     <string name="careportal_question_message">Domanda : %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
     <string name="careportal_pump_site_change">Cambio posizione cannula</string>
+    <string name="cgm_sensor_insert">Inserimento sensore</string>
     <string name="careportal_pump_site_management">Siti del micro</string>
     <string name="careportal_cgm_site_management">Siti del CGM</string>
+    <string name="careportal_cgmsensorstart">Attiva sensore</string>
+    <string name="careportal_cgm_sensor_stop">Arresto Sensore</string>
     <string name="careportal_dad_alert">Avviso D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Cambio cartuccia insulina</string>
     <string name="careportal_profileswitch">Cambio profilo</string>
@@ -318,6 +321,7 @@
     <string name="scene_action_loop_mode">Modalità Loop: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">%1$s rimanenti</string>
+    <string name="scene_management">Scene</string>
     <string name="scene_management_desc">Crea, modifica e gestisci scene</string>
     <string name="scene_action_count">Azioni %1$d</string>
     <string name="scene_start_from_template">Inizia da un modello</string>
