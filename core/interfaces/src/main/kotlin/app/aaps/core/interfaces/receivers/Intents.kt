@@ -67,6 +67,10 @@ interface Intents {
         var AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
 
         var AIDEX_SENSOR_BATTERY = "com.microtechmd.cgms.aidex.SensorBattery"
+        var AIDEX_SENSOR_STATUS = "com.microtechmd.cgms.aidex.SensorStatus"
+        var AIDEX_SENSOR_EXPIRED = "com.microtechmd.cgms.aidex.SensorExpired"
+        var AIDEX_SENSOR_WARMUP = "com.microtechmd.cgms.aidex.SensorWarmup"
+        var AIDEX_SENSOR_INSERTION_TIME = "com.microtechmd.cgms.aidex.SensorInsertionTime"
 
     }
 }

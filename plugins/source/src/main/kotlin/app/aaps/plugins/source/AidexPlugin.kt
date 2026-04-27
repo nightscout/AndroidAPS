@@ -9,21 +9,28 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 
 @Singleton
 class AidexPlugin @Inject constructor(
@@ -46,6 +53,9 @@ class AidexPlugin @Inject constructor(
 ), BgSource {
     //用于存储传感器电量（0-100），默认 -1 表示不支持
     override var sensorBatteryLevel: Int = -1
+    companion object {
+        var sensorExpiredNotified = false
+    }
     // Allow only for pumpcontrol or dev & engineering_mode
     override fun specialEnableCondition(): Boolean {
         // return config.APS.not() || config.isDev() && config.isEngineeringMode()
@@ -61,6 +71,10 @@ class AidexPlugin @Inject constructor(
         @Inject lateinit var aidexPlugin: AidexPlugin
         @Inject lateinit var persistenceLayer: PersistenceLayer
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+        @Inject lateinit var preferences: Preferences
+        @Inject lateinit var dateUtil: DateUtil
+        @Inject lateinit var rxBus: RxBus
+        @Inject lateinit var uiInteraction: UiInteraction
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
@@ -86,7 +100,55 @@ class AidexPlugin @Inject constructor(
             val battery = bundle.getInt(Intents.AIDEX_SENSOR_BATTERY, -1)
             if (battery != -1) {
                 aidexPlugin.sensorBatteryLevel = battery // 更新全局状态
+                aapsLogger.debug(LTag.BGSOURCE, "Sensor battery level updated: $battery%")
             }
+            val sensorExpired = bundle.getBoolean(Intents.AIDEX_SENSOR_EXPIRED, false)
+            val sensorWarmup = bundle.getBoolean(Intents.AIDEX_SENSOR_WARMUP, false)
+            val sensorStatus = bundle.getString(Intents.AIDEX_SENSOR_STATUS, "")
+
+            if (sensorExpired) {
+                aapsLogger.warn(LTag.BGSOURCE, "Sensor expired detected!")
+                if (!sensorExpiredNotified) {
+                    sensorExpiredNotified = true
+                    uiInteraction.addNotificationValidFor(
+                        10001,
+                        "Aidex传感器已过期，请更换新传感器",
+                        Notification.URGENT,
+                        60
+                    )
+                }
+            } else {
+                sensorExpiredNotified = false
+            }
+
+            if (sensorWarmup) {
+                aapsLogger.info(LTag.BGSOURCE, "Sensor in warmup period")
+            }
+
+            if (sensorStatus.isNotEmpty()) {
+                aapsLogger.debug(LTag.BGSOURCE, "Sensor status: $sensorStatus")
+            }
+
+            var sensorStartTime: Long? = null
+            if (preferences.get(BooleanKey.BgSourceCreateSensorChange)) {
+                val sensorInsertionTime = bundle.getLong(Intents.AIDEX_SENSOR_INSERTION_TIME, 0)
+                if (sensorInsertionTime > 0) {
+                    sensorStartTime = sensorInsertionTime
+                    aapsLogger.debug(LTag.BGSOURCE, "Sensor insertion time from broadcast: $sensorStartTime")
+                } else if (bundle.containsKey(Intents.AIDEX_SENSOR_ID)) {
+                    val currentTime = dateUtil.now()
+                    sensorStartTime = if (timestamp > 0 && abs(currentTime - timestamp) < T.hours(2).msecs()) {
+                        timestamp
+                    } else {
+                        null
+                    }
+
+                    if (sensorStartTime != null) {
+                        aapsLogger.debug(LTag.BGSOURCE, "Sensor start time estimated: $sensorStartTime")
+                    }
+                }
+            }
+
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
 
             glucoseValues += GV(
