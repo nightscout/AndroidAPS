@@ -73,9 +73,9 @@ fun PreferenceSliderWithButtons(
     var showDialog by remember { mutableStateOf(false) }
 
     val resolvedUnitLabel = when {
-        unitLabelResId != 0 -> stringResource(unitLabelResId)
+        unitLabelResId != 0    -> stringResource(unitLabelResId)
         unitLabel.isNotEmpty() -> unitLabel
-        else -> ""
+        else                   -> ""
     }
     val displayText = if (showValue) formatSliderDisplayValue(
         value = value,

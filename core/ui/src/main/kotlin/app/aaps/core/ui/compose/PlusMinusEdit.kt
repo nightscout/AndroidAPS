@@ -81,9 +81,9 @@ fun PlusMinusEdit(
     }
 
     val resolvedUnitLabel = when {
-        unitLabelResId != 0 -> stringResource(unitLabelResId)
+        unitLabelResId != 0    -> stringResource(unitLabelResId)
         unitLabel.isNotEmpty() -> unitLabel
-        else -> ""
+        else                   -> ""
     }
 
     fun validateAndCommit(text: String) {

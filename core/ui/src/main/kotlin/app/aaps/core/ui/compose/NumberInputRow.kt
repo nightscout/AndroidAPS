@@ -158,9 +158,9 @@ fun NumberInputRow(
     }
 
     val resolvedUnitLabel = when {
-        unitLabelResId != 0 -> stringResource(unitLabelResId)
+        unitLabelResId != 0    -> stringResource(unitLabelResId)
         unitLabel.isNotEmpty() -> unitLabel
-        else -> ""
+        else                   -> ""
     }
 
     Row(
