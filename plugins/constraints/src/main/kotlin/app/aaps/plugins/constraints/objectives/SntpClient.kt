@@ -1,6 +1,7 @@
 package app.aaps.plugins.constraints.objectives
 
 import android.os.SystemClock
+import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.local.LocaleDependentSetting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
@@ -28,6 +29,7 @@ import javax.inject.Singleton
 </pre> *
  */
 @Singleton
+@OpenForTesting
 class SntpClient @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
@@ -56,7 +58,7 @@ class SntpClient @Inject constructor(
      * @return time value computed from NTP server response.
      */
     // system time computed from NTP server response
-    private var ntpTime: Long = 0
+    protected var ntpTime: Long = 0
 
     /**
      * Returns the reference clock value (value of SystemClock.elapsedRealtime())
@@ -65,7 +67,7 @@ class SntpClient @Inject constructor(
      * @return reference clock corresponding to the NTP time.
      */
     // value of SystemClock.elapsedRealtime() corresponding to mNtpTime
-    private var ntpTimeReference: Long = 0
+    protected var ntpTimeReference: Long = 0
 
     /**
      * Returns the round trip time of the NTP transaction
@@ -104,7 +106,7 @@ class SntpClient @Inject constructor(
      * @return true if the transaction was successful.
      */
     @Suppress("SameParameterValue")
-    @Synchronized private fun requestTime(host: String, timeout: Int): Boolean {
+    @Synchronized protected fun requestTime(host: String, timeout: Int): Boolean {
         try {
             val socket = DatagramSocket()
             socket.soTimeout = timeout
