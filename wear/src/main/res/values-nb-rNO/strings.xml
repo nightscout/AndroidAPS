@@ -7,6 +7,7 @@
     <string name="label_temp_target_tile">Midlertidig mål</string>
     <string name="label_quick_wizard_tile">Hurtigknapp</string>
     <string name="label_user_action_tile">Brukerhandling</string>
+    <string name="label_scene_tile">Scene</string>
     <string name="msg_warning_sync">Ingen data mottatt siden %1$s. Sjekk om AAPS på telefonen sender data</string>
     <string name="msg_warning_old">AAPS-data er %1$s gamle! Sjekk din sensor, xDrip+, NS, AAPS konfigurasjon eller annet!</string>
     <string name="pref_vibrate_on_bolus">Vibrer ved bolus</string>
@@ -84,6 +85,7 @@
     <string name="action_tempt_confirmation">Midlertidig mål forespurt</string>
     <string name="action_quick_wizard_confirmation">Hurtigknapp forespurt</string>
     <string name="action_user_action_confirmation">Brukerhandling forespurt</string>
+    <string name="action_scene_confirmation">Aktivere scene</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>
     <string name="action_wizard_confirmation">Beregning forespurt</string>
