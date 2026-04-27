@@ -117,6 +117,11 @@
     <string name="hotel_icon_label">Hotel</string>
     <string name="seat_flat_icon_label">Repaus</string>
     <string name="work_icon_label">Muncă</string>
+    <string name="school_icon_label">Școală</string>
+    <string name="home_icon_label">Acasă</string>
+    <string name="car_icon_label">Condus</string>
+    <string name="flight_icon_label">Zbor</string>
+    <string name="shopping_icon_label">Cumpărături</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Lipsă nume insulină</string>
     <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>
