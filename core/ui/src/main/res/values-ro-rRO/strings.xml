@@ -281,8 +281,11 @@
     <string name="careportal_question_message">Întrebare : %1$s</string>
     <string name="careportal_exercise_message">Exercițiu fizic: %1$s</string>
     <string name="careportal_pump_site_change">Schimbare canulă/loc infuzie</string>
+    <string name="cgm_sensor_insert">Inserare senzor</string>
     <string name="careportal_pump_site_management">Zone pompă</string>
     <string name="careportal_cgm_site_management">Locuri CGM</string>
+    <string name="careportal_cgmsensorstart">Pornire senzor</string>
+    <string name="careportal_cgm_sensor_stop">Oprire senzor</string>
     <string name="careportal_dad_alert">Alertă D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Schimbare cartuș insulină</string>
     <string name="careportal_profileswitch">Schimbare de profil</string>
@@ -310,6 +313,7 @@
     <string name="scene_confirm_deactivate">Încheiați scena \"%1$s\" și anulați modificările?</string>
     <string name="scene_conflict_active_tt">Ținta activă temporară va fi înlocuită</string>
     <string name="scene_conflict_active_profile">Schimbarea profilului activ va fi înlocuită</string>
+    <string name="scene_conflict_active_running_mode">Modul buclă activă va fi înlocuit</string>
     <string name="scene_conflict_active_scene">Scena activă \"%1$s\" se va încheia prima</string>
     <string name="scene_action_tt">Țintă temporară: %1$s</string>
     <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
@@ -318,6 +322,7 @@
     <string name="scene_action_loop_mode">Mod buclă: %1$s</string>
     <string name="scene_action_careportal">Jurnal: %1$s</string>
     <string name="scene_time_remaining">%1$s rămas</string>
+    <string name="scene_management">Scene</string>
     <string name="scene_management_desc">Creați, editați și gestionați scene</string>
     <string name="scene_action_count">%1$d acțiuni</string>
     <string name="scene_start_from_template">Porniți de la șablon</string>
@@ -336,6 +341,7 @@
     <string name="scene_editor_enabled">Activat</string>
     <string name="scene_editor_disabled">Dezactivat</string>
     <string name="scene_summary">%1$d acțiuni, %2$s</string>
+    <string name="scene_duration_indefinite">Nedefinit (sfârșit manual)</string>
     <string name="scene_some_actions_failed">Unele acțiuni au eșuat</string>
     <string name="scene_no_active">Nicio scenă activă</string>
     <string name="scene_some_reverts_failed">Unele acțiuni de revenire au eșuat</string>
@@ -343,6 +349,7 @@
     <string name="scene_no_actions">Scena nu are acțiuni</string>
     <string name="scene_profile_not_found">Profilul \"%1$s\" nu a fost găsit</string>
     <string name="scene_revert_tt">Anulați ținta temporară</string>
+    <string name="scene_revert_profile">Reveniți la profilul de dinainte de schimbare</string>
     <string name="scene_revert_smb_on">Reactivați SMB</string>
     <string name="scene_revert_smb_off">Dezactivați SMB</string>
     <string name="scene_revert_loop_mode">Anulați suprascrierea modului de buclă</string>
