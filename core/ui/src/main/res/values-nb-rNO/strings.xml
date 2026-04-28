@@ -347,7 +347,6 @@
     <string name="scene_no_actions">Scenen har ingen handlinger</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" finnes ikke</string>
     <string name="scene_revert_tt">Avbryt midlertidig mål</string>
-    <string name="scene_revert_profile">Endre profil tilbake til %1$s %2$d%%</string>
     <string name="scene_revert_smb_on">Reaktiver SMB</string>
     <string name="scene_revert_smb_off">Deaktiver SMB</string>
     <string name="scene_revert_loop_mode">Avbryt overstyring av loop-modus</string>
