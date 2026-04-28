@@ -313,11 +313,13 @@
     <string name="scene_confirm_deactivate">Terminare la scena \"%1$s\" e ripristinare le modifiche?</string>
     <string name="scene_conflict_active_tt">Il target temporaneo attivo verrà sostituito</string>
     <string name="scene_conflict_active_profile">L\'interruttore del profilo attivo verrà sostituito</string>
+    <string name="scene_conflict_active_running_mode">La modalità di esecuzione attiva verrà sostituita</string>
     <string name="scene_conflict_active_scene">Scena attiva \"%1$s\" sarà terminata prima</string>
     <string name="scene_action_tt">Temp-Target %1$s</string>
     <string name="scene_action_profile">Profilo: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Abilita SMB</string>
     <string name="scene_action_smb_off">Disabilita SMB</string>
+    <string name="scene_action_running_mode">Modalità in esecuzione: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">%1$s rimanenti</string>
     <string name="scene_management">Scene</string>
@@ -350,6 +352,7 @@
     <string name="scene_revert_profile">Ripristina la modifica del profilo</string>
     <string name="scene_revert_smb_on">Riattiva SMB</string>
     <string name="scene_revert_smb_off">Disabilita SMB</string>
+    <string name="scene_revert_loop_mode">Annulla l\'override della modalità in esecuzione</string>
     <string name="scene_careportal_no_revert">Le voci CarePortal non verranno ripristinate</string>
     <string name="careportal_sickness">Malattia</string>
     <string name="careportal_stress">Stress</string>
