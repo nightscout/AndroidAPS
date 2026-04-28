@@ -318,7 +318,6 @@
     <string name="scene_action_profile">Perfil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Habilitar SMB</string>
     <string name="scene_action_smb_off">Deshabilitar SMB</string>
-    <string name="scene_action_loop_mode">Modo de lazo: %1$s</string>
     <string name="scene_action_careportal">Registro: %1$s</string>
     <string name="scene_time_remaining">%1$s restante</string>
     <string name="scene_management">Escenas</string>
@@ -340,6 +339,7 @@
     <string name="scene_editor_enabled">Habilitado</string>
     <string name="scene_editor_disabled">Deshabilitado</string>
     <string name="scene_summary">%1$d acciones, %2$s</string>
+    <string name="scene_duration_indefinite">Indefinido (finalización manual)</string>
     <string name="scene_some_actions_failed">Se produjeron errores en algunas acciones</string>
     <string name="scene_no_active">Sin escena activa</string>
     <string name="scene_some_reverts_failed">Se produjeron errores en algunas acciones de reversión</string>
@@ -347,9 +347,9 @@
     <string name="scene_no_actions">La escena no tiene acciones</string>
     <string name="scene_profile_not_found">No se encontró el perfil \"%1$s\"</string>
     <string name="scene_revert_tt">Cancelar objetivo temporal</string>
+    <string name="scene_revert_profile">Revertir cambio de perfil</string>
     <string name="scene_revert_smb_on">Volver a habilitar SMB</string>
     <string name="scene_revert_smb_off">Deshabilitar SMB</string>
-    <string name="scene_revert_loop_mode">Cancelar anulación del modo de lazo</string>
     <string name="scene_careportal_no_revert">No se revertirán las entradas del portal de cuidados</string>
     <string name="careportal_sickness">Enfermedad</string>
     <string name="careportal_stress">Estrés</string>
