@@ -354,9 +354,7 @@
     <string name="pref_title_max_basal">Débit de base maximum</string>
     <string name="openapsma_max_basal_summary">Cette valeur est appelée Basal max dans le contexte OpenAPS</string>
     <string name="pref_title_smb_max_iob">IA max pour SMB</string>
-    <string name="openapssmb_max_iob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contexte OpenAPS\nOpenAPS n’ajoutera pas plus d’insuline si l\'IA actuelle est supérieure à cette valeur</string>
     <string name="pref_title_ama_max_iob">IA max pour AMA</string>
-    <string name="openapsma_max_iob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contexte OpenAPS\nC\'est le maximum d\'insuline en [U] que APS peut délivrer en une seule fois.</string>
     <string name="pref_title_max_daily_multiplier">Multiplicateur max quotidien de sécurité</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valeur par défaut : 3 Ceci est un paramètre important de sécurité de l’OpenAPS. Ceci va limiter vos débits basal à 3 fois votre débit Basal maximum. Il est probable que vous n’aurez pas besoin de changer cela, mais vous devez être conscient de ce qui est discuté pour les limites de sécurité dans “3x max daily; 4x current”.</string>
     <string name="pref_title_current_basal_multiplier">Multiplicateur de sécurité basale courante</string>
