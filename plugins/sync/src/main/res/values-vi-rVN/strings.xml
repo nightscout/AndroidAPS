@@ -222,7 +222,6 @@
     <string name="smscommunicator_message_body">Nội dung tin nhắn không hợp lệ</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Để chuyển chế độ Loop sang LGS (Tạm dừng khi đường huyết thấp), hãy trả lời với mã %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Chuyển chế độ Loop sang Vòng lặp kín: trả lời mã %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Chế độ Vòng lặp hiện tại: %1$s</string>
     <string name="wrong_format">Định dạng sai</string>
     <string name="sms_actual_bg">Đường huyết:</string>
     <string name="sms_last_bg">BG gần nhất:</string>
