@@ -223,6 +223,7 @@
     <string name="smscommunicator_message_body">Ugyldig meldingstekst</string>
     <string name="smscommunicator_set_lgs_reply_with_code">For å bytte Kjøremodus til Stopp ved lavt BS, svar med koden %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">For å bytte Kjøremodus til lukket loop, svar med koden %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Nåværende kjøremodus: %1$s</string>
     <string name="wrong_format">Feil format</string>
     <string name="sms_actual_bg">BS:</string>
     <string name="sms_last_bg">Siste BS:</string>
