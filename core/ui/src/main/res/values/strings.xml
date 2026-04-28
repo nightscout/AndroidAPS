@@ -322,6 +322,7 @@
     <string name="scene_confirm_deactivate">End scene \"%1$s\" and revert changes?</string>
     <string name="scene_conflict_active_tt">Active temporary target will be replaced</string>
     <string name="scene_conflict_active_profile">Active profile switch will be replaced</string>
+    <string name="scene_conflict_active_running_mode">Active loop mode will be replaced</string>
     <string name="scene_conflict_active_scene">Active scene \"%1$s\" will be ended first</string>
     <string name="scene_action_tt">Temp target: %1$s</string>
     <string name="scene_action_profile">Profile: %1$s %2$d%%</string>
@@ -349,6 +350,7 @@
     <string name="scene_editor_enabled">Enabled</string>
     <string name="scene_editor_disabled">Disabled</string>
     <string name="scene_summary">%1$d actions, %2$s</string>
+    <string name="scene_duration_indefinite">Indefinite (manual end)</string>
     <string name="scene_some_actions_failed">Some actions failed</string>
     <string name="scene_no_active">No active scene</string>
     <string name="scene_some_reverts_failed">Some revert actions failed</string>
@@ -356,7 +358,7 @@
     <string name="scene_no_actions">Scene has no actions</string>
     <string name="scene_profile_not_found">Profile \"%1$s\" not found</string>
     <string name="scene_revert_tt">Cancel temporary target</string>
-    <string name="scene_revert_profile">Revert profile to %1$s %2$d%%</string>
+    <string name="scene_revert_profile">Revert profile change</string>
     <string name="scene_revert_smb_on">Re-enable SMB</string>
     <string name="scene_revert_smb_off">Disable SMB</string>
     <string name="scene_revert_loop_mode">Cancel loop mode override</string>
