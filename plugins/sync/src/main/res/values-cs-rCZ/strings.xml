@@ -215,7 +215,6 @@
     <string name="smscommunicator_message_body">Neplatné tělo zprávy</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Pro přepnutí režimu smyčky na LGS (Low Glucose Suspend) odpovězte kódem %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Pro přepnutí režimu smyčky na uzavřenou smyčku odpovězte kódem %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Aktuální režim smyčky: %1$s</string>
     <string name="wrong_format">Nesprávný formát</string>
     <string name="sms_actual_bg">Gly:</string>
     <string name="sms_last_bg">Poslední gly:</string>
