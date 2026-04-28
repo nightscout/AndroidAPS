@@ -122,6 +122,17 @@
     <string name="car_icon_label">Condus</string>
     <string name="flight_icon_label">Zbor</string>
     <string name="shopping_icon_label">Cumpărături</string>
+    <string name="relax_icon_label">Meditație</string>
+    <string name="spa_icon_label">Spa</string>
+    <string name="heart_icon_label">Inimă</string>
+    <string name="psychology_icon_label">Minte</string>
+    <string name="star_icon_label">Stea</string>
+    <string name="speed_icon_label">Viteză</string>
+    <string name="alarm_icon_label">Alarmă</string>
+    <string name="event_icon_label">Eveniment</string>
+    <string name="flag_icon_label">Steag</string>
+    <string name="bookmark_icon_label">Marcaj</string>
+    <string name="label_icon_label">Etichetă</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Lipsă nume insulină</string>
     <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>
