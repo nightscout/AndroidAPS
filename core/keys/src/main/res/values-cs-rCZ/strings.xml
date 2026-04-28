@@ -354,9 +354,7 @@
     <string name="pref_title_max_basal">Maximální bazální dávka</string>
     <string name="openapsma_max_basal_summary">Tato hodnota se v kontextu OpenAPS nazývá max basal</string>
     <string name="pref_title_smb_max_iob">Max IOB pro SMB</string>
-    <string name="openapssmb_max_iob_summary">Tato hodnota se v kontextu OpenAPS nazývá Max IOB\nOpenAPS nepřidá více inzulínu, pokud je aktuální IOB větší než tato hodnota</string>
     <string name="pref_title_ama_max_iob">Max IOB pro AMA</string>
-    <string name="openapsma_max_iob_summary">Tato hodnota se v kontextu OpenAPS nazývá Max IOB\nToto je maximální množství inzulínu [U], které APS může najednou podat.</string>
     <string name="pref_title_max_daily_multiplier">Maximální denní bezpečnostní násobitel</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Výchozí hodnota: 3. Jde o klíčový bezpečnostní limit OpenAPS. Omezuje vaše bazály na 3násobek vašeho nejvyššího bazálu. Pravděpodobně nebudete potřebovat tuto hodnotu měnit, ale měli byste vědět, že právě toto je míněno v diskuzi o bezpečnostních limitech „3× max denní; 4× aktuální“.</string>
     <string name="pref_title_current_basal_multiplier">Aktuální bezpečnostní násobitel bazálu</string>

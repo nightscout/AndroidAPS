@@ -347,7 +347,6 @@
     <string name="scene_no_actions">Le scénario n\'a pas d\'action</string>
     <string name="scene_profile_not_found">Profil « %1$s » introuvable</string>
     <string name="scene_revert_tt">Annuler Cible Temporaire</string>
-    <string name="scene_revert_profile">Revenir au profil %1$s %2$d%%</string>
     <string name="scene_revert_smb_on">Réactiver SMB</string>
     <string name="scene_revert_smb_off">Désactiver SMB</string>
     <string name="scene_revert_loop_mode">Annuler le forçage du mode Boucle</string>

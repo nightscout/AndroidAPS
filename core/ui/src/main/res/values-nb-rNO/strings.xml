@@ -281,7 +281,7 @@
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
     <string name="careportal_pump_site_change">Bytte av pumpens kanyle</string>
-    <string name="cgm_sensor_insert">Bytte av sensor</string>
+    <string name="cgm_sensor_insert">Sensorbytte</string>
     <string name="careportal_pump_site_management">Pumpeområder</string>
     <string name="careportal_cgm_site_management">Sensor-områder</string>
     <string name="careportal_cgmsensorstart">Sensorstart</string>
@@ -347,7 +347,6 @@
     <string name="scene_no_actions">Scenen har ingen handlinger</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" finnes ikke</string>
     <string name="scene_revert_tt">Avbryt midlertidig mål</string>
-    <string name="scene_revert_profile">Endre profil tilbake til %1$s %2$d%%</string>
     <string name="scene_revert_smb_on">Reaktiver SMB</string>
     <string name="scene_revert_smb_off">Deaktiver SMB</string>
     <string name="scene_revert_loop_mode">Avbryt overstyring av loop-modus</string>

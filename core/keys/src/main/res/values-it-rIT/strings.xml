@@ -354,9 +354,7 @@
     <string name="pref_title_max_basal">Velocità basale massima</string>
     <string name="openapsma_max_basal_summary">Questo valore è chiamato max basale nel contesto OpenAPS</string>
     <string name="pref_title_smb_max_iob">IOB massimo per SMB</string>
-    <string name="openapssmb_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nOpenAPS non aggiungerà ulteriore insulina se l\'IOB corrente è maggiore di questo valore</string>
     <string name="pref_title_ama_max_iob">IOB massimo per AMA</string>
-    <string name="openapsma_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
     <string name="pref_title_max_daily_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valore predefinito: 3 Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare la tua basale ad un valore pari alla tua velocità basale massima moltiplicata per 3. Probabilmente non avrai bisogno di cambiare questo valore ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
     <string name="pref_title_current_basal_multiplier">Moltiplicatore di sicurezza della basale corrente</string>

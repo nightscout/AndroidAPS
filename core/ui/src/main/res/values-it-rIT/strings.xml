@@ -313,6 +313,7 @@
     <string name="scene_confirm_deactivate">Terminare la scena \"%1$s\" e ripristinare le modifiche?</string>
     <string name="scene_conflict_active_tt">Il target temporaneo attivo verrà sostituito</string>
     <string name="scene_conflict_active_profile">L\'interruttore del profilo attivo verrà sostituito</string>
+    <string name="scene_conflict_active_running_mode">La modalità loop attiva verrà sostituita</string>
     <string name="scene_conflict_active_scene">Scena attiva \"%1$s\" sarà terminata prima</string>
     <string name="scene_action_tt">Temp-Target %1$s</string>
     <string name="scene_action_profile">Profilo: %1$s %2$d%%</string>
@@ -340,6 +341,7 @@
     <string name="scene_editor_enabled">Abilitato</string>
     <string name="scene_editor_disabled">Disabilitato</string>
     <string name="scene_summary">%1$d azioni, %2$s</string>
+    <string name="scene_duration_indefinite">Indefinito (fine manuale)</string>
     <string name="scene_some_actions_failed">Alcune azioni fallite</string>
     <string name="scene_no_active">Nessuna scena attiva</string>
     <string name="scene_some_reverts_failed">Alcune azioni di ripristino non sono riuscite</string>
@@ -347,7 +349,7 @@
     <string name="scene_no_actions">La scena non ha azioni</string>
     <string name="scene_profile_not_found">Profilo \"%1$s\" non trovato</string>
     <string name="scene_revert_tt">Cancella basali temporanee</string>
-    <string name="scene_revert_profile">Ripristina il profilo ad %1$s %2$d%%</string>
+    <string name="scene_revert_profile">Ripristina la modifica del profilo</string>
     <string name="scene_revert_smb_on">Riattiva SMB</string>
     <string name="scene_revert_smb_off">Disabilita SMB</string>
     <string name="scene_revert_loop_mode">Annulla override modalità loop</string>

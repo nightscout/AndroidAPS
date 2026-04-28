@@ -86,6 +86,7 @@
     <string name="action_quick_wizard_confirmation">Asistent rapid solicitat</string>
     <string name="action_user_action_confirmation">Acțiune Utilizator Solicitată</string>
     <string name="action_scene_confirmation">Activați scena</string>
+    <string name="scene_stop">STOP</string>
     <string name="action_treatment_confirmation">Tratament solicitat</string>
     <string name="action_bolus_confirmation">Bolus solicitat</string>
     <string name="action_wizard_confirmation">Calcul solicitat</string>

@@ -347,7 +347,6 @@
     <string name="scene_no_actions">该情景未配置任何操作</string>
     <string name="scene_profile_not_found">未找到配置文件 \"%1$s\"</string>
     <string name="scene_revert_tt">取消临时目标</string>
-    <string name="scene_revert_profile">将配置档案还原至 %1$s%2$d%%</string>
     <string name="scene_revert_smb_on">重新启用微型大剂量</string>
     <string name="scene_revert_smb_off">禁用微型大剂量</string>
     <string name="scene_revert_loop_mode">取消闭环模式覆盖</string>

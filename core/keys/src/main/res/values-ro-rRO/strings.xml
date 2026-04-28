@@ -354,9 +354,7 @@
     <string name="pref_title_max_basal">Rată bazală maximă</string>
     <string name="openapsma_max_basal_summary">Această valoare este denumită bazală maximă în contextul OpenAPS</string>
     <string name="pref_title_smb_max_iob">IOB maxim pentru SMB</string>
-    <string name="openapssmb_max_iob_summary">Această valoare este denumită Max IOB în contextul OpenAPS,\nOpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
     <string name="pref_title_ama_max_iob">IOB maxim pentru SMB</string>
-    <string name="openapsma_max_iob_summary">Această valoare se numește Max IOB în contextul OpenAPS\nAceasta este insulina maximă în [U] pe care APS o poate livra imediat.</string>
     <string name="pref_title_max_daily_multiplier">Multiplicator maxim de siguranță zilnic</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3 Aceasta este o limită cheie de siguranță OpenAPS. Ceea ce face este să limiteze bazalele dumneavoastră la a fi de 3x (pentru această persoană) din cea mai mare rată bazală. Probabil că nu va trebui să schimbaţi acest lucru, dar trebuie să ştiți că asta se discută despre \"3x max zilnic; 4x curent” pentru plafoanele de siguranță.</string>
     <string name="pref_title_current_basal_multiplier">Multiplicator de siguranță pentru bazala curentă</string>

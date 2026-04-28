@@ -343,7 +343,6 @@
     <string name="scene_no_actions">此場景沒有動作</string>
     <string name="scene_profile_not_found">找不到設定檔 \"%1$s\"</string>
     <string name="scene_revert_tt">取消臨時目標</string>
-    <string name="scene_revert_profile">將設定檔還原為 %1$s %2$d%%</string>
     <string name="scene_revert_smb_on">重新啟用微量注射</string>
     <string name="scene_revert_smb_off">停用微量注射</string>
     <string name="scene_revert_loop_mode">取消循環模式覆寫</string>
