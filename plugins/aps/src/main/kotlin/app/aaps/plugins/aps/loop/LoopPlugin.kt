@@ -1011,7 +1011,8 @@ class LoopPlugin @Inject constructor(
         key = "loop_settings",
         titleResId = app.aaps.core.ui.R.string.loop,
         items = listOf(
-            IntKey.LoopOpenModeMinChange
+            IntKey.LoopOpenModeMinChange,
+            IntKey.LoopMinBgRecalcInterval
         ),
         icon = pluginDescription.icon
     )

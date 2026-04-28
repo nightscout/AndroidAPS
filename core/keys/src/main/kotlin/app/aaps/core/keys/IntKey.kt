@@ -185,6 +185,15 @@ enum class IntKey(
         defaultedBySM = true,
         unitType = UnitType.PERCENT
     ),
+    LoopMinBgRecalcInterval(
+        key = "loop_min_bg_recalc_interval",
+        defaultValue = 0,
+        min = 0,
+        max = 5,
+        titleResId = R.string.pref_title_loop_min_bg_recalc_interval,
+        summaryResId = R.string.loop_min_bg_recalc_interval_summary,
+        unitType = UnitType.MIN
+    ),
     ApsMaxSmbFrequency(key = "smbinterval", defaultValue = 3, min = 1, max = 10, titleResId = R.string.pref_title_smb_frequency, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb, unitType = UnitType.MIN),
     ApsMaxMinutesOfBasalToLimitSmb(key = "smbmaxminutes", defaultValue = 30, min = 15, max = 120, titleResId = R.string.pref_title_smb_max_minutes, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb, unitType = UnitType.MIN),
     ApsUamMaxMinutesOfBasalToLimitSmb(
