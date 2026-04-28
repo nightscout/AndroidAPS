@@ -313,11 +313,13 @@
     <string name="scene_confirm_deactivate">Încheiați scena \"%1$s\" și anulați modificările?</string>
     <string name="scene_conflict_active_tt">Ținta activă temporară va fi înlocuită</string>
     <string name="scene_conflict_active_profile">Schimbarea profilului activ va fi înlocuită</string>
+    <string name="scene_conflict_active_running_mode">Modul de rulare activ va fi înlocuit</string>
     <string name="scene_conflict_active_scene">Scena activă \"%1$s\" se va încheia prima</string>
     <string name="scene_action_tt">Țintă temporară: %1$s</string>
     <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Activați SMB</string>
     <string name="scene_action_smb_off">Dezactivaţi SMB</string>
+    <string name="scene_action_running_mode">Mod de rulare: %1$s</string>
     <string name="scene_action_careportal">Jurnal: %1$s</string>
     <string name="scene_time_remaining">%1$s rămas</string>
     <string name="scene_management">Scene</string>
@@ -350,6 +352,7 @@
     <string name="scene_revert_profile">Reveniți la profilul de dinainte de schimbare</string>
     <string name="scene_revert_smb_on">Reactivați SMB</string>
     <string name="scene_revert_smb_off">Dezactivați SMB</string>
+    <string name="scene_revert_loop_mode">Anulați modificarea modului de buclă</string>
     <string name="scene_careportal_no_revert">Intrările din CarePortal nu vor fi readuse la starea anterioară</string>
     <string name="careportal_sickness">Boală</string>
     <string name="careportal_stress">Stres</string>
