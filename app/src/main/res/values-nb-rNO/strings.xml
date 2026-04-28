@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="authorizationfailed">Autentisering feilet</string>
-    <string name="identification_not_set">Identifikasjon ikke satt i utviklermodus</string>
+    <string name="identification_not_set">Utviklermodus krever at du identifiserer deg</string>
     <string name="select">Velg</string>
     <string name="set">Angi</string>
     <string name="migrating_preferences">Migrerer innstillinger…</string>
