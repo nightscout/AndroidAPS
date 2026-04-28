@@ -354,9 +354,7 @@
     <string name="pref_title_max_basal">Tỷ lệ liều nền tối đa</string>
     <string name="openapsma_max_basal_summary">Giá trị này được gọi là liều nền tối đa trong ngữ cảnh OpenAPS</string>
     <string name="pref_title_smb_max_iob">IOB tối đa cho SMB</string>
-    <string name="openapssmb_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB. \nOpenAPS sẽ không đưa thêm insulin nếu IOB hiện tại lớn hơn giá trị này</string>
     <string name="pref_title_ama_max_iob">IOB tối đa cho AMA</string>
-    <string name="openapsma_max_iob_summary">Giá trị này trong OpenAPS được gọi là Max IOB.\n Đây là lượng insulin tối đa [U] mà APS có thể đưa vào cùng một lúc.</string>
     <string name="pref_title_max_daily_multiplier">Hệ số an toàn tối đa hằng ngày</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Giá trị mặc định: 3. Đây là một giới hạn an toàn quan trọng của OpenAPS. Thiết lập này giới hạn liều nền tối đa ở mức gấp 3 lần tốc độ liều nền cao nhất của bạn (đối với người này). Bạn có thể sẽ không cần thay đổi giá trị này, nhưng nên biết rằng đây chính là điều được nhắc đến trong giới hạn an toàn “3x tối đa hằng ngày; 4x hiện tại”.</string>
     <string name="pref_title_current_basal_multiplier">Hệ số an toàn của liều nền hiện tại</string>
