@@ -222,7 +222,6 @@
     <string name="smscommunicator_message_body">訊息內文無效</string>
     <string name="smscommunicator_set_lgs_reply_with_code">若要將循環模式切換為 LGS（Low Glucose Suspend，低血糖暫停），請回覆代碼 %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">若要將循環模式切換為封閉循環，請回覆代碼 %1$s</string>
-    <string name="smscommunicator_current_loop_mode">目前循環模式：%1$s</string>
     <string name="wrong_format">格式錯誤</string>
     <string name="sms_actual_bg">血糖：</string>
     <string name="sms_last_bg">最近血糖：</string>
