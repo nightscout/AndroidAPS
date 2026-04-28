@@ -318,7 +318,6 @@
     <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Aktiver SMB</string>
     <string name="scene_action_smb_off">Deaktiver SMB</string>
-    <string name="scene_action_loop_mode">Loop-modus: %1$s</string>
     <string name="scene_action_careportal">Logg: %1$s</string>
     <string name="scene_time_remaining">%1$s gjenstår</string>
     <string name="scene_management">Scener</string>
@@ -349,7 +348,6 @@
     <string name="scene_revert_tt">Avbryt midlertidig mål</string>
     <string name="scene_revert_smb_on">Reaktiver SMB</string>
     <string name="scene_revert_smb_off">Deaktiver SMB</string>
-    <string name="scene_revert_loop_mode">Avbryt overstyring av loop-modus</string>
     <string name="scene_careportal_no_revert">Oppføringer i helseportal vil ikke bli tilbakestilt</string>
     <string name="careportal_sickness">Sykdom</string>
     <string name="careportal_stress">Stress</string>
