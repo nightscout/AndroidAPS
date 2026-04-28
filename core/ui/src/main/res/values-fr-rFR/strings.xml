@@ -318,7 +318,7 @@
     <string name="scene_action_profile">Profil : %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Activer SMB</string>
     <string name="scene_action_smb_off">Désactiver SMB</string>
-    <string name="scene_action_loop_mode">Mode Boucle : %1$s</string>
+    <string name="scene_action_running_mode">Mode Boucle : %1$s</string>
     <string name="scene_action_careportal">Note : %1$s</string>
     <string name="scene_time_remaining">%1$s restants</string>
     <string name="scene_management">Scénarii</string>

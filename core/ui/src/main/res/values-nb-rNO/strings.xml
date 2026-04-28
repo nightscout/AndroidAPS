@@ -318,7 +318,7 @@
     <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Aktiver SMB</string>
     <string name="scene_action_smb_off">Deaktiver SMB</string>
-    <string name="scene_action_loop_mode">Loop-modus: %1$s</string>
+    <string name="scene_action_running_mode">Loop-modus: %1$s</string>
     <string name="scene_action_careportal">Logg: %1$s</string>
     <string name="scene_time_remaining">%1$s gjenstår</string>
     <string name="scene_management">Scener</string>

@@ -315,7 +315,7 @@
     <string name="scene_action_profile">設定檔: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">啟用微量注射</string>
     <string name="scene_action_smb_off">停用微量注射</string>
-    <string name="scene_action_loop_mode">循環模式: %1$s</string>
+    <string name="scene_action_running_mode">循環模式: %1$s</string>
     <string name="scene_action_careportal">記錄: %1$s</string>
     <string name="scene_time_remaining">剩餘 %1$s</string>
     <string name="scene_management_desc">建立、編輯與管理場景</string>

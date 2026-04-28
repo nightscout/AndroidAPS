@@ -315,7 +315,7 @@
     <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Activați SMB</string>
     <string name="scene_action_smb_off">Dezactivaţi SMB</string>
-    <string name="scene_action_loop_mode">Mod buclă: %1$s</string>
+    <string name="scene_action_running_mode">Mod buclă: %1$s</string>
     <string name="scene_action_careportal">Jurnal: %1$s</string>
     <string name="scene_time_remaining">%1$s rămas</string>
     <string name="scene_management_desc">Creați, editați și gestionați scene</string>

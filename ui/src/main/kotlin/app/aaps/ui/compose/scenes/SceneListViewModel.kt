@@ -224,7 +224,7 @@ class SceneListViewModel @Inject constructor(
             }
 
             is SceneAction.LoopModeChange  -> {
-                rh.gs(R.string.scene_action_loop_mode, translator.translate(action.mode))
+                rh.gs(R.string.scene_action_running_mode, translator.translate(action.mode))
             }
 
             is SceneAction.CarePortalEvent -> {
