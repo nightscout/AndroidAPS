@@ -354,9 +354,7 @@
     <string name="pref_title_max_basal">最大基础率</string>
     <string name="openapsma_max_basal_summary">这个值在 OpenAPS被称为最大基础率</string>
     <string name="pref_title_smb_max_iob">SMB 模式下的最大 IOB 上限</string>
-    <string name="openapssmb_max_iob_summary">该值在OpenAPS中称为最大 IOB\n如果当前IOB大于此值，则OpenAPS不会输注更多胰岛素</string>
     <string name="pref_title_ama_max_iob">AMA 最大 IOB 上限</string>
-    <string name="openapsma_max_iob_summary">这个值在OpenAPS中被成为最大IOB\n这是APS单次可以输注的胰岛素的最大值[U]</string>
     <string name="pref_title_max_daily_multiplier">最大日基础率安全倍数</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">默认值：3 这是 OpenAPS 中一项关键的安全上限设置。作用是将你的基础率限制为最高基础率的 3 倍（当前示例为 3 倍）。你通常无需修改此值，但需要了解：这就是相关说明中提到的 “最大每日 3 倍、当前 4 倍” 安全上限机制。</string>
     <string name="pref_title_current_basal_multiplier">当前基础率安全倍数</string>
