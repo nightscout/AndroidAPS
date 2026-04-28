@@ -313,11 +313,13 @@
     <string name="scene_confirm_deactivate">Avslutte scene \"%1$s\" og tilbakestille endringer?</string>
     <string name="scene_conflict_active_tt">Dette vil erstatte et aktivt midlertidig mål</string>
     <string name="scene_conflict_active_profile">Dette vil erstatte en aktiv overstyrt profil</string>
+    <string name="scene_conflict_active_running_mode">Aktiv kjøremodus vil bli erstattet</string>
     <string name="scene_conflict_active_scene">Aktiv scene \"%1$s\" vil bli avsluttet først</string>
     <string name="scene_action_tt">Midlertidig mål: %1$s</string>
     <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Aktiver SMB</string>
     <string name="scene_action_smb_off">Deaktiver SMB</string>
+    <string name="scene_action_running_mode">Kjøremodus: %1$s</string>
     <string name="scene_action_careportal">Logg: %1$s</string>
     <string name="scene_time_remaining">%1$s gjenstår</string>
     <string name="scene_management">Scener</string>
@@ -339,6 +341,7 @@
     <string name="scene_editor_enabled">Aktivert</string>
     <string name="scene_editor_disabled">Deaktivert</string>
     <string name="scene_summary">%1$d handlinger, %2$s</string>
+    <string name="scene_duration_indefinite">Ubestemt (manuell slutt)</string>
     <string name="scene_some_actions_failed">Noen handlinger mislyktes</string>
     <string name="scene_no_active">Ingen aktiv scene</string>
     <string name="scene_some_reverts_failed">Reversering av noen handlinger feilet</string>
@@ -346,8 +349,10 @@
     <string name="scene_no_actions">Scenen har ingen handlinger</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" finnes ikke</string>
     <string name="scene_revert_tt">Avbryt midlertidig mål</string>
+    <string name="scene_revert_profile">Omgjør profilbytte</string>
     <string name="scene_revert_smb_on">Reaktiver SMB</string>
     <string name="scene_revert_smb_off">Deaktiver SMB</string>
+    <string name="scene_revert_loop_mode">Avbryt overstyring av kjøremodus</string>
     <string name="scene_careportal_no_revert">Oppføringer i helseportal vil ikke bli tilbakestilt</string>
     <string name="careportal_sickness">Sykdom</string>
     <string name="careportal_stress">Stress</string>
