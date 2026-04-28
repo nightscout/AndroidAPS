@@ -223,6 +223,7 @@
     <string name="smscommunicator_message_body">Conținutul mesajului nu este valid</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Pentru a schimba modul buclei în LGS (Suspendare la hipoglicemie), răspundeți cu codul %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Pentru a schimba modul buclei în Buclă Închisă răspundeți cu codul %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Mod de rulare curent: %1$s</string>
     <string name="wrong_format">Format greșit</string>
     <string name="sms_actual_bg">Glicemie:</string>
     <string name="sms_last_bg">Ultima glicemie:</string>
