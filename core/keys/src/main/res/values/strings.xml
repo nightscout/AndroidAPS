@@ -446,8 +446,10 @@
     <string name="openapsama_smb_max_range_extension_summary">Default value: 1 This is another key OpenAPS safety cap, and specifies by what factor you can exceed the regular 120 maxSMB/maxUAM minutes. Increase this experimental value slowly and with caution.</string>
 
     <!-- UnitDoubleKey: Overview preferences -->
+    <string name="pref_title_very_low_mark">Very Low BG mark</string>
     <string name="pref_title_low_mark">Low BG mark</string>
     <string name="pref_title_high_mark">High BG mark</string>
+    <string name="pref_title_very_high_mark">Very High BG mark</string>
 
     <!-- UnitDoubleKey: APS preferences -->
     <string name="pref_title_lgs_threshold">LGS threshold</string>

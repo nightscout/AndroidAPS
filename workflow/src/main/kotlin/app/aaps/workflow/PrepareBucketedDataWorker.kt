@@ -57,8 +57,10 @@ class PrepareBucketedDataWorker(
             )
         )
 
+        val veryHighMark = preferences.get(UnitDoubleKey.OverviewVeryHighMark)
         val highMark = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMark = preferences.get(UnitDoubleKey.OverviewLowMark)
+        val veryLowMark = preferences.get(UnitDoubleKey.OverviewVeryLowMark)
 
         val bucketedDataPoints = bucketedData
             .filter { it.timestamp in newFromTime..newToTime }
@@ -66,9 +68,11 @@ class PrepareBucketedDataWorker(
                 // Use recalculated (smoothed value with fallback to original)
                 val valueInUnits = profileUtil.fromMgdlToUnits(inMemoryGlucoseValue.recalculated)
                 val range = when {
-                    valueInUnits > highMark -> BgRange.HIGH
-                    valueInUnits < lowMark  -> BgRange.LOW
-                    else                    -> BgRange.IN_RANGE
+                    valueInUnits > veryHighMark -> BgRange.VERY_HIGH
+                    valueInUnits > highMark     -> BgRange.HIGH
+                    valueInUnits < veryLowMark  -> BgRange.VERY_LOW
+                    valueInUnits < lowMark      -> BgRange.LOW
+                    else                        -> BgRange.IN_RANGE
                 }
                 BgDataPoint(
                     timestamp = inMemoryGlucoseValue.timestamp,

@@ -185,9 +185,11 @@ fun BgInfoSection(
  */
 @Composable
 private fun BgRange.toColor(): Color = when (this) {
-    BgRange.HIGH     -> AapsTheme.generalColors.bgHigh
-    BgRange.IN_RANGE -> AapsTheme.generalColors.bgInRange
-    BgRange.LOW      -> AapsTheme.generalColors.bgLow
+    BgRange.VERY_HIGH -> AapsTheme.generalColors.bgVeryHigh
+    BgRange.HIGH      -> AapsTheme.generalColors.bgHigh
+    BgRange.IN_RANGE  -> AapsTheme.generalColors.bgInRange
+    BgRange.LOW       -> AapsTheme.generalColors.bgLow
+    BgRange.VERY_LOW  -> AapsTheme.generalColors.bgVeryLow
 }
 
 /**

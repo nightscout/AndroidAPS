@@ -15,9 +15,11 @@ import app.aaps.core.data.model.TrendArrow
  */
 enum class BgRange {
 
+    VERY_HIGH,  // Above very high mark
     HIGH,      // Above high mark
     IN_RANGE,  // Within target range
-    LOW        // Below low mark
+    LOW,       // Below low mark
+    VERY_LOW    // Below very low mark
 }
 
 /**

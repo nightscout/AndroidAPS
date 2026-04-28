@@ -47,8 +47,10 @@ class PrepareBgDataWorker(
 
         val bgReadingsArray = persistenceLayer.getBgReadingsDataFromTimeToTime(fromTime, toTime, false)
 
+        val veryHighMarkInUnits = preferences.get(UnitDoubleKey.OverviewVeryHighMark)
         val highMarkInUnits = preferences.get(UnitDoubleKey.OverviewHighMark)
         val lowMarkInUnits = preferences.get(UnitDoubleKey.OverviewLowMark)
+        val veryLowMarkInUnits = preferences.get(UnitDoubleKey.OverviewVeryLowMark)
 
         val bgDataPoints = bgReadingsArray
             .filter { it.timestamp in fromTime..toTime }
@@ -58,9 +60,11 @@ class PrepareBgDataWorker(
                     timestamp = bg.timestamp,
                     value = valueInUnits,
                     range = when {
-                        valueInUnits > highMarkInUnits -> BgRange.HIGH
-                        valueInUnits < lowMarkInUnits  -> BgRange.LOW
-                        else                           -> BgRange.IN_RANGE
+                        valueInUnits > veryHighMarkInUnits -> BgRange.VERY_HIGH
+                        valueInUnits > highMarkInUnits     -> BgRange.HIGH
+                        valueInUnits < veryLowMarkInUnits  -> BgRange.VERY_LOW
+                        valueInUnits < lowMarkInUnits      -> BgRange.LOW
+                        else                               -> BgRange.IN_RANGE
                     },
                     type = BgType.REGULAR
                 )

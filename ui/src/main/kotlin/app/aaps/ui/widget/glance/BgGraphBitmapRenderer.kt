@@ -20,9 +20,11 @@ data class BgGraphInput(
 )
 
 data class BgGraphColors(
+    val veryLow: Int,
     val low: Int,
     val inRange: Int,
-    val high: Int
+    val high: Int,
+    val veryHigh: Int
 )
 
 /**
@@ -64,9 +66,11 @@ class BgGraphBitmapRenderer {
     }
 
     private fun colorForRange(range: BgRange, colors: BgGraphColors): Int = when (range) {
-        BgRange.LOW      -> colors.low
-        BgRange.IN_RANGE -> colors.inRange
-        BgRange.HIGH     -> colors.high
+        BgRange.VERY_LOW  -> colors.veryLow
+        BgRange.LOW       -> colors.low
+        BgRange.IN_RANGE  -> colors.inRange
+        BgRange.HIGH      -> colors.high
+        BgRange.VERY_HIGH -> colors.veryHigh
     }
 
     companion object {

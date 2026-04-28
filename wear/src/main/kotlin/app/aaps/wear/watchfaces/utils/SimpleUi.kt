@@ -29,9 +29,11 @@ class SimpleUi @Inject constructor(
     private lateinit var mSvgPaint: Paint
     private lateinit var mDirectionPaint: Paint
     private var mYOffset = 0f
+    private val colorDarkVeryHigh = ContextCompat.getColor(context, R.color.dark_veryHighColor)
     private val colorDarkHigh = ContextCompat.getColor(context, R.color.dark_highColor)
     private var colorDarkMid = ContextCompat.getColor(context, R.color.dark_midColor)
     private var colorDarkLow = ContextCompat.getColor(context, R.color.dark_lowColor)
+    private var colorDarkVeryLow = ContextCompat.getColor(context, R.color.dark_veryLowColor)
     private var displayWidth = 0
     private var displayHeight = 0
     private lateinit var callback: () -> Unit
@@ -97,8 +99,11 @@ class SimpleUi @Inject constructor(
 
     private fun getBgColour(level: Long): Int =
         when (level) {
+            2L   -> colorDarkVeryHigh
             1L   -> colorDarkHigh
             0L   -> colorDarkMid
+            -1L  -> colorDarkLow
+            -2L  -> colorDarkVeryLow
             else -> colorDarkLow
         }
 
