@@ -318,7 +318,6 @@
     <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Povoliť SMB</string>
     <string name="scene_action_smb_off">Zakázať SMB</string>
-    <string name="scene_action_loop_mode">Režim uzavretého okruhu: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">zostáva %1$s</string>
     <string name="scene_management">Scény</string>
@@ -349,7 +348,6 @@
     <string name="scene_revert_tt">Zrušiť dočasný cieľ</string>
     <string name="scene_revert_smb_on">Znovu povoliť SMB</string>
     <string name="scene_revert_smb_off">Zakázať SMB</string>
-    <string name="scene_revert_loop_mode">Zrušiť prepísanie režimu uzavretého okruhu</string>
     <string name="scene_careportal_no_revert">Záznamy portálu starostlivosti se nevrátia</string>
     <string name="careportal_sickness">Choroba</string>
     <string name="careportal_stress">Stres</string>
