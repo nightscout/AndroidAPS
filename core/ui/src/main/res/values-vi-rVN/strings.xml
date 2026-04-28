@@ -315,7 +315,6 @@
     <string name="scene_action_profile">Hồ sơ: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Kích hoạt SMB</string>
     <string name="scene_action_smb_off">Vô hiệu hóa SMBs</string>
-    <string name="scene_action_loop_mode">Chế độ vòng lặp: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_time_remaining">%1$s còn lại</string>
     <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các Bối cảnh</string>
@@ -345,7 +344,6 @@
     <string name="scene_revert_tt">Hủy mục tiêu tạm thời</string>
     <string name="scene_revert_smb_on">Bật lại SMB</string>
     <string name="scene_revert_smb_off">Vô hiệu hóa SMB</string>
-    <string name="scene_revert_loop_mode">Hủy ghi đè chế độ loop</string>
     <string name="scene_careportal_no_revert">Các mục nhập CarePortal sẽ không được hoàn tác</string>
     <string name="careportal_sickness">Bệnh tật</string>
     <string name="careportal_stress">Căng thẳng</string>
