@@ -223,6 +223,7 @@
     <string name="smscommunicator_message_body">Corpo del messaggio non valido</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Per cambiare la modalità loop a LGS (Sospensione a glicemia bassa) rispondi con il codice %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Per cambiare la modalità loop a Loop Chiuso rispondi con il codice %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modalità di esecuzione corrente: %1$s</string>
     <string name="wrong_format">Formato errato</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Ultimo BG:</string>
