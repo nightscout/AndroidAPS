@@ -223,7 +223,6 @@
     <string name="smscommunicator_message_body">Cuerpo del mensaje no válido</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Para cambiar el modo del Lazo a LGS (Suspensión por glucosa baja), responda con el código %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Para cambiar el modo del Lazo a Lazo cerrado, responda con el código %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Modo actual del Lazo: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">Glucosa:</string>
     <string name="sms_last_bg">Última glucemia:</string>
