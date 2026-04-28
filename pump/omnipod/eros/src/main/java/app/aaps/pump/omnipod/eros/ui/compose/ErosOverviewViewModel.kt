@@ -177,6 +177,7 @@ class ErosOverviewViewModel @Inject constructor(
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_firmware_version), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_time_on_pod), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = PLACEHOLDER))
+            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = PLACEHOLDER))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_connection), value = buildLastConnection().first, level = buildLastConnection().second))
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_last_bolus), value = PLACEHOLDER))
@@ -206,6 +207,12 @@ class ErosOverviewViewModel @Inject constructor(
             val expiryValue = expiresAt?.let { readableZonedTime(it) } ?: PLACEHOLDER
             val expiryLevel = if (expiresAt != null && DateTime.now().isAfter(expiresAt)) StatusLevel.CRITICAL else StatusLevel.NORMAL
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_expiry_date), value = expiryValue, level = expiryLevel))
+
+            // Hard end date (+8 hours after expiry)
+            val hardEndAt = expiresAt?.plusHours(8)
+            val hardEndValue = hardEndAt?.let { dateUtil.dateAndTimeString(it.millis) } ?: PLACEHOLDER
+            val hardEndLevel = if (hardEndAt != null && DateTime.now().isAfter(hardEndAt)) StatusLevel.CRITICAL else StatusLevel.NORMAL
+            add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_hard_end_date), value = hardEndValue, level = hardEndLevel))
 
             // Pod status
             add(PumpInfoRow(label = rh.gs(CommonR.string.omnipod_common_overview_pod_status), value = buildPodStatusText(), level = buildPodStatusLevel()))
