@@ -343,7 +343,6 @@
     <string name="scene_no_actions">Scena nu are acțiuni</string>
     <string name="scene_profile_not_found">Profilul \"%1$s\" nu a fost găsit</string>
     <string name="scene_revert_tt">Anulați ținta temporară</string>
-    <string name="scene_revert_profile">Restabiliți profilul la %1$s %2$d%%</string>
     <string name="scene_revert_smb_on">Reactivați SMB</string>
     <string name="scene_revert_smb_off">Dezactivați SMB</string>
     <string name="scene_revert_loop_mode">Anulați suprascrierea modului de buclă</string>
