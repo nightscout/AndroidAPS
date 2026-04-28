@@ -1012,7 +1012,7 @@ class LoopPlugin @Inject constructor(
         titleResId = app.aaps.core.ui.R.string.loop,
         items = listOf(
             IntKey.LoopOpenModeMinChange,
-            IntKey.LoopMinBgRecalcInterval
+            LoopIntervalPreferenceItem(persistenceLayer)
         ),
         icon = pluginDescription.icon
     )
