@@ -24,15 +24,21 @@ class SyncNsRunningModeTransaction(private val runningModes: List<RunningMode>) 
                     result.invalidated.add(current)
                 }
                 // Allow update duration to shorter only.
+                // duration == 0 means "permanent/indefinite" for RM, so it must compare as
+                // infinite — otherwise a permanent→finite cut (incoming > 0, current == 0)
+                // would be wrongly rejected as "longer". Incoming 0 (lengthening to permanent)
+                // stays rejected.
                 // Guard: autoForced rows (SUSPENDED_BY_PUMP, constraint-forced modes) are
                 // locally determined by each device from its own pump/constraints state.
                 // Remote clients (including older versions that rewrite durations based on
                 // their non-authoritative local pump.isSuspended()) must not be allowed to
                 // shorten them here — otherwise the chip on the authoritative device
                 // flips to the truncated value on every NS round-trip.
+                val isCut = runningMode.duration > 0 &&
+                    (current.duration == 0L || runningMode.duration < current.duration)
                 if (!current.autoForced &&
                     current.duration != runningMode.duration &&
-                    runningMode.duration < current.duration
+                    isCut
                 ) {
                     current.duration = runningMode.duration
                     database.runningModeDao.updateExistingEntry(current)

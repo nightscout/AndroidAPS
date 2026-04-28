@@ -24,6 +24,8 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.LocalProfileManager
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventProfileChangeRequested
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -48,7 +50,8 @@ class SceneExecutor @Inject constructor(
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private val rxBus: RxBus
 ) {
 
     /**
@@ -59,17 +62,22 @@ class SceneExecutor @Inject constructor(
      */
     suspend fun activate(scene: Scene, durationMinutes: Int = scene.defaultDurationMinutes): SceneExecutionResult {
         aapsLogger.info(LTag.UI, "XXXX activate() entry scene='${scene.name}' id=${scene.id} duration=${durationMinutes}min actions=${scene.actions.size}")
-        // Deactivate any currently active scene first (without reverting).
-        // If the previous scene has already expired, its expiry worker is either currently running
-        // (chained activation — we're inside that worker) or already finished. Calling cancelUniqueWork
-        // on the running worker would cancel our own coroutine scope and break all subsequent
-        // persistenceLayer calls with JobCancellationException. REPLACE policy on the new
-        // scheduleExpiryWorker handles any leftover work.
+        // Wind down any currently active scene first.
+        // - Not yet expired: full revert (TT/PS/RM cancel, SMB restore) so SceneA's effects don't
+        //   leak past SceneB's start.
+        // - Already expired: its expiry worker is either running right now (chained activation —
+        //   we are inside that worker) or already finished, and onExpiry() has already reverted
+        //   non-duration actions. Calling cancelUniqueWork on the running worker would cancel our
+        //   own coroutine scope, so we just clear the state. REPLACE policy on the new
+        //   scheduleExpiryWorker handles any leftover work.
         if (activeSceneManager.isActive()) {
             val previouslyExpired = activeSceneManager.expired.value
-            aapsLogger.info(LTag.UI, "XXXX activate() — clearing previous active scene '${activeSceneManager.getActiveState()?.scene?.name}' expired=$previouslyExpired")
-            if (!previouslyExpired) cancelExpiryWorker()
-            activeSceneManager.clearActive()
+            aapsLogger.info(LTag.UI, "XXXX activate() — winding down previous active scene '${activeSceneManager.getActiveState()?.scene?.name}' expired=$previouslyExpired")
+            if (!previouslyExpired) {
+                deactivate()
+            } else {
+                activeSceneManager.clearActive()
+            }
         } else {
             aapsLogger.info(LTag.UI, "XXXX activate() — no previous active scene")
         }
@@ -102,15 +110,14 @@ class SceneExecutor @Inject constructor(
             actionResults.add(result)
         }
 
-        // Query record IDs of what we just created (for override detection at revert time)
+        // Record IDs of what we just created (pulled from insert results for override detection at revert time)
         aapsLogger.info(LTag.UI, "XXXX activate() computing updatedPriorState")
         val updatedPriorState = try {
             priorState.copy(
-                sceneTtId = if (scene.actions.any { it is SceneAction.TempTarget })
-                    persistenceLayer.getTemporaryTargetActiveAt(now)?.id else null,
-                scenePsId = actionResults.firstOrNull { it.action is SceneAction.ProfileSwitch }?.psId,
-                sceneRunningModeId = if (scene.actions.any { it is SceneAction.LoopModeChange })
-                    persistenceLayer.getRunningModeActiveAt(now).id.takeIf { it > 0 } else null
+                sceneTtId = actionResults.firstOrNull { it.action is SceneAction.TempTarget }?.recordId,
+                scenePsId = actionResults.firstOrNull { it.action is SceneAction.ProfileSwitch }?.recordId,
+                sceneRunningModeId = actionResults.firstOrNull { it.action is SceneAction.LoopModeChange }?.recordId,
+                sceneTherapyEventId = actionResults.firstOrNull { it.action is SceneAction.CarePortalEvent }?.recordId
             )
         } catch (e: Throwable) {
             aapsLogger.error(LTag.UI, "XXXX activate() updatedPriorState FAILED", e)
@@ -236,48 +243,14 @@ class SceneExecutor @Inject constructor(
         activeSceneManager.clearActive()
     }
 
-    private suspend fun capturePriorState(scene: Scene): ActiveSceneState.PriorState {
-        var smbEnabled: Boolean? = null
-        var profileName: String? = null
-        var profilePercentage: Int? = null
-        var profileTimeShiftHours: Int? = null
-        var runningMode: RM.Mode? = null
-
-        for (action in scene.actions) {
-            when (action) {
-                is SceneAction.SmbToggle       -> {
-                    smbEnabled = preferences.get(BooleanKey.ApsUseSmb)
-                }
-
-                is SceneAction.ProfileSwitch   -> {
-                    val profile = profileFunction.getProfile()
-                    // Use ORIGINAL (base) name so revert targets a valid profile-store entry,
-                    // not a display name with temp-% suffix like "Test (60%)".
-                    profileName = profileFunction.getOriginalProfileName()
-                    profilePercentage = profile?.percentage ?: 100
-                    profileTimeShiftHours = profile?.timeshift ?: 0
-                }
-
-                is SceneAction.LoopModeChange  -> {
-                    // Capture current running mode — will be used for revert
-                    // The actual mode is managed by LoopPlugin, we just store what to revert to
-                    runningMode = null // Will use RESUME on revert which cancels any running mode
-                }
-
-                is SceneAction.TempTarget,
-                is SceneAction.CarePortalEvent -> {
-                    // No prior state to capture for these
-                }
-            }
+    private fun capturePriorState(scene: Scene): ActiveSceneState.PriorState {
+        // SMB is the only action without a duration model — capture its prior value so revert
+        // can restore the user's preference. TT/PS/RM revert by shortening their own record;
+        // the resolver picks up whatever was underneath, so no snapshot is needed for them.
+        val smbEnabled = scene.actions.firstOrNull { it is SceneAction.SmbToggle }?.let {
+            preferences.get(BooleanKey.ApsUseSmb)
         }
-
-        return ActiveSceneState.PriorState(
-            smbEnabled = smbEnabled,
-            profileName = profileName,
-            profilePercentage = profilePercentage,
-            profileTimeShiftHours = profileTimeShiftHours,
-            runningMode = runningMode
-        )
+        return ActiveSceneState.PriorState(smbEnabled = smbEnabled)
     }
 
     private suspend fun executeAction(
@@ -296,7 +269,7 @@ class SceneExecutor @Inject constructor(
                         lowTarget = action.targetMgdl,
                         highTarget = action.targetMgdl
                     )
-                    persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                    val result = persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         temporaryTarget = tempTarget,
                         action = Action.TT,
                         source = Sources.Scene,
@@ -306,7 +279,7 @@ class SceneExecutor @Inject constructor(
                             ValueWithUnit.Minute(sceneDurationMinutes)
                         )
                     )
-                    SceneExecutionResult.ActionResult(action, success = true)
+                    SceneExecutionResult.ActionResult(action, success = true, recordId = result.inserted.firstOrNull()?.id)
                 }
 
                 is SceneAction.ProfileSwitch   -> {
@@ -335,7 +308,7 @@ class SceneExecutor @Inject constructor(
                         SceneExecutionResult.ActionResult(
                             action = action,
                             success = ps != null,
-                            psId = ps?.id,
+                            recordId = ps?.id,
                             errorMessage = if (ps == null) "createProfileSwitch returned null for '$profileName'" else null
                         )
                     } else {
@@ -349,7 +322,7 @@ class SceneExecutor @Inject constructor(
                 }
 
                 is SceneAction.LoopModeChange  -> {
-                    persistenceLayer.insertOrUpdateRunningMode(
+                    val result = persistenceLayer.insertOrUpdateRunningMode(
                         runningMode = RM(
                             timestamp = now,
                             mode = action.mode,
@@ -360,19 +333,20 @@ class SceneExecutor @Inject constructor(
                         source = Sources.Scene,
                         listValues = listOf(ValueWithUnit.SimpleString(action.mode.name))
                     )
-                    SceneExecutionResult.ActionResult(action, success = true)
+                    SceneExecutionResult.ActionResult(action, success = true, recordId = result.inserted.firstOrNull()?.id)
                 }
 
                 is SceneAction.CarePortalEvent -> {
+                    val teDuration = if (sceneDurationMinutes > 0) T.mins(sceneDurationMinutes.toLong()).msecs() else Long.MAX_VALUE
                     val te = TE(
                         timestamp = now,
                         type = action.type,
-                        duration = T.mins(sceneDurationMinutes.toLong()).msecs(),
+                        duration = teDuration,
                         note = action.note,
                         enteredBy = "AAPS",
                         glucoseUnit = GlucoseUnit.MGDL
                     )
-                    persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                    val result = persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                         therapyEvent = te,
                         action = Action.CAREPORTAL,
                         source = Sources.Scene,
@@ -382,7 +356,7 @@ class SceneExecutor @Inject constructor(
                             ValueWithUnit.Minute(sceneDurationMinutes)
                         )
                     )
-                    SceneExecutionResult.ActionResult(action, success = true)
+                    SceneExecutionResult.ActionResult(action, success = true, recordId = result.inserted.firstOrNull()?.id)
                 }
             }
         } catch (e: Exception) {
@@ -416,29 +390,24 @@ class SceneExecutor @Inject constructor(
                 }
 
                 is SceneAction.ProfileSwitch   -> {
-                    // Check if scene's profile is still active (PS id tracking via EPS.originalPsId)
+                    // Shorten the scene's PS so its window ends now; the resolver picks up
+                    // any underlying temp/permanent PS automatically (mirrors TT/RM revert).
+                    // Override-protection: if the active EPS no longer derives from the scene's
+                    // PS, the user changed profile during the scene — leave their choice alone.
                     val currentEps = persistenceLayer.getEffectiveProfileSwitchActiveAt(now)
                     val profileStillFromScene = priorState.scenePsId != null &&
                         currentEps?.originalPsId == priorState.scenePsId
 
                     if (profileStillFromScene) {
-                        val name = priorState.profileName
-                        val store = localProfileManager.profile
-                        if (name != null && store != null) {
-                            profileFunction.createProfileSwitch(
-                                profileStore = store,
-                                profileName = name,
-                                durationInMinutes = 0, // permanent (revert)
-                                percentage = priorState.profilePercentage ?: 100,
-                                timeShiftInHours = priorState.profileTimeShiftHours ?: 0,
-                                timestamp = now,
-                                action = Action.PROFILE_SWITCH,
-                                source = Sources.Scene,
-                                note = null,
-                                listValues = listOf(ValueWithUnit.SimpleString(name)),
-                                iCfg = insulin.iCfg
-                            )
-                        }
+                        persistenceLayer.cancelProfileSwitch(
+                            id = priorState.scenePsId!!,
+                            timestamp = now,
+                            action = Action.PROFILE_SWITCH,
+                            source = Sources.Scene,
+                            note = null,
+                            listValues = emptyList()
+                        )
+                        rxBus.send(EventProfileChangeRequested())
                     } else {
                         aapsLogger.info(LTag.UI, "Skipping profile revert — profile was changed during scene")
                     }
@@ -454,7 +423,8 @@ class SceneExecutor @Inject constructor(
                     // Check if scene's running mode is still active (not manually overridden)
                     val currentRm = persistenceLayer.getRunningModeActiveAt(now)
                     if (priorState.sceneRunningModeId != null && currentRm.id == priorState.sceneRunningModeId) {
-                        persistenceLayer.cancelCurrentRunningMode(
+                        persistenceLayer.cancelRunningMode(
+                            id = priorState.sceneRunningModeId!!,
                             timestamp = now,
                             action = Action.RUNNING_MODE,
                             source = Sources.Scene,
@@ -467,7 +437,27 @@ class SceneExecutor @Inject constructor(
                 }
 
                 is SceneAction.CarePortalEvent -> {
-                    // CarePortal events are informational — no revert needed
+                    // Cut the scene's TE so its window ends at scene end (mirrors TT/PS/RM revert).
+                    // For temp scenes the duration was already finite; for indefinite scenes it
+                    // was Long.MAX_VALUE and gets shortened here. Skips if id missing (legacy
+                    // state where TE id wasn't captured).
+                    //
+                    // No override-protection check (unlike PS/RM): TE has no "currently active"
+                    // concept (multiple TEs coexist; no getActiveTherapyEventAt query). The
+                    // transaction's own guards (invalid / started-after / already-finished)
+                    // catch invalidations. Edit-during-scene of the TE's duration is a known
+                    // minor gap — deemed acceptable since CarePortal events are stamps, not
+                    // typically edited mid-scene.
+                    priorState.sceneTherapyEventId?.let { teId ->
+                        persistenceLayer.cancelTherapyEvent(
+                            id = teId,
+                            timestamp = now,
+                            action = Action.CAREPORTAL,
+                            source = Sources.Scene,
+                            note = null,
+                            listValues = emptyList()
+                        )
+                    }
                     SceneExecutionResult.ActionResult(action, success = true)
                 }
             }

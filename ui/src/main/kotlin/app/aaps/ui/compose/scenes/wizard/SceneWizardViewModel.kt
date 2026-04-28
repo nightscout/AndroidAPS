@@ -142,8 +142,6 @@ class SceneWizardViewModel @Inject constructor(
 
     fun translateEventType(type: TE.Type): String = translator.translate(type)
 
-    fun formatMinutes(minutes: Int): String = dateUtil.niceTimeScalar(minutes * 60_000L, rh)
-
     fun selectTemplate(template: SceneTemplate) {
         val hasAction = { cls: Class<*> -> template.defaultActions.any { cls.isInstance(it) } }
 

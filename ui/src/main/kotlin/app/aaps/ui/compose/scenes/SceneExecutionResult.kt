@@ -15,6 +15,6 @@ data class SceneExecutionResult(
         val action: SceneAction,
         val success: Boolean,
         val errorMessage: String? = null,
-        val psId: Long? = null // PS id created by ProfileSwitch action (for scene tracking)
+        val recordId: Long? = null // DB id of the row created/updated by this action (TT/PS/RM)
     )
 }

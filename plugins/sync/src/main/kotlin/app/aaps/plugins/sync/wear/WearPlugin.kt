@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Watch
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
@@ -14,9 +17,6 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.data.model.TT
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
@@ -166,6 +166,10 @@ class WearPlugin @Inject constructor(
         scenes.scenesFlow
             .drop(1) // Skip initial replay on subscribe
             .onEach { dataHandlerMobile.sendScenes() }
+            .launchIn(newScope)
+        // Push active-scene flag to wear so the tile can swap between scene list and STOP button
+        scenes.activeFlow
+            .onEach { dataHandlerMobile.sendActiveSceneState(it) }
             .launchIn(newScope)
         disposable += rxBus
             .toObservable(EventWearUpdateTiles::class.java)

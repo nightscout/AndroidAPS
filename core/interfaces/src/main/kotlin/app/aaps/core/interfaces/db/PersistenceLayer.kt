@@ -676,6 +676,18 @@ interface PersistenceLayer {
     suspend fun invalidateProfileSwitch(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): TransactionResult<PS>
 
     /**
+     * Shorten an existing ProfileSwitch so it ends at [timestamp]. Works on both
+     * temporary (duration > 0) and permanent (duration = 0) records.
+     *
+     * @param id ProfileSwitch row id
+     * @param timestamp time the record should end
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     */
+    suspend fun cancelProfileSwitch(id: Long, timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): TransactionResult<PS>
+
+    /**
      * Store records coming from NS to database
      *
      * @param profileSwitches list of records
@@ -774,6 +786,18 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      */
     suspend fun cancelCurrentRunningMode(timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): TransactionResult<RM>
+
+    /**
+     * Cut the active RunningMode identified by [id] so its window ends at [timestamp].
+     * Used by scene revert to end an indefinite RM created on activation. No-op when the
+     * record is missing, invalid, started after [timestamp], or already finished. Distinct
+     * from [cancelCurrentRunningMode] which targets the currently active row by composition
+     * (and is temp-only — preserves user-set permanent rows for callers like LoopPlugin).
+     *
+     * @param id record id
+     * @param timestamp end time (also UserEntry timestamp)
+     */
+    suspend fun cancelRunningMode(id: Long, timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): TransactionResult<RM>
 
     /**
      * Insert or update new record in database
@@ -1243,6 +1267,16 @@ interface PersistenceLayer {
      * @return List of changed records
      */
     suspend fun invalidateTherapyEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): TransactionResult<TE>
+
+    /**
+     * Cut the active TherapyEvent identified by [id] so its window ends at [timestamp].
+     * Used by scene revert to end an indefinite TE created on activation. No-op when the
+     * record is missing, invalid, started after [timestamp], or already finished.
+     *
+     * @param id record id
+     * @param timestamp end time (also UserEntry timestamp)
+     */
+    suspend fun cancelTherapyEvent(id: Long, timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): TransactionResult<TE>
 
     /**
      * Invalidate records with notes containing string

@@ -445,6 +445,14 @@ class DataHandlerMobile @Inject constructor(
                            handleSceneConfirmed(it)
                        }, fabricPrivacy::logException)
         disposable += rxBus
+            .toObservable(EventData.ActionSceneStop::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "ActionSceneStop received from ${it.sourceNodeId}")
+                           if (!config.appInitialized) return@subscribe
+                           appScope.launch { scenes.stopActiveScene() }
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventData.SnoozeAlert::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
@@ -1445,6 +1453,7 @@ class DataHandlerMobile @Inject constructor(
         sendUserActions()
         // Scenes
         sendScenes()
+        sendActiveSceneState(scenes.isAnySceneActive())
         // GraphData
         iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
             rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it) }))))
@@ -1501,6 +1510,10 @@ class DataHandlerMobile @Inject constructor(
                 )
             )
         }
+    }
+
+    fun sendActiveSceneState(active: Boolean) {
+        rxBus.send(EventMobileToWear(EventData.ActiveSceneState(active)))
     }
 
     private fun sendTreatments() {

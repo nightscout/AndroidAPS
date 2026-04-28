@@ -11,7 +11,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
 
 class SyncNsProfileSwitchTransactionTest {
@@ -82,6 +84,74 @@ class SyncNsProfileSwitchTransactionTest {
     }
 
     @Test
+    fun `updates duration to shorter when duration changes`() = runTest {
+        val profileSwitch = createProfileSwitch(id = 0, nsId = "ns-123", duration = 30_000L)
+        val existing = createProfileSwitch(id = 1, nsId = "ns-123", duration = 60_000L)
+
+        whenever(profileSwitchDao.findByNSId("ns-123")).thenReturn(existing)
+
+        val transaction = SyncNsProfileSwitchTransaction(listOf(profileSwitch))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updatedDuration).hasSize(1)
+        assertThat(existing.duration).isEqualTo(30_000L)
+
+        verify(profileSwitchDao).updateExistingEntry(existing)
+    }
+
+    @Test
+    fun `does not update duration to longer`() = runTest {
+        val profileSwitch = createProfileSwitch(id = 0, nsId = "ns-123", duration = 120_000L)
+        val existing = createProfileSwitch(id = 1, nsId = "ns-123", duration = 60_000L)
+
+        whenever(profileSwitchDao.findByNSId("ns-123")).thenReturn(existing)
+
+        val transaction = SyncNsProfileSwitchTransaction(listOf(profileSwitch))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updatedDuration).isEmpty()
+        assertThat(existing.duration).isEqualTo(60_000L)
+
+        verify(profileSwitchDao, never()).updateExistingEntry(any())
+    }
+
+    @Test
+    fun `cuts permanent (duration=0) to finite when incoming is positive`() = runTest {
+        val profileSwitch = createProfileSwitch(id = 0, nsId = "ns-123", duration = 60_000L)
+        val existing = createProfileSwitch(id = 1, nsId = "ns-123", duration = 0L)
+
+        whenever(profileSwitchDao.findByNSId("ns-123")).thenReturn(existing)
+
+        val transaction = SyncNsProfileSwitchTransaction(listOf(profileSwitch))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updatedDuration).hasSize(1)
+        assertThat(existing.duration).isEqualTo(60_000L)
+
+        verify(profileSwitchDao).updateExistingEntry(existing)
+    }
+
+    @Test
+    fun `does not lengthen finite to permanent (incoming duration=0)`() = runTest {
+        val profileSwitch = createProfileSwitch(id = 0, nsId = "ns-123", duration = 0L)
+        val existing = createProfileSwitch(id = 1, nsId = "ns-123", duration = 60_000L)
+
+        whenever(profileSwitchDao.findByNSId("ns-123")).thenReturn(existing)
+
+        val transaction = SyncNsProfileSwitchTransaction(listOf(profileSwitch))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updatedDuration).isEmpty()
+        assertThat(existing.duration).isEqualTo(60_000L)
+
+        verify(profileSwitchDao, never()).updateExistingEntry(any())
+    }
+
+    @Test
     fun `inserts new when timestamp matches but existing has different nsId`() = runTest {
         val profileSwitch = createProfileSwitch(id = 0, nsId = "ns-123", timestamp = 1000L)
         val existing = createProfileSwitch(id = 1, nsId = "other-ns", timestamp = 1000L)
@@ -103,7 +173,8 @@ class SyncNsProfileSwitchTransactionTest {
         id: Long,
         nsId: String?,
         timestamp: Long = System.currentTimeMillis(),
-        isValid: Boolean = true
+        isValid: Boolean = true,
+        duration: Long = 0
     ): ProfileSwitch = ProfileSwitch(
         timestamp = timestamp,
         basalBlocks = emptyList(),
@@ -114,7 +185,7 @@ class SyncNsProfileSwitchTransactionTest {
         profileName = "Test",
         timeshift = 0,
         percentage = 100,
-        duration = 0,
+        duration = duration,
         interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId),
         insulinConfiguration = InsulinConfiguration("some", 600000L, 60000L, 1.0),
         isValid = isValid

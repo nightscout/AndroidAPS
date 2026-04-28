@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.scenes
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.aaps.core.data.model.Scene
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -31,6 +32,13 @@ interface SceneAutomationApi {
 
     /** Whether a scene is currently active (running, not yet expired). */
     fun isAnySceneActive(): Boolean
+
+    /** Emits true when there's a stoppable scene state — running OR expired-with-banner.
+     *  Used by wear-sync to drive the tile's stop button visibility. */
+    val activeFlow: Flow<Boolean>
+
+    /** End the active scene (deactivate) or dismiss the expired banner. No-op if nothing active. */
+    suspend fun stopActiveScene(): SceneAutomationResult
 
     /** Resolved icon for the scene's stored icon key, or null if the scene is missing. */
     fun iconForScene(sceneId: String): ImageVector?
