@@ -86,6 +86,7 @@
     <string name="action_quick_wizard_confirmation">Asistente Rápido Solicitado</string>
     <string name="action_user_action_confirmation">Acción de usuario solicitada</string>
     <string name="action_scene_confirmation">Activar escena</string>
+    <string name="scene_stop">DETENER</string>
     <string name="action_treatment_confirmation">Tratamiento Solicitado</string>
     <string name="action_bolus_confirmation">Bolo Solicitado</string>
     <string name="action_wizard_confirmation">Calculadora Solicitada</string>
