@@ -80,7 +80,7 @@ class AidexPlugin @Inject constructor(
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var rxBus: RxBus
         @Inject lateinit var uiInteraction: UiInteraction
-
+        @Inject lateinit var rh: ResourceHelper
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
@@ -113,7 +113,7 @@ class AidexPlugin @Inject constructor(
                     sensorExpiredNotified = true
                     uiInteraction.addNotificationValidFor(
                         10001,
-                        "Aidex传感器已过期，请更换新传感器",
+                        rh.gs(R.string.aidex_sensor_expired),
                         Notification.URGENT,
                         60
                     )
@@ -127,7 +127,7 @@ class AidexPlugin @Inject constructor(
                     replaceSensorNotified = true
                     uiInteraction.addNotificationValidFor(
                         10003,
-                        "Aidex传感器需要更换，请尽快更换新传感器",
+                        rh.gs(R.string.aidex_sensor_replace),
                         Notification.NORMAL,
                         120
                     )
@@ -141,7 +141,7 @@ class AidexPlugin @Inject constructor(
                     sensorErrorNotified = true
                     uiInteraction.addNotificationValidFor(
                         10002,
-                        "Aidex传感器故障，请检查传感器状态",
+                        rh.gs(R.string.aidex_sensor_error),
                         Notification.URGENT,
                         60
                     )
@@ -157,7 +157,7 @@ class AidexPlugin @Inject constructor(
                     signalLostNotified = true
                     uiInteraction.addNotificationValidFor(
                         10004,
-                        "Aidex传感器信号丢失，请检查连接",
+                        rh.gs(R.string.aidex_signal_lost),
                         Notification.NORMAL,
                         30
                     )
@@ -170,17 +170,25 @@ class AidexPlugin @Inject constructor(
 
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
 
-            glucoseValues += GV(
-                timestamp = timestamp,
-                value = bgValueTarget,
-                raw = null,
-                noise = null,
-                trendArrow = TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)),
-                sourceSensor = SourceSensor.AIDEX
-            )
-            persistenceLayer.insertCgmSourceData(Sources.Aidex, glucoseValues, emptyList(), null)
-                .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
-                .blockingGet()
+            // 过滤无效血糖值：0值或传感器错误时不存储数据
+            val isValidValue = bgValueTarget > 0 && !aidexPlugin._hasSensorError
+
+            if (isValidValue) {
+                glucoseValues += GV(
+                    timestamp = timestamp,
+                    value = bgValueTarget,
+                    raw = null,
+                    noise = null,
+                    trendArrow = TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)),
+                    sourceSensor = SourceSensor.AIDEX
+                )
+                persistenceLayer.insertCgmSourceData(Sources.Aidex, glucoseValues, emptyList(), null)
+                    .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
+                    .blockingGet()
+            } else {
+                aapsLogger.warn(LTag.BGSOURCE, "Invalid glucose value ignored: value=$bgValue, hasError=${aidexPlugin._hasSensorError}")
+            }
+
             return ret
         }
     }
