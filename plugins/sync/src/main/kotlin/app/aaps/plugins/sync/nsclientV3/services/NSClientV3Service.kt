@@ -40,6 +40,7 @@ import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import java.net.URISyntaxException
 import javax.inject.Inject
 
@@ -61,7 +62,7 @@ class NSClientV3Service : DaggerService() {
     private val disposable = CompositeDisposable()
 
     private var wakeLock: PowerManager.WakeLock? = null
-    private val binder: IBinder = LocalBinder()
+    private val binder: IBinder = LocalBinder(this)
 
     @SuppressLint("WakelockTimeout")
     override fun onCreate() {
@@ -78,10 +79,11 @@ class NSClientV3Service : DaggerService() {
         if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 
-    inner class LocalBinder : Binder() {
+    class LocalBinder(service: NSClientV3Service) : Binder() {
 
-        val serviceInstance: NSClientV3Service
-            get() = this@NSClientV3Service
+        private val serviceRef = WeakReference(service)
+        val serviceInstance: NSClientV3Service?
+            get() = serviceRef.get()
     }
 
     override fun onBind(intent: Intent): IBinder = binder

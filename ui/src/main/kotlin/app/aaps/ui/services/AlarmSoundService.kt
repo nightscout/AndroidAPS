@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import dagger.android.DaggerService
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 import kotlin.math.ln
 import kotlin.math.pow
@@ -48,12 +49,13 @@ class AlarmSoundService : DaggerService() {
 
     }
 
-    inner class LocalBinder : Binder() {
+    class LocalBinder(service: AlarmSoundService) : Binder() {
 
-        fun getService(): AlarmSoundService = this@AlarmSoundService
+        private val serviceRef = WeakReference(service)
+        fun getService(): AlarmSoundService? = serviceRef.get()
     }
 
-    private val binder = LocalBinder()
+    private val binder = LocalBinder(this)
     override fun onBind(intent: Intent): IBinder = binder
 
     private val increaseVolumeHandler = Handler(Looper.getMainLooper())
