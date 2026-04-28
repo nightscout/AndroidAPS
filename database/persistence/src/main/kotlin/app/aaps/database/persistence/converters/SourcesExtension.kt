@@ -87,6 +87,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Garmin              -> Sources.Garmin
         UserEntry.Sources.Scene               -> Sources.Scene
         UserEntry.Sources.Database            -> Sources.Database
+        UserEntry.Sources.Carelevo            -> Sources.Carelevo
         UserEntry.Sources.Unknown             -> Sources.Unknown
     }
 
@@ -174,6 +175,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.Scene               -> UserEntry.Sources.Scene
         Sources.Database            -> UserEntry.Sources.Database
         Sources.Insulin             -> UserEntry.Sources.Insulin
+        Sources.Carelevo            -> UserEntry.Sources.Carelevo
         Sources.Unknown             -> UserEntry.Sources.Unknown
     }
 

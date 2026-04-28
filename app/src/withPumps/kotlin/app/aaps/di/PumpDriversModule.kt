@@ -1,5 +1,6 @@
 package app.aaps.di
 
+import app.aaps.pump.carelevo.di.CarelevoModule
 import app.aaps.pump.common.di.PumpCommonModule
 import app.aaps.pump.common.di.RileyLinkModule
 import app.aaps.pump.diaconn.di.DiaconnG8Module
@@ -30,6 +31,7 @@ import info.nightscout.pump.combov2.di.ComboV2Module
         MedtrumModule::class,
         EquilModule::class,
         EquilModules::class,
+        CarelevoModule::class
     ]
 )
 @InstallIn(SingletonComponent::class)
