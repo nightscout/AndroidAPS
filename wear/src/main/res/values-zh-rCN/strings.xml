@@ -86,6 +86,7 @@
     <string name="action_quick_wizard_confirmation">快速向导请求</string>
     <string name="action_user_action_confirmation">请求用户操作</string>
     <string name="action_scene_confirmation">激活情景</string>
+    <string name="scene_stop">停止</string>
     <string name="action_treatment_confirmation">治疗请求</string>
     <string name="action_bolus_confirmation">大剂量请求</string>
     <string name="action_wizard_confirmation">计算请求</string>
