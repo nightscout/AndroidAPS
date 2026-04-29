@@ -21,6 +21,7 @@ import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
 import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
+import app.aaps.plugins.smoothing.AdaptiveSmoothingPlugin
 import app.aaps.plugins.smoothing.AvgSmoothingPlugin
 import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
 import app.aaps.plugins.smoothing.NoSmoothingPlugin
@@ -338,6 +339,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(605)
     abstract fun bindExponentialSmoothingPlugin(plugin: ExponentialSmoothingPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(607)
+    abstract fun bindAdaptiveSmoothingPlugin(plugin: AdaptiveSmoothingPlugin): PluginBase
 
     @Binds
     @AllConfigs
