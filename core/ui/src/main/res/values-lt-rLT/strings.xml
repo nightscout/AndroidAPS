@@ -117,7 +117,6 @@
     <string name="a11y_high">aukštas</string>
     <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
-    <string name="average">Vidurkis</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="profile">Profilis</string>
@@ -173,6 +172,8 @@
     <string name="reason">Priežastis</string>
     <string name="nochangerequested">Pakeitimai nereikalingi</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Vidurkis</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min.</string>
