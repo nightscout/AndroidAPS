@@ -223,6 +223,7 @@
     <string name="smscommunicator_message_body">无效消息</string>
     <string name="smscommunicator_set_lgs_reply_with_code">请回复代码 %1$s 以将运行模式切换为LGS(低血糖维持)</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">请回复代码 %1$s 以将运行模式切换为闭环</string>
+    <string name="smscommunicator_current_loop_mode">当前运行模式： %1$s</string>
     <string name="wrong_format">格式错误</string>
     <string name="sms_actual_bg">血糖：</string>
     <string name="sms_last_bg">上次血糖：</string>
