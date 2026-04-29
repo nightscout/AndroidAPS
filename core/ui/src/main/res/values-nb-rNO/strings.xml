@@ -173,8 +173,6 @@
     <string name="a11y_high">høyt</string>
     <string name="a11y_inrange">i målområdet</string>
     <string name="a11y_low">lavt</string>
-    <string name="average">Gjennomsnitt</string>
-    <string name="tir">Tid i målområde</string>
     <string name="remove_label">Fjern</string>
     <string name="activate_profile">Aktiver profil</string>
     <string name="activate_insulin">Aktiver insulin</string>
@@ -264,6 +262,9 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Valgt insulin: %1$s</string>
     <string name="record_insulin_hint">Hvis du registrerer insulin som gis med penn, velg riktig insulintype nedenfor. Dosen er alltid i internasjonale enheter.</string>
+    <!--       Stats -->
+    <string name="average">Gjennomsnitt</string>
+    <string name="tir">Tid i målområde</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
