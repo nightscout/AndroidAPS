@@ -173,8 +173,6 @@
     <string name="a11y_high">haut</string>
     <string name="a11y_inrange">dans la cible</string>
     <string name="a11y_low">bas</string>
-    <string name="average">Moyenne</string>
-    <string name="tir">Temps dans la cible</string>
     <string name="remove_label">Supprimer</string>
     <string name="activate_profile">Activer le profil</string>
     <string name="activate_insulin">Activer l\'insuline</string>
@@ -264,6 +262,9 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insuline sélectionnée : %1$s</string>
     <string name="record_insulin_hint">Si vous injectez l\'insuline avec un stylo, sélectionnez le bon type d\'insuline ci-dessous. La dose est toujours en Unité Internationale.</string>
+    <!--       Stats -->
+    <string name="average">Moyenne</string>
+    <string name="tir">Temps dans la cible</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
