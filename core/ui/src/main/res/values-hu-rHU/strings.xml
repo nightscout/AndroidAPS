@@ -45,7 +45,6 @@
     <string name="a11y_arrow_unknown">ismeretlen</string>
     <string name="a11y_high">magas</string>
     <string name="a11y_low">alacsony</string>
-    <string name="average">Átlag</string>
     <string name="profile">Profil</string>
     <string name="treatments_wizard_basaliob_label">Bázis IOB</string>
     <string name="overview_insulin_label">Inzulin</string>
@@ -62,6 +61,8 @@
     <!--    APSResult-->
     <string name="duration">Időtartam</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Átlag</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
