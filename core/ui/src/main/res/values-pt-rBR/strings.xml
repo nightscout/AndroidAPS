@@ -114,7 +114,6 @@
     <string name="a11y_high">hiper</string>
     <string name="a11y_inrange">no alvo</string>
     <string name="a11y_low">hipo</string>
-    <string name="average">Média</string>
     <string name="activate_profile">Ativar perfil</string>
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Ativar Perfil\" em PerfilLocal.</string>
     <string name="profile">Perfil</string>
@@ -160,6 +159,8 @@
     <string name="reason">Motivo</string>
     <string name="nochangerequested">Nenhuma alteração solicitada</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Média</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
