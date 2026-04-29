@@ -144,7 +144,7 @@ org-junit-platform-launcher = { group = "org.junit.platform", name = "junit-plat
 com-madgag-spongycastle = { group = "com.madgag.spongycastle", name = "core", version = "1.58.0.0" }
 com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version = "1.4" }
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.14.1" }
-joda-time = { group = "joda-time", name = "joda-time", version = "2.14.1" }
+joda-time = { group = "joda-time", name = "joda-time", version = "2.14.2" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
 com-github-bumptech-glide-compose = { group = "com.github.bumptech.glide", name = "compose", version = "1.0.0-beta09" } # do not update to 4.xx
