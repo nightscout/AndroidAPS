@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import androidx.annotation.DrawableRes
 import app.aaps.plugins.constraints.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -179,16 +178,6 @@ class BgQualityCheckPlugin @Inject constructor(
         aapsLogger.warn(LTag.APS, "BG_FLAT_CHECK: ⚠️ FLAT DETECTED! delta=${(bgmax - bgmin).toInt()} ≤ $maxDelta over $minutes min ($countAnalyzed readings, min=${bgmin.toInt()}, max=${bgmax.toInt()})")
         return true
     }
-
-    @DrawableRes
-    override fun icon(): Int =
-        when (state) {
-            BgQualityCheck.State.UNKNOWN        -> 0
-            BgQualityCheck.State.FIVE_MIN_DATA -> 0
-            BgQualityCheck.State.RECALCULATED  -> R.drawable.ic_baseline_warning_24_yellow
-            BgQualityCheck.State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
-            BgQualityCheck.State.FLAT          -> R.drawable.ic_baseline_trending_flat_24
-        }
 
     override fun stateDescription(): String =
         when (state) {
