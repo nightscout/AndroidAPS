@@ -18,6 +18,7 @@ import app.aaps.core.keys.interfaces.PreferenceVisibilityContext
  * Supported types:
  * - PreferenceKey: Rendered with AdaptivePreferenceItem
  * - PreferenceSubScreenDef: Rendered as navigation item
+ * - CustomPreferenceItem: Rendered via its Content() composable
  *
  * @param items List of PreferenceItems to render
  * @param visibilityContext Optional context for evaluating runtime visibility conditions
@@ -46,6 +47,8 @@ fun AdaptivePreferenceList(
                 // Subscreens are handled by PreferenceContentExtensions as nested collapsible sections
                 // Not rendered here in the flat list
             }
+
+            is CustomPreferenceItem   -> item.Content()
         }
     }
 }

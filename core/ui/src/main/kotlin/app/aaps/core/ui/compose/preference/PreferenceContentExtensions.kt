@@ -96,6 +96,8 @@ private fun RenderPreferenceItems(
                 }
             }
 
+            is CustomPreferenceItem   -> item.Content()
+
             is PreferenceSubScreenDef -> {
                 val shouldShow = shouldShowSubScreenInline(
                     subScreen = item,
