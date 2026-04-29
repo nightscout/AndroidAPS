@@ -173,8 +173,6 @@
     <string name="a11y_high">high</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>
-    <string name="average">Average</string>
-    <string name="tir">Time in Range</string>
     <string name="remove_label">Remove</string>
     <string name="activate_profile">Activate profile</string>
     <string name="activate_insulin">Activate insulin</string>
@@ -270,6 +268,24 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Selected Insulin: %1$s</string>
     <string name="record_insulin_hint">If entering insulin applied by pen, select the correct insulin type below. The dose is always in International Units.</string>
+
+    <!--       Stats -->
+    <string name="average">Average</string>
+    <string name="tir">Time in Range</string>
+    <string name="below" comment="below &quot;in range&quot;">Below</string>
+    <string name="in_range">In range</string>
+    <string name="veryLow" comment="below 3.1">Very low</string>
+    <string name="low" comment="3.1-3.9">Low</string>
+    <string name="high" comment="10.0-13.9">High</string>
+    <string name="veryHigh" comment="above 13.9">Very high</string>
+    <string name="above" comment="above &quot;in range&quot;">Above</string>
+    <string name="detailed_14_days">Detailed 14 days</string>
+    <string name="day_tir">Day TIR</string>
+    <string name="night_tir">Night TIR</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7d</string>
+    <string name="thirty_days_short">30d</string>
 
     <!--    ProfileSwitch-->
 
