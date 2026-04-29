@@ -121,7 +121,6 @@
     <string name="a11y_high">высокий</string>
     <string name="a11y_inrange">в диапазоне</string>
     <string name="a11y_low">низкий</string>
-    <string name="average">Средний</string>
     <string name="activate_profile">Активировать профиль</string>
     <string name="profileswitch_ismissing">Профиль не переключен. Переключите профиль или нажмите \"активировать профиль\" в LocalProfile.</string>
     <string name="profile">Профиль</string>
@@ -182,6 +181,8 @@
     <string name="reason">Основание</string>
     <string name="nochangerequested">Именения не запрошены</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Средний</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d мин.</string>
