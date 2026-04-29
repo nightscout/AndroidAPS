@@ -173,8 +173,6 @@
     <string name="a11y_high">alto</string>
     <string name="a11y_inrange">en rango</string>
     <string name="a11y_low">bajo</string>
-    <string name="average">Promedio</string>
-    <string name="tir">Tiempo en rango</string>
     <string name="remove_label">Eliminar</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="activate_insulin">Activar insulina</string>
@@ -264,6 +262,9 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina seleccionada: %1$s</string>
     <string name="record_insulin_hint">Si va a introducir insulina administrada con bolígrafo, seleccione el tipo de insulina correcto a continuación. La dosis es siempre en Unidades Internacionales.</string>
+    <!--       Stats -->
+    <string name="average">Promedio</string>
+    <string name="tir">Tiempo en rango</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
