@@ -173,8 +173,6 @@
     <string name="a11y_high">高</string>
     <string name="a11y_inrange">在范围内</string>
     <string name="a11y_low">低</string>
-    <string name="average">平均</string>
-    <string name="tir">在目标范围的时间</string>
     <string name="remove_label">删除</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="activate_insulin">启用胰岛素</string>
@@ -264,6 +262,9 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">已选择的胰岛素：%1$s</string>
     <string name="record_insulin_hint">如果使用笔注射胰岛素，请从下方选择正确的胰岛素类型。剂量始终以国际单位表示。</string>
+    <!--       Stats -->
+    <string name="average">平均</string>
+    <string name="tir">在目标范围的时间</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d 分钟</string>
