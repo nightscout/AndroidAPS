@@ -313,11 +313,13 @@
     <string name="scene_confirm_deactivate">结束情景 \"%1$s\" 并恢复更改？</string>
     <string name="scene_conflict_active_tt">当前启用的临时目标将被替换</string>
     <string name="scene_conflict_active_profile">当前启用的配置切换将被替换</string>
+    <string name="scene_conflict_active_running_mode">当前运行模式将被替换</string>
     <string name="scene_conflict_active_scene">当前已激活的情景 \"%1$s\" 将先结束</string>
     <string name="scene_action_tt">临时目标：%1$s</string>
     <string name="scene_action_profile">配置文件：%1$s%2$d%%</string>
     <string name="scene_action_smb_on">启用微型大剂量</string>
     <string name="scene_action_smb_off">禁用微型大剂量</string>
+    <string name="scene_action_running_mode">运行模式：%1$s</string>
     <string name="scene_action_careportal">日志：%1$s</string>
     <string name="scene_time_remaining">剩余%1$s</string>
     <string name="scene_management">情景</string>
@@ -339,6 +341,7 @@
     <string name="scene_editor_enabled">启用</string>
     <string name="scene_editor_disabled">禁用</string>
     <string name="scene_summary">%1$d 个动作，%2$s</string>
+    <string name="scene_duration_indefinite">无限时长（手动结束）</string>
     <string name="scene_some_actions_failed">部分操作执行失败</string>
     <string name="scene_no_active">当前无生效情景</string>
     <string name="scene_some_reverts_failed">部分还原操作执行失败</string>
@@ -346,8 +349,10 @@
     <string name="scene_no_actions">该情景未配置任何操作</string>
     <string name="scene_profile_not_found">未找到配置文件 \"%1$s\"</string>
     <string name="scene_revert_tt">取消临时目标</string>
+    <string name="scene_revert_profile">撤销配置更改</string>
     <string name="scene_revert_smb_on">重新启用微型大剂量</string>
     <string name="scene_revert_smb_off">禁用微型大剂量</string>
+    <string name="scene_revert_loop_mode">取消运行模式强制覆盖</string>
     <string name="scene_careportal_no_revert">护理记录不会被还原</string>
     <string name="careportal_sickness">生病</string>
     <string name="careportal_stress">压力</string>
