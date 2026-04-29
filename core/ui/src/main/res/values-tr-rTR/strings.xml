@@ -119,7 +119,6 @@
     <string name="a11y_high">yüksek</string>
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
-    <string name="average">Ortalama</string>
     <string name="activate_profile">Profil etkinleştir</string>
     <string name="profileswitch_ismissing">Profil geçişi yok. Lütfen Profil Değiştirme ile bir profil geçişi yapın veya Yerel Profil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
     <string name="profile">Profil</string>
@@ -178,6 +177,8 @@
     <string name="reason">Sebep</string>
     <string name="nochangerequested">Değişiklik yapılmadı</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Ortalama</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d dak</string>
