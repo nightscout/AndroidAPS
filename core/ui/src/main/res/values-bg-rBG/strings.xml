@@ -114,7 +114,6 @@
     <string name="a11y_high">висока</string>
     <string name="a11y_inrange">в диапазон</string>
     <string name="a11y_low">ниска</string>
-    <string name="average">Средно</string>
     <string name="activate_profile">Активирай профила</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
@@ -160,6 +159,8 @@
     <string name="reason">Основание</string>
     <string name="nochangerequested">Не се изисква промяна</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Средно</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d мин</string>
