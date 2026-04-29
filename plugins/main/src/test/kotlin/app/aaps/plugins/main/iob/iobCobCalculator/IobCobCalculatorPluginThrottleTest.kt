@@ -39,7 +39,6 @@ class IobCobCalculatorPluginThrottleTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var sut: IobCobCalculatorPlugin
-    private var fakeNow: Long = 0L
 
     private fun getLastBgCalcTriggeredAt(): Long {
         val field = IobCobCalculatorPlugin::class.java.getDeclaredField("lastBgCalcTriggeredAt")
@@ -61,89 +60,93 @@ class IobCobCalculatorPluginThrottleTest : TestBase() {
             persistenceLayer, overviewData, calculationWorkflow,
             decimalFormatter, processedTbrEbData, signals, cache
         )
-        fakeNow = 1_700_000_000_000L
-        whenever(dateUtil.now()).thenAnswer { fakeNow }
     }
 
-    // --- Throttle disabled (interval = 0) ---
-
     @Test
-    fun `throttle disabled - BG-triggered event does not update lastBgCalcTriggeredAt`() {
+    fun `skips throttle check when interval is disabled`() {
+        val now = 1_700_000_000_000L
+        whenever(dateUtil.now()).thenReturn(now)
         whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(0)
+        val priorTimestamp = now - 1000L
+        setLastBgCalcTriggeredAt(priorTimestamp)
 
         sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
 
-        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(0L)
-    }
-
-    // --- Throttle enabled, BG-triggered ---
-
-    @Test
-    fun `first BG-triggered event passes through and updates timestamp`() {
-        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
-
-        sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
-
-        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(fakeNow)
+        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(priorTimestamp)
     }
 
     @Test
-    fun `second BG-triggered event within interval is throttled`() {
+    fun `skips throttle check for non-BG events with 3 minute interval`() {
+        val now = 1_700_000_000_000L
+        whenever(dateUtil.now()).thenReturn(now)
         whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
-        setLastBgCalcTriggeredAt(fakeNow) // just ran
-
-        sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
-
-        // unchanged = early-return (throttled) before scheduling
-        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(fakeNow)
-    }
-
-    @Test
-    fun `BG-triggered event after interval passes through`() {
-        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
-        setLastBgCalcTriggeredAt(fakeNow - 4 * 60 * 1000L) // 4 min ago
-
-        sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
-
-        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(fakeNow)
-    }
-
-    @Test
-    fun `10s grace allows slightly early BG-triggered event`() {
-        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
-        // 2m55s ago — within the 10s grace window of a 3-minute interval
-        setLastBgCalcTriggeredAt(fakeNow - (2 * 60 * 1000L + 55 * 1000L))
-
-        sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
-
-        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(fakeNow)
-    }
-
-    // --- Non-BG events bypass throttle ---
-
-    @Test
-    fun `non-BG event bypasses throttle even within interval`() {
-        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
-        val oldStamp = fakeNow - 1000L
-        setLastBgCalcTriggeredAt(oldStamp) // just ran (BG-wise)
+        val lastCalcTime = now - 1000L
+        setLastBgCalcTriggeredAt(lastCalcTime)
 
         sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = false, triggeredByNewBG = false)
 
-        // throttle didn't fire (triggeredByNewBG=false), so lastBgCalcTriggeredAt unchanged
-        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(oldStamp)
+        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(lastCalcTime)
     }
 
-    // --- Edge cases ---
-
     @Test
-    fun `1 minute interval blocks rapid BG-triggered events`() {
-        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(1)
-        val oldStamp = fakeNow - 30_000L // 30s ago
-        setLastBgCalcTriggeredAt(oldStamp)
+    fun `does not throttle on first BG event with interval of 3 minutes`() {
+        val now = 1_700_000_000_000L
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
+        val priorTimestamp = 0L
 
         sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
 
-        // 30s < 50s (1 min - 10s grace), so throttled
-        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(oldStamp)
+        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(now)
+    }
+
+    @Test
+    fun `does not throttle when 4 minutes have elapsed with 3 minute interval`() {
+        val now = 1_700_000_000_000L
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
+        setLastBgCalcTriggeredAt(now - 4 * 60 * 1000L)
+
+        sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
+
+        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(now)
+    }
+
+    @Test
+    fun `does not throttle when 2 minutes 55 seconds have elapsed with 3 minute interval including grace period`() {
+        val now = 1_700_000_000_000L
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
+        setLastBgCalcTriggeredAt(now - (2 * 60 * 1000L + 55 * 1000L))
+
+        sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
+
+        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(now)
+    }
+
+    @Test
+    fun `throttles when BG event arrives immediately with 3 minute interval`() {
+        val now = 1_700_000_000_000L
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(3)
+        val priorTimestamp = now
+        setLastBgCalcTriggeredAt(priorTimestamp)
+
+        sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
+
+        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(priorTimestamp)
+    }
+
+    @Test
+    fun `throttles when BG events occur 30 seconds apart with 1 minute interval`() {
+        val now = 1_700_000_000_000L
+        whenever(dateUtil.now()).thenReturn(now)
+        whenever(preferences.get(IntKey.LoopMinBgRecalcInterval)).thenReturn(1)
+        val lastCalcTime = now - 30_000L
+        setLastBgCalcTriggeredAt(lastCalcTime)
+
+        sut.scheduleHistoryDataChange(oldDataTimestamp = 1000L, reloadBgData = true, triggeredByNewBG = true)
+
+        assertThat(getLastBgCalcTriggeredAt()).isEqualTo(lastCalcTime)
     }
 }
