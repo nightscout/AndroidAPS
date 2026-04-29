@@ -78,7 +78,6 @@
     <string name="a11y_high">visoko</string>
     <string name="a11y_inrange">u rasponu</string>
     <string name="a11y_low">nisko</string>
-    <string name="average">Prosječno</string>
     <string name="activate_profile">Aktiviraj profil</string>
     <string name="profileswitch_ismissing">ProfileSwitch nedostaje. Promijenite profil ili pritisnite \"Aktiviraj profil\" u lokalnom profilu.</string>
     <string name="profile">Profil</string>
@@ -112,6 +111,8 @@
     <string name="duration">Trajanje</string>
     <string name="reason">Razlog</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Prosječno</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
