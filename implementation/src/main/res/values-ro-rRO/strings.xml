@@ -3,18 +3,6 @@
     <string name="executing_right_now">Se execută comanda chiar acum</string>
     <string name="basal_value_below_minimum">Valoarea bazalei este sub minimul permis. Profilul nu este setat!</string>
     <!--       Stats -->
-    <string name="veryLow" comment="below 3.1">Foarte scăzută</string>
-    <string name="low" comment="3.1-3.9">Scăzută</string>
-    <string name="high" comment="10.0-13.9">Mare</string>
-    <string name="veryHigh" comment="above 13.9">Foarte mare</string>
-    <string name="below" comment="below &quot;in range&quot;">Sub</string>
-    <string name="in_range">În țintă</string>
-    <string name="above" comment="above &quot;in range&quot;">Mai sus</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="std_deviation">DST: %1$s</string>
-    <string name="detailed_14_days">Detaliere 14 zile</string>
-    <string name="day_tir">TIR ziua</string>
-    <string name="night_tir">TIR noapte</string>
     <string name="carbs_short" comment="max 6 characters">Carbohidrați</string>
     <!--    PumpStatusGenerator-->
     <string name="short_status_last_connection">UltimaConexiune: acum %1$d min</string>
