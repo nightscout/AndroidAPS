@@ -114,7 +114,6 @@
     <string name="a11y_high">υψηλό</string>
     <string name="a11y_inrange">εντός στόχου</string>
     <string name="a11y_low">χαμηλό</string>
-    <string name="average">Μέση</string>
     <string name="activate_profile">Ενεργοποίηση προφίλ</string>
     <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>
     <string name="profile">Προφίλ</string>
@@ -160,6 +159,8 @@
     <string name="reason">Αιτιολογία</string>
     <string name="nochangerequested">Δεν απαιτείται αλλαγή</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Μέση</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d λεπτά</string>
