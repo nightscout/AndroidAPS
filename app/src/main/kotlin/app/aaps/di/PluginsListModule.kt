@@ -4,7 +4,6 @@ import app.aaps.core.interfaces.di.PumpDriver
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.loop.LoopPlugin
-import app.aaps.plugins.aps.openAPSAIMI.OpenAPSAIMIPlugin
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSAutoISF.OpenAPSAutoISFPlugin
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -16,7 +15,6 @@ import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
-import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.persistentNotification.PersistentNotificationPlugin
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 
@@ -34,7 +32,6 @@ import app.aaps.plugins.source.IntelligoPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
 import app.aaps.plugins.source.NotificationReaderPlugin
-import app.aaps.plugins.source.OttaiPlugin
 import app.aaps.plugins.source.PatchedSiAppPlugin
 import app.aaps.plugins.source.PatchedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
@@ -45,7 +42,6 @@ import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.source.instara.InstaraPlugin
 import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.sync.nsclient.NSClientPlugin
-import app.aaps.plugins.sync.nsShared.RemoteControlPlugin
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.smsCommunicator.SmsCommunicatorPlugin
@@ -79,12 +75,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(10)
     abstract fun bindIobCobCalculatorPlugin(plugin: IobCobCalculatorPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(20)
-    abstract fun bindOverviewPlugin(plugin: OverviewPlugin): PluginBase
 
     @Binds
     @AllConfigs
@@ -136,12 +126,6 @@ abstract class PluginsListModule {
 
     @Binds
     @AllConfigs
-    @IntoMap
-    @IntKey(224)
-    abstract fun bindOpenAPSAIMIPlugin(plugin: OpenAPSAIMIPlugin): PluginBase
-
-    @Binds
-    @APS
     @IntoMap
     @IntKey(225)
     abstract fun bindOpenAPSAutoISFPlugin(plugin: OpenAPSAutoISFPlugin): PluginBase
@@ -205,12 +189,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(355)
     abstract fun bindNSClientV3Plugin(plugin: NSClientV3Plugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(357)
-    abstract fun bindRemoteControlPlugin(plugin: RemoteControlPlugin): PluginBase
 
     @Binds
     @NotNSClient
@@ -307,12 +285,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(470)
     abstract fun bindGlunovoPlugin(plugin: GlunovoPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(471)
-    abstract fun bindOttaiPlugin(plugin: OttaiPlugin): PluginBase
 
     @Binds
     @AllConfigs
