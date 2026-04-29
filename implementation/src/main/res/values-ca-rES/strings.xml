@@ -3,8 +3,6 @@
     <string name="executing_right_now">Ordre executant-se ara mateix</string>
     <string name="basal_value_below_minimum">Valor de basal per sota del mínim. Perfil no definit!</string>
     <!--       Stats -->
-    <string name="low" comment="3.1-3.9">Baix</string>
-    <string name="high" comment="10.0-13.9">Alt</string>
     <!--    PumpStatusGenerator-->
     <!--    Permissions-->
     <!--       ConcentrationHelper / DecimalFormatter-->
