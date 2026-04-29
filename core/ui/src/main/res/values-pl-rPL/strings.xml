@@ -121,7 +121,6 @@
     <string name="a11y_high">wysokie</string>
     <string name="a11y_inrange">w zakresie</string>
     <string name="a11y_low">niskie</string>
-    <string name="average">Średnio</string>
     <string name="activate_profile">Aktywuj profil</string>
     <string name="profileswitch_ismissing">Brakuje ZmianyProfilu. Proszę wykonać ZmianęProfilu lub nacisnąć \"Aktywuj Profil\" w ProfiluLokalnym</string>
     <string name="profile">Profil</string>
@@ -182,6 +181,8 @@
     <string name="reason">Powód</string>
     <string name="nochangerequested">Zmiana nie wymagana</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Średnio</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
