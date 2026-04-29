@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.rx.events.AdaptiveSmoothingQualityTier
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.keys.BooleanKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.emptyFlow
@@ -39,7 +38,6 @@ class AdaptiveSmoothingPluginTest : TestBaseWithProfile() {
 
         whenever { iobCobCalculator.calculateIobFromBolus() } doReturn IobTotal(time = 0L, iob = 0.2)
         whenever { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() } doReturn IobTotal(time = 0L, iob = 0.2)
-        whenever(preferences.get(BooleanKey.OApsAIMInight)).thenReturn(true)
 
         plugin = AdaptiveSmoothingPlugin(
             aapsLogger = aapsLogger,
@@ -48,8 +46,7 @@ class AdaptiveSmoothingPluginTest : TestBaseWithProfile() {
             aapsSchedulers = aapsSchedulers,
             persistenceLayer = persistenceLayer,
             sp = sp,
-            iobCobCalculator = iobCobCalculator,
-            preferences = preferences
+            iobCobCalculator = iobCobCalculator
         )
     }
 

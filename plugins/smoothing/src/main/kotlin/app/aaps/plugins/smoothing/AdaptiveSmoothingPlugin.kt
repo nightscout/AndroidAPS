@@ -23,8 +23,6 @@ import app.aaps.core.interfaces.rx.events.AdaptiveSmoothingQualitySnapshot
 import app.aaps.core.interfaces.rx.events.AdaptiveSmoothingQualityTier
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.ui.compose.icons.IcStats
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.interfaces.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -55,8 +53,7 @@ class AdaptiveSmoothingPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val persistenceLayer: PersistenceLayer,
     private val sp: SP,
-    private val iobCobCalculator: IobCobCalculator,
-    private val preferences: Preferences
+    private val iobCobCalculator: IobCobCalculator
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
@@ -476,7 +473,7 @@ class AdaptiveSmoothingPlugin @Inject constructor(
         val now = java.util.Calendar.getInstance()
         now.timeInMillis = data[index].timestamp
         val hour = now.get(java.util.Calendar.HOUR_OF_DAY)
-        val isNight = preferences.get(BooleanKey.OApsAIMInight) == true || (hour < 7 || hour >= 23)
+        val isNight = hour < 7 || hour >= 23
 
         val zone = when {
             valCur < 70 -> GlycemicZone.HYPO
