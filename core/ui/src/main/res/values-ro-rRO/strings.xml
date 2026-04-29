@@ -173,8 +173,6 @@
     <string name="a11y_high">hiper</string>
     <string name="a11y_inrange">în țintă</string>
     <string name="a11y_low">hipo</string>
-    <string name="average">Medie</string>
-    <string name="tir">Timp în interval</string>
     <string name="remove_label">Eliminați</string>
     <string name="activate_profile">Activați profil</string>
     <string name="activate_insulin">Activați insulina</string>
@@ -264,6 +262,9 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina selectată: %1$s</string>
     <string name="record_insulin_hint">Dacă introduceți insulina administrată prin stiloul injector (pen), selectați tipul corect de insulină de mai jos. Doza este întotdeauna în Unități Internaționale.</string>
+    <!--       Stats -->
+    <string name="average">Medie</string>
+    <string name="tir">Timp în interval</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
