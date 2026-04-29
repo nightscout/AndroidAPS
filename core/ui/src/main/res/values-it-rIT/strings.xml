@@ -173,8 +173,6 @@
     <string name="a11y_high">alto</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">basso</string>
-    <string name="average">Media</string>
-    <string name="tir">Tempo nell’intervallo</string>
     <string name="remove_label">Rimuovi</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="activate_insulin">Attiva insulina</string>
@@ -264,6 +262,9 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulina Selezionata: %1$s</string>
     <string name="record_insulin_hint">Se si entra in insulina applicata dalla penna, selezionare di seguito il tipo di insulina corretto. La dose è sempre nelle Unità Internazionali.</string>
+    <!--       Stats -->
+    <string name="average">Media</string>
+    <string name="tir">Tempo nell’intervallo</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
