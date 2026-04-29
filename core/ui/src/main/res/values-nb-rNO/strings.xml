@@ -265,6 +265,20 @@
     <!--       Stats -->
     <string name="average">Gjennomsnitt</string>
     <string name="tir">Tid i målområde</string>
+    <string name="below" comment="below &quot;in range&quot;">Under</string>
+    <string name="in_range">I målområdet</string>
+    <string name="veryLow" comment="below 3.1">Veldig lavt</string>
+    <string name="low" comment="3.1-3.9">Lavt</string>
+    <string name="high" comment="10.0-13.9">Høyt</string>
+    <string name="veryHigh" comment="above 13.9">Veldig høyt</string>
+    <string name="above" comment="above &quot;in range&quot;">Over</string>
+    <string name="detailed_14_days">Detaljert 14 dager</string>
+    <string name="day_tir">Dag TIR</string>
+    <string name="night_tir">Natt TIR</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7d</string>
+    <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
