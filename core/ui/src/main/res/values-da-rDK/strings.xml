@@ -114,7 +114,6 @@
     <string name="a11y_high">høj</string>
     <string name="a11y_inrange">inden for området</string>
     <string name="a11y_low">lav</string>
-    <string name="average">Gennemsnit</string>
     <string name="activate_profile">Aktivér profil</string>
     <string name="profileswitch_ismissing">Profilskift mangler. Venligst lav et profilskift eller tryk \"Aktiver profil\" i LokalProfil.</string>
     <string name="profile">Profil</string>
@@ -160,6 +159,8 @@
     <string name="reason">Årsag</string>
     <string name="nochangerequested">Ingen ændring efterspurgt</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Gennemsnit</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
