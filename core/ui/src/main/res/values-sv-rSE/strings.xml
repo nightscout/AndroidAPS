@@ -114,7 +114,6 @@
     <string name="a11y_high">hög</string>
     <string name="a11y_inrange">inom målområdet</string>
     <string name="a11y_low">låg</string>
-    <string name="average">Medel</string>
     <string name="activate_profile">Aktivera profil</string>
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
     <string name="profile">Profil</string>
@@ -160,6 +159,8 @@
     <string name="reason">Orsak</string>
     <string name="nochangerequested">Ingen ändring behövs</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Medel</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
