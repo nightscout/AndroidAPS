@@ -121,7 +121,6 @@
     <string name="a11y_high">hoog</string>
     <string name="a11y_inrange">binnen bereik</string>
     <string name="a11y_low">laag</string>
-    <string name="average">Gemiddelde</string>
     <string name="activate_profile">Activeer profiel</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="profile">Profiel</string>
@@ -182,6 +181,8 @@
     <string name="reason">Reden</string>
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Gemiddelde</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
