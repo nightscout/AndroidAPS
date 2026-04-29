@@ -16,6 +16,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import androidx.annotation.DrawableRes
 import app.aaps.plugins.constraints.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -115,20 +116,79 @@ class BgQualityCheckPlugin @Inject constructor(
         val sizeRecords = data.size
 
         lastBg ?: return null
-        if (sizeRecords < 5) return null // not enough data
-        if (data[data.size - 1].timestamp > now - 45 * 60 * 1000L) return null // data too fresh to detect
-        if (data[0].timestamp < now - 7 * 60 * 1000L) return null // data is old
+        if (sizeRecords < 5) {
+            aapsLogger.debug(LTag.APS, "BG_FLAT_CHECK: Not enough data ($sizeRecords < 5)")
+            return null // not enough data
+        }
+
+        // 🚀 FAST FAIL: If recent data shows movement, assume valid.
+        // Avoids false positives when smoothing hides short term noise but trend exists.
+        val recentSubset = data.take(min(data.size, 4))
+        val recentRange = recentSubset.maxOf { it.value } - recentSubset.minOf { it.value }
+        if (recentRange > 2.9) {
+             aapsLogger.debug(LTag.APS, "BG_FLAT_CHECK: Recent activity ($recentRange > 2.9), ALIVE.")
+             return false
+        }
+        
+        // 🔧 CRITICAL FIX: Correct flatness detection logic
+        // We need TWO things:
+        // 1. Recent data: newest BG (data[0]) must be fresh (< 12 min old)
+        // 2. Historical coverage: we need data spanning back to our analysis window
+        
+        val newestTimestamp = data[0].timestamp
+        val newestAgeMins = (now - newestTimestamp) / (60 * 1000)
+        
+        // Check 1: Is newest BG too old? (> 12 min = can't detect CURRENT flatness)
+        if (newestTimestamp < now - 12 * 60 * 1000L) {
+            aapsLogger.debug(LTag.APS, "BG_FLAT_CHECK: Newest BG too old ($newestAgeMins min)")
+            return null
+        }
+        
+        // Check 2: Do we have enough historical data?
+        // We need BG readings going back at least 45 minutes
+        // Find the oldest BG in our dataset
+        val oldestBg = data.lastOrNull()
+        if (oldestBg == null || oldestBg.timestamp > now - minutes * 60 * 1000L) {
+            // Not enough historical coverage
+            val oldestAgeMins = if (oldestBg != null) (now - oldestBg.timestamp) / (60 * 1000) else 0
+            aapsLogger.debug(LTag.APS, "BG_FLAT_CHECK: Not enough history (oldest: $oldestAgeMins min, need: $minutes min)")
+            return null
+        }
 
         var bgmin: Double = lastBg
         var bgmax: Double = bgmin
+        var countAnalyzed = 0
+        
+        // 🔧 CRITICAL: Use RAW values (bg.value) NOT smoothed values!
+        // AdaptiveSmoothie can reduce variance artificially → false positive flat detection
         for (bg in data) {
             if (bg.timestamp < offset) break
-            bgmin = min(bgmin, bg.value)
-            bgmax = max(bgmax, bg.value)
-            if (bgmax - bgmin > maxDelta) return false
+            
+            // ALWAYS use .value (RAW), NEVER .smoothed or .recalculated
+            val rawValue = bg.value
+            
+            bgmin = min(bgmin, rawValue)
+            bgmax = max(bgmax, rawValue)
+            countAnalyzed++
+            if (bgmax - bgmin > maxDelta) {
+                aapsLogger.debug(LTag.APS, "BG_FLAT_CHECK: NOT FLAT - delta=${(bgmax - bgmin).toInt()} > $maxDelta (analyzed $countAnalyzed readings)")
+                return false
+            }
         }
+        
+        aapsLogger.warn(LTag.APS, "BG_FLAT_CHECK: ⚠️ FLAT DETECTED! delta=${(bgmax - bgmin).toInt()} ≤ $maxDelta over $minutes min ($countAnalyzed readings, min=${bgmin.toInt()}, max=${bgmax.toInt()})")
         return true
     }
+
+    @DrawableRes
+    override fun icon(): Int =
+        when (state) {
+            BgQualityCheck.State.UNKNOWN        -> 0
+            BgQualityCheck.State.FIVE_MIN_DATA -> 0
+            BgQualityCheck.State.RECALCULATED  -> R.drawable.ic_baseline_warning_24_yellow
+            BgQualityCheck.State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
+            BgQualityCheck.State.FLAT          -> R.drawable.ic_baseline_trending_flat_24
+        }
 
     override fun stateDescription(): String =
         when (state) {
@@ -141,6 +201,6 @@ class BgQualityCheckPlugin @Inject constructor(
     companion object {
 
         const val staleBgCheckPeriodMinutes = 45L
-        const val staleBgMaxDeltaMgdl = 2.0
+        const val staleBgMaxDeltaMgdl = 4.0
     }
 }
