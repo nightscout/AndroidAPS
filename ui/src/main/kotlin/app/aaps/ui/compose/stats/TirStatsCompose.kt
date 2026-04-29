@@ -111,7 +111,7 @@ fun TirStatsCompose(
 
         tirStatsData.averageTir7?.let { avg ->
             TirTableDataRow(
-                date = "7d",
+                date = stringResource(R.string.seven_days_short),
                 below = formatPercentage(avg.below, avg.count),
                 inRange = formatPercentage(avg.inRange, avg.count),
                 above = formatPercentage(avg.above, avg.count),
@@ -121,7 +121,7 @@ fun TirStatsCompose(
 
         tirStatsData.averageTir30?.let { avg ->
             TirTableDataRow(
-                date = "30d",
+                date = stringResource(R.string.thirty_days_short),
                 below = formatPercentage(avg.below, avg.count),
                 inRange = formatPercentage(avg.inRange, avg.count),
                 above = formatPercentage(avg.above, avg.count),
@@ -145,7 +145,7 @@ fun TirStatsCompose(
 
         tirStatsData.averageTit7?.let { avg ->
             TirTableDataRow(
-                date = "7d",
+                date = stringResource(R.string.seven_days_short),
                 below = formatPercentage(avg.below, avg.count),
                 inRange = formatPercentage(avg.inRange, avg.count),
                 above = formatPercentage(avg.above, avg.count),
@@ -155,7 +155,7 @@ fun TirStatsCompose(
 
         tirStatsData.averageTit30?.let { avg ->
             TirTableDataRow(
-                date = "30d",
+                date = stringResource(R.string.thirty_days_short),
                 below = formatPercentage(avg.below, avg.count),
                 inRange = formatPercentage(avg.inRange, avg.count),
                 above = formatPercentage(avg.above, avg.count),
@@ -184,21 +184,21 @@ fun TirTableHeaderRow() {
             textAlign = TextAlign.Start
         )
         Text(
-            text = "Below",
+            text = stringResource(R.string.below),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = "In Range",
+            text = stringResource(R.string.in_range),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
-            text = "Above",
+            text = stringResource(R.string.above),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),

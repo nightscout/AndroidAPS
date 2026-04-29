@@ -8,7 +8,7 @@ import android.widget.TextView
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.stats.TIR
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.implementation.R
+import app.aaps.core.ui.R
 
 class TirImpl(override val date: Long, override val lowThreshold: Double, override val highThreshold: Double) : TIR {
 
@@ -63,15 +63,15 @@ class TirImpl(override val date: Long, override val lowThreshold: Double, overri
             row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text = dateUtil.dateStringShort(date) })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text =
-                rh.gs(app.aaps.core.ui.R.string.formatPercent, belowPct())
+                rh.gs(R.string.formatPercent, belowPct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text =
-                rh.gs(app.aaps.core.ui.R.string.formatPercent, inRangePct())
+                rh.gs(R.string.formatPercent, inRangePct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text =
-                rh.gs(app.aaps.core.ui.R.string.formatPercent, abovePct())
+                rh.gs(R.string.formatPercent, abovePct())
             })
         }
 
@@ -87,15 +87,15 @@ class TirImpl(override val date: Long, override val lowThreshold: Double, overri
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text =
-                rh.gs(app.aaps.core.ui.R.string.formatPercent, belowPct())
+                rh.gs(R.string.formatPercent, belowPct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text =
-                rh.gs(app.aaps.core.ui.R.string.formatPercent, inRangePct())
+                rh.gs(R.string.formatPercent, inRangePct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text =
-                rh.gs(app.aaps.core.ui.R.string.formatPercent, abovePct())
+                rh.gs(R.string.formatPercent, abovePct())
             })
         }
 }
