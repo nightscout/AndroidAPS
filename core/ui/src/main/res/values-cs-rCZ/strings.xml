@@ -124,7 +124,6 @@
     <string name="a11y_high">vysoká</string>
     <string name="a11y_inrange">v rozsahu</string>
     <string name="a11y_low">nízká</string>
-    <string name="average">Průměr</string>
     <string name="activate_profile">Aktivovat profil</string>
     <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
     <string name="profile">Profil</string>
@@ -185,6 +184,8 @@
     <string name="reason">Zdůvodnění</string>
     <string name="nochangerequested">Změna nepožadována</string>
     <!--    Insulin / Concentration-->
+    <!--       Stats -->
+    <string name="average">Průměr</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
