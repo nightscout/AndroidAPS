@@ -173,8 +173,6 @@
     <string name="a11y_high">cao</string>
     <string name="a11y_inrange">trong phạm vi</string>
     <string name="a11y_low">thấp</string>
-    <string name="average">Trung bình</string>
-    <string name="tir">Thời gian trong phạm vi</string>
     <string name="remove_label">Loại bỏ</string>
     <string name="activate_profile">Kích hoạt Hồ sơ</string>
     <string name="activate_insulin">Kích hoạt insulin</string>
@@ -264,6 +262,9 @@
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulin đã chọn: %1$s</string>
     <string name="record_insulin_hint">Nếu nhập insulin được tiêm bằng bút, hãy chọn đúng loại insulin bên dưới. Liều lượng luôn được tính bằng Đơn vị Quốc tế (IU).</string>
+    <!--       Stats -->
+    <string name="average">Trung bình</string>
+    <string name="tir">Thời gian trong phạm vi</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d phút</string>
