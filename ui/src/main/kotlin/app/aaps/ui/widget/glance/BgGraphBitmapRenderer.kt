@@ -69,8 +69,8 @@ class BgGraphBitmapRenderer {
         BgRange.VERY_LOW  -> colors.veryLow
         BgRange.LOW       -> colors.low
         BgRange.IN_RANGE  -> colors.inRange
-        BgRange.HIGH      -> colors.high
         BgRange.VERY_HIGH -> colors.veryHigh
+        BgRange.HIGH      -> colors.high
     }
 
     companion object {
