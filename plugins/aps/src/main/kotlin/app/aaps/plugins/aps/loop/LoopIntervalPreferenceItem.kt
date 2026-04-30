@@ -37,7 +37,7 @@ import java.text.DecimalFormat
  */
 class LoopIntervalPreferenceItem(
     private val persistenceLayer: PersistenceLayer
-) : CustomPreferenceItem() {
+) : CustomPreferenceItem {
 
     @Composable
     override fun Content() {

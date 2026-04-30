@@ -9,8 +9,8 @@ import app.aaps.core.keys.interfaces.PreferenceItem
  * data alongside an editable value. Subclass and override [Content] to render a row
  * that the framework will place inline among regular preferences.
  */
-abstract class CustomPreferenceItem : PreferenceItem {
+interface CustomPreferenceItem : PreferenceItem {
 
     @Composable
-    abstract fun Content()
+    fun Content()
 }
