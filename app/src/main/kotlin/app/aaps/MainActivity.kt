@@ -214,7 +214,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                                 startActivity(
                                     Intent(
                                         Intent.ACTION_VIEW,
-                                        Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))
+                                        Uri.parse("https://dontkillmyapp.com/?app=AAPS")
                                     )
                                 )
                             }
