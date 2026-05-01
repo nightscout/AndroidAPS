@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Sẽ đổi sang giờ mùa hè trong vòng 24 giờ tới</string>
     <string name="dst_loop_disabled_warning">Thay đổi giờ mùa hè cách đây chưa đến 3 giờ - Vòng lặp kín đã bị vô hiệu</string>

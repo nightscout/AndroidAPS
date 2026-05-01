@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="carbs_constraint_applied">Constrângere de carbohidrați aplicată</string>
+    <string name="no_temp_basal_running">Nicio bazală temporară în funcțiune</string>
     <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Start Țintă Temporară activitate</string>
     <string name="start_eating_soon_tt">Start Țintă Temporară mănânc-în-curând</string>
@@ -60,7 +61,67 @@
     <string name="fill_prime_amount">Cantitate de amorsare</string>
     <string name="fill_pump_units_note">Cantitatea de amorsare este în unitățile pompei</string>
     <string name="fill_insulin_change">Comutați insulina la: %1$s (se va aplica schimbarea profilului)</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
+    <string name="scene_cat_aaps">AAPS</string>
+    <string name="scene_cat_activity">Exercițiu fizic</string>
+    <string name="scene_cat_health">Sănătate</string>
+    <string name="scene_cat_food">Mâncare</string>
+    <string name="scene_cat_sleep">Somn</string>
+    <string name="scene_cat_dailylife">Viață zilnică</string>
+    <string name="scene_cat_wellness">Stare de bine</string>
+    <string name="scene_cat_general">General</string>
+    <string name="aaps_tt_high_icon_label">Țintă temporară</string>
+    <string name="aaps_tt_activity_icon_label">Țintă temporară exercițiu fizic</string>
+    <string name="aaps_tt_eating_icon_label">Țintă temporară mănânc în curând</string>
+    <string name="aaps_tt_hypo_icon_label">Țintă temporară hipoglicemie</string>
+    <string name="aaps_tt_manual_icon_label">Țintă temporară manuală</string>
+    <string name="aaps_profile_icon_label">Profil</string>
+    <string name="aaps_loop_icon_label">Buclă</string>
+    <string name="aaps_smb_icon_label">SMB</string>
+    <string name="aaps_bolus_icon_label">Bolus</string>
+    <string name="aaps_carbs_icon_label">Carbohidrați</string>
+    <string name="aaps_tbr_icon_label">Bazală temporară</string>
+    <string name="aaps_activity_icon_label">Activitate fizică</string>
+    <string name="aaps_note_icon_label">Notă</string>
+    <string name="aaps_automation_icon_label">Automatizare</string>
+    <string name="aaps_calibration_icon_label">Calibrare</string>
+    <string name="exercise_icon_label">Executați</string>
+    <string name="fitness_icon_label">Gimnastică</string>
+    <string name="swim_icon_label">Înot</string>
+    <string name="hiking_icon_label">Drumeție</string>
+    <string name="bike_icon_label">Bicicletă</string>
+    <string name="skateboard_icon_label">Skateboard</string>
+    <string name="tennis_icon_label">Tenis</string>
+    <string name="soccer_icon_label">Fotbal</string>
+    <string name="baseball_icon_label">Rugby</string>
+    <string name="basketball_icon_label">Handbal</string>
+    <string name="volleyball_icon_label">Gimnastică</string>
+    <string name="golf_icon_label">Golf</string>
+    <string name="scubadiving_icon_label">Scufundări</string>
+    <string name="rowing_icon_label">Canotaj</string>
+    <string name="surfing_icon_label">Surf</string>
+    <string name="hospital_icon_label">Spital</string>
+    <string name="medication_icon_label">Medicație</string>
+    <string name="monitor_heart_icon_label">Monitorizare</string>
+    <string name="thermostat_icon_label">Termostat</string>
+    <string name="blood_type_icon_label">Sânge</string>
+    <string name="health_safety_icon_label">Sănătate</string>
+    <string name="healing_icon_label">Vindecare</string>
+    <string name="meal_icon_label">Restaurant</string>
+    <string name="cafe_icon_label">Cafea</string>
+    <string name="lunch_icon_label">Prânz</string>
+    <string name="bakery_icon_label">Brutărie</string>
+    <string name="sleep_icon_label">Somn</string>
+    <string name="night_icon_label">Noapte</string>
+    <string name="nights_stay_icon_label">Înnoptare</string>
+    <string name="hotel_icon_label">Hotel</string>
+    <string name="seat_flat_icon_label">Repaus</string>
+    <string name="work_icon_label">Muncă</string>
+    <string name="school_icon_label">Școală</string>
+    <string name="home_icon_label">Acasă</string>
+    <string name="car_icon_label">Condus</string>
+    <string name="flight_icon_label">Zbor</string>
+    <string name="shopping_icon_label">Cumpărături</string>
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Lipsă nume insulină</string>
     <string name="insulin_name_exists">Numele de insulină %1$s există deja, selectați un nume nou</string>

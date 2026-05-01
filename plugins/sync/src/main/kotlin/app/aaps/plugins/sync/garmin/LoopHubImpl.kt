@@ -84,7 +84,7 @@ class LoopHubImpl @Inject constructor(
         get() = runBlocking { iobCobCalculator.getCobInfo("LoopHubImpl") }.displayCob
 
     /** Returns true if the pump is connected. */
-    override val isConnected: Boolean get() = loop.runningMode != RM.Mode.DISCONNECTED_PUMP
+    override val isConnected: Boolean get() = runBlocking { loop.runningMode() } != RM.Mode.DISCONNECTED_PUMP
 
     /** Returns true if the current profile is set of a limited amount of time. */
     override val isTemporaryProfile: Boolean
@@ -124,14 +124,16 @@ class LoopHubImpl @Inject constructor(
      *  for the given number of minutes. */
     override fun disconnectPump(minutes: Int) {
         currentProfile?.let { p ->
-            loop.handleRunningModeChange(
-                durationInMinutes = minutes,
-                profile = p,
-                newRM = RM.Mode.DISCONNECTED_PUMP,
-                action = Action.DISCONNECT,
-                source = Sources.Garmin,
-                listValues = listOf(ValueWithUnit.Minute(minutes))
-            )
+            appScope.launch {
+                loop.handleRunningModeChange(
+                    durationInMinutes = minutes,
+                    profile = p,
+                    newRM = RM.Mode.DISCONNECTED_PUMP,
+                    action = Action.DISCONNECT,
+                    source = Sources.Garmin,
+                    listValues = listOf(ValueWithUnit.Minute(minutes))
+                )
+            }
         }
     }
 

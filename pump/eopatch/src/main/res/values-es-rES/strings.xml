@@ -76,7 +76,7 @@
     <string name="insulin_suspend_msg4">Se suspenderá la administración de insulina</string>
     <string name="string_activate_patch">Activar parche</string>
     <string name="string_discard_patch">Descartar parche</string>
-    <string name="string_running">En ejecución</string>
+    <string name="string_running">Funcionando</string>
     <string name="retry">Reintentar</string>
     <string name="string_are_you_sure_to_discard_current_patch">¿Estás seguro de descartar el parche actual?</string>
     <string name="needle_insertion_error_1">Error de inserción de la aguja</string>

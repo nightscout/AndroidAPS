@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -236,6 +237,10 @@ class ComposeMainActivity : AppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Bar icon color is kept in sync with the AAPS-effective theme reactively
+        // from inside AapsTheme via a SideEffect on WindowInsetsControllerCompat,
+        // so a plain enableEdgeToEdge() here is enough.
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         // Activity result launchers (from base class)

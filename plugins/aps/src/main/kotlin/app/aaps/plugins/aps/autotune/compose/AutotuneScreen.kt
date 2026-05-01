@@ -44,11 +44,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -95,6 +96,10 @@ fun AutotuneScreen(
     onDialogDismiss: () -> Unit,
     onCopyLocalConfirm: (String) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+    val commit: (() -> Unit) -> () -> Unit = remember(focusManager) {
+        { action -> { focusManager.clearFocus(); action() } }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -216,25 +221,25 @@ fun AutotuneScreen(
                     ) {
                         val buttonModifier = Modifier.weight(1f)
                         if (state.showProfileSwitch) {
-                            AutotuneButton(stringResource(app.aaps.core.ui.R.string.activate_profile), Icons.Filled.SwapHoriz, buttonModifier, onClick = onProfileSwitch)
+                            AutotuneButton(stringResource(app.aaps.core.ui.R.string.activate_profile), Icons.Filled.SwapHoriz, buttonModifier, onClick = commit(onProfileSwitch))
                         }
                         if (state.showCompare) {
-                            AutotuneButton(stringResource(R.string.autotune_compare_profile), Icons.AutoMirrored.Filled.CompareArrows, buttonModifier, onClick = onCompareProfiles)
+                            AutotuneButton(stringResource(R.string.autotune_compare_profile), Icons.AutoMirrored.Filled.CompareArrows, buttonModifier, onClick = commit(onCompareProfiles))
                         }
                         if (state.showCopyLocal) {
-                            AutotuneButton(stringResource(R.string.autotune_copy_localprofile_button), Icons.Filled.ContentCopy, buttonModifier, onClick = onCopyLocal)
+                            AutotuneButton(stringResource(R.string.autotune_copy_localprofile_button), Icons.Filled.ContentCopy, buttonModifier, onClick = commit(onCopyLocal))
                         }
                         if (state.showUpdateProfile) {
-                            AutotuneButton(stringResource(R.string.autotune_update_input_profile_button), Icons.Filled.Save, buttonModifier, onClick = onUpdateProfile)
+                            AutotuneButton(stringResource(R.string.autotune_update_input_profile_button), Icons.Filled.Save, buttonModifier, onClick = commit(onUpdateProfile))
                         }
                         if (state.showRevertProfile) {
-                            AutotuneButton(stringResource(R.string.autotune_revert_input_profile_button), Icons.Filled.Restore, buttonModifier, onClick = onRevertProfile)
+                            AutotuneButton(stringResource(R.string.autotune_revert_input_profile_button), Icons.Filled.Restore, buttonModifier, onClick = commit(onRevertProfile))
                         }
                         if (state.showRun) {
-                            AutotuneButton(stringResource(R.string.autotune_run), Icons.Filled.PlayArrow, buttonModifier, onClick = onRunAutotune)
+                            AutotuneButton(stringResource(R.string.autotune_run), Icons.Filled.PlayArrow, buttonModifier, onClick = commit(onRunAutotune))
                         }
                         if (state.showCheckInput) {
-                            AutotuneButton(stringResource(R.string.autotune_check_input_profile_button), Icons.Filled.PersonSearch, buttonModifier, onClick = onCheckInputProfile)
+                            AutotuneButton(stringResource(R.string.autotune_check_input_profile_button), Icons.Filled.PersonSearch, buttonModifier, onClick = commit(onCheckInputProfile))
                         }
                     }
                 }

@@ -82,7 +82,6 @@
     <string name="disableloop">השבתת לולאה</string>
     <string name="resumeloop">חידוש לולאה</string>
     <string name="suspendloop">השהיית הלולאה</string>
-    <string name="duration_min_label">משך [min]</string>
     <string name="notification">התראה</string>
     <string name="noprofile">פרופיל הנייטסקאוט טרם נטען</string>
     <string name="exists">קיים</string>
@@ -182,9 +181,6 @@
     <string name="careportal_question_message">שאלה: %1$s</string>
     <string name="careportal_exercise_message">פעילות גופנית: %1$s</string>
     <string name="careportal_pump_site_change">החלפת צינורית משאבה</string>
-    <string name="cgm_sensor_insert">התחלת סנסור חדש</string>
-    <string name="careportal_cgmsensorstart">התחלת סנסור חדש</string>
-    <string name="careportal_cgm_sensor_stop">עצירת סנסור</string>
     <string name="careportal_dad_alert">התראת D.A.D</string>
     <string name="careportal_insulin_cartridge_change">החלפת מכל אינסולין</string>
     <string name="careportal_profileswitch">החלפת פרופיל</string>

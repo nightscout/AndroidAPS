@@ -16,10 +16,10 @@ import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.pump.WizardButton
 import app.aaps.core.ui.compose.pump.WizardStepLayout
-import app.aaps.ui.compose.scenes.LoopModeEditor
+import app.aaps.ui.compose.scenes.RunningModeEditor
 
 @Composable
-internal fun LoopModeStep(
+internal fun RunningModeStep(
     state: SceneWizardViewModel.WizardState,
     onToggle: (Boolean) -> Unit,
     onUpdate: (SceneAction) -> Unit,
@@ -31,7 +31,7 @@ internal fun LoopModeStep(
         primaryButton = WizardButton(text = stringResource(R.string.next), onClick = onNext)
     ) {
         Text(
-            text = stringResource(R.string.configbuilder_loop),
+            text = stringResource(R.string.running_mode),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
@@ -40,18 +40,18 @@ internal fun LoopModeStep(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         ActionToggle(
-            label = stringResource(R.string.scene_wizard_include_action, stringResource(R.string.configbuilder_loop)),
-            checked = state.loopModeEnabled,
+            label = stringResource(R.string.scene_wizard_include_action, stringResource(R.string.running_mode)),
+            checked = state.runningModeEnabled,
             onCheckedChange = onToggle
         )
         AnimatedVisibility(
-            visible = state.loopModeEnabled,
+            visible = state.runningModeEnabled,
             enter = fadeIn() + expandVertically(),
             exit = fadeOut() + shrinkVertically()
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(AapsSpacing.medium)) {
-                LoopModeEditor(
-                    action = state.loopModeAction,
+                RunningModeEditor(
+                    action = state.runningModeAction,
                     onUpdate = onUpdate
                 )
             }

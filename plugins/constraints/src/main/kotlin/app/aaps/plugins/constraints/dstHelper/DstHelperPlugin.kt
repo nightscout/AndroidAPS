@@ -67,9 +67,14 @@ class DstHelperPlugin @Inject constructor(
             }
         }
         if (wasDST(cal)) {
-            if (!loop.runningMode.isSuspended()) {
+            // dstCheck() is invoked from KeepAliveWorker on a background scope; the file
+            // already uses runBlocking for profileFunction. Keeping the same pattern here.
+            val mode = runBlocking { loop.runningMode() }
+            if (!mode.isSuspended()) {
                 val profile = runBlocking { profileFunction.getProfile() } ?: return
-                loop.handleRunningModeChange(newRM = RM.Mode.SUSPENDED_BY_DST, durationInMinutes = T.hours((-DISABLE_TIME_FRAME_HOURS).toLong()).mins().toInt(), action = Action.SUSPEND, source = Sources.Aaps, profile = profile)
+                runBlocking {
+                    loop.handleRunningModeChange(newRM = RM.Mode.SUSPENDED_BY_DST, durationInMinutes = T.hours((-DISABLE_TIME_FRAME_HOURS).toLong()).mins().toInt(), action = Action.SUSPEND, source = Sources.Aaps, profile = profile)
+                }
                 val snoozedTo: Long = preferences.get(DstHelperLongKey.SnoozeLoopDisabled)
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                     notificationManager.post(

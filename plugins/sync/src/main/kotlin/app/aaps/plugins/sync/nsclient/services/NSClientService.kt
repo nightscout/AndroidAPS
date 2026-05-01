@@ -71,6 +71,7 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import java.net.URISyntaxException
 import java.util.Locale
 import javax.inject.Inject
@@ -107,7 +108,7 @@ class NSClientService : DaggerService() {
     private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private var wakeLock: PowerManager.WakeLock? = null
-    private val binder: IBinder = LocalBinder()
+    private val binder: IBinder = LocalBinder(this)
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var socket: Socket? = null
     private var dataCounter = 0
@@ -206,10 +207,11 @@ class NSClientService : DaggerService() {
         }
     }
 
-    inner class LocalBinder : Binder() {
+    class LocalBinder(service: NSClientService) : Binder() {
 
-        val serviceInstance: NSClientService
-            get() = this@NSClientService
+        private val serviceRef = WeakReference(service)
+        val serviceInstance: NSClientService?
+            get() = serviceRef.get()
     }
 
     override fun onBind(intent: Intent): IBinder = binder

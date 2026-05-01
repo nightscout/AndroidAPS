@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,6 +37,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.scenes.SceneAutomationApi
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.compose.ComposablePluginContent
 import app.aaps.core.ui.compose.ToolbarConfig
@@ -58,7 +60,8 @@ class AutomationComposeContent(
     private val injector: HasAndroidInjector,
     private val uel: UserEntryLogger,
     @Suppress("unused") private val rh: ResourceHelper,
-    private val localProfileManager: app.aaps.core.interfaces.profile.LocalProfileManager
+    private val localProfileManager: app.aaps.core.interfaces.profile.LocalProfileManager,
+    private val sceneApi: SceneAutomationApi
 ) : ComposablePluginContent {
 
     @Composable
@@ -203,6 +206,7 @@ class AutomationComposeContent(
         holder: AutomationStateHolder,
         setToolbarConfig: (ToolbarConfig) -> Unit
     ) {
+        val focusManager = LocalFocusManager.current
         val backDesc = stringResource(app.aaps.core.ui.R.string.back)
         val saveDesc = stringResource(app.aaps.core.ui.R.string.save)
         val title = stringResource(R.string.condition).trimEnd(':')
@@ -226,7 +230,13 @@ class AutomationComposeContent(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { holder.closeTriggerEditor() }, enabled = dirty) {
+                        IconButton(
+                            onClick = {
+                                focusManager.clearFocus()
+                                holder.closeTriggerEditor()
+                            },
+                            enabled = dirty
+                        ) {
                             Icon(Icons.Default.Save, contentDescription = saveDesc)
                         }
                     }
@@ -325,6 +335,7 @@ class AutomationComposeContent(
         setToolbarConfig: (ToolbarConfig) -> Unit,
         activity: FragmentActivity?
     ) {
+        val focusManager = LocalFocusManager.current
         val editState by holder.editState.collectAsStateWithLifecycle()
         val route by holder.route.collectAsStateWithLifecycle()
         val isNew = (route as? AutomationRoute.Edit)?.position == -1
@@ -358,7 +369,10 @@ class AutomationComposeContent(
                     actions = {
                         if (!editState.readOnly) {
                             IconButton(
-                                onClick = { holder.save() },
+                                onClick = {
+                                    focusManager.clearFocus()
+                                    holder.save()
+                                },
                                 enabled = dirty && canSave
                             ) {
                                 Icon(Icons.Default.Save, contentDescription = saveDesc)
@@ -382,6 +396,7 @@ class AutomationComposeContent(
                         }) { Text(stringResource(R.string.automation_discard_confirm)) }
                         if (canSave) {
                             TextButton(onClick = {
+                                focusManager.clearFocus()
                                 showDiscardConfirm = false
                                 holder.save()
                             }) { Text(stringResource(app.aaps.core.ui.R.string.save)) }
@@ -399,11 +414,13 @@ class AutomationComposeContent(
         var showActionSheet by remember { mutableStateOf(false) }
         var actionTick by remember { mutableStateOf(0) }
         val profileNames = localProfileNames()
+        val sceneOptions = sceneApi.getScenes()
 
         AutomationEditScreen(
             state = editState,
             liveActions = holder.workingEvent().actions.toList(),
             profileNames = profileNames,
+            sceneOptions = sceneOptions,
             tick = actionTick,
             onTitleChange = holder::editTitleChanged,
             onUserActionChange = holder::editUserActionChanged,
@@ -426,8 +443,7 @@ class AutomationComposeContent(
                 options = options,
                 onPick = { opt ->
                     instantiateAction(opt.className)?.let { newAction ->
-                        holder.workingEvent().addAction(newAction)
-                        holder.onWorkingEventChanged()
+                        holder.addAction(newAction)
                         actionTick++
                     }
                 },

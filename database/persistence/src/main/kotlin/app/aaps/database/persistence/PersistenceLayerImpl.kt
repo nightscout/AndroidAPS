@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.AppRepository
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
@@ -51,6 +52,9 @@ import app.aaps.database.persistence.converters.fromDb
 import app.aaps.database.persistence.converters.toDb
 import app.aaps.database.transactions.CancelCurrentTemporaryRunningModeIfAnyTransaction
 import app.aaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import app.aaps.database.transactions.CancelProfileSwitchTransaction
+import app.aaps.database.transactions.CancelRunningModeTransaction
+import app.aaps.database.transactions.CancelTherapyEventTransaction
 import app.aaps.database.transactions.CgmSourceTransaction
 import app.aaps.database.transactions.CutCarbsTransaction
 import app.aaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
@@ -63,6 +67,7 @@ import app.aaps.database.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.transactions.InsertOrUpdateCachedTotalDailyDoseTransaction
 import app.aaps.database.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.transactions.InsertOrUpdateEffectiveProfileSwitchTransaction
+import app.aaps.database.transactions.InsertOrUpdateFoodTransaction
 import app.aaps.database.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.transactions.InsertOrUpdateProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateRunningModeTransaction
@@ -74,7 +79,6 @@ import app.aaps.database.transactions.InvalidateBolusTransaction
 import app.aaps.database.transactions.InvalidateCarbsTransaction
 import app.aaps.database.transactions.InvalidateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InvalidateExtendedBolusTransaction
-import app.aaps.database.transactions.InsertOrUpdateFoodTransaction
 import app.aaps.database.transactions.InvalidateFoodTransaction
 import app.aaps.database.transactions.InvalidateGlucoseValueTransaction
 import app.aaps.database.transactions.InvalidateProfileSwitchTransaction
@@ -140,7 +144,8 @@ class PersistenceLayerImpl @Inject constructor(
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
     private val config: Config,
-    private val apsResultProvider: Provider<APSResult>
+    private val apsResultProvider: Provider<APSResult>,
+    private val fabricPrivacy: FabricPrivacy
 ) : PersistenceLayer {
 
     private val compositeDisposable = CompositeDisposable()
@@ -1162,6 +1167,24 @@ class PersistenceLayerImpl @Inject constructor(
         }
     }
 
+    override suspend fun cancelRunningMode(id: Long, timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CancelRunningModeTransaction(id, timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<RM>()
+            val ueValues = mutableListOf<UE>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated RunningMode from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while canceling RunningMode by id", e)
+            throw e
+        }
+    }
+
     override suspend fun syncNsRunningModes(runningModes: List<RM>, doLog: Boolean): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
         try {
             val result = repository.runTransactionForResultSuspend(SyncNsRunningModeTransaction(runningModes.map { it.toDb() }))
@@ -1319,6 +1342,24 @@ class PersistenceLayerImpl @Inject constructor(
         }
     }
 
+    override suspend fun cancelProfileSwitch(id: Long, timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CancelProfileSwitchTransaction(id, timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<PS>()
+            val ueValues = mutableListOf<UE>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while canceling ProfileSwitch", e)
+            throw e
+        }
+    }
+
     override suspend fun syncNsProfileSwitches(profileSwitches: List<PS>, doLog: Boolean): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
         try {
             val result = repository.runTransactionForResultSuspend(SyncNsProfileSwitchTransaction(profileSwitches.map { it.toDb() }))
@@ -1351,6 +1392,10 @@ class PersistenceLayerImpl @Inject constructor(
                     )
                 aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
                 transactionResult.invalidated.add(it.fromDb())
+            }
+            result.updatedDuration.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated duration ProfileSwitch $it")
+                transactionResult.updatedDuration.add(it.fromDb())
             }
             result.updatedNsId.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
@@ -2011,6 +2056,25 @@ class PersistenceLayerImpl @Inject constructor(
         }
     }
 
+    override suspend fun cancelTherapyEvent(id: Long, timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
+        : PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CancelTherapyEventTransaction(id, timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<TE>()
+            val ueValues = mutableListOf<UE>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TherapyEvent from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while canceling TherapyEvent", e)
+            throw e
+        }
+    }
+
     override suspend fun invalidateTherapyEventsWithNote(note: String, action: Action, source: Sources): PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
         try {
             val result = repository.runTransactionForResultSuspend(InvalidateTherapyEventsWithNoteTransaction(note))
@@ -2397,8 +2461,20 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getApsResults(start, end).map { it.fromDb(apsResultProvider) }
     }
 
+    private val nonFiniteFieldRegex = Regex("(\\w+)=(NaN|Infinity|-Infinity)\\b")
+
+    private fun reportNonFiniteRtFields(apsResult: APSResult) {
+        val tokens = nonFiniteFieldRegex.findAll(apsResult.rawData().toString()).map { it.value }.toList()
+        if (tokens.isEmpty()) return
+        val msg = "APSResult RT non-finite algorithm=${apsResult.algorithm} ts=${apsResult.date} fields=$tokens"
+        aapsLogger.warn(LTag.APS, msg)
+        fabricPrivacy.logMessage(msg)
+        fabricPrivacy.logException(IllegalStateException(msg))
+    }
+
     override suspend fun insertOrUpdateApsResult(apsResult: APSResult): PersistenceLayer.TransactionResult<APSResult> = withContext(Dispatchers.IO) {
         try {
+            reportNonFiniteRtFields(apsResult)
             val result = repository.runTransactionForResultSuspend(InsertOrUpdateApsResultTransaction(apsResult.toDb()))
             val transactionResult = PersistenceLayer.TransactionResult<APSResult>()
             result.inserted.forEach {

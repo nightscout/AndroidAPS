@@ -113,17 +113,71 @@ class SyncNsRunningModeTransactionTest {
         verify(runningModeDao, never()).updateExistingEntry(any())
     }
 
+    @Test
+    fun `cuts permanent (duration=0) to finite when incoming is positive`() = runTest {
+        val runningMode = createRunningMode(id = 0, nsId = "ns-123", duration = 60_000L)
+        val existing = createRunningMode(id = 1, nsId = "ns-123", duration = 0L)
+
+        whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
+
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updatedDuration).hasSize(1)
+        assertThat(existing.duration).isEqualTo(60_000L)
+
+        verify(runningModeDao).updateExistingEntry(existing)
+    }
+
+    @Test
+    fun `skips duration update when current row is autoForced`() = runTest {
+        // autoForced (SUSPENDED_BY_PUMP / constraint-forced) rows are locally authoritative —
+        // remote NS clients must not be allowed to truncate them on round-trip.
+        val runningMode = createRunningMode(id = 0, nsId = "ns-123", duration = 30_000L)
+        val existing = createRunningMode(id = 1, nsId = "ns-123", duration = 60_000L, autoForced = true)
+
+        whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
+
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updatedDuration).isEmpty()
+        assertThat(existing.duration).isEqualTo(60_000L)
+        verify(runningModeDao, never()).updateExistingEntry(any())
+    }
+
+    @Test
+    fun `does not lengthen finite to permanent (incoming duration=0)`() = runTest {
+        val runningMode = createRunningMode(id = 0, nsId = "ns-123", duration = 0L)
+        val existing = createRunningMode(id = 1, nsId = "ns-123", duration = 60_000L)
+
+        whenever(runningModeDao.findByNSId("ns-123")).thenReturn(existing)
+
+        val transaction = SyncNsRunningModeTransaction(listOf(runningMode))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.updatedDuration).isEmpty()
+        assertThat(existing.duration).isEqualTo(60_000L)
+
+        verify(runningModeDao, never()).updateExistingEntry(any())
+    }
+
     private fun createRunningMode(
         id: Long,
         nsId: String?,
         timestamp: Long = System.currentTimeMillis(),
         isValid: Boolean = true,
-        duration: Long = 0L
+        duration: Long = 0L,
+        autoForced: Boolean = false
     ): RunningMode = RunningMode(
         timestamp = timestamp,
         mode = RunningMode.Mode.OPEN_LOOP,
         interfaceIDs_backing = InterfaceIDs(nightscoutId = nsId),
         duration = duration,
-        isValid = isValid
+        isValid = isValid,
+        autoForced = autoForced
     ).also { it.id = id }
 }

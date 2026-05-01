@@ -3,6 +3,7 @@ package app.aaps.ui.compose.scenes.wizard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.ui.R
@@ -17,9 +18,16 @@ internal fun DurationStep(
     onBack: () -> Unit,
     onNext: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     WizardStepLayout(
-        secondaryButton = WizardButton(text = stringResource(R.string.back), onClick = onBack),
-        primaryButton = WizardButton(text = stringResource(R.string.next), onClick = onNext)
+        secondaryButton = WizardButton(
+            text = stringResource(R.string.back),
+            onClick = { focusManager.clearFocus(); onBack() }
+        ),
+        primaryButton = WizardButton(
+            text = stringResource(R.string.next),
+            onClick = { focusManager.clearFocus(); onNext() }
+        )
     ) {
         Text(
             text = stringResource(R.string.duration),
@@ -36,16 +44,16 @@ internal fun DurationStep(
             onValueChange = { onSetDuration(it.toInt()) },
             valueRange = 0.0..4320.0,
             step = 5.0,
-            controlPoints = listOf(
-                0.0 to 0.0,
-                0.3 to 60.0,
-                0.6 to 480.0,
-                0.85 to 1440.0,
-                1.0 to 4320.0
-            ),
             valueFormatResId = R.string.mins,
             formatAsInt = true
         )
+        if (state.durationMinutes == 0) {
+            Text(
+                text = stringResource(R.string.scene_duration_indefinite),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 

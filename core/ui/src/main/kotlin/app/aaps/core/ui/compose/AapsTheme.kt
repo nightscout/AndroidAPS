@@ -1,5 +1,6 @@
 package app.aaps.core.ui.compose
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -8,10 +9,13 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowInsetsControllerCompat
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
@@ -207,6 +211,19 @@ fun AapsTheme(
         UiMode.LIGHT  -> false
         UiMode.DARK   -> true
         UiMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
+    // Keep system bar icon color in sync with the AAPS-effective theme so
+    // status/nav bar icons stay legible against the bar scrims (which use
+    // colorScheme.surface). Reactive — no activity recreate needed.
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            val controller = WindowInsetsControllerCompat(window, view)
+            controller.isAppearanceLightStatusBars = !isDark
+            controller.isAppearanceLightNavigationBars = !isDark
+        }
     }
 
     val scheme = if (isDark) darkColors else lightColors

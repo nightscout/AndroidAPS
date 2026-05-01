@@ -16,6 +16,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,8 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Surface
 import androidx.compose.ui.tooling.preview.Preview
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.Scene
@@ -75,11 +74,12 @@ internal fun ActiveSceneBannerContent(
     formatDuration: (Long) -> String = { ms -> "${(ms / 60000L).toInt()}m" },
     modifier: Modifier = Modifier
 ) {
-    // Ticker for countdown
+    // Ticker for countdown — 30s matches GraphViewModel.ticker30s; text is minute-grain
+    // and the progress bar stays visually smooth even on short scenes.
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) {
         while (true) {
-            delay(1000L)
+            delay(30_000L)
             now = System.currentTimeMillis()
         }
     }

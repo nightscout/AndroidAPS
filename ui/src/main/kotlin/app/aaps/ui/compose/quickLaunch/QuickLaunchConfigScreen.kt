@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -95,22 +96,27 @@ fun QuickLauchConfigScreen(
         previousSelectedCount = state.selectedItems.size
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        AapsTopAppBar(
-            title = { Text(stringResource(app.aaps.core.ui.R.string.quick_launch_configure)) },
-            navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            AapsTopAppBar(
+                title = { Text(stringResource(app.aaps.core.ui.R.string.quick_launch_configure)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
                 }
-            }
-        )
-
+            )
+        }
+    ) { paddingValues ->
         LazyColumn(
             state = lazyListState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
             // ── Selected actions ──
             item(key = "header_selected") {

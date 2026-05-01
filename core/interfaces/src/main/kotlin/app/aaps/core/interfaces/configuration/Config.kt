@@ -2,6 +2,8 @@ package app.aaps.core.interfaces.configuration
 
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * Represents the current initialization progress of the app.
@@ -75,4 +77,20 @@ interface Config {
     fun isEngineeringModeOrRelease(): Boolean
     fun isEngineeringMode(): Boolean
     fun isEnabled(option: ExternalOptions): Boolean
+}
+
+/**
+ * Suspends until app initialization completes, or [timeoutMs] elapses.
+ * Returns true if init is (or became) complete; false on timeout.
+ *
+ * Use at the top of WorkManager workers (and any background entry point that
+ * touches `lateinit` plugin state) to avoid a boot-time race: WorkManager
+ * persists pending work across reboots, so a worker can fire before
+ * `MainApp`'s background init scope has populated `pluginStore.plugins`.
+ */
+suspend fun Config.awaitInitialized(timeoutMs: Long = 30_000L): Boolean {
+    if (appInitialized) return true
+    return withTimeoutOrNull(timeoutMs) {
+        initProgressFlow.first { it.done }
+    } != null
 }

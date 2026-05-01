@@ -1,6 +1,12 @@
 package app.aaps.core.ui.compose
 
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.Offset
@@ -44,3 +50,26 @@ private val ConsumeOverscrollConnection = object : NestedScrollConnection {
 }
 
 fun Modifier.consumeOverscroll(): Modifier = this.nestedScroll(ConsumeOverscrollConnection)
+
+/**
+ * Pads the modified element above the system navigation bar AND above the IME
+ * (whichever is taller). Use on `Button`s (and similar plain composables) placed
+ * in `Scaffold(bottomBar = { … })`.
+ *
+ * Background: in edge-to-edge mode (targetSdk 35+), Material 3 `Scaffold`'s
+ * `bottomBar` slot does NOT auto-apply system bar insets to plain composables —
+ * only Material components designed for the slot (`BottomAppBar`,
+ * `NavigationBar`) self-inset via their own `windowInsets` parameter. Without
+ * this modifier, a `Button` in `bottomBar` overlaps the gesture/3-button
+ * navigation bar.
+ *
+ * Uses `WindowInsets.navigationBars.union(WindowInsets.ime)` so the keyboard
+ * (when shown) and the navigation bar don't double-pad — the result is the
+ * larger of the two, which is what we want.
+ *
+ * Replaces the older `.imePadding()` that screens had before the targetSdk 35
+ * migration.
+ */
+@Composable
+fun Modifier.bottomBarSafeArea(): Modifier =
+    this.windowInsetsPadding(WindowInsets.navigationBars.union(WindowInsets.ime))

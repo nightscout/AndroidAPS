@@ -70,7 +70,7 @@ class InsulinDialogViewModel @Inject constructor(
     private val uel: UserEntryLogger,
     private val persistenceLayer: PersistenceLayer,
     val decimalFormatter: DecimalFormatter,
-    loop: Loop,
+    private val loop: Loop,
     val preferences: Preferences,
     val rh: ResourceHelper,
     val dateUtil: DateUtil,
@@ -102,15 +102,22 @@ class InsulinDialogViewModel @Inject constructor(
         val bolusStep = pump.pumpDescription.bolusStep
         val units = profileFunction.getUnits()
 
-        val forcedRecordOnly = loop.runningMode.isSuspended() || !pump.isInitialized()
+        // Conservative default for medical dosing UI: start in record-only mode and relax
+        // only after the async loop.runningMode() check below confirms the loop is actually
+        // running. Erring on "real delivery" first and flipping to "record-only" later would
+        // (a) visibly toggle the checkbox under the user, and (b) let a fast-tapping user
+        // confirm a "deliver" dialog that the Loop guard would then reject. Safer to start
+        // checked and uncheck once we know the loop is running.
+        val pumpInitialized = pump.isInitialized()
         val isAapsClient = config.AAPSCLIENT
+        val initialForcedRecordOnly = true
 
         _uiState.update {
             InsulinDialogUiState(
                 insulin = 0.0,
                 timeOffsetMinutes = 0,
                 eatingSoonTtChecked = false,
-                recordOnlyChecked = forcedRecordOnly || isAapsClient,
+                recordOnlyChecked = initialForcedRecordOnly || isAapsClient,
                 notes = "",
                 eventTime = now,
                 eventTimeOriginal = now,
@@ -126,12 +133,19 @@ class InsulinDialogViewModel @Inject constructor(
                 showNotesFromPreferences = preferences.get(BooleanKey.OverviewShowNotesInDialogs),
                 simpleMode = preferences.get(BooleanKey.GeneralSimpleMode),
                 isAapsClient = isAapsClient,
-                forcedRecordOnly = forcedRecordOnly
+                forcedRecordOnly = initialForcedRecordOnly
             )
         }
         viewModelScope.launch {
             val runningIcfg = getRunningIcfg()
-            _uiState.update { it.copy(selectedIcfg = runningIcfg) }
+            val forcedRecordOnly = loop.runningMode().isSuspended() || !pumpInitialized
+            _uiState.update {
+                it.copy(
+                    selectedIcfg = runningIcfg,
+                    forcedRecordOnly = forcedRecordOnly,
+                    recordOnlyChecked = forcedRecordOnly || isAapsClient
+                )
+            }
         }
     }
 

@@ -34,6 +34,12 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">App Sino</string>
     <string name="description_source_patched_sino_app">Ricevi i dati di glucosio dall\'app Sino patchata.</string>
+    <!-- Instara App -->
+    <string name="instara_app">Instara</string>
+    <string name="description_source_instara_app">Ricevi valori glicemia dall\'app Instara.</string>
+    <!-- Instara preferences -->
+    <string name="pref_title_instara_history_request">Richiesta dati storici Instara</string>
+    <string name="pref_summary_instara_history_request">Richiesta possibile di dati storici mancanti in background</string>
     <!-- Notification Reader -->
     <string name="notification_reader">Lettore Notifiche</string>
     <string name="description_source_notification_reader">Leggi i valori di glucosio dalle notifiche pubblicate dalle app CGM ufficiali (Dexcom, Medtronic, Eversense, ecc.).</string>

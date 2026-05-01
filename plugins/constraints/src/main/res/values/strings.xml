@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
-    <string name="phone_checker" translatable="false">PhoneChecker</string>
-
     <!-- DST Helper -->
     <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
     <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
@@ -34,7 +31,7 @@
     <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
     <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
 
-    <string name="safety" translatable="false">Safety</string>
+    <string name="safety">Safety</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>

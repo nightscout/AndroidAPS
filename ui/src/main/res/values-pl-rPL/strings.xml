@@ -38,7 +38,7 @@
     <string name="fill_warning">Proszę upewnij się, że ilość wypełnienia odpowiada ilości właściwej dla twojego wkłucia!</string>
     <string name="record_pump_site_change">Zapisz zmianę wkłucia</string>
     <string name="record_insulin_cartridge_change">Zapisz zmianę zasobnika insuliny</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Użyj ponownie %1$d%% %2$dh</string>
     <string name="timeshift_label">Zmiana czasu</string>

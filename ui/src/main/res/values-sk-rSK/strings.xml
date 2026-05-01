@@ -60,7 +60,7 @@
     <string name="fill_prime_amount">Množstvo naplnenia</string>
     <string name="fill_pump_units_note">Množstvo náplne v pumpe v jednotkách</string>
     <string name="fill_insulin_change">Prepni inzulín na: %1$s (bude vykonané prepnutie profilu)</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="missing_insulin_name">Chýba názov inzulínu</string>
     <string name="insulin_name_exists">Inzulín s názvom %1$s už existuje, zvoľ iný názov</string>

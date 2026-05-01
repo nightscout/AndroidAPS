@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val. ar mažiau</string>
     <string name="dst_loop_disabled_warning">Laiko persukimas įvyko prieš mažiau nei 3 val. - Uždaras ciklas išjungtas</string>

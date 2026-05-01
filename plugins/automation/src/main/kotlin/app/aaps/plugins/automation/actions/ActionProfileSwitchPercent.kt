@@ -12,6 +12,7 @@ import app.aaps.plugins.automation.compose.IconTint
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputPercent
+import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
@@ -24,6 +25,8 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     var pct = InputPercent()
     var duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
+    override var precondition: Trigger? = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
+
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
         if (duration.value == 0) rh.gs(R.string.startprofileforever, pct.value.toInt())
@@ -31,10 +34,6 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
 
     override fun composeIcon() = IcProfile
     override fun composeIconTint() = IconTint.Profile
-
-    init {
-        precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
-    }
 
     override suspend fun doAction(): PumpEnactResult {
         val switched = profileFunction.createProfileSwitch(

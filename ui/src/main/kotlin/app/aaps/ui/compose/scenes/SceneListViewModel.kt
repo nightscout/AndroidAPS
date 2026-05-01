@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.model.ActiveSceneState
+import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.Scene
 import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.SceneEndAction
@@ -91,7 +92,9 @@ class SceneListViewModel @Inject constructor(
     }
 
     /** Format minutes as human-readable duration using DateUtil */
-    fun formatMinutes(minutes: Int): String = dateUtil.niceTimeScalar(minutes * 60_000L, rh)
+    fun formatMinutes(minutes: Int): String =
+        if (minutes == 0) rh.gs(R.string.scene_duration_indefinite)
+        else dateUtil.niceTimeScalar(minutes * 60_000L, rh)
 
     // --- Dialog state ---
 
@@ -123,7 +126,7 @@ class SceneListViewModel @Inject constructor(
             if (!scene.isEnabled) return@launch
 
             // Validation: pump disconnected / loop suspended
-            if (loop.runningMode.isSuspended()) {
+            if (loop.runningMode().isSuspended()) {
                 _dialogState.value = DialogState.ValidationError(rh.gs(R.string.pump_disconnected))
                 return@launch
             }
@@ -154,7 +157,7 @@ class SceneListViewModel @Inject constructor(
             }
 
             // Build action summaries
-            val summaries = scene.actions.map { buildActionSummary(it, scene.defaultDurationMinutes) }
+            val summaries = scene.actions.map { buildActionSummary(it) }
 
             // Detect conflicts
             val conflicts = detectConflicts(scene)
@@ -204,7 +207,7 @@ class SceneListViewModel @Inject constructor(
 
     // --- Summary builders ---
 
-    private fun buildActionSummary(action: SceneAction, sceneDurationMinutes: Int): String {
+    private fun buildActionSummary(action: SceneAction): String {
         return when (action) {
             is SceneAction.TempTarget      -> {
                 val targetStr = "${profileUtil.fromMgdlToStringInUnits(action.targetMgdl)} ${profileUtil.units.asText}"
@@ -221,7 +224,7 @@ class SceneListViewModel @Inject constructor(
             }
 
             is SceneAction.LoopModeChange  -> {
-                rh.gs(R.string.scene_action_loop_mode, translator.translate(action.mode))
+                rh.gs(R.string.scene_action_running_mode, translator.translate(action.mode))
             }
 
             is SceneAction.CarePortalEvent -> {
@@ -250,6 +253,17 @@ class SceneListViewModel @Inject constructor(
             }
         }
 
+        // Active running mode conflict (user-set: temp or non-default mode; auto-forced rows
+        // like SUSPENDED_BY_PUMP are pump-imposed and not a user-meaningful "override").
+        if (scene.actions.any { it is SceneAction.LoopModeChange }) {
+            val activeRm = persistenceLayer.getRunningModeActiveAt(now)
+            if (activeRm.id != 0L && !activeRm.autoForced &&
+                (activeRm.duration > 0 || activeRm.mode != RM.DEFAULT_MODE)
+            ) {
+                conflicts.add(rh.gs(R.string.scene_conflict_active_running_mode))
+            }
+        }
+
         // Active scene conflict
         val activeState = activeSceneManager.getActiveState()
         if (activeState != null) {
@@ -271,9 +285,7 @@ class SceneListViewModel @Inject constructor(
                 }
 
                 is SceneAction.ProfileSwitch   -> {
-                    val name = prior.profileName ?: profileFunction.getProfileName()
-                    val pct = prior.profilePercentage ?: 100
-                    summaries.add(rh.gs(R.string.scene_revert_profile, name, pct))
+                    summaries.add(rh.gs(R.string.scene_revert_profile))
                 }
 
                 is SceneAction.SmbToggle       -> {

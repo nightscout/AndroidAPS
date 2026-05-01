@@ -22,16 +22,13 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":core:keys"))
     implementation(project(":core:objects"))
-    implementation(project(":core:nssdk"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
-    implementation(project(":shared:impl"))
     implementation(project(":ui"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -41,6 +38,7 @@ dependencies {
 
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
+
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.hilt.compiler)
     ksp(libs.com.google.dagger.android.processor)

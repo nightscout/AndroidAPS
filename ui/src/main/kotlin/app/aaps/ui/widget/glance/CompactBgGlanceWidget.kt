@@ -29,8 +29,8 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.ui.compose.navigation.DarkElementColors
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -38,14 +38,18 @@ import kotlinx.coroutines.withTimeoutOrNull
  * Compact single-row widget: BG + trend arrow | bolus-icon IOB | carbs-icon COB.
  * Icons act as section dividers — no explicit vertical separators.
  */
-class CompactBgGlanceWidget(
-    private val stateLoader: WidgetStateLoader,
-    private val config: Config
-) : GlanceAppWidget() {
+class CompactBgGlanceWidget : GlanceAppWidget() {
 
     override val sizeMode: SizeMode = SizeMode.Single
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val deps = EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            WidgetDependencies::class.java
+        )
+        val stateLoader = deps.widgetStateLoader()
+        val config = deps.config()
+
         val ready = config.appInitialized || withTimeoutOrNull(AWAIT_INIT_TIMEOUT_MS) {
             config.initProgressFlow.first { it.done }
         } != null

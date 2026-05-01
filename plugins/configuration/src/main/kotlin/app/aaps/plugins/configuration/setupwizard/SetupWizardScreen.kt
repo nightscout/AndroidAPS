@@ -177,7 +177,7 @@ fun SetupWizardScreen(
                     title = { Text(currentScreen?.getHeaderCompose() ?: stringResource(app.aaps.core.ui.R.string.nav_setupwizard)) },
                     navigationIcon = {
                         IconButton(onClick = { showExitDialog = true }) {
-                            Icon(Icons.Default.Close, contentDescription = null)
+                            Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
                         }
                     }
                 )

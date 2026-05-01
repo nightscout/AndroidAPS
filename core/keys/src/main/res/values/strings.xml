@@ -398,9 +398,9 @@
     <string name="pref_title_max_basal">Maximum basal rate</string>
     <string name="openapsma_max_basal_summary">This value is called max basal in OpenAPS context</string>
     <string name="pref_title_smb_max_iob">Max IOB for SMB</string>
-    <string name="openapssmb_max_iob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
+    <string name="openapssmb_max_iob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value. Value is affected by patient type too.</string>
     <string name="pref_title_ama_max_iob">Max IOB for AMA</string>
-    <string name="openapsma_max_iob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
+    <string name="openapsma_max_iob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once. Value is affected by patient type too.</string>
     <string name="pref_title_max_daily_multiplier">Max daily safety multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="pref_title_current_basal_multiplier">Current basal safety multiplier</string>

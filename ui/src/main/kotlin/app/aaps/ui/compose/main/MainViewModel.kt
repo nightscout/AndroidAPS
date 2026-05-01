@@ -640,7 +640,7 @@ class MainViewModel @Inject constructor(
             if (result == ProtectionResult.GRANTED) {
                 viewModelScope.launch {
                     val lastRun = loop.lastRun ?: return@launch
-                    if (lastRun.constraintsProcessed?.isChangeRequested == true) {
+                    if (lastRun.constraintsProcessed?.isChangeRequested() == true) {
                         uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
                         loop.invoke("Accept temp button", false)
                         loop.acceptChangeRequest()
@@ -679,7 +679,7 @@ class MainViewModel @Inject constructor(
                     else rh.gs(app.aaps.core.ui.R.string.scene_action_smb_off)
 
                 is app.aaps.core.data.model.SceneAction.LoopModeChange  ->
-                    rh.gs(app.aaps.core.ui.R.string.scene_action_loop_mode, action.mode.name)
+                    rh.gs(app.aaps.core.ui.R.string.scene_action_running_mode, action.mode.name)
 
                 is app.aaps.core.data.model.SceneAction.CarePortalEvent ->
                     rh.gs(app.aaps.core.ui.R.string.scene_action_careportal, action.type.text)

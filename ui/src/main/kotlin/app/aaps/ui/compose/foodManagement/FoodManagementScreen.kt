@@ -56,7 +56,6 @@ import app.aaps.core.ui.compose.AapsSpacing
 import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.LocalSnackbarHostState
 import app.aaps.core.ui.compose.icons.IcCalculator
-import app.aaps.core.ui.compose.icons.IcPluginFood
 import app.aaps.core.ui.R as CoreUiR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -93,19 +92,10 @@ fun FoodManagementScreen(
         topBar = {
             AapsTopAppBar(
                 title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = IcPluginFood,
-                            contentDescription = null,
-                            modifier = Modifier.size(AapsSpacing.chipIconSize),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(Modifier.width(AapsSpacing.medium))
-                        AapsSearchField(
-                            query = state.searchQuery,
-                            onQueryChange = { viewModel.setSearchQuery(it) },
-                        )
-                    }
+                    AapsSearchField(
+                        query = state.searchQuery,
+                        onQueryChange = { viewModel.setSearchQuery(it) },
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {

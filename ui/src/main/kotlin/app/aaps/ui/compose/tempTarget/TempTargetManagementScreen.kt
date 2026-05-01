@@ -20,12 +20,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,8 +63,6 @@ import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.core.ui.compose.dialogs.TimePickerModal
 import app.aaps.core.ui.compose.formatMinutesAsDuration
 import app.aaps.core.ui.compose.navigation.ElementType
-import app.aaps.core.ui.compose.navigation.color
-import app.aaps.core.ui.compose.navigation.icon
 import app.aaps.core.ui.compose.navigation.labelResId
 import app.aaps.ui.R
 import app.aaps.ui.compose.components.ContentContainer
@@ -223,18 +221,7 @@ fun TempTargetManagementScreen(
         Scaffold(
             topBar = {
                 AapsTopAppBar(
-                    title = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = ElementType.TEMP_TARGET_MANAGEMENT.icon(),
-                                contentDescription = null,
-                                tint = ElementType.TEMP_TARGET_MANAGEMENT.color(),
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.padding(start = 8.dp))
-                            Text(stringResource(ElementType.TEMP_TARGET_MANAGEMENT.labelResId()))
-                        }
-                    },
+                    title = { Text(stringResource(ElementType.TEMP_TARGET_MANAGEMENT.labelResId())) },
                     navigationIcon = {
                         IconButton(onClick = onNavigateBack) {
                             Icon(
@@ -255,9 +242,12 @@ fun TempTargetManagementScreen(
                         } else {
                             // Save button (shown when editor has unsaved changes in EDIT mode)
                             if (uiState.selectedPreset != null && viewModel.hasUnsavedChanges()) {
-                                IconButton(onClick = { viewModel.saveCurrentPreset() }) {
+                                IconButton(onClick = {
+                                    focusManager.clearFocus()
+                                    viewModel.saveCurrentPreset()
+                                }) {
                                     Icon(
-                                        imageVector = Icons.Filled.Check,
+                                        imageVector = Icons.Default.Save,
                                         contentDescription = stringResource(app.aaps.core.ui.R.string.save),
                                         tint = MaterialTheme.colorScheme.primary
                                     )

@@ -25,7 +25,7 @@
     <string name="fill_warning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
     <string name="record_pump_site_change">Registar mudança local bomba</string>
     <string name="record_insulin_cartridge_change">Registar mudança de reservatório</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="timeshift_label">Deslocamento temporal</string>

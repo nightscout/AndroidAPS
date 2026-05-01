@@ -81,7 +81,6 @@
     <string name="disableloop">Inaktivera loop</string>
     <string name="resumeloop">Återuppta loop</string>
     <string name="suspendloop">Pausa loop</string>
-    <string name="duration_min_label">Duration [min]</string>
     <string name="notification">Avisering</string>
     <string name="noprofile">Ingen profil laddad från Nightscout ännu</string>
     <string name="exists">finns</string>
@@ -177,9 +176,6 @@
     <string name="careportal_question_message">Fråga : %1$s</string>
     <string name="careportal_exercise_message">Träning : %1$s</string>
     <string name="careportal_pump_site_change">Pump/nålbyte</string>
-    <string name="cgm_sensor_insert">Sensorbyte</string>
-    <string name="careportal_cgmsensorstart">Start CGM-sensor</string>
-    <string name="careportal_cgm_sensor_stop">Stoppa CGM-sensor</string>
     <string name="careportal_dad_alert">Diabeteshundlarm</string>
     <string name="careportal_insulin_cartridge_change">Byte av insulinreservoar</string>
     <string name="careportal_profileswitch">Profilbyte</string>

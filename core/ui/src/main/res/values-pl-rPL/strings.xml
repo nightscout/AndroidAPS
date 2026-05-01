@@ -84,7 +84,6 @@
     <string name="disabled_loop">Pętla wyłączona</string>
     <string name="resumeloop">Wznów pętlę</string>
     <string name="suspendloop">Wstrzymaj pętle</string>
-    <string name="duration_min_label">Czas trwania [min]</string>
     <string name="notification">Powiadomienie</string>
     <string name="noprofile">Nie załadowano profilu z NS</string>
     <string name="exists">istnieje</string>
@@ -200,11 +199,8 @@
     <string name="careportal_question_message">Pytanie : %1$s</string>
     <string name="careportal_exercise_message">Ćwiczenie: %1$s</string>
     <string name="careportal_pump_site_change">Zmiana wkłucia</string>
-    <string name="cgm_sensor_insert">Założenie sensora CGM</string>
     <string name="careportal_pump_site_management">Miejsca pompy/wkłucia</string>
     <string name="careportal_cgm_site_management">Miejsca Sensora</string>
-    <string name="careportal_cgmsensorstart">Uruchomienie sensora CGM</string>
-    <string name="careportal_cgm_sensor_stop">Zatrzymanie sensora CGM</string>
     <string name="careportal_dad_alert">Alarm D.A.D.</string>
     <string name="careportal_insulin_cartridge_change">Zmiana zasobnika insuliny</string>
     <string name="careportal_profileswitch">Zmiana profilu</string>

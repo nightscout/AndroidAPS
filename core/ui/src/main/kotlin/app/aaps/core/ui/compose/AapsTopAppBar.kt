@@ -22,9 +22,30 @@ import androidx.compose.ui.tooling.preview.Preview
 /**
  * AndroidAPS TopAppBar component with proper elevation visibility in dark mode.
  *
- * Uses [MaterialTheme.colorScheme.surfaceContainer] which provides visible
- * elevation contrast in both light and dark themes through Material 3's
- * tonal elevation system.
+ * **Always use this instead of Material 3's bare [TopAppBar].** Direct uses of
+ * `TopAppBar` mix differing default colors and break the consistent status-bar
+ * appearance once edge-to-edge is enabled (the bar's container color extends
+ * behind the status bar).
+ *
+ * Uses [MaterialTheme.colorScheme.surface] for the resting state and
+ * [MaterialTheme.colorScheme.surfaceContainer] for the scrolled state — a
+ * "seamless" look where the bar blends into the screen background, with a
+ * subtle one-step elevation when content scrolls underneath.
+ *
+ * ## Usage convention
+ *
+ * - **`title`** — pass a plain `Text(...)` only. Do not embed icons in the
+ *   title (no `Row { Icon; Text }` patterns). Material 3 reserves icons for
+ *   the `navigationIcon` and `actions` slots.
+ * - **`navigationIcon`** — choose by screen role:
+ *     - **`Icons.Filled.Close` (✕)** for *modal tasks* the user either commits
+ *       or abandons (any screen with a Save / OK / Confirm / Activate button —
+ *       dialogs, editors, wizards, pickers). Backing out = cancel.
+ *     - **`Icons.AutoMirrored.Filled.ArrowBack` (←)** for *pure navigation*
+ *       (browse / list / settings / management screens with no commit button).
+ *       Backing out = go to previous screen.
+ *     - **`Icons.Filled.Menu` (≡)** only at top level (drawer entry).
+ * - **`actions`** — keep to 2–3 icons max, right-aligned.
  *
  * @param title The title to be displayed in the center of the TopAppBar
  * @param modifier Modifier to be applied to the TopAppBar
@@ -45,8 +66,8 @@ fun AapsTopAppBar(
         navigationIcon = navigationIcon,
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            containerColor = MaterialTheme.colorScheme.surface,
+            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
         )
     )
 }
@@ -54,9 +75,13 @@ fun AapsTopAppBar(
 /**
  * AndroidAPS TopAppBar component with scroll behavior support.
  *
- * Uses [MaterialTheme.colorScheme.surfaceContainer] which provides visible
- * elevation contrast in both light and dark themes through Material 3's
- * tonal elevation system.
+ * **Always use this instead of Material 3's bare [TopAppBar]** — see the
+ * single-arg overload above for the rationale.
+ *
+ * Uses [MaterialTheme.colorScheme.surface] for the resting state and
+ * [MaterialTheme.colorScheme.surfaceContainer] for the scrolled state — a
+ * "seamless" look where the bar blends into the screen background, with a
+ * subtle one-step elevation when content scrolls underneath.
  *
  * @param title The title to be displayed in the center of the TopAppBar
  * @param scrollBehavior Scroll behavior for collapsing/expanding behavior
@@ -80,8 +105,8 @@ fun AapsTopAppBar(
         actions = actions,
         scrollBehavior = scrollBehavior,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            containerColor = MaterialTheme.colorScheme.surface,
+            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
         )
     )
 }

@@ -28,6 +28,7 @@ import app.aaps.wear.tile.RunningModeTileService
 import app.aaps.wear.tile.QuickWizardTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.TileBase
+import app.aaps.wear.tile.SceneTileService
 import app.aaps.wear.tile.UserActionTileService
 import app.aaps.wear.watchfaces.CircleWatchface
 import app.aaps.wear.watchfaces.CustomWatchface
@@ -74,6 +75,7 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesTileBase(): TileBase
     @ContributesAndroidInjector abstract fun contributesQuickWizardTileService(): QuickWizardTileService
     @ContributesAndroidInjector abstract fun contributesUserActionTileService(): UserActionTileService
+    @ContributesAndroidInjector abstract fun contributesSceneTileService(): SceneTileService
     @ContributesAndroidInjector abstract fun contributesTempTargetTileService(): TempTargetTileService
     @ContributesAndroidInjector abstract fun contributesActionsTileService(): ActionsTileService
     @ContributesAndroidInjector abstract fun contributesRunningModeTileService(): RunningModeTileService

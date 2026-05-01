@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,7 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import app.aaps.core.ui.compose.AapsTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -70,22 +70,11 @@ fun RunningModeScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = state.currentMode.toIcon(),
-                            contentDescription = null,
-                            tint = state.currentMode.toColor(),
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.padding(start = 8.dp))
-                        Text(state.currentModeText.ifEmpty { stringResource(app.aaps.core.ui.R.string.running_mode) })
-                    }
-                },
+            AapsTopAppBar(
+                title = { Text(state.currentModeText.ifEmpty { stringResource(app.aaps.core.ui.R.string.running_mode) }) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(app.aaps.core.ui.R.string.back))
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.close))
                     }
                 }
             )

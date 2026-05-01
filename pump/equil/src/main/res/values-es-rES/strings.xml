@@ -7,7 +7,7 @@
     <string name="equil_dressing_onkey_msg">Desplazamiento automático del émbolo hasta el fondo del depósito. Se detendrá automáticamente al llegar al fondo. Haga clic en \"Detener\" para interrumpir si es necesario.</string>
     <string name="equil_hint_dressing">Esta operación detendrá la infusión de insulina y hará que el émbolo de la bomba se retraiga hasta el fondo</string>
     <string name="equil_insulin_reservoir">Reservorio de insulina</string>
-    <string name="equil_mode">Modo en ejecución</string>
+    <string name="equil_mode">Modo de funcionamiento</string>
     <string name="equil_mode_running">Funcionando</string>
     <string name="equil_mode_stopped">Detenido</string>
     <string name="equil_mode_suspended">Suspendido</string>

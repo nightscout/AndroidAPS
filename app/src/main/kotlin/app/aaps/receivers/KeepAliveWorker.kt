@@ -17,6 +17,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.awaitInitialized
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -127,6 +128,13 @@ class KeepAliveWorker(
             if (lastRun + T.mins(4).msecs() > dateUtil.now()) return Result.success(workDataOf("Error" to "Schedule broken. Ignoring"))
         }
 
+        // Gate the plugin-touching work behind app init — without this, a worker that fires
+        // after a reboot before MainApp's init scope has populated pluginStore.plugins crashes.
+        if (!config.awaitInitialized()) {
+            aapsLogger.debug(LTag.CORE, "KeepAlive: app not yet initialized, retrying")
+            return Result.retry()
+        }
+
         if (lastRun != 0L && dateUtil.now() - lastRun > T.mins(10).msecs()) {
             aapsLogger.error(LTag.CORE, "KeepAlive fail")
             fabricPrivacy.logCustom("KeepAliveFail")
@@ -175,11 +183,11 @@ class KeepAliveWorker(
     // if there is no BG available, we have to upload anyway to have correct
     // IOB displayed in NS
     @VisibleForTesting
-    fun checkAPS() {
+    suspend fun checkAPS() {
         var shouldUploadStatus = false
         if (config.AAPSCLIENT) return
         if (config.PUMPCONTROL) shouldUploadStatus = true
-        else if (!loop.runningMode.isLoopRunning() || iobCobCalculator.ads.actualBg() == null) shouldUploadStatus = true
+        else if (!loop.runningMode().isLoopRunning() || iobCobCalculator.ads.actualBg() == null) shouldUploadStatus = true
         else if (activePlugin.activeAPS?.let { dateUtil.isOlderThan(it.lastAPSRun, 5) } == true) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()
@@ -209,10 +217,11 @@ class KeepAliveWorker(
         // last read status attempt and the current time can be slightly over 5 minutes (for example,
         // 300041 milliseconds instead of exactly 300000). Add 30 extra seconds to allow for
         // plenty of tolerance.
+        val runningMode = loop.runningMode()
         if (lastReadStatus != 0L && (now - lastReadStatus).coerceIn(minimumValue = 0, maximumValue = null) <= T.secs(5 * 60 + 30).msecs()) {
-            localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, loop.runningMode == RM.Mode.DISCONNECTED_PUMP)
+            localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, runningMode == RM.Mode.DISCONNECTED_PUMP)
         }
-        if (loop.runningMode == RM.Mode.DISCONNECTED_PUMP) {
+        if (runningMode == RM.Mode.DISCONNECTED_PUMP) {
             // do nothing if pump is disconnected
         } else if (
             runningProfile == null ||

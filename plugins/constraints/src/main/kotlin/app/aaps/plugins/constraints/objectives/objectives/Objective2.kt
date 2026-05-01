@@ -315,8 +315,10 @@ class Objective2 @Inject constructor(
         )
         for (task in tasks) (task as ExamTask).options.shuffle()
 
+        // Tasks here are all ExamTasks whose isCompleted() simply returns `answered`.
+        // Read the field directly to avoid suspending in init.
         for (task in tasks) {
-            if (!task.isCompleted()) accomplishedOn = 0
+            if (!(task as ExamTask).answered) accomplishedOn = 0
         }
     }
 }

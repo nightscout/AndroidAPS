@@ -377,6 +377,19 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     rxBus.toFlow(EventNewOpenLoopNotification::class.java)
                 ).collect { updateTempTargetFromDatabase() }
             }
+            // AAPSCLIENT counterpart: the ADJUSTED text comes from
+            // processedDeviceStatusData.getAPSResult()?.targetBG, which NSDeviceStatusHandler
+            // mutates in place when a new NS devicestatus arrives — no DB change, no flow.
+            // EventNsClientStatusUpdated fires after every devicestatus batch on AAPSCLIENT,
+            // so re-read the cache then. Also covers the post-expiry case where the master's
+            // APS result no longer matches the just-expired TT.
+            if (config.AAPSCLIENT) {
+                scope.launch {
+                    rxBus.toFlow(EventNsClientStatusUpdated::class.java)
+                        .debounce(300)
+                        .collect { updateTempTargetFromDatabase() }
+                }
+            }
             // EPS changes affect EPS graph, profile chip, TT chip, target line, and basal
             scope.launch {
                 persistenceLayer.observeChanges(EPS::class.java)

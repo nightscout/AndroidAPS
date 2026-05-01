@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Cambio all\'ora legale/solare in 24h o meno</string>
     <string name="dst_loop_disabled_warning">Cambio all\'ora legale/solare avvenuto meno di 3 ore fa - Loop chiuso disabilitato</string>

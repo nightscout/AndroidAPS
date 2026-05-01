@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Zmena letného času za menej ako 24 hodín</string>
     <string name="dst_loop_disabled_warning">Zmena letného času za menej ako 3 hodiny - Uzavretý okruh pozastavený</string>

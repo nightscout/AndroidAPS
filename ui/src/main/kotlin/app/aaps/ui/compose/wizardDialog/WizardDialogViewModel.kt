@@ -206,12 +206,7 @@ class WizardDialogViewModel @Inject constructor(
 
     fun updateCarbTime(value: Int) {
         val clamped = value.coerceIn(-60, 60)
-        _uiState.update {
-            it.copy(
-                carbTime = clamped,
-                alarmChecked = clamped > 0
-            )
-        }
+        _uiState.update { it.copy(carbTime = clamped) }
         recalculate()
     }
 

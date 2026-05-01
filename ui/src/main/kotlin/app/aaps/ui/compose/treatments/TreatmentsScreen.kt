@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import app.aaps.core.ui.R as CoreUiR
 import androidx.compose.ui.unit.dp
 import app.aaps.core.ui.compose.AapsTheme
 import app.aaps.core.ui.compose.AapsTopAppBar
@@ -160,7 +161,7 @@ fun TreatmentsScreen(
     Scaffold(
         topBar = {
             AapsTopAppBar(
-                title = { Text(activeToolbar.title) },
+                title = { Text(activeToolbar.title.ifEmpty { stringResource(CoreUiR.string.treatments_history) }) },
                 navigationIcon = { activeToolbar.navigationIcon() },
                 actions = { activeToolbar.actions(this) }
             )

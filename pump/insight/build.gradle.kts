@@ -25,13 +25,10 @@ dependencies {
     implementation(project(":core:keys"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":pump:common"))
     testImplementation(project(":shared:tests"))
 
-    api(libs.com.google.android.material)
-    api(libs.androidx.room)
+    implementation(libs.com.google.android.material)
     api(libs.androidx.room.runtime)
-    api(libs.androidx.room.rxjava3)
 
     ksp(libs.androidx.room.compiler)
     ksp(libs.com.google.dagger.compiler)

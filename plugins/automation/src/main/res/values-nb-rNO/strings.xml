@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation_short">Auto</string>
-    <string name="automation">Automatisering</string>
-    <string name="automation_description">Brukerdefinerte automatiseringer</string>
+    <string name="automation">Automasjon</string>
+    <string name="automation_description">Brukerdefinerte automasjonsoppgaver</string>
     <string name="automation_enabled">Aktivert</string>
     <string name="automation_read_only">Skrivebeskyttet</string>
     <string name="automation_new_rule">Ny regel</string>
@@ -23,6 +23,20 @@
     <string name="automation_category_loop">Loop &amp; insulin</string>
     <string name="automation_category_alerts">Varsler</string>
     <string name="automation_category_system">System</string>
+    <string name="automation_category_scenes">Scener</string>
+    <string name="action_run_scene">Kjør scene</string>
+    <string name="action_run_scene_short">Kjør scene: %1$s</string>
+    <string name="action_enable_scene">Aktiver scene</string>
+    <string name="action_enable_scene_short">Aktiver scene: %1$s</string>
+    <string name="action_disable_scene">Deaktiver scene</string>
+    <string name="action_disable_scene_short">Deaktiver scene: %1$s</string>
+    <string name="action_scene_label">Scene</string>
+    <string name="trigger_scene_active">Scene</string>
+    <string name="trigger_scene_active_compared">Scene %1$s</string>
+    <string name="action_scene_not_found">Scenen ble ikke funnet</string>
+    <string name="action_scene_disabled">Scenen er deaktivert</string>
+    <string name="automation_unit_meters">m</string>
+    <string name="automation_unit_bpm">bpm</string>
     <string name="automation_missing_task_name">Angi et navn på oppgaven.</string>
     <string name="automation_missing_trigger">Oppgi minst en trigger.</string>
     <string name="automation_missing_action">Oppgi minst en aksjon.</string>
@@ -113,8 +127,8 @@
     <string name="edit_short">REDIGER</string>
     <string name="preconditions">Forutsetninger:</string>
     <string name="user_action">Brukerhandling</string>
-    <string name="system_automation">Systemautomatisering</string>
-    <string name="run_automations">Kjør automatiseringer</string>
+    <string name="system_automation">Systemautomasjon</string>
+    <string name="run_automations">Kjør automasjoner</string>
     <string name="add_automation">Legg til regel</string>
     <string name="stop_processing">Stopp prosessering</string>
     <!--    Reminders-->
@@ -144,6 +158,6 @@
     <string name="selected_coords">Valgt: %1$.6f, %2$.6f</string>
     <!-- Permission rationales -->
     <string name="permission_location_title">Sted</string>
-    <string name="permission_location_description">Nødvendig for stedsbaserte automatiseringstriggere og identifisering av WiFi-nettverk</string>
-    <string name="permission_background_location_description">Nødvendig for at automatiseringstriggere skal fungere når appen er i bakgrunnen</string>
+    <string name="permission_location_description">Nødvendig for stedsbaserte automasjonstriggere og identifisering av WiFi-nettverk</string>
+    <string name="permission_background_location_description">Nødvendig for at automasjonstriggere skal fungere når appen er i bakgrunnen</string>
 </resources>

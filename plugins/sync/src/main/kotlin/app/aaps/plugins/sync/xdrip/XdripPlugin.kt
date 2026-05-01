@@ -44,6 +44,7 @@ import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.compose.icons.IcXDrip
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.plugins.sync.R
@@ -212,7 +213,7 @@ class XdripPlugin @Inject constructor(
 
     private fun buildStatusLine(profile: Profile): String {
         val status = StringBuilder()
-        if (!loop.runningMode.isLoopRunning() && config.APS)
+        if (!runBlocking { loop.runningMode() }.isLoopRunning() && config.APS)
             status.append(rh.gs(R.string.disabled_loop)).append("\n")
 
         //Temp basal
@@ -229,7 +230,7 @@ class XdripPlugin @Inject constructor(
                 .append("|")
                 .append(decimalFormatter.to2Decimal(basalIob.basaliob))
                 .append(")")
-        if (preferences.get(BooleanKey.XdripSendBgi) && glucoseStatusProvider.glucoseStatusData != null && loop.lastRun != null) {
+        if (preferences.get(BooleanKey.XdripSendBgi) && glucoseStatusProvider.glucoseStatusData != null && loop.lastRun != null && (profile as? ProfileSealed)?.aps != null) {
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("XdripPlugin"))
             status.append(" ")
                 .append(if (bgi >= 0) "+" else "")

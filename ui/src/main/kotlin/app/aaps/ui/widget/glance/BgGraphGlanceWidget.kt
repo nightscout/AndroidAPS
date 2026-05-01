@@ -32,18 +32,22 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import app.aaps.core.interfaces.configuration.Config
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
-class BgGraphGlanceWidget(
-    private val stateLoader: BgGraphStateLoader,
-    private val config: Config
-) : GlanceAppWidget() {
+class BgGraphGlanceWidget : GlanceAppWidget() {
 
     override val sizeMode: SizeMode = SizeMode.Single
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val deps = EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            WidgetDependencies::class.java
+        )
+        val stateLoader = deps.bgGraphStateLoader()
+        val config = deps.config()
+
         val ready = config.appInitialized || withTimeoutOrNull(AWAIT_INIT_TIMEOUT_MS) {
             config.initProgressFlow.first { it.done }
         } != null

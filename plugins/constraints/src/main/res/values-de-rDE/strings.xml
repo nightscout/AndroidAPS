@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Zeitumstellung in weniger als 24 Stunden</string>
     <string name="dst_loop_disabled_warning">Zeitumstellung vor weniger als 3 Stunden - Closed Loop deaktiviert</string>

@@ -32,7 +32,6 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Provider
@@ -117,9 +116,9 @@ class DetermineBasalResult @Inject constructor(
     override val carbsRequiredText: String
         get() = rh.gs(R.string.carbsreq, carbsReq, carbsReqWithin)
 
-    override fun resultAsString(): String {
+    override suspend fun resultAsString(): String {
         val pump = activePlugin.activePump
-        if (isChangeRequested) {
+        if (isChangeRequested()) {
             // rate
             var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.cancel_temp)} "
             else if (rate == -1.0) "${rh.gs(R.string.let_temp_basal_run)}\n"
@@ -141,10 +140,10 @@ class DetermineBasalResult @Inject constructor(
         } else rh.gs(R.string.nochangerequested)
     }
 
-    override fun resultAsSpanned(): Spanned = HtmlHelper.fromHtml(resultAsHtmlString())
-    override fun resultAsHtmlString(): String {
+    override suspend fun resultAsSpanned(): Spanned = HtmlHelper.fromHtml(resultAsHtmlString())
+    override suspend fun resultAsHtmlString(): String {
         val pump = activePlugin.activePump
-        if (isChangeRequested) {
+        if (isChangeRequested()) {
             // rate
             var ret: String =
                 if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>"
@@ -259,100 +258,100 @@ class DetermineBasalResult @Inject constructor(
             predictions?.ZT?.let { if (it.isNotEmpty()) latest = max(latest, startTime + (it.size - 1) * 5 * 60 * 1000L) }
             return latest
         }
-    override val isChangeRequested: Boolean
-        get() {
-            val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
-            // closed loop mode: handle change at driver level
-            if (closedLoopEnabled.value()) {
-                aapsLogger.debug(LTag.APS, "DEFAULT: Closed mode")
-                return isTempBasalRequested || isBolusRequested
-            }
 
-            // open loop mode: try to limit request
-            if (!isTempBasalRequested && !isBolusRequested) {
-                aapsLogger.debug(LTag.APS, "FALSE: No request")
+    override suspend fun isChangeRequested(): Boolean {
+        val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
+        // closed loop mode: handle change at driver level
+        if (closedLoopEnabled.value()) {
+            aapsLogger.debug(LTag.APS, "DEFAULT: Closed mode")
+            return isTempBasalRequested || isBolusRequested
+        }
+
+        // open loop mode: try to limit request
+        if (!isTempBasalRequested && !isBolusRequested) {
+            aapsLogger.debug(LTag.APS, "FALSE: No request")
+            return false
+        }
+        val now = System.currentTimeMillis()
+        val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
+        val pump = activePlugin.activePump
+        val profile = profileFunction.getProfile()
+        if (profile == null) {
+            aapsLogger.error("FALSE: No Profile")
+            return false
+        }
+        return if (usePercent) {
+            if (activeTemp == null && percent == 100) {
+                aapsLogger.debug(LTag.APS, "FALSE: No temp running, asking cancel temp")
                 return false
             }
-            val now = System.currentTimeMillis()
-            val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
-            val pump = activePlugin.activePump
-            val profile = runBlocking { profileFunction.getProfile() }
-            if (profile == null) {
-                aapsLogger.error("FALSE: No Profile")
+            if (activeTemp != null && abs(percent - activeTemp.convertedToPercent(now, profile)) < pump.pumpDescription.basalStep) {
+                aapsLogger.debug(LTag.APS, "FALSE: Temp equal")
                 return false
             }
-            return if (usePercent) {
-                if (activeTemp == null && percent == 100) {
-                    aapsLogger.debug(LTag.APS, "FALSE: No temp running, asking cancel temp")
-                    return false
-                }
-                if (activeTemp != null && abs(percent - activeTemp.convertedToPercent(now, profile)) < pump.pumpDescription.basalStep) {
-                    aapsLogger.debug(LTag.APS, "FALSE: Temp equal")
-                    return false
-                }
-                // always report zero temp
-                if (percent == 0) {
-                    aapsLogger.debug(LTag.APS, "TRUE: Zero temp")
+            // always report zero temp
+            if (percent == 0) {
+                aapsLogger.debug(LTag.APS, "TRUE: Zero temp")
+                return true
+            }
+            // always report high temp
+            if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
+                val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
+                if (percent.toDouble() == pumpLimit) {
+                    aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                     return true
                 }
-                // always report high temp
-                if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
-                    val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
-                    if (percent.toDouble() == pumpLimit) {
-                        aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
-                        return true
-                    }
-                }
-                // report change bigger than 30%
-                var percentMinChangeChange = preferences.get(IntKey.LoopOpenModeMinChange).toDouble()
-                percentMinChangeChange /= 100.0
-                val lowThreshold = 1 - percentMinChangeChange
-                val highThreshold = 1 + percentMinChangeChange
-                var change = percent / 100.0
-                if (activeTemp != null) change = percent / activeTemp.convertedToPercent(now, profile).toDouble()
-                if (change !in lowThreshold..highThreshold) {
-                    aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
-                    true
-                } else {
-                    aapsLogger.debug(LTag.APS, "TRUE: Inside allowed range " + change * 100.0 + "%")
-                    false
-                }
+            }
+            // report change bigger than 30%
+            var percentMinChangeChange = preferences.get(IntKey.LoopOpenModeMinChange).toDouble()
+            percentMinChangeChange /= 100.0
+            val lowThreshold = 1 - percentMinChangeChange
+            val highThreshold = 1 + percentMinChangeChange
+            var change = percent / 100.0
+            if (activeTemp != null) change = percent / activeTemp.convertedToPercent(now, profile).toDouble()
+            if (change !in lowThreshold..highThreshold) {
+                aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
+                true
             } else {
-                if (activeTemp == null && rate == ch.fromPump(pump.baseBasalRate)) {
-                    aapsLogger.debug(LTag.APS, "FALSE: No temp running, asking cancel temp")
-                    return false
-                }
-                if (activeTemp != null && abs(rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
-                    aapsLogger.debug(LTag.APS, "FALSE: Temp equal")
-                    return false
-                }
-                // always report zero temp
-                if (rate == 0.0) {
-                    aapsLogger.debug(LTag.APS, "TRUE: Zero temp")
+                aapsLogger.debug(LTag.APS, "TRUE: Inside allowed range " + change * 100.0 + "%")
+                false
+            }
+        } else {
+            if (activeTemp == null && rate == ch.fromPump(pump.baseBasalRate)) {
+                aapsLogger.debug(LTag.APS, "FALSE: No temp running, asking cancel temp")
+                return false
+            }
+            if (activeTemp != null && abs(rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
+                aapsLogger.debug(LTag.APS, "FALSE: Temp equal")
+                return false
+            }
+            // always report zero temp
+            if (rate == 0.0) {
+                aapsLogger.debug(LTag.APS, "TRUE: Zero temp")
+                return true
+            }
+            // always report high temp
+            if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
+                if (rate == pumpLimit) {
+                    aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                     return true
                 }
-                // always report high temp
-                if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                    val pumpLimit = pump.pumpDescription.pumpType.tbrSettings()?.maxDose ?: 0.0
-                    if (rate == pumpLimit) {
-                        aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
-                        return true
-                    }
-                }
-                // report change bigger than 30%
-                var percentMinChangeChange = preferences.get(IntKey.LoopOpenModeMinChange).toDouble()
-                percentMinChangeChange /= 100.0
-                val lowThreshold = 1 - percentMinChangeChange
-                val highThreshold = 1 + percentMinChangeChange
-                var change = rate / profile.getBasal()
-                if (activeTemp != null) change = rate / activeTemp.convertedToAbsolute(now, profile)
-                if (change !in lowThreshold..highThreshold) {
-                    aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
-                    true
-                } else {
-                    aapsLogger.debug(LTag.APS, "TRUE: Inside allowed range " + change * 100.0 + "%")
-                    false
-                }
+            }
+            // report change bigger than 30%
+            var percentMinChangeChange = preferences.get(IntKey.LoopOpenModeMinChange).toDouble()
+            percentMinChangeChange /= 100.0
+            val lowThreshold = 1 - percentMinChangeChange
+            val highThreshold = 1 + percentMinChangeChange
+            var change = rate / profile.getBasal()
+            if (activeTemp != null) change = rate / activeTemp.convertedToAbsolute(now, profile)
+            if (change !in lowThreshold..highThreshold) {
+                aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
+                true
+            } else {
+                aapsLogger.debug(LTag.APS, "TRUE: Inside allowed range " + change * 100.0 + "%")
+                false
             }
         }
+    }
 }

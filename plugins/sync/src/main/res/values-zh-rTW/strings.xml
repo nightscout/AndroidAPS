@@ -54,9 +54,9 @@
     <string name="xdrip_local_broadcasts_summary">將血糖和治療資料傳送到 xDrip+。資料來源必須選擇 \"xDrip+ Sync Follower\"，並且在設置 - 應用間設置 - 接受血糖/治療中啟用接受資料。</string>
     <string name="xdrip_local_broadcasts_title">啟用傳送到 xDrip+。</string>
     <!--    DataBroadcast-->
-    <string name="tizen">三星 Tizen</string>
-    <string name="tizen_short">TIZ</string>
-    <string name="tizen_description">將資料傳送到三星的 G-Watch Wear 應用程式 (Tizen OS)</string>
+    <string name="tizen">外部輔助 App</string>
+    <string name="tizen_short">CAB</string>
+    <string name="tizen_description">啟用向各種外部輔助 App 廣播資料</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">連線到 Garmin 設備（Fenix，Edge 等）</string>

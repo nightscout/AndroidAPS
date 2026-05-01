@@ -27,10 +27,13 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
+import app.aaps.plugins.automation.actions.ActionDisableScene
+import app.aaps.plugins.automation.actions.ActionEnableScene
 import app.aaps.plugins.automation.actions.ActionNotification
 import app.aaps.plugins.automation.actions.ActionProfileSwitch
 import app.aaps.plugins.automation.actions.ActionProfileSwitchPercent
 import app.aaps.plugins.automation.actions.ActionRunAutotune
+import app.aaps.plugins.automation.actions.ActionRunScene
 import app.aaps.plugins.automation.actions.ActionSMBChange
 import app.aaps.plugins.automation.actions.ActionSendSMS
 import app.aaps.plugins.automation.actions.ActionSettingsExport
@@ -42,6 +45,7 @@ enum class ActionCategory(val labelResId: Int) {
     Targets(R.string.automation_category_targets),
     Profile(R.string.automation_category_profile),
     Loop(R.string.automation_category_loop),
+    Scenes(R.string.automation_category_scenes),
     Alerts(R.string.automation_category_alerts),
     System(R.string.automation_category_system),
     Other(R.string.automation_category_other)
@@ -57,6 +61,10 @@ private fun actionCategoryOf(cls: Class<*>): ActionCategory = when (cls) {
     ActionSMBChange::class.java,
     ActionStopProcessing::class.java,
     ActionRunAutotune::class.java -> ActionCategory.Loop
+
+    ActionRunScene::class.java,
+    ActionEnableScene::class.java,
+    ActionDisableScene::class.java -> ActionCategory.Scenes
 
     ActionAlarm::class.java,
     ActionNotification::class.java,

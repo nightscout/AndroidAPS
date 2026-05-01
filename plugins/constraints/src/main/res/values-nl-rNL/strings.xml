@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Omschakeling van zomer- of wintertijd in 24 uur of minder</string>
     <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Gesloten Lus modus gedeactiveerd</string>

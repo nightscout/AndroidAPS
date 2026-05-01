@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">שינוי לשעון קיץ ב-24 השעות הקרובות</string>
     <string name="dst_loop_disabled_warning">חל מעבר לשעון קיץ לפני פחות מ-3 שעות - לולאה סגורה מושבתת</string>

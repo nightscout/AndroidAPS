@@ -25,7 +25,7 @@
     <string name="fill_warning">Παρακαλώ ελέγξτε ότι η ποσότητα ταιριάζει με τις προδιαγραφές του σετ έγχυσης!</string>
     <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
     <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Επαναχρησιμοποίηση %1$d%% %2$dh</string>
     <string name="timeshift_label">Αλλαγή της ώρας</string>

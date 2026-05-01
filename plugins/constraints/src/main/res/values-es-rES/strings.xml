@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
     <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>

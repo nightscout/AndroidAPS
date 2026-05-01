@@ -38,7 +38,7 @@
     <string name="fill_warning">Zorg ervoor dat de hoeveelheid overeenkomt met de specificatie van uw infusieset!</string>
     <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
     <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
-    <!-- InsulinDialog -->
+    <!-- Scene -->
     <!-- Insulin Management -->
     <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
     <string name="timeshift_label">Tijd verschuiving</string>

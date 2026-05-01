@@ -12,7 +12,7 @@ internal val previewState = SceneWizardViewModel.WizardState(
     profileEnabled = false,
     ttEnabled = true,
     smbEnabled = false,
-    loopModeEnabled = false,
+    runningModeEnabled = false,
     carePortalEnabled = true,
     ttAction = SceneAction.TempTarget(reason = TT.Reason.ACTIVITY, targetMgdl = 140.0),
     carePortalAction = SceneAction.CarePortalEvent(type = TE.Type.EXERCISE),

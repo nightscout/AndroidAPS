@@ -28,7 +28,6 @@
     <string name="pump_time_updated">Pumpa idő frissítve</string>
     <string name="exit">Kilép</string>
     <string name="alarm">Riasztás</string>
-    <string name="duration_min_label">Időtartam [min]</string>
     <string name="notification">Értesítés</string>
     <string name="exists">létezik</string>
     <string name="notexists">nem létezik</string>

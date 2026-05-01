@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">24시간 미만의 썸머타임 변경</string>
     <string name="dst_loop_disabled_warning">썸머타임 변경이 3시간 미만입니다 - Closed Loop 비활성됨</string>
