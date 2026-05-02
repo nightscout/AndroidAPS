@@ -265,6 +265,20 @@
     <!--       Stats -->
     <string name="average">平均</string>
     <string name="tir">目標範圍內時間</string>
+    <string name="below" comment="below &quot;in range&quot;">低於</string>
+    <string name="in_range">在目標範圍內</string>
+    <string name="veryLow" comment="below 3.1">極低</string>
+    <string name="low" comment="3.1-3.9">低</string>
+    <string name="high" comment="10.0-13.9">高</string>
+    <string name="veryHigh" comment="above 13.9">極高</string>
+    <string name="above" comment="above &quot;in range&quot;">高於</string>
+    <string name="detailed_14_days">14 天詳細資料</string>
+    <string name="day_tir">白天目標範圍內</string>
+    <string name="night_tir">夜間目標範圍內</string>
+    <string name="hba1c">HbA1c：</string>
+    <string name="std_deviation">標準差：%1$s</string>
+    <string name="seven_days_short">7 天</string>
+    <string name="thirty_days_short">30 天</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d 分鐘</string>
@@ -282,8 +296,11 @@
     <string name="careportal_question_message">問題：%1$s</string>
     <string name="careportal_exercise_message">運動：%1$s</string>
     <string name="careportal_pump_site_change">幫浦位置更改</string>
+    <string name="cgm_sensor_insert">傳感器插入</string>
     <string name="careportal_pump_site_management">幫浦植入部位</string>
     <string name="careportal_cgm_site_management">CGM 植入部位</string>
+    <string name="careportal_cgmsensorstart">傳感器啟動</string>
+    <string name="careportal_cgm_sensor_stop">傳感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警報</string>
     <string name="careportal_insulin_cartridge_change">胰島素匣更換</string>
     <string name="careportal_profileswitch">設定檔切換</string>
@@ -311,13 +328,16 @@
     <string name="scene_confirm_deactivate">結束場景 \"%1$s\" 並還原變更？</string>
     <string name="scene_conflict_active_tt">目前的臨時目標將被取代</string>
     <string name="scene_conflict_active_profile">目前的設定檔切換將被取代</string>
+    <string name="scene_conflict_active_running_mode">目前啟用中的執行模式將被取代</string>
     <string name="scene_conflict_active_scene">作用中的場景 \"%1$s\" 會先結束</string>
     <string name="scene_action_tt">臨時目標: %1$s</string>
     <string name="scene_action_profile">設定檔: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">啟用微量注射</string>
     <string name="scene_action_smb_off">停用微量注射</string>
+    <string name="scene_action_running_mode">執行模式：%1$s</string>
     <string name="scene_action_careportal">記錄: %1$s</string>
     <string name="scene_time_remaining">剩餘 %1$s</string>
+    <string name="scene_management">情境</string>
     <string name="scene_management_desc">建立、編輯與管理場景</string>
     <string name="scene_action_count">%1$d 個動作</string>
     <string name="scene_start_from_template">從範本開始</string>
@@ -336,6 +356,7 @@
     <string name="scene_editor_enabled">啟用</string>
     <string name="scene_editor_disabled">停用</string>
     <string name="scene_summary">%1$d 個動作, %2$s</string>
+    <string name="scene_duration_indefinite">無限期（手動結束）</string>
     <string name="scene_some_actions_failed">部分動作失敗</string>
     <string name="scene_no_active">沒有作用中的場景</string>
     <string name="scene_some_reverts_failed">部分還原動作失敗</string>
@@ -343,8 +364,10 @@
     <string name="scene_no_actions">此場景沒有動作</string>
     <string name="scene_profile_not_found">找不到設定檔 \"%1$s\"</string>
     <string name="scene_revert_tt">取消臨時目標</string>
+    <string name="scene_revert_profile">還原設定檔變更</string>
     <string name="scene_revert_smb_on">重新啟用微量注射</string>
     <string name="scene_revert_smb_off">停用微量注射</string>
+    <string name="scene_revert_loop_mode">取消執行模式覆寫</string>
     <string name="scene_careportal_no_revert">照護入口的條目不會被還原</string>
     <string name="careportal_sickness">生病</string>
     <string name="careportal_stress">壓力</string>
