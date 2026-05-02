@@ -20,6 +20,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">由於 %2$s，將延長注射限製為 %1$.1f U</string>
     <string name="limitingcarbs">由於 %2$s，將碳水化合物限制為 %1$d g</string>
+    <string name="safety">安全性</string>
     <string name="pumpisnottempbasalcapable">幫浦無法使用臨時基礎速率</string>
     <string name="closed_loop_disabled_on_dev_branch">運行開發版本。閉環已停用。</string>
     <string name="closed_loop_disabled_with_eb">由於運行延長注射已停用閉環</string>
