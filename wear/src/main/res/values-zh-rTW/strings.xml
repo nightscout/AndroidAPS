@@ -7,6 +7,7 @@
     <string name="label_temp_target_tile">臨時目標</string>
     <string name="label_quick_wizard_tile">快速嚮導</string>
     <string name="label_user_action_tile">使用者動作</string>
+    <string name="label_scene_tile">場景</string>
     <string name="msg_warning_sync">自 %1$s 起無接收到資料！請檢查手機上的 AAPS 是否將資料傳送到手錶</string>
     <string name="msg_warning_old">AAPS 資料已過期 %1$s！請檢查您的傳感器、xDrip+、NS、AAPS 配置或其他！</string>
     <string name="pref_vibrate_on_bolus">注射時震動</string>
@@ -84,6 +85,8 @@
     <string name="action_tempt_confirmation">已請求臨時目標</string>
     <string name="action_quick_wizard_confirmation">已請求快速嚮導</string>
     <string name="action_user_action_confirmation">用戶操作請求</string>
+    <string name="action_scene_confirmation">啟動情境</string>
+    <string name="scene_stop">停止</string>
     <string name="action_treatment_confirmation">已請求治療</string>
     <string name="action_bolus_confirmation">已請求注射</string>
     <string name="action_wizard_confirmation">已請求計算</string>
