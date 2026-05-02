@@ -71,6 +71,7 @@
     <string name="quick_wizard_not_available">所選的快速嚮導不再可用，請重新整理您的資訊方塊</string>
     <string name="quick_wizard_message">快速嚮導: %1$s\n胰島素: %2$.2fU\n碳水化合物: %3$dg</string>
     <string name="user_action_not_available">選定的用戶操作 %1$s 已不再可用，請重新整理您的面版</string>
+    <string name="scene_not_available">情境 %1$s 已無法使用，請重新整理您的圖塊</string>
     <string name="wear_action_tempt_cancel_message">取消執行中的臨時目標？</string>
     <string name="wear_action_tempt_unit_error">手錶和手機上使用了不同的單位！</string>
     <string name="wear_action_tempt_zero_message">零臨時目標 - 取消執行中的臨時目標？</string>
@@ -222,6 +223,7 @@
     <string name="smscommunicator_message_body">訊息內文無效</string>
     <string name="smscommunicator_set_lgs_reply_with_code">若要將循環模式切換為 LGS（Low Glucose Suspend，低血糖暫停），請回覆代碼 %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">若要將循環模式切換為封閉循環，請回覆代碼 %1$s</string>
+    <string name="smscommunicator_current_loop_mode">目前執行模式：%1$s</string>
     <string name="wrong_format">格式錯誤</string>
     <string name="sms_actual_bg">血糖：</string>
     <string name="sms_last_bg">最近血糖：</string>
