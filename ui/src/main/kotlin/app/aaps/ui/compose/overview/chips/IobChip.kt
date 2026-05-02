@@ -1,7 +1,7 @@
 package app.aaps.ui.compose.overview.chips
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +31,7 @@ internal fun IobChip(
     Surface(
         shape = RoundedCornerShape(AapsSpacing.chipCornerRadius),
         color = if (hasValue) ElementType.INSULIN.color().copy(alpha = 0.2f) else Color.Transparent,
-        modifier = modifier.height(AapsSpacing.chipHeight)
+        modifier = modifier.heightIn(min = AapsSpacing.chipHeight)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

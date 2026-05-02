@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -13,7 +14,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowInsetsControllerCompat
 import app.aaps.core.interfaces.configuration.Config
@@ -26,6 +29,20 @@ import app.aaps.core.ui.compose.navigation.DarkElementColors
 import app.aaps.core.ui.compose.navigation.ElementColors
 import app.aaps.core.ui.compose.navigation.LightElementColors
 import app.aaps.core.ui.compose.navigation.LocalElementColors
+
+/**
+ * Smallest-screen-width threshold (in dp) above which the device is treated as a tablet.
+ * Drives both typography scaling in [AapsTheme] and the tablet layout dispatch in OverviewScreen.
+ * Single source of truth — keep both call sites in sync by referencing this constant.
+ */
+const val TABLET_MIN_SW_DP = 600
+
+/**
+ * CompositionLocal providing the tablet typography/dimension scale factor.
+ * 1f on phones, larger (e.g. 1.5f) on tablets. Use to scale dp dimensions
+ * (icon sizes, custom shapes) so they match the scaled typography.
+ */
+val LocalAapsScale = compositionLocalOf { 1f }
 
 /**
  * CompositionLocal providing access to user preferences for theme configuration.
@@ -232,17 +249,24 @@ fun AapsTheme(
     val generalColors = if (isDark) DarkGeneralColors else LightGeneralColors
     val snackbarColors = if (isDark) DarkSnackbarColors else LightSnackbarColors
 
+    // Scale typography up on tablets. Orientation-independent (smallest-width signal).
+    val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= TABLET_MIN_SW_DP
+    val typographyScale = if (isTablet) 1.5f else 1f
+    val scaledMaterialTypography = remember(typographyScale) { Typography().scaled(typographyScale) }
+
     CompositionLocalProvider(
         LocalProfileHelperColors provides profileViewerColors,
         LocalElementColors provides treatmentIconColors,
         LocalGeneralColors provides generalColors,
-        LocalSnackbarColors provides snackbarColors
+        LocalSnackbarColors provides snackbarColors,
+        LocalAapsScale provides typographyScale,
     ) {
         MaterialTheme(
             colorScheme = scheme,
+            typography = scaledMaterialTypography,
         ) {
             CompositionLocalProvider(
-                LocalAapsTypography provides aapsTypography(),
+                LocalAapsTypography provides aapsTypography(typographyScale),
                 content = content
             )
         }
