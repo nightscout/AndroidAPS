@@ -83,8 +83,9 @@
 
     <!-- Scene wizard: chain step -->
     <string name="scene_wizard_chain_title">Follow-up scene</string>
-    <string name="scene_wizard_chain_info">Optionally chain another scene to auto-activate when this one expires. Manual stop does not trigger the follow-up. The follow-up runs only if the target is enabled and the pump is available; otherwise you will get a notification.</string>
+    <string name="scene_wizard_chain_info">Optionally chain another scene to auto-activate when this one expires. You can also skip to it when ending early. The follow-up runs only if the target is enabled and the pump is available; otherwise you will get a notification.</string>
     <string name="scene_chain_none">None</string>
+    <string name="scene_skip_to_format">Skip to %1$s</string>
 
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
