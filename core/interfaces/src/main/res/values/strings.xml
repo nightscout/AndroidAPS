@@ -48,6 +48,8 @@
     <string name="unit_weeks">weeks</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dh %2$dm remaining</string>
+    <string name="time_remaining_m">%1$dm remaining</string>
     <string name="later_today">Later today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="today">Today</string>
