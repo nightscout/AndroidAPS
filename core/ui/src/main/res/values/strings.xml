@@ -346,7 +346,6 @@
     <string name="scene_action_smb_off">Disable SMB</string>
     <string name="scene_action_running_mode">Running mode: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
-    <string name="scene_time_remaining">%1$s remaining</string>
     <string name="scene_management">Scenes</string>
     <string name="scene_management_desc">Create, edit, and manage scenes</string>
     <string name="scene_action_count">%1$d actions</string>
