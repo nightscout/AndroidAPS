@@ -336,7 +336,6 @@
     <string name="scene_action_smb_off">停用微量注射</string>
     <string name="scene_action_running_mode">執行模式：%1$s</string>
     <string name="scene_action_careportal">記錄: %1$s</string>
-    <string name="scene_time_remaining">剩餘 %1$s</string>
     <string name="scene_management">情境</string>
     <string name="scene_management_desc">建立、編輯與管理場景</string>
     <string name="scene_action_count">%1$d 個動作</string>
