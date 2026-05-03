@@ -45,6 +45,8 @@
     <string name="unit_weeks">settimane</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dh %2$d m rimanenti</string>
+    <string name="time_remaining_m">%1$dm rimanenti</string>
     <string name="later_today">Più tardì oggi</string>
     <string name="tomorrow">Domani</string>
     <string name="today">Oggi</string>
