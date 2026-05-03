@@ -336,7 +336,6 @@
     <string name="scene_action_smb_off">Dezactivaţi SMB</string>
     <string name="scene_action_running_mode">Mod de rulare: %1$s</string>
     <string name="scene_action_careportal">Jurnal: %1$s</string>
-    <string name="scene_time_remaining">%1$s rămas</string>
     <string name="scene_management">Scene</string>
     <string name="scene_management_desc">Creați, editați și gestionați scene</string>
     <string name="scene_action_count">%1$d acțiuni</string>
