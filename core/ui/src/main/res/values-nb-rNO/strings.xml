@@ -336,7 +336,6 @@
     <string name="scene_action_smb_off">Deaktiver SMB</string>
     <string name="scene_action_running_mode">Kjøremodus: %1$s</string>
     <string name="scene_action_careportal">Logg: %1$s</string>
-    <string name="scene_time_remaining">%1$s gjenstår</string>
     <string name="scene_management">Scener</string>
     <string name="scene_management_desc">Lage, endre og håndtere scener</string>
     <string name="scene_action_count">%1$d handlinger</string>
