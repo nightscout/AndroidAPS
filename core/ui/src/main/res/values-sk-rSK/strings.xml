@@ -320,7 +320,6 @@
     <string name="scene_action_smb_on">Povoliť SMB</string>
     <string name="scene_action_smb_off">Zakázať SMB</string>
     <string name="scene_action_careportal">Log: %1$s</string>
-    <string name="scene_time_remaining">zostáva %1$s</string>
     <string name="scene_management">Scény</string>
     <string name="scene_management_desc">Vytvorenie, úprava a správa scén</string>
     <string name="scene_action_count">%1$d akcií</string>
