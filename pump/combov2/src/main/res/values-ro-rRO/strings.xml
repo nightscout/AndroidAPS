@@ -20,8 +20,8 @@
     <string name="combov2_error_11">Setul de infuzie neamorsat</string>
     <string name="combov2_extended_bolus_not_supported">Bolusul extins nu este acceptat</string>
     <string name="combov2_title">Accu-Check Combo v2</string>
-    <string name="combov2_pair_with_pump_title">Asociere pompă</string>
-    <string name="combov2_unpair_pump_title">Dezasociere pompă</string>
+    <string name="combov2_pair_with_pump_title">Asociați pompa</string>
+    <string name="combov2_unpair_pump_title">Dezasociați pompa</string>
     <string name="combov2_driver_state_label">Stare soft conexiune</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
     <string name="combov2_start_pairing">Începeți asocierea</string>
@@ -67,7 +67,7 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_setting_basal_profile_cmddesc">Se setează profilul bazalei</string>
     <string name="combov2_setting_tbr_cmddesc">Setarea a %1$d%% RBT pentru %2$d minute</string>
     <string name="combov2_cancelling_tbr">Anulare RBT în desfășurare</string>
-    <string name="combov2_fetching_tdd_history_cmddesc">Preluare istoric TDD</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Preluare istoric DZT</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Se actualizează data pompei</string>
     <string name="combov2_updating_pump_status_cmddesc">Se actualizează starea pompei</string>
     <string name="combov2_pairing_pin_failure">Codul PIN nu a funcționat. Verifică eventuale erori de scriere.. Dacă eroarea persistă, anulează procesul și reia împerecherea.</string>
