@@ -7,7 +7,7 @@
     <string name="migrating_preferences">Đang chuyển đổi cài đặt…</string>
     <string name="initializing_plugins">Đang khởi tạo plugin…</string>
     <string name="initializing">Đang khởi chạy…</string>
-    <string name="migrating_profile_switches">Đang chuyển đổi dữ liệu hồ sơ…</string>
-    <string name="migrating_effective_profile_switches">Đang chuyển đổi các lần chuyển hồ sơ có hiệu lực…</string>
+    <string name="migrating_profile_switches">Đang chuyển đổi dữ liệu cấu hình…</string>
+    <string name="migrating_effective_profile_switches">Đang chuyển đổi các lần chuyển cấu hình có hiệu lực…</string>
     <string name="migrating_boluses">Đang chuyển đổi dữ liệu bolus…</string>
 </resources>
