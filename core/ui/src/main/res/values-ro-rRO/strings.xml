@@ -201,7 +201,7 @@
     <string name="stoptemptarget">Opriți ținta temporară</string>
     <string name="closedloop">Buclă închisă</string>
     <string name="openloop">Buclă deschisă</string>
-    <string name="lowglucosesuspend">Suspendare la hipoglicemie</string>
+    <string name="lowglucosesuspend">Suspendare la glicemie scăzută</string>
     <string name="pump_disconnected">Pompă deconectată</string>
     <string name="pump_suspended">Pompă suspendată</string>
     <string name="pump_suspend">Suspendați pompa</string>
@@ -316,13 +316,13 @@
     <string name="temporary_target">Țintă temporară</string>
     <string name="temporary_targets">Ținte temporare</string>
     <string name="running_mode">Mod de rulare</string>
-    <string name="scene">Scenă</string>
+    <string name="scene">Scenariu</string>
     <string name="scenes">Scene</string>
     <string name="scene_desc">Presetări situații — activați mai multe acțiuni simultan</string>
     <string name="scene_activate">Activați</string>
-    <string name="scene_deactivate">Încheiați scenă</string>
+    <string name="scene_deactivate">Încheiați scenariul</string>
     <string name="scene_active">Activ</string>
-    <string name="scene_ended">Scenă încheiată</string>
+    <string name="scene_ended">Scenariu încheiat</string>
     <string name="scene_confirm_activate">Activați scena \"%1$s\"?</string>
     <string name="scene_confirm_deactivate">Încheiați scena \"%1$s\" și anulați modificările?</string>
     <string name="scene_conflict_active_tt">Ținta activă temporară va fi înlocuită</string>
@@ -356,7 +356,7 @@
     <string name="scene_summary">%1$d acțiuni, %2$s</string>
     <string name="scene_duration_indefinite">Nedefinit (sfârșit manual)</string>
     <string name="scene_some_actions_failed">Unele acțiuni au eșuat</string>
-    <string name="scene_no_active">Nicio scenă activă</string>
+    <string name="scene_no_active">Niciun scenariu activ</string>
     <string name="scene_some_reverts_failed">Unele acțiuni de revenire au eșuat</string>
     <string name="scene_no_profile_store">Niciun spațiu de stocare pentru profiluri disponibil</string>
     <string name="scene_no_actions">Scena nu are acțiuni</string>
@@ -580,8 +580,8 @@
     <string name="uel_running_mode">MODUL DE RULARE</string>
     <string name="uel_running_mode_removed">MODUL DE RULARE ȘTERS</string>
     <string name="uel_running_mode_updarted">MODUL DE RULARE ACTUALIZAT</string>
-    <string name="uel_scene_activated">SCENĂ ACTIVATĂ</string>
-    <string name="uel_scene_deactivated">SCENĂ DEZACTIVATĂ</string>
+    <string name="uel_scene_activated">SCENARIU ACTIVAT</string>
+    <string name="uel_scene_deactivated">SCENARIU DEZACTIVAT</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Profil ținta joasă</string>
     <string name="profile_high_target">Profil țintă ridicată</string>
