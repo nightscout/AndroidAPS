@@ -44,24 +44,24 @@
     <string name="alarm_occlusion">Ocluzie</string>
     <string name="alarm_expired">Expirat</string>
     <string name="alarm_reservoir_empty">Rezervor gol</string>
-    <string name="alarm_patch_fault">Patch defect</string>
-    <string name="alarm_base_fault">Defecțiune de bază</string>
+    <string name="alarm_patch_fault">Plasture defect</string>
+    <string name="alarm_base_fault">Defecțiune bază</string>
     <string name="alarm_battery_out">Baterie descărcată</string>
     <string name="alarm_no_calibration">Fără calibrare</string>
     <string name="pump_time_update_failed">Actualizarea fusului orar al pompei a eșuat, amânați mesajul și actualizați manual.</string>
     <string name="bolus_error">Eroare bolus</string>
     <!-- wizard-->
-    <string name="retry">Încercați din nou</string>
+    <string name="retry">Reîncercați</string>
     <string name="step_prepare_patch">Activați plasturele</string>
-    <string name="step_prepare_patch_connect">Conectare și umplere</string>
+    <string name="step_prepare_patch_connect">Conectați și umpleți</string>
     <string name="step_select_insulin">Selectați insulina</string>
     <string name="step_prime">Amorsați</string>
     <string name="step_priming">Se amorsează</string>
     <string name="step_priming_complete">Amorsare finalizată</string>
-    <string name="step_attach">Atașează plasturele</string>
+    <string name="step_attach">Atașați plasturele</string>
     <string name="step_activate">Se activează...</string>
     <string name="step_activate_complete">Activare completă</string>
-    <string name="step_deactivate">Dezactivează plasturele</string>
+    <string name="step_deactivate">Dezactivați plasturele</string>
     <string name="step_deactivating">Se dezactivează…</string>
     <string name="step_deactivate_complete">Plasture dezactivat</string>
     <string name="step_retry_activation">Activare în curs</string>
@@ -77,7 +77,7 @@
     <string name="wait_for_priming">Vă rugăm să așteptați finalizarea amorsării.</string>
     <string name="press_next">Apăsați <b>Înainte</b> pentru a continua.</string>
     <string name="press_next_to_start_activation">Apăsați <b>Înainte</b> pentru a începe activarea.</string>
-    <string name="remove_safety_lock">Înlăturați dispozitivul de siguranță. Atașați pompa la corp. Apăsați butonul acului.</string>
+    <string name="remove_safety_lock">Dezactivați siguranța. Atașați pompa pe corp. Apăsați butonul acului.</string>
     <string name="activating_pump">Se activează pompa și se setează rata bazală inițială. Vă rog așteptați.</string>
     <string name="activating_complete">Plasture nou activat. %.2f unități rămase.</string>
     <string name="can_export_settings">Puteți exporta setările pentru a putea recupera această sesiune de plasture mai târziu.</string>
@@ -85,7 +85,7 @@
     <string name="deactivate_sure">Sigur doriți să dezactivați plasturele curent?</string>
     <string name="cancel_sure">Sigur doriți să anulați activarea?</string>
     <string name="medtrum_deactivate_pump_confirm">Sunteți sigur? Această acțiune nu este reversibilă!!</string>
-    <string name="press_next_or_cancel">Apasă <b>Înainte</b> pentru a dezactiva sau <b>Anulează</b> pentru a reveni la ecranul principal.</string>
+    <string name="press_next_or_cancel">Apasă <b>Înainte</b> pentru a dezactiva sau <b>Anulați</b> pentru a reveni la ecranul principal.</string>
     <string name="deactivating_pump">Se dezactivează plasturele. Vă rog așteptați.</string>
     <string name="deactivating_error">Dezactivarea nu a reușit, apăsați <b>Renunțare</b> pentru a uita plasturele.</string>
     <string name="retract_needle">Retrageți acul. Îndepărtați plasturele de pe corp.</string>
@@ -119,7 +119,7 @@
     <string name="daily_max_insulin_title">Insulină maximă zilnică</string>
     <string name="daily_max_insulin_summary">Specificați numărul maxim de unități de insulină permise pe zi. Dacă sunt depășite, pompa se va suspenda.</string>
     <string name="scan_on_connection_error_title">Scan la eroare conexiune</string>
-    <string name="scan_on_connection_error_summary">ATENȚIE: Activați doar dacă aveți probleme de conexiune. Dacă este activat, driverul scanează din nou pentru pompă înainte de a încerca să se reconecteze la pompă. Asigurați-vă că aveți permisiunea de Locație setată ca „Permiteți mereu\" </string>
+    <string name="scan_on_connection_error_summary">ATENȚIE: Activați doar dacă aveți probleme de conexiune. Dacă este activat, driverul scanează din nou pentru pompă înainte de a încerca să se reconecteze la pompă. Asigurați-vă că aveți permisiunea de Locație setată ca \"Permiteți mereu\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Se primește starea pompei</string>
     <string name="syncing_records">Sincronizare înregistrări, %1$d rămase</string>
