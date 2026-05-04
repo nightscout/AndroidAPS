@@ -7,7 +7,7 @@
     <string name="equil_basal_speed">Bazală de bază</string>
     <string name="equil_dressing">Schimbare rezervor</string>
     <string name="equil_dressing_onkey_msg">Mutarea automată a pistonului în partea de jos a rezervorului. Se va opri automat când ajunge în partea de jos. Apasă pe \'Oprire\' pentru a întrerupe dacă este necesar.</string>
-    <string name="equil_hint_dressing">Această operațiune va opri livrarea de insulină și va retrage pistonul pompei până la capăt!</string>
+    <string name="equil_hint_dressing">Această operațiune va opri administrarea de insulină și va retrage pistonul pompei până la capăt!</string>
     <string name="equil_insulin_reservoir">Rezervor insulină</string>
     <string name="equil_mode">Mod de funcționare</string>
     <string name="equil_mode_running">Funcționare</string>
@@ -26,7 +26,7 @@
     <string name="equil_title_unpair_confirm">Confirmați dezasocierea</string>
     <string name="equil_title_history_events">Evenimente din istoric</string>
     <string name="equil_tone">Sunet alertă</string>
-    <string name="equil_tone_mode_mute">Silențios</string>
+    <string name="equil_tone_mode_mute">Mut</string>
     <string name="equil_tone_mode_shake">Doar vibrare</string>
     <string name="equil_tone_mode_tone">Doar sunet</string>
     <string name="equil_tone_mode_tone_and_shake">Vibrare și sunet</string>
@@ -50,7 +50,7 @@
     <string name="equil_fill">Amorsare/Umplere</string>
     <string name="equil_air">Evacuare aer</string>
     <string name="equil_temp_basal_rate">Rată bazală temporară</string>
-    <string name="equil_total_delivered">Total livrat</string>
+    <string name="equil_total_delivered">Total administrat</string>
     <string name="equil_firmware_version">Versiune firmware</string>
     <string name="equil_shutdown_be">Equil se va opri automat</string>
     <string name="equil_shutdown">Oprire automată Equil</string>
