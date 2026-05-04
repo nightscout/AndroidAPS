@@ -9,10 +9,10 @@
     <string name="omnipod_common_pod_management_button_pod_history">Lịch sử Pod</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">Không có Pod hoạt động</string>
-    <string name="omnipod_common_error_set_basal_failed">Cài đặt cấu hình Hồ sơ không thành công.</string>
+    <string name="omnipod_common_error_set_basal_failed">Thiết lập cấu hình liều nền không thành công.</string>
     <string name="omnipod_common_error_bolus_did_not_succeed">Bolus không thành công.</string>
-    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Thiết lập Hồ sơ liều nền thất bại: nhận được Hồ sơ trống. Hãy đảm bảo rằng bạn đã kích hoạt Hồ sơ liều nền của mình.</string>
-    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Không có Hồ sơ liều nền nào đang hoạt động. Hãy đảm bảo bạn đã kích hoạt Hồ sơ liều nền của mình.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Thiết lập cấu hình liều nền thất bại: nhận được cấu hình trống. Hãy đảm bảo rằng bạn đã kích hoạt cấu hình liều nền của mình.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Không có cấu hình liều nền nào đang hoạt động. Hãy đảm bảo bạn đã kích hoạt cấu hình liều nền của mình.</string>
     <string name="omnipod_common_error_unsupported_custom_command">Lệnh tùy chỉnh không được hỗ trợ: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Không thể cập nhật trạng thái</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Không thể cập nhật trạng thái khi khởi động</string>
