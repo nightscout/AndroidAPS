@@ -16,7 +16,7 @@
     <string name="refresh">Làm mới</string>
     <string name="no_history_records">Không tìm thấy bản ghi nào</string>
     <string name="error">Lỗi</string>
-    <string name="profile_set_ok">Đã cập nhật Hồ sơ liều nền trong bơm</string>
+    <string name="profile_set_ok">Đã cập nhật cấu hình liều nền trong bơm</string>
     <string name="invalid_input">Dữ liệu đầu vào không hợp lệ</string>
     <string name="invalid_number">Số không hợp lệ</string>
     <string name="constraint_applied">Đã áp dụng giới hạn!</string>
@@ -25,8 +25,8 @@
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_base_basal_rate_dynamic">%1$s U/h</string>
-    <string name="pump_not_initialized_profile_not_set">Bơm chưa được khởi tạo, Hồ sơ chưa được thiết lập!</string>
-    <string name="failed_update_basal_profile">Không thể cập nhật Hồ sơ liều nền</string>
+    <string name="pump_not_initialized_profile_not_set">Bơm chưa được khởi tạo, cấu hình chưa được thiết lập!</string>
+    <string name="failed_update_basal_profile">Không thể cập nhật cấu hình liều nền</string>
     <string name="no_valid_basal_rate">Không đọc được liều basal hợp lệ từ bơm</string>
     <string name="limiting_iob">Giới hạn IOB: %1$.1f U – Lý do: %2$s.</string>
     <string name="loop_disabled">VÒNG LẶP BỊ TẮT DO GIỚI HẠN AN TOÀN</string>
@@ -101,8 +101,8 @@
     <string name="stop">Dừng lại</string>
     <string name="stop_pressed">Đã nhấn DỪNG</string>
     <string name="carbs">Carbs</string>
-    <string name="invalid_profile">Hồ sơ không hợp lệ!</string>
-    <string name="no_profile_set">KHÔNG CÓ HỒ SƠ</string>
+    <string name="invalid_profile">Cấu hình không hợp lệ!</string>
+    <string name="no_profile_set">KHÔNG CÓ CẤU HÌNH</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Ngày</string>
     <string name="units_label">Đơn vị</string>
@@ -133,7 +133,7 @@
     <string name="resumeloop">Khởi động lại vòng lặp</string>
     <string name="suspendloop">Tạm dừng vòng lặp</string>
     <string name="notification">Thông báo</string>
-    <string name="noprofile">Chưa tải Hồ sơ nào từ NS</string>
+    <string name="noprofile">Chưa tải cấu hình nào từ NS</string>
     <string name="exists">tồn tại</string>
     <string name="notexists">không tồn tại</string>
     <string name="glucose">Đường huyết</string>
@@ -174,14 +174,14 @@
     <string name="a11y_inrange">trong phạm vi</string>
     <string name="a11y_low">thấp</string>
     <string name="remove_label">Loại bỏ</string>
-    <string name="activate_profile">Kích hoạt Hồ sơ</string>
+    <string name="activate_profile">Kích hoạt cấu hình</string>
     <string name="activate_insulin">Kích hoạt insulin</string>
     <string name="reset">Đặt lại</string>
-    <string name="profileswitch_ismissing">Thiếu chuyển đổi hồ sơ. Vui lòng thực hiện chuyển đổi hồ sơ hoặc nhấn “Kích hoạt hồ sơ” trong Hồ sơ cục bộ.</string>
-    <string name="profile">Hồ sơ</string>
+    <string name="profileswitch_ismissing">Thiếu Chuyển đổi Cấu hình. Vui lòng thực hiện chuyển đổi cấu hình hoặc nhấn “Kích hoạt cấu hình” trong cấu hình cục bộ.</string>
+    <string name="profile">Cấu hình</string>
     <string name="confirm_remove_multiple_items">Bạn có chắc chắn muốn xóa %1$d mục không</string>
     <string name="overview_treatment_label">Điều trị</string>
-    <string name="copytolocalprofile">Tạo Hồ sơ mới từ Hồ sơ này không?</string>
+    <string name="copytolocalprofile">Tạo cấu hình mới từ cấu hình này không?</string>
     <string name="wear_wizard_settings">Cài đặt Wizard trên Wear OS</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
@@ -245,7 +245,7 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="startprofile">Bắt đầu Hồ sơ %1$d%% trong %2$d phút</string>
+    <string name="startprofile">Bắt đầu cấu hình %1$d%% trong %2$d phút</string>
     <!--    APSResult-->
     <string name="cancel_temp">Huỷ liều liều nền tạm thời</string>
     <string name="let_temp_basal_run">Cho liều nền tạm thời tiếp tục</string>
@@ -257,7 +257,7 @@
     <string name="ins_concentration_confirmed">Insulin %1$s đã được xác nhận</string>
     <string name="current_insulin">Đang hoạt động</string>
     <string name="change_insulin">Thay đổi</string>
-    <string name="select_insulin_description">Chọn loại insulin bạn đang nạp vào bơm. Hồ sơ (profile) sẽ được chuyển đổi sau khi kích hoạt / làm đầy (prime).</string>
+    <string name="select_insulin_description">Chọn loại insulin bạn đang nạp vào bơm. Cấu hình sẽ được chuyển đổi sau khi kích hoạt / làm đầy.</string>
     <string name="pump_insulin_cu">%1$.2f\u00a0CU</string>
     <string name="pump_insulin_cu1">%1$.1f\u00a0CU</string>
     <string name="selected_insulin">Insulin đã chọn: %1$s</string>
@@ -303,8 +303,8 @@
     <string name="careportal_cgm_sensor_stop">Dừng cảm biến</string>
     <string name="careportal_dad_alert">Cảnh báo D.A.D</string>
     <string name="careportal_insulin_cartridge_change">Thay ống chứa insulin</string>
-    <string name="careportal_profileswitch">Chuyển Hồ sơ</string>
-    <string name="profile_management">Hồ sơ</string>
+    <string name="careportal_profileswitch">Chuyển cấu hình</string>
+    <string name="profile_management">Cấu hình</string>
     <string name="careportal_snackbolus">Bolus bữa ăn nhẹ</string>
     <string name="careportal_mealbolus">Bolus cho bữa ăn</string>
     <string name="careportal_correctionbolus">Bolus hiệu chỉnh</string>
@@ -327,11 +327,11 @@
     <string name="scene_confirm_activate">Kích hoạt Bối cảnh “%1$s”?</string>
     <string name="scene_confirm_deactivate">Kết thúc Bối cảnh “%1$s” và hoàn tác các thay đổi?</string>
     <string name="scene_conflict_active_tt">Mục tiêu tạm thời đang hoạt động sẽ được thay thế</string>
-    <string name="scene_conflict_active_profile">Chuyển đổi hồ sơ đang hoạt động sẽ được thay thế</string>
+    <string name="scene_conflict_active_profile">Chuyển đổi cấu hình đang hoạt động sẽ được thay thế</string>
     <string name="scene_conflict_active_running_mode">Chế độ đang hoạt động sẽ được thay thế</string>
     <string name="scene_conflict_active_scene">Bối cảnh đang hoạt động “%1$s” sẽ được kết thúc trước</string>
     <string name="scene_action_tt">Mục tiêu tạm thời: %1$s</string>
-    <string name="scene_action_profile">Hồ sơ: %1$s %2$d%%</string>
+    <string name="scene_action_profile">Cấu hình: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Kích hoạt SMB</string>
     <string name="scene_action_smb_off">Vô hiệu hóa SMBs</string>
     <string name="scene_action_running_mode">Chế độ đang chạy: %1$s</string>
@@ -346,7 +346,7 @@
     <string name="scene_editor_no_tt_presets">Chưa cấu hình preset TT nào</string>
     <string name="scene_editor_select_tt_preset">Chọn cài đặt sẵn</string>
     <string name="scene_editor_percentage">Phần trăm</string>
-    <string name="scene_editor_profile">Hồ sơ</string>
+    <string name="scene_editor_profile">Cấu hình</string>
     <string name="scene_editor_keep_current_profile">-- Giữ nguyên hiện tại --</string>
     <string name="scene_editor_mode">Chế Độ</string>
     <string name="scene_editor_event_type">Loại sự kiện</string>
@@ -359,11 +359,11 @@
     <string name="scene_some_actions_failed">Một số hành động thất bại</string>
     <string name="scene_no_active">Không có Bối cảnh nào đang hoạt động</string>
     <string name="scene_some_reverts_failed">Một số hành động hoàn tác thất bại</string>
-    <string name="scene_no_profile_store">Không có kho hồ sơ khả dụng</string>
+    <string name="scene_no_profile_store">Không có kho cấu hình khả dụng</string>
     <string name="scene_no_actions">Bối cảnh không có hành động nào</string>
-    <string name="scene_profile_not_found">Không tìm thấy hồ sơ “%1$s”</string>
+    <string name="scene_profile_not_found">Không tìm thấy cấu hình “%1$s”</string>
     <string name="scene_revert_tt">Hủy mục tiêu tạm thời</string>
-    <string name="scene_revert_profile">Hoàn tác thay đổi hồ sơ</string>
+    <string name="scene_revert_profile">Hoàn tác thay đổi cấu hình</string>
     <string name="scene_revert_smb_on">Bật lại SMB</string>
     <string name="scene_revert_smb_off">Vô hiệu hóa SMB</string>
     <string name="scene_revert_loop_mode">Hủy chế độ ghi đè đang chạy</string>
@@ -386,9 +386,9 @@
     <string name="treatment_calculator_desc">Tính toán liều bolus</string>
     <string name="insulin_management">Insulin</string>
     <string name="manage_insulin_desc">Quản lý và kích hoạt các cấu hình insulin</string>
-    <string name="concentration_disable_blocked">Không thể tắt hỗ trợ nồng độ khi vẫn còn insulin không phải U100. Hãy xóa tất cả các cấu hình insulin không phải U100 và chuyển sang hồ sơ U100 trước.</string>
+    <string name="concentration_disable_blocked">Không thể tắt hỗ trợ nồng độ khi vẫn còn insulin không phải U100. Hãy xóa tất cả các cấu hình insulin không phải U100 và chuyển sang cấu hình U100 trước.</string>
     <string name="simple_mode_blocked_by_concentration">Không thể bật chế độ đơn giản khi đang sử dụng insulin không phải U100. Hãy chuyển sang insulin U100 trước.</string>
-    <string name="manage_profile_desc">Quản lý và kích hoạt các hồ sơ</string>
+    <string name="manage_profile_desc">Quản lý và kích hoạt các cấu hình</string>
     <string name="manage_temp_target_desc">Quản lý và đặt mục tiêu tạm thời</string>
     <string name="manage_temp_basal_desc">Bắt đầu liều nền tạm thời</string>
     <string name="manage_extended_bolus_desc">Bắt đầu liều bolus kéo dài</string>
@@ -488,10 +488,10 @@
     <string name="uel_extended_carbs">CARBS MỞ RỘNG</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
     <string name="uel_tt">TEMP TARGET</string>
-    <string name="uel_new_profile">HỒ SƠ MỚI</string>
-    <string name="uel_clone_profile">NHÂN BẢN HỒ SƠ</string>
-    <string name="uel_store_profile">LƯU TRỮ HỒ SƠ</string>
-    <string name="uel_profile_switch">CHUYỂN HỒ SƠ</string>
+    <string name="uel_new_profile">CẤU HÌNH MỚI</string>
+    <string name="uel_clone_profile">NHÂN BẢN CẤU HÌNH</string>
+    <string name="uel_store_profile">LƯU TRỮ CẤU HÌNH</string>
+    <string name="uel_profile_switch">CHUYỂN CẤU HÌNH</string>
     <string name="uel_profile_switch_cloned">ĐÃ NHÂN BẢN CHUYỂN HỒ SƠ</string>
     <string name="uel_closed_loop_mode">CHẾ ĐỘ VÒNG KÍN</string>
     <string name="uel_lgs_loop_mode">CHẾ ĐỘ VÒNG KÍN LGS</string>
@@ -519,7 +519,7 @@
     <string name="uel_prime_bolus">BOLUS MỒI</string>
     <string name="uel_treatment">ĐIỀU TRỊ</string>
     <string name="uel_careportal_ns_refresh">CẬP NHẬT CAREPORTAL TỪ NS</string>
-    <string name="uel_profile_switch_ns_refresh">LÀM MỚI CHUYỂN HỒ SƠ TỪ NS</string>
+    <string name="uel_profile_switch_ns_refresh">LÀM MỚI CHUYỂN CẤU HÌNH TỪ NS</string>
     <string name="uel_treatments_ns_refresh">CẬP NHẬT ĐIỀU TRỊ TỪ NS</string>
     <string name="uel_tt_ns_refresh">CẬP NHẬT TEMP TARGET TỪ NS</string>
     <string name="uel_automation_removed">ĐÃ XÓA AUTOMATION</string>
@@ -531,8 +531,8 @@
     <string name="uel_extended_bolus_removed">ĐÃ XÓA LIỀU BOLUS KÉO DÀI</string>
     <string name="uel_food">BỮA ĂN</string>
     <string name="uel_food_removed">ĐÃ XÓA BỮA ĂN</string>
-    <string name="uel_profile_removed">ĐÃ XÓA HỒ SƠ</string>
-    <string name="uel_profile_switch_removed">ĐÃ XÓA CHUYỂN HỒ SƠ</string>
+    <string name="uel_profile_removed">ĐÃ XÓA CẤU HÌNH</string>
+    <string name="uel_profile_switch_removed">ĐÃ XÓA CHUYỂN CẤU HÌNH</string>
     <string name="uel_restart_events_removed">SỰ KIỆN KHỞI ĐỘNG LẠI ĐÃ XÓA</string>
     <string name="uel_treatment_removed">ĐÃ XÓA ĐIỀU TRỊ</string>
     <string name="uel_tt_removed">ĐÃ XÓA TEMP TARGET</string>
@@ -584,31 +584,31 @@
     <string name="uel_scene_activated">ĐÃ KÍCH HOẠT TÌNH HUỐNG</string>
     <string name="uel_scene_deactivated">ĐÃ TẮT TÌNH HUỐNG</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Hồ sơ Mục tiêu Thấp</string>
-    <string name="profile_high_target">Hồ sơ Mục tiêu Cao</string>
+    <string name="profile_low_target">Cấu hình mục tiêu thấp</string>
+    <string name="profile_high_target">Cấu hình mục tiêu cao</string>
     <string name="temp_target_low_target">Giá trị thấp của mục tiêu tạm thời</string>
     <string name="temp_target_high_target">Giá trị cao của mục tiêu tạm thời</string>
     <string name="temp_target_value">Giá trị mục tiêu tạm thời</string>
-    <string name="profile_dia">Hồ sơ giá trị DIA</string>
+    <string name="profile_dia">Cấu hình giá trị DIA</string>
     <string name="insulin_dia">Thời gian tác dụng của insulin</string>
     <string name="insulin_peak">Thời điểm đạt đỉnh của insulin</string>
-    <string name="profile_sensitivity_value">Giá trị độ nhạy insulin trong Hồ sơ</string>
-    <string name="profile_max_daily_basal_value">Giá trị liều nền tối đa trong Hồ sơ</string>
+    <string name="profile_sensitivity_value">Cấu hình giá trị độ nhạy</string>
+    <string name="profile_max_daily_basal_value">Cấu hình liều nền tối đa</string>
     <string name="current_basal_value">Giá trị liều nền hiện tại</string>
-    <string name="profile_carbs_ratio_value">Giá trị tỷ lệ carb trong Hồ sơ</string>
+    <string name="profile_carbs_ratio_value">Cấu hình tỷ lệ Carb</string>
     <string name="valuelimitedto">%1$.2f bị giới hạn ở %2$.2f</string>
     <string name="valueoutofrange">»%1$s« nằm ngoài giới hạn an toàn</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f nằm ngoài giới hạn an toàn</string>
     <string name="basal_value">Giá trị liều liều nền</string>
     <!-- Profile validation -->
     <string name="no_profile_selected">Chưa chọn hồ sơ</string>
-    <string name="missing_profile_name">Thiếu tên hồ sơ</string>
+    <string name="missing_profile_name">Thiếu tên cấu hình</string>
     <string name="error_in_ic_values">Lỗi trong giá trị IC</string>
     <string name="error_in_isf_values">Lỗi trong giá trị IC</string>
     <string name="error_in_basal_values">Lỗi ở các giá trị liều nền</string>
     <string name="error_in_target_values">Lỗi ở các giá trị mục tiêu</string>
-    <string name="profile_name_contains_dot">Một số tên hồ sơ chứa dấu chấm (.). Điều này không được NS hỗ trợ. Các hồ sơ sẽ không được tải lên NS.</string>
-    <string name="invalid_profile_not_accepted">Hồ sơ %1$s không hợp lệ, không được chấp nhận từ NS</string>
+    <string name="profile_name_contains_dot">Một số tên cấu hình chứa dấu chấm (.).\nĐiều này không được NS hỗ trợ.\nCác cấu hình sẽ không được tải lên NS.</string>
+    <string name="invalid_profile_not_accepted">Cấu hình %1$s không hợp lệ, không được chấp nhận từ NS</string>
     <string name="errors">Lỗi</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -620,7 +620,7 @@
     <string name="update_time">CẬP NHẬT THỜI GIAN</string>
     <string name="load_history">TẢI LỊCH SỬ %1$d</string>
     <string name="load_tdds">TẢI TDDs</string>
-    <string name="set_profile">THIẾT LẬP HỒ SƠ</string>
+    <string name="set_profile">THIẾT LẬP CẤU HÌNH</string>
     <string name="set_user_settings">CÀI ĐẶT NGƯỜI DÙNG</string>
     <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
     <string name="start_pump">Khởi động Bơm</string>
@@ -643,7 +643,7 @@
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_tune_days">Tune days :</string>
-    <string name="autotune_select_profile">Chọn Hồ sơ để điều chỉnh</string>
+    <string name="autotune_select_profile">Chọn cấu hình để điều chỉnh</string>
     <!-- Alerts -->
     <string name="urgent_alarm">Cảnh báo khẩn cấp</string>
     <string name="info">THÔNG TIN</string>
@@ -681,7 +681,7 @@
     <string name="bolus_equal_zero_no_action">Bolus = 0. Không thực hiện hành động nào!</string>
     <string name="wizard_no_insulin_required">Không cần insulin</string>
     <string name="wizard_no_actual_bg">Chưa có BG gần đây để tính toán!</string>
-    <string name="wizard_no_active_profile">Chưa có Hồ sơ nào hoạt động!</string>
+    <string name="wizard_no_active_profile">Chưa có cấu hình nào hoạt động!</string>
     <string name="wizard_no_cob">COB không xác định! Thiếu dữ liệu BG hoặc ứng dụng vừa khởi động lại?</string>
     <string name="wizard_carbs_constraint">Vi phạm giới hạn carb!</string>
     <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
@@ -844,15 +844,15 @@
     <string name="nav_history_browser_desc">Xem các biểu đồ lịch sử</string>
     <string name="appearance">Bố cục</string>
     <string name="manage">Quản lý</string>
-    <string name="localprofile">Hồ sơ</string>
+    <string name="localprofile">Cấu hình</string>
     <string name="nav_setupwizard">Cài đặt nhanh</string>
     <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
     <string name="statistics">Thống kê</string>
     <string name="statistics_desc">Xem thống kê và báo cáo</string>
     <string name="tdd_cycle_pattern">Mẫu chu kỳ TDD</string>
     <string name="tdd_cycle_pattern_desc">Gộp tổng liều insulin hàng ngày theo chu kỳ 28 ngày để nhận diện các mẫu lặp lại</string>
-    <string name="nav_profile_helper">Hỗ trợ hồ sơ</string>
-    <string name="nav_profile_helper_desc">Xây dựng hồ sơ dựa trên cân nặng hoặc TDD</string>
+    <string name="nav_profile_helper">Hỗ trợ cấu hình</string>
+    <string name="nav_profile_helper_desc">Xây dựng cấu hình dựa trên cân nặng hoặc TDD</string>
     <string name="quick_launch_configure">Thiết lập Khởi chạy nhanh</string>
     <string name="quick_launch_configure_desc">Tùy chỉnh các nút hành động nhanh trên tổng quan</string>
     <!-- Alerts -->
@@ -915,8 +915,8 @@
     <!-- ProfileEditor -->
     <string name="basal_short">BAS</string>
     <string name="target_short">TARG</string>
-    <string name="profile_name">Tên Hồ sơ:</string>
-    <string name="edit_profile_name">Sửa tên hồ sơ</string>
+    <string name="profile_name">Tên cấu hình:</string>
+    <string name="edit_profile_name">Sửa tên cấu hình</string>
     <string name="units_colon">Đơn vị:</string>
     <string name="unsaved_changes">Chưa lưu thay đổi</string>
     <string name="unsaved_changes_message">Có thay đổi chưa lưu. Bạn muốn làm gì?</string>
