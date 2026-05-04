@@ -20,7 +20,7 @@
     <string name="scene_wizard_info_sleep">Ban đêm là thời điểm nhiều người có thể gặp tăng hoặc hạ đường huyết mà không nhận ra. Việc đặt mục tiêu đường huyết chặt hơn một chút khi ngủ giúp thuật toán thực hiện các điều chỉnh tinh hơn trong suốt đêm. Để đạt hiệu quả tốt nhất, hãy kết hợp với một cấu hình điều trị phù hợp với nhu cầu liều nền ban đêm của bạn.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
     <string name="scene_template_post_exercise_night">Đêm sau khi tập thể dục</string>
-    <string name="scene_wizard_post_exercise_night_desc">Giảm cấu hình điều trị tăng mục tiêu, tắt SMB — giúp bảo vệ khỏi hạ đường huyết muộn trong đêm sau khi vận động.</string>
+    <string name="scene_wizard_post_exercise_night_desc">Giảm cấu hình tăng mục tiêu, tắt SMB — giúp bảo vệ khỏi hạ đường huyết muộn trong đêm sau khi vận động.</string>
     <string name="scene_wizard_info_post_exercise_night">Sau khi vận động thể chất, cơ bắp tiếp tục nạp lại glycogen trong nhiều giờ — độ nhạy insulin có thể duy trì ở mức cao trong 24–48 giờ, với nguy cơ hạ đường huyết ban đêm cao nhất vào khoảng 6–12 giờ sau khi tập. Việc giảm cấu hình điều trị sẽ làm giảm insulin nền trong suốt đêm, tăng mục tiêu tạm thời giúp thuật toán có một “vùng đệm” an toàn, và tắt SMB giúp tránh việc hệ thống hiệu chỉnh quá mức khi đường huyết tăng nhẹ thoáng qua. Hãy kích hoạt chế độ này trước khi đi ngủ vào những ngày bạn có tập luyện, đặc biệt sau các buổi tập dài hoặc khi thử hoạt động mới. Nên chuẩn bị sẵn carb hấp thu nhanh bên cạnh giường và cân nhắc đặt báo thức để kiểm tra đường huyết vào giữa đêm.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
     <string name="scene_template_pre_meal">Trước bữa ăn</string>
@@ -28,8 +28,8 @@
     <string name="scene_wizard_info_pre_meal">Việc đặt mục tiêu thấp hơn khoảng 30–60 phút trước khi ăn sẽ giúp thuật toán bắt đầu “tích lũy” insulin đang hoạt động (IOB) trước khi carbohydrate được hấp thu. Điều này giúp giảm mức tăng đường huyết sau ăn, xảy ra khi thức ăn vào máu nhanh hơn so với tốc độ tác dụng của insulin. Hiệu quả nhất khi bạn biết trước sắp có bữa ăn.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
     <string name="scene_template_alcohol">Rượu bia</string>
-    <string name="scene_wizard_alcohol_desc">Chế độ LGS, giảm cấu hình điều tri, tắt SMB — giúp bảo vệ khỏi hạ đường huyết muộn do rượu bia.</string>
-    <string name="scene_wizard_info_alcohol">Rượu bia là một trong những tình huống nguy hiểm nhất đối với người mắc tiểu đường type 1. Gan sẽ ưu tiên xử lý rượu thay vì giải phóng glucose, điều này có thể gây hạ đường huyết muộn sau 6–24 giờ — thường xảy ra vào ban đêm khi bạn đang ngủ. Chế độ LGS giúp ngăn tích lũy insulin bằng cách chỉ giảm cung cấp insulin khi đường huyết giảm. Việc giảm profile và tắt SMB tiếp tục hạn chế lượng insulin đang hoạt động (IOB). Luôn kiểm tra đường huyết trước khi đi ngủ và cân nhắc đặt báo thức để kiểm tra vào giữa đêm.</string>
+    <string name="scene_wizard_alcohol_desc">Chế độ LGS, giảm cấu hình, tắt SMB — giúp bảo vệ khỏi hạ đường huyết muộn do rượu bia.</string>
+    <string name="scene_wizard_info_alcohol">Rượu bia là một trong những tình huống nguy hiểm nhất đối với người mắc tiểu đường type 1. Gan sẽ ưu tiên xử lý rượu thay vì giải phóng glucose, điều này có thể gây hạ đường huyết muộn sau 6–24 giờ — thường xảy ra vào ban đêm khi bạn đang ngủ. Chế độ LGS giúp ngăn tích lũy insulin bằng cách chỉ giảm cung cấp insulin khi đường huyết giảm. Việc giảm cấu hình và tắt SMB tiếp tục hạn chế lượng insulin đang hoạt động (IOB). Luôn kiểm tra đường huyết trước khi đi ngủ và cân nhắc đặt báo thức để kiểm tra vào giữa đêm.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
     <string name="scene_template_driving">Lái xe</string>
     <string name="scene_wizard_driving_desc">Tăng mục tiêu một chút để đảm bảo an toàn khi lái xe.</string>
@@ -48,7 +48,7 @@
     <string name="scene_wizard_info_hot_weather">Nhiệt độ cao làm giãn mạch máu, từ đó tăng tốc độ hấp thu insulin — cùng một liều sẽ tác dụng nhanh hơn và mạnh hơn. Điều này có thể dẫn đến hạ đường huyết bất ngờ, đặc biệt khi hoạt động ngoài trời. Việc giảm profile ở mức vừa phải (85%) giúp bù lại tốc độ hấp thu nhanh hơn. Hãy uống đủ nước, theo dõi thường xuyên hơn, và lưu ý rằng insulin được bảo quản trong bơm hoặc bút ở môi trường nóng có thể bị giảm hiệu lực. Nếu bạn đồng thời vận động trong thời tiết nóng, hãy cân nhắc kết hợp với chế độ tập luyện để tăng thêm mức độ an toàn.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
     <string name="scene_template_medical_procedure">Can thiệp y khoa</string>
-    <string name="scene_wizard_medical_procedure_desc">Mở loop với SMB tắt khi phẫu thuật hoặc thực hiện thủ thuật y khoa.</string>
+    <string name="scene_wizard_medical_procedure_desc">Mở vòng lặp với SMB tắt khi phẫu thuật hoặc thực hiện thủ thuật y khoa.</string>
     <string name="scene_wizard_info_medical_procedure">Trong khi phẫu thuật hoặc thực hiện thủ thuật y khoa, thuốc gây mê và các hormone stress có thể làm đường huyết trở nên khó dự đoán. Chế độ open loop được khuyến nghị vì thuật toán không thể dự đoán chính xác phản ứng của cơ thể trong những điều kiện này. Việc đặt mục tiêu cao hơn (150 mg/dL) tạo một biên độ an toàn để tránh hạ đường huyết trong lúc phẫu thuật. Tắt SMB giúp ngăn việc cung cấp insulin ngoài ý muốn trong quá trình thực hiện thủ thuật. Luôn thông báo cho nhân viên y tế rằng bạn đang sử dụng bơm insulin và CGM. Với các thủ thuật kéo dài hơn 3 giờ, đội ngũ y tế có thể chuyển sang sử dụng insulin truyền tĩnh mạch.</string>
     <!-- Blank: no actions — 1h -->
     <string name="scene_template_blank">Trống</string>
@@ -59,24 +59,24 @@
     <string name="scene_wizard_smb_info">Super Micro Bolus (SMB) cho phép thuật toán đưa insulin sớm dưới dạng các liều bolus nhỏ, đồng thời tạm dừng insulin nền để bù lại — về cơ bản là “mượn insulin từ tương lai” để phản ứng nhanh hơn. Việc tắt SMB sẽ ngăn cơ chế này và giới hạn thuật toán chỉ điều chỉnh insulin nền. Khi đó phản ứng sẽ chậm hơn và diễn ra từ từ hơn, thường được ưu tiên trong khi tập thể dục hoặc khi ngủ.</string>
     <string name="scene_wizard_loop_mode_info">Chế độ thể dục quyết định mức độ tự động của thuật toán. Ở chế độ vòng lặp kín, hệ thống tự động điều chỉnh việc cung cấp insulin. LGS (Low Glucose Suspend) chỉ giảm hoặc ngừng insulin khi đường huyết đang giảm về mức thấp — và sẽ không tăng insulin. Vòng lặp mở chỉ đưa ra đề xuất và chờ bạn xác nhận từng thay đổi.</string>
     <string name="scene_wizard_careportal_info">Một sự kiện CarePortal chỉ là một mục ghi nhật ký — nó không thay đổi việc cung cấp insulin hay hành vi của thuật toán. Hãy sử dụng nó để ghi lại các hoạt động, tình huống hoặc ghi chú trong lịch sử điều trị của bạn. Bạn có thể xem lại các bản ghi này trong mục Treatments - CarePortal và trong Nightscout, giúp bạn và bác sĩ nhận ra các xu hướng trong dữ liệu.</string>
-    <string name="scene_wizard_duration_info">Thời lượng (duration) kiểm soát thời gian mà tình huống (scene) này được kích hoạt. Khi hết thời gian, các hành động có giới hạn thời gian (mục tiêu tạm thời, chuyển cấu hình, chế độ hoạt động) sẽ tự động hết hiệu lực, trong khi các thay đổi mang tính duy trì (như bật/tắt SMB) sẽ tự động được khôi phục về giá trị trước đó. Đặt duration bằng 0 sẽ khiến cảnh hoạt động vô thời hạn — tất cả các hành động sẽ được giữ nguyên cho đến khi bạn tắt cảnh thủ công.</string>
-    <string name="scene_wizard_name_info">Chọn một tên và biểu tượng giúp bạn dễ nhận ra tình huống này ngay lập tức. Bạn sẽ thấy chúng trên nút kích hoạt và trên thanh tình huống đang hoạt động ở màn hình tổng quan.</string>
+    <string name="scene_wizard_duration_info">Thời lượng kiểm soát thời gian mà ngữ cảnh này được kích hoạt. Khi hết thời gian, các hành động có giới hạn thời gian (mục tiêu tạm thời, chuyển cấu hình, chế độ thể dục) sẽ tự động hết hiệu lực, trong khi các thay đổi mang tính duy trì (như bật/tắt SMB) sẽ tự động được khôi phục về giá trị trước đó. Đặt thời lượng bằng 0 sẽ khiến ngữ cảnh hoạt động vô thời hạn — tất cả các hành động sẽ được giữ nguyên cho đến khi bạn tắt ngữ cảnh thủ công.</string>
+    <string name="scene_wizard_name_info">Chọn một tên và biểu tượng giúp bạn dễ nhận ra ngữ cảnh này ngay lập tức. Bạn sẽ thấy chúng trên nút kích hoạt và trên thanh tình huống đang hoạt động ở màn hình tổng quan.</string>
     <!-- Scene wizard: UI labels -->
-    <string name="scene_wizard_include_action">Bao gồm %1$s trong tình huống</string>
+    <string name="scene_wizard_include_action">Bao gồm %1$s trong ngữ cảnh</string>
     <string name="scene_wizard_finish">Kết thúc</string>
     <!-- Scene wizard: chain step -->
-    <string name="scene_wizard_chain_title">Theo dõi tình huống</string>
+    <string name="scene_wizard_chain_title">Theo dõi ngữ cảnh</string>
     <string name="scene_wizard_chain_info">Tùy chọn nối thêm một tình huống khác để tự động kích hoạt khi tình huống này hết thời gian. Bạn cũng có thể chuyển sang tình huống đó khi kết thúc sớm. Tình huống tiếp theo chỉ chạy nếu mục tiêu được bật và bơm insulin sẵn sàng; nếu không, bạn sẽ nhận được thông báo.</string>
     <string name="scene_chain_none">Không</string>
     <string name="scene_skip_to_format">Chuyển sang %1$s</string>
     <!-- Scene list: chain indicator -->
     <string name="scene_chain_indicator">→ %1$s</string>
-    <string name="scene_chain_target_missing">Tình huống liên kết đã bị xóa</string>
+    <string name="scene_chain_target_missing">Ngữ cảnh liên kết đã bị xóa</string>
     <!-- Scene expiry: chain result notifications -->
-    <string name="scene_ended_format">Tình huống \"%1$s\" đã kết thúc</string>
-    <string name="scene_chained_format">Tình huống liên kết: %1$s → %2$s</string>
-    <string name="scene_chain_ended_with_skip">%1$s đã kết thúc — bỏ qua tình huống tiếp theo: %2$s</string>
-    <string name="scene_chain_skipped_deleted">tình huống mục tiêu đã bị xóa</string>
+    <string name="scene_ended_format">Ngữ cảnh \"%1$s\" đã kết thúc</string>
+    <string name="scene_chained_format">Ngữ cảnh liên kết: %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s đã kết thúc — bỏ qua bước tiếp theo: %2$s</string>
+    <string name="scene_chain_skipped_deleted">ngữ cảnh mục tiêu đã bị xóa</string>
     <string name="scene_chain_skipped_disabled">\"%1$s\" đã bị vô hiệu hóa</string>
     <string name="scene_chain_error_summary">%1$s → %2$s: %3$d trong %4$d hành động thất bại</string>
 </resources>
