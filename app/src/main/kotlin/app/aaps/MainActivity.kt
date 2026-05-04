@@ -211,13 +211,18 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             .setMessage(messageSpanned)
                             .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok), null)
                             .setNeutralButton(rh.gs(app.aaps.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
-                                startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))
-                                    )
-                                )
-                            }
+                        val knownVendors = setOf(
+                        "samsung", "huawei", "xiaomi", "oneplus", "oppo", "vivo",
+                        "realme", "meizu", "asus", "lenovo", "sony", "lg",
+                        "google", "nokia", "honor", "blackview", "wiko"
+                        )
+                        val mfr = Build.MANUFACTURER.lowercase().replace(" ", "-")
+                        val url = if (mfr in knownVendors)
+                        "https://dontkillmyapp.com/$mfr?app=AAPS"
+                        else
+                        "https://dontkillmyapp.com/?app=AAPS"
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                        }
                             .create().apply {
                                 show()
                                 findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
