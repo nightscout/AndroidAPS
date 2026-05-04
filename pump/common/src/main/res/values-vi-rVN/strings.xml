@@ -13,8 +13,8 @@
     <!-- Commands -->
     <string name="pump_cmd_desc_get_settings">Lấy cài đặt</string>
     <string name="pump_cmd_desc_get_firmware">Lấy firmware của bơm</string>
-    <string name="pump_cmd_desc_get_basal_profile">Lấy Hồ sơ liều nền</string>
-    <string name="pump_cmd_desc_set_basal_profile">Thiết lập Hồ sơ liều nền</string>
+    <string name="pump_cmd_desc_get_basal_profile">Lấy cấu hình liều nền</string>
+    <string name="pump_cmd_desc_set_basal_profile">Thiết lập cấu hình liều nền</string>
     <string name="pump_cmd_desc_get_tbr">Lấy liều nền tạm thời</string>
     <string name="pump_cmd_desc_cancel_tbr">Hủy bỏ liều nền tạm thời</string>
     <string name="pump_cmd_desc_set_tbr">Đặt liều nền tạm thời</string>
