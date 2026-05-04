@@ -75,8 +75,8 @@
     <string name="pref_title_maintenance_enable_fabric">Bật báo cáo lỗi Fabric</string>
     <string name="pref_title_maintenance_enable_export_automation">Chấp nhận cập nhật hồ sơ từ Nightscout</string>
     <!-- Autotune preferences -->
-    <string name="pref_title_autotune_auto_switch_profile">Tự động chuyển hồ sơ</string>
-    <string name="pref_summary_autotune_auto_switch_profile">Tự động chuyển sang hồ sơ do Autotune tạo sau khi tính toán.</string>
+    <string name="pref_title_autotune_auto_switch_profile">Tự động chuyển cấu hình</string>
+    <string name="pref_summary_autotune_auto_switch_profile">Tự động chuyển sang cấu hình do Autotune tạo sau khi tính toán.</string>
     <string name="pref_title_autotune_categorize_uam_as_basal">Phân loại UAM như liều nền</string>
     <string name="pref_summary_autotune_categorize_uam_as_basal">Coi các bữa ăn không khai báo là nhu cầu insulin nền trong tính toán Autotune.</string>
     <string name="pref_title_autotune_tune_insulin_curve">Điều chỉnh đường cong insulin</string>
@@ -94,12 +94,12 @@
     <string name="pref_summary_ns_upload_data">Tải lên các dữ liệu điều trị, liều nền tạm thời và dữ liệu khác lên Nightscout.</string>
     <string name="pref_title_ns_receive_cgm">Chấp nhận dữ liệu CGM từ NS</string>
     <string name="pref_summary_ns_receive_cgm">Chấp nhận dữ liệu CGM từ Nightscout.</string>
-    <string name="pref_title_ns_receive_profile_store">Nhận dữ liệu Hồ sơ đã lưu</string>
-    <string name="pref_summary_ns_receive_profile_store">Chấp nhận cập nhật kho hồ sơ từ Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_store">Nhận dữ liệu cấu hình đã lưu</string>
+    <string name="pref_summary_ns_receive_profile_store">Chấp nhận cập nhật kho cấu hình từ Nightscout.</string>
     <string name="pref_title_ns_receive_temp_target">Nhận mục tiêu tạm thời từ NS</string>
     <string name="pref_summary_ns_receive_temp_target">Chấp nhận thay đổi mục tiêu tạm thời từ Nightscout.</string>
-    <string name="pref_title_ns_receive_profile_switch">Nhận chuyển đổi Hồ sơ từ NS</string>
-    <string name="pref_summary_ns_receive_profile_switch">Chấp nhận sự kiện chuyển hồ sơ từ Nightscout.</string>
+    <string name="pref_title_ns_receive_profile_switch">Nhận chuyển đổi cấu hình từ NS</string>
+    <string name="pref_summary_ns_receive_profile_switch">Chấp nhận sự kiện chuyển cấu hình từ Nightscout.</string>
     <string name="pref_title_ns_receive_insulin">Nhận insulin từ NS</string>
     <string name="pref_summary_ns_receive_insulin">Chấp nhận dữ liệu tiêm insulin từ Nightscout.</string>
     <string name="pref_title_ns_receive_carbs">Nhận carbs từ NS</string>
@@ -179,9 +179,9 @@
     <string name="pref_title_protection_type_application">Mức 0: Bảo vệ ứng dụng</string>
     <string name="pref_summary_protection_type_application">Khi khởi động ứng dụng. Độc lập với các mức khác</string>
     <string name="pref_title_protection_type_bolus">Mức 1: Bảo vệ liều bolus</string>
-    <string name="pref_summary_protection_type_bolus">Điều trị, kích hoạt hồ sơ. Yêu cầu Mức 2</string>
+    <string name="pref_summary_protection_type_bolus">Điều trị, kích hoạt cấu hình. Yêu cầu Mức 2</string>
     <string name="pref_title_protection_type_settings">Mức 2: Bảo vệ cài đặt</string>
-    <string name="pref_summary_protection_type_settings">Chỉnh sửa hồ sơ, cài đặt</string>
+    <string name="pref_summary_protection_type_settings">Chỉnh sửa cấu hình, cài đặt</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <string name="noprotection">Không bảo mật</string>
     <string name="biometric">Sinh trắc học</string>
@@ -225,7 +225,7 @@
     <string name="pref_title_alarm_stale_data">Ngưỡng báo động dữ liệu lỗi thời</string>
     <string name="pref_title_urgent_alarm_stale_data">Ngưỡng báo động khẩn cấp cho dữ liệu lỗi thời</string>
     <!-- IntKey: Site rotation preferences -->
-    <string name="pref_title_site_rotation_profile">Hồ sơ luân phiên vị trí tiêm</string>
+    <string name="pref_title_site_rotation_profile">Cấu hình thay đổi vị trí tiêm</string>
     <!-- StringKey: General preferences -->
     <string name="pref_title_units">Đơn vị</string>
     <string name="units_mgdl">mg/dl</string>
