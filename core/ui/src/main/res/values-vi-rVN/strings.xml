@@ -317,11 +317,11 @@
     <string name="temporary_target">Mục tiêu Tạm thời</string>
     <string name="temporary_targets">Mục tiêu tạm thời</string>
     <string name="running_mode">Chế độ đang chạy</string>
-    <string name="scene">Bối cảnh</string>
-    <string name="scenes">Các kịch bản</string>
+    <string name="scene">Tình huống</string>
+    <string name="scenes">Các tình huống</string>
     <string name="scene_desc">Thiết lập sẵn theo tình huống — kích hoạt nhiều hành động cùng lúc</string>
     <string name="scene_activate">Kích hoạt</string>
-    <string name="scene_deactivate">Kết thúc Bối cảnh</string>
+    <string name="scene_deactivate">Kết thúc tình huống</string>
     <string name="scene_active">Kích hoạt</string>
     <string name="scene_ended">Bối cảnh đã kết thúc</string>
     <string name="scene_confirm_activate">Kích hoạt Bối cảnh “%1$s”?</string>
@@ -581,8 +581,8 @@
     <string name="uel_running_mode">RUNNING MODE</string>
     <string name="uel_running_mode_removed">ĐÃ XÓA CHẾ ĐỘ THỂ DỤC</string>
     <string name="uel_running_mode_updarted">ĐÃ CẬP NHẬT CHẾ ĐỘ THỂ DỤC</string>
-    <string name="uel_scene_activated">ĐÃ KÍCH HOẠT BỐI CẢNH</string>
-    <string name="uel_scene_deactivated">ĐÃ TẮT BỐI CẢNH</string>
+    <string name="uel_scene_activated">ĐÃ KÍCH HOẠT TÌNH HUỐNG</string>
+    <string name="uel_scene_deactivated">ĐÃ TẮT TÌNH HUỐNG</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Hồ sơ Mục tiêu Thấp</string>
     <string name="profile_high_target">Hồ sơ Mục tiêu Cao</string>
