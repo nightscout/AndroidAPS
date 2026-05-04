@@ -48,6 +48,8 @@
     <string name="unit_weeks">săptămâni</string>
     <string name="shortminute">m</string>
     <string name="shortday">z</string>
+    <string name="time_remaining_h_m">%1$dh %2$dm rămase</string>
+    <string name="time_remaining_m">%1$d rămase</string>
     <string name="later_today">Mai târziu astăzi</string>
     <string name="tomorrow">Mâine</string>
     <string name="today">Astăzi</string>
