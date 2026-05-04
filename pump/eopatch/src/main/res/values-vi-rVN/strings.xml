@@ -12,8 +12,8 @@
     <string name="eopatch_not_activated">Chưa kích hoạt</string>
     <string name="eopatch_base_basal_rate">Tỷ lệ liều nền cơ bản</string>
     <string name="eopatch_temp_basal_rate">Tỷ lệ liều nền tạm thời</string>
-    <string name="invalid_basal_rate">Liều nền trong Hồ sơ nhỏ hơn 0,05 U/giờ. EOPatch có đơn vị tiêm tối thiểu là 0.05 U. Vui lòng thử lại sau khi đặt cấu hình lớn hơn đơn vị tiêm tối thiểu.</string>
-    <string name="no_profile_selected">Chưa chọn Hồ sơ. Vui lòng chọn Hồ sơ và thử lại.</string>
+    <string name="invalid_basal_rate">Liều nền trong Cấu hình nhỏ hơn 0,05 U/giờ. EOPatch có đơn vị tiêm tối thiểu là 0,05 U. Vui lòng thử lại sau khi đặt cấu hình lớn hơn đơn vị tiêm tối thiểu.</string>
+    <string name="no_profile_selected">Chưa chọn Cấu hình. Vui lòng chọn Cấu hình và thử lại.</string>
     <string name="symbol_day">ngày</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
