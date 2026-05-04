@@ -12,7 +12,7 @@
     <string name="pump_status_executing_command">Executare comandă</string>
     <!-- Commands -->
     <string name="pump_cmd_desc_get_settings">Obțineți setările</string>
-    <string name="pump_cmd_desc_get_firmware">Obțineți firmware-ul pompei</string>
+    <string name="pump_cmd_desc_get_firmware">Obțineți firmware pompă</string>
     <string name="pump_cmd_desc_get_basal_profile">Obțineți profilul bazal</string>
     <string name="pump_cmd_desc_set_basal_profile">Setați profilul bazal</string>
     <string name="pump_cmd_desc_get_tbr">Obțineți bazala temporară</string>
