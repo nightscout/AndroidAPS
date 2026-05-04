@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="disabled_loop">Buclă inactivă</string>
+    <string name="disabled_loop">Buclă dezactivată</string>
     <string name="nav_history_browser">Vizualizare istoric</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Insulină</string>
