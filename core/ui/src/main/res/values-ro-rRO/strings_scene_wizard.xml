@@ -13,7 +13,7 @@
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Zi de boală - Vărsături</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Profil redus cu Suspendare la glicemie scăzută – opusul zilei standard de boală în care nu se pot absorbi alimentele.</string>
-    <string name="scene_wizard_info_sick_day_vomiting">Atunci când nu puteți reține alimentele, abordarea standard pentru o zi de boală, care presupune creșterea dozei de insulină, poate fi periculoasă. Vărsăturile înseamnă că carbohidrații nu sunt absorbiți, astfel încât glicemia poate să scadă în loc să crească. Un profil redus (60%) scade livrarea de insulină, iar modul LGS, suspendarea la glicemie scăzută, adaugă o plasă de siguranță suplimentară prin suspendarea insulinei dacă glicemia scade. Dezactivarea SMB previne orice bolusuri suplimentare. Monitorizați frecvent — verificați glicemia la fiecare 1–2 ore și cetonele la fiecare 2–4 ore. Solicitați ajutor medical dacă vărsăturile persistă mai mult de câteva ore sau dacă nivelul cetonelor depășește 1,5 mmol/L.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Atunci când nu puteți reține alimentele, abordarea standard pentru o zi de boală, care presupune creșterea dozei de insulină, poate fi periculoasă. Vărsăturile înseamnă că carbohidrații nu sunt absorbiți, astfel încât glicemia poate să scadă în loc să crească. Un profil redus (60%) scade administrarea de insulină, iar modul LGS, suspendarea la glicemie scăzută, adaugă o plasă de siguranță suplimentară prin suspendarea insulinei dacă glicemia scade. Dezactivarea SMB previne orice bolusuri suplimentare. Monitorizați frecvent — verificați glicemia la fiecare 1–2 ore și cetonele la fiecare 2–4 ore. Solicitați ajutor medical dacă vărsăturile persistă mai mult de câteva ore sau dacă nivelul cetonelor depășește 1,5 mmol/L.</string>
     <!-- Sleep: no default actions — 8h -->
     <string name="scene_template_sleep">Somn</string>
     <string name="scene_wizard_sleep_desc">Ținta mai strânsă pentru un control mai bun peste noapte.</string>
@@ -21,7 +21,7 @@
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
     <string name="scene_template_post_exercise_night">Noapte după efort fizic</string>
     <string name="scene_wizard_post_exercise_night_desc">Profil redus, țintă mai mare, SMB oprit — protejează împotriva hipoglicemiilor întârziate de după activitatea fizică.</string>
-    <string name="scene_wizard_info_post_exercise_night">După activitatea fizică, mușchii continuă să își refacă rezervele de glicogen timp de mai multe ore — sensibilitatea la insulină poate rămâne ridicată timp de 24–48 de ore, cu cel mai mare risc de hipoglicemie nocturnă la 6–12 ore după efort. Un profil redus scade livrarea bazală pe parcursul nopții, o țintă temporară mai ridicată oferă algoritmului o zonă de siguranță, iar dezactivarea SMB împiedică algoritmul să supracorecteze creșterile de scurtă durată. Activați acest scenariu la ora de culcare în zilele în care ați făcut mișcare, în special după sesiuni mai lungi sau când ați introdus activități noi. Păstrați carbohidrați rapizi lângă pat și luați în considerare setarea unei alarme pentru o verificare în mijlocul nopții.</string>
+    <string name="scene_wizard_info_post_exercise_night">După activitatea fizică, mușchii continuă să își refacă rezervele de glicogen timp de mai multe ore — sensibilitatea la insulină poate rămâne ridicată timp de 24–48 de ore, cu cel mai mare risc de hipoglicemie nocturnă la 6–12 ore după efort. Un profil redus scade administrarea bazală pe parcursul nopții, o țintă temporară mai ridicată oferă algoritmului o zonă de siguranță, iar dezactivarea SMB împiedică algoritmul să supracorecteze creșterile de scurtă durată. Activați acest scenariu la ora de culcare în zilele în care ați făcut mișcare, în special după sesiuni mai lungi sau când ați introdus activități noi. Păstrați carbohidrați rapizi lângă pat și luați în considerare setarea unei alarme pentru o verificare în mijlocul nopții.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
     <string name="scene_template_pre_meal">Înainte de masă</string>
     <string name="scene_wizard_pre_meal_desc">Coborâți ținta pentru a preîntâmpina vârful glicemic postprandial.</string>
@@ -54,8 +54,29 @@
     <string name="scene_template_blank">Necompletat</string>
     <string name="scene_wizard_blank_desc">Începeți de la zero fără acțiuni pre-selectate.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info">O schimbare de profil modifică simultan ratele bazale, factorul de sensibilitate la insulină (ISF) și raportul insulină-carbohidrați (IC). Puteți ajusta totul procentual — de exemplu, o setare de 110% crește administrarea bazală, calculele pentru bolus și ratele de absorbție a carbohidraților cu 10%. De asemenea, puteți trece complet la un alt profil, dacă aveți unul configurat special pentru situații specifice.</string>
+    <string name="scene_wizard_tt_info">O țintă temporară transmite algoritmului să vizeze un nivel diferit al glicemiei pentru o perioadă determinată. Cu o țintă mai ridicată, algoritmul reacționează mai lent la creșterea glicemiei și vizează o valoare mai mare per ansamblu — acest lucru reduce administrarea de insulină și ajută la prevenirea hipoglicemiilor în timpul exercițiilor fizice. Cu o țintă mai scăzută, algoritmul răspunde mai devreme și administrează mai multă insulină — util pentru a acționa înainte de masă. Alegeți una dintre presetările de mai jos — valoarea țintei și motivul sunt deja configurate acolo.</string>
+    <string name="scene_wizard_smb_info">Super Micro Bolusurile (SMB) permit algoritmului să administreze insulina în avans sub formă de bolusuri mici, oprind temporar administrarea bazală pentru a compensa — practic, \"împrumutând\" insulină din viitor pentru un răspuns mai rapid. Dezactivarea SMB previne acest proces și limitează algoritmul doar la ajustarea ratelor bazale. Răspunsul devine mai lent și mai gradual, ceea ce este adesea preferat în timpul exercițiilor fizice sau al somnului.</string>
+    <string name="scene_wizard_loop_mode_info">Modul de funcționare determină cât de multă autonomie are algoritmul. În modul buclă închisă, acesta ajustează automat administrarea de insulină. LGS (suspendarea la glicemie scăzută) doar reduce sau oprește insulina atunci când glicemia scade spre o valoare mică — acesta nu va crește administrarea. Modul buclă deschisă calculează sugestii, dar așteaptă ca dumneavoastră să o confirmați pe fiecare în parte.</string>
+    <string name="scene_wizard_careportal_info">Un eveniment în CarePortal este o înregistrare în jurnal — acesta nu modifică administrarea insulinei sau comportamentul algoritmului. Utilizați-l pentru a marca activități, situații sau note în cronologia tratamentului dumneavoastră. Puteți consulta aceste înregistrări în Tratamente - CarePortal și în Nightscout, ajutându-vă pe dumneavoastră și pe medicul dumneavoastră să identificați tipare în datele colectate.</string>
+    <string name="scene_wizard_duration_info">Durata controlează cât timp rămâne activ acest scenariu. Când timpul expiră, acțiunile bazate pe durată (ținta temporară, schimbarea profilului, modul de funcționare) expiră de la sine, în timp ce modificările persistente (cum ar fi comutatorul SMB) revin automat la valorile anterioare. Setarea duratei la 0 face scenariul nedefinit — toate acțiunile rămân active până când încheiați manual scenariul.</string>
+    <string name="scene_wizard_name_info">Alegeți un nume și o pictogramă care să facă acest scenariu ușor de recunoscut dintr-o privire. Le veți vedea pe butonul de activare și în panoul de scenariu activ în vederea de ansamblu.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Includeți %1$s în scenariu</string>
+    <string name="scene_wizard_finish">Finalizați</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Scenariu de continuare</string>
+    <string name="scene_wizard_chain_info">Opțional, puteți conecta un alt scenariu care să se activeze automat atunci când acesta expiră. De asemenea, puteți sări direct la acesta dacă încheiați scenariul actual mai devreme. Scenariul de continuare rulează doar dacă ținta este activată și pompa este disponibilă; în caz contrar, veți primi o notificare.</string>
+    <string name="scene_chain_none">Niciunul</string>
+    <string name="scene_skip_to_format">Săriți la %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Scenariul conectat a fost șters</string>
     <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">Scenariul \"%1$s\" s-a încheiat</string>
+    <string name="scene_chained_format">Scenariu conectat: %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s s-a încheiat - continuarea a fost omisă: %2$s</string>
+    <string name="scene_chain_skipped_deleted">scenariul țintă a fost șters</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" este dezactivat</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d din %4$d acțiuni au eșuat</string>
 </resources>
