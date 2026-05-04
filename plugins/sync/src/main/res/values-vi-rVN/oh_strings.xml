@@ -26,7 +26,7 @@
     <string name="extended_boluses">Liều Bolus kéo dài</string>
     <string name="carbohydrates">Carbohydrates</string>
     <string name="careportal_events">Sự kiện Careportal (trừ ghi chú)</string>
-    <string name="profile_switches">Chuyển Hồ sơ</string>
+    <string name="profile_switches">Chuyển cấu hình</string>
     <string name="total_daily_doses">Tổng liều dùng hàng ngày</string>
     <string name="temporary_basal_rates">Tỷ lệ liều nền tạm thời</string>
     <string name="temporary_targets">Mục tiêu Tạm thời</string>
