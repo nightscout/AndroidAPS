@@ -13,7 +13,7 @@
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Date recalculate utilizate</string>
-    <string name="bg_too_close">BG prea aproape:\n%1$s\n%2$s</string>
+    <string name="bg_too_close">Glicemia prea aproape:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">recalculate</string>
     <string name="a11y_bg_quality_doubles">intrări duble</string>
     <string name="a11y_bg_quality_flat">Date plate. Se consideră greșite</string>
