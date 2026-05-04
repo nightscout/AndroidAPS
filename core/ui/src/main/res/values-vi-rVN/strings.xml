@@ -265,6 +265,20 @@
     <!--       Stats -->
     <string name="average">Trung bình</string>
     <string name="tir">Thời gian trong phạm vi</string>
+    <string name="below" comment="below &quot;in range&quot;">Bên dưới</string>
+    <string name="in_range">Trong phạm vi</string>
+    <string name="veryLow" comment="below 3.1">Quá thấp</string>
+    <string name="low" comment="3.1-3.9">Thấp</string>
+    <string name="high" comment="10.0-13.9">Cao</string>
+    <string name="veryHigh" comment="above 13.9">Quá cao</string>
+    <string name="above" comment="above &quot;in range&quot;">Bên trên</string>
+    <string name="detailed_14_days">Chi tiết 14 ngày</string>
+    <string name="day_tir">TIR trong ngày</string>
+    <string name="night_tir">TIR ban đêm</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7ngày</string>
+    <string name="thirty_days_short">30 ngày</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d phút</string>
@@ -282,8 +296,11 @@
     <string name="careportal_question_message">Câu hỏi: %1$s</string>
     <string name="careportal_exercise_message">Bài tập luyện : %1$s</string>
     <string name="careportal_pump_site_change">Thay vị trí kim truyền</string>
+    <string name="cgm_sensor_insert">Gắn cảm biến</string>
     <string name="careportal_pump_site_management">Vị trí tiêm</string>
     <string name="careportal_cgm_site_management">Vị trí CGM</string>
+    <string name="careportal_cgmsensorstart">Khởi động Cảm biến</string>
+    <string name="careportal_cgm_sensor_stop">Dừng cảm biến</string>
     <string name="careportal_dad_alert">Cảnh báo D.A.D</string>
     <string name="careportal_insulin_cartridge_change">Thay ống chứa insulin</string>
     <string name="careportal_profileswitch">Chuyển Hồ sơ</string>
@@ -301,7 +318,7 @@
     <string name="temporary_targets">Mục tiêu tạm thời</string>
     <string name="running_mode">Chế độ đang chạy</string>
     <string name="scene">Bối cảnh</string>
-    <string name="scenes">Các Bối cảnh</string>
+    <string name="scenes">Các kịch bản</string>
     <string name="scene_desc">Thiết lập sẵn theo tình huống — kích hoạt nhiều hành động cùng lúc</string>
     <string name="scene_activate">Kích hoạt</string>
     <string name="scene_deactivate">Kết thúc Bối cảnh</string>
@@ -311,13 +328,16 @@
     <string name="scene_confirm_deactivate">Kết thúc Bối cảnh “%1$s” và hoàn tác các thay đổi?</string>
     <string name="scene_conflict_active_tt">Mục tiêu tạm thời đang hoạt động sẽ được thay thế</string>
     <string name="scene_conflict_active_profile">Chuyển đổi hồ sơ đang hoạt động sẽ được thay thế</string>
+    <string name="scene_conflict_active_running_mode">Chế độ đang hoạt động sẽ được thay thế</string>
     <string name="scene_conflict_active_scene">Bối cảnh đang hoạt động “%1$s” sẽ được kết thúc trước</string>
     <string name="scene_action_tt">Mục tiêu tạm thời: %1$s</string>
     <string name="scene_action_profile">Hồ sơ: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Kích hoạt SMB</string>
     <string name="scene_action_smb_off">Vô hiệu hóa SMBs</string>
+    <string name="scene_action_running_mode">Chế độ đang chạy: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
-    <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các Bối cảnh</string>
+    <string name="scene_management">Các kịch bản</string>
+    <string name="scene_management_desc">Tạo, chỉnh sửa và quản lý các kịch bản</string>
     <string name="scene_action_count">%1$d hành động</string>
     <string name="scene_start_from_template">Bắt đầu từ mẫu</string>
     <string name="scene_editor_reason">Lý do</string>
@@ -335,6 +355,7 @@
     <string name="scene_editor_enabled">Đã bật</string>
     <string name="scene_editor_disabled">Vô hiệu hoá</string>
     <string name="scene_summary">%1$d hành động, %2$s</string>
+    <string name="scene_duration_indefinite">Không thời hạn (kết thúc thủ công)</string>
     <string name="scene_some_actions_failed">Một số hành động thất bại</string>
     <string name="scene_no_active">Không có Bối cảnh nào đang hoạt động</string>
     <string name="scene_some_reverts_failed">Một số hành động hoàn tác thất bại</string>
@@ -342,8 +363,10 @@
     <string name="scene_no_actions">Bối cảnh không có hành động nào</string>
     <string name="scene_profile_not_found">Không tìm thấy hồ sơ “%1$s”</string>
     <string name="scene_revert_tt">Hủy mục tiêu tạm thời</string>
+    <string name="scene_revert_profile">Hoàn tác thay đổi hồ sơ</string>
     <string name="scene_revert_smb_on">Bật lại SMB</string>
     <string name="scene_revert_smb_off">Vô hiệu hóa SMB</string>
+    <string name="scene_revert_loop_mode">Hủy chế độ ghi đè đang chạy</string>
     <string name="scene_careportal_no_revert">Các mục nhập CarePortal sẽ không được hoàn tác</string>
     <string name="careportal_sickness">Bệnh tật</string>
     <string name="careportal_stress">Căng thẳng</string>
