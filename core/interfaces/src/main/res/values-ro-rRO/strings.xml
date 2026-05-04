@@ -7,7 +7,7 @@
     <string name="bolus_delivered_so_far">Administrat %1$.2fU / %2$.2fU</string>
     <string name="bolus_delivered_successfully">Bolusul de %1$.2fU a fost administrat cu succes</string>
     <!-- PumpPluginBase -->
-    <string name="pump_driver_changed" comment="26 characters max for translation">Driver-ul pompei a fost schimbat.</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Driverul pompei a fost schimbat.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d minute în urmă</string>
     <string name="secago">%1$d zile în urmă</string>
