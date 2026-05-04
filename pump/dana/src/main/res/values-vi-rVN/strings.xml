@@ -83,7 +83,7 @@
     <string name="pumpdrivercorrected">Trình điều khiển bơm đã được sửa</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Tắt chế độ EasyUI trên bơm</string>
-    <string name="profile_set_failed">Cài đặt Hồ sơ liều nền thất bại</string>
+    <string name="profile_set_failed">Cài đặt Cấu hình liều nền thất bại</string>
     <string name="danar_pump_settings">Cài đặt bơm Dana</string>
     <string name="time_format_12h">12h</string>
     <string name="time_format_24h">24h</string>
