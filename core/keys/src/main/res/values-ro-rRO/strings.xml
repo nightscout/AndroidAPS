@@ -192,7 +192,7 @@
     <string name="pref_title_max_carbs">Maximul de carbohidrați permis</string>
     <!-- IntKey: Loop preferences -->
     <string name="pref_title_open_mode_min_change">Schimbare minimă în modul deschis</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Buclă deschisă va afișa o nouă cerere de schimbare doar dacă schimbarea este mai mare decât această valoare în %. Valoarea implicită este 20%</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Bucla deschisă va afișa o nouă cerere de schimbare doar dacă schimbarea este mai mare decât această valoare în %. Valoarea implicită este 20%</string>
     <!-- IntKey: APS preferences -->
     <string name="pref_title_smb_frequency">Interval SMB</string>
     <string name="pref_title_smb_max_minutes">Maximul de minute de bazală la care să se limiteze SMB</string>
@@ -200,7 +200,7 @@
     <string name="uam_smb_max_minutes">Maximul de minute UAM SMB</string>
     <string name="pref_title_carbs_request_threshold">Pragul de carbohidrați necesari</string>
     <string name="carbs_req_threshold_summary">Cantitatea minimă de carbohidrați în grame pentru a afișa o alertă de sugestie. Sugestiile de carbohidrați sub acest număr nu vor declanșa o notificare.</string>
-    <string name="pref_title_half_basal_exercise_target">Țină exercițiu, înjumătățire exercițiu</string>
+    <string name="pref_title_half_basal_exercise_target">Țintă exercițiu: jumătate din bazală</string>
     <string name="half_basal_exercise_target_summary">Setat la un număr, spre exemplu 160, înseamnă că atunci când Ținta Temporară este de 160 mg/dL și Ținta Temporară ridicată crește sensibilitatea = adevărat, se execută 50%% bazală la acest nivel (120 = 75%%; 140 = 60%%).</string>
     <string name="pref_title_iob_threshold_percent">Pragul procentual IOB</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procentul de maxIOB peste care SMB-urile sunt dezactivate.\nValoarea implicită: 100%\nCu 100% această caracteristică este de fapt dezactivată.</string>
