@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="executing_right_now">Đang xử lý lệch</string>
-    <string name="basal_value_below_minimum">Giá trị liều nền thấp hơn mức tối thiểu. Hồ sơ chưa được thiết lập!</string>
+    <string name="basal_value_below_minimum">Giá trị liều nền thấp hơn mức tối thiểu. Cấu hình chưa được thiết lập!</string>
     <!--       Stats -->
     <string name="carbs_short" comment="max 6 characters">Carbs</string>
     <!--    PumpStatusGenerator-->
