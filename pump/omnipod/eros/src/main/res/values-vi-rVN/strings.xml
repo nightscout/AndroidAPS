@@ -29,9 +29,9 @@
     <string name="omnipod_eros_error_communication_failed_no_response_from_riley_link">Không có phản hồi từ RileyLink</string>
     <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">Kết nối RileyLink bị gián đoạn</string>
     <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Không có phản hồi từ Pod</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Thiết lập Hồ sơ liều nền thất bại. Việc truyền insulin có thể đã bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
-    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Việc thiết lập Hồ sơ liều nền có thể đã thất bại. Truyền insulin có thể bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
-    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Thiết lập Hồ sơ liều nền thất bại. Việc truyền insulin đã bị tạm dừng! Vui lòng tiếp tục truyền thủ công từ tab Omnipod.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Thiết lập cấu hình liều nền thất bại. Việc truyền insulin có thể đã bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
+    <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Việc thiết lập cấu hình liều nền có thể đã thất bại. Truyền insulin có thể bị tạm dừng! Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod và tiếp tục truyền nếu cần.</string>
+    <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Thiết lập cấu hình liều nền thất bại. Việc truyền insulin đã bị tạm dừng! Vui lòng tiếp tục truyền thủ công từ tab Omnipod.</string>
     <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Việc hủy liều nền tạm thời có thể đã thất bại. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Thiết lập liều nền tạm thời thất bại. Nếu trước đó đã có liều nền tạm thời đang chạy, nó có thể đã bị hủy. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Việc thiết lập liều nền tạm thời có thể đã thất bại. Nếu trước đó đã có liều nền tạm thời đang chạy, nó đã bị hủy. Vui lòng làm mới trạng thái Pod thủ công từ tab Omnipod.</string>
