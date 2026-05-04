@@ -4,19 +4,19 @@
     <string name="setupwizard_units_prompt">Selectați unitățile în care doriți să afișați valorile</string>
     <string name="next_button">Următor</string>
     <string name="previous_button">Anterior</string>
-    <string name="setupwizard_finish">TERMINARE</string>
+    <string name="setupwizard_finish">FINALIZAȚI</string>
     <string name="welcome">Bine ați venit</string>
-    <string name="welcometosetupwizard">Ați pornit asistentul pentru setări. Acesta vă va ajuta pentru configurarea setărilor\n</string>
+    <string name="welcometosetupwizard">Ați pornit asistentul pentru setări. Acesta vă va ajuta în configurarea setărilor\n</string>
     <string name="end_user_license_agreement">Licență utilizator final</string>
     <string name="end_user_license_agreement_text">NU FOLOSIȚI PENTRU LUAREA DE DECIZII MEDICALE. NU EXISTĂ RĂSPUNDERE LEGALĂ SAU GARANȚIE PENTRU ACEST PROGRAM, ÎN LIMITA APLICABILĂ A LEGII. CU EXCEPȚIA CAZURILOR SPECIAL MENȚIONATE, AUTORUL ȘI/SAU ALTE PERSOANE IMPLICATE PUN LA DISPOZIȚIE ACEST PROGRAM FĂRĂ NICIO GARANȚIE, IMPLICITĂ SAU EXPLICITĂ, INCLUZÂND, DAR FĂRĂ A SE LIMITA LA, GARANȚIILE LEGATE DE VÂNZAREA SAU POTRIVIREA PENTRU UN ANUME SCOP. ÎNTREGUL RISC LEGAT DE CALITATEA ȘI PERFORMANȚA ACESTUI PROGRAM CAD ÎN RESPONSABILITATEA DUMNEAVOASTRĂ. DACĂ PROGRAMUL SE DOVEDEȘTE A FI DEFECT, DUMNEAVOASTRĂ VĂ ASUMAȚI ÎNTREAGA RĂSPUNDERE, PRECUM ȘI TOATE COSTURILE LEGATE DE SERVICE, REPARAȚII SAU CORECȚII.</string>
     <string name="end_user_license_agreement_i_understand">ÎNȚELEG ȘI SUNT DE ACORD</string>
     <string name="display_settings">Setări afișare</string>
-    <string name="low_mark">Pragul HIPO</string>
-    <string name="high_mark">Pragul HIPER</string>
+    <string name="low_mark">Marcaj HIPO</string>
+    <string name="high_mark">Marcaj HIPER</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
-    <string name="storedsettingsfound">Au fost găsite setări stocate</string>
-    <string name="master_password_summary">Parola principală este folosită pentru criptarea copiilor de rezervă și pentru a suprascrie securitatea în aplicație. Rețineți-o sau păstrați-o într-un loc sigur.</string>
+    <string name="storedsettingsfound">Setări salvate găsite</string>
+    <string name="master_password_summary">Parola principală este utilizată pentru criptarea copiei de rezervă și pentru anularea securității în aplicație. Rețineți-o sau păstrați-o într-un loc sigur.</string>
     <!-- current_master_password moved to core/ui/protection.xml -->
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
     <string name="syncinfotext">Sincronizează datele în cloud. Puteți sări peste această parte acum, dar nu veți putea trece de obiective până când nu veți configura un cont Nightscout sau Tidepool.</string>
@@ -27,7 +27,7 @@
     <string name="exitwizard">Omiteți asistentul de configurare</string>
     <string name="setupwizard_sensitivity_description">Modulul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
-    <string name="setupwizard_aps_description">Selectați unul dintre algoritmii disponibili. Aceștia sunt sortate de la cel mai vechi la cel mai nou. Algoritmul mai nou este de obicei mai puternic. Nu uitați să citiți documentația OpenAPS și să o configurați înainte de utilizare.</string>
+    <string name="setupwizard_aps_description">Selectați unul dintre algoritmii disponibili. Aceștia sunt sortați de la cel mai vechi la cel mai nou. Algoritmul mai nou este de obicei mai puternic. Nu uitați să citiți documentația OpenAPS și să o configurați înainte de utilizare.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configurați RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuați setarea odată ce starea RieyLink este \"Conectată\". Acest lucru ar putea dura un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
     <string name="startobjective">Începeți primul obiectiv</string>
@@ -36,11 +36,11 @@
     <string name="setupwizard_profile_info">Creați un profil cu ratele bazale, IC, ISF și valorile țintă. Puteți adăuga mai multe profiluri mai târziu.</string>
     <string name="setupwizard_permissions_info">AAPS are nevoie de acces și de permisiuni la stocare pentru a funcționa corect. Vă rugăm să acordați permisiunile necesare mai jos.</string>
     <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
-    <string name="readstatus">Citire stare</string>
+    <string name="readstatus">Citiți stare</string>
     <!-- Provider-agnostic cloud export/import strings -->
-    <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme legate de performanță.</string>
     <!--    ConfigBuilder-->
-    <string name="configbuilder_pump_description">Ce pompă dorești să folosești cu AAPS?</string>
+    <string name="configbuilder_pump_description">Ce pompă doriți să folosiți cu AAPS?</string>
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
     <string name="configbuilder_sync_description">Module de încărcare date, sincronizare și de comunicare.</string>
     <string name="configbuilder_bgsource_description">De unde ar trebui AAPS să primească datele?</string>
