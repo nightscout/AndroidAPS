@@ -19,7 +19,6 @@
     <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
     <string name="invalid_input">Date de intrare incorecte</string>
     <string name="invalid_number">Număr incorect</string>
-    <string name="constraint_applied">Limitare aplicată!</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pompă indisponibilă</string>
     <string name="insulin_unit_shortname">U</string>
@@ -37,9 +36,9 @@
     <string name="skip">Omiteți</string>
     <string name="switch_to_edit">Editați</string>
     <string name="snooze">Amânați</string>
-    <string name="snooze_15m">Amânare 15 minute</string>
-    <string name="snooze_30m">Amânare 30 minute</string>
-    <string name="snooze_60m">Amânare 60 minute</string>
+    <string name="snooze_15m">Amânați 15 minute</string>
+    <string name="snooze_30m">Amânați 30 minute</string>
+    <string name="snooze_60m">Amânați 60 minute</string>
     <string name="virtual_pump">Pompă virtuală</string>
     <string name="constraints">Constrângeri</string>
     <string name="superbolus">Superbolus</string>
@@ -973,7 +972,7 @@
     <string name="aaps_directory">Dosar AAPS</string>
     <string name="import_setting">Importați setări</string>
     <!-- Import settings screen -->
-    <string name="import_decrypt_review">Decriptare &amp; Revizuire</string>
+    <string name="import_decrypt_review">Decriptați &amp; Revizuiți</string>
     <string name="import_decrypt">Decriptați</string>
     <string name="import_master_password">Parola principală</string>
     <string name="import_decryption_password">Parolă de decriptare</string>
