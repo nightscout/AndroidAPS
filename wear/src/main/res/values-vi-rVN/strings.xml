@@ -7,7 +7,7 @@
     <string name="label_temp_target_tile">Mục tiêu tạm thời</string>
     <string name="label_quick_wizard_tile">Quick Wizard</string>
     <string name="label_user_action_tile">Thao tác người dùng</string>
-    <string name="label_scene_tile">Tình huống</string>
+    <string name="label_scene_tile">Ngữ cảnh</string>
     <string name="msg_warning_sync">Không nhận được dữ liệu kể từ %1$s! Kiểm tra xem AAPS trên điện thoại có gửi dữ liệu cho đồng hồ hay không</string>
     <string name="msg_warning_old">Dữ liệu AAPS đã cũ %1$s! Kiểm tra cảm biến, xDrip+, NS, cấu hình AAPS hoặc nguyên nhân khác!</string>
     <string name="pref_vibrate_on_bolus">Rung khi bolus</string>
@@ -85,7 +85,7 @@
     <string name="action_tempt_confirmation">Mục tiêu tạm thời được yêu cầu</string>
     <string name="action_quick_wizard_confirmation">Yêu cầu Quick Wizard</string>
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
-    <string name="action_scene_confirmation">Kích hoạt Tình huống</string>
+    <string name="action_scene_confirmation">Kích hoạt ngữ cảnh</string>
     <string name="scene_stop">DỪNG</string>
     <string name="action_treatment_confirmation">Yêu cầu xử lý</string>
     <string name="action_bolus_confirmation">Bolus được yêu cầu</string>
