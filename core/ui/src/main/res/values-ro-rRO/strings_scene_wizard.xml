@@ -1,19 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Alegeți un punct de plecare. Șabloanele completează automat acțiunile recomandate pentru situații obișnuite — puteți ajusta totul în pașii următori.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Activitate fizică</string>
+    <string name="scene_wizard_exercise_desc">Ridicați ținta, reduceți profilul la 70%, dezactivați SMB pentru a preveni scăderile cauzate de efort.</string>
+    <string name="scene_wizard_info_exercise">În timpul activității fizice, mușchii consumă glucoză mai repede și sensibilitatea la insulină creşte. Ridicând ținta temporară în prealabil îi dă algoritmului un avantaj la start - acesta va începe să reducă administrarea insulinei din timp, construind un tampon împotriva scăderilor cauzate de exercițiile fizice. Dezactivarea SMB este, de asemenea, recomandată, deoarece bolusurile de corecție în timpul exercițiilor fizice pot cauza căderi rapide. Pentru cele mai bune rezultate, activați acest scenariu cu 1–2 ore înainte de a începe să faceți exerciții fizice, astfel încât algoritmul să aibă timp să scadă insulina de la bord.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Zi de boală</string>
+    <string name="scene_wizard_sick_day_desc">Profilul mai puternic (150%) pentru a face față rezistenței crescute la insulină în timpul bolii.</string>
+    <string name="scene_wizard_info_sick_day">Bolile, febra şi hormonii de stres pot creşte dramatic rezistența la insulină – uneori cu 50% sau mai mult. Un profil mai puternic (de exemplu 150%) îi spune algoritmului să furnizeze mai multă insulină pentru toate calculele - ratele bazale, sugestiile pentru bolus și factorii de corecție. De asemenea, puteți adăuga o țintă temporară sau puteți ajusta modul de rulare în următorii pași. Monitorizați îndeaproape și ajustați pe măsură ce corpul se recuperează.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Zi de boală - Vărsături</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Profil redus cu Suspendare la glicemie scăzută – opusul zilei standard de boală în care nu se pot absorbi alimentele.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Atunci când nu puteți reține alimentele, abordarea standard pentru o zi de boală, care presupune creșterea dozei de insulină, poate fi periculoasă. Vărsăturile înseamnă că carbohidrații nu sunt absorbiți, astfel încât glicemia poate să scadă în loc să crească. Un profil redus (60%) scade livrarea de insulină, iar modul LGS, suspendarea la glicemie scăzută, adaugă o plasă de siguranță suplimentară prin suspendarea insulinei dacă glicemia scade. Dezactivarea SMB previne orice bolusuri suplimentare. Monitorizați frecvent — verificați glicemia la fiecare 1–2 ore și cetonele la fiecare 2–4 ore. Solicitați ajutor medical dacă vărsăturile persistă mai mult de câteva ore sau dacă nivelul cetonelor depășește 1,5 mmol/L.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Somn</string>
+    <string name="scene_wizard_sleep_desc">Ținta mai strânsă pentru un control mai bun peste noapte.</string>
+    <string name="scene_wizard_info_sleep">Noaptea este momentul în care mulți oameni se confruntă cu creșteri sau scăderi ale glicemiei care trec nedetectate. O țintă puțin mai strânsă în timpul somnului permite algoritmului să facă corecții mai fine pe parcursul nopții. Pentru rezultate optime, asociați această setare cu un profil care să reflecte nevoile dumneavoastră bazale nocturne.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Noapte după efort fizic</string>
+    <string name="scene_wizard_post_exercise_night_desc">Profil redus, țintă mai mare, SMB oprit — protejează împotriva hipoglicemiilor întârziate de după activitatea fizică.</string>
+    <string name="scene_wizard_info_post_exercise_night">După activitatea fizică, mușchii continuă să își refacă rezervele de glicogen timp de mai multe ore — sensibilitatea la insulină poate rămâne ridicată timp de 24–48 de ore, cu cel mai mare risc de hipoglicemie nocturnă la 6–12 ore după efort. Un profil redus scade livrarea bazală pe parcursul nopții, o țintă temporară mai ridicată oferă algoritmului o zonă de siguranță, iar dezactivarea SMB împiedică algoritmul să supracorecteze creșterile de scurtă durată. Activați acest scenariu la ora de culcare în zilele în care ați făcut mișcare, în special după sesiuni mai lungi sau când ați introdus activități noi. Păstrați carbohidrați rapizi lângă pat și luați în considerare setarea unei alarme pentru o verificare în mijlocul nopții.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Înainte de masă</string>
+    <string name="scene_wizard_pre_meal_desc">Coborâți ținta pentru a preîntâmpina vârful glicemic postprandial.</string>
+    <string name="scene_wizard_info_pre_meal">Fixarea unei ținte mai scăzute cu 30–60 de minute înainte de masă transmite algoritmului să înceapă acumularea insulinei active înainte de sosirea carbohidraților. Acest lucru ajută la atenuarea vârfului postprandial care apare atunci când mâncarea ajunge în fluxul sanguin mai repede decât poate acționa insulina. Această setare este optimă atunci când știți că urmează să luați masa în curând.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alcool</string>
+    <string name="scene_wizard_alcohol_desc">Modul LGS (suspendare la glicemie scăzută), profil redus, SMB oprit — protejează împotriva hipoglicemiilor întârziate cauzate de consumul de alcool.</string>
+    <string name="scene_wizard_info_alcohol">Consumul de alcool reprezintă una dintre cele mai periculoase situații pentru persoanele cu diabet de tip 1. Ficatul prioritizează procesarea alcoolului în detrimentul eliberării de glucoză, ceea ce poate cauza hipoglicemii întârziate la 6–24 de ore distanță — adesea peste noapte, în timp ce dormiți. Modul LGS, suspendare la glicemie scăzută, previne acumularea insulinei prin reducerea administrării doar atunci când glicemia scade. Un profil redus și dezactivarea SMB limitează suplimentar insulina la bord. Verificați-vă întotdeauna glicemia înainte de a merge la culcare și luați în considerare setarea unei alarme pentru o verificare în mijlocul nopții.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Șofatul</string>
+    <string name="scene_wizard_driving_desc">O țintă puțin mai ridicată pentru a rămâne în siguranță la volan.</string>
+    <string name="scene_wizard_info_driving">Conducerea în siguranță necesită o glicemie stabilă, peste 5,0 mmol/L (90 mg/dL). În unele țări, verificarea glicemiei înainte de drum și în timpul călătoriilor lungi este o cerință legală. O țintă puțin mai ridicată oferă algoritmului o zonă de siguranță — acesta va lucra pentru a vă menține peste nivelul la care capacitatea de concentrare și timpul de reacție încep să scadă. Dacă aveți o hipoglicemie în timp ce conduceți, trageți imediat pe dreapta, tratați episodul și așteptați cel puțin 45 de minute după ce glicemia a revenit la normal înainte de a continua drumul.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Baie sau duș</string>
+    <string name="scene_wizard_bathing_desc">Deconectați pompa pentru duș, înot, băi sau orice activitate în apă.</string>
+    <string name="scene_wizard_info_bathing">Când deconectați pompa, administrarea insulinei se oprește complet – fără bazale, fără bolusuri, fără corecții. Algoritmul trece în modul deconectat şi încetează să mai facă ajustări. Acest lucru este normal pentru perioade scurte de timp, cum ar fi în timpul dușului, al îmbăierii sau al înotului. Când acest scenariu se termină, pompa este reconectată, iar algoritmul își reia automat activitatea. Mențineți perioadele de deconectare scurte – în absența insulinei bazale, glicemia va începe să crească în 1-2 ore.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Faza luteală</string>
+    <string name="scene_wizard_luteal_phase_desc">Profilul crescut pentru a face față rezistenței la insulină dinaintea menstruației.</string>
+    <string name="scene_wizard_info_luteal_phase">Multe femei se confruntă cu o rezistență crescută la insulină în timpul fazei luteale (aproximativ cu 1–2 săptămâni înainte de menstruație). Aceasta este cauzată de creșterea nivelului de progesteron, care reduce sensibilitatea la insulină. Efectul variază enorm de la o persoană la alta — unele observă o creștere de 10–30% a necesarului de insulină, în timp ce altele observă schimbări minime. Începeți cu o creștere conservatoare (115%) și ajustați în funcție de propriile tipare pe parcursul mai multor cicluri. Monitorizarea acestor date în CarePortal vă va ajuta să vă identificați propriul ritm personal.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Vreme fierbinte</string>
+    <string name="scene_wizard_hot_weather_desc">Profilul redus – căldura accelerează absorbția insulinei.</string>
+    <string name="scene_wizard_info_hot_weather">Temperaturile ridicate determină dilatarea vaselor de sânge, ceea ce accelerează absorbția insulinei — aceeași doză acționează mai rapid și mai puternic. Acest lucru poate duce la hipoglicemii neașteptate, în special în timpul activităților în aer liber. O reducere modestă a profilului (85%) compensează absorbția mai rapidă. Hidratați-vă corespunzător, monitorizați-vă glicemia mai frecvent și aveți în vedere faptul că insulina păstrată într-o pompă sau într-un pen expus la căldură se poate degrada. Dacă faceți și efort fizic în condiții de căldură, luați în considerare combinarea acestei setări cu scenariul pentru exerciții fizice, pentru o protecție suplimentară.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Procedură medicală</string>
+    <string name="scene_wizard_medical_procedure_desc">Buclă deschisă cu SMB oprit pentru chirurgie sau proceduri medicale.</string>
+    <string name="scene_wizard_info_medical_procedure">În timpul intervențiilor chirurgicale sau al procedurilor medicale, anestezia și hormonii de stres fac ca glicemia să fie imprevizibilă. Modul buclă deschisă este recomandat deoarece algoritmul nu poate prezice cu certitudine reacția corpului în aceste condiții. Ținta mai ridicată (150 mg/dL / 8,3 mmol/L) oferă o marjă de siguranță împotriva hipoglicemiei intraoperatorii. Dezactivarea SMB previne administrarea neașteptată de insulină în timpul procedurii. Informați întotdeauna personalul medical că purtați o pompă de insulină și un senzor CGM. Pentru proceduri care durează mai mult de 3 ore, echipa medicală poate decide trecerea la administrarea de insulină intravenos.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Necompletat</string>
+    <string name="scene_wizard_blank_desc">Începeți de la zero fără acțiuni pre-selectate.</string>
     <!-- Scene wizard: action step education -->
     <!-- Scene wizard: UI labels -->
     <!-- Scene wizard: chain step -->
