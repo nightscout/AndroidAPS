@@ -42,6 +42,8 @@
     <string name="unit_weeks">tuần</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">Còn %1$d giờ %2$d phút</string>
+    <string name="time_remaining_m">Còn %1$d phút</string>
     <string name="later_today">Sau ngày hôm nay</string>
     <string name="tomorrow">Ngày mai</string>
     <string name="today">Hôm nay</string>
