@@ -66,7 +66,7 @@
     <string name="step_deactivate_complete">Đã hủy kích hoạt Patch</string>
     <string name="step_retry_activation">Đang kích hoạt</string>
     <string name="unexpected_state">Trạng thái không mong đợi: %1$s</string>
-    <string name="no_profile_selected">Chưa chọn Hồ sơ. Vui lòng chọn Hồ sơ và thử lại.</string>
+    <string name="no_profile_selected">Chưa chọn cấu hình. Vui lòng chọn cấu hình và thử lại.</string>
     <string name="patch_begin_activation">Chưa có patch đang hoạt động. Nhấn <b>Tiếp theo</b> để bắt đầu quá trình kích hoạt.</string>
     <string name="patch_not_active_note">Không được kết nối Pump Base với patch cho đến bước tiếp theo!</string>
     <string name="connect_pump_base">Kết nối pump base với Patch mới, loại bỏ bọt khí và nạp insulin, rồi nhấn <b>Tiếp theo</b>.</string>
