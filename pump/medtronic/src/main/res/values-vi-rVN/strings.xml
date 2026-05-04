@@ -45,7 +45,7 @@
     <string name="medtronic_error_rileylink_address_invalid">Địa chỉ RileyLink không hợp lệ.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Loại Bơm phát hiện không khớp với loại đã cấu hình.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Cài đặt các profiles/patterns chưa được bật trên bơm. Hãy bật nó trên bơm.</string>
-    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Hồ sơ liều nền trên bơm không chính xác (phải là Standard).</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Cấu hình liều nền trên bơm không chính xác (phải là Standard).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Loại TBR trên Bơm không đúng (phải là Absolute).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Giá trị Max Bolus trên Bơm không đúng (phải là %1$.2f).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">Giá trị liều nền tối đa trên bơm không đúng (phải là %1$.2f).</string>
@@ -62,13 +62,13 @@
     <string name="medtronic_cmd_cancel_bolus_not_supported">Bạn đã hủy liều Bolus sau khi nó đã được thiết lập trên bơm. Vì bơm Medtronic không hỗ trợ hủy trực tiếp, bạn sẽ cần hủy thủ công. Đặt bơm vào chế độ Suspend rồi thực hiện Resume (nếu bạn vẫn muốn hủy). Ứng dụng sẽ nhận các thay đổi này trong lần cập nhật tiếp theo (dưới 5 phút).</string>
     <string name="medtronic_cmd_cant_read_tbr">Không thể đọc TBR hiện tại.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Không thể hủy TBR hiện tại. Dừng thao tác.</string>
-    <string name="medtronic_cmd_set_profile_pattern_overflow">Thiết lập Hồ sơ thất bại, vì các mẫu sau có tỷ lệ liều nền quá cao: %1$s</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Thiết lập Cấu hình thất bại, vì các mẫu sau có tỷ lệ liều nền quá cao: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Không thể tiêm Bolus.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Không thể tiêm Bolus, vì lượng insulin hiện có (%1$.2f) ít hơn lượng Bolus yêu cầu (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Không thể thiết lập TBR.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Không thể hủy TBR hiện tại.</string>
-    <string name="medtronic_cmd_basal_profile_could_not_be_set">Không thể thiết lập Hồ sơ liều nền.</string>
-    <string name="medtronic_cmd_basal_profile_not_set_is_same">Hồ sơ liều nền không thay đổi, nên sẽ không được thiết lập lại.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Không thể thiết lập Cấu hình liều nền.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Cấu hình liều nền không thay đổi, nên sẽ không được thiết lập lại.</string>
     <string name="medtronic_cmd_desc_get_history">Lấy lịch sử - Trang %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Lấy lịch sử - Trang %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Lấy thời gian Bơm</string>
@@ -76,8 +76,8 @@
     <string name="medtronic_cmd_desc_get_battery_status">Lấy trạng thái pin</string>
     <string name="medtronic_cmd_desc_get_settings">Lấy cài đặt</string>
     <string name="medtronic_cmd_desc_get_model">Lấy mẫu Bơm</string>
-    <string name="medtronic_cmd_desc_get_basal_profile">Lấy Hồ sơ liều nền</string>
-    <string name="medtronic_cmd_desc_set_basal_profile">Thiết lập Hồ sơ liều nền</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Lấy Cấu hình liều nền</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Thiết lập Cấu hình liều nền</string>
     <string name="medtronic_cmd_desc_get_tbr">Lấy liều nền tạm thời</string>
     <string name="medtronic_cmd_desc_set_tbr">Thiết lập liều nền tạm thời</string>
     <string name="medtronic_cmd_desc_cancel_tbr">Hủy liều nền tạm thời</string>
