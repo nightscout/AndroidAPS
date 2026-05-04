@@ -30,10 +30,10 @@
     <string name="action_enable_scene_short">Activați scena: %1$s</string>
     <string name="action_disable_scene">Dezactivați scena</string>
     <string name="action_disable_scene_short">Dezactivați scena: %1$s</string>
-    <string name="action_scene_label">Scenă</string>
-    <string name="trigger_scene_active">Scenă</string>
+    <string name="action_scene_label">Scenariu</string>
+    <string name="trigger_scene_active">Scenariu</string>
     <string name="trigger_scene_active_compared">Scena %1$s</string>
-    <string name="action_scene_not_found">Scenă negăsită</string>
+    <string name="action_scene_not_found">Scenariu negăsit</string>
     <string name="action_scene_disabled">Scena este dezactivată</string>
     <string name="automation_unit_meters">m</string>
     <string name="automation_unit_bpm">bpm</string>
