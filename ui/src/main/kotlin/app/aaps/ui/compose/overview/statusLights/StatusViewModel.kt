@@ -21,12 +21,12 @@ import app.aaps.core.keys.interfaces.IntPreferenceKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.ui.R
 import app.aaps.core.ui.compose.StatusLevel
-import app.aaps.core.ui.compose.pump.tickerFlow
 import app.aaps.core.ui.compose.icons.IcCannulaChange
 import app.aaps.core.ui.compose.icons.IcCgmInsert
 import app.aaps.core.ui.compose.icons.IcPatchPump
 import app.aaps.core.ui.compose.icons.IcPumpBattery
 import app.aaps.core.ui.compose.icons.IcPumpCartridge
+import app.aaps.core.ui.compose.pump.tickerFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -167,7 +167,6 @@ class StatusViewModel @Inject constructor(
             levelPercent = -1f, // No progress bar - reservoir sizes vary by pump
             icon = IcPumpCartridge,
             compactAge = !isPatchPump, // Overview: insulin age hidden for patch pumps
-            expandedLevel = !config.AAPSCLIENT // Actions: AAPSCLIENT suppresses reservoir level
         )
     }
 

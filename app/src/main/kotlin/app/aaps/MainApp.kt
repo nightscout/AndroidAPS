@@ -266,7 +266,9 @@ class MainApp : Application(), HasAndroidInjector {
         handler.postDelayed(
             {
                 // log version
-                persistenceLayer.insertVersionChangeIfChanged(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)
+                appScope.launch {
+                    persistenceLayer.insertVersionChangeIfChanged(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)
+                }
                 // log app start
                 if (preferences.get(BooleanKey.NsClientLogAppStart))
                     appScope.launch {
@@ -302,7 +304,7 @@ class MainApp : Application(), HasAndroidInjector {
         aapsLogger.debug("doInit end")
     }
 
-    private fun setUserStats() {
+    private suspend fun setUserStats() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
         val remote = config.REMOTE.lowercase(Locale.getDefault())
@@ -726,9 +728,9 @@ class MainApp : Application(), HasAndroidInjector {
     private suspend fun dataMigrations() {
         // Migrate to database 33 (ICfg)
         // Grab default value first
-        var runningICfg = if (profileNameToDia.size == 0) // no migration, get running iCfg from running Profile
+        val runningICfg = if (profileNameToDia.isEmpty()) // no migration, get running iCfg from running Profile
             profileFunction.getProfile()?.iCfg ?: localInsulinManager.iCfg
-        else {  // migration, create running iCfg from previous runningProfile dia and slected InsulinPlugin for peak
+        else {  // migration, create running iCfg from previous runningProfile dia and selected InsulinPlugin for peak
             val dia = (profileFunction.getProfile() as ProfileSealed.EPS?)?.profileName?.let { profileName ->
                 profileNameToDia[profileName]
             }

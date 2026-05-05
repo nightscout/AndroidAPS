@@ -2183,8 +2183,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     private fun reportFinishedBolus(status: String, id: Long, pumpEnactResult: PumpEnactResult, succeeded: Boolean) {
-        val totalInsulin = bolusProgressData.state.value?.insulin ?: 0.0
-        bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin), totalInsulin)
+        bolusProgressData.updateProgress(100)
 
         pumpEnactResult.apply {
             success = succeeded

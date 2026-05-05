@@ -67,7 +67,7 @@ class QuickLaunchResolver @Inject constructor(
 
         is QuickLaunchAction.SceneAction       -> sceneRepository.getScene(action.sceneId)
             ?.let { SceneIcons.fromKey(it.icon).icon }
-            ?: action.elementType?.icon() ?: Icons.Default.Extension
+            ?: action.elementType.icon()
 
         else                                   -> action.elementType?.icon() ?: Icons.Default.Extension
     }

@@ -250,23 +250,18 @@ class EquilManager @Inject constructor(
             val percent1 = (5f / detailedBolusInfo.insulin).toFloat()
             aapsLogger.debug(LTag.PUMPCOMM, "sleep===" + detailedBolusInfo.insulin + "===" + percent1)
             var percent = 0f
-            val isPriming = bolusProgressData.state.value?.isPriming ?: false
-            val totalInsulin = bolusProgressData.state.value?.insulin ?: detailedBolusInfo.insulin
             if (command.cmdSuccess) {
                 result.success = true
                 result.enacted(true)
                 while (!bolusProfile.stop && percent < 100) {
-                    val delivering = percent / 100.0 * detailedBolusInfo.insulin
-                    val pumpInsulin = PumpInsulin(delivering)
-                    val progressPercent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
-                    bolusProgressData.updateProgress(progressPercent, ch.bolusProgressString(pumpInsulin, isPriming), delivering)
+                    bolusProgressData.updateProgress(percent.toInt())
                     SystemClock.sleep(sleep.toLong())
                     percent += percent1
                     aapsLogger.debug(LTag.PUMPCOMM, "isCmdStatus===" + percent + "====" + bolusProfile.stop)
                 }
                 // constraint percent.
                 percent = min(percent, 100.0f)
-                bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin), detailedBolusInfo.insulin)
+                bolusProgressData.updateProgress(percent = 100)
                 result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
             } else {
                 result.success = false

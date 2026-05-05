@@ -398,7 +398,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
             commandQueue.readStatus(rh.gs(R.string.bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
             medtrumPump.bolusDone = true
-            bolusProgressData.updateProgress(0, "", 0.0)
+            bolusProgressData.updateProgress(percent = 0, status= "")
             return false
         }
 
@@ -505,13 +505,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     disconnect("Communication stopped")
                 }
             } else {
-                val currentBolusAmount = bolusProgressData.state.value?.delivered ?: 0.0
-                if (currentBolusAmount != lastSentBolusAmount) {
-                    val insulin = bolusProgressData.state.value?.insulin ?: 0.0
-                    val percent = if (insulin > 0) ((currentBolusAmount / insulin) * 100).toInt().coerceAtMost(100) else 0
-                    val status = ch.bolusProgressString(PumpInsulin(currentBolusAmount))
-                    bolusProgressData.updateProgress(percent, status, currentBolusAmount)
-                    lastSentBolusAmount = currentBolusAmount
+                val currentBolusAmount = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
+                if (currentBolusAmount.cU != lastSentBolusAmount) {
+                    bolusProgressData.updateProgress(currentBolusAmount)
+                    lastSentBolusAmount = currentBolusAmount.cU
                 }
             }
         }

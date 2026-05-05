@@ -547,7 +547,7 @@ class InsightPlugin @Inject constructor(
                     val isPriming = bolusProgressData.state.value?.isPriming ?: false
                     val totalInsulin = bolusProgressData.state.value?.insulin ?: detailedBolusInfo.insulin
                     result.success(true).enacted(true)
-                    bolusProgressData.updateProgress(0, ch.bolusProgressString(PumpInsulin(0.0), isPriming), 0.0)
+                    bolusProgressData.updateProgress(percent = 0)
                     var trials = 0
                     val now = dateUtil.now()
                     val serial = serialNumber()
@@ -591,15 +591,13 @@ class InsightPlugin @Inject constructor(
                             trials = -1
                             val delivered = activeBolus.initialAmount - activeBolus.remainingAmount
                             val pumpInsulin = PumpInsulin(delivered)
-                            val percent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
-                            bolusProgressData.updateProgress(percent, ch.bolusProgressString(pumpInsulin, isPriming), delivered)
+                            bolusProgressData.updateProgress(delivered = pumpInsulin)
                         } else {
                             synchronized(_bolusLock) {
                                 if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                     if (!bolusCancelled) {
                                         val pumpInsulin = PumpInsulin(insulin)
-                                        val percent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
-                                        bolusProgressData.updateProgress(percent, ch.bolusProgressString(pumpInsulin, isPriming), insulin)
+                                        bolusProgressData.updateProgress(delivered = pumpInsulin)
                                     }
                                 }
                             }

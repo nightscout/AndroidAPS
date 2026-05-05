@@ -26,7 +26,7 @@ class MsgError(
         if (errorCode < 8) { // bolus delivering stopped
             danaPump.bolusStopped = true
             val currentPercent = bolusProgressData.state.value?.percent ?: 0
-            bolusProgressData.updateProgress(currentPercent, errorString, bolusProgressData.state.value?.delivered ?: 0.0)
+            bolusProgressData.updateProgress(currentPercent, errorString)
             // at least on Occlusion pump stops communication. Try to force reconnecting
             activePlugin.activePump.disconnect("Error from pump received")
             failed = true

@@ -10,10 +10,14 @@ import app.aaps.core.data.model.RM
  * (checking current pump state and skipping commands that would be no-ops).
  *
  * Buckets:
- *  - Working        — OPEN_LOOP / CLOSED_LOOP / CLOSED_LOOP_LGS / DISABLED_LOOP / RESUME: APS
- *                     drives the pump; reconciler does not interfere.
+ *  - Working        — OPEN_LOOP / CLOSED_LOOP / CLOSED_LOOP_LGS / RESUME: APS drives the pump;
+ *                     reconciler does not interfere.
  *  - ZeroDelivery   — DISCONNECTED_PUMP / SUPER_BOLUS: pump must deliver zero (zero-TBR, no EB).
- *  - SuspendedNoTbr — SUSPENDED_BY_USER / SUSPENDED_BY_DST: pump must have no active TBR.
+ *  - SuspendedNoTbr — SUSPENDED_BY_DST: pump must have no active TBR.
+ *  - Stopped        — DISABLED_LOOP / SUSPENDED_BY_USER: APS is off, no APS-driven TBR should
+ *                     remain. Pump is otherwise usable for manual delivery; treated identically
+ *                     to SuspendedNoTbr at the gate (cancel any active TBR on entry).
+ *                     SUSPENDED_BY_USER is the temporary counterpart of DISABLED_LOOP.
  *  - PumpReported   — SUSPENDED_BY_PUMP: LoopPlugin.runningModePreCheck owns this; reconciler
  *                     stays out of its way.
  */
@@ -39,30 +43,32 @@ object ReconcilerDecision {
             return Action.IssueZeroTbr(cancelExtendedBolus = true)
         }
 
-        // Entry to suspended-no-tbr: cancel any active TBR.
-        if (nextBucket == Bucket.SuspendedNoTbr) return Action.CancelTbr
+        // Entry to suspended-no-tbr or stopped: cancel any active TBR.
+        if (nextBucket == Bucket.SuspendedNoTbr || nextBucket == Bucket.Stopped) return Action.CancelTbr
 
         // Exit from zero-delivery to working: cancel the zero-TBR so APS can take over.
         if (prevBucket == Bucket.ZeroDelivery && nextBucket == Bucket.Working) return Action.CancelTbr
 
-        // Everything else (working→working, suspended-no-tbr→working): no pump action needed.
-        // SuspendedNoTbr did not set a TBR; exiting it leaves nothing to clean up.
+        // Everything else (working→working, suspended-no-tbr→working, stopped→working): no pump
+        // action needed. SuspendedNoTbr / Stopped did not set a TBR; exiting them leaves nothing
+        // to clean up.
         return Action.NoOp
     }
 
-    internal enum class Bucket { Working, ZeroDelivery, SuspendedNoTbr, PumpReported }
+    internal enum class Bucket { Working, ZeroDelivery, SuspendedNoTbr, Stopped, PumpReported }
 
     internal fun bucketOf(mode: RM.Mode): Bucket = when (mode) {
         RM.Mode.OPEN_LOOP,
         RM.Mode.CLOSED_LOOP,
         RM.Mode.CLOSED_LOOP_LGS,
-        RM.Mode.DISABLED_LOOP,
         RM.Mode.RESUME            -> Bucket.Working
+
+        RM.Mode.DISABLED_LOOP,
+        RM.Mode.SUSPENDED_BY_USER -> Bucket.Stopped
 
         RM.Mode.DISCONNECTED_PUMP,
         RM.Mode.SUPER_BOLUS       -> Bucket.ZeroDelivery
 
-        RM.Mode.SUSPENDED_BY_USER,
         RM.Mode.SUSPENDED_BY_DST  -> Bucket.SuspendedNoTbr
 
         RM.Mode.SUSPENDED_BY_PUMP -> Bucket.PumpReported

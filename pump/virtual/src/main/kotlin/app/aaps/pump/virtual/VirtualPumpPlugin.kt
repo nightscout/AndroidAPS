@@ -219,14 +219,11 @@ open class VirtualPumpPlugin @Inject constructor(
             .bolusDelivered(detailedBolusInfo.insulin)
             .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
             .comment(rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok))
-        val isPriming = bolusProgressData.state.value?.isPriming ?: false
-        val totalInsulin = bolusProgressData.state.value?.insulin ?: detailedBolusInfo.insulin
         var delivering = 0.0
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200)
             val pumpInsulin = PumpInsulin(delivering)
-            val percent = min((ch.fromPump(pumpInsulin, isPriming) / totalInsulin * 100).toInt(), 100)
-            bolusProgressData.updateProgress(percent, ch.bolusProgressString(pumpInsulin, isPriming), delivering)
+            bolusProgressData.updateProgress(delivered = pumpInsulin)
             delivering += 0.1
             if (bolusProgressData.isStopPressed)
                 return pumpEnactResultProvider.get()
@@ -235,7 +232,7 @@ open class VirtualPumpPlugin @Inject constructor(
                     .comment(rh.gs(app.aaps.core.ui.R.string.stop))
         }
         SystemClock.sleep(200)
-        bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, totalInsulin), detailedBolusInfo.insulin)
+        bolusProgressData.updateProgress(100)
         SystemClock.sleep(1000)
         aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
         _lastDataTime.value = System.currentTimeMillis()

@@ -17,33 +17,33 @@ class Objective1 @Inject constructor(
 
     init {
         tasks.add(object : Task(this, R.string.objectives_useprofileswitch) {
-            override fun isCompleted(): Boolean {
+            override suspend fun isCompleted(): Boolean {
                 return preferences.get(BooleanNonKey.ObjectivesProfileSwitchUsed)
             }
         })
         tasks.add(object : Task(this, R.string.objectives_usedisconnectpump) {
-            override fun isCompleted(): Boolean {
+            override suspend fun isCompleted(): Boolean {
                 return preferences.get(BooleanNonKey.ObjectivesDisconnectUsed)
             }
         }.hint(Hint(R.string.disconnectpump_hint)))
         tasks.add(object : Task(this, R.string.objectives_usereconnectpump) {
-            override fun isCompleted(): Boolean {
+            override suspend fun isCompleted(): Boolean {
                 return preferences.get(BooleanNonKey.ObjectivesReconnectUsed)
             }
         }.hint(Hint(R.string.disconnectpump_hint)))
         tasks.add(object : Task(this, R.string.objectives_usetemptarget) {
-            override fun isCompleted(): Boolean {
+            override suspend fun isCompleted(): Boolean {
                 return preferences.get(BooleanNonKey.ObjectivesTempTargetUsed)
             }
         }.hint(Hint(R.string.usetemptarget_hint)))
         tasks.add(object : Task(this, R.string.objectives_useloop) {
-            override fun isCompleted(): Boolean {
+            override suspend fun isCompleted(): Boolean {
                 return preferences.get(BooleanNonKey.ObjectivesLoopUsed)
             }
         }.hint(Hint(R.string.useaction_hint)))
         tasks.add(
             object : Task(this, R.string.objectives_usescale) {
-                override fun isCompleted(): Boolean {
+                override suspend fun isCompleted(): Boolean {
                     return preferences.get(BooleanNonKey.ObjectivesScaleUsed)
                 }
             }.hint(Hint(R.string.usescale_hint))

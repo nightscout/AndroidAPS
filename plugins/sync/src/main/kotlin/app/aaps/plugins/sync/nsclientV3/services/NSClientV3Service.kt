@@ -40,6 +40,7 @@ import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import java.net.URISyntaxException
 import javax.inject.Inject
 
@@ -61,7 +62,7 @@ class NSClientV3Service : DaggerService() {
     private val disposable = CompositeDisposable()
 
     private var wakeLock: PowerManager.WakeLock? = null
-    private val binder: IBinder = LocalBinder()
+    private val binder: IBinder = LocalBinder(this)
 
     @SuppressLint("WakelockTimeout")
     override fun onCreate() {
@@ -78,10 +79,11 @@ class NSClientV3Service : DaggerService() {
         if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 
-    inner class LocalBinder : Binder() {
+    class LocalBinder(service: NSClientV3Service) : Binder() {
 
-        val serviceInstance: NSClientV3Service
-            get() = this@NSClientV3Service
+        private val serviceRef = WeakReference(service)
+        val serviceInstance: NSClientV3Service?
+            get() = serviceRef.get()
     }
 
     override fun onBind(intent: Intent): IBinder = binder
@@ -94,18 +96,18 @@ class NSClientV3Service : DaggerService() {
 
     @OpenForTesting
     fun shutdownWebsockets() {
-        storageSocket?.on(Socket.EVENT_CONNECT, onConnectStorage)
-        storageSocket?.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
-        storageSocket?.on("create", onDataCreateUpdate)
-        storageSocket?.on("update", onDataCreateUpdate)
-        storageSocket?.on("delete", onDataDelete)
+        storageSocket?.off(Socket.EVENT_CONNECT, onConnectStorage)
+        storageSocket?.off(Socket.EVENT_DISCONNECT, onDisconnectStorage)
+        storageSocket?.off("create", onDataCreateUpdate)
+        storageSocket?.off("update", onDataCreateUpdate)
+        storageSocket?.off("delete", onDataDelete)
         storageSocket?.disconnect()
-        alarmSocket?.on(Socket.EVENT_CONNECT, onConnectAlarms)
-        alarmSocket?.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
-        alarmSocket?.on("announcement", onAnnouncement)
-        alarmSocket?.on("alarm", onAlarm)
-        alarmSocket?.on("urgent_alarm", onUrgentAlarm)
-        alarmSocket?.on("clear_alarm", onClearAlarm)
+        alarmSocket?.off(Socket.EVENT_CONNECT, onConnectAlarms)
+        alarmSocket?.off(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
+        alarmSocket?.off("announcement", onAnnouncement)
+        alarmSocket?.off("alarm", onAlarm)
+        alarmSocket?.off("urgent_alarm", onUrgentAlarm)
+        alarmSocket?.off("clear_alarm", onClearAlarm)
         alarmSocket?.disconnect()
         wsConnected = false
         storageSocket = null
@@ -114,43 +116,58 @@ class NSClientV3Service : DaggerService() {
 
     @Suppress("SameParameterValue")
     fun initializeWebSockets(reason: String) {
-        if (preferences.get(StringKey.NsClientUrl).isEmpty()) return
+        if (preferences.get(StringKey.NsClientUrl).isEmpty()) {
+            shutdownWebsockets()
+            return
+        }
+        if (!preferences.get(BooleanKey.NsClient3UseWs)) {
+            shutdownWebsockets()
+            return
+        }
+        if (!nsClientV3Plugin.isAllowed) {
+            shutdownWebsockets()
+            nsClientRepository.addLog("● WS", nsClientV3Plugin.blockingReason)
+            return
+        }
+        if (preferences.get(NsclientBooleanKey.NsPaused)) {
+            shutdownWebsockets()
+            nsClientRepository.addLog("● WS", "paused")
+            return
+        }
+        if (storageSocket != null) {
+            nsClientRepository.addLog("● WS", "already initialized, skip $reason")
+            return
+        }
         val urlStorage = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/storage"
         val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
-        if (!nsClientV3Plugin.isAllowed) {
-            nsClientRepository.addLog("● WS", nsClientV3Plugin.blockingReason)
-        } else if (preferences.get(NsclientBooleanKey.NsPaused)) {
-            nsClientRepository.addLog("● WS", "paused")
-        } else {
-            try {
-                // java io.client doesn't support multiplexing. create 2 sockets
-                storageSocket = IO.socket(urlStorage).also { socket ->
-                    socket.on(Socket.EVENT_CONNECT, onConnectStorage)
-                    socket.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
-                    nsClientRepository.addLog("► WS", "do connect storage $reason")
-                    socket.connect()
-                    socket.on("create", onDataCreateUpdate)
-                    socket.on("update", onDataCreateUpdate)
-                    socket.on("delete", onDataDelete)
-                }
-                if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) ||
-                    preferences.get(BooleanKey.NsClientNotificationsFromAlarms)
-                )
-                    alarmSocket = IO.socket(urlAlarm).also { socket ->
-                        socket.on(Socket.EVENT_CONNECT, onConnectAlarms)
-                        socket.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
-                        nsClientRepository.addLog("► WS", "do connect alarm $reason")
-                        socket.connect()
-                        socket.on("announcement", onAnnouncement)
-                        socket.on("alarm", onAlarm)
-                        socket.on("urgent_alarm", onUrgentAlarm)
-                        socket.on("clear_alarm", onClearAlarm)
-                    }
-            } catch (_: URISyntaxException) {
-                nsClientRepository.addLog("● WS", "Wrong URL syntax")
-            } catch (_: RuntimeException) {
-                nsClientRepository.addLog("● WS", "RuntimeException")
+        try {
+            // java io.client doesn't support multiplexing. create 2 sockets
+            storageSocket = IO.socket(urlStorage).also { socket ->
+                socket.on(Socket.EVENT_CONNECT, onConnectStorage)
+                socket.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
+                nsClientRepository.addLog("► WS", "do connect storage $reason")
+                socket.connect()
+                socket.on("create", onDataCreateUpdate)
+                socket.on("update", onDataCreateUpdate)
+                socket.on("delete", onDataDelete)
             }
+            if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) ||
+                preferences.get(BooleanKey.NsClientNotificationsFromAlarms)
+            )
+                alarmSocket = IO.socket(urlAlarm).also { socket ->
+                    socket.on(Socket.EVENT_CONNECT, onConnectAlarms)
+                    socket.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
+                    nsClientRepository.addLog("► WS", "do connect alarm $reason")
+                    socket.connect()
+                    socket.on("announcement", onAnnouncement)
+                    socket.on("alarm", onAlarm)
+                    socket.on("urgent_alarm", onUrgentAlarm)
+                    socket.on("clear_alarm", onClearAlarm)
+                }
+        } catch (_: URISyntaxException) {
+            nsClientRepository.addLog("● WS", "Wrong URL syntax")
+        } catch (_: RuntimeException) {
+            nsClientRepository.addLog("● WS", "RuntimeException")
         }
     }
 
@@ -230,7 +247,7 @@ class NSClientV3Service : DaggerService() {
             "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it)) }
             "entries"      -> docString.toNSSgvV3()?.let {
                 nsIncomingDataProcessor.processSgvs(listOf(it), doFullSync = false)
-                storeDataForDb.storeGlucoseValuesToDb()
+                storeDataForDb.requestStoreGlucoseValues()
             }
 
             "profile"      ->
@@ -238,12 +255,12 @@ class NSClientV3Service : DaggerService() {
 
             "treatments"   -> docString.toNSTreatment()?.let {
                 nsIncomingDataProcessor.processTreatments(listOf(it), doFullSync = false)
-                storeDataForDb.storeTreatmentsToDb(fullSync = false)
+                storeDataForDb.requestStoreTreatments(fullSync = false)
             }
 
             "foods"        -> docString.toNSFood()?.let {
                 nsIncomingDataProcessor.processFood(listOf(it))
-                storeDataForDb.storeFoodsToDb()
+                storeDataForDb.requestStoreFoods()
             }
 
             "settings"     -> { /* nothing to do for now */
@@ -259,11 +276,11 @@ class NSClientV3Service : DaggerService() {
         nsClientRepository.addLog("◄ WS DELETE", "$collection $identifier")
         if (collection == "treatments") {
             storeDataForDb.addToDeleteTreatment(identifier)
-            storeDataForDb.updateDeletedTreatmentsInDb()
+            storeDataForDb.requestUpdateDeletedTreatments()
         }
         if (collection == "entries") {
             storeDataForDb.addToDeleteGlucoseValue(identifier)
-            storeDataForDb.updateDeletedGlucoseValuesInDb()
+            storeDataForDb.requestUpdateDeletedGlucoseValues()
         }
     }
 

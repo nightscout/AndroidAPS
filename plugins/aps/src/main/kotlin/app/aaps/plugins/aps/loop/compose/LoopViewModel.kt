@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,7 +63,7 @@ class LoopViewModel(
             }
             .launchIn(scope)
 
-        updateState()
+        scope.launch { updateState() }
         preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
     }
 
@@ -75,7 +74,7 @@ class LoopViewModel(
         }
     }
 
-    private fun updateState() {
+    private suspend fun updateState() {
         val lastRun = loop.lastRun
         if (lastRun == null) {
             _uiState.value = LoopUiState(

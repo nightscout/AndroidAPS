@@ -323,7 +323,7 @@ class DiaconnG8Plugin @Inject constructor(
         if (detailedBolusInfo.insulin > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
         result.success = connectionOK
-        result.bolusDelivered = bolusProgressData.state.value?.delivered ?: 0.0
+        result.bolusDelivered = bolusProgressData.state.value?.delivered?.cU ?: 0.0
 
         if (result.success) result.enacted = true
         if (!result.success) {

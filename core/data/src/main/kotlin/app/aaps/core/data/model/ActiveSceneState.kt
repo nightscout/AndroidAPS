@@ -27,24 +27,21 @@ data class ActiveSceneState(
 
     /**
      * Snapshot of system state before scene activation, used for revert.
+     * TT/PS/RM revert works by shortening the scene's own record so the resolver
+     * naturally falls back to the underlying state — no prior values needed.
+     * SMB has no duration model, so its prior value is captured explicitly.
      */
     data class PriorState(
         /** SMB enabled state before activation (null if SMB wasn't changed by scene) */
         val smbEnabled: Boolean? = null,
-        /** Active profile name before activation (null if profile wasn't changed by scene) */
-        val profileName: String? = null,
-        /** Profile percentage before activation (null if profile wasn't changed by scene) */
-        val profilePercentage: Int? = null,
-        /** Profile time shift before activation (null if profile wasn't changed by scene) */
-        val profileTimeShiftHours: Int? = null,
-        /** Running mode before activation (null if loop mode wasn't changed by scene) */
-        val runningMode: RM.Mode? = null,
         // Record IDs created by scene activation — used to detect manual overrides at revert time
         /** ID of the TT record created by scene (null if scene didn't set TT) */
         val sceneTtId: Long? = null,
         /** ID of the ProfileSwitch record created by scene (null if scene didn't change profile) */
         val scenePsId: Long? = null,
         /** ID of the RunningMode record created by scene (null if scene didn't change loop mode) */
-        val sceneRunningModeId: Long? = null
+        val sceneRunningModeId: Long? = null,
+        /** ID of the TherapyEvent record created by scene (null if scene didn't log a CarePortalEvent) */
+        val sceneTherapyEventId: Long? = null
     )
 }

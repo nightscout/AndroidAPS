@@ -86,7 +86,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         constraintChecker: ConstraintsChecker,
         profileFunction: ProfileFunction,
         activePlugin: ActivePlugin,
-        context: Context,
         config: Config,
         dateUtil: DateUtil,
         fabricPrivacy: FabricPrivacy,
@@ -101,7 +100,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         bolusProgressData: BolusProgressData
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, rh, constraintChecker, profileFunction,
-        activePlugin, context, config, dateUtil, fabricPrivacy,
+        activePlugin, config, dateUtil, fabricPrivacy,
         uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, appScope, bolusProgressData
     ) {
 
@@ -199,7 +198,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         runTest {
             whenever(persistenceLayer.observeChanges(anyOrNull<Class<*>>())).thenReturn(emptyFlow())
             commandQueue = CommandQueueMocked(
-                injector, aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin, context,
+                injector, aapsLogger, rxBus, rh, constraintChecker, profileFunction, activePlugin,
                 config, dateUtil, fabricPrivacy, uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope, bolusProgressData
             )
             testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
@@ -246,7 +245,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun commandIsPickedUp() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, rh,
-            constraintChecker, profileFunction, activePlugin, context,
+            constraintChecker, profileFunction, activePlugin,
             config, dateUtil, fabricPrivacy, uiInteraction, notificationManager, persistenceLayer, decimalFormatter, pumpEnactResultProvider, jobName, workManager, testScope, bolusProgressData
         )
         val handler: Handler = mock()
@@ -677,7 +676,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     // --- Running-mode gate tests ---
     //
     // These verify the queue rejects commands when the active running mode forbids them.
-    // The gate itself is exhaustively tested in TbrGateTest; here we only verify the queue
+    // The gate itself is exhaustively tested in PumpCommandGateTest; here we only verify the queue
     // calls the gate and propagates its decision to the callback.
 
     @Test
@@ -744,18 +743,20 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `tempBasalAbsolute non-zero is rejected during SUSPENDED_BY_USER`() = runTest {
+    fun `tempBasalAbsolute non-zero is allowed during SUSPENDED_BY_USER`() = runTest {
+        // SUSPENDED_BY_USER is the temporary counterpart of DISABLED_LOOP — manual delivery stays
+        // available; the gate does not block TBR / bolus / EB.
         stubActiveMode(app.aaps.core.data.model.RM.Mode.SUSPENDED_BY_USER)
         val queued = commandQueue.tempBasalAbsolute(1.5, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
-        assertThat(queued).isFalse()
+        assertThat(queued).isTrue()
     }
 
     @Test
-    fun `tempBasalAbsolute rate zero is also rejected during SUSPENDED_BY_USER`() = runTest {
-        // SUSPENDED_BY_* means "no TBR" — even zero-rate TBR is rejected.
+    fun `bolus is allowed during SUSPENDED_BY_USER`() = runTest {
         stubActiveMode(app.aaps.core.data.model.RM.Mode.SUSPENDED_BY_USER)
-        val queued = commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, null)
-        assertThat(queued).isFalse()
+        val info = DetailedBolusInfo().also { it.insulin = 1.0 }
+        val queued = commandQueue.bolus(info, null)
+        assertThat(queued).isTrue()
     }
 
     @Test

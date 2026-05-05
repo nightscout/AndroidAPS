@@ -26,12 +26,7 @@ class DanaRSPacketNotifyDeliveryComplete @Inject constructor(
     override fun handleMessage(data: ByteArray) {
         val deliveredInsulin = byteArrayToInt(getBytes(data, DATA_START, 2)) / 100.0
         danaPump.bolusDone = true
-        val isPriming = bolusProgressData.state.value?.isPriming == true
-        val insulin = bolusProgressData.state.value?.insulin ?: 0.0
-        val delivered = ch.fromPump(PumpInsulin(deliveredInsulin), isPriming)
-        val percent = if (insulin > 0) min((delivered / insulin * 100).toInt(), 100) else 0
-        val status = ch.bolusProgressString(PumpInsulin(deliveredInsulin), isPriming)
-        bolusProgressData.updateProgress(percent, status, deliveredInsulin)
+        bolusProgressData.updateProgress(PumpInsulin(deliveredInsulin))
         aapsLogger.debug(LTag.PUMPCOMM, "Delivered insulin: $deliveredInsulin")
     }
 

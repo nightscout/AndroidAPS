@@ -2,6 +2,7 @@ package app.aaps.ui.compose.extendedBolusDialog
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -13,8 +14,8 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.core.objects.runningMode.TbrGate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -31,7 +33,7 @@ import kotlin.math.abs
 @Stable
 class ExtendedBolusDialogViewModel @Inject constructor(
     private val constraintChecker: ConstraintsChecker,
-    private val activePlugin: ActivePlugin,
+    activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val uel: UserEntryLogger,
     private val rh: ResourceHelper,
@@ -56,8 +58,10 @@ class ExtendedBolusDialogViewModel @Inject constructor(
     init {
         val pumpDescription = activePlugin.activePump.pumpDescription
         val maxInsulin = constraintChecker.getMaxExtendedBolusAllowed().value()
-        val isClosedLoop = constraintChecker.isClosedLoopAllowed().value()
 
+        // Default to showing the loop-stop warning until the async closed-loop check
+        // resolves, so a closed-loop user can't briefly see the form and start typing
+        // before the warning gate appears.
         _uiState.update {
             ExtendedBolusDialogUiState(
                 insulin = pumpDescription.extendedBolusStep,
@@ -66,9 +70,18 @@ class ExtendedBolusDialogViewModel @Inject constructor(
                 extendedStep = pumpDescription.extendedBolusStep,
                 extendedDurationStep = pumpDescription.extendedBolusDurationStep,
                 extendedMaxDuration = pumpDescription.extendedBolusMaxDuration,
-                showLoopStopWarning = isClosedLoop,
-                loopStopWarningAccepted = !isClosedLoop,
+                showLoopStopWarning = true,
+                loopStopWarningAccepted = false,
             )
+        }
+        viewModelScope.launch {
+            val isClosedLoop = constraintChecker.isClosedLoopAllowed().value()
+            _uiState.update {
+                it.copy(
+                    showLoopStopWarning = isClosedLoop,
+                    loopStopWarningAccepted = !isClosedLoop
+                )
+            }
         }
     }
 
@@ -122,7 +135,7 @@ class ExtendedBolusDialogViewModel @Inject constructor(
             ConstraintObject(state.insulin, aapsLogger)
         ).value()
 
-        if (runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.EXTENDED_BOLUS)) return
+        if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.EXTENDED_BOLUS)) return
 
         uel.log(
             action = Action.EXTENDED_BOLUS, source = Sources.ExtendedBolusDialog,

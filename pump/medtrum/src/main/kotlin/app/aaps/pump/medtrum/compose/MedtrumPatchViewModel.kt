@@ -497,15 +497,20 @@ class MedtrumPatchViewModel @Inject constructor(
         _siteArrow.value = arrow
     }
 
+    /** Navigate from ATTACH to SITE_LOCATION if enabled, otherwise straight to ACTIVATE. */
+    fun moveAfterPriming() {
+        moveStep(if (showSiteLocationStep) PatchStep.SITE_LOCATION else PatchStep.ATTACH_PATCH)
+    }
+
     override fun completeSiteLocation() {
         // Site location is saved after activation completes (patchStartTime not available yet)
-        moveStep(PatchStep.ACTIVATE)
+        moveStep(PatchStep.ATTACH_PATCH)
     }
 
     override fun skipSiteLocation() {
         _siteLocation.value = TE.Location.NONE
         _siteArrow.value = TE.Arrow.NONE
-        moveStep(PatchStep.ACTIVATE)
+        moveStep(PatchStep.ATTACH_PATCH)
     }
 
     override fun bodyType(): BodyType =
@@ -561,6 +566,10 @@ class MedtrumPatchViewModel @Inject constructor(
     }
 
     private fun prepareStep(newStep: PatchStep): PatchStep {
+        // Rebuild page list when re-entering a wizard entry point (e.g. New Patch after deactivation)
+        if (newStep in listOf(PatchStep.PREPARE_PATCH, PatchStep.START_DEACTIVATION, PatchStep.RETRY_ACTIVATION)) {
+            wizardPages = buildWizardPages(newStep)
+        }
         val stringResId = when (newStep) {
             PatchStep.PREPARE_PATCH            -> R.string.step_prepare_patch
             PatchStep.PREPARE_PATCH_CONNECT    -> R.string.step_prepare_patch_connect
@@ -628,8 +637,8 @@ class MedtrumPatchViewModel @Inject constructor(
             add(WizardPage.PREPARE)
             if (showInsulinStep) add(WizardPage.SELECT_INSULIN)
             add(WizardPage.PRIME)
-            add(WizardPage.ATTACH)
             if (showSiteLocationStep) add(WizardPage.SITE_LOCATION)
+            add(WizardPage.ATTACH)
             add(WizardPage.ACTIVATE)
             add(WizardPage.COMPLETE)
         }
@@ -655,11 +664,12 @@ class MedtrumPatchViewModel @Inject constructor(
         PatchStep.PRIMING,
         PatchStep.PRIME_COMPLETE           -> WizardPage.PRIME
 
+        PatchStep.SITE_LOCATION            -> WizardPage.SITE_LOCATION
+
         PatchStep.ATTACH_PATCH             -> WizardPage.ATTACH
         PatchStep.ACTIVATE,
         PatchStep.ACTIVATE_COMPLETE        -> WizardPage.ACTIVATE
 
-        PatchStep.SITE_LOCATION            -> WizardPage.SITE_LOCATION
         PatchStep.COMPLETE                 -> WizardPage.COMPLETE
         PatchStep.START_DEACTIVATION       -> WizardPage.CONFIRM_DEACTIVATE
         PatchStep.DEACTIVATE,

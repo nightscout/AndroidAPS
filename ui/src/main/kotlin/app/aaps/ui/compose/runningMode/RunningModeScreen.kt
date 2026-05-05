@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import app.aaps.core.ui.compose.AapsTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.ue.Action
+import app.aaps.core.ui.compose.AapsTopAppBar
 import app.aaps.core.ui.compose.dialogs.OkCancelDialog
 import app.aaps.ui.R
 import app.aaps.ui.compose.overview.chips.toColor
@@ -233,7 +233,7 @@ private fun LoopControlSection(
             if (allowedModes.contains(RM.Mode.DISABLED_LOOP)) {
                 CompactButton(
                     disableLoopText, RM.Mode.DISABLED_LOOP,
-                    { onAction(PendingRunningModeAction(RM.Mode.DISABLED_LOOP, Action.LOOP_DISABLED, Int.MAX_VALUE, disableLoopText)) },
+                    { onAction(PendingRunningModeAction(RM.Mode.DISABLED_LOOP, Action.LOOP_DISABLED, 0, disableLoopText)) },
                     Modifier.weight(1f)
                 )
             }

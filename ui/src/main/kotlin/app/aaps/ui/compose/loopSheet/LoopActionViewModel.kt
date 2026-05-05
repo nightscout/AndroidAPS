@@ -68,7 +68,7 @@ class LoopActionViewModel @Inject constructor(
 
         val resultAvailable = lastRun != null &&
             (lastRun.lastOpenModeAccept == 0L || lastRun.lastOpenModeAccept < lastRun.lastAPSRun) &&
-            lastRun.constraintsProcessed?.isChangeRequested == true
+            lastRun.constraintsProcessed?.isChangeRequested() == true
 
         val available = resultAvailable &&
             pump.isInitialized() &&

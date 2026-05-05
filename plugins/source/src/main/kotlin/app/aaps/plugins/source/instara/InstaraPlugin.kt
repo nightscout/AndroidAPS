@@ -44,7 +44,7 @@ class InstaraPlugin @Inject constructor(
 ) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
-        .composeContent { plugin ->
+        .composeContent {
             BgSourceComposeContent(
                 title = rh.gs(app.aaps.plugins.source.R.string.instara_app)
             )
@@ -99,6 +99,7 @@ class InstaraPlugin @Inject constructor(
         // Persist per-device Instara meta into preferences
         @Inject lateinit var preferences: Preferences
 
+        @Suppress("SameParameterValue")
         private fun readDouble(json: JSONObject, vararg keys: String): Double {
             for (k in keys) if (json.has(k) && !json.isNull(k)) return json.getDouble(k)
             throw JSONException("Missing glucose value field among: ${keys.joinToString()}")
@@ -128,7 +129,8 @@ class InstaraPlugin @Inject constructor(
          * - If malformed/missing -> record is INVALID -> DO NOT insert into DB.
          */
         private fun parseSgvIdStrict(json: JSONObject): Long? {
-            val v = json.optString("sgvId", null)?.trim() ?: return null
+            val v = if (json.has("sgvId")) json.getString("sgvId").trim()
+            else return null
             if (v.length != 13) return null
             if (!v.all { it.isDigit() }) return null
             return v.toLongOrNull()
@@ -254,7 +256,7 @@ class InstaraPlugin @Inject constructor(
                         hasRecentInBatch = true
                     }
 
-                    val unitsField = json.optString("units", null)
+                    val unitsField = json.optString("units")
 
                     // Accept either "current" or legacy "sgv" as the primary value
                     val current = readDouble(json, "current", "sgv")

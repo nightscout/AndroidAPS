@@ -11,7 +11,7 @@ data class PS(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     override var ids: IDs = IDs(),
-    var timestamp: Long,
+    override var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var basalBlocks: List<Block>,
     var isfBlocks: List<Block>,
@@ -25,7 +25,7 @@ data class PS(
     var duration: Long,
     /** Applied insulin configuration */
     var iCfg: ICfg
-) : HasIDs {
+) : HasIDs, TimeStamped {
 
     fun copy(): PS =
         PS(

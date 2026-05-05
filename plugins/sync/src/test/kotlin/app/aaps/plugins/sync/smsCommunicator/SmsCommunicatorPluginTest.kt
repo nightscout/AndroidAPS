@@ -73,7 +73,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var smsManager: SmsManager
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var pumpStatusProvider: PumpStatusProvider
-    @Mock lateinit var runningModeGuard: RunningModeGuard
+    private lateinit var runningModeGuard: RunningModeGuard
 
     private val iCfg = ICfg(insulinLabel = "Fake", insulinEndTime = 9 * 3600 * 1000, insulinPeakTime = 60 * 60 * 1000, concentration = 1.0)
 
@@ -102,6 +102,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             ).thenReturn(PersistenceLayer.TransactionResult<TT>())
         }
         whenever(insulin.iCfg).thenReturn(iCfg)
+        // Use a real RunningModeGuard so the gate decisions actually fire from the mocked loop
+        // (a mock guard returns null for everything → all gate-protected paths silently allow).
+        runningModeGuard = RunningModeGuard(loop, rh, rxBus)
+        // Default running mode for tests that don't care; individual tests can override.
+        // Without this, the gate sees null mode and PumpCommandGate.check throws NPE.
+        runBlocking { whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP) }
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
             aapsLogger, rh, smsManager, preferences, constraintChecker, rxBus, profileFunction, profileUtil, activePlugin, insulin, localProfileManager,
             commandQueue, loop, iobCobCalculator, xDripBroadcast, otp, config, dateUtilMocked, uel,
@@ -1019,6 +1025,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Pump suspended")
         testPumpPlugin.pumpSuspended = false
+        whenever(loop.runningMode()).thenReturn(RM.Mode.CLOSED_LOOP)
 
         //BOLUS 1 a
         smsCommunicatorPlugin.messages = ArrayList()

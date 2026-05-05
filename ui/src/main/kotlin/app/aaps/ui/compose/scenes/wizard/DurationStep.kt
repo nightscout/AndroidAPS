@@ -47,6 +47,13 @@ internal fun DurationStep(
             valueFormatResId = R.string.mins,
             formatAsInt = true
         )
+        if (state.durationMinutes == 0) {
+            Text(
+                text = stringResource(R.string.scene_duration_indefinite),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 

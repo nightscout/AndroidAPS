@@ -26,6 +26,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.objects.runningMode.PumpCommandGate
+import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.objects.wizard.BolusWizard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -54,12 +56,13 @@ class WizardDialogViewModel @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val persistenceLayer: PersistenceLayer,
-    val preferences: Preferences,
-    val config: Config,
-    val rh: ResourceHelper,
-    val dateUtil: DateUtil,
+    private val preferences: Preferences,
+    config: Config,
+    private val rh: ResourceHelper,
+    private val dateUtil: DateUtil,
     val decimalFormatter: DecimalFormatter,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    runningModeGuard: RunningModeGuard
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WizardDialogUiState())
@@ -123,6 +126,9 @@ class WizardDialogViewModel @Inject constructor(
             val basalIob = runBlocking { iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended() }.round()
             val totalIOB = bolusIob.iob + basalIob.basaliob
 
+            val cantDeliverBolus = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS) != null
+            val forcedRecordOnly = cantDeliverBolus || !activePlugin.activePump.isInitialized() || config.AAPSCLIENT
+
             _uiState.update {
                 WizardDialogUiState(
                     // User inputs
@@ -159,7 +165,8 @@ class WizardDialogViewModel @Inject constructor(
                     hasBgData = hasBgData,
                     bgAgeMinutes = bgAgeMinutes,
                     // Initial IOB display
-                    totalIOB = -totalIOB
+                    totalIOB = -totalIOB,
+                    forcedRecordOnly = forcedRecordOnly
                 )
             }
 
@@ -435,7 +442,8 @@ class WizardDialogViewModel @Inject constructor(
             advisor = false,
             eCarbsGrams = state.eCarbs,
             eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-            eCarbsDurationHours = state.eCarbsDurationHours
+            eCarbsDurationHours = state.eCarbsDurationHours,
+            forcedRecordOnly = state.forcedRecordOnly
         ) ?: emptyList()
     }
 
@@ -445,7 +453,8 @@ class WizardDialogViewModel @Inject constructor(
             advisor = true,
             eCarbsGrams = state.eCarbs,
             eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
-            eCarbsDurationHours = state.eCarbsDurationHours
+            eCarbsDurationHours = state.eCarbsDurationHours,
+            forcedRecordOnly = state.forcedRecordOnly
         ) ?: emptyList()
     }
 
@@ -457,8 +466,9 @@ class WizardDialogViewModel @Inject constructor(
                     _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
                 },
                 eCarbsGrams = state.eCarbs,
-                eCarbsDelayMinutes = state.eCarbsDelayMinutes,
-                eCarbsDurationHours = state.eCarbsDurationHours
+                eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
+                eCarbsDurationHours = state.eCarbsDurationHours,
+                forcedRecordOnly = state.forcedRecordOnly
             )
         }
     }
@@ -470,8 +480,9 @@ class WizardDialogViewModel @Inject constructor(
                 _sideEffect.tryEmit(SideEffect.ShowDeliveryError(comment))
             },
             eCarbsGrams = state.eCarbs,
-            eCarbsDelayMinutes = state.eCarbsDelayMinutes,
-            eCarbsDurationHours = state.eCarbsDurationHours
+            eCarbsDelayMinutes = state.eCarbsDelayMinutes + state.carbTime,
+            eCarbsDurationHours = state.eCarbsDurationHours,
+            forcedRecordOnly = state.forcedRecordOnly
         )
     }
 

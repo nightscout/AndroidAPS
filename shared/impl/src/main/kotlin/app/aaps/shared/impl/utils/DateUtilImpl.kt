@@ -287,6 +287,14 @@ class DateUtilImpl @Inject constructor(
         return timeFrameString(durationMillis, rh)
     }
 
+    override fun timeRemainingString(timeInMillis: Long, rh: ResourceHelper): String {
+        val duration = timeInMillis.milliseconds
+        val totalHours = duration.inWholeHours.toInt()
+        val remainingMinutes = (duration - totalHours.hours).inWholeMinutes.toInt()
+        return if (totalHours > 0) rh.gs(R.string.time_remaining_h_m, totalHours, remainingMinutes)
+        else rh.gs(R.string.time_remaining_m, remainingMinutes)
+    }
+
     override fun now(): Long = clock.millis()
 
     override fun nowWithoutMilliseconds(): Long =

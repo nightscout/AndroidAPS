@@ -67,10 +67,12 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import java.net.URISyntaxException
 import java.util.Locale
 import javax.inject.Inject
@@ -107,7 +109,7 @@ class NSClientService : DaggerService() {
     private var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private var wakeLock: PowerManager.WakeLock? = null
-    private val binder: IBinder = LocalBinder()
+    private val binder: IBinder = LocalBinder(this)
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var socket: Socket? = null
     private var dataCounter = 0
@@ -206,10 +208,11 @@ class NSClientService : DaggerService() {
         }
     }
 
-    inner class LocalBinder : Binder() {
+    class LocalBinder(service: NSClientService) : Binder() {
 
-        val serviceInstance: NSClientService
-            get() = this@NSClientService
+        private val serviceRef = WeakReference(service)
+        val serviceInstance: NSClientService?
+            get() = serviceRef.get()
     }
 
     override fun onBind(intent: Intent): IBinder = binder
@@ -512,7 +515,7 @@ class NSClientService : DaggerService() {
                         val foods = data.getJSONArray("food")
                         if (foods.length() > 0) nsClientRepository.addLog("◄ DATA", "received " + foods.length() + " foods")
                         nsIncomingDataProcessor.processFood(foods)
-                        storeDataForDb.storeFoodsToDb()
+                        storeDataForDb.requestStoreFoods()
                     }
                     if (data.has("mbgs")) {
                         val mbgArray = data.getJSONArray("mbgs")
@@ -533,7 +536,7 @@ class NSClientService : DaggerService() {
                         if (sgvs.length() > 0) {
                             nsClientRepository.addLog("◄ DATA", "received " + sgvs.length() + " sgvs")
                             nsIncomingDataProcessor.processSgvs(sgvs, false)
-                            storeDataForDb.storeGlucoseValuesToDb()
+                            storeDataForDb.requestStoreGlucoseValues()
                         }
                     }
                     nsClientRepository.addLog("◄ LAST", dateUtil.dateAndTimeString(latestDateInReceivedData))

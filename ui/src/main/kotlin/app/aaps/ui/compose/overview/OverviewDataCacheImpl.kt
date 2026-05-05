@@ -18,6 +18,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.compensateForClockSkew
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -353,6 +354,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             // Observe running mode changes for graph + chip
             scope.launch {
                 persistenceLayer.observeChanges(RM::class.java)
+                    .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
                         updateRunningModeFromDatabase()
@@ -363,6 +365,7 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             // Observe TT changes for target line graph + chip
             scope.launch {
                 persistenceLayer.observeChanges(TT::class.java)
+                    .compensateForClockSkew(config, dateUtil)
                     .debounce(300)
                     .collect {
                         updateTempTargetFromDatabase()
@@ -376,6 +379,19 @@ class OverviewDataCacheImpl @AssistedInject constructor(
                     rxBus.toFlow(EventLoopUpdateGui::class.java),
                     rxBus.toFlow(EventNewOpenLoopNotification::class.java)
                 ).collect { updateTempTargetFromDatabase() }
+            }
+            // AAPSCLIENT counterpart: the ADJUSTED text comes from
+            // processedDeviceStatusData.getAPSResult()?.targetBG, which NSDeviceStatusHandler
+            // mutates in place when a new NS devicestatus arrives — no DB change, no flow.
+            // EventNsClientStatusUpdated fires after every devicestatus batch on AAPSCLIENT,
+            // so re-read the cache then. Also covers the post-expiry case where the master's
+            // APS result no longer matches the just-expired TT.
+            if (config.AAPSCLIENT) {
+                scope.launch {
+                    rxBus.toFlow(EventNsClientStatusUpdated::class.java)
+                        .debounce(300)
+                        .collect { updateTempTargetFromDatabase() }
+                }
             }
             // EPS changes affect EPS graph, profile chip, TT chip, target line, and basal
             scope.launch {
@@ -566,7 +582,8 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         // Read directly from DB — loop.runningModeRecord routes through runningModePreCheck()
         // which touches activePump and crashes at startup before the pump plugin is selected.
         // Loop will correct mode itself when it next runs; the RM observer will pick it up.
-        val rmRecord = persistenceLayer.getRunningModeActiveAt(dateUtil.now())
+        val now = dateUtil.now()
+        val rmRecord = persistenceLayer.getRunningModeActiveAt(now)
 
         // Store raw data only - ViewModel computes display text
         _runningModeFlow.value = RunningModeDisplayData(
@@ -590,10 +607,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
         val now = dateUtil.now()
         val basalData = iobCobCalculator.getBasalData(profile, now)
         val state = when {
-            !basalData.isTempBasalRunning                               -> TbrState.NONE
-            abs(basalData.tempBasalAbsolute - basalData.basal) < 0.01  -> TbrState.NONE
-            basalData.tempBasalAbsolute > basalData.basal               -> TbrState.HIGH
-            else                                                        -> TbrState.LOW
+            !basalData.isTempBasalRunning                             -> TbrState.NONE
+            abs(basalData.tempBasalAbsolute - basalData.basal) < 0.01 -> TbrState.NONE
+            basalData.tempBasalAbsolute > basalData.basal             -> TbrState.HIGH
+            else                                                      -> TbrState.LOW
         }
         // Pull timing from the active TB row for expiry detection on ticks. Extended boluses
         // converted to TBR (EB-as-TB) won't have a TB row; state is still correct but the

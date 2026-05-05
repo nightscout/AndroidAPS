@@ -54,8 +54,8 @@ import app.aaps.core.keys.interfaces.withCompose
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.icons.IcPluginSms
@@ -315,7 +315,6 @@ class SmsCommunicatorPlugin @Inject constructor(
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_command_not_allowed)))
                     else if (commandQueue.bolusInQueue()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_another_bolus_in_queue)))
                     else if (divided.size == 2 && dateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)))
-                    else if (divided.size == 2 && loop.runningMode().isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.pumpsuspended)))
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
@@ -719,8 +718,8 @@ class SmsCommunicatorPlugin @Inject constructor(
             else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.sms_wrong_tbr_duration, durationStep)))
             else {
                 tempBasalPct = constraintChecker.applyBasalPercentConstraints(ConstraintObject(tempBasalPct, aapsLogger), profile).value()
-                val gateKind = if (tempBasalPct == 0) TbrGate.CommandKind.TEMP_BASAL_ZERO
-                else TbrGate.CommandKind.TEMP_BASAL_NONZERO
+                val gateKind = if (tempBasalPct == 0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO
+                else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
                 val gateReject = runningModeGuard.rejectionMessage(gateKind)
                 if (gateReject != null) {
                     sendSMS(Sms(receivedSms.phoneNumber, gateReject))
@@ -757,8 +756,8 @@ class SmsCommunicatorPlugin @Inject constructor(
             else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.sms_wrong_tbr_duration, durationStep)))
             else {
                 tempBasal = constraintChecker.applyBasalConstraints(ConstraintObject(tempBasal, aapsLogger), profile).value()
-                val gateKind = if (tempBasal == 0.0) TbrGate.CommandKind.TEMP_BASAL_ZERO
-                else TbrGate.CommandKind.TEMP_BASAL_NONZERO
+                val gateKind = if (tempBasal == 0.0) PumpCommandGate.CommandKind.TEMP_BASAL_ZERO
+                else PumpCommandGate.CommandKind.TEMP_BASAL_NONZERO
                 val gateReject = runningModeGuard.rejectionMessage(gateKind)
                 if (gateReject != null) {
                     sendSMS(Sms(receivedSms.phoneNumber, gateReject))
@@ -812,7 +811,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             extended = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(extended, aapsLogger)).value()
             if (extended == 0.0 || duration == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
             else {
-                val gateReject = runningModeGuard.rejectionMessage(TbrGate.CommandKind.EXTENDED_BOLUS)
+                val gateReject = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.EXTENDED_BOLUS)
                 if (gateReject != null) {
                     sendSMS(Sms(receivedSms.phoneNumber, gateReject))
                     receivedSms.processed = true
@@ -847,7 +846,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (divided.size == 3 && !isMeal) {
             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
         } else if (bolus > 0.0) {
-            val gateReject = runningModeGuard.rejectionMessage(TbrGate.CommandKind.BOLUS)
+            val gateReject = runningModeGuard.rejectionMessage(PumpCommandGate.CommandKind.BOLUS)
             if (gateReject != null) {
                 sendSMS(Sms(receivedSms.phoneNumber, gateReject))
                 receivedSms.processed = true

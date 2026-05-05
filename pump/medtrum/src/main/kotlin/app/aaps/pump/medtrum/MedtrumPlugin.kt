@@ -283,9 +283,9 @@ class MedtrumPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
         val connectionOK = medtrumService?.setBolus(detailedBolusInfo) == true
         val result = pumpEnactResultProvider.get()
-        val delivered = bolusProgressData.state.value?.delivered ?: 0.0
-        result.success = (connectionOK && abs(detailedBolusInfo.insulin - delivered) < pumpDescription.bolusStep) || medtrumPump.bolusStopped
-        result.bolusDelivered = delivered
+        val delivered = bolusProgressData.state.value?.delivered ?: PumpInsulin(0.0)
+        result.success = (connectionOK && abs(detailedBolusInfo.insulin - delivered.cU) < pumpDescription.bolusStep) || medtrumPump.bolusStopped
+        result.bolusDelivered = delivered.cU
         if (result.success && result.bolusDelivered > 0.0) {
             medtrumPump.lastBolusAmount = result.bolusDelivered
             medtrumPump.lastBolusTime = detailedBolusInfo.timestamp

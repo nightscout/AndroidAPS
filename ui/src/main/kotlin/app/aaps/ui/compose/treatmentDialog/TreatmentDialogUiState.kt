@@ -11,5 +11,7 @@ data class TreatmentDialogUiState(
     val maxInsulin: Double = 0.0,
     val maxCarbs: Int = 0,
     val bolusStep: Double = 0.1,
-    val isAapsClient: Boolean = false
+    val isAapsClient: Boolean = false,
+    /** True when the entry must be recorded only (no pump delivery): pump unavailable, mode forbids bolus, or AAPSCLIENT. */
+    val forcedRecordOnly: Boolean = false
 )

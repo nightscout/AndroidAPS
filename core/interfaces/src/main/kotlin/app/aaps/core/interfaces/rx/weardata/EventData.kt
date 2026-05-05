@@ -147,6 +147,12 @@ sealed class EventData : Event() {
     data class ActionSceneConfirmed(val id: String, val title: String) : EventData()
 
     @Serializable
+    class ActionSceneStop : EventData()
+
+    @Serializable
+    data class ActiveSceneState(val active: Boolean) : EventData()
+
+    @Serializable
     data class RunningModeRequest(val timeStamp: Long) : EventData()
 
     @Serializable
@@ -223,14 +229,17 @@ sealed class EventData : Event() {
 
     @Serializable
     data class RunningModeList(val timeStamp: Long, val states: List<AvailableRunningMode>) : EventData() {
+
         @Serializable
         data class AvailableRunningMode(
             val state: RunningMode,
             val durations: List<Int>? = null,
             val title: String? = null, // used for FAKE_DIVIDER
         ) {
+
             @Serializable
             enum class RunningMode {
+
                 // See LoopDialog
                 LOOP_OPEN,
                 LOOP_LGS,

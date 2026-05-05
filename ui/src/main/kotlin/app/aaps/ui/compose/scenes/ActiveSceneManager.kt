@@ -1,7 +1,6 @@
 package app.aaps.ui.compose.scenes
 
 import app.aaps.core.data.model.ActiveSceneState
-import app.aaps.core.data.model.RM
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.keys.StringNonKey
@@ -115,26 +114,16 @@ class ActiveSceneManager @Inject constructor(
 
 private fun ActiveSceneState.PriorState.toJson(): JSONObject = JSONObject().apply {
     smbEnabled?.let { put("smbEnabled", it) }
-    profileName?.let { put("profileName", it) }
-    profilePercentage?.let { put("profilePercentage", it) }
-    profileTimeShiftHours?.let { put("profileTimeShiftHours", it) }
-    runningMode?.let { put("runningMode", it.name) }
     sceneTtId?.let { put("sceneTtId", it) }
+    scenePsId?.let { put("scenePsId", it) }
     sceneRunningModeId?.let { put("sceneRunningModeId", it) }
+    sceneTherapyEventId?.let { put("sceneTherapyEventId", it) }
 }
 
 private fun JSONObject.toPriorState(): ActiveSceneState.PriorState = ActiveSceneState.PriorState(
     smbEnabled = if (has("smbEnabled")) getBoolean("smbEnabled") else null,
-    profileName = if (has("profileName")) getString("profileName") else null,
-    profilePercentage = if (has("profilePercentage")) getInt("profilePercentage") else null,
-    profileTimeShiftHours = if (has("profileTimeShiftHours")) getInt("profileTimeShiftHours") else null,
-    runningMode = if (has("runningMode")) {
-        try {
-            RM.Mode.valueOf(getString("runningMode"))
-        } catch (_: Exception) {
-            null
-        }
-    } else null,
     sceneTtId = if (has("sceneTtId")) getLong("sceneTtId") else null,
-    sceneRunningModeId = if (has("sceneRunningModeId")) getLong("sceneRunningModeId") else null
+    scenePsId = if (has("scenePsId")) getLong("scenePsId") else null,
+    sceneRunningModeId = if (has("sceneRunningModeId")) getLong("sceneRunningModeId") else null,
+    sceneTherapyEventId = if (has("sceneTherapyEventId")) getLong("sceneTherapyEventId") else null
 )

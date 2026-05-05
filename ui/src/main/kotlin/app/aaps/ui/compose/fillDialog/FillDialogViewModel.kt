@@ -32,8 +32,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -389,7 +389,7 @@ class FillDialogViewModel @Inject constructor(
         decimalFormatter.pumpSupportedBolusFormat(uiState.value.bolusStep)
 
     private fun requestPrimeBolus(insulin: Double, notes: String, onSuccess: (() -> Unit)? = null) {
-        if (runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)) return
+        if (runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)) return
         val detailedBolusInfo = DetailedBolusInfo().also {
             it.insulin = insulin
             it.bolusType = BS.Type.PRIMING

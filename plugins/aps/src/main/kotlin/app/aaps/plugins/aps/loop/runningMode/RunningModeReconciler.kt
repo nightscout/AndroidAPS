@@ -15,6 +15,9 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventShowSnackbar
 import app.aaps.core.interfaces.utils.DateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -45,6 +48,8 @@ class RunningModeReconciler @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus,
+    private val rh: ResourceHelper,
     @ApplicationScope private val appScope: CoroutineScope
 ) {
 
@@ -83,7 +88,7 @@ class RunningModeReconciler @Inject constructor(
         aapsLogger.debug(LTag.APS, "RunningModeReconciler: startup reconcile, mode=${active.mode}")
     }
 
-    private suspend fun handleStartupDrift(activeMode: RM.Mode, now: Long) {
+    private fun handleStartupDrift(activeMode: RM.Mode, now: Long) {
         // If we are in a zero-delivery mode, normal startup path already covers it.
         if (activeMode == RM.Mode.DISCONNECTED_PUMP || activeMode == RM.Mode.SUPER_BOLUS) return
         val currentTbr = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
@@ -92,7 +97,7 @@ class RunningModeReconciler @Inject constructor(
                 LTag.APS,
                 "RunningModeReconciler: startup drift — pump has EMULATED_PUMP_SUSPEND TBR but mode is $activeMode, canceling"
             )
-            commandQueue.cancelTempBasal(enforceNew = true, callback = logCallback("startup-drift cancelTbr"))
+            commandQueue.cancelTempBasal(enforceNew = true, callback = errorCallback("startup-drift cancelTbr"))
         }
     }
 
@@ -131,7 +136,7 @@ class RunningModeReconciler @Inject constructor(
             LTag.APS,
             "RunningModeReconciler: canceling active TBR (rate=${currentTbr.rate}, type=${currentTbr.type})"
         )
-        commandQueue.cancelTempBasal(enforceNew = true, callback = logCallback("cancelTbr"))
+        commandQueue.cancelTempBasal(enforceNew = true, callback = errorCallback("cancelTbr"))
     }
 
     private suspend fun issueZeroTbrIfNeeded(activeMode: RM, cancelEb: Boolean, now: Long) {
@@ -192,7 +197,7 @@ class RunningModeReconciler @Inject constructor(
                         enforceNew = true,
                         profile = profile,
                         tbrType = PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND,
-                        callback = logCallback("tempBasalAbsolute 0.0")
+                        callback = errorCallback("tempBasalAbsolute 0.0")
                     )
                 } else {
                     commandQueue.tempBasalPercent(
@@ -201,7 +206,7 @@ class RunningModeReconciler @Inject constructor(
                         enforceNew = true,
                         profile = profile,
                         tbrType = PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND,
-                        callback = logCallback("tempBasalPercent 0")
+                        callback = errorCallback("tempBasalPercent 0")
                     )
                 }
             }
@@ -219,6 +224,26 @@ class RunningModeReconciler @Inject constructor(
         return (remainingMs / 60_000L).toInt().coerceAtLeast(0)
     }
 
+    /**
+     * Error callback for TBR enforcement commands. Logs the failure AND surfaces a snackbar so
+     * the user knows the pump is in an inconsistent state versus the claimed running mode.
+     * Used for cancelTbr / tempBasalAbsolute / tempBasalPercent — i.e. the commands that
+     * actively drive the pump to match the mode.
+     */
+    private fun errorCallback(label: String): Callback = object : Callback() {
+        override fun run() {
+            if (!result.success) {
+                aapsLogger.warn(LTag.APS, "RunningModeReconciler: $label failed: ${result.comment}")
+                rxBus.send(EventShowSnackbar(rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), EventShowSnackbar.Type.Error))
+            }
+        }
+    }
+
+    /**
+     * Quiet callback — log only, no user-visible feedback. Used for defensive cleanup that
+     * may legitimately fail silently (e.g. cancelExtended when no EB is actually active on
+     * the pump despite our DB suggesting otherwise).
+     */
     private fun logCallback(label: String): Callback = object : Callback() {
         override fun run() {
             if (!result.success) {

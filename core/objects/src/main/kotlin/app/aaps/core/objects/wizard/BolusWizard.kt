@@ -10,7 +10,6 @@ import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.RM
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
-import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -21,6 +20,8 @@ import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.di.ApplicationScope
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -29,11 +30,9 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -51,8 +50,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.highValueToUnitsToString
 import app.aaps.core.objects.extensions.lowValueToUnitsToString
 import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.runningMode.PumpCommandGate
 import app.aaps.core.objects.runningMode.RunningModeGuard
-import app.aaps.core.objects.runningMode.TbrGate
 import app.aaps.core.utils.JsonHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -85,6 +84,7 @@ class BolusWizard @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val runningModeGuard: RunningModeGuard,
+    private val activeInsulin: Insulin,
     @ApplicationScope private val appScope: CoroutineScope
 ) {
 
@@ -446,7 +446,7 @@ class BolusWizard @Inject constructor(
             // a new bolus, show a snackbar and skip the confirmation flow entirely so the
             // user never hits the alarm-on-failure callback.
             if (calculatedTotalInsulin > 0.0 &&
-                runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)
+                runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)
             ) return
             if (accepted) {
                 aapsLogger.debug(LTag.UI, "guarding: already accepted")
@@ -534,18 +534,15 @@ class BolusWizard @Inject constructor(
     @SuppressLint("CheckResult")
     private fun commonProcessing(quickWizardEntry: QuickWizardEntry? = null) {
         val profile = runBlocking { profileFunction.getProfile() } ?: return
-        val pump = activePlugin.activePump
         val now = dateUtil.now()
 
         val confirmMessage = confirmMessageAfterConstraints(advisor = false, quickWizardEntry)
         rxBus.send(EventShowDialog.OkCancel(title = rh.gs(app.aaps.core.ui.R.string.boluswizard), message = confirmMessage, onOk = {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
-                    // onOk fires on the UI thread. Loop.allowedNextModes() / handleRunningModeChange
-                    // are suspend and do real work (DB + state machine), so we hop off Main via
-                    // appScope.launch. Order is preserved within the coroutine: mode-change
-                    // completes before the temp-basal command is enqueued. The bolus path below
-                    // uses the same commandQueue so it serializes after either way.
+                    // onOk fires on the UI thread. Loop.handleRunningModeChange is suspend, so we
+                    // hop off Main via appScope.launch. Writing the SUPER_BOLUS row is enough —
+                    // RunningModeReconciler observes the change and issues the zero-TBR.
                     appScope.launch {
                         if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS)) {
                             loop.handleRunningModeChange(
@@ -556,24 +553,6 @@ class BolusWizard @Inject constructor(
                                 source = Sources.WizardDialog
                             )
                             rxBus.send(EventRefreshOverview("WizardDialog"))
-                        }
-
-                        if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                            commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-                                override fun run() {
-                                    if (!result.success) {
-                                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
-                                    }
-                                }
-                            })
-                        } else {
-                            commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-                                override fun run() {
-                                    if (!result.success) {
-                                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
-                                    }
-                                }
-                            })
                         }
                     }
                 }
@@ -702,7 +681,7 @@ class BolusWizard @Inject constructor(
      * Build confirmation summary lines as plain text (no HTML colors).
      * Compose UI layer handles coloring via theme.
      */
-    fun buildConfirmationLines(advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0): List<String> {
+    fun buildConfirmationLines(advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false): List<String> {
         val lines = mutableListOf<String>()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
@@ -730,7 +709,7 @@ class BolusWizard @Inject constructor(
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
             lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints))
-        if (config.AAPSCLIENT && insulinAfterConstraints > 0)
+        if ((config.AAPSCLIENT || forcedRecordOnly) && insulinAfterConstraints > 0)
             lines.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
             lines.add(rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime))
@@ -760,15 +739,18 @@ class BolusWizard @Inject constructor(
      * Execute normal bolus wizard flow (bolus + carbs + superbolus + BCR save).
      * No UI dependency — errors reported via [onError] callback.
      */
-    suspend fun executeNormal(onError: (String) -> Unit, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0) {
+    suspend fun executeNormal(onError: (String) -> Unit, quickWizardEntry: QuickWizardEntry? = null, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
         if (accepted) {
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
         }
         // Pre-check: if the mode forbids a new bolus, show a snackbar and skip without ever
         // hitting commandQueue (avoids the alarm-on-failure callback path).
-        if (calculatedTotalInsulin > 0.0 &&
-            runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)
+        // When forcedRecordOnly is true the caller has already shown a banner and confirmation
+        // line stating the entry will be recorded only — we bypass the snackbar guard and route
+        // to the record-only path below.
+        if (!forcedRecordOnly && calculatedTotalInsulin > 0.0 &&
+            runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)
         ) return
         accepted = true
         if (calculatedTotalInsulin > 0.0)
@@ -777,11 +759,12 @@ class BolusWizard @Inject constructor(
             automation.removeAutomationEventEatReminder()
 
         val profile = profileFunction.getProfile() ?: return
-        val pump = activePlugin.activePump
         val now = dateUtil.now()
 
         if (insulinAfterConstraints > 0 || carbs > 0) {
-            if (useSuperBolus) {
+            if (useSuperBolus && !forcedRecordOnly) {
+                // Writing the SUPER_BOLUS row is enough — RunningModeReconciler observes the
+                // change and issues the zero-TBR.
                 if (loop.allowedNextModes().contains(RM.Mode.SUPER_BOLUS)) {
                     loop.handleRunningModeChange(
                         durationInMinutes = 2 * 60,
@@ -791,24 +774,6 @@ class BolusWizard @Inject constructor(
                         source = Sources.WizardDialog
                     )
                     rxBus.send(EventRefreshOverview("WizardDialog"))
-                }
-
-                if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                    commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                onError(result.comment)
-                            }
-                        }
-                    })
-                } else {
-                    commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                onError(result.comment)
-                            }
-                        }
-                    })
                 }
             }
             DetailedBolusInfo().apply {
@@ -826,9 +791,10 @@ class BolusWizard @Inject constructor(
                         carbs == 0.0                   -> Action.BOLUS
                         else                           -> Action.TREATMENT
                     }
+                    val source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog
                     uel.log(
                         action = action,
-                        source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                        source = source,
                         note = notes,
                         listValues = listOfNotNull(
                             ValueWithUnit.TEType(eventType),
@@ -844,22 +810,43 @@ class BolusWizard @Inject constructor(
                     if (useAlarm && carbs > 0 && this@BolusWizard.carbTime > 0) {
                         automation.scheduleTimeToEatReminder(T.mins(this@BolusWizard.carbTime.toLong()).secs().toInt())
                     }
-                    commandQueue.bolus(this, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                onError(result.comment)
-                            }
+                    if (forcedRecordOnly) {
+                        val recordIcfg = this@BolusWizard.profile.iCfg ?: activeInsulin.iCfg
+                        val notesText = notes.orEmpty()
+                        if (insulin > 0) {
+                            persistenceLayer.insertOrUpdateBolus(
+                                bolus = createBolus(recordIcfg),
+                                action = action,
+                                source = source,
+                                note = rh.gs(app.aaps.core.ui.R.string.record) + if (notesText.isNotEmpty()) ": $notesText" else ""
+                            )
                         }
-                    })
+                        if (carbs > 0) {
+                            persistenceLayer.insertOrUpdateCarbs(
+                                carbs = createCarbs(),
+                                action = action,
+                                source = source,
+                                note = notesText.ifEmpty { rh.gs(app.aaps.core.ui.R.string.record) }
+                            )
+                        }
+                    } else {
+                        commandQueue.bolus(this, object : Callback() {
+                            override fun run() {
+                                if (!result.success) {
+                                    onError(result.comment)
+                                }
+                            }
+                        })
+                    }
                 }
                 bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) }
             }
         }
         if (quickWizardEntry != null) {
-            scheduleECarbsFromQuickWizardCompose(quickWizardEntry, onError)
+            scheduleECarbsFromQuickWizardCompose(quickWizardEntry, onError, forcedRecordOnly)
         }
         if (eCarbsGrams > 0) {
-            scheduleECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours, onError)
+            scheduleECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours, onError, forcedRecordOnly)
         }
     }
 
@@ -867,13 +854,13 @@ class BolusWizard @Inject constructor(
      * Execute bolus advisor flow (correction-only bolus, no carbs, eat reminder).
      * No UI dependency — errors reported via [onError] callback.
      */
-    fun executeBolusAdvisor(onError: (String) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0) {
+    fun executeBolusAdvisor(onError: (String) -> Unit, eCarbsGrams: Int = 0, eCarbsDelayMinutes: Int = 0, eCarbsDurationHours: Int = 0, forcedRecordOnly: Boolean = false) {
         if (accepted) {
             aapsLogger.debug(LTag.UI, "guarding: already accepted")
             return
         }
-        if (calculatedTotalInsulin > 0.0 &&
-            runningModeGuard.checkWithSnackbar(TbrGate.CommandKind.BOLUS)
+        if (!forcedRecordOnly && calculatedTotalInsulin > 0.0 &&
+            runningModeGuard.checkWithSnackbar(PumpCommandGate.CommandKind.BOLUS)
         ) return
         accepted = true
         if (calculatedTotalInsulin > 0.0)
@@ -890,9 +877,10 @@ class BolusWizard @Inject constructor(
             carbTime = 0
             bolusCalculatorResult = createBolusCalculatorResult()
             notes = this@BolusWizard.notes
+            val source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog
             uel.log(
                 action = Action.BOLUS_ADVISOR,
-                source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                source = source,
                 note = notes,
                 listValues = listOf(
                     ValueWithUnit.TEType(eventType),
@@ -900,22 +888,36 @@ class BolusWizard @Inject constructor(
                 )
             )
             if (insulin > 0) {
-                commandQueue.bolus(this, object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            onError(result.comment)
-                        } else
-                            automation.scheduleAutomationEventEatReminder()
+                if (forcedRecordOnly) {
+                    val recordIcfg = this@BolusWizard.profile.iCfg ?: activeInsulin.iCfg
+                    val notesText = notes.orEmpty()
+                    appScope.launch {
+                        persistenceLayer.insertOrUpdateBolus(
+                            bolus = createBolus(recordIcfg),
+                            action = Action.BOLUS_ADVISOR,
+                            source = source,
+                            note = rh.gs(app.aaps.core.ui.R.string.record) + if (notesText.isNotEmpty()) ": $notesText" else ""
+                        )
                     }
-                })
+                    automation.scheduleAutomationEventEatReminder()
+                } else {
+                    commandQueue.bolus(this, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                onError(result.comment)
+                            } else
+                                automation.scheduleAutomationEventEatReminder()
+                        }
+                    })
+                }
             }
         }
         if (eCarbsGrams > 0) {
-            scheduleECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours, onError)
+            scheduleECarbs(eCarbsGrams, eCarbsDelayMinutes, eCarbsDurationHours, onError, forcedRecordOnly)
         }
     }
 
-    private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (String) -> Unit) {
+    private fun scheduleECarbs(eCarbsGrams: Int, delayMinutes: Int, durationHours: Int, onError: (String) -> Unit, forcedRecordOnly: Boolean = false) {
         val totalDelayMinutes = delayMinutes + carbTime
         val eventTime = Calendar.getInstance().timeInMillis + (totalDelayMinutes * 60000L)
         DetailedBolusInfo().apply {
@@ -935,17 +937,28 @@ class BolusWizard @Inject constructor(
                     ValueWithUnit.Hour(durationHours).takeIf { durationHours != 0 }
                 )
             )
-            commandQueue.bolus(this, object : Callback() {
-                override fun run() {
-                    if (!result.success) {
-                        onError(result.comment)
-                    }
+            if (forcedRecordOnly) {
+                appScope.launch {
+                    persistenceLayer.insertOrUpdateCarbs(
+                        carbs = createCarbs(),
+                        action = Action.EXTENDED_CARBS,
+                        source = Sources.WizardDialog,
+                        note = notes.orEmpty().ifEmpty { rh.gs(app.aaps.core.ui.R.string.record) }
+                    )
                 }
-            })
+            } else {
+                commandQueue.bolus(this, object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            onError(result.comment)
+                        }
+                    }
+                })
+            }
         }
     }
 
-    private fun scheduleECarbsFromQuickWizardCompose(quickWizardEntry: QuickWizardEntry, onError: (String) -> Unit) {
+    private fun scheduleECarbsFromQuickWizardCompose(quickWizardEntry: QuickWizardEntry, onError: (String) -> Unit, forcedRecordOnly: Boolean = false) {
         val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
         if (eCarbsYesNo == QuickWizardEntry.YES) {
             val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage, "time", 0)
@@ -962,10 +975,11 @@ class BolusWizard @Inject constructor(
                 detailedBolusInfo.notes = quickWizardEntry.storage.get("buttonText").toString()
                 detailedBolusInfo.carbsDuration = T.hours(duration.toLong()).msecs()
                 detailedBolusInfo.carbsTimestamp = eventTime
+                val buttonText = quickWizardEntry.storage.get("buttonText").toString()
                 uel.log(
                     action = Action.EXTENDED_CARBS,
                     source = Sources.QuickWizard,
-                    note = quickWizardEntry.storage.get("buttonText").toString(),
+                    note = buttonText,
                     listValues = listOfNotNull(
                         ValueWithUnit.Timestamp(eventTime),
                         ValueWithUnit.Gram(carbs2),
@@ -973,13 +987,24 @@ class BolusWizard @Inject constructor(
                         ValueWithUnit.Hour(duration).takeIf { duration != 0 }
                     )
                 )
-                commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                    override fun run() {
-                        if (!result.success) {
-                            onError(result.comment)
-                        }
+                if (forcedRecordOnly) {
+                    appScope.launch {
+                        persistenceLayer.insertOrUpdateCarbs(
+                            carbs = detailedBolusInfo.createCarbs(),
+                            action = Action.EXTENDED_CARBS,
+                            source = Sources.QuickWizard,
+                            note = buttonText
+                        )
                     }
-                })
+                } else {
+                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                onError(result.comment)
+                            }
+                        }
+                    })
+                }
             }
         }
     }

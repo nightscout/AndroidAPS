@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.ui.compose.AapsSpacing
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.compose.EquilWizardViewModel
@@ -116,7 +116,7 @@ private fun FillStepContent(
 
         if (errorMessage != null) {
             Spacer(Modifier.height(AapsSpacing.medium))
-            WizardErrorBanner(message = errorMessage)
+            ErrorBanner(message = errorMessage)
         }
     }
 }

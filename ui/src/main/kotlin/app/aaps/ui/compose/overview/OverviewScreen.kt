@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aaps.core.data.model.ActiveSceneState
@@ -21,6 +22,7 @@ import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.notifications.AapsNotification
 import app.aaps.core.interfaces.overview.graph.TbrState
 import app.aaps.core.interfaces.pump.BolusProgressState
+import app.aaps.core.ui.compose.TABLET_MIN_SW_DP
 import app.aaps.core.ui.compose.navigation.NavigationRequest
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
 import app.aaps.core.ui.compose.pump.PumpActivityDialog
@@ -99,8 +101,41 @@ fun OverviewScreen(
     val profileSceneManaged = activeSceneState?.priorState?.scenePsId
         ?.let { it == profilePsId && it > 0 } == true
 
+    val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= TABLET_MIN_SW_DP
+
     Box(modifier = modifier.fillMaxSize()) {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        if (isTablet) {
+            OverviewScreenTablet(
+                profileName = profileName,
+                isProfileModified = isProfileModified,
+                profileProgress = profileProgress,
+                profileSceneManaged = profileSceneManaged,
+                tempTargetText = tempTargetText,
+                tempTargetState = tempTargetState,
+                tempTargetProgress = tempTargetProgress,
+                tempTargetReason = tempTargetReason,
+                tempTargetSceneManaged = tempTargetSceneManaged,
+                runningMode = runningMode,
+                runningModeText = runningModeText,
+                runningModeProgress = runningModeProgress,
+                runningModeSceneManaged = runningModeSceneManaged,
+                tbrState = tbrState,
+                isSimpleMode = isSimpleMode,
+                calcProgress = calcProgress,
+                graphViewModel = graphViewModel,
+                manageViewModel = manageViewModel,
+                statusViewModel = statusViewModel,
+                statusLightsDef = statusLightsDef,
+                onNavigate = onNavigate,
+                onTbrChipClick = onTbrChipClick,
+                paddingValues = paddingValues,
+                activeSceneState = activeSceneState,
+                sceneExpired = sceneExpired,
+                onEndScene = onEndScene,
+                onDismissScene = onDismissScene,
+                formatDuration = formatDuration
+            )
+        } else BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             if (maxWidth >= SPLIT_LAYOUT_MIN_WIDTH) {
                 OverviewScreenSplit(
                     profileName = profileName,

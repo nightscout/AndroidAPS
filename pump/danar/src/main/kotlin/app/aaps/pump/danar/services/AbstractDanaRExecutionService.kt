@@ -193,7 +193,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     }
 
     fun bolusStop() {
-        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ ${bolusProgressData.state.value?.delivered ?: 0.0}")
+        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ ${bolusProgressData.state.value?.delivered?.cU ?: 0.0}")
         val stop = MsgBolusStop(injector)
         danaPump.bolusStopForced = true
         if (isConnected) {

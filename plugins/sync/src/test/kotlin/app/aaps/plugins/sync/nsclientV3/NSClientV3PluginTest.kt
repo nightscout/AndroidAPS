@@ -42,6 +42,9 @@ import app.aaps.plugins.sync.nsclientV3.keys.NsclientStringKey
 import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
@@ -85,7 +88,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         whenever(persistenceLayer.observeAnyChange()).thenReturn(emptyFlow())
         whenever(receiverDelegate.connectivityStatusFlow).thenReturn(MutableStateFlow(ReceiverDelegate.ConnectivityStatus("", allowed = false, connected = false)))
         whenever(insulin.iCfg).thenReturn(insulinConfiguration)
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, virtualPump, nsClientRepository)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, persistenceLayer, preferences, config, virtualPump, nsClientRepository, CoroutineScope(SupervisorJob() + Dispatchers.Unconfined))
         sut =
             NSClientV3Plugin(
                 aapsLogger, rh, preferences, rxBus, context,
@@ -699,7 +702,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // Assert
         // Verify that the call was passed through to the nsClientV3Service with the correct parameters.
         verify(nsClientV3Service).handleClearAlarm(mockAlarm, silenceDuration)
-        sut.setPluginEnabledBlocking(PluginType.SYNC, false)
     }
 
     @Test

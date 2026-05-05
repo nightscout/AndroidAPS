@@ -33,9 +33,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.aaps.core.ui.compose.banner.ErrorBanner
 import app.aaps.core.ui.compose.dialogs.OkDialog
 import app.aaps.core.ui.compose.pump.WizardButton
-import app.aaps.core.ui.compose.pump.WizardErrorBanner
 import app.aaps.core.ui.compose.pump.WizardStepLayout
 import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
@@ -62,8 +62,7 @@ fun PrepareStep(
         // When step becomes PREPARE_PATCH_CONNECT, trigger connect
         if (patchStep == PatchStep.PREPARE_PATCH_CONNECT) {
             viewModel.preparePatchConnect()
-        }
-        else {
+        } else {
             // Trigger preparePatch and load insulins on initial display
             viewModel.preparePatch()
             viewModel.loadInsulins()
@@ -205,7 +204,7 @@ internal fun PrepareStepContent(
                 )
                 if (state == PrepareState.ERROR) {
                     Spacer(Modifier.height(8.dp))
-                    WizardErrorBanner(message = stringResource(R.string.unexpected_state, pumpState))
+                    ErrorBanner(message = stringResource(R.string.unexpected_state, pumpState))
                 }
                 if (state == PrepareState.CONNECTING) {
                     Spacer(Modifier.height(48.dp))

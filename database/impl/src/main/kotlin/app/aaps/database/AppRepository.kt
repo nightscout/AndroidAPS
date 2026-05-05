@@ -23,9 +23,7 @@ import app.aaps.database.entities.data.NewEntries
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntry
 import app.aaps.database.transactions.Transaction
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.CoroutineScope
@@ -38,9 +36,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.io.Closeable
-import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -129,56 +125,6 @@ class AppRepository @Inject internal constructor(
             _changeFlow.emit(changes)
         }
         return result
-    }
-
-    /**
-     * Executes a transaction ignoring its result (RxJava version)
-     * Runs on IO scheduler
-     * Emits to BOTH RxJava (existing) AND Flow (new)
-     */
-    fun <T> runTransaction(transaction: Transaction<T>): Completable {
-        val changes = mutableListOf<DBEntry>()
-        return Completable.fromCallable {
-            database.runInTransaction {
-                transaction.database = DelegatedAppDatabase(changes, database)
-                runBlocking { transaction.run() }
-            }
-        }.subscribeOn(Schedulers.io()).doOnComplete {
-            // Emit to RxJava (existing) - for backwards compatibility
-            changeSubject.onNext(changes)
-
-            // Emit to Flow (new)
-            if (changes.isNotEmpty()) {
-                repositoryScope.launch {
-                    _changeFlow.emit(changes)
-                }
-            }
-        }
-    }
-
-    /**
-     * Executes a transaction and returns its result (RxJava version)
-     * Runs on IO scheduler
-     * Emits to BOTH RxJava (existing) AND Flow (new)
-     */
-    fun <T : Any> runTransactionForResult(transaction: Transaction<T>): Single<T> {
-        val changes = mutableListOf<DBEntry>()
-        return Single.fromCallable {
-            database.runInTransaction(Callable {
-                transaction.database = DelegatedAppDatabase(changes, database)
-                runBlocking { transaction.run() }
-            })
-        }.subscribeOn(Schedulers.io()).doOnSuccess {
-            // Emit to RxJava (existing) - for backwards compatibility
-            changeSubject.onNext(changes)
-
-            // Emit to Flow (new)
-            if (changes.isNotEmpty()) {
-                repositoryScope.launch {
-                    _changeFlow.emit(changes)
-                }
-            }
-        }
     }
 
     fun clearDatabases() = database.clearAllTables()

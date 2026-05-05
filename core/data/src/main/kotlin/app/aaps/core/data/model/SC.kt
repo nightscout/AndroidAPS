@@ -9,7 +9,7 @@ data class SC(
     var duration: Long,
     /** Milliseconds since the epoch. End of the sampling period, i.e. the value is
      *  sampled from timestamp-duration to timestamp. */
-    var timestamp: Long,
+    override var timestamp: Long,
     var steps5min: Int,
     var steps10min: Int,
     var steps15min: Int,
@@ -24,7 +24,7 @@ data class SC(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     override var ids: IDs = IDs()
-) : HasIDs {
+) : HasIDs, TimeStamped {
 
     fun contentEqualsTo(other: SC): Boolean {
         return this === other || (

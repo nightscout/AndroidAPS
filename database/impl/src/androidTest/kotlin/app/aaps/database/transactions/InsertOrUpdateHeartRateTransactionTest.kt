@@ -8,6 +8,7 @@ import app.aaps.database.AppDatabase
 import app.aaps.database.AppRepository
 import app.aaps.database.dao.HeartRateDaoTest
 import app.aaps.database.entities.HeartRate
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -35,20 +36,20 @@ class InsertOrUpdateHeartRateTransactionTest {
     }
 
     @Test
-    fun createNewEntry() {
+    fun createNewEntry() = runBlocking {
         val hr1 = HeartRateDaoTest.createHeartRate()
-        val result = repo.runTransactionForResult(InsertOrUpdateHeartRateTransaction(hr1)).blockingGet()
+        val result = repo.runTransactionForResultSuspend(InsertOrUpdateHeartRateTransaction(hr1))
         assertEquals(listOf(hr1), result.inserted)
         assertTrue(result.updated.isEmpty())
     }
 
     @Test
-    fun updateEntry() {
+    fun updateEntry() = runBlocking {
         val hr1 = HeartRateDaoTest.createHeartRate()
         val id = db.heartRateDao.insertNewEntry(hr1)
         assertNotEquals(0, id)
         val hr2 = hr1.copy(id = id, beatsPerMinute = 181.0)
-        val result = repo.runTransactionForResult(InsertOrUpdateHeartRateTransaction(hr2)).blockingGet()
+        val result = repo.runTransactionForResultSuspend(InsertOrUpdateHeartRateTransaction(hr2))
         assertEquals(listOf(hr2), result.updated)
         assertTrue(result.inserted.isEmpty())
 

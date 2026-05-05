@@ -338,6 +338,17 @@ interface DateUtil {
     fun untilString(timestamp: Long, rh: ResourceHelper): String
 
     /**
+     * Formats a remaining duration as a localized "time remaining" string.
+     * Uses the `time_remaining_h_m` resource when hours > 0 (e.g., "1h 30m remaining"),
+     * otherwise the `time_remaining_m` resource (e.g., "30m remaining"). Whole-word ordering
+     * and units are owned by the resource so all locales translate correctly.
+     * @param timeInMillis The remaining duration in milliseconds.
+     * @param rh Resource helper for the localized format string.
+     * @return The formatted "time remaining" string.
+     */
+    fun timeRemainingString(timeInMillis: Long, rh: ResourceHelper): String
+
+    /**
      * Gets the current system time in milliseconds.
      * @return The current timestamp.
      */

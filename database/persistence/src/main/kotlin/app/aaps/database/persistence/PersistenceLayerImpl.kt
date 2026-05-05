@@ -52,6 +52,9 @@ import app.aaps.database.persistence.converters.fromDb
 import app.aaps.database.persistence.converters.toDb
 import app.aaps.database.transactions.CancelCurrentTemporaryRunningModeIfAnyTransaction
 import app.aaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import app.aaps.database.transactions.CancelProfileSwitchTransaction
+import app.aaps.database.transactions.CancelRunningModeTransaction
+import app.aaps.database.transactions.CancelTherapyEventTransaction
 import app.aaps.database.transactions.CgmSourceTransaction
 import app.aaps.database.transactions.CutCarbsTransaction
 import app.aaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
@@ -64,6 +67,7 @@ import app.aaps.database.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.transactions.InsertOrUpdateCachedTotalDailyDoseTransaction
 import app.aaps.database.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.transactions.InsertOrUpdateEffectiveProfileSwitchTransaction
+import app.aaps.database.transactions.InsertOrUpdateFoodTransaction
 import app.aaps.database.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.transactions.InsertOrUpdateProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateRunningModeTransaction
@@ -75,7 +79,6 @@ import app.aaps.database.transactions.InvalidateBolusTransaction
 import app.aaps.database.transactions.InvalidateCarbsTransaction
 import app.aaps.database.transactions.InvalidateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InvalidateExtendedBolusTransaction
-import app.aaps.database.transactions.InsertOrUpdateFoodTransaction
 import app.aaps.database.transactions.InvalidateFoodTransaction
 import app.aaps.database.transactions.InvalidateGlucoseValueTransaction
 import app.aaps.database.transactions.InvalidateProfileSwitchTransaction
@@ -121,7 +124,6 @@ import app.aaps.database.transactions.UpdateNsIdTherapyEventTransaction
 import app.aaps.database.transactions.UserEntryTransaction
 import app.aaps.database.transactions.VersionChangeTransaction
 import dagger.Reusable
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -1164,9 +1166,27 @@ class PersistenceLayerImpl @Inject constructor(
         }
     }
 
+    override suspend fun cancelRunningMode(id: Long, timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CancelRunningModeTransaction(id, timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<RM>()
+            val ueValues = mutableListOf<UE>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated RunningMode from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while canceling RunningMode by id", e)
+            throw e
+        }
+    }
+
     override suspend fun syncNsRunningModes(runningModes: List<RM>, doLog: Boolean): PersistenceLayer.TransactionResult<RM> = withContext(Dispatchers.IO) {
         try {
-            val result = repository.runTransactionForResultSuspend(SyncNsRunningModeTransaction(runningModes.map { it.toDb() }))
+            val result = repository.runTransactionForResultSuspend(SyncNsRunningModeTransaction(runningModes.map { it.toDb() }, config.AAPSCLIENT))
             val transactionResult = PersistenceLayer.TransactionResult<RM>()
             val ueValues = mutableListOf<UE>()
             result.inserted.forEach {
@@ -1321,6 +1341,24 @@ class PersistenceLayerImpl @Inject constructor(
         }
     }
 
+    override suspend fun cancelProfileSwitch(id: Long, timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CancelProfileSwitchTransaction(id, timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<PS>()
+            val ueValues = mutableListOf<UE>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while canceling ProfileSwitch", e)
+            throw e
+        }
+    }
+
     override suspend fun syncNsProfileSwitches(profileSwitches: List<PS>, doLog: Boolean): PersistenceLayer.TransactionResult<PS> = withContext(Dispatchers.IO) {
         try {
             val result = repository.runTransactionForResultSuspend(SyncNsProfileSwitchTransaction(profileSwitches.map { it.toDb() }))
@@ -1353,6 +1391,10 @@ class PersistenceLayerImpl @Inject constructor(
                     )
                 aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
                 transactionResult.invalidated.add(it.fromDb())
+            }
+            result.updatedDuration.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated duration ProfileSwitch $it")
+                transactionResult.updatedDuration.add(it.fromDb())
             }
             result.updatedNsId.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
@@ -2013,6 +2055,25 @@ class PersistenceLayerImpl @Inject constructor(
         }
     }
 
+    override suspend fun cancelTherapyEvent(id: Long, timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>)
+        : PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
+        try {
+            val result = repository.runTransactionForResultSuspend(CancelTherapyEventTransaction(id, timestamp))
+            val transactionResult = PersistenceLayer.TransactionResult<TE>()
+            val ueValues = mutableListOf<UE>()
+            result.updated.forEach {
+                aapsLogger.debug(LTag.DATABASE, "Updated TherapyEvent from ${source.name} $it")
+                transactionResult.updated.add(it.fromDb())
+                ueValues.add(UE(timestamp = dateUtil.now(), action = action, source = source, note = note ?: "", values = listValues))
+            }
+            log(ueValues)
+            transactionResult
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.DATABASE, "Error while canceling TherapyEvent", e)
+            throw e
+        }
+    }
+
     override suspend fun invalidateTherapyEventsWithNote(note: String, action: Action, source: Sources): PersistenceLayer.TransactionResult<TE> = withContext(Dispatchers.IO) {
         try {
             val result = repository.runTransactionForResultSuspend(InvalidateTherapyEventsWithNoteTransaction(note))
@@ -2384,8 +2445,9 @@ class PersistenceLayerImpl @Inject constructor(
     }
 
     // VersionChange
-    override fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable =
-        repository.runTransaction(VersionChangeTransaction(versionName, versionCode, gitRemote, commitHash))
+    override suspend fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?) = withContext(Dispatchers.IO) {
+        repository.runTransactionSuspend(VersionChangeTransaction(versionName, versionCode, gitRemote, commitHash))
+    }
 
     override suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): NE = withContext(Dispatchers.IO) {
         repository.collectNewEntriesSince(since, until, limit, offset).fromDb()

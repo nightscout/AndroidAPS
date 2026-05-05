@@ -108,7 +108,7 @@ fun SceneWizardScreen(
                         onBack = onBack, onNext = onNext
                     )
 
-                    SceneWizardViewModel.STEP_LOOP_MODE -> LoopModeStep(
+                    SceneWizardViewModel.STEP_LOOP_MODE -> RunningModeStep(
                         state = state, onToggle = viewModel::setLoopModeEnabled,
                         onUpdate = viewModel::updateLoopModeAction,
                         onBack = onBack, onNext = onNext

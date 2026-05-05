@@ -22,6 +22,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianLayerRangeProvider
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
@@ -50,7 +51,7 @@ private val IobColor = Color(0xFFE040FB)       // Magenta
  * - Activity curve (blue, left Y-axis): insulin activity contribution over time
  * - IOB curve (magenta with area fill, right Y-axis): remaining insulin on board
  *
- * X-axis: time in minutes from 0 to DIA + 1 hour
+ * X-axis: time in hours from 0 to DIA + 1 hour
  * Data sampled at 5-minute intervals using iobCalc()
  *
  * @param iCfg Insulin configuration to visualize
@@ -79,11 +80,13 @@ fun InsulinGraphCompose(
 
         val activityValues = mutableListOf<Double>()
         val iobValues = mutableListOf<Double>()
+        val xMinutes = mutableListOf<Double>()
         var time = 0L
         while (time <= T.hours(hours).msecs()) {
             val iob = bolus.iobCalc(time)
             activityValues.add(iob.activityContrib)
             iobValues.add(iob.iobContrib)
+            xMinutes.add((time / T.mins(1).msecs()).toDouble())
             time += T.mins(5).msecs()
         }
 
@@ -94,11 +97,11 @@ fun InsulinGraphCompose(
         modelProducer.runTransaction {
             // Block 1 → IOB layer (layer 0, primary)
             lineSeries {
-                series(y = iobValues)
+                series(x = xMinutes, y = iobValues)
             }
             // Block 2 → Activity layer (layer 1, normalized)
             lineSeries {
-                series(y = normalizedActivity)
+                series(x = xMinutes, y = normalizedActivity)
             }
             extras { extraStore ->
                 extraStore[InsulinLegendLabelKey] = listOf(iobLabel, activityLabel)
@@ -157,7 +160,12 @@ fun InsulinGraphCompose(
                 verticalAxisPosition = Axis.Position.Vertical.Start
             ),
             startAxis = VerticalAxis.rememberStart(),
-            bottomAxis = HorizontalAxis.rememberBottom(),
+            bottomAxis = HorizontalAxis.rememberBottom(
+                valueFormatter = remember {
+                    CartesianValueFormatter { _, value, _ -> "${(value / 60).toInt()}h" }
+                },
+                itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = { 12 }) }
+            ),
             legend = rememberHorizontalLegend(
                 items = { extraStore ->
                     extraStore[InsulinLegendLabelKey].forEachIndexed { index, label ->

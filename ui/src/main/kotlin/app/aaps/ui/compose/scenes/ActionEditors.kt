@@ -163,7 +163,7 @@ internal fun SmbToggleEditor(
 }
 
 @Composable
-internal fun LoopModeEditor(
+internal fun RunningModeEditor(
     action: SceneAction.LoopModeChange,
     onUpdate: (SceneAction) -> Unit
 ) {

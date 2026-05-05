@@ -2,12 +2,17 @@ package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSClientRepository
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 class DataSyncWorker(
@@ -26,8 +31,16 @@ class DataSyncWorker(
         }
         if (activePlugin.activeNsClient?.hasWritePermission == true || nsClientV3Plugin.nsClientV3Service?.wsConnected == true) {
             nsClientRepository.addLog("► UPL", "Start")
-            dataSyncSelectorV3.doUpload()
-            nsClientRepository.addLog("► UPL", "End")
+            try {
+                // Hard cap so a hung HTTP call / dead WS can't keep the worker in
+                // RUNNING/BLOCKED forever and silently block every future upload.
+                withTimeout(UPLOAD_TIMEOUT_MS) { dataSyncSelectorV3.doUpload() }
+                nsClientRepository.addLog("► UPL", "End")
+            } catch (e: TimeoutCancellationException) {
+                nsClientRepository.addLog("◄ ERROR", "Upload timed out")
+                aapsLogger.error(LTag.NSCLIENT, "DataSyncWorker timed out", e)
+                return Result.failure(workDataOf("Error" to "Upload timed out"))
+            }
         } else {
             if (activePlugin.activeNsClient?.hasWritePermission == true)
                 nsClientRepository.addLog("► ERROR", "No write permission")
@@ -37,5 +50,10 @@ class DataSyncWorker(
             nsClientV3Plugin.scheduleIrregularExecution(refreshToken = true)
         }
         return Result.success()
+    }
+
+    companion object {
+
+        private val UPLOAD_TIMEOUT_MS = T.mins(30).msecs()
     }
 }

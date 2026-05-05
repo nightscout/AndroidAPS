@@ -69,7 +69,10 @@ data class QuickWizardItem(
 data class ActionConfirmation(
     val title: String,
     val message: String,
-    val onConfirmAction: ConfirmableAction
+    val onConfirmAction: ConfirmableAction,
+    val confirmLabel: String? = null,
+    val secondaryAction: ConfirmableAction? = null,
+    val secondaryLabel: String? = null
 )
 
 /**
@@ -87,4 +90,5 @@ sealed class ConfirmableAction {
 
     data class ActivateScene(val sceneId: String, val durationMinutes: Int) : ConfirmableAction()
     data object DeactivateScene : ConfirmableAction()
+    data class DeactivateAndChainScene(val targetSceneId: String) : ConfirmableAction()
 }

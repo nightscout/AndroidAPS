@@ -33,10 +33,10 @@ open class DanaRSPacketBolusSetStepBolusStop @Inject constructor(
         if (!danaPump.bolusStopForced) {
             // delivery ended without user intervention
             val insulin = bolusProgressData.state.value?.insulin ?: 0.0
-            bolusProgressData.updateProgress(100, rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin), insulin)
+            bolusProgressData.updateProgress(100)
         } else {
             val currentPercent = bolusProgressData.state.value?.percent ?: 0
-            bolusProgressData.updateProgress(currentPercent, rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped), bolusProgressData.state.value?.delivered ?: 0.0)
+            bolusProgressData.updateProgress(currentPercent, rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped))
         }
     }
 

@@ -15,6 +15,7 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -538,7 +539,7 @@ class BgQualityCheckPluginTest : TestBase() {
     }
 
     @Test
-    fun applyMaxIOBConstraintsTest() {
+    fun applyMaxIOBConstraintsTest() = runTest {
         plugin.state = BgQualityCheck.State.UNKNOWN
         assertThat(plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value()).isWithin(0.001).of(10.0)
         plugin.state = BgQualityCheck.State.FIVE_MIN_DATA

@@ -17,12 +17,7 @@ class MsgBolusProgress(
     override fun handleMessage(bytes: ByteArray) {
         val deliveredInsulin = danaPump.bolusingDetailedBolusInfo!!.insulin - intFromBuff(bytes, 0, 2) / 100.0
         danaPump.bolusProgressLastTimeStamp = System.currentTimeMillis()
-        val isPriming = bolusProgressData.state.value?.isPriming == true
-        val insulin = bolusProgressData.state.value?.insulin ?: 0.0
-        val delivered = ch.fromPump(PumpInsulin(deliveredInsulin), isPriming)
-        val percent = if (insulin > 0) min((delivered / insulin * 100).toInt(), 100) else 0
-        val status = ch.bolusProgressString(PumpInsulin(deliveredInsulin), isPriming)
-        bolusProgressData.updateProgress(percent, status, deliveredInsulin)
+        bolusProgressData.updateProgress(PumpInsulin(deliveredInsulin))
         aapsLogger.debug(LTag.PUMPCOMM, "Delivered insulin so far: $deliveredInsulin")
     }
 }

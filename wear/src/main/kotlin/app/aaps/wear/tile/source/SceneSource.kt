@@ -17,6 +17,18 @@ import javax.inject.Singleton
 class SceneSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
 
     override fun getSelectedActions(): List<Action> {
+        if (isSceneActive()) {
+            aapsLogger.info(LTag.WEAR, "getSelectedActions: scene is active, showing STOP")
+            return listOf(
+                Action(
+                    buttonText = context.resources.getString(R.string.scene_stop),
+                    iconRes = R.drawable.ic_cancel,
+                    activityClass = BackgroundActionActivity::class.java.name,
+                    action = EventData.ActionSceneStop(),
+                    message = context.resources.getString(R.string.scene_stop)
+                )
+            )
+        }
         val sceneList = mutableListOf<Action>()
         val sceneData = getSceneData(sp)
 
@@ -42,5 +54,11 @@ class SceneSource @Inject constructor(private val context: Context, private val 
     private fun getSceneData(sp: SP): EventData.SceneList =
         EventData.deserialize(sp.getString(R.string.key_scene_data, EventData.SceneList(arrayListOf()).serialize())) as EventData.SceneList
 
-    override fun getResourceReferences(resources: Resources): List<Int> = listOf(R.drawable.ic_scene)
+    private fun isSceneActive(): Boolean {
+        val raw = sp.getString(R.string.key_active_scene_state, "")
+        if (raw.isEmpty()) return false
+        return runCatching { (EventData.deserialize(raw) as? EventData.ActiveSceneState)?.active == true }.getOrDefault(false)
+    }
+
+    override fun getResourceReferences(resources: Resources): List<Int> = listOf(R.drawable.ic_scene, R.drawable.ic_cancel)
 }

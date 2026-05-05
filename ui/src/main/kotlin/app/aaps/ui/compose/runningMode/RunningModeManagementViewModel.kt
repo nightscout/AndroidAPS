@@ -9,7 +9,9 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.compensateForClockSkew
 import app.aaps.core.interfaces.db.observeChanges
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -17,6 +19,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventShowSnackbar
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -46,7 +49,9 @@ class RunningModeManagementViewModel @Inject constructor(
     private val preferences: Preferences,
     private val persistenceLayer: PersistenceLayer,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val dateUtil: DateUtil,
+    private val config: Config
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RunningModeManagementUiState())
@@ -94,6 +99,7 @@ class RunningModeManagementViewModel @Inject constructor(
     private fun observeRunningModeChanges() {
         persistenceLayer
             .observeChanges<RM>()
+            .compensateForClockSkew(config, dateUtil)
             .debounce(500L)
             .onEach { loadState() }
             .launchIn(viewModelScope)
