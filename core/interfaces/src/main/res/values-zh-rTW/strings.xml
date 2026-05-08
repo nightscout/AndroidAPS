@@ -54,6 +54,8 @@ Other
     <string name="unit_weeks">週</string>
     <string name="shortminute">分</string>
     <string name="shortday">天</string>
+    <string name="time_remaining_h_m">剩餘 %1$d 小時 %2$d 分鐘</string>
+    <string name="time_remaining_m">剩餘 %1$d 分鐘</string>
     <string name="later_today">今天稍晚</string>
     <string name="tomorrow">明天</string>
     <string name="today">今天</string>
