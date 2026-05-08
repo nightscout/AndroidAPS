@@ -1,22 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Elija un punto de partida. Las plantillas preconfiguradas se pueden modificar después</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Ejercicio</string>
+    <string name="scene_wizard_exercise_desc">Subir objetivo, reducir perfil al 70%% y desactivar SMB para evitar hipoglucemias por ejercicio</string>
+    <string name="scene_wizard_info_exercise">Durante la actividad física, los músculos consumen glucosa más rápido y la sensibilidad a la insulina aumenta. Subir el objetivo temporal con antelación permite que el algoritmo se adelante: comenzará a reducir el suministro de insulina temprano, creando un margen de seguridad contra las hipoglucemias por ejercicio. También se recomienda desactivar las SMB, ya que los bolus de corrección durante el ejercicio pueden causar caídas rápidas. Para obtener mejores resultados, active este escenario 1–2 horas antes de empezar a hacer ejercicio para que el algoritmo tenga tiempo de reducir la insulina a bordo</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Día de enfermedad</string>
+    <string name="scene_wizard_sick_day_desc">Perfil más fuerte (150%) para gestionar el aumento de la resistencia a la insulina durante la enfermedad</string>
+    <string name="scene_wizard_info_sick_day">La enfermedad, la fiebre y las hormonas del estrés pueden aumentar drásticamente la resistencia a la insulina, a veces en un 50% o más. Un perfil más fuerte (p. ej., 150%) le indica al algoritmo que suministre más insulina en todos sus cálculos: tasas basales, sugerencias de bolos y factores de corrección. También puede añadir un objetivo temporal o ajustar el modo de funcionamiento en los siguientes pasos. Supervise de cerca y realice ajustes a medida que su cuerpo se recupere</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Día de enfermedad — Vómitos</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Perfil reducido con LGS — Al revés que un día de enfermedad común, para cuando no se toleran los alimentos</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Cuando no se toleran los alimentos, el enfoque estándar para días de enfermedad de aumentar la insulina puede ser peligroso. Los vómitos significan que los carbohidratos no se están absorbiendo, por lo que la glucosa en sangre puede bajar en lugar de subir. Un perfil reducido (60%) disminuye el suministro de insulina, y el modo LGS añade una red de seguridad adicional al suspender la insulina si la glucosa cae. Se recomienda desactivar las SMB para evitar bolus adicionales. Supervise con frecuencia: compruebe la glucosa en sangre cada 1–2 horas y las cetonas cada 2–4 horas. Busque ayuda médica si los vómitos persisten más de unas pocas horas o si las cetonas superan los 1.5 mmol/L</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Dormir</string>
+    <string name="scene_wizard_sleep_desc">Objetivo más ajustado para un mejor control nocturno</string>
+    <string name="scene_wizard_info_sleep">La noche es el momento en que muchas personas experimentan subidas o bajadas sin detectar. Un objetivo ligeramente más ajustado durante el sueño permite que el algoritmo realice correcciones más precisas a lo largo de la noche. Para obtener mejores resultados, combine esto con un perfil que refleje sus necesidades basales nocturnas</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Noche tras ejercicio</string>
+    <string name="scene_wizard_post_exercise_night_desc">Perfil reducido, objetivo más alto y SMB desactivadas: protege contra las hipoglucemias nocturnas retardadas tras la actividad</string>
+    <string name="scene_wizard_info_post_exercise_night">Tras la actividad física, los músculos continúan recargando las reservas de glucógeno durante muchas horas; la sensibilidad a la insulina puede permanecer elevada de 24 a 48 horas, con el mayor riesgo de hipoglucemia nocturna entre 6 y 12 horas después del ejercicio. Un perfil reducido disminuye el suministro basal durante toda la noche, un objetivo temporal más alto proporciona al algoritmo un margen de seguridad y la desactivación de las SMB evita que el sistema corrija en exceso las subidas breves. Active este escenario al acostarse los días que haya hecho ejercicio, especialmente tras sesiones largas o actividades nuevas. Mantenga carbohidratos rápidos junto a la cama y considere poner una alarma para realizar un control a mitad de la noche</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Antes de comer</string>
+    <string name="scene_wizard_pre_meal_desc">Objetivo más bajo para adelantarse al pico postprandial</string>
+    <string name="scene_wizard_info_pre_meal">Establecer un objetivo más bajo entre 30 y 60 minutos antes de comer le indica al algoritmo que comience a acumular insulina a bordo antes de la llegada de los carbohidratos. Esto ayuda a suavizar el pico postprandial que ocurre cuando la comida llega al torrente sanguíneo más rápido de lo que la insulina puede actuar. Es ideal para cuando sabe que va a comer pronto</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alcohol</string>
+    <string name="scene_wizard_alcohol_desc">Modo LGS, perfil reducido y SMB desactivadas: protege contra las hipoglucemias retardadas por el alcohol</string>
+    <string name="scene_wizard_info_alcohol">El alcohol representa una de las situaciones más peligrosas para las personas con diabetes tipo 1. El hígado prioriza el procesamiento del alcohol frente a la liberación de glucosa, lo que puede provocar hipoglucemias retardadas entre 6 y 24 horas después; a menudo, durante la noche mientras duerme. El modo LGS evita el apilamiento de insulina al reducir el suministro únicamente cuando la glucosa cae. Un perfil reducido y la desactivación de las SMB limitan aún más la insulina a bordo. Compruebe siempre su glucosa en sangre antes de irse a dormir y considere poner una alarma para realizar un control a mitad de la noche</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Conducción</string>
+    <string name="scene_wizard_driving_desc">Objetivo ligeramente más alto para mantener la seguridad al volante</string>
+    <string name="scene_wizard_info_driving">La conducción segura requiere una glucosa en sangre estable por encima de 5.0 mmol/L (90 mg/dL). En algunos países, realizar controles antes y durante trayectos largos es un requisito legal. Un objetivo ligeramente más alto proporciona al algoritmo un margen de seguridad: este trabajará para mantenerle por encima del nivel en el que la concentración y el tiempo de reacción empiezan a disminuir. Si sufre una hipoglucemia mientras conduce, deténgase inmediatamente, trátela y espere al menos 45 minutos después de que la glucosa vuelva a la normalidad antes de continuar</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Baño | Ducha</string>
+    <string name="scene_wizard_bathing_desc">Desconecte la bomba para ducharse, nadar, bañarse o cualquier actividad acuática</string>
+    <string name="scene_wizard_info_bathing">Cuando desconecta su bomba, el suministro de insulina se detiene por completo: sin basal, sin bolos y sin correcciones. El algoritmo cambia al modo desconectado y deja de realizar ajustes. Esto es normal durante periodos cortos como ducharse, bañarse o nadar. Cuando el escenario termina, la bomba se reconecta y el algoritmo se reanuda automáticamente. Procure que las desconexiones sean breves: sin insulina basal, la glucosa en sangre empezará a subir en un plazo de 1 a 2 horas</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Fase lútea</string>
+    <string name="scene_wizard_luteal_phase_desc">Perfil incrementado para gestionar la resistencia a la insulina premenstrual</string>
+    <string name="scene_wizard_info_luteal_phase">Muchas mujeres experimentan un aumento de la resistencia a la insulina durante la fase lútea (aproximadamente 1 o 2 semanas antes del periodo). Esto se debe al aumento de los niveles de progesterona, que reducen la sensibilidad a la insulina. El efecto varía enormemente entre individuos: algunas notan un aumento del 10 al 30 % en sus necesidades de insulina, mientras que otras observan cambios mínimos. Comience con un aumento conservador (115 %) y ajústelo según sus propios patrones a lo largo de varios ciclos. Registrar esto en portal de cuidados ayuda a identificar su ritmo personal</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Clima cálido</string>
+    <string name="scene_wizard_hot_weather_desc">Perfil reducido: el calor acelera la absorción de la insulina</string>
+    <string name="scene_wizard_info_hot_weather">Las altas temperaturas provocan la dilatación de los vasos sanguíneos, lo que acelera la absorción de la insulina: la misma dosis actúa más rápido y con más fuerza. Esto puede provocar bajadas inesperadas, especialmente durante actividades al aire libre. Una reducción moderada del perfil (85 %) compensa esta absorción acelerada. Manténgase hidratado, realice controles con más frecuencia y tenga en cuenta que la insulina almacenada en una bomba o pluma expuesta al calor puede degradarse. Si además realiza ejercicio con calor, considere combinar esto con el escenario de ejercicio para una protección adicional</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Procedimiento médico</string>
+    <string name="scene_wizard_medical_procedure_desc">Lazo abierto con SMB desactivadas para cirugías o procedimientos médicos</string>
+    <string name="scene_wizard_info_medical_procedure">Durante una cirugía o procedimiento médico, la anestesia y las hormonas del estrés hacen que la glucosa en sangre sea impredecible. Se recomienda el modo de lazo abierto porque el algoritmo no puede predecir con fiabilidad cómo reaccionará su cuerpo en estas condiciones. Un objetivo más alto (150 mg/dL) proporciona un margen de seguridad frente a la hipoglucemia intraoperatoria. Desactivar las SMB evita el suministro inesperado de insulina durante la intervención. Informe siempre al personal médico de que lleva una bomba de insulina y un sensor. En procedimientos de más de 3 horas, es posible que el equipo médico prefiera cambiar a insulina intravenosa</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Vacío | En blanco</string>
+    <string name="scene_wizard_blank_desc">Empezar de cero sin acciones preseleccionadas</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info">Un cambio de perfil modifica simultáneamente sus tasas basales, su factor de sensibilidad a la insulina (ISF) y sus ratios de insulina-carbohidratos (IC). Puede escalar todo mediante un porcentaje; por ejemplo, un 110 % incrementa el suministro basal, los cálculos de los bolos y las tasas de absorción de carbohidratos en un 10 %. También puede cambiar a un perfil completamente distinto si tiene uno configurado para situaciones específicas</string>
+    <string name="scene_wizard_tt_info">Un objetivo temporal indica al algoritmo que debe apuntar a un nivel de glucosa en sangre distinto durante un periodo determinado. Con un objetivo más alto, el algoritmo reacciona más lentamente ante las subidas de glucosa y busca un valor general más elevado; esto reduce el suministro de insulina y ayuda a prevenir hipoglucemias durante el ejercicio. Con un objetivo más bajo, el algoritmo responde antes y administra más insulina, lo cual es útil para anticiparse a una comida. Elija uno de sus ajustes preestablecidos a continuación: el valor del objetivo y el motivo ya están configurados allí</string>
+    <string name="scene_wizard_smb_info">Los Super Micro Bolos (SMB) permiten que el algoritmo suministre insulina por adelantado en forma de pequeños bolos, mientras detiene temporalmente el suministro basal para compensar; en la práctica, \"toman prestada\" insulina del futuro para obtener una respuesta más rápida. Desactivar las SMB impide esto y limita al algoritmo a ajustar únicamente las tasas basales. La respuesta se vuelve más lenta y gradual, lo cual suele preferirse durante el ejercicio o el sueño</string>
+    <string name="scene_wizard_loop_mode_info">El modo de funcionamiento determina cuánta autonomía tiene el algoritmo. En Lazo Cerrado (Closed Loop), el sistema ajusta el suministro de insulina automáticamente. El modo LGS (suspensión por glucosa baja) solo reduce o detiene la insulina cuando la glucosa cae hacia un valor bajo, pero no aumentará el suministro. El Lazo Abierto (Open Loop) calcula sugerencias, pero espera a que usted confirme cada una de ellas</string>
+    <string name="scene_wizard_careportal_info">Un evento del portal de cuidados (CarePortal) es una entrada de registro; no modifica el suministro de insulina ni el comportamiento del algoritmo. Utilícelo para marcar actividades, situaciones o notas en su historial de tratamiento. Puede revisar estos registros en Tratamientos - Portal de cuidados y en Nightscout, lo que les ayudará a usted y a su médico a detectar patrones en sus datos</string>
+    <string name="scene_wizard_duration_info">La duración controla cuánto tiempo permanece activo este escenario. Cuando el tiempo se agota, las acciones basadas en la duración (objetivo temporal, cambio de perfil, modo de funcionamiento) caducan por sí solas, mientras que los cambios persistentes (como la activación/desactivación de los SMB) se revierten automáticamente a sus valores anteriores. Establecer la duración en 0 hace que el escenario sea indefinido: todas las acciones permanecerán activas hasta que finalice el escenario manualmente</string>
+    <string name="scene_wizard_name_info">Elija un nombre y un icono que permitan reconocer este escenario de un vistazo. Los verá en el botón de activación y en el banner de escenario activo de la pantalla principal</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Incluir %1$s en la escena</string>
+    <string name="scene_wizard_finish">Finalizar</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Escena de seguimiento</string>
+    <string name="scene_wizard_chain_info">Opcionalmente, encadene otra escena para que se active automáticamente cuando esta caduque. También puede saltar a ella si finaliza la escena antes de tiempo. La escena de seguimiento solo se ejecutará si el objetivo está habilitado y la bomba está disponible; de lo contrario, recibirá una notificación</string>
+    <string name="scene_chain_none">Ninguna</string>
+    <string name="scene_skip_to_format">Saltar a %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">La escena encadenada ha sido eliminada</string>
     <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">La escena \"%1$s\" ha finalizado</string>
+    <string name="scene_chained_format">Escena encadenada: %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s finalizada — escena de seguimiento omitida: %2$s</string>
+    <string name="scene_chain_skipped_deleted">la escena de destino ha sido eliminada</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" está deshabilitada</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: fallaron %3$d de %4$d acciones</string>
 </resources>
