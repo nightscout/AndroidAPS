@@ -1,22 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">選擇一個起點。範本會預先填入常見情境的建議動作 — 你可以在接下來的步驟中調整所有設定。</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">運動</string>
+    <string name="scene_wizard_exercise_desc">提高目標、將設定檔降為 70%，並停用 SMB 以避免運動時的低血糖。</string>
+    <string name="scene_wizard_info_exercise">在身體活動期間，肌肉消耗葡萄糖更快，胰島素敏感度也會提高。事先提高你的臨時目標，能讓演算法搶先一步 — 它會提早開始降低胰島素輸注，建立對抗運動引發低血糖的緩衝。也建議停用 SMB，因為運動期間的校正注射可能導致血糖快速下降。為達最佳效果，請在開始運動前 1–2 小時啟用此情境，讓演算法有時間降低你的活性胰島素。</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">生病日</string>
+    <string name="scene_wizard_sick_day_desc">較強的設定檔（150%），以應對生病期間增加的胰島素阻抗。</string>
+    <string name="scene_wizard_info_sick_day">疾病、發燒與壓力荷爾蒙會大幅提高胰島素阻抗 — 有時可達 50% 以上。較強的設定檔（例如 150%）會告訴演算法在所有計算中提供更多胰島素 — 基礎率、注射建議與校正係數。你也可以在接下來的步驟中加入臨時目標或調整執行模式。請密切監測，並隨身體恢復情況調整。</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">生病日 — 嘔吐</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">降低設定檔並啟用 LGS — 當你無法吸收食物時，這與標準的生病日作法相反。</string>
+    <string name="scene_wizard_info_sick_day_vomiting">當你無法用餐或無法留住食物時，採用標準生病日增加胰島素的作法可能很危險。嘔吐代表碳水化合物未被吸收，因此血糖可能不升反降。降低設定檔（60%）會減少胰島素輸注，而 LGS 模式會在血糖下降時暫停胰島素，作為額外的安全防護。停用 SMB 可避免任何額外的注射。請頻繁監測 — 每 1–2 小時檢查一次血糖、每 2–4 小時檢查一次酮體。若嘔吐持續超過數小時或酮體升至 1.5 mmol/L 以上，請尋求醫療協助。</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">睡眠</string>
+    <string name="scene_wizard_sleep_desc">較嚴格的目標，有助於提升夜間控制。</string>
+    <string name="scene_wizard_info_sleep">許多人在夜間會出現未被察覺的高或低血糖。在睡眠期間設定稍微緊一些的目標，可讓演算法在整晚進行更細緻的修正。若再搭配能反映夜間基礎需求的設定檔，效果最佳。</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">運動後夜間</string>
+    <string name="scene_wizard_post_exercise_night_desc">降低設定檔、提高目標、停用 SMB — 預防活動後延遲出現的夜間低血糖。</string>
+    <string name="scene_wizard_info_post_exercise_night">在體能活動之後，肌肉會持續數小時補充肝醣庫存；胰島素敏感性可能在 24–48 小時內維持升高，其中在運動後 6–12 小時的夜間，低血糖風險最高。降低設定檔可在整夜降低基礎輸注；較高的臨時目標為演算法提供安全緩衝；停用 SMB 則可避免演算法對短暫升高過度修正。在有運動的日子就寢時啟用此情境，特別是長時間運動或新增了不熟悉的活動後。床邊備妥速效碳水化合物，並考慮設定鬧鐘於半夜檢查一次。</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">餐前</string>
+    <string name="scene_wizard_pre_meal_desc">降低目標，搶先抑制餐後尖峰。</string>
+    <string name="scene_wizard_info_pre_meal">在用餐前 30–60 分鐘設定較低的目標，可讓演算法在碳水進入體內之前，先行累積體內胰島素。當食物進入血液的速度快於胰島素作用時，這有助於減緩餐後血糖尖峰。最適合在確定即將用餐時使用。</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">酒精</string>
+    <string name="scene_wizard_alcohol_desc">LGS 模式、降低設定檔、停用 SMB — 預防酒精引起的延遲性低血糖。</string>
+    <string name="scene_wizard_info_alcohol">酒精對於第 1 型糖尿病患者而言，是最危險的情境之一。肝臟會優先代謝酒精而非釋放葡萄糖，可能在 6–24 小時後導致延遲性低血糖——常發生於你睡著的夜間。LGS 模式僅在血糖下滑時降低輸注，避免胰島素堆疊。降低設定檔並關閉 SMB，可進一步限制體內胰島素。睡前務必檢查血糖，並考慮設定鬧鐘於半夜再檢查一次。</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">駕車</string>
+    <string name="scene_wizard_driving_desc">略為提高目標，以維持行車安全。</string>
+    <string name="scene_wizard_info_driving">安全駕駛需維持穩定血糖且高於 5.0 mmol/L（90 mg/dL）。在部分國家，長途駕駛前與途中量測是法定要求。略高的目標可為演算法提供安全緩衝——協助你維持在注意力與反應時間開始下降之上。若駕車中發生低血糖，請立刻靠邊停車並處置，待血糖回復正常後至少再等 45 分鐘再上路。</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">沐浴</string>
+    <string name="scene_wizard_bathing_desc">淋浴、游泳、泡澡或任何涉水活動時，請取下幫浦。</string>
+    <string name="scene_wizard_info_bathing">當你取下幫浦時，胰島素輸注會完全停止——沒有基礎、沒有注射、也沒有校正。演算法會切換為中斷模式，停止進行調整。對於如淋浴、泡澡或游泳等短時間情況，這是正常的。當情境結束時，幫浦會重新連線，演算法會自動恢復。請縮短中斷時間——沒有基礎胰島素時，血糖可能在 1–2 小時內開始上升。</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">黃體期</string>
+    <string name="scene_wizard_luteal_phase_desc">提高設定檔，以應對經期前的胰島素阻抗。</string>
+    <string name="scene_wizard_info_luteal_phase">許多女性在黃體期（約在月經前 1–2 週）會出現較高的胰島素阻抗。這是因為黃體素上升，降低了胰島素敏感度。此影響的個體差異很大——有些人胰島素需求增加 10–30%，有些人幾乎沒有變化。可先以保守的提高（115%）開始，並依據你在數個週期中觀察到的模式調整。在 照護入口 中追蹤記錄，有助於辨識你的個人節律。</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">高溫天氣</string>
+    <string name="scene_wizard_hot_weather_desc">降低設定檔——高溫會加速胰島素吸收。</string>
+    <string name="scene_wizard_info_hot_weather">高溫會使血管擴張，進而加速胰島素吸收——相同劑量會來得更快、作用更強。這可能導致意外低血糖，尤其在戶外活動時。適度降低設定檔（85%）可補償較快的吸收。請維持充足水分、提高監測頻率，並注意存放在溫熱環境中的幫浦或注射筆內的胰島素可能會劣化。若你在高溫下運動，考慮與「運動」情境搭配以獲得額外保護。</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">醫療處置</string>
+    <string name="scene_wizard_medical_procedure_desc">手術或醫療處置時，使用開放循環並關閉 SMB。</string>
+    <string name="scene_wizard_info_medical_procedure">在手術或醫療處置期間，麻醉與壓力荷爾蒙會讓血糖難以預測。建議使用開放循環模式，因為在此情況下演算法無法可靠地預測你的身體反應。較高的目標值（150 mg/dL）可為術中低血糖提供安全緩衝。停用 SMB 可避免處置過程中出現非預期的胰島素輸注。務必告知醫療人員你正佩戴胰島素幫浦與 CGM。若處置時間超過 3 小時，醫療團隊可能會改以靜脈胰島素。</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">空白</string>
+    <string name="scene_wizard_blank_desc">從零開始，未預先選取任何動作。</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info">切換設定檔會同時變更你的基礎率、胰島素敏感係數（ISF）與胰島素與碳水比（IC）。你可以依百分比整體縮放——例如 110% 會將基礎輸注、注射計算與碳水吸收速率一併提高 10%。若你另有針對特定情境建立的設定檔，也可以直接切換過去。</string>
+    <string name="scene_wizard_tt_info">臨時目標可在一段時間內，讓演算法以不同的血糖目標運作。較高的目標會讓演算法對上升反應較慢，且整體鎖定較高數值——這會減少胰島素輸注，有助於在運動時避免低血糖。較低的目標則會讓演算法更早反應並提供較多胰島素——適合用來搶在用餐前一步。請從下方的預設中選擇——目標值與原因已於其中設定。</string>
+    <string name="scene_wizard_smb_info">超微量注射（SMB）可讓演算法先行以小劑量注射，並暫時停止基礎輸注來抵銷——等於是從未來「借用」胰島素，以獲得更快的反應。停用 SMB 會禁止此行為，並將演算法限制為僅調整基礎率。反應會更慢且更平緩，這常被用於運動或睡眠期間。</string>
+    <string name="scene_wizard_loop_mode_info">執行模式決定演算法的自動化程度。於封閉循環中，它會自動調整胰島素輸注。LGS（低血糖暫停）僅會在血糖朝低值下滑時減少或停止輸注——不會增加輸注。開放循環則會提供建議計算，但會等待你逐一確認。</string>
+    <string name="scene_wizard_careportal_info">照護入口事件是一筆記錄項目——不會改變胰島素輸注或演算法行為。用它在治療時間軸上標註活動、情境或備註。你可在「治療 - 照護入口」以及 Nightscout 中檢視這些紀錄，協助你與醫師從資料中找出模式。</string>
+    <string name="scene_wizard_duration_info">持續時間決定此情境維持啟用的長度。時間到期時，依時間生效的動作（臨時目標、設定檔切換、執行模式）會自行到期；而持續性變更（如 SMB 切換）會自動還原為先前的數值。將持續時間設為 0 會使情境無限期生效——所有動作都會保持啟用，直到你手動結束情境為止。</string>
+    <string name="scene_wizard_name_info">請選擇易於一眼辨識的名稱與圖示。你會在啟用按鈕以及總覽畫面頂端的活動情境橫幅上看到它們。</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">在情境中包含 %1$s</string>
+    <string name="scene_wizard_finish">完成</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">後續情境</string>
+    <string name="scene_wizard_chain_info">可選擇串接另一個情境，於本情境到期時自動啟用。你也可以在提前結束時跳轉至它。僅當目標已啟用且幫浦可用時，後續情境才會執行；否則你會收到通知。</string>
+    <string name="scene_chain_none">無</string>
+    <string name="scene_skip_to_format">跳轉至 %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">已串接的情境已被刪除</string>
     <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">情境「%1$s」已結束</string>
+    <string name="scene_chained_format">已串接情境：%1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s 已結束 — 已略過後續：%2$s</string>
+    <string name="scene_chain_skipped_deleted">目標情境已被刪除</string>
+    <string name="scene_chain_skipped_disabled">「%1$s」已停用</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s：有 %3$d 項動作失敗（共 %4$d 項）</string>
 </resources>
