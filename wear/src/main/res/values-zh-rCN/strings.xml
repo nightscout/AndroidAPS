@@ -209,7 +209,7 @@
     <string name="tile_action_3">动作 3</string>
     <string name="tile_action_4">动作 4</string>
     <string name="datalayer_notification_title">数据层前台服务</string>
-    <string name="datalayer_notification_text">AAPS 正在前台运行。要隐藏通知，请前往“开发者选项”>“应用通知”>“允许的手表应用”，选择 AAPS，然后关闭“数据层前台服务通道”通知。</string>
+    <string name="datalayer_notification_text">AAPS 正在前台运行。要隐藏通知，请前往“开发者选项”&gt;“应用通知”&gt;“允许的手表应用”，选择 AAPS，然后关闭“数据层前台服务通道”通知。</string>
     <string name="on">开</string>
     <string name="off">关</string>
     <string name="complication_full_status">完整状态</string>
