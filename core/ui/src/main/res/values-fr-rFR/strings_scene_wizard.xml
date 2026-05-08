@@ -1,22 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Choisissez un point de départ. Les modèles pré-remplissent les actions recommandées pour les situations courantes — vous pouvez tout ajuster dans les étapes suivantes.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Exercice</string>
+    <string name="scene_wizard_exercise_desc">Augmentez la cible, réduisez le profil à 70%, désactivez les SMB pour éviter les hypos d\'exercice.</string>
+    <string name="scene_wizard_info_exercise">Pendant l\'activité physique, les muscles consomment les glucides plus rapidement et la sensibilité à l\'insuline augmente. Augmenter votre cible temporaire à l\'avance donne à l\'algorithme un point de départ. Il commencera à réduire l\'insuline plus tôt, en construisant un tampon contre les hypoglycémies induits par l\'exercice. La désactivation des SMB est également recommandée, car les bolus de correction durant l\'exercice peuvent causer des baisses rapides. Pour de meilleurs résultats, activez ce scénario 1 à 2 heures avant de commencer à faire de l\'exercice, afin que l\'algorithme ait le temps de réduire votre insuline active.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Journée de maladie</string>
+    <string name="scene_wizard_sick_day_desc">Un profil plus fort (150%) pour gérer une résistance accrue à l\'insuline en cas de maladie.</string>
+    <string name="scene_wizard_info_sick_day">La maladie, la fièvre et les hormones de stress peuvent augmenter considérablement la résistance à l\'insuline, parfois de 50 % ou plus. Un profil plus fort (par ex. 150%) indique à l\'algorithme de fournir plus d\'insuline dans tous les calculs — débits de base, suggestions de bolus et facteurs de correction. Vous pouvez également ajouter une cible temporaire ou ajuster le mode de fonctionnement dans les étapes suivantes. Surveillez de près et ajustez au fur et à mesure que votre corps se rétablira.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Journée de maladie avec vomissements</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Profil réduit avec AGB — c\'est l\'opposé de la journée de maladie standard quand vous ne pouvez pas absorber de nourriture.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Lorsque vous ne pouvez pas absorber la nourriture, la méthode habituelle de jour malade consistant à augmenter l\'insuline peut être dangereuse. Le vomissement signifie que les glucides ne sont pas absorbés, donc la glycémie peut baisser plutôt qu\'augmenter. Un profil réduit (60 %) réduit la distribution d\'insuline, et le mode AGB ajoute un filet de sécurité supplémentaire en suspendant l\'insuline en cas de chute de la glycémie. La désactivation des SMB empêche tout bolus supplémentaire. Surveillez fréquemment — vérifiez la glycémie toutes les 1-2 heures et les cétones toutes les 2-4 heures. Demandez de l\'aide médicale si les vomissements persistent plus de quelques heures ou si les cétones dépassent 1,5 mmol/L.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Sommeil</string>
+    <string name="scene_wizard_sleep_desc">Cible plus serrée pour un meilleur contrôle de la nuit.</string>
+    <string name="scene_wizard_info_sleep">Pendant la nuit, de nombreuses personnes ont des hauts ou des bas non détectés. Une cible légèrement plus serrée pendant le sommeil permet à l\'algorithme d\'effectuer des corrections plus fines tout au long de la nuit. Associez ceci avec un profil qui reflète vos besoins de basal nocturne pour obtenir de meilleurs résultats.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Nuit après exercice</string>
+    <string name="scene_wizard_post_exercise_night_desc">Profil réduit, cible plus élevée, SMB off — protège contre les hypoglycémie retard dans la nuit qui suit une activité.</string>
+    <string name="scene_wizard_info_post_exercise_night">Après l\'activité physique, les muscles ne cessent de recharger les réserves de glycogène pendant de nombreuses heures - la sensibilité à l\'insuline peut rester élevée pendant 24-48h, avec le plus grand risque d\'hypoglycémie nocturne 6–12h après l\'exercice. Un profil réduit réduit l\'injection de basale pendant toute la nuit, une cible temporaire plus élevée donne à l\'algorithme un tampon de sécurité, et la désactivation des SMB empêche l\'algorithme de corriger de manière excessive les montées brèves. Activez ce scénario au moment de vous coucher les jours où vous vous êtes entraîné, surtout après de longues sessions ou lorsque vous avez ajouté de nouvelles activités. Gardez les glucides rapides au chevet et envisagez de régler une alarme pour un contrôle au milieu de la nuit.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Pré-repas</string>
+    <string name="scene_wizard_pre_meal_desc">Diminuer la cible pour anticiper le pic postprandial.</string>
+    <string name="scene_wizard_info_pre_meal">Définir un objectif inférieur de 30-60 minutes avant de manger indique à l\'algorithme de commencer à construire de l\'insuline active avant l\'arrivée des glucides. Cela aide à contrecarrer le pic postprandial qui se produit lorsque la nourriture frappe le flux sanguin plus rapidement que l\'insuline ne peut agir. Meilleure utilisation si vous savez qu\'un repas arrive bientôt.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alcool</string>
+    <string name="scene_wizard_alcohol_desc">Mode AGB, profil réduit, SMB off — protège contre les hypoglycémies d\'alcool.</string>
+    <string name="scene_wizard_info_alcohol">L\'alcool est l\'une des situations les plus dangereuses pour les diabétiques de type 1. Le foie privilégie le traitement de l\'alcool au lieu de libérer du glucose, ce qui peut causer une hypoglycémie retardée 6–24 heures plus tard, souvent la nuit, pendant que vous dormez. Le mode AGB empêche l\'accumulation d\'insuline en réduisant l\'injection uniquement lorsque la glycémie baisse. Un profil réduit et la désactivation des SMB limite davantage l\'insuline active. Vérifiez toujours votre glycémie avant d\'aller dormir et prévoyez de mettre une alarme pour un contrôle du milieu de la nuit.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Conduite</string>
+    <string name="scene_wizard_driving_desc">Cible légèrement plus élevée pour rester en sécurité derrière le volant.</string>
+    <string name="scene_wizard_info_driving">Une conduite sécurisée nécessite une glycémie stable supérieure à 90 mg/dL (5,0 mmol/L). Dans certains pays, la vérification avant et pendant les longs trajets est une exigence légale. Une cible légèrement plus élevée donne à l\'algorithme un tampon de sécurité — il fonctionnera pour vous maintenir au-dessus du niveau où la concentration et le temps de réaction commencent à diminuer. Si vous devenez faible en conduisant, arrêtez-vous immédiatement, traitez l\'hypo, et attendez au moins 45 minutes après le retour à une glycémie normale avant de reprendre la route.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Baignade</string>
+    <string name="scene_wizard_bathing_desc">Débranchez la pompe pour la douche, la natation, les bains ou toute autre activité aquatique.</string>
+    <string name="scene_wizard_info_bathing">Lorsque vous déconnectez votre pompe, la distribution d\'insuline s\'arrête complètement — pas de basal, pas de bolus, pas de correction. L\'algorithme bascule vers le mode déconnecté et cesse de faire des ajustements. C\'est normal pour de courtes périodes comme la douche, le bain ou la natation. Lorsque le scénario se termine, la pompe se reconnecte et l\'algorithme reprend automatiquement. Garder les déconnexions courtes — sans insuline basale, la glycémie commencera à augmenter dans les 1 à 2 heures.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Phase lutéale</string>
+    <string name="scene_wizard_luteal_phase_desc">Profil augmenté pour gérer la résistance à l\'insuline prémenstruelle.</string>
+    <string name="scene_wizard_info_luteal_phase">De nombreuses femmes ont une résistance accrue à l\'insuline pendant la phase lutéale (environ 1 à 2 semaines avant leurs règles). Ceci est dû à la hausse des niveaux de progestérone qui réduisent la sensibilité à l\'insuline. L’effet varie énormément d’une personne à l’autre, certaines constatent une augmentation de 10 à 30 % des besoins en insuline, d’autres observent un minimum de changement. Commencez par une augmentation prudente (115 %) et ajustez en fonction de vos propres habitudes sur plusieurs cycles.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Météo chaude</string>
+    <string name="scene_wizard_hot_weather_desc">Profil réduit — la chaleur accélère l\'absorption d\'insuline.</string>
+    <string name="scene_wizard_info_hot_weather">Les températures élevées font que les vaisseaux sanguins se dilatent, ce qui accélère l\'absorption de l\'insuline — la même dose frappe plus rapidement et plus fort. Cela peut entraîner des baisses inattendues, surtout pendant les activités de plein air. Une modeste réduction de profil (85%) compense une absorption plus rapide. Restez hydraté, surveillez plus fréquemment votre glycémie, et soyez conscient que l\'insuline stockée dans une pompe ou un stylo chauds peut se dégrader. Si vous faites également de l\'exercice dans la chaleur, pensez à combiner cela avec le scénario Exercice pour une protection supplémentaire.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Acte médical</string>
+    <string name="scene_wizard_medical_procedure_desc">Boucle ouverte avec SMB off pour les interventions chirurgicales ou médicales.</string>
+    <string name="scene_wizard_info_medical_procedure">Lors d\'une intervention chirurgicale ou médicale, l\'anesthésie et les hormones de stress rendent la glycémie imprévisible. Le mode Boucle Ouverte est recommandé car l\'algorithme ne peut pas prédire de manière fiable comment votre corps réagira dans ces conditions. Une cible plus élevée (150 mg/dL) fournit une marge de sécurité contre l\'hypoglycémie intra-opératoire. Désactiver les SMB empêche l\'injection d\'insuline inattendue pendant l\'opération. Toujours informer le personnel médical que vous portez une pompe à insuline et un MGC. Pour les opérations de plus de 3 heures, votre équipe peut plutôt passer à l\'insuline intraveineuse.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Vide</string>
+    <string name="scene_wizard_blank_desc">Commencez à partir de zéro sans aucune action présélectionnée.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info">Un changement de profil modifie les débits de base, la sensibilité à l\'insuline (SI) et les ratios Glucides/Insuline (G/I) en même temps. Vous pouvez tout mettre à l\'échelle par pourcentage. Par exemple, 110% augmente l\'injection de basale, les calculs de bolus et l\'absorption des glucides de 10%. Vous pouvez également passer à un autre profil entièrement si vous en avez un pour des situations spécifiques.</string>
+    <string name="scene_wizard_tt_info">Une cible temporaire indique à l\'algorithme de viser un niveau de glycémie différent pour une période donnée. Avec une cible plus élevée, l\'algorithme réagit plus lentement à la hausse de la glycémie et cible une valeur globale plus élevée, ce qui réduit l\'injection d\'insuline et aide à prévenir des hypos pendant l\'exercice. Avec une cible plus basse, l\'algorithme répond plus rapidement et injecte plus d\'insuline — utile pour anticiper un repas. Choisissez l\'une de vos présélections ci-dessous — la valeur cible et la raison y sont déjà configurées.</string>
+    <string name="scene_wizard_smb_info">Les Super Micro Bolus (SMB) permettent à l\'algorithme d\'injecter de l\'insuline à l\'avance sous forme de petits bolus tout en arrêtant temporairement l\'injection de basale pour compenser — cela revient à emprunter efficacement de l\'insuline à venir pour une réponse plus rapide. Désactiver les SMB empêche cela et limite l\'algorithme à l\'ajustement des débits de base uniquement. La réponse devient plus lente et plus graduelle, ce qui est souvent préféré pendant l\'exercice physique ou le sommeil.</string>
+    <string name="scene_wizard_loop_mode_info">Le mode détermine le niveau d\'autonomie de l\'algorithme. Dans Boucle fermée, il ajuste l\'injection de l\'insuline automatiquement. L\'AGB (Arrêt Glycémie Basse) ne réduit ou arrête l\'insuline que lorsque la glycémie baisse vers une hypo — il n\'augmentera pas l\'injection. La Boucle Ouverte calcule des suggestions mais attend que vous confirmiez chacune d\'entre elles.</string>
+    <string name="scene_wizard_careportal_info">Un événement CarePortal est une entrée de journal — il ne modifie pas l\'injection de l\'insuline ni le comportement de l\'algorithme. Utilisez-le pour marquer les activités, les situations ou les notes dans vos traitements. Vous pouvez consulter ces informations dans Traitements - CarePortal et dans Nightscout. C\'est pour vous aider, vous et votre médecin, à repérer les schémas de vos données.</string>
+    <string name="scene_wizard_duration_info">La durée contrôle combien de temps ce scénario reste actif. Quand le temps est écoulé, les actions basées sur la durée (cible temporaire, changement de profil, mode) expirent automatiquement, alors que les changements persistants (comme les SMB) sont automatiquement restaurés à leurs valeurs précédentes. Définir la durée à 0 rend la scène permanente — toutes les actions restent actives jusqu\'à ce que vous finissiez le scénario manuellement.</string>
+    <string name="scene_wizard_name_info">Choisissez un nom et une icône qui rendent ce scénario facile à reconnaître d\'un coup d\'œil. Vous les verrez sur le bouton d\'activation et dans la bannière de scénario actif sur votre écran d\'accueil.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Inclure %1$s dans le scénario</string>
+    <string name="scene_wizard_finish">Terminer</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Scénario suivant</string>
+    <string name="scene_wizard_chain_info">Vous pouvez optionellement enchaîner un autre scénario à activer automatiquement lorsque celui-ci expire. Vous pouvez également l\'ignorer lorsque vous vous terminez le scénario plus tôt. Le suivi ne s\'exécute que si la cible est activée et que la pompe est disponible; sinon, vous recevrez une notification.</string>
+    <string name="scene_chain_none">Aucun</string>
+    <string name="scene_skip_to_format">Aller à %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Un scénario chaîné a été supprimé</string>
     <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">Scénario \"%1$s\" terminé</string>
+    <string name="scene_chained_format">Scénario chaîné : %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s terminé - suivant ignoré : %2$s</string>
+    <string name="scene_chain_skipped_deleted">le scénario cible a été supprimé</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" est désactivé</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s : %3$d des %4$d actions ont échoué</string>
 </resources>
