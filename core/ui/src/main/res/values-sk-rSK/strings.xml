@@ -265,6 +265,20 @@
     <!--       Stats -->
     <string name="average">Priemer</string>
     <string name="tir">Čas v rozsahu</string>
+    <string name="below" comment="below &quot;in range&quot;">Nižšie</string>
+    <string name="in_range">V rozsahu</string>
+    <string name="veryLow" comment="below 3.1">Veľmi nízka</string>
+    <string name="low" comment="3.1-3.9">Nízka</string>
+    <string name="high" comment="10.0-13.9">Vysoká</string>
+    <string name="veryHigh" comment="above 13.9">Veľmi vysoká</string>
+    <string name="above" comment="above &quot;in range&quot;">Vyššie</string>
+    <string name="detailed_14_days">Podrobne 14 dní</string>
+    <string name="day_tir">Denný TIR</string>
+    <string name="night_tir">Nočný TIR</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="seven_days_short">7d</string>
+    <string name="thirty_days_short">30d</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min.</string>
@@ -314,11 +328,13 @@
     <string name="scene_confirm_deactivate">Ukončiť scénu \"%1$s\" a vrátiť zmeny?</string>
     <string name="scene_conflict_active_tt">Aktívny dočasný cieľ bude nahradený</string>
     <string name="scene_conflict_active_profile">Aktívne prepnutie profilu bude nahradené</string>
+    <string name="scene_conflict_active_running_mode">Aktívny režim uzavretého okruhu bude nahradený</string>
     <string name="scene_conflict_active_scene">Aktivna scéna \"%1$s\" bude najskôr ukončená</string>
     <string name="scene_action_tt">Dočasný cieľ: %1$s</string>
     <string name="scene_action_profile">Profil: %1$s %2$d%%</string>
     <string name="scene_action_smb_on">Povoliť SMB</string>
     <string name="scene_action_smb_off">Zakázať SMB</string>
+    <string name="scene_action_running_mode">Režim uzavretého okruhu: %1$s</string>
     <string name="scene_action_careportal">Log: %1$s</string>
     <string name="scene_management">Scény</string>
     <string name="scene_management_desc">Vytvorenie, úprava a správa scén</string>
@@ -339,6 +355,7 @@
     <string name="scene_editor_enabled">Povolené</string>
     <string name="scene_editor_disabled">Zakázané</string>
     <string name="scene_summary">%1$d akcií, %2$s</string>
+    <string name="scene_duration_indefinite">Neurčitý (manuálne ukončenie)</string>
     <string name="scene_some_actions_failed">Niektoré akcie zlyhali</string>
     <string name="scene_no_active">Žiadna aktívna scéna</string>
     <string name="scene_some_reverts_failed">Niektoré návraty akcií zlyhali</string>
@@ -346,8 +363,10 @@
     <string name="scene_no_actions">Scéna nemá žiadne akcie</string>
     <string name="scene_profile_not_found">Profil \"%1$s\" nebol nájdený</string>
     <string name="scene_revert_tt">Zrušiť dočasný cieľ</string>
+    <string name="scene_revert_profile">Vrátiť zmenu profilu</string>
     <string name="scene_revert_smb_on">Znovu povoliť SMB</string>
     <string name="scene_revert_smb_off">Zakázať SMB</string>
+    <string name="scene_revert_loop_mode">Zrušiť prepísanie režimu uzavretého okruhu</string>
     <string name="scene_careportal_no_revert">Záznamy portálu starostlivosti se nevrátia</string>
     <string name="careportal_sickness">Choroba</string>
     <string name="careportal_stress">Stres</string>
