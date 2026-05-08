@@ -45,6 +45,8 @@
     <string name="unit_weeks">uker</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">%1$dt %2$dm gjenstår</string>
+    <string name="time_remaining_m">%1$dm gjenstår</string>
     <string name="later_today">Senere i dag</string>
     <string name="tomorrow">I morgen</string>
     <string name="today">Idag</string>
