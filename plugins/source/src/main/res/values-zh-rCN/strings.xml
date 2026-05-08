@@ -20,6 +20,7 @@
     <string name="description_source_aidex">从 LinX、LinX vista、Equil G、Smart 2、Diaexpert 2 等设备接收动态血糖数值</string>
     <string name="aidex_sensor_expired">传感器已过期，请更换新传感器</string>
     <string name="aidex_sensor_error">传感器故障，请检查传感器状态</string>
+    <string name="aidex_sensor_stabilizing">传感器正在稳定中</string>
     <string name="aidex_sensor_replace">传感器需要更换，请尽快更换新传感器</string>
     <string name="aidex_signal_lost">传感器信号丢失，请检查连接</string>
     <!-- Patched Syai Tag App -->

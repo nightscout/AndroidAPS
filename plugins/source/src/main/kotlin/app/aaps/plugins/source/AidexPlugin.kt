@@ -56,6 +56,9 @@ class AidexPlugin @Inject constructor(
     companion object {
         var sensorExpiredNotified = false
         var sensorErrorNotified = false
+
+        var sensorStablingNotified = false
+
         var replaceSensorNotified = false
         var signalLostNotified = false
     }
@@ -104,6 +107,8 @@ class AidexPlugin @Inject constructor(
 
             val sensorExpired = bundle.getBoolean(Intents.AIDEX_SENSOR_EXPIRED, false)
             val sensorError = bundle.getBoolean(Intents.EXTRA_SENSOR_ERROR, false)
+            val sensorStabling = bundle.getBoolean(Intents.EXTRA_SENSOR_STABILIZING, false)
+
             val replaceSensor = bundle.getBoolean(Intents.EXTRA_REPLACE_SENSOR, false)
             val signalLost = bundle.getBoolean(Intents.EXTRA_SIGNAL_LOST, false)
 
@@ -150,6 +155,21 @@ class AidexPlugin @Inject constructor(
                 sensorErrorNotified = false
             }
 
+            if (sensorStabling) {
+                aapsLogger.error(LTag.BGSOURCE, "Sensor is not stable detected!")
+                if (!sensorStablingNotified) {
+                    sensorStablingNotified = true
+                    uiInteraction.addNotificationValidFor(
+                        10005,
+                        rh.gs(R.string.aidex_sensor_stabilizing),
+                        Notification.NORMAL,
+                        60
+                    )
+                }
+            } else {
+                sensorStablingNotified = false
+            }
+
 
             if (signalLost) {
                 aapsLogger.warn(LTag.BGSOURCE, "Signal lost detected!")
@@ -166,7 +186,7 @@ class AidexPlugin @Inject constructor(
                 signalLostNotified = false
             }
 
-            aidexPlugin._hasSensorError = sensorExpired || sensorError || replaceSensor || signalLost
+            aidexPlugin._hasSensorError = sensorExpired || sensorError || replaceSensor || signalLost||sensorStabling
 
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
 

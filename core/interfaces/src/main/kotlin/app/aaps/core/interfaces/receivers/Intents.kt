@@ -69,6 +69,8 @@ interface Intents {
 
         const val EXTRA_SENSOR_ERROR = "com.microtechmd.cgms.aidex.SensorError"
 
+        const val EXTRA_SENSOR_STABILIZING = "com.microtechmd.cgms.aidex.SensorStabilizing"
+
         const val EXTRA_REPLACE_SENSOR = "com.microtechmd.cgms.aidex.ReplaceSensor"
 
         const val EXTRA_SIGNAL_LOST = "com.microtechmd.cgms.aidex.SignalLost"
