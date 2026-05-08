@@ -69,7 +69,7 @@
     <string name="pump_status">Trạng thái Bơm</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
     <string name="quick_wizard_not_available">Quickwizard đã chọn không còn khả dụng nữa, vui lòng làm mới ô của bạn</string>
-    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="quick_wizard_message">Hướng dẫn nhanh: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="user_action_not_available">Hành động người dùng đã chọn %1$s không còn khả dụng, vui lòng làm mới ô của bạn</string>
     <string name="scene_not_available">Ngữ cảnh %1$s không còn khả dụng, vui lòng làm mới ô hiển thị của bạn</string>
     <string name="wear_remote_insulin_not_allowed_in_client">Các lệnh insulin từ xa bị vô hiệu hóa ở chế độ client</string>
