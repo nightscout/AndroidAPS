@@ -213,11 +213,11 @@
     <string name="dpv_default_profile">Cấu hình mặc định DPV</string>
     <!-- Other dialogs -->
     <!--QuickWizard-->
-    <string name="overview_edit_quickwizard_button_text">Button text</string>
+    <string name="overview_edit_quickwizard_button_text">Nhãn nút</string>
     <string name="quick_wizard_mode_wizard">Wizard</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Carbs</string>
-    <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB > 0</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB &gt; 0</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <!--    History browser-->
     <string name="history_now">Hiện tại</string>
