@@ -51,7 +51,7 @@
     <string name="simple_mode">Simple mode</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
-    <string name="no_compose_preferences">No compose preferences available for this plugin</string>
+    <string name="no_compose_preferences">No preferences available for this plugin</string>
     <string name="plugin_no_preferences">Plugin does not support preferences</string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="confirm_pin_hint">Confirm PIN</string>
