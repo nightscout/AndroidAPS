@@ -697,7 +697,7 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">Không có bơm khả dụng!</string>
-    <string name="quickwizard_managemnt">QuickWizard</string>
+    <string name="quickwizard_managemnt">Hướng dẫn nhanh</string>
     <!--    Preferences-->
     <string name="child">Trẻ em</string>
     <string name="teenage">Thanh thiếu niên</string>
