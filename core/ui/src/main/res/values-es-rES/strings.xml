@@ -51,7 +51,7 @@
     <string name="simple_mode">Modo simple</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>
-    <string name="no_compose_preferences">No hay preferencias de composición disponibles para este plugin</string>
+    <string name="no_compose_preferences">No hay preferencias disponibles para este complemento</string>
     <string name="plugin_no_preferences">El complemento no admite preferencias</string>
     <string name="confirm_password_hint">Confirmar la contraseña</string>
     <string name="confirm_pin_hint">Confirmar PIN</string>
@@ -100,7 +100,7 @@
     <string name="please_wait">Por favor, espere…</string>
     <string name="stop">Detener</string>
     <string name="stop_pressed">PARADA PULSADA</string>
-    <string name="carbs">Carbohidratos [g]</string>
+    <string name="carbs">Carbohidratos</string>
     <string name="invalid_profile">Perfil inválido</string>
     <string name="no_profile_set">NINGÚN PERFIL ACTIVO</string>
     <string name="active"><![CDATA[<Activo>]]></string>
