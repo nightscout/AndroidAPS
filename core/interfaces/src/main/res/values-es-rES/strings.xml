@@ -45,6 +45,8 @@
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="time_remaining_h_m">Faltan %1$dh %2$dm</string>
+    <string name="time_remaining_m">Faltan %1$dm</string>
     <string name="later_today">Más tarde hoy</string>
     <string name="tomorrow">Mañana</string>
     <string name="today">Hoy</string>
