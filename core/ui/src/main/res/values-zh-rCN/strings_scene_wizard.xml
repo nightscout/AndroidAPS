@@ -1,22 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">请选择一个起点。模板会为常见场景预先填充推荐操作，所有内容均可在后续步骤中自行调整。</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">运动</string>
+    <string name="scene_wizard_exercise_desc">提高目标，将配置降至 70%，禁用 SMB，预防运动性低血糖。</string>
+    <string name="scene_wizard_info_exercise">在运动时，肌肉会加快葡萄糖消耗，同时胰岛素敏感性会升高。提前调高临时目标血糖，可让算法提前预判 — 尽早减少胰岛素输注，为预防运动诱发的低血糖建立缓冲空间。同时建议禁用微型大剂量（SMB），因为运动期间的校正大剂量会导致血糖快速下降。建议在运动前 1–2 小时激活该情景，使算法有充足时间降低体内活性胰岛素。</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">生病日</string>
+    <string name="scene_wizard_sick_day_desc">增强配置（150%），以应对患病期间升高的胰岛素抵抗。</string>
+    <string name="scene_wizard_info_sick_day">生病、发烧以及应激激素会大幅升高胰岛素抵抗，涨幅有时可达 50% 甚至更高。调高基础率配置（例如 150%）可让算法在所有运算中增加胰岛素输注量，涵盖基础率、餐食大剂量推荐及校正系数。你也可以在后续步骤中设置临时目标血糖或调整运行模式。请密切监测血糖，并随身体恢复情况适时调整参数。</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">生病日 — 呕吐</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">调低基础率配置并启用低血糖保护（LGS）— 适用于无法正常消化进食时，与标准生病日情景的设置相反。</string>
+    <string name="scene_wizard_info_sick_day_vomiting">当无法进食、持续呕吐时，采用标准生病日方案增加胰岛素剂量存在安全风险。呕吐意味着碳水无法被身体吸收，血糖反而可能下降而非升高。调低配置至 60% 可减少胰岛素输注，同时开启低血糖暂停保护（LGS），一旦血糖走低将自动暂停胰岛素，增添一层安全防护。禁用微型大剂量（SMB）可避免产生额外校正大剂量。需频繁监测血糖：每 1–2 小时监测一次血糖，每 2–4 小时监测一次血酮。若呕吐持续数小时以上，或血酮值超过 1.5 mmol/L，请及时就医。</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">睡眠</string>
+    <string name="scene_wizard_sleep_desc">严格目标以实现更好的夜间控制</string>
+    <string name="scene_wizard_info_sleep">夜间是很多人出现无症状高血糖或低血糖的时段。睡眠期间适当收紧目标血糖，可让算法在整夜做出更精细的校正调节。搭配符合自身夜间基础率需求的配置方案，能达到最佳控糖效果。</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">运动后夜晚</string>
+    <string name="scene_wizard_post_exercise_night_desc">下调基础配置、调高血糖目标、关闭SMB — 防范运动后夜间发生延迟性低血糖。</string>
+    <string name="scene_wizard_info_post_exercise_night">运动结束后，肌肉会在数小时内持续补充糖原储备，胰岛素高敏感状态可维持 24～48 小时，其中运动后 6～12 小时是夜间低血糖的最高风险时段。下调基础配置可整夜减少基础胰岛素输注，调高临时血糖目标能给算法留出安全缓冲，禁用 SMB 可避免算法对短暂血糖回升过度校正。当日有运动时，建议在睡前激活该情景，长时间运动或新增运动项目后尤其需要启用。床边备好速效碳水食物，可设置闹钟半夜定时监测血糖。</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">餐前</string>
+    <string name="scene_wizard_pre_meal_desc">降低目标，以应对餐后血糖飙升。</string>
+    <string name="scene_wizard_info_pre_meal">在进食前30至60分钟设定一个较低的目标值，可以告诉算法在碳水化合物到达之前开始增加体内的胰岛素。这有助于缓解餐后血糖飙升的情况，这种情况通常发生在食物进入血液的速度快于胰岛素发挥作用的速度时。适合明确即将进餐时提前启用。</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">饮酒</string>
+    <string name="scene_wizard_alcohol_desc">启用低血糖暂停（LGS）模式、下调配置、关闭 SMB — 防范饮酒后延迟性低血糖。</string>
+    <string name="scene_wizard_info_alcohol">酒精对 1 型糖尿病患者而言是风险极高的诱因。肝脏会优先代谢酒精，暂停释放葡萄糖，容易在6～24 小时后引发延迟性低血糖，且多发生在夜间睡眠时段。低血糖暂停（LGS）模式仅在血糖下降时减少胰岛素输注，避免胰岛素叠加蓄积。下调基础率配置并禁用 SMB，可进一步降低体内活性胰岛素存量。饮酒后睡前务必监测血糖，建议设置闹钟半夜定时复查。</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">驾驶</string>
+    <string name="scene_wizard_driving_desc">适度调高血糖目标，保障驾车出行安全。</string>
+    <string name="scene_wizard_info_driving">安全驾驶需将血糖稳定维持在 5.0 mmol/L（90 mg/dL） 以上。在部分国家，长途驾驶前后及途中监测血糖属于法定要求。适度调高血糖目标可为算法留出安全缓冲，维持血糖高于注意力、反应速度开始下降的临界水平。若驾驶途中发生低血糖，应立即靠边停车、及时纠正低血糖，待血糖恢复正常后，至少再等待 45 分钟方可继续行驶。</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">沐浴</string>
+    <string name="scene_wizard_bathing_desc">淋浴、游泳、沐浴或任何涉水活动时，请断开胰岛素泵连接。</string>
+    <string name="scene_wizard_info_bathing">断开胰岛素泵后，胰岛素输注会完全停止，不再提供基础率、餐食大剂量及校正剂量。系统将切换至断开模式，暂停所有参数调节。
+淋浴、泡澡、游泳等短时涉水场景下，该状态属于正常情况。情景结束重新接回泵后，算法会自动恢复正常工作。
+请尽量缩短离泵时长，在缺乏基础胰岛素的情况下，血糖通常会在 1–2 小时内开始升高。</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">黄体期</string>
+    <string name="scene_wizard_luteal_phase_desc">上调基础率配置，应对经期前胰岛素抵抗。</string>
+    <string name="scene_wizard_info_luteal_phase">许多女性在黄体期（经期前约 1–2 周）会出现胰岛素抵抗升高。这是由孕酮水平上升、降低胰岛素敏感性所导致。个体差异极大：部分人胰岛素需求量会增加 10%–30%，也有人变化很小。建议先保守上调基础率至115%，再结合数个生理周期的血糖规律自行微调。在 护理门户中记录追踪，有助于摸清个人生理节律。</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">高温天气</string>
+    <string name="scene_wizard_hot_weather_desc">下调基础率配置 — 高温会加快胰岛素吸收速度。</string>
+    <string name="scene_wizard_info_hot_weather">高温天气会使血管扩张，从而加快胰岛素吸收；同等剂量的胰岛素起效会更快、降糖作用也更强。这会诱发突发低血糖，在户外活动时风险尤其高。可将基础方案适度下调至85%，用以抵消胰岛素吸收过快的影响。注意多喝水、增加血糖监测频次；需注意：胰岛素泵或胰岛素笔若处于高温环境，内部胰岛素容易药效降解失效。如果在高温环境下同时进行运动，建议叠加开启运动情景模式，加强防护、规避低血糖。</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">医疗诊疗</string>
+    <string name="scene_wizard_medical_procedure_desc">手术或进行医疗操作时，切换为开环模式并关闭 SMB。</string>
+    <string name="scene_wizard_info_medical_procedure">手术或进行医疗操作期间，麻醉药物与应激激素会让血糖变得难以预测。推荐切换至开环模式，因为算法无法在这种身体状态下可靠预判血糖波动。将血糖目标调高至 150mg/dL（约8.33mmol/L），为术中低血糖留出安全余量。关闭 SMB，避免手术过程中出现意外的胰岛素输注。务必告知医护人员你佩戴了胰岛素泵和动态血糖仪（CGM）。若医疗操作时长超过 3 小时，医疗团队可能会改为静脉输注胰岛素。</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">空白</string>
+    <string name="scene_wizard_blank_desc">从零开始，不预设任何情景动作。</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info">配置方案切换可一次性同时更改基础率、胰岛素敏感系数（ISF）和碳水系数（IC）。你可以按百分比整体缩放所有参数，例如设为 110%，会把基础输注量、大剂量计算值和碳水吸收速率同步上调 10%。如果已为特定场景预设了独立方案，也可以直接完整切换到另一套配置。</string>
+    <string name="scene_wizard_tt_info">临时血糖目标可让算法在指定时间段内，维持一个自定义的血糖控制水平。调高目标值时，算法对血糖升高的响应会更平缓，整体控制目标更高，从而减少胰岛素输注，有助于预防运动期间发生低血糖。调低目标值时，算法会更早介入、增加胰岛素给药，适合餐前提前压制血糖波动。可直接选用下方预设模板，目标数值和适用场景均已提前配置好。</string>
+    <string name="scene_wizard_smb_info">微型大剂量（SMB） 允许算法提前分多次小剂量输注胰岛素，同时暂时暂停基础率输注以做平衡，相当于预支后续的基础胰岛素，实现更快降糖响应。关闭 SMB 后，算法将不再使用这种方式，只能通过调节基础率来控糖。整体降糖响应会变得更平缓、温和，更适合运动或睡眠期间使用。</string>
+    <string name="scene_wizard_loop_mode_info">运行模式决定算法拥有多大自主调控权限。闭环模式下，算法可自动调节胰岛素输注。LGS（低血糖暂停） 仅在血糖走低、即将发生低血糖时减少或停止胰岛素输注，不会主动增加给药量。开环模式只会计算控糖建议，每一次调整都需你手动确认后才会执行。</string>
+    <string name="scene_wizard_careportal_info">CarePortal 事件只是一条日志记录，不会改变胰岛素输注，也不会影响算法运行逻辑。可用来在治疗时间线里标记活动、特殊情景或备注信息。你可以在「治疗记录 - CarePortal」以及 Nightscout 中回看这些记录，帮助自己和医生发现血糖与生活状态的规律。</string>
+    <string name="scene_wizard_duration_info">时长用于控制该情景的生效持续时间。计时结束后，时效型动作（临时血糖目标、方案切换、运行模式）会自动失效；而持久型设置（如 SMB 开关）会自动恢复为情景开启前的原有状态。将时长设为 0 代表永久生效，所有配置会一直保持，直到你手动关闭该情景。</string>
+    <string name="scene_wizard_name_info">为该情景设置名称和图标，做到一眼就能快速识别。名称和图标会显示在情景启用按钮，以及主页概览界面的生效情景横幅上。</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">在情景中包含 %1$s</string>
+    <string name="scene_wizard_finish">完成</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">后续情景</string>
+    <string name="scene_wizard_chain_info">可选择关联另一个后续情景，当本情景到期结束时自动启用。也可在手动提前结束本情景时，直接跳转至该后续情景。仅当血糖目标已启用、且胰岛素泵状态正常时，后续情景才会自动运行；否则系统会推送通知提醒。</string>
+    <string name="scene_chain_none">无</string>
+    <string name="scene_skip_to_format">跳转到 %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">已关联的后续情景已被删除</string>
     <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">情景“%1$s” 结束</string>
+    <string name="scene_chained_format">情景已联动：%1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s 已结束 — 跳过后续情景：%2$s</string>
+    <string name="scene_chain_skipped_deleted">目标情景已删除</string>
+    <string name="scene_chain_skipped_disabled">\"%1$s\" 已禁用</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d %4$d 操作失败</string>
 </resources>
