@@ -51,7 +51,7 @@
     <string name="simple_mode">Enkelmodus</string>
     <string name="expand">Utvid</string>
     <string name="collapse">Kollaps</string>
-    <string name="no_compose_preferences">Ingen Compose-innstillinger tilgjengelig for denne plugin</string>
+    <string name="no_compose_preferences">Ingen innstillinger tilgjengelig for denne plugin</string>
     <string name="plugin_no_preferences">Plugin støtter ikke innstillinger</string>
     <string name="confirm_password_hint">Bekreft passord</string>
     <string name="confirm_pin_hint">Bekreft PIN</string>
