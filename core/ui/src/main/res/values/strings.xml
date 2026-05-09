@@ -176,6 +176,9 @@
     <string name="remove_label">Remove</string>
     <string name="activate_profile">Activate profile</string>
     <string name="activate_insulin">Activate insulin</string>
+    <string name="pump_wizard_profile_gate_title">Profile required</string>
+    <string name="pump_wizard_profile_gate_pick">Select the profile to apply on activation.</string>
+    <string name="pump_wizard_profile_gate_no_store">No profile defined. Open Profile Management to create one, then start activation again.</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="profile">Profile</string>
