@@ -29,7 +29,7 @@
     <string name="omnipod_common_error_time_out_of_sync">Thời gian trên Pod không đồng bộ. Vui lòng cập nhật lại thời gian trong Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">Đã xảy ra lỗi không mong đợi. Vui lòng báo cáo! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
-    <string name="omnipod_common_confirmation_expiration_alerts_updated">Cấu hình cảnh báo đã được cập nhật trên Pod.</string>
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">Cài đặt cảnh báo đã được cập nhật trên Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Thời gian trên Pod đã được cập nhật.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Đặt thời gian</string>
@@ -127,7 +127,7 @@
     <string name="omnipod_common_cmd_discard_pod">Xóa Pod</string>
     <string name="omnipod_common_cmd_get_pod_status">Nhận trạng thái Pod</string>
     <string name="omnipod_common_cmd_set_time">Đặt giờ</string>
-    <string name="omnipod_common_cmd_configure_alerts">Cấu hình cảnh báo</string>
+    <string name="omnipod_common_cmd_configure_alerts">Cài đặt cảnh báo</string>
     <string name="omnipod_common_cmd_silence_alerts">Tắt cảnh báo</string>
     <string name="omnipod_common_cmd_read_pulse_log">Đọc nhật ký Pulse</string>
     <string name="omnipod_common_cmd_suspend_delivery">Tạm dừng liều insulin</string>
