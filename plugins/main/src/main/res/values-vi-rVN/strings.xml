@@ -15,4 +15,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Hiển thị thông báo liên tục với tóm tắt ngắn gọn về hoạt động của vòng lặp</string>
     <string name="old_data">DỮ LIỆU CŨ</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 </resources>
