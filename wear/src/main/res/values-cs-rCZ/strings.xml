@@ -3,6 +3,11 @@
     <string name="label_watchface_circle">AAPS(Kruhový)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (vlastní)</string>
+    <string name="label_actions_tile">Akce</string>
+    <string name="label_temp_target_tile">Dočasný cíl</string>
+    <string name="label_quick_wizard_tile">Rychlý průvodce</string>
+    <string name="label_user_action_tile">Uživatelská akce</string>
+    <string name="label_scene_tile">Scéna</string>
     <string name="msg_warning_sync">Od %1$s nebyla obdržena žádná data! Zkontrolujte, zda AAPS na telefonu odesílá data ke sledování</string>
     <string name="msg_warning_old">AAPS data jsou %1$s stará! Zkontrolujte svůj senzor, xDrip +, NS, AAPS konfigurace nebo ostatní!</string>
     <string name="pref_vibrate_on_bolus">Vibrovat při bolusu</string>
@@ -10,6 +15,7 @@
     <string name="pref_display_settings">Displej</string>
     <string name="pref_graph_settings">Graf</string>
     <string name="pref_interface_settings">Rozhraní</string>
+    <string name="pref_tile_settings">Dlaždice</string>
     <string name="pref_others_settings">Ostatní</string>
     <string name="pref_complication_settings">Komplikace</string>
     <string name="pref_show_date">Zobrazit datum</string>
@@ -60,6 +66,7 @@
     <string name="pref_moreWatchfaceSettings">Další nastavení ciferníku</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Podívejte se na konfiguraci hodinek prosím.</string>
     <string name="menu_tempt">Dočasný cíl</string>
+    <string name="menu_tempt_long">Dočasný cíl</string>
     <string name="menu_wizard">Kalkulačka</string>
     <string name="menu_wizard_short">Kalk</string>
     <string name="menu_treatment">Ošetření</string>
@@ -78,6 +85,8 @@
     <string name="action_tempt_confirmation">Požadován dočasný cíl</string>
     <string name="action_quick_wizard_confirmation">Požadován rychlý bolus</string>
     <string name="action_user_action_confirmation">Požadována Uživatelská akce</string>
+    <string name="action_scene_confirmation">Aktivovat scénu</string>
+    <string name="scene_stop">ZASTAVIT</string>
     <string name="action_treatment_confirmation">Požadováno ošetření</string>
     <string name="action_bolus_confirmation">Požadován bolus</string>
     <string name="action_wizard_confirmation">Požadován kalkulátor</string>
@@ -93,6 +102,10 @@
     <string name="action_percentage">Procento\n[%]</string>
     <string name="action_start_minutes">Spustit\n[minuty]</string>
     <string name="action_duration_hours">Trvání\n[hodiny]</string>
+    <string name="action_duration_hours_format">%1$d h</string>
+    <string name="action_duration_hours_minutes_format">%1$d h %2$d min</string>
+    <string name="action_minutes_format">%1$d min</string>
+    <string name="ecarbs_start_format">%1$d min</string>
     <string name="ecarbs_confirm_time">Čas: %1$s</string>
     <string name="ecarbs_confirm_duration">Trvání: %1$d h</string>
     <string name="action_confirm_reason">Důvod: %1$s</string>
@@ -219,6 +232,13 @@
     <string name="complication_iob_detailed">Detailní IOB</string>
     <string name="complication_uploader_phone_battery">Baterie telefonu/uploaderu</string>
     <string name="status_running_mode">Provozní režim</string>
+    <string name="label_running_mode_title">Režim smyčky</string>
+    <string name="label_bg_graph_tile">Graf glykémie</string>
+    <string name="tile_tap_action">Akce při klepnutí</string>
+    <string name="tile_graph_time_range">Časové rozmezí</string>
+    <string name="tile_tap_bg_graph">Graf glykémie</string>
+    <string name="tile_tap_main_menu">Hlavní nabídka</string>
+    <string name="tile_tap_loop_status">Stav smyčky</string>
     <string name="action_running_mode_selected">Vyžádán provozní režim</string>
     <string name="title_activity_disconnect_pump">Odpojit pumpu</string>
     <string name="title_activity_suspend_loop">Pozastavit smyčku</string>
@@ -237,6 +257,7 @@
     <string name="wizard_result_total">Celkem</string>
     <string name="wizard_insulin_format">%1$s U</string>
     <string name="insulin_unit_short">U</string>
+    <string name="wizard_result_correction_percentage">%1$d%%</string>
     <string name="wizard_confirmation_sent">Odesláno</string>
     <string name="tile_settings">Nastavení dlaždice</string>
     <string name="loop_status_error">Nepodařilo se načíst stav</string>
