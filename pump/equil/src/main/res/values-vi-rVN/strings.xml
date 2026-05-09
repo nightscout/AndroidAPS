@@ -20,7 +20,7 @@
     <string name="equil_title_serial">Ghép nối thiết bị</string>
     <string name="equil_title_fill">Prime/Fill</string>
     <string name="equil_title_attach">Gắn bơm</string>
-    <string name="equil_title_air">Mồi kim luồn(cannula)</string>
+    <string name="equil_title_air">Mồi kim luồn</string>
     <string name="equil_title_unpair_detach">Tháo bơm</string>
     <string name="equil_title_unpair_confirm">Xác nhận hủy ghép nối</string>
     <string name="equil_title_history_events">Lịch sử sự kiện</string>
@@ -65,7 +65,7 @@
     <string name="equil_common_cmd_suspend_delivery">Tạm dừng liều insulin</string>
     <string name="equil_common_cmd_resume_delivery">Tiếp tục lại việc tiêm insulin</string>
     <string name="equil_common_cmd_pair">Ghép đôi Equil</string>
-    <string name="equil_common_cmd_insert_cannula">Gắn Cannula</string>
+    <string name="equil_common_cmd_insert_cannula">Gắn kim luồn</string>
     <string name="equil_common_cmd_unpair">Hủy ghép đôi Equil</string>
     <string name="equil_common_cmd_set_extended_bolus">Đặt liều Bolus kéo dài</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Hủy liều Bolus kéo dài</string>
@@ -142,7 +142,7 @@
     <string name="equil_insert">Vui lòng mồi ống chứa cho đến khi có một giọt insulin xuất hiện ở đầu kim</string>
     <string name="equil_insert2">Bơm không được đặt trên đế bơm.</string>
     <string name="equil_attach">Vui lòng gắn bơm vào đế</string>
-    <string name="equil_hint2">Mồi ống dẫn (cannula)</string>
+    <string name="equil_hint2">Mồi kim luồn</string>
     <string name="equil_pump_updated">Đã đồng bộ Bơm</string>
     <string name="equil_replace_reservoir">Ống chứa trống. Vui lòng thay ống chứa mới</string>
     <string name="error_mustbe6hexadidits">Phải gồm 6 ký tự, chọn từ ABCDEF0123456789</string>
