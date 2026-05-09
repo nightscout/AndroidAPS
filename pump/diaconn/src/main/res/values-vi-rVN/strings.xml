@@ -59,14 +59,14 @@
     <string name="needinsullinreplace">Yêu cầu thay Insulin</string>
     <string name="diaconn_g8_loginsulinchange_title">Ghi lại thay đổi bình chứa</string>
     <string name="diaconn_g8_loginsulinchange_summary">Thêm sự kiện ‘Thay insulin’ vào careportal khi phát hiện trong lịch sử</string>
-    <string name="diaconn_g8_logcanulachange_title">Ghi lại thay đổi kim truyền</string>
-    <string name="diaconn_g8_logcanulachange_summary">Thêm sự kiện \"Thay đổi kim truyền\" vào careportal khi phát hiện trong lịch sử</string>
+    <string name="diaconn_g8_logcanulachange_title">Ghi lại thay kim</string>
+    <string name="diaconn_g8_logcanulachange_summary">Thêm sự kiện “Thay vị trí truyền” vào CarePortal khi được phát hiện trong lịch sử</string>
     <string name="diaconn_g8_logbatterychange_summary">Thêm sự kiện \"Thay pin\" vào careportal khi phát hiện trong lịch sử</string>
     <string name="diaconn_g8_logbatterychange_title">Ghi lại thay đổi Pin</string>
     <string name="diaconn_g8_logsyncinprogress">Đang đồng bộ nhật ký</string>
     <string name="diaconn_g8_loginsulinshorage">Thiếu insulin</string>
     <string name="diaconn_g8_logbatteryshorage">Thiếu pin</string>
-    <string name="diaconn_g8_logneedleprime">Mồi Needle: %1$.2fU</string>
+    <string name="diaconn_g8_logneedleprime">Mồi Kim: %1$.2fU</string>
     <string name="diaconn_g8_loginjectorprime">Mồi Injecto: %1$.2fU</string>
     <string name="diaconn_g8_logtubeprime">Mồi sau thay Tube :%1$.2fU</string>
     <string name="diaconn_g8_resetfactoryreset">Đặt lại sau khi khôi phục cài đặt gốc</string>
