@@ -7,4 +7,6 @@
     <string name="description_avg_smoothing">"Algoritmo di smoothing medio, il valore più recente non ne è influenzato"</string>
     <string name="no_smoothing_name">No smoothing</string>
     <string name="description_no_smoothing">"Nessuno smoothing eseguito sui dati glicemici di input. Usalo quando hai già filtrato i dati, ad esempio da BYODA G6."</string>
+    <string name="adaptive_smoothing_name">Lisciamento adattivo</string>
+    <string name="description_adaptive_smoothing">"Levigatura adattiva contesto-consapevole: ritardo minimo su aumenti rapidi, filtraggio aggressivo su dati rumorosi, prevenzione di ipo su bassi"</string>
 </resources>
