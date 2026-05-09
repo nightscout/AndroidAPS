@@ -54,6 +54,9 @@
     <string name="xdrip_local_broadcasts_summary">Poslat data o glykémii a ošetření do xDrip+. Musí být vybrán zdroj dat \"xDrip+ Sync Follower\" a přijímání dat musí být povoleno v Nastavení - Nastavení komunikace mezi aplikacemi - Přijímat Glykémie/Ošetření</string>
     <string name="xdrip_local_broadcasts_title">Povolit odesílání do xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Externí aplikace</string>
+    <string name="tizen_short">CAB</string>
+    <string name="tizen_description">Umožňuje přenos dat různým externím aplikacím</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Připojení k zařízení Garmin (Fenix, Edge, …)</string>
@@ -68,6 +71,8 @@
     <string name="quick_wizard_not_available">Vybraný rychlý bolus již není k dispozici, obnovte prosím dlaždici</string>
     <string name="quick_wizard_message">Rychlý bolus: %1$s\nInzulín: %2$.2fU\nSacharidy: %3$dg</string>
     <string name="user_action_not_available">Vybraná akce uživatele %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
+    <string name="scene_not_available">Vybraná scéna %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
+    <string name="wear_remote_insulin_not_allowed_in_client">Vzdálené příkazy na podání inzulínu jsou v klientském režimu vypnuty</string>
     <string name="wear_action_tempt_cancel_message">Zrušit běžící dočasný cíl?</string>
     <string name="wear_action_tempt_unit_error">Různé jednotky používané na hodinkách a telefonu!</string>
     <string name="wear_action_tempt_zero_message">Nulový dočasný cíl – zrušit běžící dočasný cíl?</string>
@@ -127,6 +132,7 @@
     <string name="wear_action_running_mode_title">PROVOZNÍ REŽIM</string>
     <string name="wear_action_loop_state_changed_with_duration">%1$s\nTrvání: %2$d min</string>
     <string name="wear_action_loop_state_now_closed">Uzavřená smyčka</string>
+    <string name="wear_action_loop_state_now_lgs">Pozastavení při nízké glykémii</string>
     <string name="wear_action_loop_state_now_open">Otevřená smyčka</string>
     <string name="wear_action_loop_state_now_suspended">Pozastavit smyčku</string>
     <string name="wear_action_loop_state_now_resumed">Obnovit smyčku</string>
@@ -139,10 +145,12 @@
     <string name="garmin_request_key">Vyžadovaný klíč</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS komunikátor</string>
+    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Dálkové ovládání AAPS pomocí SMS příkazů.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikace Authenticator pro: %1$s následované PINem</string>
     <string name="smscommunicator_tab_otp_label">Nastavení Authenticatoru</string>
     <string name="smscommunicator_code_verify_label">Kód k ověření:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Ověřovací kód se skládá ze 6 číslic zobrazovaných aplikací Authenticator (označovaných jako OTP) následovaných 3 nebo více číslicemi povinného PINu.</string>
     <string name="smscommunicator_otp_reset_btn">Resetovat Authenticatory</string>
     <string name="smscommunicator_otp_reset_title">Resetovat klíč Authenticatoru</string>
@@ -153,6 +161,7 @@
     <string name="smscommunicator_otp_reset_header">Resetovat Authenticatory</string>
     <string name="smscommunicator_otp_install_info">Na každý telefon následovníka nainstalujte aplikaci Authenticator, která podporuje RFC 6238 TOTP tokeny. Oblíbené bezplatné aplikace jsou:\n  Authy\n  Google Authenticator\n  LastPass Authenticator\n  FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Resetováním autentizátoru znehodnotíte všechny již nakonfigurované autentizátory. Budete je muset nastavit znovu!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">NEPLATNÁ VELIKOST!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">NESPRÁVNÝ PIN</string>
     <string name="smscommunicator_otp_verification_wrong_otp">NESPRÁVNÉ OTP</string>
@@ -215,9 +224,13 @@
     <string name="smscommunicator_message_body">Neplatné tělo zprávy</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Pro přepnutí režimu smyčky na LGS (Low Glucose Suspend) odpovězte kódem %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Pro přepnutí režimu smyčky na uzavřenou smyčku odpovězte kódem %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Aktuální režim běhu: %1$s</string>
     <string name="wrong_format">Nesprávný formát</string>
     <string name="sms_actual_bg">Gly:</string>
     <string name="sms_last_bg">Poslední gly:</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazál:</string>
     <string name="sms_min_ago">před %1$d min</string>
     <string name="sms_loop_suspended_for">Pozastaveno (%1$d m)</string>
@@ -225,5 +238,6 @@
     <string name="sms_profile_switch_created">Přepnutí profilu vytvořeno</string>
     <string name="sms_wrong_tbr_duration">Trvání TBR musí být násobkem %1$d minut a větší než 0.</string>
     <string name="a11y_otp_qr_code">QR kód pro nastavení jednorázového hesla</string>
+    <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_description">Aplikace potřebuje oprávnění SMS pro dálkové ovládání pomocí textových zpráv</string>
 </resources>
