@@ -21,7 +21,7 @@
     <string name="omnipod_common_error_failed_to_set_time">Không thể thiết lập thời gian</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Không thể tiếp tục truyền insulin</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Không thể khởi tạo Pod</string>
-    <string name="omnipod_common_error_failed_to_insert_cannula">Gắn kim truyền thất bại</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Gắn kim luồn thất bại</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Đã bị vượt quá thời gian kích hoạt Pod. Pod này không thể được kích hoạt nữa.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Không thể kích hoạt. Vui lòng thử lại.</string>
     <string name="omnipod_common_error_pod_suspended">Pod đã tạm dừng</string>
@@ -58,12 +58,12 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Làm đầy Pod</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Khởi tạo Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Gắn Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Chuẩn bị vị trí gắn. Tháo nắp kim và lớp keo bảo vệ của Pod, sau đó gắn Pod vào vị trí tiêm.\n\nNếu kim truyền (cannula) bị lòi ra, vui lòng nhấn <b>Hủy</b> và Loại bỏ Pod của bạn.\n\nNhấn <b>Tiếp theo</b> để đưa kim truyền vào và bắt đầu truyền liều nền.</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Khi bạn nhấn <b>OK</b>, kim truyền sẽ được đưa vào. Hãy đảm bảo rằng bạn đã gắn Pod vào vị trí gắn.</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Gắn kim truyền</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Đang thiết lập lịch liều nền ban đầu và đưa kim truyền vào.\n\nKhi kim truyền đã được đưa vào thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Chuẩn bị vị trí gắn. Tháo nắp kim và lớp keo bảo vệ của Pod, sau đó gắn Pod vào vị trí tiêm.\n\nNếu kim luồn bị lòi ra, vui lòng nhấn <b>Hủy</b> và Loại bỏ Pod của bạn.\n\nNhấn <b>Tiếp theo</b> để đưa kim luồn vào và bắt đầu truyền liều nền.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Khi bạn nhấn <b>OK</b>, kim luồn sẽ được đưa vào. Hãy đảm bảo rằng bạn đã gắn Pod vào vị trí gắn.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Gắn kim luồn</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Đang thiết lập lịch liều nền ban đầu và đưa kim luồn vào.\n\nKhi kim luồn đã được đưa vào thành công, bạn có thể nhấn <b>Tiếp theo</b>.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Đã kích hoạt Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Pod mới đã được kích hoạt.\n\nLịch liều nền của bạn đã được lập trình và kim truyền đã được đưa vào.\n\nVui lòng kiểm tra xem kim truyền đã được đưa vào đúng chưa và thay Pod nếu bạn cho rằng chưa đúng.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Pod mới đã được kích hoạt.\n\nLịch liều nền của bạn đã được lập trình và kim luồn đã được đưa vào.\n\nVui lòng kiểm tra xem kim luồn đã được đưa vào đúng chưa và thay Pod nếu bạn cho rằng chưa đúng.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Hủy kích hoạt Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Nhấn <b>Tiếp theo</b> để hủy kích hoạt Pod.\n\n<b>Lưu ý:</b> Thao tác này sẽ tạm dừng toàn bộ việc truyền insulin và hủy kích hoạt Pod.</string>
@@ -103,7 +103,7 @@
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Không có Pod hoạt động</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Đang thiết lập (đang chờ kích hoạt Pod)</string>
-    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Đang thiết lập (đang chờ đưa kim truyền vào)</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Đang thiết lập (đang chờ đưa kim luồn vào)</string>
     <string name="omnipod_common_pod_status_running">Đang chạy</string>
     <string name="omnipod_common_pod_status_suspended">Bị tạm dừng</string>
     <string name="omnipod_common_pod_status_pod_fault">Sự cố Pod</string>
@@ -117,7 +117,7 @@
     <string name="omnipod_common_alert_unknown_alert">Cảnh báo không xác định</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_common_cmd_initialize_pod">Khởi tạo Pod</string>
-    <string name="omnipod_common_cmd_insert_cannula">Gắn kim truyền</string>
+    <string name="omnipod_common_cmd_insert_cannula">Gắn Kim luồn</string>
     <string name="omnipod_common_cmd_deactivate_pod">Hủy kích hoạt Pod</string>
     <string name="omnipod_common_cmd_set_basal_schedule">Đặt lịch trình liều nền</string>
     <string name="omnipod_common_cmd_set_bolus">Thiết lập liều Bolus</string>
