@@ -298,7 +298,7 @@
     <string name="careportal_note_message">Ghi chú: %1$s</string>
     <string name="careportal_question_message">Câu hỏi: %1$s</string>
     <string name="careportal_exercise_message">Bài tập luyện : %1$s</string>
-    <string name="careportal_pump_site_change">Thay vị trí kim truyền</string>
+    <string name="careportal_pump_site_change">Thay vị trí truyền của bơm</string>
     <string name="cgm_sensor_insert">Gắn cảm biến</string>
     <string name="careportal_pump_site_management">Vị trí tiêm</string>
     <string name="careportal_cgm_site_management">Vị trí CGM</string>
@@ -395,7 +395,7 @@
     <string name="manage_temp_target_desc">Quản lý và đặt mục tiêu tạm thời</string>
     <string name="manage_temp_basal_desc">Bắt đầu liều nền tạm thời</string>
     <string name="manage_extended_bolus_desc">Bắt đầu liều bolus kéo dài</string>
-    <string name="manage_site_rotation_desc">Theo dõi và luân chuyển vị trí kim truyền</string>
+    <string name="manage_site_rotation_desc">Theo dõi và luân chuyển vị trí truyền</string>
     <string name="manage_quickwizard_desc">Quản lý preset Trình hướng dẫn nhanh</string>
     <string name="treatment_note_desc">Thêm ghi chú vào hồ sơ</string>
     <string name="treatment_question_desc">Ghi lại câu hỏi cho nhóm chăm sóc của bạn</string>
@@ -406,7 +406,7 @@
     <string name="treatment_announcement_desc">Đăng thông báo</string>
     <string name="treatment_sensor_insert_desc">Ghi nhận việc gắn cảm biến CGM</string>
     <string name="treatment_battery_change_desc">Ghi nhận việc thay pin bơm</string>
-    <string name="treatment_cannula_change_desc">Ghi nhận việc thay kim luồn/bộ truyền</string>
+    <string name="treatment_cannula_change_desc">Ghi lại việc thay kim luồn/bộ truyền</string>
     <string name="treatment_fill_desc">Mồi và làm đầy kim luồn</string>
     <string name="temp_basal">Liều nền tạm thời</string>
     <string name="user_entry">Nhập liệu của người dùng</string>
