@@ -195,7 +195,7 @@
     <string name="site_rotation">Chuyển vị trí</string>
     <string name="edit_site">Sửa</string>
     <string name="select_arrow">Chọn Mũi tên</string>
-    <string name="site_filter_info">Chọn loại sự kiện điều trị bạn muốn xem: Thay cannula và/hoặc thay cảm biến</string>
+    <string name="site_filter_info">Chọn loại sự kiện điều trị bạn muốn xem: Thay Kim luồn và/hoặc thay Cảm biến</string>
     <string name="selected_location">Chọn: %1$s</string>
     <string name="last_site_location">Vị trí gần nhất: %1$s</string>
     <string name="pick_site">Chọn vị trí</string>
