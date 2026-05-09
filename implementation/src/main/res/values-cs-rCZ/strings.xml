@@ -19,6 +19,12 @@
     <string name="permission_notifications_description">Vyžadováno pro zobrazování výstrah, alarmů a aktualizací stavu pumpy</string>
     <!--       ConcentrationHelper / DecimalFormatter-->
     <string name="bolus_with_volume">%1$s\u00a0U (%2$.1f\u00a0µl)</string>
+    <string name="insulin_concentration">U%1$d</string>
+    <string name="concentration_format">%1$s (%2$s)</string>
+    <string name="concentration_tbr_format">%1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_ago_format">%1$s @%2$s (%3$d\')</string>
+    <string name="concentration_etbr_format">E %1$s @%2$s %3$d/%4$d\'</string>
+    <string name="concentration_delivered_format">%1$s/%2$s</string>
     <string name="pump_base_basal_rate_cu_dynamic">%1$s\u00a0CU/h</string>
     <!-- Maintenance strings (moved from plugins/configuration) -->
     <string name="exported_to_cloud">Nastavení úspěšně exportováno do cloudového úložiště</string>
@@ -58,6 +64,7 @@
     <string name="metadata_format_new">Nový šifrovaný formát</string>
     <string name="metadata_format_other">Neznámý formát exportu</string>
     <string name="error_accessing_filesystem_select_aaps_directory_properly">Chyba přístupu k souborovému systému. Vyberte správně adresář AAPS.</string>
+    <string name="storage_google_drive">Google Drive</string>
     <string name="backup_to_google_drive">Zálohovat na Google Drive</string>
     <string name="csv_upload_failed">Nahrání uživatelských záznamů CSV do cloudového úložiště selhalo</string>
     <string name="csv_upload_error">Při nahrávání CSV do cloudu došlo k chybě</string>
