@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Vyberte počáteční bod. Šablony předvyplní doporučené akce pro běžné situace — vše můžete upravit v následujících krocích.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Cvičení</string>
+    <string name="scene_wizard_exercise_desc">Zvýšit cíl, snížit profil na 70 %, vypnout SMB, aby se zabránilo nízkým glykémiím.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <!-- Sleep: no default actions — 8h -->
