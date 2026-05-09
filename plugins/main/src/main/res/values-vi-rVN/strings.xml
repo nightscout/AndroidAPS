@@ -5,7 +5,7 @@
     <string name="sensor_label">Cảm biến</string>
     <string name="insulin_label">Insulin</string>
     <string name="pb_label">Pin Bơm</string>
-    <string name="cannula">Kim truyền</string>
+    <string name="cannula">Kim luồn</string>
     <string name="patch_pump">Patch pump</string>
     <!-- Overview -->
     <!-- overview moved to core:ui module -->
