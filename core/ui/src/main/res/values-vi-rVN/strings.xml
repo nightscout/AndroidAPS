@@ -663,7 +663,7 @@
     <string name="carbs_type_pizza">Lasagna, pizza, hamburger, khoai tây chiên, khoai tây nướng, snack như khoai tây lát chiên và các món tương tự</string>
     <string name="wizard_ecarbs">eCarbs %1$dg / %2$dh (+%3$dmin)</string>
     <string name="wizard_total">Tổng cộng</string>
-    <string name="wizard_carb_time">Thời gian ăn tinh bột</string>
+    <string name="wizard_carb_time">Thời gian ăn</string>
     <string name="carb_time_now">Bây giờ</string>
     <string name="change">Thay đổi</string>
     <string name="grant">Cấp quyền</string>
