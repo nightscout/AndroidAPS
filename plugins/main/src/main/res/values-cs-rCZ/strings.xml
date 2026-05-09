@@ -15,4 +15,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="old_data">ZASTARALÉ</string>
+    <string name="notification_iob_short">%1$.1fU</string>
 </resources>
