@@ -181,7 +181,7 @@
     <string name="pref_title_protection_type_bolus">Mức 1: Bảo vệ liều bolus</string>
     <string name="pref_summary_protection_type_bolus">Điều trị, kích hoạt cấu hình. Yêu cầu Mức 2</string>
     <string name="pref_title_protection_type_settings">Mức 2: Bảo vệ cài đặt</string>
-    <string name="pref_summary_protection_type_settings">Chỉnh sửa cấu hình, cài đặt</string>
+    <string name="pref_summary_protection_type_settings">Chỉnh sửa cấu hình, tuỳ chọn</string>
     <!-- Protection type entries (canonical location - also used by core/ui) -->
     <string name="noprotection">Không bảo mật</string>
     <string name="biometric">Sinh trắc học</string>
