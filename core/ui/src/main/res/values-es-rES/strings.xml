@@ -176,6 +176,9 @@
     <string name="remove_label">Eliminar</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="activate_insulin">Activar insulina</string>
+    <string name="pump_wizard_profile_gate_title">Perfil requerido</string>
+    <string name="pump_wizard_profile_gate_pick">Seleccione el perfil que se aplicará al activar</string>
+    <string name="pump_wizard_profile_gate_no_store">No hay ningún perfil definido. Abra la Gestión de perfiles para crear uno y, a continuación, inicie la activación de nuevo</string>
     <string name="reset">Restablecer</string>
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="profile">Perfil</string>
