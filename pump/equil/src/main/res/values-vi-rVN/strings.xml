@@ -71,13 +71,13 @@
     <string name="equil_common_cmd_cancel_extended_bolus">Hủy liều Bolus kéo dài</string>
     <!--    推杆回退-->
     <string name="equil_common_change_insulin">Rút cần đẩy</string>
-    <string name="equil_common_set_alarm_tone">Cấu hình chỉ để phát âm thanh thông báo</string>
-    <string name="equil_common_set_alarm_shake">Cấu hình chỉ để rung</string>
-    <string name="equil_common_set_alarm_mute">Cấu hình im lặng</string>
-    <string name="equil_common_set_alarm_tone_and_shake">Cấu hình để phát thông báo âm thanh và rung</string>
+    <string name="equil_common_set_alarm_tone">Cài đặt chỉ để phát âm thanh thông báo</string>
+    <string name="equil_common_set_alarm_shake">Cài đặt chỉ để rung</string>
+    <string name="equil_common_set_alarm_mute">Cài đặt im lặng</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Cài đặt để phát thông báo âm thanh và rung</string>
     <string name="equil_common_read_devices">Đọc thông tin thiết bị</string>
     <string name="equil_common_cmd_fill">Fill</string>
-    <string name="history_manual_confirm">Cấu hình thủ công</string>
+    <string name="history_manual_confirm">Cài đặt thủ công</string>
     <string name="equil_command_not_found">Không tìm thấy thiết bị</string>
     <string name="equil_command_connect_error">Lỗi kết nối Bơm</string>
     <string name="equil_command_connect_no_response">Không có phản hồi từ Bơm</string>
@@ -90,7 +90,7 @@
     <string name="equil_history_group_pair">Ghép đôi</string>
     <string name="equil_history_group_bolus">Liều bolus</string>
     <string name="equil_history_group_basal">Liều nền</string>
-    <string name="equil_history_group_configuration">Cấu hình</string>
+    <string name="equil_history_group_configuration">Các cài đặt</string>
     <string name="equil_tab_action">Lịch sử hoạt động</string>
     <string name="equil_tab_equil">Lịch sử Equil</string>
     <string name="equil_password_error">Mật khẩu ghép đôi Equil không chính xác</string>
