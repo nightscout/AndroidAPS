@@ -7,4 +7,6 @@
     <string name="description_avg_smoothing">"Průměrovací vyhlazovací algoritmus, nejnovější hodnota není ovlivněna"</string>
     <string name="no_smoothing_name">Žádné vyhlazování</string>
     <string name="description_no_smoothing">"U vstupních dat glykémie se neprovádí žádné vyhlazení. Použijte to, pokud již máte filtrovaná data, např. z BYODA G6."</string>
+    <string name="adaptive_smoothing_name">Adaptivní vyhlazování</string>
+    <string name="description_adaptive_smoothing">"Adaptivní vyhlazování zohledňujcí kontext: minimální zpoždění při rychlém vzestupu, agresivní filtrování šumu, bezpečné při nízkých glykémiích"</string>
 </resources>
