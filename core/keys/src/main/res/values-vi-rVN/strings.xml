@@ -73,7 +73,7 @@
     <string name="pref_summary_aps_smb_on_even_target">Cách kích hoạt SMB thay thế, luôn dựa trên giá trị đường huyết mục tiêu.</string>
     <!-- Maintenance preferences -->
     <string name="pref_title_maintenance_enable_fabric">Bật báo cáo lỗi Fabric</string>
-    <string name="pref_title_maintenance_enable_export_automation">Chấp nhận cập nhật cấu hình từ Nightscout</string>
+    <string name="pref_title_maintenance_enable_export_automation">Bật xuất cài đặt tự động</string>
     <!-- Autotune preferences -->
     <string name="pref_title_autotune_auto_switch_profile">Tự động chuyển cấu hình</string>
     <string name="pref_summary_autotune_auto_switch_profile">Tự động chuyển sang cấu hình do Autotune tạo sau khi tính toán.</string>
@@ -209,7 +209,7 @@
     <string name="pref_title_autosens_period">Khoảng thời gian Autosens</string>
     <string name="openapsama_autosens_period_summary">Số giờ trong quá khứ được dùng để phát hiện độ nhạy (không tính thời gian hấp thụ carb)</string>
     <!-- IntKey: Maintenance preferences -->
-    <string name="pref_title_logs_amount">Số lượng log cần gửi</string>
+    <string name="pref_title_logs_amount">Số lượng nhật ký cần gửi</string>
     <!-- IntKey: Alert preferences -->
     <string name="pref_title_stale_data_threshold">Ngưỡng dữ liệu lỗi thời</string>
     <string name="pref_title_pump_unreachable_threshold">Ngưỡng mất kết nối với bơm</string>
@@ -218,7 +218,7 @@
     <string name="pref_title_autotune_days">Ngày điều chỉnh mặc định</string>
     <string name="autotune_default_tune_days_summary">Số ngày dữ liệu mặc định được Autotune xử lý (tối đa 30)</string>
     <!-- IntKey: SMS preferences -->
-    <string name="pref_title_sms_remote_bolus_distance">Khoảng cách tối thiểu bolus từ xa</string>
+    <string name="pref_title_sms_remote_bolus_distance">Khoảng tối thiểu bolus từ xa</string>
     <!-- IntKey: BG Source preferences -->
     <string name="pref_title_random_bg_interval">Khoảng thời gian BG ngẫu nhiên</string>
     <!-- IntKey: NS Client preferences -->
