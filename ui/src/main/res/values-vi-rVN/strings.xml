@@ -248,7 +248,7 @@
     <string name="recalculate">Tính toán lại</string>
     <!--    Widget-->
     <string name="use_black_color">Sử dụng màu đen</string>
-    <string name="widget_configuration">Cài đặt tiện ích</string>
+    <string name="widget_configuration">Thiết lập tiện ích</string>
     <string name="until_changed">Cho đến khi thay đổi</string>
     <!--    Permissions-->
     <string name="permission_sheet_title">Yêu cầu quyền truy cập</string>
