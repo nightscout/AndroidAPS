@@ -102,7 +102,7 @@
     <string name="sensitivity_label">Plugin độ nhạy Insulin</string>
     <string name="sensitivity_adjust">Các plugin về độ nhạy cho phép AAPS điều chỉnh khi có những thay đổi tạm thời hoặc ngắn hạn trong độ nhạy insulin (ví dụ như thay đổi nội tiết tố hoặc vấn đề hấp thu tại vị trí truyền).</string>
     <string name="sensitivity_edit">Các plugin về độ nhạy cung cấp cho người dùng những gợi ý thay đổi về tỷ lệ liều nền, tỷ lệ I:C và ISF để có thể chỉnh sửa cấu hình.</string>
-    <string name="sensitivity_cannula">Ghi lại việc thay kim (cannula) sẽ đặt lại tỷ lệ Autosens về 100%.</string>
+    <string name="sensitivity_cannula">Ghi lại việc thay kim luồn sẽ đặt lại tỷ lệ Autosens về 100%.</string>
     <string name="sensitivity_time">Một số tùy chọn plugin có phạm vi thời gian có thể cấu hình, và người dùng có thể tự thiết lập chúng.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/KeyAapsFeatures.html#autosens</string>
