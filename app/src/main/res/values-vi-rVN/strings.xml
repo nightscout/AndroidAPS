@@ -3,7 +3,7 @@
     <string name="authorizationfailed">Xác thực không thành công</string>
     <string name="identification_not_set">Chưa thiết lập nhận dạng ở chế độ phát triển</string>
     <string name="select">Chọn</string>
-    <string name="set">Thiết lập</string>
+    <string name="set">Cài đặt</string>
     <string name="migrating_preferences">Đang chuyển đổi cài đặt…</string>
     <string name="initializing_plugins">Đang khởi tạo plugin…</string>
     <string name="initializing">Đang khởi chạy…</string>
