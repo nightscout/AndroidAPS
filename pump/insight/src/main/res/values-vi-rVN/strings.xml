@@ -36,7 +36,7 @@
     <string name="release_software_version">Phiên bản phần mềm</string>
     <string name="bluetooth_address">Địa chỉ Bluetooth</string>
     <string name="manufacturing_date">Ngày sản xuất</string>
-    <string name="log_site_changes">Ghi lại thay đổi vị trí kim truyền</string>
+    <string name="log_site_changes">Ghi lại thay vị trí truyền</string>
     <string name="log_reservoir_changes">Ghi lại thay đổi bình chứa insulin</string>
     <string name="log_tube_changes">Ghi lại thay đổi dây truyền</string>
     <string name="log_battery_changes">Ghi lại thay đổi Pin</string>
