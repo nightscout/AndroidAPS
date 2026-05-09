@@ -113,7 +113,7 @@
     <string name="wrongcarbs_donothing">Không cần làm gì – AAPS sẽ tự động điều chỉnh phù hợp.</string>
     <string name="wrongcarbs_bolus">Hãy thực hiện bolus insulin bằng nút Insulin (bolus) trong màn hình Overview.</string>
     <string name="wronginsulin_label">Lỗi trong việc tiêm/nhập insulin</string>
-    <string name="wronginsulin_whattodo">Bạn nên làm gì nếu nhận được ít insulin hơn so với lịch sử bơm ghi lại, ví dụ do tắc nghẽn, kim truyền (cannula) hỏng hoặc quên gắn lại bơm sau khi tắm?</string>
+    <string name="wronginsulin_whattodo">Bạn nên làm gì nếu nhận được ít insulin hơn so với lịch sử bơm ghi lại, ví dụ do tắc nghẽn, kim luồn hỏng hoặc quên gắn lại bơm sau khi tắm?</string>
     <string name="wronginsulin_careportal">Xóa dữ liệu insulin trong Nightscout Careportal để loại bỏ khỏi lịch sử bơm.</string>
     <string name="wronginsulin_compare">So sánh các giá trị trong AAPS và lịch sử bơm (nếu bơm hỗ trợ chức năng này).</string>
     <string name="wronginsulin_prime">Tiêm bolus một phần lượng insulin ‘bị bỏ lỡ’ đã tính toán bằng bơm tiêm/bút tiêm hoặc sử dụng chức năng mồi (prime).</string>
