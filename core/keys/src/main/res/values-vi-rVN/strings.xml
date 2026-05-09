@@ -13,17 +13,17 @@
     <string name="pref_title_show_carbs_button">Hiển thị nút Carbs</string>
     <string name="pref_title_show_cgm_button">Hiển thị nút CGM</string>
     <string name="pref_summary_show_cgm_button">Mở xDrip+ hoặc ứng dụng Dexcom (bạn có thể dùng nút quay lại để trở về AAPS).</string>
-    <string name="pref_title_show_calibration_button">Hiển thị nút Tính toán</string>
+    <string name="pref_title_show_calibration_button">Hiển thị nút hiệu chuẩn</string>
     <string name="pref_summary_show_calibration_button">Gửi hiệu chuẩn đến xDrip+ (hãy đảm bảo rằng tùy chọn \'Accept Calibrations\' đã được bật trong phần Cài đặt liên ứng dụng của xDrip+).</string>
     <string name="pref_title_show_notes_in_dialogs">Hiển thị ghi chú trong hộp thoại</string>
-    <string name="pref_title_use_bolus_advisor">Sử dụng trợ lý tính liều bolus</string>
-    <string name="pref_summary_use_bolus_advisor">Bật trợ lý bolus để hỗ trợ tính toán liều bolus khi đường huyết cao.</string>
+    <string name="pref_title_use_bolus_advisor">Tư vấn liều bolus</string>
+    <string name="pref_summary_use_bolus_advisor">Bật tư vấn liều bolus để hỗ trợ tính toán liều bolus khi đường huyết cao.</string>
     <string name="pref_title_use_bolus_reminder">Nhắc tiêm liều bolus</string>
-    <string name="pref_summary_use_bolus_reminder">Bật thông báo nhắc bolus để giúp theo dõi việc tiêm insulin.</string>
+    <string name="pref_summary_use_bolus_reminder">Bật thông báo nhắc tiêm liều bolus để giúp theo dõi việc tiêm insulin.</string>
     <string name="pref_title_use_super_bolus">Sử dụng super bolus</string>
     <string name="pref_summary_use_super_bolus">Bật tính năng super bolus, sử dụng insulin từ liều nền để cung cấp ngay lập tức.</string>
     <!-- Pump preferences -->
-    <string name="pref_title_bt_watchdog">BT Watchdog</string>
+    <string name="pref_title_bt_watchdog">Giám sát Bluetooth</string>
     <string name="pref_summary_bt_watchdog">Tắt Bluetooth 1 giây khi không kết nối được bơm (khắc phục lỗi treo Bluetooth).</string>
     <!-- Alert preferences -->
     <string name="pref_title_alert_missed_bg_reading">Cảnh báo khi không có dữ liệu BG</string>
@@ -68,12 +68,12 @@
     <string name="pref_title_aps_low_tt_lowers_sensitivity">Mục tiêu tạm thời thấp làm giảm độ nhạy</string>
     <string name="pref_summary_aps_low_tt_lowers_sensitivity">Mục tiêu tạm thời thấp sẽ làm giảm độ nhạy insulin.</string>
     <string name="pref_title_aps_use_autoisf_weights">Bật AutoISF</string>
-    <string name="pref_summary_aps_use_autoisf_weights">Bật AutoISF để điều chỉnh ISF dựa trên hệ số (weight).</string>
+    <string name="pref_summary_aps_use_autoisf_weights">Bật AutoISF để điều chỉnh ISF dựa trên hệ số</string>
     <string name="pref_title_aps_smb_on_even_target">Bật SMB khi ở mức mục tiêu</string>
     <string name="pref_summary_aps_smb_on_even_target">Cách kích hoạt SMB thay thế, luôn dựa trên giá trị đường huyết mục tiêu.</string>
     <!-- Maintenance preferences -->
     <string name="pref_title_maintenance_enable_fabric">Bật báo cáo lỗi Fabric</string>
-    <string name="pref_title_maintenance_enable_export_automation">Chấp nhận cập nhật hồ sơ từ Nightscout</string>
+    <string name="pref_title_maintenance_enable_export_automation">Chấp nhận cập nhật cấu hình từ Nightscout</string>
     <!-- Autotune preferences -->
     <string name="pref_title_autotune_auto_switch_profile">Tự động chuyển cấu hình</string>
     <string name="pref_summary_autotune_auto_switch_profile">Tự động chuyển sang cấu hình do Autotune tạo sau khi tính toán.</string>
@@ -92,7 +92,7 @@
     <!-- NS Client preferences -->
     <string name="pref_title_ns_upload_data">Tải dữ liệu lên NS</string>
     <string name="pref_summary_ns_upload_data">Tải lên các dữ liệu điều trị, liều nền tạm thời và dữ liệu khác lên Nightscout.</string>
-    <string name="pref_title_ns_receive_cgm">Chấp nhận dữ liệu CGM từ NS</string>
+    <string name="pref_title_ns_receive_cgm">Nhận dữ liệu CGM từ NS</string>
     <string name="pref_summary_ns_receive_cgm">Chấp nhận dữ liệu CGM từ Nightscout.</string>
     <string name="pref_title_ns_receive_profile_store">Nhận dữ liệu cấu hình đã lưu</string>
     <string name="pref_summary_ns_receive_profile_store">Chấp nhận cập nhật kho cấu hình từ Nightscout.</string>
@@ -378,16 +378,20 @@
     <string name="openapsama_autoISF_min_summary">Tương tự như autosens_tối thiểu, thiết lập này xác định ISF có thể trở nên yếu đến mức nào.\n\nGiá trị mặc định 1,0 sẽ thực tế vô hiệu hóa tác động này.</string>
     <string name="pref_title_autoisf_max">AutoISF tối đa</string>
     <string name="openapsama_autoISF_max_summary">Tương tự như autosens_max, thiết lập này xác định ISF có thể trở nên mạnh đến mức nào.\n\nGiá trị mặc định 1,0 sẽ thực tế vô hiệu hóa tác động này.\n\nCẢNH BÁO: Hãy cực kỳ cẩn thận khi sử dụng các giá trị lớn hơn 2,5</string>
+    <string name="pref_title_bg_accel_weight">Hệ số ISF khi BG tăng tốc (acce)</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết tăng nhanh, giúp tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
+    <string name="pref_title_bg_brake_weight">Hệ số ISF khi BG giảm tốc</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết giảm tốc, làm yếu ISF và từ đó có thể làm giảm lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
-    <string name="pref_title_low_bg_weight">Hệ số đường huyết thấp</string>
+    <string name="pref_title_low_bg_weight">Hệ số khi BG Thấp</string>
     <string name="openapsama_lower_ISFrange_weight_summary">Đây là hệ số được áp dụng khi đường huyết thấp hơn mục tiêu, làm yếu ISF và từ đó có thể làm giảm lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
-    <string name="pref_title_high_bg_weight">Hệ số đường huyết cao</string>
+    <string name="pref_title_high_bg_weight">Hệ số khi BG Cao (bg)</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Đây là hệ số được áp dụng khi đường huyết cao hơn mục tiêu, làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
     <string name="pref_title_smb_delivery_ratio_bg_range">Phạm vi BG cho tỷ lệ SMB</string>
     <string name="openapsama_smb_delivery_ratio_bg_range_summary">Giá trị mặc định: 0. Tỷ lệ SMB tăng tuyến tính được ánh xạ trong khoảng đường huyết [target_bg, target_bg+bg_range].\nTại target_bg, tỷ lệ SMB là smb_delivery_ratio_min; tại target_bg+bg_range, tỷ lệ này là smb_delivery_ratio_max.\nVới giá trị 0, chế độ SMB tăng tuyến tính sẽ bị tắt và thay vào đó sử dụng smb_delivery_ratio cố định.</string>
+    <string name="pref_title_pp_weight">Hệ số ISF sau bữa ăn (pp)</string>
     <string name="openapsama_pp_ISF_weight_summary">Đây là hệ số được áp dụng khi đường huyết đang tăng, làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
-    <string name="openapsama_dura_ISF_weight_summary">Đây là hệ số được áp dụng trong các giai đoạn đường huyết tăng cao kéo dài (plateau), làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
+    <string name="pref_title_dura_weight">Hệ số ISF theo thời gian tác dụng (dura)</string>
+    <string name="openapsama_dura_ISF_weight_summary">Đây là hệ số được áp dụng trong các giai đoạn đường huyết tăng cao kéo dài, làm tăng cường ISF và từ đó có thể làm tăng lượng insulin được đưa vào.\n\nGiá trị mặc định 0,0 sẽ thực tế vô hiệu hóa tác động này.</string>
     <string name="pref_title_smb_delivery_ratio">Tỷ lệ phân phối SMB</string>
     <string name="openapsama_smb_delivery_ratio_summary">Giá trị mặc định: 0,5. Đây là một giới hạn an toàn quan trọng khác của OpenAPS, quy định tỷ lệ insulin cần thiết có thể được bơm dưới dạng SMB. Mục đích là để ngăn tình trạng nguy hiểm khi có yêu cầu SMB được gửi đồng thời từ điện thoại của người chăm sóc. Hãy tăng giá trị thử nghiệm này từ từ và thận trọng.</string>
     <string name="pref_title_smb_delivery_ratio_min">Tỷ lệ SMB tối thiểu</string>
