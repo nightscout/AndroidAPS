@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_watchface_circle">AAPS (Vòng tròn)</string>
-    <string name="label_watchface_digital_style">AAPS (Kỹ thuật số)</string>
-    <string name="label_watchface_custom">AAPS (Tùy chỉnh)</string>
+    <string name="label_watchface_circle">AAPS(Vòng tròn)</string>
+    <string name="label_watchface_digital_style">AAPS(Kỹ thuật số)</string>
+    <string name="label_watchface_custom">AAPS(Tùy chỉnh)</string>
     <string name="label_actions_tile">Hành động</string>
     <string name="label_temp_target_tile">Mục tiêu tạm thời</string>
     <string name="label_quick_wizard_tile">Quick Wizard</string>
@@ -15,7 +15,7 @@
     <string name="pref_display_settings">Hiển thị</string>
     <string name="pref_graph_settings">Đồ thị</string>
     <string name="pref_interface_settings">Giao diện</string>
-    <string name="pref_tile_settings">Các mục</string>
+    <string name="pref_tile_settings">Ô gạch</string>
     <string name="pref_others_settings">Khác</string>
     <string name="pref_complication_settings">Ô hiển thị</string>
     <string name="pref_show_date">Hiển thị ngày</string>
