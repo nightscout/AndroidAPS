@@ -156,7 +156,7 @@
     <string name="pref_title_carbs_button_increment_2">Nút carb tăng lần 2</string>
     <string name="pref_title_carbs_button_increment_3">Nút carb tăng lần 3</string>
     <string name="carb_increment_button_message">Số lượng carb sẽ được thêm khi nhấn nút</string>
-    <string name="pref_title_cage_warning">Ngưỡng cảnh báo tuổi của kim luồn</string>
+    <string name="pref_title_cage_warning">Ngưỡng cảnh báo thời gian sử dụng của kim luồn</string>
     <string name="pref_title_cage_critical">Ngưỡng nguy hiểm tuổi của cannula</string>
     <string name="pref_title_iage_warning">Ngưỡng nguy hiểm tuổi của insulin</string>
     <string name="pref_title_iage_critical">Ngưỡng nguy hiểm tuổi của insulin</string>
