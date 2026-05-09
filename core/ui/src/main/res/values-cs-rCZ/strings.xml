@@ -176,6 +176,9 @@
     <string name="remove_label">Odebrat</string>
     <string name="activate_profile">Aktivovat profil</string>
     <string name="activate_insulin">Aktivovat inzulín</string>
+    <string name="pump_wizard_profile_gate_title">Vyžadován profil</string>
+    <string name="pump_wizard_profile_gate_pick">Vyberte profil, který se použije při aktivaci.</string>
+    <string name="pump_wizard_profile_gate_no_store">Není definován žádný profil. Otevřete Správu profilů a vytvořte profil, poté znovu spusťte aktivaci.</string>
     <string name="reset">Resetovat</string>
     <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
     <string name="profile">Profil</string>
