@@ -77,7 +77,7 @@
     <string name="equil_common_set_alarm_tone_and_shake">Cài đặt để phát thông báo âm thanh và rung</string>
     <string name="equil_common_read_devices">Đọc thông tin thiết bị</string>
     <string name="equil_common_cmd_fill">Fill</string>
-    <string name="history_manual_confirm">Cài đặt thủ công</string>
+    <string name="history_manual_confirm">Xác nhận thủ công</string>
     <string name="equil_command_not_found">Không tìm thấy thiết bị</string>
     <string name="equil_command_connect_error">Lỗi kết nối Bơm</string>
     <string name="equil_command_connect_no_response">Không có phản hồi từ Bơm</string>
