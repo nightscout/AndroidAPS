@@ -6,7 +6,7 @@
     <string name="treatments">Điều trị</string>
     <string name="treatments_history">Lịch sử điều trị</string>
     <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
-    <string name="nav_configuration">Cấu hình</string>
+    <string name="nav_configuration">Thiết lập hệ thống</string>
     <string name="nav_configuration_desc">Thiết lập cấu hình (CGM, bơm insulin, ...) và bật các tính năng</string>
     <string name="count_selected">Đã chọn %1$d</string>
     <string name="delete">Xóa</string>
@@ -416,7 +416,7 @@
     <string name="hypo">Hypo</string>
     <string name="activity">Hoạt động</string>
     <string name="wear">Wear</string>
-    <string name="automation">Automation</string>
+    <string name="automation">Tự động hóa</string>
     <string name="settingsexport">Xuất cài đặt</string>
     <string name="custom">Tuỳ chỉnh</string>
     <string name="preset_settings">Thiết lập cài đặt sẵn</string>
@@ -522,7 +522,7 @@
     <string name="uel_profile_switch_ns_refresh">LÀM MỚI CHUYỂN CẤU HÌNH TỪ NS</string>
     <string name="uel_treatments_ns_refresh">CẬP NHẬT ĐIỀU TRỊ TỪ NS</string>
     <string name="uel_tt_ns_refresh">CẬP NHẬT TEMP TARGET TỪ NS</string>
-    <string name="uel_automation_removed">ĐÃ XÓA AUTOMATION</string>
+    <string name="uel_automation_removed">ĐÃ XÓA TỰ ĐỘNG HOÁ</string>
     <string name="uel_bg_removed">BG REMOVED</string>
     <string name="uel_careportal_removed">ĐÃ XÓA CAREPORTAL</string>
     <string name="uel_bolus_removed">ĐÃ XÓA BOLUS</string>
@@ -777,7 +777,7 @@
     <string name="export_result_message_failed">Xuất cài đặt THẤT BẠI!</string>
     <string name="export_result_message_about_to_expire">Đã xuất cài đặt: mật khẩu sắp hết hạn. Vui lòng xuất thủ công và nhập lại mật khẩu.</string>
     <string name="export_result_message_expired">Xuất cài đặt bị hủy: mật khẩu đã hết hạn. Vui lòng xuất thủ công và nhập lại!</string>
-    <string name="export_result_message_disabled">Cảnh báo (automation): Xuất cài đặt chưa được bật!</string>
+    <string name="export_result_message_disabled">Cảnh báo (tự động hoá): Xuất cài đặt chưa được bật!</string>
     <!-- Cloud export -->
     <string name="export_cloud_success">Xuất dữ liệu lên đám mây thành công</string>
     <string name="export_cloud_failed">Xuất dữ liệu lên đám mây THẤT BẠI!</string>
