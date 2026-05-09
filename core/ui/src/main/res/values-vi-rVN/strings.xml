@@ -176,6 +176,9 @@
     <string name="remove_label">Loại bỏ</string>
     <string name="activate_profile">Kích hoạt cấu hình</string>
     <string name="activate_insulin">Kích hoạt insulin</string>
+    <string name="pump_wizard_profile_gate_title">Yêu cầu cấu hình</string>
+    <string name="pump_wizard_profile_gate_pick">Chọn cấu hình để áp dụng khi kích hoạt.</string>
+    <string name="pump_wizard_profile_gate_no_store">Chưa có cấu hình nào được thiết lập. Mở Quản lý cấu hình để tạo cấu hình rồi kích hoạt lại.</string>
     <string name="reset">Đặt lại</string>
     <string name="profileswitch_ismissing">Thiếu Chuyển đổi Cấu hình. Vui lòng thực hiện chuyển đổi cấu hình hoặc nhấn “Kích hoạt cấu hình” trong cấu hình cục bộ.</string>
     <string name="profile">Cấu hình</string>
