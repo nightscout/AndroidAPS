@@ -106,8 +106,8 @@
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="triggerSensorAgeLabel">Sensor age</string>
     <string name="triggerSensorAgeDesc">Sensor age %1$s %2$.1f hour</string>
-    <string name="triggerCannulaAgeLabel">Cannula age</string>
-    <string name="triggerCannulaAgeDesc">Cannula age %1$s %2$.1f hour</string>
+    <string name="triggerCannulaAgeLabel">Kim luồn đã dùng</string>
+    <string name="triggerCannulaAgeDesc">Kim luồn đã dùng %1$s %2$.1f giờ</string>
     <string name="triggerPodChangeLabel">Kích hoạt Pod</string>
     <string name="triggerPodChangeDesc">Pod đã kích hoạt</string>
     <string name="triggerInsulinAgeLabel">Thời gian insulin</string>
