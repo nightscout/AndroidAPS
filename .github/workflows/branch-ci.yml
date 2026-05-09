@@ -297,7 +297,7 @@ jobs:
 
 
   # Configuration: Threshold-based cleanup
-  # Cleanup only occurs when total runs exceed: keep_runs + keep_threshold (e.g., 30 + 5 = 35)
+  # Cleanup only occurs when total runs exceed: keep_runs + keep_threshold (e.g., 30 + 10 = 40)
   cleanup:
     name: Cleanup Old Workflow Runs
     needs: build
@@ -305,7 +305,7 @@ jobs:
     uses: ./.github/workflows/cleanup-workflow-runs.yml
     with:
       workflow_name: 'Branch CI'
-      keep_runs: 46
-      keep_threshold: 2
+      keep_runs: 30
+      keep_threshold: 10
 
 
