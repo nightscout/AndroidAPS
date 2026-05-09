@@ -15,4 +15,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="old_data">GAMLE DATA</string>
+    <string name="notification_iob_short">%1$.1fE</string>
 </resources>
