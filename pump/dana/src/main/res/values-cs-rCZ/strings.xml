@@ -92,6 +92,9 @@
     <string name="danars_password_title">Heslo pumpy (pouze v1)</string>
     <string name="danar_password_title">Heslo k pumpě</string>
     <string name="danar_useextended_title">Použít prodloužené bolusy pro &gt;200%</string>
+    <string name="bolus_speed_12">12 s/U</string>
+    <string name="bolus_speed_30">30 s/U</string>
+    <string name="bolus_speed_60">60 s/U</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="rs_loginsulinchange_title">Zaznamenat výměnu zásobníku</string>
     <string name="rs_loginsulinchange_summary">Přidat událost \"Výměna inzulínu\" do portálu pěče, pokud je zjištěna v historii</string>
