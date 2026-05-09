@@ -31,7 +31,7 @@
     <string name="pump_cmd_desc_custom">Lệnh tùy chỉnh</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Liều nền</string>
-    <string name="history_group_configuration">Các cài đặt</string>
+    <string name="history_group_configuration">Các thiết lập</string>
     <string name="history_group_notification">Thông báo</string>
     <string name="history_group_statistic">Thống kê</string>
     <string name="history_group_unknown">Không xác định</string>
