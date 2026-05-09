@@ -176,6 +176,9 @@
     <string name="remove_label">Rimuovi</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="activate_insulin">Attiva insulina</string>
+    <string name="pump_wizard_profile_gate_title">Profilo richiesto</string>
+    <string name="pump_wizard_profile_gate_pick">Seleziona il profilo da applicare all\'attivazione.</string>
+    <string name="pump_wizard_profile_gate_no_store">Nessun profilo definito. Apri la Gestione del Profilo per crearne una, quindi riavvia l\'attivazione.</string>
     <string name="reset">Reset</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
