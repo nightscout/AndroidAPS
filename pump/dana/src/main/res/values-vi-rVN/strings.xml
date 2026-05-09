@@ -98,7 +98,7 @@
     <string name="selectedpump">Bơm đã chọn</string>
     <string name="rs_loginsulinchange_title">Ghi lại thay đổi bình chứa</string>
     <string name="rs_loginsulinchange_summary">Thêm sự kiện \"Thay đổi insulin\" vào careportal khi phát hiện trong lịch sử</string>
-    <string name="rs_logcanulachange_title">Ghi lại thay đổi kim truyền</string>
+    <string name="rs_logcanulachange_title">Ghi lại thay đổi kim luồn</string>
     <string name="rs_logcanulachange_summary">Thêm sự kiện “Thay vị trí truyền” vào CarePortal khi được phát hiện trong lịch sử</string>
     <string name="press_ok_on_the_pump">Nhấn OK trên Bơm\nvà nhập 2 số hiển thị\nGiữ màn hình bơm luôn BẬT bằng cách nhấn nút trừ cho đến khi bạn nhập xong mã.</string>
     <string name="num1pin">1: (12 chữ số)</string>
