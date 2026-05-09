@@ -28,7 +28,7 @@
     <string name="objectives_smb_objective">Bật thêm các tính năng để sử dụng ban ngày, chẳng hạn như SMB</string>
     <string name="objectives_smb_gate">Bạn phải đọc wiki và tăng MaxIOB thì SMB mới hoạt động tốt! Một cách bắt đầu hợp lý là đặt MaxIOB = bolus trung bình mỗi bữa + 3 × liều nền tối đa trong ngày. Ở chế độ đơn giản, giá trị này được tính tự động theo khuyến nghị trong wiki nên không cần phải cài đặt.</string>
     <string name="objectives_smb_learned">Mục tiêu của bạn là sử dụng SMB. Thuật toán Oref1 được thiết kế để hỗ trợ bạn với các liều bolus. Bạn không nên tiêm toàn bộ bolus cho bữa ăn mà chỉ một phần, rồi để AAPS tiêm phần còn lại nếu cần. Cách này giúp bạn có thêm khoảng an toàn khi ước lượng carb chưa chính xác. Bạn có biết rằng có thể cài đặt phần trăm kết quả của bộ tính bolus để giảm lượng bolus không?</string>
-    <string name="objectives_auto_objective">Bật tự động hóa (Automation)</string>
+    <string name="objectives_auto_objective">Kích hoạt tự động hóa</string>
     <string name="objectives_auto_gate">Đọc tài liệu để hiểu cách tự động hóa hoạt động. Thiết lập các quy tắc đơn giản đầu tiên. Thay vì hành động, hãy để AAPS chỉ hiển thị thông báo. Khi bạn chắc chắn tự động hóa được kích hoạt đúng thời điểm, hãy thay thông báo bằng hành động thật.
 (Xem thêm: https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Tự động hóa có thể là người trợ giúp tốt nhưng cũng có thể trở thành ‘ông chủ tồi’. Đừng lạm dụng. Đừng cố thay thế thuật toán cốt lõi. Hãy thử quy tắc với thông báo trước khi dùng thật. Thứ tự cũng có ảnh hưởng.</string>
