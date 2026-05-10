@@ -7,4 +7,6 @@
     <string name="description_avg_smoothing">"平均平滑算法，最新值不受影響"</string>
     <string name="no_smoothing_name">無平滑</string>
     <string name="description_no_smoothing">"對輸入的血糖資料不進行平滑處理。當您已經有過濾的資料時使用，例如來自BYODA G6的資料。"</string>
+    <string name="adaptive_smoothing_name">自適應平滑</string>
+    <string name="description_adaptive_smoothing">"情境感知自適應平滑：快速上升時延遲最小、對雜訊較多的資料強力過濾、於低血糖時更安全"</string>
 </resources>
