@@ -41,7 +41,7 @@
     <string name="snooze_30m">Hoãn 30 phút</string>
     <string name="snooze_60m">Hoãn 60 phút</string>
     <string name="virtual_pump">Bơm mô phỏng</string>
-    <string name="constraints">Giới hạn</string>
+    <string name="constraints">Điều kiện ràng buộc</string>
     <string name="superbolus">Superbolus</string>
     <string name="pump_paused">Bơm đã tạm dừng</string>
     <string name="and">Và</string>
