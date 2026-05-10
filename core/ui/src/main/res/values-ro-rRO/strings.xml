@@ -176,6 +176,9 @@
     <string name="remove_label">Eliminați</string>
     <string name="activate_profile">Activați profil</string>
     <string name="activate_insulin">Activați insulina</string>
+    <string name="pump_wizard_profile_gate_title">Profil necesar</string>
+    <string name="pump_wizard_profile_gate_pick">Selectați profilul pentru a fi aplicat la activare.</string>
+    <string name="pump_wizard_profile_gate_no_store">Niciun profil definit. Deschideți gestionarea profilului pentru a crea unul, apoi începeți activarea din nou.</string>
     <string name="reset">Resetați</string>
     <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
     <string name="profile">Profil</string>
