@@ -396,7 +396,7 @@
     <string name="manage_temp_basal_desc">Bắt đầu liều nền tạm thời</string>
     <string name="manage_extended_bolus_desc">Bắt đầu liều bolus kéo dài</string>
     <string name="manage_site_rotation_desc">Theo dõi và luân chuyển vị trí truyền</string>
-    <string name="manage_quickwizard_desc">Quản lý preset Trình hướng dẫn nhanh</string>
+    <string name="manage_quickwizard_desc">Quản lý các thiết lập sẵn cho Quick Wizard</string>
     <string name="treatment_note_desc">Thêm ghi chú vào hồ sơ</string>
     <string name="treatment_question_desc">Ghi lại câu hỏi cho nhóm chăm sóc của bạn</string>
     <string name="treatment_cgm_desc">Mở ứng dụng CGM</string>
@@ -517,7 +517,7 @@
     <string name="uel_sensor_location">VỊ TRÍ CẢM BIẾN</string>
     <string name="uel_site_change">THAY ĐIỂM GẮN</string>
     <string name="uel_site_location">SITE LOCATION</string>
-    <string name="uel_reservoir_change">THAY RESERVOIR</string>
+    <string name="uel_reservoir_change">THAY BÌNH CHỨA</string>
     <string name="uel_calibration">CALIBRATION</string>
     <string name="uel_prime_bolus">BOLUS MỒI</string>
     <string name="uel_treatment">ĐIỀU TRỊ</string>
@@ -700,7 +700,7 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">Không có bơm khả dụng!</string>
-    <string name="quickwizard_managemnt">Hướng dẫn nhanh</string>
+    <string name="quickwizard_managemnt">QuickWizard</string>
     <!--    Preferences-->
     <string name="child">Trẻ em</string>
     <string name="teenage">Thanh thiếu niên</string>
@@ -715,7 +715,7 @@
     <string name="unlock_settings">Mở khóa cài đặt</string>
     <!--    Pumps -->
     <string name="battery_label">Pin</string>
-    <string name="reservoir_label">Bình chứa insulin</string>
+    <string name="reservoir_label">Bình chứa</string>
     <string name="last_connection_label">Kết nối lần cuối</string>
     <string name="last_bolus_label">Liều bolus gần nhất</string>
     <string name="base_basal_rate_label">Tỷ lệ liều nền cơ bản</string>
