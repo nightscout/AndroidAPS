@@ -13,10 +13,10 @@
     <string name="widget_bg_graph_description">Biểu đồ đường huyết AAPS</string>
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (thu gọn)</string>
     <!--     Activities-->
-    <string name="activity_monitor">Màn hình hoạt động</string>
+    <string name="activity_monitor">Theo dõi hoạt động</string>
     <string name="time_range">Khoảng thời gian</string>
-    <string name="dexcom_tir">Dexcom TIR</string>
-    <string name="cgp_title">Glucose Pentagon (CGP) — 14 days</string>
+    <string name="dexcom_tir">Phạm vi mục tiêu của Dexcom</string>
+    <string name="cgp_title">Ngũ giác đường huyết (CGP) — 14 ngày</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
     <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
