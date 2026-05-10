@@ -88,7 +88,7 @@
     <string name="extended_bolus">Liều Bolus kéo dài</string>
     <string name="paused">Đã tạm dừng</string>
     <string name="running">Đang chạy</string>
-    <string name="tdd_total">Tổng TDD</string>
+    <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">Dữ liệu cũ</string>
     <string name="goingtodeliver">Đang tiêm %1$.2f U Insulin</string>
     <string name="androidaps_start">AAPS đã khởi động</string>
@@ -268,16 +268,16 @@
     <!--       Stats -->
     <string name="average">Trung bình</string>
     <string name="tir">Thời gian trong phạm vi</string>
-    <string name="below" comment="below &quot;in range&quot;">Bên dưới</string>
+    <string name="below" comment="below &quot;in range&quot;">Thấp</string>
     <string name="in_range">Trong phạm vi</string>
     <string name="veryLow" comment="below 3.1">Quá thấp</string>
     <string name="low" comment="3.1-3.9">Thấp</string>
     <string name="high" comment="10.0-13.9">Cao</string>
     <string name="veryHigh" comment="above 13.9">Quá cao</string>
-    <string name="above" comment="above &quot;in range&quot;">Bên trên</string>
+    <string name="above" comment="above &quot;in range&quot;">Cao</string>
     <string name="detailed_14_days">Chi tiết 14 ngày</string>
-    <string name="day_tir">TIR trong ngày</string>
-    <string name="night_tir">TIR ban đêm</string>
+    <string name="day_tir">Phạm vi mục tiêu ban ngày</string>
+    <string name="night_tir">Phạm vi mục tiêu ban đêm</string>
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">SD: %1$s</string>
     <string name="seven_days_short">7ngày</string>
@@ -800,7 +800,7 @@
     <string name="data_choices">Lựa chọn dữ liệu</string>
     <string name="unattended_settings_export">Xuất cài đặt tự động</string>
     <!-- Maintenance bottom sheet descriptions -->
-    <string name="maintenance_log_settings_desc">Cấu hình mức độ chi tiết của nhật ký</string>
+    <string name="maintenance_log_settings_desc">Thiết lập mức độ chi tiết của nhật ký</string>
     <string name="maintenance_send_logs_desc">Chia sẻ nhật ký để khắc phục sự cố</string>
     <string name="maintenance_delete_logs_desc">Xóa các tệp nhật ký cũ</string>
     <string name="maintenance_aaps_directory_desc">Chọn thư mục lưu trữ cục bộ</string>
@@ -808,7 +808,7 @@
     <string name="maintenance_export_desc">Lưu bản sao lưu cài đặt được mã hóa</string>
     <string name="maintenance_import_desc">Khôi phục cài đặt từ bản sao lưu</string>
     <string name="maintenance_export_csv_desc">Xuất lịch sử điều trị dưới dạng bảng tính</string>
-    <string name="maintenance_cleanup_db_desc">Xóa các mục cũ khỏi cơ sở dữ liệu</string>
+    <string name="maintenance_cleanup_db_desc">Xóa các bản ghi cũ khỏi cơ sở dữ liệu</string>
     <string name="maintenance_reset_aps_results_desc">Xóa kết quả thuật toán đã lưu</string>
     <string name="maintenance_reset_db_desc">Xóa tất cả cơ sở dữ liệu và khởi động lại</string>
     <!-- Cloud directory dialog (Compose) -->
@@ -852,8 +852,8 @@
     <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
     <string name="statistics">Thống kê</string>
     <string name="statistics_desc">Xem thống kê và báo cáo</string>
-    <string name="tdd_cycle_pattern">Mẫu chu kỳ TDD</string>
-    <string name="tdd_cycle_pattern_desc">Gộp tổng liều insulin hàng ngày theo chu kỳ 28 ngày để nhận diện các mẫu lặp lại</string>
+    <string name="tdd_cycle_pattern">Mô hình chu kỳ tổng liều hàng ngày</string>
+    <string name="tdd_cycle_pattern_desc">Gộp tổng liều insulin hàng ngày theo chu kỳ 28 ngày để nhận diện các mô hình lặp lại</string>
     <string name="nav_profile_helper">Hỗ trợ cấu hình</string>
     <string name="nav_profile_helper_desc">Xây dựng cấu hình dựa trên cân nặng hoặc TDD</string>
     <string name="quick_launch_configure">Thiết lập Khởi chạy nhanh</string>
