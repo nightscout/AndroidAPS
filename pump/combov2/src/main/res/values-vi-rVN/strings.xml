@@ -8,7 +8,7 @@
     <string name="combov2_error">Lỗi Combo</string>
     <string name="combov2_warning_4">Gọi đường dây nóng để cập nhật</string>
     <string name="combov2_warning_10">Lỗi Bluetooth, hãy ghép đôi lại</string>
-    <string name="combov2_error_1">Bình chứa insulin rỗng</string>
+    <string name="combov2_error_1">Bình chứa rỗng</string>
     <string name="combov2_error_2">Hết Pin</string>
     <string name="combov2_error_4">Tắc kim/ống dẫn insulin</string>
     <string name="combov2_error_5">Kết thúc chế độ bơm dự phòng</string>
@@ -16,7 +16,7 @@
     <string name="combov2_error_7">Lỗi mạch điện tử</string>
     <string name="combov2_error_8">Mất nguồn điện</string>
     <string name="combov2_error_9">Kết thúc chế độ bơm cho mượn</string>
-    <string name="combov2_error_10">Lỗi ống chứa insulin</string>
+    <string name="combov2_error_10">Lỗi bình chứa</string>
     <string name="combov2_error_11">Bộ dây truyền chưa được làm đầy</string>
     <string name="combov2_extended_bolus_not_supported">Không hỗ trợ liều bolus kéo dài</string>
     <string name="combov2_title">Accu-Check Combo v2</string>
@@ -93,7 +93,7 @@ Nếu sau khoảng 5 phút vẫn chưa thiết lập được kết nối:\n\n
     <string name="combov2_battery_low">Thấp</string>
     <string name="combov2_battery_full">Đầy</string>
     <string name="combov2_battery_low_warning">Pin của bơm yếu</string>
-    <string name="combov2_reservoir_low_warning">Mức insulin trong bình bơm thấp</string>
+    <string name="combov2_reservoir_low_warning">Mức insulin trong bình chứa của bơm đang thấp</string>
     <string name="combov2_setting_tbr_succeeded">Cài đặt TBR thành công</string>
     <string name="combov2_setting_tbr_failed">Cài đặt TBR không thành công</string>
     <string name="combov2_set_emulated_100_tbr">Đặt TBR giả lập 100%</string>
