@@ -14,7 +14,7 @@
     <string name="cwf_comment_delta_ext">Delta BG ngắn hạn (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Trung bình độ lệch đường huyết (15 phút) (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_temp_target_ext">Mục tiêu tạm thời hoặc Mục tiêu tạm thời thấp – Mục tiêu tạm thời cao (từ AAPSClient hoặc AAPSClient2)</string>
-    <string name="cwf_comment_reservoir_ext">Mức insulin trong ống chứa (từ AAPSClient hoặc AAPSClient2)</string>
+    <string name="cwf_comment_reservoir_ext">Mức insulin trong bình chứa (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Pin vòng lặp toàn cục (%) (từ AAPSClient hoặc AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Tỷ lệ liều nền (từ AAPSClient/AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">Giá trị BGI (từ AAPSClient hoặc AAPSClient2)</string>
