@@ -44,7 +44,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Một liều bolus đã được bơm trong vòng 3 phút trước, bỏ qua SMB</string>
     <string name="pump_not_initialized">Bơm chưa được khởi tạo!</string>
-    <string name="loop_shortname">LOOP</string>
+    <string name="loop_shortname">VÒNG LẶP</string>
     <string name="description_loop">Bật hoặc tắt chức năng thực thi để kích hoạt vòng lặp.</string>
     <string name="no_aps_selected">KHÔNG CÓ APS ĐƯỢC CHỌN HOẶC CUNG CẤP KẾT QUẢ</string>
     <string name="ignore5m">Bỏ qua 5 phút</string>
