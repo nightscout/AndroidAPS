@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Vyberte si východiskový bod. Šablóny predvypĺňajú odporúčané akcie pre bežné situácie - všetko môžete upraviť v nasledujúcich krokoch.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Cvičenie</string>
+    <string name="scene_wizard_exercise_desc">Zvýšte cieľ, znížte profil na 70 %, vypnite SMB, aby ste predišli poklesom pri cvičení.</string>
+    <string name="scene_wizard_info_exercise">Počas fyzickej aktivity svaly spotrebúvajú glukózu rýchlejšie a citlivosť na inzulín sa zvyšuje.
+Zvýšenie dočasného cieľa vopred dáva algoritmu náskok – začne včas znižovať podávanie inzulínu, čím si vytvorí rezervu proti poklesom vyvolaným cvičením. Odporúča sa tiež vypnúť SMB, pretože korekčné bolusy počas cvičenia môžu spôsobiť rýchle poklesy. Pre dosiahnutie najlepších výsledkov aktivujte túto scénu 1 – 2 hodiny pred začiatkom cvičenia, aby mal algoritmus čas znížiť hladinu inzulínu.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Choroba</string>
+    <string name="scene_wizard_sick_day_desc">Silnejší profil (150 %) na zvládnutie zvýšenej inzulínovej rezistencie počas choroby.</string>
+    <string name="scene_wizard_info_sick_day">Choroba, horúčka a stresové hormóny môžu dramaticky zvýšiť inzulínovú rezistenciu, niekedy až o 50 % alebo viac. Silnejší profil (napr. 150 %) povie algoritmu, aby podával viac inzulínu vo všetkých výpočtoch – bazálne dávky, návrhy bolusu a korekčné faktory. Môžete tiež pridať dočasný cieľ alebo upraviť režim uzavretého okruhu v nasledujúcich krokoch. Pozorne sledujte a upravujte ho podľa toho, ako sa vaše telo zotavuje.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_wizard_sick_day_vomiting_desc">Znížený profil s LGS - opak štandardného dňa choroby, keď nemôžete vstrebávať jedlo.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Keď nedokážete udržať jedlo v žalúdku, štandardný prístup zvyšovania inzulínu počas choroby môže byť nebezpečný. Zvracanie znamená, že sacharidy sa nevstrebávajú, takže hladina glukózy v krvi môže klesnúť, a nie stúpnuť. Znížený profil (60 %) znižuje podávanie inzulínu a režim LGS pridáva ďalšiu bezpečnostnú poistku tým, že pozastaví podávanie inzulínu, ak hladina glukózy klesne. Vypnutie SMB zabráni akýmkoľvek dodatočným bolusom. Často monitorujte – kontrolujte hladinu glukózy v krvi každé 1–2 hodiny a ketóny každé 2–4 hodiny. Vyhľadajte lekársku pomoc, ak zvracanie pretrváva dlhšie ako niekoľko hodín alebo ak ketóny stúpnu nad 1,5 mmol/L.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Spánok</string>
+    <string name="scene_wizard_sleep_desc">Presnejší cieľ pre lepšiu kontrolu počas noci.</string>
+    <string name="scene_wizard_info_sleep">Počas noci veľa ľudí zažíva nezistené hyperglykémie alebo hypoglykémie. Mierne presnejší cieľ počas spánku umožňuje algoritmu vykonávať jemnejšie korekcie počas noci. Pre dosiahnutie najlepších výsledkov to skombinujte s profilom, ktorý zodpovedá vašej nočnej bazálnej potrebe.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Noc po cvičení</string>
+    <string name="scene_wizard_post_exercise_night_desc">Znížený profil, vyšší cieľ, vypnuté SMB - chráni pred oneskorenými nočnými hypoglykémiami po aktivite.</string>
+    <string name="scene_wizard_info_post_exercise_night">Po fyzickej aktivite svaly dopĺňajú zásoby glykogénu ešte mnoho hodín – citlivosť na inzulín môže zostať zvýšená 24–48 hodín, s najvyšším rizikom nočnej hypoglykémie 6–12 hodín po cvičení. Znížený profil znižuje bazálne podávanie počas celej noci, vyšší dočasný cieľ poskytuje algoritmu bezpečnostnú rezervu a vypnutie SMB zabraňuje algoritmu v nadmernej korekcii krátkodobých nárastov.
+Aktivujte túto scénu pred spaním v dňoch, keď ste cvičili, najmä po dlhších tréningoch alebo keď ste pridali nové aktivity. Majte pri posteli rýchle sacharidy a zvážte nastavenie budíka na kontrolu uprostred noci.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Pred jedlom</string>
+    <string name="scene_wizard_pre_meal_desc">Nižší cieľ, aby ste predišli nárastu po jedle.</string>
+    <string name="scene_wizard_info_pre_meal">Nastavenie nižšieho cieľa 30–60 minút pred jedlom povie algoritmu, aby začal hromadiť inzulín skôr, ako dorazia sacharidy. To pomáha zmierniť nárast glykémie po jedle, ku ktorému dochádza, keď sa jedlo dostane do krvného obehu rýchlejšie, ako inzulín dokáže zapôsobiť. Najlepšie sa používa, keď viete, že budete čoskoro jesť.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alkohol</string>
+    <string name="scene_wizard_alcohol_desc">Režim LGS, znížený profil, SMB vypnuté – chráni pred oneskorenou hypoglykémiou po alkohole.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
