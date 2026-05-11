@@ -22,6 +22,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -89,49 +90,49 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
     private val gamma = sqrt(n + lambda)
 
     // Sigma point weights.
-    private val Wm = DoubleArray(2 * n + 1)
-    private val Wc = DoubleArray(2 * n + 1)
+    private val wm = DoubleArray(2 * n + 1)
+    private val wc = DoubleArray(2 * n + 1)
 
     // FIXED process noise covariances - tuned for realistic glucose dynamics.
     // These values must accommodate meal responses (rapid rises) and insulin action (rapid falls).
     // Increased significantly from original to handle real-world glucose variability.
-    private val Q = doubleArrayOf(
+    private val q = doubleArrayOf(
         1.0, 0.0,     // Glucose process noise
         0.0, 0.35     // Rate process noise
     )
 
     // Initial measurement noise (conservative starting point).
-    private val R_INIT = 25.0  // ~5 mg/dL std dev - assumes moderate sensor quality.
+    private val rInit = 25.0  // ~5 mg/dL std dev - assumes moderate sensor quality.
 
     // Adaptive R bounds (variance, mg/dL^2).
-    private val R_MIN = 16.0   // ~4 mg/dL std dev - excellent sensor.
-    private val R_MAX = 225.0  // ~15 mg/dL std dev - poor sensor.
-    private val R_EFF_MAX = 400.0
+    private val rMin = 16.0   // ~4 mg/dL std dev - excellent sensor.
+    private val rMax = 225.0  // ~15 mg/dL std dev - poor sensor.
+    private val rEffMax = 400.0
 
     // R adaptation window length for innovation statistics.
     private val innovationWindow = 18  // ≈90 minutes at 5‑min intervals.
 
     // Chi-squared based outlier detection (99.99% confidence, 1 DOF).
-    private val CHI_SQUARED_THRESHOLD = 15.13  // Statistically rigorous.
-    private val OUTLIER_ABSOLUTE = 65.0        // Absolute safety limit (mg/dL).
+    private val chiSquaredThreshold = 15.13  // Statistically rigorous.
+    private val outlierAbsolute = 65.0        // Absolute safety limit (mg/dL).
 
     // Covariance limits (tighter for faster recovery).
-    private val MAX_GLUCOSE_VARIANCE = 400.0  // Max 20 mg/dL std dev.
-    private val MAX_RATE_VARIANCE = 4.0       // Max 2 mg/dL/min std dev.
+    private val maxGlucoseVariance = 400.0  // Max 20 mg/dL std dev.
+    private val maxRateVariance = 4.0       // Max 2 mg/dL/min std dev.
 
     // Innovation-based validation - detect parameter corruption.
-    private val INNOVATION_RESET_THRESHOLD = 12.0   // Reset if avg innovation > 12.
-    private val INNOVATION_VALIDATION_SAMPLES = 15  // Need 15 samples before validating.
+    private val innovationResetThreshold = 12.0   // Reset if avg innovation > 12.
+    private val innovationValidationSamples = 15  // Need 15 samples before validating.
 
     // Gap handling.
-    private val MINOR_GAP_THRESHOLD = 7.0       // Minutes - bridge with prediction.
-    private val MAJOR_GAP_THRESHOLD = 60.0      // Minutes - segment data.
-    private val RATE_DECAY_TIME_CONSTANT = 30.0 // Minutes - physiological decay.
+    private val minorGapThreshold = 7.0       // Minutes - bridge with prediction.
+    private val majorGapThreshold = 60.0      // Minutes - segment data.
+    private val rateDecayTimeConstant = 30.0 // Minutes - physiological decay.
 
     // Hoisted constant for millis → minutes conversion to avoid repeated literal expressions.
-    private val MILLIS_PER_MINUTE = 1000.0 * 60.0
+    private val millisPerMinute = 1000.0 * 60.0
 
-    private fun rateDamp(dt: Double): Double = exp(-dt / RATE_DECAY_TIME_CONSTANT)
+    private fun rateDamp(dt: Double): Double = exp(-dt / rateDecayTimeConstant)
 
     // ============================================================
     // DATA STRUCTURES
@@ -153,26 +154,44 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      * Used by the RTS smoother to perform backward smoothing.
      *
      * @property x state estimate before update [glucose, rate].
-     * @property P state covariance before update (2x2 in row-major).
+     * @property p state covariance before update (2x2 in row-major).
      * @property xPred predicted state [glucose, rate].
-     * @property PPred predicted covariance (2x2 in row-major).
+     * @property pPred predicted covariance (2x2 in row-major).
      * @property dt time step used for this prediction (minutes).
      */
     private data class FilterState(
-
         val x: DoubleArray,
-        val P: DoubleArray,
+        val p: DoubleArray,
         val xPred: DoubleArray,
-        val PPred: DoubleArray,
+        val pPred: DoubleArray,
         val dt: Double
-    )
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is FilterState) return false
+            if (!x.contentEquals(other.x)) return false
+            if (!p.contentEquals(other.p)) return false
+            if (!xPred.contentEquals(other.xPred)) return false
+            if (!pPred.contentEquals(other.pPred)) return false
+            return dt == other.dt
+        }
+
+        override fun hashCode(): Int {
+            var result = x.contentHashCode()
+            result = 31 * result + p.contentHashCode()
+            result = 31 * result + xPred.contentHashCode()
+            result = 31 * result + pPred.contentHashCode()
+            result = 31 * result + dt.hashCode()
+            return result
+        }
+    }
 
     // ============================================================
     // PERSISTENT STATE
     // ============================================================
 
     // Learned measurement noise (variance).
-    private var learnedR = R_INIT
+    private var learnedR = rInit
 
     // Innovation tracking.
     // - innovations: normalized innovation squared ν² / (P[0] + R).
@@ -202,12 +221,12 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
 
     init {
         // Initialize sigma point weights.
-        Wm[0] = lambda / (n + lambda)
-        Wc[0] = lambda / (n + lambda) + (1 - alpha * alpha + beta)
+        wm[0] = lambda / (n + lambda)
+        wc[0] = lambda / (n + lambda) + (1 - alpha * alpha + beta)
         val w = 1.0 / (2.0 * (n + lambda))
         for (i in 1 until 2 * n + 1) {
-            Wm[i] = w
-            Wc[i] = w
+            wm[i] = w
+            wc[i] = w
         }
 
         // Load persisted parameters.
@@ -248,30 +267,30 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             if (lastSaved > 0) {
                 lastSensorChangeTimestamp = savedSensorChange
                 lastProcessedTimestamp = sp.getLong("ukf_last_processed_timestamp", 0L)
-                learnedR = sp.getDouble("ukf_learned_r", R_INIT)
+                learnedR = sp.getDouble("ukf_learned_r", rInit)
                 sensorSessionId = sp.getInt("ukf_session_id", 0)
 
                 // Validate loaded R.
-                if (learnedR < R_MIN || learnedR > R_MAX) {
+                if (learnedR !in rMin..rMax) {
                     aapsLogger.info(
                         LTag.GLUCOSE,
                         "UKF: Loaded R ($learnedR) out of bounds, resetting to R_INIT"
                     )
-                    learnedR = R_INIT
+                    learnedR = rInit
                 }
 
                 aapsLogger.info(
                     LTag.GLUCOSE,
                     "UKF: Loaded session $sensorSessionId " +
-                        "(R=${String.format("%.1f", learnedR)}, " +
-                        "Q_glucose=${String.format("%.2f", Q[0])} [FIXED], " +
-                        "Q_rate=${String.format("%.4f", Q[3])} [FIXED])"
+                        "(R=${String.format(Locale.US, "%.1f", learnedR)}, " +
+                        "Q_glucose=${String.format(Locale.US, "%.2f", q[0])} [FIXED], " +
+                        "Q_rate=${String.format(Locale.US, "%.4f", q[3])} [FIXED])"
                 )
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.GLUCOSE, "UKF: Failed to load persisted parameters", e)
             // Reset to defaults on error.
-            learnedR = R_INIT
+            learnedR = rInit
         }
     }
 
@@ -423,7 +442,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             return true
         }
 
-        val timeDiffMinutes = (currentTimestamp - lastProcessedTimestamp) / MILLIS_PER_MINUTE
+        val timeDiffMinutes = (currentTimestamp - lastProcessedTimestamp) / millisPerMinute
 
         if (timeDiffMinutes < 0) {
             aapsLogger.info(LTag.GLUCOSE, "UKF: Timestamp went backwards, resetting learning")
@@ -439,14 +458,14 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         }
 
         // Check for severely mis-tuned R based on innovation statistics.
-        if (innovations.size >= INNOVATION_VALIDATION_SAMPLES) {
+        if (innovations.size >= innovationValidationSamples) {
             val avgInnovation = innovations.average()
-            if (avgInnovation > INNOVATION_RESET_THRESHOLD) {
+            if (avgInnovation > innovationResetThreshold) {
                 aapsLogger.info(
                     LTag.GLUCOSE,
                     "UKF: Severely mis-tuned parameters " +
-                        "(avg innovation: ${String.format("%.1f", avgInnovation)}), " +
-                        "resetting (R was ${String.format("%.1f", learnedR)})"
+                        "(avg innovation: ${String.format(Locale.US, "%.1f", avgInnovation)}), " +
+                        "resetting (R was ${String.format(Locale.US, "%.1f", learnedR)})"
                 )
                 return true
             }
@@ -462,7 +481,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      * Clears innovation history and increments session ID; Q remains fixed.
      */
     private fun resetLearning() {
-        learnedR = R_INIT
+        learnedR = rInit
         innovations.clear()
         rawInnovationVariance.clear()
         predVarHistory.clear()
@@ -474,9 +493,9 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         aapsLogger.info(
             LTag.GLUCOSE,
             "UKF: Learning reset complete (session $sensorSessionId, " +
-                "R=${String.format("%.1f", learnedR)}, " +
-                "Q_glucose=${String.format("%.2f", Q[0])} [FIXED], " +
-                "Q_rate=${String.format("%.4f", Q[3])} [FIXED])"
+                "R=${String.format(Locale.US, "%.1f", learnedR)}, " +
+                "Q_glucose=${String.format(Locale.US, "%.2f", q[0])} [FIXED], " +
+                "Q_rate=${String.format(Locale.US, "%.4f", q[3])} [FIXED])"
         )
 
         // Save the reset state.
@@ -487,7 +506,6 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
     // MAIN FILTERING API
     // ============================================================
 
-    @Suppress("LocalVariableName")
     override suspend fun smooth(
         data: MutableList<InMemoryGlucoseValue>,
         @Suppress("UNUSED_PARAMETER") context: SmoothingContext
@@ -520,10 +538,10 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         var segmentStart = 0
 
         for (i in 0 until data.size - 1) {
-            val timeDiff = (data[i].timestamp - data[i + 1].timestamp) / MILLIS_PER_MINUTE
+            val timeDiff = (data[i].timestamp - data[i + 1].timestamp) / millisPerMinute
 
             // Segment at major gaps (>60 min), invalid spacing, or error code.
-            if (timeDiff > MAJOR_GAP_THRESHOLD || timeDiff < 2.0 || data[i].value == 38.0) {
+            if (timeDiff !in 2.0..majorGapThreshold || data[i].value == 38.0) {
                 // Close current segment if it has enough points.
                 if (i - segmentStart >= 2) {
                     segments.add(DataSegment(segmentStart, i))
@@ -588,11 +606,11 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             aapsLogger.info(
                 LTag.GLUCOSE,
                 "UKF: Session $sensorSessionId, $sessionMeasurementCount measurements, " +
-                    "R=${String.format("%.1f", learnedR)} [ADAPTIVE], " +
-                    "Q_glucose=${String.format("%.2f", Q[0])} [FIXED], " +
-                    "Q_rate=${String.format("%.4f", Q[3])} [FIXED], " +
-                    "AvgInnovation=${String.format("%.2f", avgInnovation)}, " +
-                    "OutlierRate=${String.format("%.1f%%", sessionOutlierRate * 100)}"
+                    "R=${String.format(Locale.US, "%.1f", learnedR)} [ADAPTIVE], " +
+                    "Q_glucose=${String.format(Locale.US, "%.2f", q[0])} [FIXED], " +
+                    "Q_rate=${String.format(Locale.US, "%.4f", q[3])} [FIXED], " +
+                    "AvgInnovation=${String.format(Locale.US, "%.2f", avgInnovation)}, " +
+                    "OutlierRate=${String.format(Locale.US, "%.1f%%", sessionOutlierRate * 100)}"
             )
         }
 
@@ -643,8 +661,8 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         val initialGlucose = data[endIdx].value
         var initialRate = 0.0
 
-        if (segmentSize >= 2 && endIdx > 0) {
-            val dt = (data[endIdx - 1].timestamp - data[endIdx].timestamp) / MILLIS_PER_MINUTE
+        if (endIdx > 0) {
+            val dt = (data[endIdx - 1].timestamp - data[endIdx].timestamp) / millisPerMinute
             if (dt in 3.0..7.0) {
                 initialRate = (data[endIdx - 1].value - data[endIdx].value) / dt
                 initialRate = initialRate.coerceIn(-4.0, 4.0)
@@ -652,8 +670,8 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         }
 
         val x = doubleArrayOf(initialGlucose, initialRate)
-        val P = doubleArrayOf(16.0, 0.0, 0.0, 1.0)
-        var R = learnedR
+        val p = doubleArrayOf(16.0, 0.0, 0.0, 1.0)
+        var r = learnedR
 
         val forwardStates = ArrayDeque<FilterState>(segmentSize)
         val forwardResults = DoubleArray(segmentSize)
@@ -667,26 +685,26 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
 
         // === FORWARD PASS (within segment only) ===
         for (i in (endIdx - 1) downTo startIdx) {
-            val dt = (data[i].timestamp - data[i + 1].timestamp) / MILLIS_PER_MINUTE
+            val dt = (data[i].timestamp - data[i + 1].timestamp) / millisPerMinute
 
             // Handle minor gaps within the segment.
-            if (dt > MINOR_GAP_THRESHOLD && dt <= MAJOR_GAP_THRESHOLD) {
+            if (dt > minorGapThreshold && dt <= majorGapThreshold) {
                 x[1] *= rateDamp(dt)
                 aapsLogger.debug(
                     LTag.GLUCOSE,
-                    "UKF: Bridging ${String.format("%.1f", dt)} min gap within segment"
+                    "UKF: Bridging ${String.format(Locale.US, "%.1f", dt)} min gap within segment"
                 )
             }
 
             // Covariance sanity checks.
-            P[0] = P[0].coerceIn(0.1, MAX_GLUCOSE_VARIANCE)
-            P[3] = P[3].coerceIn(0.001, MAX_RATE_VARIANCE)
+            p[0] = p[0].coerceIn(0.1, maxGlucoseVariance)
+            p[3] = p[3].coerceIn(0.001, maxRateVariance)
 
             // Use the real dt here; all process noise comes from predict().
             val dtUsed = dt
 
             // One-step prediction with fixed Q (base prediction).
-            val (xPredBase, PPredBase) = predict(x, P, Q, dtUsed)
+            val (xPredBase, pPredBase) = predict(x, p, q, dtUsed)
 
             val z = data[i].value
 
@@ -695,18 +713,18 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
                 // For smoothing, still record the pre-update state and prediction.
                 val stateBefore = FilterState(
                     x.copyOf(),
-                    P.copyOf(),
+                    p.copyOf(),
                     xPredBase.copyOf(),
-                    PPredBase.copyOf(),
+                    pPredBase.copyOf(),
                     dtUsed
                 )
 
                 x[0] = xPredBase[0]
                 x[1] = xPredBase[1]
-                P[0] = PPredBase[0]
-                P[1] = PPredBase[1]
-                P[2] = PPredBase[2]
-                P[3] = PPredBase[3]
+                p[0] = pPredBase[0]
+                p[1] = pPredBase[1]
+                p[2] = pPredBase[2]
+                p[3] = pPredBase[3]
 
                 val resultIdx = i - startIdx
                 forwardResults[resultIdx] = x[0]
@@ -716,7 +734,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
 
             // --- Innovation stats (pre-inflation, for gating only) ---
             val innovation = z - xPredBase[0]
-            val innovationVarianceRaw = PPredBase[0] + R
+            val innovationVarianceRaw = pPredBase[0] + r
             val stdRaw = sqrt(innovationVarianceRaw)
             val normRaw = innovation / stdRaw
             val isNewData = data[i].timestamp > previousTimestamp
@@ -731,51 +749,51 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             if (recentSigns.size == 3) recentSigns.removeLast()
             recentSigns.addFirst(if (abs(normRaw) > 2.0) sign else 0)
             val sameSignCount = if (sign == 0) 0 else recentSigns.count { it == sign }
-            val qInflateAllowed = sameSignCount >= 2 && sign != 0
+            val qInflateAllowed = sameSignCount >= 2
 
             val absn = abs(normRaw)
 
             // --- Measurement noise inflation (R_eff) ---
             // Huber-like per-sample R inflation with soft caps.
             val rScale = 1.0 + max(0.0, absn - 2.0) // Grows linearly beyond 2σ.
-            val R_eff = min(R * rScale, min(R + 100.0, R_EFF_MAX)) // Gentle ceiling.
+            val rEff = min(r * rScale, min(r + 100.0, rEffMax)) // Gentle ceiling.
 
             // --- Process noise inflation (Q) for real trends ---
             // Temporary Q inflation: prioritize rate agility, keep glucose bounded.
             val zScore = absn.coerceAtLeast(1.0)
             val qScale = if (qInflateAllowed) zScore.coerceIn(1.0, 3.0) else 1.0
             val tempQ = if (qScale > 1.0) {
-                Q.copyOf().apply {
-                    this[0] = Q[0] * min(qScale, 2.0) // Modest glucose variance.
-                    this[3] = Q[3] * qScale          // Agile slope.
+                q.copyOf().apply {
+                    this[0] = q[0] * min(qScale, 2.0) // Modest glucose variance.
+                    this[3] = q[3] * qScale          // Agile slope.
                 }
             } else {
-                Q
+                q
             }
 
             // Re-predict if Q inflated, then update with R_eff.
-            val (xPredEff, PPredEff) =
-                if (qScale > 1.0) predict(x, P, tempQ, dtUsed) else Pair(xPredBase, PPredBase)
+            val (xPredEff, pPredEff) =
+                if (qScale > 1.0) predict(x, p, tempQ, dtUsed) else Pair(xPredBase, pPredBase)
 
             // Store prediction for RTS smoothing (uses the effective prediction).
             val stateBefore = FilterState(
                 x.copyOf(),
-                P.copyOf(),
+                p.copyOf(),
                 xPredEff.copyOf(),
-                PPredEff.copyOf(),
+                pPredEff.copyOf(),
                 dtUsed
             )
 
             // Effective innovation variance used by the filter (PPredEff + R_eff).
-            val innovationVarianceEff = PPredEff[0] + R_eff
+            val innovationVarianceEff = pPredEff[0] + rEff
             val mahalSqEff = (innovation * innovation) / innovationVarianceEff
 
             // Track predicted variance history for adaptive-R.
-            predVarHistory.addFirst(PPredEff[0])
+            predVarHistory.addFirst(pPredEff[0])
             if (predVarHistory.size > innovationWindow) predVarHistory.removeLast()
 
             // UKF update with effective parameters.
-            update(xPredEff, PPredEff, z, R_eff, x, P)
+            update(xPredEff, pPredEff, z, rEff, x, p)
 
             // Track innovations for adaptive-R and reset logic using effecgtive variance.
             trackInnovation(innovation, innovationVarianceEff)
@@ -783,23 +801,23 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             // Pause R learning during real trend and on very large residuals.
             val skipRUpdate = qInflateAllowed || absn > 3.0
             if (!skipRUpdate) {
-                R = adaptMeasurementNoise(R, innovations, rawInnovationVariance)
+                r = adaptMeasurementNoise(r, innovations, rawInnovationVariance)
             }
 
             // Diagnostics on outliers, using effective covariance.
-            if (mahalSqEff > CHI_SQUARED_THRESHOLD || abs(innovation) > OUTLIER_ABSOLUTE) {
+            if (mahalSqEff > chiSquaredThreshold || abs(innovation) > outlierAbsolute) {
                 aapsLogger.debug(
                     LTag.GLUCOSE,
-                    "UKF: Outlier detected - χ²=${String.format("%.2f", mahalSqEff)}, " +
-                        "innovation=${String.format("%.1f", innovation)}, " +
-                        "P[0]=${String.format("%.1f", P[0])}"
+                    "UKF: Outlier detected - χ²=${String.format(Locale.US, "%.2f", mahalSqEff)}, " +
+                        "innovation=${String.format(Locale.US, "%.1f", innovation)}, " +
+                        "P[0]=${String.format(Locale.US, "%.1f", p[0])}"
                 )
             }
 
             if (isNewData) {
                 segmentNewMeasurements++
                 sessionMeasurementCount++
-                if (mahalSqEff > CHI_SQUARED_THRESHOLD || abs(innovation) > OUTLIER_ABSOLUTE) {
+                if (mahalSqEff > chiSquaredThreshold || abs(innovation) > outlierAbsolute) {
                     segmentOutliers++
                     sessionOutlierCount++
                 }
@@ -808,15 +826,15 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             // Logging with effective parameters (just switch to xPredEff for consistency).
             aapsLogger.warn(
                 LTag.GLUCOSE,
-                "UKF: live R=${String.format("%.1f", R)}, " +
-                    "R_eff=${String.format("%.1f", R_eff)}, " +
-                    "BG=${String.format("%.0f", z)}, " +
-                    "predBG=${String.format("%.0f", xPredEff[0])}, " +
-                    "innov=${String.format("%.1f", innovation)}, " +
-                    "|ν|/σ=${String.format("%.1f", absn)}, " +
-                    "qScale=${String.format("%.1f", qScale)}, " +
-                    "P[0]=${String.format("%.1f", P[0])}, " +
-                    "P[3]=${String.format("%.4f", P[3])}"
+                "UKF: live R=${String.format(Locale.US, "%.1f", r)}, " +
+                    "R_eff=${String.format(Locale.US, "%.1f", rEff)}, " +
+                    "BG=${String.format(Locale.US, "%.0f", z)}, " +
+                    "predBG=${String.format(Locale.US, "%.0f", xPredEff[0])}, " +
+                    "innov=${String.format(Locale.US, "%.1f", innovation)}, " +
+                    "|ν|/σ=${String.format(Locale.US, "%.1f", absn)}, " +
+                    "qScale=${String.format(Locale.US, "%.1f", qScale)}, " +
+                    "P[0]=${String.format(Locale.US, "%.1f", p[0])}, " +
+                    "P[3]=${String.format(Locale.US, "%.4f", p[3])}"
             )
 
             val resultIdx = i - startIdx
@@ -825,7 +843,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         }
 
         // Update learned R from the segment.
-        learnedR = R
+        learnedR = r
 
         // Log segment processing.
         if (segmentNewMeasurements > 0) {
@@ -835,7 +853,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
                 LTag.GLUCOSE,
                 "UKF: Segment processed $segmentNewMeasurements new measurements, " +
                     "$segmentOutliers outliers " +
-                    "(${String.format("%.1f%%", segmentOutlierRate * 100)})"
+                    "(${String.format(Locale.US, "%.1f%%", segmentOutlierRate * 100)})"
             )
         }
 
@@ -843,15 +861,15 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         val smoothedResults = forwardResults.copyOf()
         if (segmentSize >= 3 && forwardStates.isNotEmpty()) {
             val maxSmoothSteps = min(segmentSize - 1, forwardStates.size)
-            var xSmooth = doubleArrayOf(forwardResults[0], x[1])
+            val xSmooth = doubleArrayOf(forwardResults[0], x[1])
 
             for (i in 1..maxSmoothSteps) {
                 val state = forwardStates[i - 1]
-                val C = computeSmootherGain(state.P, state.PPred, state.dt)
+                val c = computeSmootherGain(state.p, state.pPred, state.dt)
                 val dx0 = xSmooth[0] - state.xPred[0]
                 val dx1 = xSmooth[1] - state.xPred[1]
-                xSmooth[0] = forwardResults[i] + C[0] * dx0 + C[1] * dx1
-                xSmooth[1] = state.x[1] + C[2] * dx0 + C[3] * dx1
+                xSmooth[0] = forwardResults[i] + c[0] * dx0 + c[1] * dx1
+                xSmooth[1] = state.x[1] + c[2] * dx0 + c[3] * dx1
                 smoothedResults[i] = xSmooth[0]
             }
         }
@@ -912,22 +930,6 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         rawSq: ArrayDeque<Double>         // Stores ν².
     ): Double {
         if (innovations.size < 12 || predVarHistory.isEmpty()) return currentR
-        /*
-                fun trimmedMedian(v: List<Double>, trim: Double = 0.13): Double {
-                    val s = v.sorted()
-                    val k = (s.size * trim).toInt().coerceAtMost((s.size - 1) / 2)
-                    val core = s.subList(k, s.size - k)
-                    val mid = core.size / 2
-                    return if (core.isEmpty()) {
-                        0.0
-                    } else if (core.size % 2 == 1) {
-                        core[mid]
-                    } else {
-                        0.5 * (core[mid - 1] + core[mid])
-                    }
-                }
-
-         */
 
         fun trimmedMean(v: List<Double>, trim: Double = 0.20): Double {
             if (v.isEmpty()) return 0.0
@@ -937,32 +939,27 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             return core.average()
         }
 
-        //val N = minOf(innovationWindow, minOf(innovations.size, predVarHistory.size))
-        val N = innovations.size
-        val mRaw = trimmedMean(rawSq.take(N))        // Robust Var(ν).
-        val pyyMed = trimmedMean(predVarHistory.take(N)) // Robust P_pred[0].
+        val nSize = innovations.size
+        val mRaw = trimmedMean(rawSq.take(nSize))        // Robust Var(ν).
+        val pyyMed = trimmedMean(predVarHistory.take(nSize)) // Robust P_pred[0].
 
         // Robust, decoupled target.
-        val RhatRaw = (mRaw - pyyMed).coerceAtLeast(R_MIN) // Ensure positivity.
-        val Rhat = RhatRaw.coerceIn(R_MIN, R_MAX)
-
-        // Deadband around currentR to avoid chatter.
-        val diff = Rhat - currentR
-        //if (abs(diff) < 8.0) return currentR           // ≈ ±(≈3 mg/dL)^2.
+        val rHatRaw = (mRaw - pyyMed).coerceAtLeast(rMin) // Ensure positivity.
+        val rHat = rHatRaw.coerceIn(rMin, rMax)
 
         // Asymmetric gains and gentle EMA step.
-        val goingUp = diff > 0.0
+        val goingUp = rHat > currentR
         val kup = 0.18
         val kdn = 0.12 //MP increased from 0.10
         val k = if (goingUp) kup else kdn
-        val step = currentR + k * diff
+        val step = currentR + k * (rHat - currentR)
 
         // Per-sample multiplicative clamp to avoid jumps.
         val upCap = if (goingUp) 1.20 else 1.00
         val dnCap = if (goingUp) 1.00 else 0.90
         val clamped = step
             .coerceIn(currentR * dnCap, currentR * upCap)
-            .coerceIn(R_MIN, R_MAX)
+            .coerceIn(rMin, rMax)
 
         // Final smoothing to prevent ping-pong while keeping agility.
         val eta = 0.25
@@ -1004,14 +1001,14 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      * Where F is the state transition Jacobian:
      * F = [[1, dt], [0, damping]]
      *
-     * @param P forward-filtered covariance (2x2).
-     * @param PPred one-step-ahead predicted covariance (2x2).
+     * @param p forward-filtered covariance (2x2).
+     * @param pPred one-step-ahead predicted covariance (2x2).
      * @param dt time step (minutes).
      * @return smoother gain matrix C (2x2 in row-major).
      */
     private fun computeSmootherGain(
-        P: DoubleArray,
-        PPred: DoubleArray,
+        p: DoubleArray,
+        pPred: DoubleArray,
         dt: Double
     ): DoubleArray {
         // F = [[1, dt],
@@ -1019,26 +1016,26 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         val damp = rateDamp(dt)
 
         // Compute P · Fᵀ.
-        val PFt00 = P[0] + P[1] * dt
-        val PFt01 = P[1] * damp
-        val PFt10 = P[2] + P[3] * dt
-        val PFt11 = P[3] * damp
+        val pfT00 = p[0] + p[1] * dt
+        val pfT01 = p[1] * damp
+        val pfT10 = p[2] + p[3] * dt
+        val pfT11 = p[3] * damp
 
         // Invert PPred (2x2).
-        val det = PPred[0] * PPred[3] - PPred[1] * PPred[2]
+        val det = pPred[0] * pPred[3] - pPred[1] * pPred[2]
         if (abs(det) < 1e-10) return doubleArrayOf(0.0, 0.0, 0.0, 0.0)
 
-        val inv00 = PPred[3] / det
-        val inv01 = -PPred[1] / det
-        val inv10 = -PPred[2] / det
-        val inv11 = PPred[0] / det
+        val inv00 = pPred[3] / det
+        val inv01 = -pPred[1] / det
+        val inv10 = -pPred[2] / det
+        val inv11 = pPred[0] / det
 
         // C = P · Fᵀ · PPred^{-1}.
         return doubleArrayOf(
-            PFt00 * inv00 + PFt01 * inv10,
-            PFt00 * inv01 + PFt01 * inv11,
-            PFt10 * inv00 + PFt11 * inv10,
-            PFt10 * inv01 + PFt11 * inv11
+            pfT00 * inv00 + pfT01 * inv10,
+            pfT00 * inv01 + pfT01 * inv11,
+            pfT10 * inv00 + pfT11 * inv10,
+            pfT10 * inv01 + pfT11 * inv11
         )
     }
 
@@ -1052,19 +1049,19 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      * 4. Add fixed process noise Q (scaled linearly with time).
      *
      * @param x current state [glucose, rate].
-     * @param P current covariance (2x2 in row-major).
-     * @param Q fixed process noise covariance (2x2 in row-major).
+     * @param p current covariance (2x2 in row-major).
+     * @param q fixed process noise covariance (2x2 in row-major).
      * @param dt time step in minutes.
      * @return pair of (predicted state, predicted covariance).
      */
     private fun predict(
         x: DoubleArray,
-        P: DoubleArray,
-        Q: DoubleArray,
+        p: DoubleArray,
+        q: DoubleArray,
         dt: Double
     ): Pair<DoubleArray, DoubleArray> {
         // 1) Sigma points from current state.
-        val sigmaPoints = generateSigmaPoints(x, P)
+        val sigmaPoints = generateSigmaPoints(x, p)
 
         // 2) Propagate through process model with dt-based rate damping.
         val sigmaPointsPred = Array(2 * n + 1) { DoubleArray(n) }
@@ -1079,31 +1076,31 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         // 3) Predicted mean.
         val xPred = DoubleArray(n)
         for (i in 0 until (2 * n + 1)) {
-            xPred[0] += Wm[i] * sigmaPointsPred[i][0]
-            xPred[1] += Wm[i] * sigmaPointsPred[i][1]
+            xPred[0] += wm[i] * sigmaPointsPred[i][0]
+            xPred[1] += wm[i] * sigmaPointsPred[i][1]
         }
 
         // 4) Predicted covariance.
-        val PPred = DoubleArray(4)
+        val pPred = DoubleArray(4)
         for (i in 0 until (2 * n + 1)) {
             val dx0 = sigmaPointsPred[i][0] - xPred[0]
             val dx1 = sigmaPointsPred[i][1] - xPred[1]
-            PPred[0] += Wc[i] * dx0 * dx0
-            PPred[1] += Wc[i] * dx0 * dx1
-            PPred[2] += Wc[i] * dx1 * dx0
-            PPred[3] += Wc[i] * dx1 * dx1
+            pPred[0] += wc[i] * dx0 * dx0
+            pPred[1] += wc[i] * dx0 * dx1
+            pPred[2] += wc[i] * dx1 * dx0
+            pPred[3] += wc[i] * dx1 * dx1
         }
 
         // 5) Add process noise scaled linearly with time (as in original).
         val qScale = dt / 5.0
-        PPred[0] += Q[0] * qScale
-        PPred[3] += Q[3] * qScale
+        pPred[0] += q[0] * qScale
+        pPred[3] += q[3] * qScale
 
         // 6) Ensure positive definiteness.
-        PPred[0] = max(PPred[0], 0.1)
-        PPred[3] = max(PPred[3], 0.001)
+        pPred[0] = max(pPred[0], 0.1)
+        pPred[3] = max(pPred[3], 0.001)
 
-        return Pair(xPred, PPred)
+        return Pair(xPred, pPred)
     }
 
     /**
@@ -1117,22 +1114,22 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      * 5. Update state and covariance.
      *
      * @param xPred predicted state [glucose, rate].
-     * @param PPred predicted covariance (2x2 in row-major).
+     * @param pPred predicted covariance (2x2 in row-major).
      * @param z measurement (glucose reading in mg/dL).
-     * @param R adaptive measurement noise variance.
+     * @param r adaptive measurement noise variance.
      * @param x output: updated state (modified in place).
-     * @param P output: updated covariance (modified in place).
+     * @param p output: updated covariance (modified in place).
      */
     private fun update(
         xPred: DoubleArray,
-        PPred: DoubleArray,
+        pPred: DoubleArray,
         z: Double,
-        R: Double,
+        r: Double,
         x: DoubleArray,
-        P: DoubleArray
+        p: DoubleArray
     ) {
         // Generate sigma points from predicted state.
-        val sigmaPoints = generateSigmaPoints(xPred, PPred)
+        val sigmaPoints = generateSigmaPoints(xPred, pPred)
         val zSigma = DoubleArray(2 * n + 1)
 
         // Transform sigma points through measurement model (h(x) = glucose).
@@ -1143,64 +1140,64 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         // Compute predicted measurement: z̄ = Σ W_i^(m) · Z_i.
         var zPred = 0.0
         for (i in 0 until 2 * n + 1) {
-            zPred += Wm[i] * zSigma[i]
+            zPred += wm[i] * zSigma[i]
         }
 
         // Compute innovation covariance: Pzz = Σ W_i^(c) · (Z_i - z̄)² + R.
-        var Pzz = 0.0
+        var pzz = 0.0
         for (i in 0 until 2 * n + 1) {
             val dz = zSigma[i] - zPred
-            Pzz += Wc[i] * dz * dz
+            pzz += wc[i] * dz * dz
         }
-        Pzz += R
+        pzz += r
 
         // Safety check to prevent division by zero or numerical instability.
-        if (Pzz < 1e-6) {
+        if (pzz < 1e-6) {
             aapsLogger.warn(
                 LTag.GLUCOSE,
-                "UKF: Innovation covariance too small (Pzz=$Pzz), skipping update"
+                "UKF: Innovation covariance too small (Pzz=$pzz), skipping update"
             )
             x[0] = xPred[0]
             x[1] = xPred[1]
-            P[0] = PPred[0]
-            P[1] = PPred[1]
-            P[2] = PPred[2]
-            P[3] = PPred[3]
+            p[0] = pPred[0]
+            p[1] = pPred[1]
+            p[2] = pPred[2]
+            p[3] = pPred[3]
             return
         }
 
         // Compute cross-covariance: Pxz = Σ W_i^(c) · (χ_i - x̄)(Z_i - z̄).
-        val Pxz = DoubleArray(n)
+        val pxz = DoubleArray(n)
         for (i in 0 until 2 * n + 1) {
             val dx0 = sigmaPoints[i][0] - xPred[0]
             val dx1 = sigmaPoints[i][1] - xPred[1]
             val dz = zSigma[i] - zPred
-            Pxz[0] += Wc[i] * dx0 * dz
-            Pxz[1] += Wc[i] * dx1 * dz
+            pxz[0] += wc[i] * dx0 * dz
+            pxz[1] += wc[i] * dx1 * dz
         }
 
         // Compute Kalman gain: K = Pxz / Pzz.
-        val K = DoubleArray(n)
-        K[0] = Pxz[0] / Pzz
-        K[1] = Pxz[1] / Pzz
+        val k = DoubleArray(n)
+        k[0] = pxz[0] / pzz
+        k[1] = pxz[1] / pzz
 
         // Update state: x = x̄ + K · (z - z̄).
         val innovation = z - zPred
-        x[0] = xPred[0] + K[0] * innovation
-        x[1] = xPred[1] + K[1] * innovation
+        x[0] = xPred[0] + k[0] * innovation
+        x[1] = xPred[1] + k[1] * innovation
 
         // Clamp rate to physiological range.
         x[1] = x[1].coerceIn(-4.0, 4.0)
 
         // Update covariance: P = P̄ - K · Pzz · Kᵀ.
-        P[0] = PPred[0] - K[0] * Pzz * K[0]
-        P[1] = PPred[1] - K[0] * Pzz * K[1]
-        P[2] = PPred[2] - K[1] * Pzz * K[0]
-        P[3] = PPred[3] - K[1] * Pzz * K[1]
+        p[0] = pPred[0] - k[0] * pzz * k[0]
+        p[1] = pPred[1] - k[0] * pzz * k[1]
+        p[2] = pPred[2] - k[1] * pzz * k[0]
+        p[3] = pPred[3] - k[1] * pzz * k[1]
 
         // Ensure positive definiteness.
-        P[0] = max(P[0], 0.1)
-        P[3] = max(P[3], 0.001)
+        p[0] = max(p[0], 0.1)
+        p[3] = max(p[3], 0.001)
     }
 
     /**
@@ -1214,15 +1211,15 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      * Where γ = sqrt(n + λ) and λ is the scaling parameter.
      *
      * @param x mean state [glucose, rate].
-     * @param P covariance (2x2 in row-major).
+     * @param p covariance (2x2 in row-major).
      * @return array of 2n+1 sigma points.
      */
     private fun generateSigmaPoints(
         x: DoubleArray,
-        P: DoubleArray
+        p: DoubleArray
     ): Array<DoubleArray> {
         val sigmaPoints = Array(2 * n + 1) { DoubleArray(n) }
-        val sqrtP = matrixSqrt2x2(P)
+        val sqrtP = matrixSqrt2x2(p)
 
         // Center sigma point.
         sigmaPoints[0][0] = x[0]
@@ -1256,13 +1253,13 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      *
      * Includes validation for numerical stability and non-positive-definite matrices.
      *
-     * @param P covariance matrix [a, b, c, d] in row-major order.
+     * @param p covariance matrix [a, b, c, d] in row-major order.
      * @return lower-triangular Cholesky factor L in column-major order.
      */
-    private fun matrixSqrt2x2(P: DoubleArray): DoubleArray {
-        val a = P[0]
-        val b = (P[1] + P[2]) / 2.0 // Enforce symmetry.
-        val d = P[3]
+    private fun matrixSqrt2x2(p: DoubleArray): DoubleArray {
+        val a = p[0]
+        val b = (p[1] + p[2]) / 2.0 // Enforce symmetry.
+        val d = p[3]
 
         val l11 = sqrt(max(a, 1e-9))
         val l21 = b / l11
