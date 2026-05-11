@@ -32,7 +32,7 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
- * Adaptive Unscented Kalman Filter with RTS smoothing and event-based learning reset.
+ * Adaptive Unscented Kalman Filter with RTS smoothing.
  *
  * KEY FEATURES:
  * - FIXED Q (process noise) tuned for realistic meal/insulin responses.
@@ -96,8 +96,8 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
     // These values must accommodate meal responses (rapid rises) and insulin action (rapid falls).
     // Increased significantly from original to handle real-world glucose variability.
     private val Q = doubleArrayOf(
-        1.0, 0.0,     // Glucose process noise: ~2.4 mg/dL std dev per 5 min.
-        0.0, 0.35     // Rate process noise: ~0.24 mg/dL/min std dev.
+        1.0, 0.0,     // Glucose process noise
+        0.0, 0.35     // Rate process noise
     )
 
     // Initial measurement noise (conservative starting point).
