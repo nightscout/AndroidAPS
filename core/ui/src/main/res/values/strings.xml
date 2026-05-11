@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
     <string name="loop_disabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="loop_disabled_by_user">Loop disabled by user</string>
     <string name="event_type">Event type</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -850,7 +851,7 @@
     <string name="maintenance_export_csv_desc">Export treatment history as spreadsheet</string>
     <string name="maintenance_cleanup_db_desc">Remove old entries from database</string>
     <string name="maintenance_reset_aps_results_desc">Clear stored algorithm results</string>
-    <string name="maintenance_reset_db_desc">Erase all databases and restart</string>
+    <string name="maintenance_reset_db_desc">Erase all databases and reload</string>
 
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Select Storage Type</string>
