@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">No se leyó una tasa basal válida de la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
+    <string name="loop_disabled_by_user">Lazo deshabilitado por el usuario</string>
     <string name="event_type">Tipo de evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -810,7 +811,7 @@
     <string name="maintenance_export_csv_desc">Exportar historial de tratamientos como hoja de cálculo</string>
     <string name="maintenance_cleanup_db_desc">Eliminar entradas antiguas de la base de datos</string>
     <string name="maintenance_reset_aps_results_desc">Borrar resultados de algoritmos almacenados</string>
-    <string name="maintenance_reset_db_desc">Borrar todas las bases de datos y reiniciar</string>
+    <string name="maintenance_reset_db_desc">Borrar todas las bases de datos y recargar</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Seleccionar tipo de almacenamiento</string>
     <string name="clear_cloud_action">Restablecer ajustes</string>
