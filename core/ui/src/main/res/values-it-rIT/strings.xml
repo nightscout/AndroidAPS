@@ -810,7 +810,6 @@
     <string name="maintenance_export_csv_desc">Esporta la cronologia del trattamento come foglio di calcolo</string>
     <string name="maintenance_cleanup_db_desc">Rimuovi le vecchie voci dal database</string>
     <string name="maintenance_reset_aps_results_desc">Cancella i risultati dell\'algoritmo memorizzati</string>
-    <string name="maintenance_reset_db_desc">Cancella tutti i database e riavvia</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Seleziona il Tipo di Storage</string>
     <string name="clear_cloud_action">Cancella impostazioni</string>
