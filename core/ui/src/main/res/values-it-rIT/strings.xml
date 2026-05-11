@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">Nessuna velocità basale valida letta dal micro</string>
     <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="loop_disabled">LOOP DISABILITATO DAI VINCOLI</string>
+    <string name="loop_disabled_by_user">Loop disabilitato dall\'utente</string>
     <string name="event_type">Tipo evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -810,6 +811,7 @@
     <string name="maintenance_export_csv_desc">Esporta la cronologia del trattamento come foglio di calcolo</string>
     <string name="maintenance_cleanup_db_desc">Rimuovi le vecchie voci dal database</string>
     <string name="maintenance_reset_aps_results_desc">Cancella i risultati dell\'algoritmo memorizzati</string>
+    <string name="maintenance_reset_db_desc">Cancella tutti i database e ricarica</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Seleziona il Tipo di Storage</string>
     <string name="clear_cloud_action">Cancella impostazioni</string>
