@@ -38,7 +38,7 @@
     <string name="noisycgm_nothing">Không cần làm gì – AAPS sẽ tự xử lý.</string>
     <string name="noisycgm_pause">Tắt vòng lặp kín để tránh nguy cơ bơm quá liều hoặc thiếu liều.</string>
     <string name="noisycgm_replacesensor">Thay thế các cảm biến liên tục bị nhiễu hoặc cho kết quả không chính xác.</string>
-    <string name="noisycgm_checksmoothing">Xác minh rằng ứng dụng CGM của bạn cung cấp dữ liệu đã được làm mượt (smoothed data).</string>
+    <string name="noisycgm_checksmoothing">Kiểm tra xem ứng dụng CGM có hỗ trợ làm mượt dữ liệu hay không.</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/CompatibleCgms/SmoothingBloodGlucoseData.html</string>
     <string name="exerciseprofile_label">Tập luyện và Cấu hình</string>
     <string name="exerciseprofile_whattodo">Bạn có thể sử dụng các cấu hình như thế nào để giúp hệ thống xử lý tốt nhất khi tập luyện aerobic?</string>
