@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">Không đọc được liều basal hợp lệ từ bơm</string>
     <string name="limiting_iob">Giới hạn IOB: %1$.1f U – Lý do: %2$s.</string>
     <string name="loop_disabled">VÒNG LẶP BỊ TẮT DO GIỚI HẠN AN TOÀN</string>
+    <string name="loop_disabled_by_user">Vòng lặp đã bị người dùng tắt</string>
     <string name="event_type">Loại sự kiện</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -427,7 +428,7 @@
     <string name="temp_target_management">Mục tiêu tạm thời</string>
     <string name="revert_to_defaults">Khôi phục về mặc định</string>
     <string name="confirm_cancel_temp_target">Hủy mục tiêu tạm thời đang hoạt động?</string>
-    <string name="loop">Loop</string>
+    <string name="loop">Vòng lặp</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
     <string name="location_front_right_upper_chest">Ngực phải</string>
@@ -810,6 +811,7 @@
     <string name="maintenance_export_csv_desc">Xuất lịch sử điều trị dưới dạng bảng tính</string>
     <string name="maintenance_cleanup_db_desc">Xóa các bản ghi cũ khỏi cơ sở dữ liệu</string>
     <string name="maintenance_reset_aps_results_desc">Xóa kết quả thuật toán đã lưu</string>
+    <string name="maintenance_reset_db_desc">Xóa toàn bộ cơ sở dữ liệu và tải lại</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Chọn loại lưu trữ</string>
     <string name="clear_cloud_action">Xóa cài đặt</string>
