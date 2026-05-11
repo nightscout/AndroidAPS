@@ -810,7 +810,6 @@
     <string name="maintenance_export_csv_desc">Xuất lịch sử điều trị dưới dạng bảng tính</string>
     <string name="maintenance_cleanup_db_desc">Xóa các bản ghi cũ khỏi cơ sở dữ liệu</string>
     <string name="maintenance_reset_aps_results_desc">Xóa kết quả thuật toán đã lưu</string>
-    <string name="maintenance_reset_db_desc">Xóa tất cả cơ sở dữ liệu và khởi động lại</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Chọn loại lưu trữ</string>
     <string name="clear_cloud_action">Xóa cài đặt</string>
