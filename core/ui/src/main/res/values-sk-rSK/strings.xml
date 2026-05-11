@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">Nenačítaný žiadny platný bazál z pumpy</string>
     <string name="limiting_iob">IOB obmedzený na %1$.1f U: %2$s</string>
     <string name="loop_disabled">UZAVRETÝ OKRUH DEAKTIVOVANÝ OBMEDZENÍM</string>
+    <string name="loop_disabled_by_user">Uzavretý okruh zakázaný používateľom</string>
     <string name="event_type">Typ udalosti</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
@@ -176,6 +177,9 @@
     <string name="remove_label">Odstrániť</string>
     <string name="activate_profile">Aktivovať profil</string>
     <string name="activate_insulin">Aktivuj inzulín</string>
+    <string name="pump_wizard_profile_gate_title">Vyžaduje sa profil</string>
+    <string name="pump_wizard_profile_gate_pick">Vyberte profil, ktorý sa použije pri aktivácii.</string>
+    <string name="pump_wizard_profile_gate_no_store">Nie je zadefinovaný žiaden profil. Otvorte Správu profilov a vytvorte profil. Potom znova spustite aktiváciu.</string>
     <string name="reset">Resetovať</string>
     <string name="profileswitch_ismissing">Prepnutie profilu chýba. Vykonajte prepnutie profilu, alebo ho aktivujte na záložke lokálneho profilu.</string>
     <string name="profile">Profil</string>
@@ -807,6 +811,7 @@
     <string name="maintenance_export_csv_desc">Exportovať históriu ošetrení ako tabuľku</string>
     <string name="maintenance_cleanup_db_desc">Odstrániť staré záznamy z databázy</string>
     <string name="maintenance_reset_aps_results_desc">Vymazať uložené výsledky algoritmu</string>
+    <string name="maintenance_reset_db_desc">Vymaž všetky databázy a načítaj znova</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Vyberte typ úložiska</string>
     <string name="clear_cloud_action">Vymazať nastavenia</string>
