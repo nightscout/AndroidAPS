@@ -33,7 +33,7 @@
     <string name="cwf_comment_temp_target">Mục tiêu tạm thời (Thấp - Cao)</string>
     <string name="cwf_comment_reservoir">Mức Insulin</string>
     <string name="cwf_comment_uploader_battery">Pin điện thoại (%)</string>
-    <string name="cwf_comment_rig_battery">Global loop battery (%)</string>
+    <string name="cwf_comment_rig_battery">Pin tổng thể của vòng lặp (%)</string>
     <string name="cwf_comment_basalRate">Tỷ lệ liều nền</string>
     <string name="cwf_comment_bgi">Giá trị BGI</string>
     <string name="cwf_comment_status">Tóm tắt trạng thái</string>
