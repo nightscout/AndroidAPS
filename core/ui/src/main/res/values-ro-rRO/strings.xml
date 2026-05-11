@@ -810,7 +810,6 @@
     <string name="maintenance_export_csv_desc">Exportați istoricul tratamentului ca foaie de calcul</string>
     <string name="maintenance_cleanup_db_desc">Eliminați intrările vechi din baza de date</string>
     <string name="maintenance_reset_aps_results_desc">Ștergeți rezultatele stocate ale algoritmului</string>
-    <string name="maintenance_reset_db_desc">Ștergeți toate bazele de date și reporniți</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Alegeți tipul de stocare</string>
     <string name="clear_cloud_action">Ștergeți setările</string>
