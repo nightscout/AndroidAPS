@@ -5,7 +5,7 @@
     <string name="label_watchface_custom">AAPS(Tùy chỉnh)</string>
     <string name="label_actions_tile">Hành động</string>
     <string name="label_temp_target_tile">Mục tiêu tạm thời</string>
-    <string name="label_quick_wizard_tile">Quick Wizard</string>
+    <string name="label_quick_wizard_tile">Hướng dẫn nhanh</string>
     <string name="label_user_action_tile">Thao tác người dùng</string>
     <string name="label_scene_tile">Ngữ cảnh</string>
     <string name="msg_warning_sync">Không nhận được dữ liệu kể từ %1$s! Kiểm tra xem AAPS trên điện thoại có gửi dữ liệu cho đồng hồ hay không</string>
@@ -83,7 +83,7 @@
     <string name="menu_default">Mặc định</string>
     <string name="menu_menu">Danh Mục</string>
     <string name="action_tempt_confirmation">Mục tiêu tạm thời được yêu cầu</string>
-    <string name="action_quick_wizard_confirmation">Yêu cầu Quick Wizard</string>
+    <string name="action_quick_wizard_confirmation">Yêu cầu hướng dẫn nhanh</string>
     <string name="action_user_action_confirmation">Cần bạn thực hiện thao tác</string>
     <string name="action_scene_confirmation">Kích hoạt ngữ cảnh</string>
     <string name="scene_stop">DỪNG</string>
