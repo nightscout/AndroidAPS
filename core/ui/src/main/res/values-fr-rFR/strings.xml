@@ -807,7 +807,6 @@
     <string name="maintenance_export_csv_desc">Exporter l\'historique des traitements en feuille de calcul</string>
     <string name="maintenance_cleanup_db_desc">Supprimer les anciennes entrées de la base de données</string>
     <string name="maintenance_reset_aps_results_desc">Effacer les résultats des algorithmes</string>
-    <string name="maintenance_reset_db_desc">Effacer toutes les bases de données et redémarrer</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Sélectionnez le type de stockage</string>
     <string name="clear_cloud_action">Effacer les paramètres</string>
