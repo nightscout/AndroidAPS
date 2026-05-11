@@ -396,7 +396,7 @@
     <string name="manage_temp_basal_desc">Bắt đầu liều nền tạm thời</string>
     <string name="manage_extended_bolus_desc">Bắt đầu liều bolus kéo dài</string>
     <string name="manage_site_rotation_desc">Theo dõi và luân chuyển vị trí truyền</string>
-    <string name="manage_quickwizard_desc">Quản lý các thiết lập sẵn cho Quick Wizard</string>
+    <string name="manage_quickwizard_desc">Quản lý các thiết lập sẵn của hướng dẫn nhanh</string>
     <string name="treatment_note_desc">Thêm ghi chú vào hồ sơ</string>
     <string name="treatment_question_desc">Ghi lại câu hỏi cho nhóm chăm sóc của bạn</string>
     <string name="treatment_cgm_desc">Mở ứng dụng CGM</string>
@@ -700,7 +700,7 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">Không có bơm khả dụng!</string>
-    <string name="quickwizard_managemnt">QuickWizard</string>
+    <string name="quickwizard_managemnt">Hướng dẫn nhanh</string>
     <!--    Preferences-->
     <string name="child">Trẻ em</string>
     <string name="teenage">Thanh thiếu niên</string>
