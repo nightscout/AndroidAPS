@@ -8,6 +8,4 @@ enum class DoubleNonKey(
     override val exportable: Boolean = true
 ) : DoubleNonPreferenceKey {
 
-    /** Adaptive smoothing UKF: learned measurement noise variance R (internal persistence). */
-    UkfLearnedR("ukf_learned_r", 25.0, exportable = true),
 }

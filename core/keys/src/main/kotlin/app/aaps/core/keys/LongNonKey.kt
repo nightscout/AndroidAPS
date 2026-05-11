@@ -13,9 +13,5 @@ enum class LongNonKey(
     ActivePumpChangeTimestamp("active_pump_change_timestamp", 0L),
     LastCleanupRun("last_cleanup_run", 0L),
 
-    /** Adaptive smoothing UKF: last processed glucose timestamp (internal persistence). */
-    UkfLastProcessedTimestamp("ukf_last_processed_timestamp", 0L, exportable = true),
-    /** Adaptive smoothing UKF: sensor change TE timestamp (internal persistence). */
-    UkfSensorChangeTimestamp("ukf_sensor_change_timestamp", 0L, exportable = true),
 }
 
