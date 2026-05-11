@@ -176,6 +176,9 @@
     <string name="remove_label">删除</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="activate_insulin">启用胰岛素</string>
+    <string name="pump_wizard_profile_gate_title">需要配置文件</string>
+    <string name="pump_wizard_profile_gate_pick">选择激活时应用的配置文件。</string>
+    <string name="pump_wizard_profile_gate_no_store">未定义任何配置文件。请打开配置文件管理创建一个，然后重新开始激活。</string>
     <string name="reset">重置</string>
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
