@@ -807,7 +807,6 @@
     <string name="maintenance_export_csv_desc">Exportovať históriu ošetrení ako tabuľku</string>
     <string name="maintenance_cleanup_db_desc">Odstrániť staré záznamy z databázy</string>
     <string name="maintenance_reset_aps_results_desc">Vymazať uložené výsledky algoritmu</string>
-    <string name="maintenance_reset_db_desc">Vymaž celú databázu a reštartuj</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Vyberte typ úložiska</string>
     <string name="clear_cloud_action">Vymazať nastavenia</string>
