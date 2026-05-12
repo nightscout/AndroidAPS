@@ -66,7 +66,6 @@
     <string name="step_deactivate_complete">貼片已停用</string>
     <string name="step_retry_activation">啟動進行中</string>
     <string name="unexpected_state">意外狀態: %1$s</string>
-    <string name="no_profile_selected">未選擇設定檔。請選擇設定檔後重試。</string>
     <string name="patch_begin_activation">無可用的貼片。按 <b>下一步</b> 開始啟動過程。</string>
     <string name="patch_not_active_note">幫浦底座應該在下一步之前不要連線到貼片！</string>
     <string name="connect_pump_base">連線幫浦底座到新貼片，移除殘餘空氣並填充胰島素，然後按 <b>下一步</b>。</string>
@@ -95,9 +94,6 @@
     <string name="press_retry_or_discard">按 <b>下一步</b> 繼續啟動或按 <b>捨棄</b> 重置啟動狀態。</string>
     <string name="reading_activation_status">請稍候，從幫浦讀取啟動狀態。</string>
     <!-- settings-->
-    <string name="sn_input_title">序列號</string>
-    <string name="sn_input_invalid">無效的序列號！</string>
-    <string name="change_sn">變更</string>
     <string name="alarm_setting_title">警報設定</string>
     <string name="alarm_setting_summary">選擇您偏好的幫浦警報設定。</string>
     <string name="alarm_setting_light_vibrate_beep">燈光、震動與嗶聲</string>
