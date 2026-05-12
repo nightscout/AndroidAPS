@@ -235,6 +235,7 @@
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">Aplikacija treba bluetooth dozvolu</string>
     <!--    Combo-->
+    <!--    Pump pair/unpair (shared) -->
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nije podržan.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nije podržan ili uređaj nije uparen.</string>
