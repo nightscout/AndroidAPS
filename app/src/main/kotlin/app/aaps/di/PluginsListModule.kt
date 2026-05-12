@@ -34,6 +34,7 @@ import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import app.aaps.plugins.smoothing.AvgSmoothingPlugin
 import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
 import app.aaps.plugins.smoothing.NoSmoothingPlugin
+import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.GlunovoPlugin
@@ -408,6 +409,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(440)
     abstract fun bindDexcomPlugin(plugin: DexcomPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(445)
+    abstract fun bindAidexPlugin(plugin: AidexPlugin): PluginBase
 
     @Binds
     @AllConfigs

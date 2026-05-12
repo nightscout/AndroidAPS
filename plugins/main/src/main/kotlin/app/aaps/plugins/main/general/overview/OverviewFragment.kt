@@ -852,6 +852,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
         val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
         val lastBgDescription = lastBgData.lastBgDescription()
+        val hasSensorError = activePlugin.activeBgSource.hasSensorError()
+
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.recalculated)
@@ -876,7 +878,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             // strike through if BG is old
             binding.infoLayout.bg.paintFlags =
-                if (!isActualBg) binding.infoLayout.bg.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                if (!isActualBg || hasSensorError) binding.infoLayout.bg.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 else binding.infoLayout.bg.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
 
             val outDate = (if (!isActualBg) rh.gs(R.string.a11y_bg_outdated) else "")

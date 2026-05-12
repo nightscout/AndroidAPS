@@ -39,4 +39,8 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">App Sino</string>
     <string name="description_source_patched_sino_app">Ricevi i dati di glucosio dall\'app Sino patchata.</string>
+
+    <string name="aidex">App CGM MicroTech</string>
+    <string name="aidex_short">App CGM</string>
+    <string name="description_source_aidex">Ricevi i valori del glucosio CGM da LinX, LinX vista, Equil G, Smart 2, Diaexpert 2 e altri.</string>
 </resources>
