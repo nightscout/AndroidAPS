@@ -829,6 +829,7 @@
     <string name="need_connect_permission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Accoppiamento</string>
     <string name="pump_unpair">Disaccoppia</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
