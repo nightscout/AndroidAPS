@@ -477,6 +477,7 @@
     <string name="need_connect_permission">Programai reikalinga Bluetooth prieigos teisė</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Naudotojo užklausa</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">Pompa susieta</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
