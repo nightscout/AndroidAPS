@@ -22,7 +22,6 @@
     <string name="equil_title_attach">Gắn bơm</string>
     <string name="equil_title_air">Mồi kim luồn</string>
     <string name="equil_title_unpair_detach">Tháo bơm</string>
-    <string name="equil_title_unpair_confirm">Xác nhận hủy ghép nối</string>
     <string name="equil_title_history_events">Lịch sử sự kiện</string>
     <string name="equil_tone">Âm cảnh báo</string>
     <string name="equil_tone_mode_mute">Im lặng</string>
