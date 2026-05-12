@@ -66,7 +66,6 @@
     <string name="step_deactivate_complete">Đã hủy kích hoạt Patch</string>
     <string name="step_retry_activation">Đang kích hoạt</string>
     <string name="unexpected_state">Trạng thái không mong đợi: %1$s</string>
-    <string name="no_profile_selected">Chưa chọn cấu hình. Vui lòng chọn cấu hình và thử lại.</string>
     <string name="patch_begin_activation">Chưa có patch đang hoạt động. Nhấn <b>Tiếp theo</b> để bắt đầu quá trình kích hoạt.</string>
     <string name="patch_not_active_note">Không được kết nối Pump Base với patch cho đến bước tiếp theo!</string>
     <string name="connect_pump_base">Kết nối pump base với Patch mới, loại bỏ bọt khí và nạp insulin, rồi nhấn <b>Tiếp theo</b>.</string>
@@ -95,9 +94,6 @@
     <string name="press_retry_or_discard">Nhấn <b>Tiếp theo</b> để tiếp tục kích hoạt hoặc <b>Bỏ qua</b> để đặt lại trạng thái kích hoạt.</string>
     <string name="reading_activation_status">Vui lòng chờ, đang đọc trạng thái kích hoạt từ Bơm.</string>
     <!-- settings-->
-    <string name="sn_input_title">Số sê-ri</string>
-    <string name="sn_input_invalid">Số sê-ri không hợp lệ!</string>
-    <string name="change_sn">Thay đổi</string>
     <string name="alarm_setting_title">Cài đặt cảnh báo</string>
     <string name="alarm_setting_summary">Chọn cài đặt báo động Bơm mà bạn muốn.</string>
     <string name="alarm_setting_light_vibrate_beep">Đèn, rung và tiếng bíp</string>
