@@ -64,7 +64,6 @@
     <string name="step_deactivate_complete">Patch gedeactiveerd</string>
     <string name="step_retry_activation">Bezig met activatie</string>
     <string name="unexpected_state">Onverwachte staat: %1$s</string>
-    <string name="no_profile_selected">Geen profiel geselecteerd. Selecteer een profiel en probeer het opnieuw.</string>
     <string name="patch_begin_activation">Geen actieve patch. Druk op <b>Volgende</b> om het activeringsproces te starten.</string>
     <string name="patch_not_active_note">Pomp basis mag niet verbonden zijn met de patch tot de volgende stap!</string>
     <string name="connect_pump_base">Verbind de pompbasis op een nieuwe patch, ontlucht de patch, vul met insuline en druk op <b>Volgende</b>.</string>
@@ -93,8 +92,6 @@
     <string name="press_retry_or_discard">Druk op <b>Volgende</b> om de activering te hervatten of <b>Verwijderen</b> om de activeringsstatus te resetten.</string>
     <string name="reading_activation_status">Een ogenblik geduld, activeringsstatus van de pomp wordt gelezen.</string>
     <!-- settings-->
-    <string name="sn_input_title">Serienummer</string>
-    <string name="sn_input_invalid">Ongeldig serienummer!</string>
     <string name="alarm_setting_title">Alarminstellingen</string>
     <string name="alarm_setting_summary">Selecteer uw gewenste alarminstellingen voor de pomp.</string>
     <string name="pump_warning_notification_title">Notificatie bij pomp waarschuwing</string>
