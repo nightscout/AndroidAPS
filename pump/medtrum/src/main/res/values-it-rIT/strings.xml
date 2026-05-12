@@ -66,7 +66,6 @@
     <string name="step_deactivate_complete">Patch disattivata</string>
     <string name="step_retry_activation">Attivazione in corso</string>
     <string name="unexpected_state">Stato inaspettato: %1$s</string>
-    <string name="no_profile_selected">Nessun profilo selezionato. Seleziona un profilo e riprova.</string>
     <string name="patch_begin_activation">Nessuna patch attiva. Premi <b>Avanti</b> per iniziare il processo di attivazione.</string>
     <string name="patch_not_active_note">La base del micro non deve essere collegata alla patch fino alla fase successiva!</string>
     <string name="connect_pump_base">Collegare la base del micro a una nuova patch, rimuovere l\'aria residua e riempire con insulina, quindi premere <b>Avanti</b>.</string>
@@ -95,9 +94,6 @@
     <string name="press_retry_or_discard">Premi <b>Avanti</b> per riprendere l\'attivazione o <b>Scarta</b> per resettare lo stato di attivazione.</string>
     <string name="reading_activation_status">Attendere, lettura dello stato di attivazione dal micro.</string>
     <!-- settings-->
-    <string name="sn_input_title">Numero seriale</string>
-    <string name="sn_input_invalid">Numero di serie non valido!</string>
-    <string name="change_sn">Cambiare</string>
     <string name="alarm_setting_title">Impostazioni allarmi</string>
     <string name="alarm_setting_summary">Seleziona le tue impostazioni di allarme del micro preferite.</string>
     <string name="alarm_setting_light_vibrate_beep">Luce, vibrazione e suono</string>
