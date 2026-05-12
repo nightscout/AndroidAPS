@@ -827,6 +827,7 @@
     <string name="need_connect_permission">Aplikace potřebuje oprávnění bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Požadavek uživatele</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Spárovat</string>
     <string name="pump_unpair">Odpárovat</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárována</string>
