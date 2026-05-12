@@ -443,6 +443,7 @@
     <string name="need_connect_permission">Η εφαρμογή χρειάζεται άδεια Bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Αίτημα χρήστη</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">Αντλία σε ζεύξη</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Χαμηλή ενέργεια Bluetooth δεν υποστηρίζεται.</string>
