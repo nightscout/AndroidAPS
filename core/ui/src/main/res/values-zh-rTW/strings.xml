@@ -827,6 +827,7 @@
     <string name="need_connect_permission">應用程式需要藍牙權限</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">使用者請求</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">配對</string>
     <string name="pump_unpair">取消配對</string>
     <string name="pump_paired" comment="26 characters max for translation">幫浦已配對</string>
