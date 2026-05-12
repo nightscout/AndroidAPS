@@ -485,6 +485,7 @@
     <string name="need_connect_permission">Uygulama bluetooth iznine ihtiyac duyuyor</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Kullanıcı talebi</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">Pompa eşleştirildi</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Düşük Enerji Bluetooth desteklenmez.</string>
