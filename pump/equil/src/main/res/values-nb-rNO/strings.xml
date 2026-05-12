@@ -21,7 +21,6 @@
     <string name="equil_title_attach">Koble til pumpen</string>
     <string name="equil_title_air">Prime kanylen</string>
     <string name="equil_title_unpair_detach">Løsne pumpen</string>
-    <string name="equil_title_unpair_confirm">Bekreft oppheving av paring</string>
     <string name="equil_title_history_events">Historiske hendelser</string>
     <string name="equil_tone">Varseltone</string>
     <string name="equil_tone_mode_mute">Demp lyd</string>
