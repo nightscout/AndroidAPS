@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">从泵中无法读取有效的基础率</string>
     <string name="limiting_iob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
     <string name="loop_disabled">按约束条件禁用循环</string>
+    <string name="loop_disabled_by_user">用户禁用闭环</string>
     <string name="event_type">事件类型</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -810,6 +811,7 @@
     <string name="maintenance_export_csv_desc">导出处理历史为电子表格</string>
     <string name="maintenance_cleanup_db_desc">从数据库中删除旧条目</string>
     <string name="maintenance_reset_aps_results_desc">清除已存储的算法结果</string>
+    <string name="maintenance_reset_db_desc">删除所有数据库并重新加载</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">选择存储类型</string>
     <string name="clear_cloud_action">清除设置</string>
