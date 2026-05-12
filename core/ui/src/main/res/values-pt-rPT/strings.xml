@@ -407,6 +407,7 @@
     <string name="need_connect_permission">Aplicação precisa de permissão Bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Pedido do Utilizador</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">Bomba Emparelhada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy não suportado.</string>
