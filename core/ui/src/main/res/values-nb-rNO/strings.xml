@@ -829,6 +829,7 @@
     <string name="need_connect_permission">Appen trenger bluetooth-tillatelse</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Brukerforespørsel</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Paring</string>
     <string name="pump_unpair">Opphev paring</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
