@@ -107,7 +107,7 @@ class LoopTest @Inject constructor() {
         loop.invoke("test1", allowNotification = false)
         var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step1")
         assertThat(loopStatusEvent.first).isTrue()
-        assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("Objective 1 not started")
+        assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("Loop disabled by user")
 
         // So start objectives
         objectivesPlugin.objectives[0].startedOn = 1
