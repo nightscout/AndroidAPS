@@ -66,7 +66,6 @@
     <string name="step_deactivate_complete">Plasture dezactivat</string>
     <string name="step_retry_activation">Activare în curs</string>
     <string name="unexpected_state">Stare neașteptată: %1$s</string>
-    <string name="no_profile_selected">Niciun profil selectat. Selectați un profil și încercați din nou.</string>
     <string name="patch_begin_activation">Niciun plasture activ. Apăsați <b>Înainte</b> pentru a începe procesul de activare.</string>
     <string name="patch_not_active_note">Baza pompei nu trebuie conectată la plasture până la pasul următor!</string>
     <string name="connect_pump_base">Conectați baza pompei la un nou plasture, eliminați aerul rezidual și umpleți cu insulină, apoi apăsați <b>Înainte</b>.</string>
@@ -95,9 +94,6 @@
     <string name="press_retry_or_discard">Apăsați <b>Înainte</b> pentru a relua activarea sau <b>Renunțare</b> pentru a reseta statusul activării.</string>
     <string name="reading_activation_status">Vă rog așteptați. Se citește starea de activare din pompă.</string>
     <!-- settings-->
-    <string name="sn_input_title">Număr de serie</string>
-    <string name="sn_input_invalid">Număr de serie invalid!</string>
-    <string name="change_sn">Schimbați</string>
     <string name="alarm_setting_title">Setări alarmă</string>
     <string name="alarm_setting_summary">Selectați setările preferate pentru alarma pompei.</string>
     <string name="alarm_setting_light_vibrate_beep">Lumină, vibrație și semnal sonor</string>
