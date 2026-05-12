@@ -285,7 +285,7 @@
     <string name="quick_launch_category_automation">Tự động hóa</string>
     <string name="quick_launch_all_selected">Tất cả mục đã chọn</string>
     <string name="quick_launch_no_quick_wizard">Thêm hướng dẫn nhanh để sử dụng tại đây</string>
-    <string name="quick_launch_no_automation">Tạo hành động tự động để dùng ở đây</string>
+    <string name="quick_launch_no_automation">Tạo các hành động tự động hóa người dùng để dùng tại đây</string>
     <string name="quick_launch_no_tt_presets">Thêm cài đặt sẵn Mục tiêu Tạm thời để sử dụng tại đây</string>
     <string name="quick_launch_no_profiles">Tạo Cấu hình trong Cấu hình Cục bộ để dùng ở đây</string>
     <string name="quick_launch_edit_profile_preset">Sửa Cấu hình Cài đặt sẵn</string>
