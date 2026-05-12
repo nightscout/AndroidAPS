@@ -443,6 +443,7 @@
     <string name="need_connect_permission">Applikationen kræver tilladelse til bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Bruger anmodning</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">Pumpe parret</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy understøttes ikke.</string>
