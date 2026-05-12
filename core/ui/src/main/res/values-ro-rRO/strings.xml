@@ -827,6 +827,7 @@
     <string name="need_connect_permission">Aplicația are nevoie de permisiune Bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Cerere utilizator</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Asociați</string>
     <string name="pump_unpair">Dezasociați</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompă asociată</string>
