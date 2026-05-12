@@ -66,7 +66,6 @@
     <string name="step_deactivate_complete">Patch désactivé</string>
     <string name="step_retry_activation">Activation en cours</string>
     <string name="unexpected_state">État inattendu : %1$s</string>
-    <string name="no_profile_selected">Aucun profil sélectionné. Veuillez sélectionner un profil et réessayez.</string>
     <string name="patch_begin_activation">Aucun Patch actif. Appuyez sur <b>Suivant</b> pour commencer le processus d\'activation.</string>
     <string name="patch_not_active_note">La base de la pompe ne doit pas être connectée au Patch avant l\'étape suivante !</string>
     <string name="connect_pump_base">Connectez la base de la pompe à un nouveau Patch, retirez l\'air résiduel et remplissez avec de l\'insuline, puis appuyez sur <b>Suivant</b>.</string>
@@ -95,9 +94,6 @@
     <string name="press_retry_or_discard">Appuyez sur <b>Suivant</b> pour reprendre l\'activation ou <b>Supprimer</b> pour réinitialiser l\'état d\'activation.</string>
     <string name="reading_activation_status">Veuillez patienter, lecture de l\'état d\'activation de la pompe.</string>
     <!-- settings-->
-    <string name="sn_input_title">Numéro de série</string>
-    <string name="sn_input_invalid">Numéro de série invalide !</string>
-    <string name="change_sn">Changer</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
     <string name="alarm_setting_light_vibrate_beep">Lumière, vibreur et bip</string>
