@@ -829,6 +829,7 @@
     <string name="need_connect_permission">Ứng dụng yêu cầu quyền Bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Yêu cầu người dùng</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Ghép nối</string>
     <string name="pump_unpair">Hủy ghép nối</string>
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
