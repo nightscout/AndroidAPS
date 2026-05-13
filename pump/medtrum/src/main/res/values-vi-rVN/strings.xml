@@ -77,7 +77,7 @@
     <string name="wait_for_priming">Vui lòng chờ cho quá trình xả mồi insulin hoàn tất.</string>
     <string name="press_next">Nhấn <b>Tiếp theo</b> để tiếp tục.</string>
     <string name="press_next_to_start_activation">Nhấn <b>Tiếp theo</b> để bắt đầu kích hoạt.</string>
-    <string name="remove_safety_lock">Tháo khóa an toàn. Gắn pump lên cơ thể. Nhấn nút kim.</string>
+    <string name="remove_safety_lock">Tháo khóa an toàn. Gắn bơm lên cơ thể. Nhấn nút kim.</string>
     <string name="activating_pump">Đang kích hoạt Bơm và cài đặt liều nền. Vui lòng chờ.</string>
     <string name="activating_complete">Patch mới đã được kích hoạt. Còn lại %.2f đơn vị.</string>
     <string name="can_export_settings">Bạn có thể xuất cài đặt để khôi phục lại phiên Patch này sau.</string>
