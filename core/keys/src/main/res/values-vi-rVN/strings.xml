@@ -23,7 +23,7 @@
     <string name="pref_title_use_super_bolus">Sử dụng super bolus</string>
     <string name="pref_summary_use_super_bolus">Bật tính năng super bolus, sử dụng insulin từ liều nền để cung cấp ngay lập tức.</string>
     <!-- Pump preferences -->
-    <string name="pref_title_bt_watchdog">Giám sát Bluetooth</string>
+    <string name="pref_title_bt_watchdog">Theo dõi Bluetooth</string>
     <string name="pref_summary_bt_watchdog">Tắt Bluetooth 1 giây khi không kết nối được bơm (khắc phục lỗi treo Bluetooth).</string>
     <!-- Alert preferences -->
     <string name="pref_title_alert_missed_bg_reading">Cảnh báo khi không có dữ liệu BG</string>
