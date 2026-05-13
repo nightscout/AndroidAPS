@@ -832,6 +832,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Spárovať</string>
     <string name="pump_unpair">Zrušiť párovanie</string>
+    <string name="pump_unpair_confirm_title">Odpárovať pumpu?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nie je podporované.</string>
@@ -1002,6 +1003,7 @@
     <string name="database_cleanup">Vyčistenie databázy</string>
     <string name="nav_resetdb">Reset databázy</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Vyhľadať pumpu</string>
     <string name="ble_scan_select_pump">Vyberte si Vašu pumpu zo zoznamu nižšie</string>
     <string name="ble_scan_scanning">Vyhľadávam zariadenia...</string>
     <!-- Graph configuration -->
