@@ -64,6 +64,7 @@
     <string name="step_deactivate">Disattiva patch</string>
     <string name="step_deactivating">Disattivazione...</string>
     <string name="step_deactivate_complete">Patch disattivata</string>
+    <string name="unpair_confirm_message">Questo cancellerà il numero di serie del microinfusore memorizzato e si disconnetterà. Attivare una nuova patch per eseguire la scansione di un micro.</string>
     <string name="step_retry_activation">Attivazione in corso</string>
     <string name="unexpected_state">Stato inaspettato: %1$s</string>
     <string name="patch_begin_activation">Nessuna patch attiva. Premi <b>Avanti</b> per iniziare il processo di attivazione.</string>
