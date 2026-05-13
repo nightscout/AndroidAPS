@@ -189,7 +189,7 @@
     <string name="custom_password">Mật khẩu tùy chọn</string>
     <string name="custom_pin">Mã PIN tùy chọn</string>
     <!-- IntKey: Safety preferences -->
-    <string name="pref_title_max_carbs">Lượng carb tối đa cho phép</string>
+    <string name="pref_title_max_carbs">Lượng carb tối đa</string>
     <!-- IntKey: Loop preferences -->
     <string name="pref_title_open_mode_min_change">Mức thay đổi tối thiểu trong chế độ mở</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Mở vòng lặp sẽ chỉ hiển thị yêu cầu thay đổi mới nếu thay đổi lớn hơn giá trị này theo %. Giá trị mặc định là 20%</string>
@@ -314,7 +314,7 @@
     <string name="pref_light_theme">Chủ đề sáng</string>
     <string name="pref_follow_system_theme">Sử dụng giao diện của thiết bị</string>
     <!-- StringKey: Safety preferences -->
-    <string name="pref_title_patient_age">Tuổi người dùng</string>
+    <string name="pref_title_patient_age">Độ tuổi người dùng</string>
     <!-- StringKey: Maintenance preferences -->
     <string name="maintenance_email">Người nhận email</string>
     <string name="pref_title_identification">Nhận diện báo cáo lỗi</string>
