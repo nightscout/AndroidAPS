@@ -832,6 +832,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Ghép nối</string>
     <string name="pump_unpair">Hủy ghép nối</string>
+    <string name="pump_unpair_confirm_title">Hủy ghép đôi bơm?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Thiết bị không hỗ trợ Bluetooth.</string>
@@ -993,6 +994,7 @@
     <string name="database_cleanup">Dọn dẹp cơ sở dữ liệu</string>
     <string name="nav_resetdb">Đặt lại cơ sở dữ liệu</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Tìm bơm</string>
     <string name="ble_scan_select_pump">Chọn bơm của bạn từ danh sách bên dưới</string>
     <string name="ble_scan_scanning">Đang quét các thiết bị…</string>
     <!-- Graph configuration -->
