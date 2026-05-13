@@ -832,6 +832,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Accoppiamento</string>
     <string name="pump_unpair">Disaccoppia</string>
+    <string name="pump_unpair_confirm_title">Disassocia micro?</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
@@ -996,6 +997,7 @@
     <string name="database_cleanup">Pulizia database</string>
     <string name="nav_resetdb">Reset database</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Trova Micro</string>
     <string name="ble_scan_select_pump">Seleziona il tuo micro dall\'elenco qui sotto</string>
     <string name="ble_scan_scanning">Ricerca dispositivi in corso...</string>
     <!-- Graph configuration -->
