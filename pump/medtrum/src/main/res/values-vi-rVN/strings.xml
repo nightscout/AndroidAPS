@@ -64,6 +64,7 @@
     <string name="step_deactivate">Huỷ kích hoạt Patch</string>
     <string name="step_deactivating">Đang hủy kích hoạt...</string>
     <string name="step_deactivate_complete">Đã hủy kích hoạt Patch</string>
+    <string name="unpair_confirm_message">Thao tác này sẽ xóa số sê-ri bơm đã lưu và ngắt kết nối. Kích hoạt patch mới để quét tìm bơm.</string>
     <string name="step_retry_activation">Đang kích hoạt</string>
     <string name="unexpected_state">Trạng thái không mong đợi: %1$s</string>
     <string name="patch_begin_activation">Chưa có patch đang hoạt động. Nhấn <b>Tiếp theo</b> để bắt đầu quá trình kích hoạt.</string>
