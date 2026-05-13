@@ -832,6 +832,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Emparejar</string>
     <string name="pump_unpair">Desemparejar</string>
+    <string name="pump_unpair_confirm_title">¿Desvincular bomba?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baja energía no soportado.</string>
@@ -996,6 +997,7 @@
     <string name="database_cleanup">Limpieza de la base de datos</string>
     <string name="nav_resetdb">Restablecer bases de datos</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Buscar bomba</string>
     <string name="ble_scan_select_pump">Selecciona tu bomba de la lista de abajo</string>
     <string name="ble_scan_scanning">Buscando dispositivos…</string>
     <!-- Graph configuration -->
