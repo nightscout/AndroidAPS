@@ -43,6 +43,7 @@
     <string name="alarm_battery_out">Akku leer</string>
     <string name="alarm_no_calibration">Keine Kalibrierung</string>
     <string name="pump_time_update_failed">Fehler beim Aktualisieren der Pumpen-Zeitzone, stelle Benachrichtigung ab und aktualisiere manuell.</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Erneut versuchen</string>
     <string name="step_prepare_patch">Pod aktivieren</string>
