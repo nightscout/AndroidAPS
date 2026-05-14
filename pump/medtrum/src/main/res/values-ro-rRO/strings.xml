@@ -64,6 +64,7 @@
     <string name="step_deactivate">Dezactivați plasturele</string>
     <string name="step_deactivating">Se dezactivează…</string>
     <string name="step_deactivate_complete">Plasture dezactivat</string>
+    <string name="unpair_confirm_message">Acest lucru va șterge numărul de serie stocat al pompei și se va deconecta. Activați un nou plasture pentru a scana pentru pompă.</string>
     <string name="step_retry_activation">Activare în curs</string>
     <string name="unexpected_state">Stare neașteptată: %1$s</string>
     <string name="patch_begin_activation">Niciun plasture activ. Apăsați <b>Înainte</b> pentru a începe procesul de activare.</string>
