@@ -51,6 +51,14 @@
     <string name="pump_time_update_failed">Error al actualizar la zona horaria de la bomba, posponer zumbido y actualizar manualmente.</string>
     <string name="bolus_error">Error de bolo</string>
     <!-- Status strings -->
+    <string name="status_idle">Inactivo</string>
+    <string name="status_filled">Llenado</string>
+    <string name="status_priming">Cebado</string>
+    <string name="status_primed">Cebado</string>
+    <string name="status_ejecting">Expulsando</string>
+    <string name="status_ejected">Expulsado</string>
+    <string name="status_active">Activo</string>
+    <string name="status_stopped">Detenido</string>
     <!-- wizard-->
     <string name="retry">Reintentar</string>
     <string name="step_prepare_patch">Activar parche</string>
