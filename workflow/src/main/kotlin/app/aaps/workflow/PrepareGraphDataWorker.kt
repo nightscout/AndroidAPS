@@ -6,7 +6,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
@@ -44,7 +43,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
-import app.aaps.core.interfaces.smoothing.SmoothingContext
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationSignalsEmitter
@@ -115,7 +113,7 @@ class PrepareGraphDataWorker(
         // ===== Phase 1: Load BG into ads + smooth (was LoadBgDataWorker) =====
         if (data.bgDataReload) {
             data.iobCobCalculator.ads.loadBgData(data.end)
-            data.iobCobCalculator.ads.smoothData(data.iobCobCalculator)
+            data.iobCobCalculator.ads.smoothData()
             rxBus.send(EventBucketedDataCreated())
             data.iobCobCalculator.clearCache()
         }
@@ -160,16 +158,12 @@ class PrepareGraphDataWorker(
         }
     }
 
-    private suspend fun AutosensDataStore.smoothData(iobCobCalculator: IobCobCalculator) {
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().iob
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().iob
-        val smoothingContext = SmoothingContext(cachedTotalIobUnits = bolusIob + basalIob)
-        val workingCopy: MutableList<InMemoryGlucoseValue> = synchronized(dataLock) {
-            bucketedData?.map { it.copy(smoothed = null) }?.toMutableList()
-        } ?: return
-        val smoothed = activePlugin.activeSmoothing.smooth(workingCopy, smoothingContext)
+    private fun AutosensDataStore.smoothData() {
         synchronized(dataLock) {
-            bucketedData = smoothed
+            bucketedData?.let {
+                val smoothedData = activePlugin.activeSmoothing.smooth(it)
+                bucketedData = smoothedData
+            }
         }
     }
 

@@ -9,11 +9,14 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smoothing.Smoothing
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.plugins.smoothing.keys.UkfDoubleNonKey
+import app.aaps.plugins.smoothing.keys.UkfIntNonKey
+import app.aaps.plugins.smoothing.keys.UkfLongNonKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -59,17 +62,17 @@ import kotlin.math.sqrt
 class UnscentedKalmanFilterPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val persistenceLayer: PersistenceLayer,
-    private val sp: SP
-) : PluginBase(
-    PluginDescription()
+    preferences: Preferences,
+    private val persistenceLayer: PersistenceLayer
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.SMOOTHING)
         .icon(Icons.Default.Timeline)
         .pluginName(R.string.UKF_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_UKF),
-    aapsLogger,
-    rh
+    ownPreferences = listOf(UkfLongNonKey::class.java, UkfIntNonKey::class.java, UkfDoubleNonKey::class.java),
+    aapsLogger, rh, preferences
 ), Smoothing {
 
     // ============================================================
@@ -165,6 +168,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
         val pPred: DoubleArray,
         val dt: Double
     ) {
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other !is FilterState) return false
@@ -260,14 +264,14 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      */
     private fun loadPersistedParameters() {
         try {
-            val lastSaved = sp.getLong("ukf_last_saved_timestamp", 0L)
-            val savedSensorChange = sp.getLong("ukf_sensor_change_timestamp", 0L)
+            val lastSaved = preferences.get(UkfLongNonKey.LastSavedTimestamp)
+            val savedSensorChange = preferences.get(UkfLongNonKey.LastSensorChangeTimestamp)
 
             if (lastSaved > 0) {
                 lastSensorChangeTimestamp = savedSensorChange
-                lastProcessedTimestamp = sp.getLong("ukf_last_processed_timestamp", 0L)
-                learnedR = sp.getDouble("ukf_learned_r", rInit)
-                sensorSessionId = sp.getInt("ukf_session_id", 0)
+                lastProcessedTimestamp = preferences.get(UkfLongNonKey.LastProcessedTimestamp)
+                learnedR = preferences.get(UkfDoubleNonKey.LearnedR)
+                sensorSessionId = preferences.get(UkfIntNonKey.SessionId)
 
                 // Validate loaded R.
                 if (learnedR !in rMin..rMax) {
@@ -301,11 +305,11 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      */
     private fun savePersistedParameters() {
         try {
-            sp.putLong("ukf_last_saved_timestamp", System.currentTimeMillis())
-            sp.putLong("ukf_sensor_change_timestamp", lastSensorChangeTimestamp)
-            sp.putLong("ukf_last_processed_timestamp", lastProcessedTimestamp)
-            sp.putDouble("ukf_learned_r", learnedR)
-            sp.putInt("ukf_session_id", sensorSessionId)
+            preferences.put(UkfLongNonKey.LastSavedTimestamp, System.currentTimeMillis())
+            preferences.put(UkfLongNonKey.LastSensorChangeTimestamp, lastSensorChangeTimestamp)
+            preferences.put(UkfLongNonKey.LastProcessedTimestamp, lastProcessedTimestamp)
+            preferences.put(UkfDoubleNonKey.LearnedR, learnedR)
+            preferences.put(UkfIntNonKey.SessionId, sensorSessionId)
 
             aapsLogger.debug(
                 LTag.GLUCOSE,
@@ -739,7 +743,7 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
             val sign = when {
                 normRaw > 0.0 -> 1
                 normRaw < 0.0 -> -1
-                else -> 0
+                else          -> 0
             }
 
             if (recentSigns.size == 3) recentSigns.removeLast()
@@ -974,13 +978,13 @@ class UnscentedKalmanFilterPlugin @Inject constructor(
      */
     private fun computeTrendArrow(rate: Double): TrendArrow {
         return when {
-            rate > 2.0 -> TrendArrow.DOUBLE_UP
-            rate > 1.0 -> TrendArrow.SINGLE_UP
-            rate > 0.5 -> TrendArrow.FORTY_FIVE_UP
+            rate > 2.0  -> TrendArrow.DOUBLE_UP
+            rate > 1.0  -> TrendArrow.SINGLE_UP
+            rate > 0.5  -> TrendArrow.FORTY_FIVE_UP
             rate < -2.0 -> TrendArrow.DOUBLE_DOWN
             rate < -1.0 -> TrendArrow.SINGLE_DOWN
             rate < -0.5 -> TrendArrow.FORTY_FIVE_DOWN
-            else -> TrendArrow.FLAT
+            else        -> TrendArrow.FLAT
         }
     }
 
