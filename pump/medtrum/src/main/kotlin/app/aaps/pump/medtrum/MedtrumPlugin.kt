@@ -238,6 +238,15 @@ class MedtrumPlugin @Inject constructor(
         // New profile will be set when patch is activated
         if (!isInitialized()) return pumpEnactResultProvider.get().success(true).enacted(true)
 
+        // Pump only stores basal bytes; iCfg/ISF/IC differences don't require a packet.
+        // Avoids a spurious failure right after activation when an insulin-only profile switch
+        // races with post-activation pump traffic.
+        if (isThisProfileSet(profile)) {
+            notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
+            notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)
+            return pumpEnactResultProvider.get().success(true).enacted(false)
+        }
+
         return if (medtrumService?.updateBasalsInPump(profile) == true) {
             notificationManager.dismiss(NotificationId.FAILED_UPDATE_PROFILE)
             notificationManager.post(NotificationId.PROFILE_SET_OK, app.aaps.core.ui.R.string.profile_set_ok, validMinutes = 60)

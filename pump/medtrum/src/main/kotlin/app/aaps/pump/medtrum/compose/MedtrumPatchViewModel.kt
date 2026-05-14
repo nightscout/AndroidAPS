@@ -642,7 +642,10 @@ class MedtrumPatchViewModel @Inject constructor(
     /** Execute profile switch if user selected a different insulin. Called after activation completes. */
     fun executeInsulinProfileSwitch() {
         val selected = _selectedInsulin.value ?: return
-        val activeLabel = _activeInsulinLabel.value
+        // Recompute from the currently active profile instead of trusting the cached value,
+        // which is captured during initializePatchStep — before PROFILE_GATE selection has
+        // produced an EffectiveProfileSwitch — and is not refreshed across activation sessions.
+        val activeLabel = profileFunction.getProfile()?.iCfg?.insulinLabel
         if (selected.insulinLabel == activeLabel) return
         viewModelScope.launch {
             profileFunction.createProfileSwitchWithNewInsulin(selected, Sources.Medtrum)
