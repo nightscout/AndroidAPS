@@ -7,4 +7,6 @@
     <string name="description_avg_smoothing">"Algorithme de lissage moyen, la dernière valeur n'est pas affectée"</string>
     <string name="no_smoothing_name">Pas de lissage</string>
     <string name="description_no_smoothing">"Aucun lissage effectué sur les glycémies d'entrée. Utilisez ceci lorsque vous avez des données déjà filtrés, par exemple avec G6 et BYODA."</string>
+    <string name="adaptive_smoothing_name">Lissage adaptatif</string>
+    <string name="description_adaptive_smoothing">"Lissage adaptatif selon le contexte : retard minimal sur les augmentations rapides, filtrage agressif sur les données bruitées, protection hypoglycémies"</string>
 </resources>
