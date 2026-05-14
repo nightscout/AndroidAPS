@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
     <string name="result">Result</string>
     <string name="settings">Settings</string>
+    <string name="open_plugin">Open plugin</string>
+    <string name="configbuilder_pick_one_hint">Choose one. Only one can be active at a time.</string>
+    <string name="configbuilder_pick_many_hint">Choose any that apply.</string>
+    <string name="configbuilder_no_selection_warning">No plugin is selected in this category.</string>
     <string name="simple_mode">Simple mode</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
