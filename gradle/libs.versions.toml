@@ -29,7 +29,7 @@ glance = "1.1.1"
 android-library = { id = "com.android.library" }
 klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
-ksp = { id = "com.google.devtools.ksp", version = "2.3.7" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.8" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
