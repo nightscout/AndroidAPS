@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">Nu s-a citit o rată bazală validă din pompă</string>
     <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="loop_disabled">BUCLĂ DEZACTIVATĂ DE CONSTRÂNGERI</string>
+    <string name="loop_disabled_by_user">Bucla dezactivată de utilizator</string>
     <string name="event_type">Tip eveniment</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -810,6 +811,7 @@
     <string name="maintenance_export_csv_desc">Exportați istoricul tratamentului ca foaie de calcul</string>
     <string name="maintenance_cleanup_db_desc">Eliminați intrările vechi din baza de date</string>
     <string name="maintenance_reset_aps_results_desc">Ștergeți rezultatele stocate ale algoritmului</string>
+    <string name="maintenance_reset_db_desc">Ștergeți toate bazele de date și reîncărcați</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Alegeți tipul de stocare</string>
     <string name="clear_cloud_action">Ștergeți setările</string>
@@ -830,6 +832,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Asociați</string>
     <string name="pump_unpair">Dezasociați</string>
+    <string name="pump_unpair_confirm_title">Dezasociați pompa?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompă asociată</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE nu este suportat.</string>
@@ -997,6 +1000,7 @@
     <string name="database_cleanup">Curățarea bazei de date</string>
     <string name="nav_resetdb">Resetați bazele de date</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Găsiți pompa</string>
     <string name="ble_scan_select_pump">Selectați pompa din lista de mai jos</string>
     <string name="ble_scan_scanning">Se scanează pentru dispozitive…</string>
     <!-- Graph configuration -->
