@@ -186,7 +186,7 @@
     <string name="smscommunicator_pump_connect_fail">Không thể kết nối với bơm</string>
     <string name="smscommunicator_pump_disconnect_with_code">Để ngắt kết nối bơm trong %1$d phút, hãy trả lời với mã %2$s</string>
     <string name="smscommunicator_pump_disconnected">Bơm đã ngắt kết nối</string>
-    <string name="smscommunicator_reconnect">Pump đã kết nối lại</string>
+    <string name="smscommunicator_reconnect">Bơm đã kết nối lại</string>
     <string name="smscommunicator_remote_command_not_allowed">Lệnh điều khiển từ xa không được phép</string>
     <string name="smscommunicator_remote_command_not_possible">Không thể thực hiện lệnh điều khiển từ xa</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus từ xa hiện không khả dụng. Vui lòng thử lại sau.</string>

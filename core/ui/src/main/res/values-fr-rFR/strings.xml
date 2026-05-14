@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">Aucun débit basal valide lu depuis la pompe</string>
     <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="loop_disabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
+    <string name="loop_disabled_by_user">Boucle désactivée par l\'utilisateur</string>
     <string name="event_type">Type d\'évènement</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -176,6 +177,9 @@
     <string name="remove_label">Supprimer</string>
     <string name="activate_profile">Activer le profil</string>
     <string name="activate_insulin">Activer l\'insuline</string>
+    <string name="pump_wizard_profile_gate_title">Profil nécessaire</string>
+    <string name="pump_wizard_profile_gate_pick">Sélectionnez le profil à appliquer lors de l\'activation.</string>
+    <string name="pump_wizard_profile_gate_no_store">Aucun profil défini. Ouvrez la gestionnaire de profil pour en créer un, puis recommencez l\'activation.</string>
     <string name="reset">Réinitialiser</string>
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
     <string name="profile">Profil</string>
@@ -807,6 +811,7 @@
     <string name="maintenance_export_csv_desc">Exporter l\'historique des traitements en feuille de calcul</string>
     <string name="maintenance_cleanup_db_desc">Supprimer les anciennes entrées de la base de données</string>
     <string name="maintenance_reset_aps_results_desc">Effacer les résultats des algorithmes</string>
+    <string name="maintenance_reset_db_desc">Effacer toutes les bases de données et les recharger</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Sélectionnez le type de stockage</string>
     <string name="clear_cloud_action">Effacer les paramètres</string>
@@ -827,6 +832,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Appairer</string>
     <string name="pump_unpair">Dissocier</string>
+    <string name="pump_unpair_confirm_title">Désappairer la pompe ?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non pris en charge.</string>
@@ -991,6 +997,7 @@
     <string name="database_cleanup">Nettoyer la base de données</string>
     <string name="nav_resetdb">Réinitialiser les Bases de Données</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Trouver la Pompe</string>
     <string name="ble_scan_select_pump">Sélectionnez votre pompe dans la liste ci-dessous</string>
     <string name="ble_scan_scanning">Recherche d\'appareils…</string>
     <!-- Graph configuration -->

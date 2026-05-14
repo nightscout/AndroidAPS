@@ -73,7 +73,7 @@
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Xuất dữ liệu sang Excel (csv)</string>
     <string name="confirm">Xác nhận</string>
-    <string name="pump">Bơm</string>
+    <string name="pump">Bơm Insulin</string>
     <string name="pump_management">Bơm Insulin</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
@@ -466,7 +466,7 @@
     <string name="arrow_center">Ở giữa</string>
     <!--    Command-->
     <string name="connectiontimedout">Hết thời gian kết nối</string>
-    <string name="pump_not_configured">Boưm chưa được cấu hình</string>
+    <string name="pump_not_configured">Bơm chưa được cấu hình</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Đã kích hoạt</string>
     <string name="comment">Nhận xét</string>
@@ -657,7 +657,7 @@
     <string name="cobvsiob">COB với IOB</string>
     <string name="slowabsorptiondetected_plain">!!!!! Phát hiện hấp thu carb chậm trong %1$d%% thời gian. Hãy kiểm tra lại phép tính của bạn. COB có thể bị ước tính cao, do đó có thể dẫn đến việc cung cấp nhiều insulin hơn !!!!!</string>
     <string name="bolus_constraint_applied_warn">Giới hạn bolus đã áp dụng: %1$.2f U đến %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus chỉ được ghi lại (không tiêm qua pump)</string>
+    <string name="bolus_recorded_only">Liều Bolus chỉ được ghi lại (không tiêm qua Bơm)</string>
     <string name="advisoralarm">Chạy báo thức khi đến giờ ăn</string>
     <string name="wizard_bg_label">BG</string>
     <string name="wizard_correction">Hiệu chỉnh</string>
@@ -832,7 +832,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Ghép nối</string>
     <string name="pump_unpair">Hủy ghép nối</string>
-    <string name="pump_unpair_confirm_title">Hủy ghép đôi bơm?</string>
+    <string name="pump_unpair_confirm_title">Hủy ghép nối bơm?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Thiết bị không hỗ trợ Bluetooth.</string>
@@ -868,7 +868,7 @@
     <string name="remove">Loại bỏ</string>
     <string name="reorder">Sắp xếp lại</string>
     <string name="status">Trạng thái</string>
-    <string name="pump_actions">Các hành động bơm</string>
+    <string name="pump_actions">Các thao tác với bơm</string>
     <string name="tempbasal_button">Liều nền tạm thời</string>
     <string name="extended_bolus_button">Liều bolus kéo dài</string>
     <string name="device_maintenance">Bảo trì thiết bị</string>
