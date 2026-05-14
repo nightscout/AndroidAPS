@@ -64,6 +64,7 @@
     <string name="step_deactivate">Desactivar parche</string>
     <string name="step_deactivating">Desactivando...</string>
     <string name="step_deactivate_complete">Parche desactivado</string>
+    <string name="unpair_confirm_message">Esto borrará el número de serie de la bomba almacenado y se desconectará. Active un nuevo parche para buscar una bomba</string>
     <string name="step_retry_activation">Activación en progreso</string>
     <string name="unexpected_state">Estado inesperado: %1$s</string>
     <string name="patch_begin_activation">No hay ningún parche activo. Presiona <b>Siguiente</b> para iniciar el proceso de activación.</string>

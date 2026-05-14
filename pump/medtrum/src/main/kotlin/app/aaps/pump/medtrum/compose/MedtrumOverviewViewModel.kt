@@ -249,7 +249,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         // Medtrum-specific rows
         val specificRows = buildList {
             // Pump state
-            add(PumpInfoRow(label = rh.gs(R.string.pump_state_label), value = pumpState.toString()))
+            add(PumpInfoRow(label = rh.gs(R.string.pump_state_label), value = rh.gs(pumpState.label)))
             // tempBasal rate
             add(PumpInfoRow(label = rh.gs(CoreUiR.string.base_basal_rate_label), value = ch.basalRateString(PumpRate(basalRate), true)))
             tempBasalRate?.let {

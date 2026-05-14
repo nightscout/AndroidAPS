@@ -122,7 +122,7 @@
     <string name="bolus_progress">Tiêm liều Bolus</string>
     <string name="press_to_cancel">nhấn để hủy</string>
     <string name="cancel_bolus">HỦY LIỀU BOLUS</string>
-    <string name="status_pump">Pump</string>
+    <string name="status_pump">Bơm Insulin</string>
     <string name="status_loop">Vòng lặp</string>
     <string name="status_profile_switch">Chuyển cấu hình</string>
     <string name="status_tdd">TDD</string>
