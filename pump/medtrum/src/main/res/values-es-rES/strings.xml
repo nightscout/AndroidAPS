@@ -50,6 +50,7 @@
     <string name="alarm_no_calibration">Sin calibración</string>
     <string name="pump_time_update_failed">Error al actualizar la zona horaria de la bomba, posponer zumbido y actualizar manualmente.</string>
     <string name="bolus_error">Error de bolo</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Reintentar</string>
     <string name="step_prepare_patch">Activar parche</string>
