@@ -64,6 +64,7 @@
     <string name="step_deactivate">Désactiver le Patch</string>
     <string name="step_deactivating">Désactivation en cours...</string>
     <string name="step_deactivate_complete">Patch désactivé</string>
+    <string name="unpair_confirm_message">Cela effacera le numéro de série de la pompe stockée et la déconnectera. Activez un nouveau patch pour rechercher une pompe.</string>
     <string name="step_retry_activation">Activation en cours</string>
     <string name="unexpected_state">État inattendu : %1$s</string>
     <string name="patch_begin_activation">Aucun Patch actif. Appuyez sur <b>Suivant</b> pour commencer le processus d\'activation.</string>
