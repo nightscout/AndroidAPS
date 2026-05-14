@@ -18,7 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class InsertOrUpdateHeartRateTransactionTest {
+class InsertOrUpdateHeartRatesTransactionTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private lateinit var db: AppDatabase
@@ -38,7 +38,7 @@ class InsertOrUpdateHeartRateTransactionTest {
     @Test
     fun createNewEntry() = runBlocking {
         val hr1 = HeartRateDaoTest.createHeartRate()
-        val result = repo.runTransactionForResultSuspend(InsertOrUpdateHeartRateTransaction(hr1))
+        val result = repo.runTransactionForResultSuspend(InsertOrUpdateHeartRatesTransaction(listOf(hr1)))
         assertEquals(listOf(hr1), result.inserted)
         assertTrue(result.updated.isEmpty())
     }
@@ -49,12 +49,22 @@ class InsertOrUpdateHeartRateTransactionTest {
         val id = db.heartRateDao.insertNewEntry(hr1)
         assertNotEquals(0, id)
         val hr2 = hr1.copy(id = id, beatsPerMinute = 181.0)
-        val result = repo.runTransactionForResultSuspend(InsertOrUpdateHeartRateTransaction(hr2))
+        val result = repo.runTransactionForResultSuspend(InsertOrUpdateHeartRatesTransaction(listOf(hr2)))
         assertEquals(listOf(hr2), result.updated)
         assertTrue(result.inserted.isEmpty())
 
         val hr3 = db.heartRateDao.findById(id)!!
         assertTrue(hr2.contentEqualsTo(hr3))
+    }
+
+    @Test
+    fun createMultipleEntries() = runBlocking {
+        val baseTs = System.currentTimeMillis()
+        val hr1 = HeartRateDaoTest.createHeartRate(timestamp = baseTs, beatsPerMinute = 70.0)
+        val hr2 = HeartRateDaoTest.createHeartRate(timestamp = baseTs + 60_000L, beatsPerMinute = 80.0)
+        val result = repo.runTransactionForResultSuspend(InsertOrUpdateHeartRatesTransaction(listOf(hr1, hr2)))
+        assertEquals(listOf(hr1, hr2), result.inserted)
+        assertTrue(result.updated.isEmpty())
     }
 
     private fun HeartRate.contentEqualsTo(other: HeartRate): Boolean {

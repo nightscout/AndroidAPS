@@ -58,7 +58,6 @@
     <string name="step_deactivate_complete">Пач помпата деактивирана</string>
     <string name="step_retry_activation">Активация в ход</string>
     <string name="unexpected_state">Неочаквано състояние: %1$s</string>
-    <string name="no_profile_selected">Няма избран профил. Моля, изберете профил и опитайте отново.</string>
     <string name="patch_begin_activation">Няма активна пач помпа. Натиснете <b>Следващ</b>, за да започнете процеса по активация.</string>
     <string name="patch_not_active_note">Основата на помпата не трябва да се свързва с пач помпата преди следващата стъпка!</string>
     <string name="connect_pump_base">Сържете основата към нова пач помпа, отстранете остатъчния въздух и напълнете с инсулин, след което натиснете <b>Следващ</b>.</string>
@@ -85,8 +84,6 @@
     <string name="press_retry_or_discard">Натиснете <b>Следващ</b>, за да продължите активацията или <b>Премахни</b>, за да нулирате статуса на активация.</string>
     <string name="reading_activation_status">Моля изчакайте, прочитане на статуса на активация от помпата.</string>
     <!-- settings-->
-    <string name="sn_input_title">Сериен номер</string>
-    <string name="sn_input_invalid">Невалиден сериен номер!</string>
     <string name="alarm_setting_title">Настройки на аларма</string>
     <string name="alarm_setting_summary">Изберете предпочитани настройки за аларми на помпата.</string>
     <string name="patch_expiration_title">Срок на пач помпата</string>

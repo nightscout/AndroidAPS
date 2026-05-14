@@ -13,7 +13,9 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.HasIDs
+import app.aaps.core.data.model.SC
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -85,6 +87,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
@@ -111,8 +114,7 @@ class NSClientV3Plugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val l: L,
     private val nsClientRepository: NSClientRepository,
-    private val uel: UserEntryLogger,
-    private val activePlugin: ActivePlugin,
+    private val uel: UserEntryLogger
 ) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -257,6 +259,8 @@ class NSClientV3Plugin @Inject constructor(
         preferences.observe(LongNonKey.LocalProfileLastChange).drop(1)
             .onEach { executeUpload("PROFILE_CHANGE", forceNew = true) }.launchIn(scope)
         persistenceLayer.observeAnyChange()
+            // HR/SC writes come from the watch; this plugin doesn't upload them — skip to avoid reconnect-flush storm.
+            .filter { types -> types.any { it != HR::class && it != SC::class } }
             .onEach { types -> executeUpload("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})", forceNew = false) }.launchIn(scope)
         rxBus.toFlow(EventProfileStoreChanged::class.java)
             .onEach { executeUpload("EventProfileStoreChanged", forceNew = false) }.launchIn(scope)

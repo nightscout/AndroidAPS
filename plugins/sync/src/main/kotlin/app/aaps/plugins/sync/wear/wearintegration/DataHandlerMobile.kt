@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.di.ApplicationScope
 import app.aaps.core.interfaces.insulin.ConcentrationHelper
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -113,6 +114,10 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.min
+
+// Quiet-period that closes a Wear-event batch. Long enough to absorb a Data Layer reconnect-flush,
+// short enough that live data stays effectively real-time.
+private const val HEALTH_EVENT_QUIET_PERIOD_MS = 500L
 
 @Singleton
 class DataHandlerMobile @Inject constructor(
@@ -466,14 +471,18 @@ class DataHandlerMobile @Inject constructor(
                            aapsLogger.debug(LTag.WEAR, "WearException received $it from ${it.sourceNodeId}")
                            fabricPrivacy.logWearException(it)
                        }, fabricPrivacy::logException)
+        // Coalesce Wear reconnect-flush bursts (Data Layer replays queued events back-to-back).
+        // publish/debounce keeps the timer idle when no events arrive, unlike fixed-window buffer().
         disposable += rxBus
             .toObservable(EventData.ActionHeartRate::class.java)
+            .publish { shared -> shared.buffer(shared.debounce(HEALTH_EVENT_QUIET_PERIOD_MS, TimeUnit.MILLISECONDS, aapsSchedulers.io)) }
             .observeOn(aapsSchedulers.io)
-            .subscribe({ handleHeartRate(it) }, fabricPrivacy::logException)
+            .subscribe({ handleHeartRateBatch(it) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.ActionStepsRate::class.java)
+            .publish { shared -> shared.buffer(shared.debounce(HEALTH_EVENT_QUIET_PERIOD_MS, TimeUnit.MILLISECONDS, aapsSchedulers.io)) }
             .observeOn(aapsSchedulers.io)
-            .subscribe({ handleStepsCount(it) }, fabricPrivacy::logException)
+            .subscribe({ handleStepsCountBatch(it) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.ActionGetCustomWatchface::class.java)
             .observeOn(aapsSchedulers.io)
@@ -1491,7 +1500,19 @@ class DataHandlerMobile @Inject constructor(
         sendActiveSceneState(scenes.isAnySceneActive())
         // GraphData
         iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
-            rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it) }))))
+            // Hoist out of the per-bucket map: getGlucoseStatusData copies the bucketed table and runs a polynomial fit on every call.
+            val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
+            val units = profileFunction.getUnits()
+            val lowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewLowMark), units)
+            val highLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHighMark), units)
+            val slopeArrow = (trendCalculator.getTrendArrow(iobCobCalculator.ads) ?: TrendArrow.NONE).symbol
+            rxBus.send(
+                EventMobileToWear(
+                    EventData.GraphData(
+                        ArrayList(bucketedData.map { buildSingleBg(it, glucoseStatus, units, lowLine, highLine, slopeArrow) })
+                    )
+                )
+            )
         }
         // Treatments
         sendTreatments()
@@ -1823,13 +1844,24 @@ class DataHandlerMobile @Inject constructor(
         val units = profileFunction.getUnits()
         val lowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewLowMark), units)
         val highLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHighMark), units)
+        val slopeArrow = (trendCalculator.getTrendArrow(iobCobCalculator.ads) ?: TrendArrow.NONE).symbol
+        return buildSingleBg(glucoseValue, glucoseStatus, units, lowLine, highLine, slopeArrow)
+    }
 
-        return EventData.SingleBg(
+    private fun buildSingleBg(
+        glucoseValue: InMemoryGlucoseValue,
+        glucoseStatus: GlucoseStatus?,
+        units: GlucoseUnit,
+        lowLine: Double,
+        highLine: Double,
+        slopeArrow: String
+    ): EventData.SingleBg =
+        EventData.SingleBg(
             dataset = 0,
             timeStamp = glucoseValue.timestamp,
             sgvString = profileUtil.stringInCurrentUnitsDetect(glucoseValue.recalculated),
             glucoseUnits = units.asText,
-            slopeArrow = (trendCalculator.getTrendArrow(iobCobCalculator.ads) ?: TrendArrow.NONE).symbol,
+            slopeArrow = slopeArrow,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             deltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
@@ -1842,7 +1874,6 @@ class DataHandlerMobile @Inject constructor(
             deltaMgdl = glucoseStatus?.delta,
             avgDeltaMgdl = glucoseStatus?.shortAvgDelta
         )
-    }
 
     //Check for Temp-Target:
     private
@@ -2153,31 +2184,35 @@ class DataHandlerMobile @Inject constructor(
     }
 
     /** Stores heart rate events coming from the Wear device. */
-    private fun handleHeartRate(actionHeartRate: EventData.ActionHeartRate) {
-        aapsLogger.debug(LTag.WEAR, "Heart rate received $actionHeartRate from ${actionHeartRate.sourceNodeId}")
-        val hr = HR(
-            duration = actionHeartRate.duration,
-            timestamp = actionHeartRate.timestamp,
-            beatsPerMinute = actionHeartRate.beatsPerMinute,
-            device = actionHeartRate.device
-        )
-        appScope.launch { persistenceLayer.insertOrUpdateHeartRate(hr) }
+    private fun handleHeartRateBatch(events: List<EventData.ActionHeartRate>) {
+        aapsLogger.debug(LTag.WEAR, "Heart rate batch received: ${events.size} event(s)")
+        val rows = events.map { e ->
+            HR(
+                duration = e.duration,
+                timestamp = e.timestamp,
+                beatsPerMinute = e.beatsPerMinute,
+                device = e.device
+            )
+        }
+        appScope.launch { persistenceLayer.insertOrUpdateHeartRates(rows) }
     }
 
-    private fun handleStepsCount(actionStepsRate: EventData.ActionStepsRate) {
-        aapsLogger.debug(LTag.WEAR, "Steps count received $actionStepsRate from ${actionStepsRate.sourceNodeId}")
-        val stepsCount = SC(
-            duration = actionStepsRate.duration,
-            timestamp = actionStepsRate.timestamp,
-            steps5min = actionStepsRate.steps5min,
-            steps10min = actionStepsRate.steps10min,
-            steps15min = actionStepsRate.steps15min,
-            steps30min = actionStepsRate.steps30min,
-            steps60min = actionStepsRate.steps60min,
-            steps180min = actionStepsRate.steps180min,
-            device = actionStepsRate.device
-        )
-        appScope.launch { persistenceLayer.insertOrUpdateStepsCount(stepsCount) }
+    private fun handleStepsCountBatch(events: List<EventData.ActionStepsRate>) {
+        aapsLogger.debug(LTag.WEAR, "Steps count batch received: ${events.size} event(s)")
+        val rows = events.map { e ->
+            SC(
+                duration = e.duration,
+                timestamp = e.timestamp,
+                steps5min = e.steps5min,
+                steps10min = e.steps10min,
+                steps15min = e.steps15min,
+                steps30min = e.steps30min,
+                steps60min = e.steps60min,
+                steps180min = e.steps180min,
+                device = e.device
+            )
+        }
+        appScope.launch { persistenceLayer.insertOrUpdateStepsCounts(rows) }
     }
 
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {

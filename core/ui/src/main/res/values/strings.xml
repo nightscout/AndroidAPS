@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
     <string name="result">Result</string>
     <string name="settings">Settings</string>
+    <string name="open_plugin">Open plugin</string>
+    <string name="configbuilder_pick_one_hint">Choose one. Only one can be active at a time.</string>
+    <string name="configbuilder_pick_many_hint">Choose any that apply.</string>
+    <string name="configbuilder_no_selection_warning">No plugin is selected in this category.</string>
     <string name="simple_mode">Simple mode</string>
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
@@ -874,8 +878,11 @@
 
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">User request</string>
+
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Pair</string>
     <string name="pump_unpair">Unpair</string>
+    <string name="pump_unpair_confirm_title">Unpair pump?</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
 
     <!--    BlePreCheck-->
@@ -1059,6 +1066,7 @@
     <string name="nav_resetdb">Reset Databases</string>
 
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Find Pump</string>
     <string name="ble_scan_select_pump">Select your pump from the list below</string>
     <string name="ble_scan_scanning">Scanning for devices…</string>
 

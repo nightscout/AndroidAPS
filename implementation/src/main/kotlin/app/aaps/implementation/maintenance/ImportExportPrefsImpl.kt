@@ -55,7 +55,8 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.core.utils.receivers.Inbox
 import app.aaps.implementation.R
 import app.aaps.implementation.maintenance.cloud.CloudConstants
 import app.aaps.implementation.maintenance.cloud.CloudStorageManager
@@ -99,7 +100,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val context: Context,
-    private val dataWorkerStorage: DataWorkerStorage,
+    private val dataInbox: DataInbox,
     private val activePlugin: ActivePlugin,
     @ApplicationScope private val appScope: CoroutineScope,
     private val cloudStorageManager: CloudStorageManager,
@@ -1120,13 +1121,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     override fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?) {
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            "export",
-            ExistingWorkPolicy.APPEND,
-            OneTimeWorkRequest.Builder(ApsResultExportWorker::class.java)
-                .setInputData(dataWorkerStorage.storeInputData(ApsResultExportWorker.ApsResultData(algorithm, input, output)))
-                .build()
-        )
+        dataInbox.putAndEnqueue(ApsExportInbox, ApsResultExportWorker.ApsResultData(algorithm, input, output))
     }
 
     class ApsResultExportWorker(
@@ -1137,33 +1132,40 @@ class ImportExportPrefsImpl @Inject constructor(
         @Inject lateinit var prefFileList: FileListProvider
         @Inject lateinit var storage: Storage
         @Inject lateinit var config: Config
-        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+        @Inject lateinit var dataInbox: DataInbox
 
         data class ApsResultData(val algorithm: String?, val input: JSONObject, val output: JSONObject?)
 
         override suspend fun doWorkAndLog(): Result {
             if (!config.isEngineeringMode()) return Result.success(workDataOf("Result" to "Export not enabled"))
-            val apsResultData = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as? ApsResultData?
-                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            val items = dataInbox.drain(ApsExportInbox)
+            if (items.isEmpty()) return Result.success(workDataOf("Result" to "no data"))
 
             prefFileList.ensureResultDirExists()
-            val newFile = prefFileList.newResultFile()
-            var ret = Result.success()
-            try {
-                val jsonObject = JSONObject().apply {
-                    put("algorithm", apsResultData.algorithm)
-                    put("input", apsResultData.input)
-                    put("output", apsResultData.output)
+            var hadFailure = false
+            for (apsResultData in items) {
+                val newFile = prefFileList.newResultFile()
+                try {
+                    val jsonObject = JSONObject().apply {
+                        put("algorithm", apsResultData.algorithm)
+                        put("input", apsResultData.input)
+                        put("output", apsResultData.output)
+                    }
+                    storage.putFileContents(newFile, jsonObject.toString())
+                } catch (e: FileNotFoundException) {
+                    aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                    hadFailure = true
+                } catch (e: IOException) {
+                    aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                    hadFailure = true
                 }
-                storage.putFileContents(newFile, jsonObject.toString())
-            } catch (e: FileNotFoundException) {
-                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
-                ret = Result.failure(workDataOf("Error" to "Error FileNotFoundException"))
-            } catch (e: IOException) {
-                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
-                ret = Result.failure(workDataOf("Error" to "Error IOException"))
             }
-            return ret
+            return if (hadFailure) Result.failure(workDataOf("Error" to "one or more exports failed")) else Result.success()
         }
     }
 }
+
+object ApsExportInbox : Inbox<ImportExportPrefsImpl.ApsResultExportWorker.ApsResultData>(
+    "aps-export",
+    ImportExportPrefsImpl.ApsResultExportWorker::class.java
+)

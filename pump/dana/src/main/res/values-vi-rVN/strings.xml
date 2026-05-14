@@ -70,7 +70,7 @@
     <string name="danar_backlight">Thời gian đèn nền sáng [giây]</string>
     <string name="danar_glucose_units">Đơn vị đường huyết</string>
     <string name="danar_shutdown">Tắt máy [giờ]</string>
-    <string name="danar_low_reservoir">Sắp hết Insulin [u]</string>
+    <string name="danar_low_reservoir">Sắp hết Insulin [Units]</string>
     <string name="danar_save_user_options">Lưu tùy chọn vào bơm</string>
     <string name="description_pump_dana_r">Tích hợp bơm insulin DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">Tích hợp bơm DANA Diabecare R (bản nội địa)</string>

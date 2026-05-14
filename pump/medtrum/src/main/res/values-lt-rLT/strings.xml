@@ -63,7 +63,6 @@
     <string name="step_deactivate_complete">Išjungta</string>
     <string name="step_retry_activation">Įjungiama</string>
     <string name="unexpected_state">Netikėta būsena: %1$s</string>
-    <string name="no_profile_selected">Nepasirinktas profilis. Pasirinkite profilį ir bandykite dar kartą.</string>
     <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Toliau</b> ir pradėkite aktyvavimą.</string>
     <string name="patch_not_active_note">Neprijunkite pagrindo prie rezervuaro iki kito žingsnio!</string>
     <string name="connect_pump_base">Prijunkite pompos pagrindą prie naujo rezervuaro, pašalinkite orą ir užpildykite insulinu, tada spauskite <b>Toliau</b>.</string>
@@ -92,8 +91,6 @@
     <string name="press_retry_or_discard">Norėdami atnaujinti aktyvavimą, spauskite <b>Toliau</b>, norėdami atšaukti, spauskite <b>Baigti naudoti</b>.</string>
     <string name="reading_activation_status">Palaukite, nuskaitomas pompos aktyvavimo statusas.</string>
     <!-- settings-->
-    <string name="sn_input_title">Serijos numeris</string>
-    <string name="sn_input_invalid">Neteisingas serijos numeris!</string>
     <string name="alarm_setting_title">Aliarmų nustatymai</string>
     <string name="alarm_setting_summary">Pasirinkite pompos aliarmų nustatymus</string>
     <string name="pump_warning_notification_title">Pompos pranešimas apie įspėjimą</string>

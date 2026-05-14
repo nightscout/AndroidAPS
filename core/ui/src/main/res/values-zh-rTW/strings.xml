@@ -176,6 +176,9 @@
     <string name="remove_label">移除</string>
     <string name="activate_profile">啟用設定檔</string>
     <string name="activate_insulin">啟用胰島素</string>
+    <string name="pump_wizard_profile_gate_title">需要設定檔</string>
+    <string name="pump_wizard_profile_gate_pick">請選擇要在啟用時套用的設定檔。</string>
+    <string name="pump_wizard_profile_gate_no_store">未建立任何設定檔。請開啟設定檔管理以建立一個，然後請再次開始啟用。</string>
     <string name="reset">重設</string>
     <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
     <string name="profile">設定檔</string>
@@ -807,7 +810,6 @@
     <string name="maintenance_export_csv_desc">將治療紀錄匯出為試算表</string>
     <string name="maintenance_cleanup_db_desc">從資料庫移除舊的項目</string>
     <string name="maintenance_reset_aps_results_desc">清除已儲存的演算法結果</string>
-    <string name="maintenance_reset_db_desc">清除所有資料庫並重新啟動</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">選擇儲存類型</string>
     <string name="clear_cloud_action">清除設定</string>
@@ -825,6 +827,7 @@
     <string name="need_connect_permission">應用程式需要藍牙權限</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">使用者請求</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">配對</string>
     <string name="pump_unpair">取消配對</string>
     <string name="pump_paired" comment="26 characters max for translation">幫浦已配對</string>

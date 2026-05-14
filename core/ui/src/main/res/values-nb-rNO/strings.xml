@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">Ingen gyldige basaldoser ble lest fra pumpen</string>
     <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
+    <string name="loop_disabled_by_user">Loop deaktivert av bruker</string>
     <string name="event_type">Hendelsestype</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -176,6 +177,9 @@
     <string name="remove_label">Fjern</string>
     <string name="activate_profile">Aktiver profil</string>
     <string name="activate_insulin">Aktiver insulin</string>
+    <string name="pump_wizard_profile_gate_title">Profil kreves</string>
+    <string name="pump_wizard_profile_gate_pick">Velg profilen som skal brukes ved aktivering.</string>
+    <string name="pump_wizard_profile_gate_no_store">Ingen profil definert. Åpne Profiladministrasjon for å opprette en, og start deretter aktiveringen på nytt.</string>
     <string name="reset">Tilbakestill</string>
     <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
     <string name="profile">Profil</string>
@@ -807,7 +811,7 @@
     <string name="maintenance_export_csv_desc">Eksporter behandlingshistorikk som regneark</string>
     <string name="maintenance_cleanup_db_desc">Fjern gamle oppføringer fra databasen</string>
     <string name="maintenance_reset_aps_results_desc">Fjern lagrede algoritmeresultater</string>
-    <string name="maintenance_reset_db_desc">Slett alle databaser og start på nytt</string>
+    <string name="maintenance_reset_db_desc">Slett alle databaser og last inn på nytt</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Velg lagringstype</string>
     <string name="clear_cloud_action">Tøm innstillinger</string>
@@ -825,6 +829,7 @@
     <string name="need_connect_permission">Appen trenger bluetooth-tillatelse</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Brukerforespørsel</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Paring</string>
     <string name="pump_unpair">Opphev paring</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>

@@ -114,8 +114,8 @@
     <string name="triggerInsulinAgeDesc">Insulin đã dùng %1$s được %2$.1f giờ</string>
     <string name="triggerPumpBatteryAgeLabel">Pin của Bơm</string>
     <string name="triggerPumpBatteryAgeDesc">Pin của bơm đã dùng %1$s %2$.1f giờ</string>
-    <string name="triggerReservoirLevelLabel">Reservoir level</string>
-    <string name="triggerReservoirLevelDesc">Reservoir level %1$s %2$.0f</string>
+    <string name="triggerReservoirLevelLabel">Insulin còn lại</string>
+    <string name="triggerReservoirLevelDesc">Insulin còn lại %1$s%2$.0f</string>
     <string name="triggerPumpBatteryLevelLabel">Mức pin của Bơm</string>
     <string name="triggerPumpBatteryLevelDesc">Mức pin của Bơm %1$s %2$.0f</string>
     <string name="recurringTime">Thời gian định kỳ</string>

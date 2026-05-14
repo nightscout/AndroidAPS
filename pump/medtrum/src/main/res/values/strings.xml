@@ -53,6 +53,16 @@
     <string name="pump_time_update_failed">Failed to update pump timezone, snooze message and refresh manually.</string>
     <string name="bolus_error">Bolus error</string>
 
+    <!-- Status strings -->
+    <string name="status_idle">Idle</string>
+    <string name="status_filled">Filled</string>
+    <string name="status_priming">Priming</string>
+    <string name="status_primed">Primed</string>
+    <string name="status_ejecting">Ejecting</string>
+    <string name="status_ejected">Ejected</string>
+    <string name="status_active">Active</string>
+    <string name="status_stopped">Stopped</string>
+
     <!-- wizard-->
     <string name="retry">Retry</string>
 
@@ -68,10 +78,9 @@
     <string name="step_deactivate">Deactivate Patch</string>
     <string name="step_deactivating">Deactivating...</string>
     <string name="step_deactivate_complete">Patch deactivated</string>
+    <string name="unpair_confirm_message">This will clear the stored pump serial number and disconnect. Activate a new patch to scan for a pump.</string>
     <string name="step_retry_activation">Activation in progress</string>
     <string name="unexpected_state">Unexpected state: %1$s</string>
-    <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
-
     <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>
     <string name="patch_not_active_note">Pump base should not be connected to the patch until the next step!</string>
     <string name="connect_pump_base">Connect pump base to a new patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
@@ -103,9 +112,6 @@
     <string name="reading_activation_status">Please wait, reading activation status from pump.</string>
 
     <!-- settings-->
-    <string name="sn_input_title">Serial Number</string>
-    <string name="sn_input_invalid">Invalid serial number!</string>
-    <string name="change_sn">Change</string>
     <string name="alarm_setting_title">Alarm Settings</string>
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
     <string name="alarm_setting_light_vibrate_beep">Light, vibrate and beep</string>

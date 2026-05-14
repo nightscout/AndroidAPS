@@ -29,7 +29,7 @@ glance = "1.1.1"
 android-library = { id = "com.android.library" }
 klint = { id = "org.jlleitschuh.gradle.ktlint", version = "14.2.0" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
-ksp = { id = "com.google.devtools.ksp", version = "2.3.7" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.8" }
 android-test = { id = "com.android.test", version.ref = "gradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
@@ -54,7 +54,7 @@ com-google-android-gms-playservices-location = { group = "com.google.android.gms
 
 # Check for bugfix in MaterialDataPicker and remove workaround in DateUtil::mergeUtcDateToTimestamp
 # https://github.com/material-components/material-components-android/issues/4373
-com-google-android-material = { group = "com.google.android.material", name = "material", version = "1.13.0" }
+com-google-android-material = { group = "com.google.android.material", name = "material", version = "1.14.0" }
 
 com-google-guava = { group = "com.google.guava", name = "guava", version = "33.6.0-jre" }
 com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.14.0" }

@@ -1,35 +1,21 @@
 package app.aaps.pump.medtrum.compose.steps
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,8 +35,6 @@ fun PrepareStep(
     val patchStep by viewModel.patchStep.collectAsStateWithLifecycle()
     val setupStep by viewModel.setupStep.collectAsStateWithLifecycle()
     val reservoirLevel by viewModel.medtrumPump.reservoirFlow.collectAsStateWithLifecycle()
-    val snText by viewModel.snText.collectAsStateWithLifecycle()
-    val snValidationErrorResId by viewModel.snValidationErrorResId.collectAsStateWithLifecycle()
 
     val isConnecting = patchStep == PatchStep.PREPARE_PATCH_CONNECT
     val isFilled = setupStep == MedtrumPatchViewModel.SetupStep.FILLED
@@ -59,14 +43,11 @@ fun PrepareStep(
     var unexpectedStateMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
-        // When step becomes PREPARE_PATCH_CONNECT, trigger connect
         if (patchStep == PatchStep.PREPARE_PATCH_CONNECT) {
             viewModel.preparePatchConnect()
         } else {
-            // Trigger preparePatch and load insulins on initial display
             viewModel.preparePatch()
             viewModel.loadInsulins()
-            viewModel.initSnText()
         }
     }
 
@@ -93,14 +74,9 @@ fun PrepareStep(
 
     PrepareStepContent(
         state = state,
-        snText = snText,
-        snValidationErrorResId = snValidationErrorResId,
-        isSnValid = viewModel.isSnValid,
-        onSnTextChange = viewModel::updateSnText,
         reservoirLevel = reservoirLevel,
         pumpState = viewModel.medtrumPump.pumpState.toString(),
         onNext = {
-            viewModel.saveSn()
             viewModel.moveStep(PatchStep.PREPARE_PATCH_CONNECT)
         },
         onFilled = {
@@ -131,10 +107,6 @@ internal enum class PrepareState { INITIAL, CONNECTING, FILLED, ERROR }
 @Composable
 internal fun PrepareStepContent(
     state: PrepareState,
-    snText: String = "",
-    snValidationErrorResId: Int? = null,
-    isSnValid: Boolean = true,
-    onSnTextChange: (String) -> Unit = {},
     reservoirLevel: Double = 0.0,
     pumpState: String = "",
     onNext: () -> Unit,
@@ -144,7 +116,7 @@ internal fun PrepareStepContent(
 ) {
     WizardStepLayout(
         primaryButton = when (state) {
-            PrepareState.INITIAL -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onNext, enabled = isSnValid)
+            PrepareState.INITIAL -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onNext)
             PrepareState.CONNECTING -> null
             PrepareState.FILLED -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.next), onClick = onFilled)
             PrepareState.ERROR -> WizardButton(text = stringResource(app.aaps.core.ui.R.string.retry), onClick = onRetry)
@@ -156,13 +128,6 @@ internal fun PrepareStepContent(
     ) {
         when (state) {
             PrepareState.INITIAL -> {
-                SerialNumberSection(
-                    snText = snText,
-                    snValidationErrorResId = snValidationErrorResId,
-                    isSnValid = isSnValid,
-                    onSnTextChange = onSnTextChange
-                )
-                Spacer(Modifier.height(8.dp))
                 Text(
                     text = stringResource(R.string.patch_begin_activation).stripHtml(),
                     style = MaterialTheme.typography.bodyLarge
@@ -219,102 +184,13 @@ internal fun PrepareStepContent(
     }
 }
 
+@Preview(showBackground = true, name = "Prepare - Initial")
 @Composable
-private fun SerialNumberSection(
-    snText: String,
-    snValidationErrorResId: Int?,
-    isSnValid: Boolean,
-    onSnTextChange: (String) -> Unit,
-    initialEditing: Boolean = false
-) {
-    var isEditing by rememberSaveable { mutableStateOf(initialEditing) }
-    var textBeforeEdit by rememberSaveable { mutableStateOf(snText) }
-
-    val confirmEdit = {
-        if (isSnValid) isEditing = false
-    }
-    val cancelEdit = {
-        onSnTextChange(textBeforeEdit)
-        isEditing = false
-    }
-
-    if (isEditing) {
-        OutlinedTextField(
-            value = snText,
-            onValueChange = onSnTextChange,
-            label = { Text(stringResource(R.string.sn_input_title)) },
-            singleLine = true,
-            isError = snValidationErrorResId != null,
-            supportingText = snValidationErrorResId?.let { { Text(stringResource(it)) } },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Characters,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(onDone = { confirmEdit() }),
-            trailingIcon = {
-                Row {
-                    IconButton(onClick = { cancelEdit() }, enabled = textBeforeEdit.isNotEmpty()) {
-                        Icon(Icons.Default.Close, contentDescription = stringResource(app.aaps.core.ui.R.string.cancel))
-                    }
-                    IconButton(onClick = { confirmEdit() }, enabled = isSnValid) {
-                        Icon(Icons.Default.Check, contentDescription = stringResource(app.aaps.core.ui.R.string.next))
-                    }
-                }
-            }
-        )
-    } else {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.sn_input_title) + ": " + snText,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(Modifier.width(8.dp))
-            OutlinedButton(onClick = {
-                textBeforeEdit = snText
-                isEditing = true
-            }) {
-                Text(stringResource(R.string.change_sn))
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true, name = "Prepare - Initial with SN")
-@Composable
-private fun PreviewInitialWithSn() {
+private fun PreviewInitial() {
     MaterialTheme {
         PrepareStepContent(
             state = PrepareState.INITIAL,
-            snText = "48AB1234",
-            isSnValid = true,
             onNext = {}, onFilled = {}, onRetry = {}, onCancel = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Prepare - Initial no SN")
-@Composable
-private fun PreviewInitialNoSn() {
-    MaterialTheme {
-        PrepareStepContent(
-            state = PrepareState.INITIAL,
-            snText = "",
-            isSnValid = false,
-            onNext = {}, onFilled = {}, onRetry = {}, onCancel = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Prepare - Invalid SN (editing)")
-@Composable
-private fun PreviewInvalidSn() {
-    MaterialTheme {
-        SerialNumberSection(
-            snText = "00000001",
-            snValidationErrorResId = R.string.sn_input_invalid,
-            isSnValid = false,
-            onSnTextChange = {},
-            initialEditing = true
         )
     }
 }

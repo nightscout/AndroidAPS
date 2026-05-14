@@ -91,6 +91,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -171,6 +172,11 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     override val predictionsFlow: StateFlow<List<BgDataPoint>> = _predictionsFlow.asStateFlow()
     private val _bgInfoFlow = MutableStateFlow<BgInfoData?>(null)
     override val bgInfoFlow: StateFlow<BgInfoData?> = _bgInfoFlow.asStateFlow()
+
+    // One-shot deferred recompute that flips isOutdated to true exactly when the last BG
+    // crosses 9 min old. Cancelled and re-armed by each updateBgInfoFromDatabase() call,
+    // so a fresh BG arriving before staleness simply restarts the timer.
+    private var staleBgTransitionJob: Job? = null
 
     // Overview chip flows
     private val _tempTargetFlow = MutableStateFlow<TempTargetDisplayData?>(null)
@@ -470,6 +476,10 @@ class OverviewDataCacheImpl @AssistedInject constructor(
     // =========================================================================
 
     private suspend fun updateBgInfoFromDatabase() {
+        // Cancel any pending stale-transition timer; we'll re-arm at the bottom if needed.
+        staleBgTransitionJob?.cancel()
+        staleBgTransitionJob = null
+
         // Use bucketed (smoothed) data like legacy, with raw DB fallback
         val lastBg = iobCobCalculator.ads.bucketedData?.firstOrNull()
         val lastGv = lastBg ?: persistenceLayer.getLastGlucoseValue()?.let { InMemoryGlucoseValue.fromGv(it) }
@@ -509,6 +519,20 @@ class OverviewDataCacheImpl @AssistedInject constructor(
             longAvgDelta = glucoseStatus?.let { profileUtil.fromMgdlToUnits(it.longAvgDelta) },
             longAvgDeltaText = glucoseStatus?.let { profileUtil.fromMgdlToSignedStringInUnits(it.longAvgDelta) }
         )
+
+        // Arm the one-shot timer so isOutdated flips to true the moment this BG turns 9 min old.
+        // No new DB event fires when time merely passes, so without this the strikethrough would
+        // never appear for an actually-stale value.
+        if (!isOutdated) {
+            val delayMs = lastGv.timestamp + T.mins(9).msecs() - dateUtil.now()
+            if (delayMs > 0) {
+                staleBgTransitionJob = scope.launch {
+                    delay(delayMs)
+                    aapsLogger.debug(LTag.UI, "BG crossed staleness threshold, refreshing BgInfo")
+                    updateBgInfoFromDatabase()
+                }
+            }
+        }
     }
 
     // =========================================================================

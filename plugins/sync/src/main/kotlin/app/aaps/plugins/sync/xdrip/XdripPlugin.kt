@@ -10,6 +10,8 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.HR
+import app.aaps.core.data.model.SC
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -61,6 +63,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -133,6 +136,8 @@ class XdripPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ WorkManager.getInstance(context).cancelUniqueWork(XDRIP_JOB_NAME) }, fabricPrivacy::logException)
         persistenceLayer.observeAnyChange()
+            // HR/SC writes come from the watch; this plugin doesn't broadcast them — skip to avoid reconnect-flush storm.
+            .filter { types -> types.any { it != HR::class && it != SC::class } }
             .onEach { types ->
                 sendStatusLine()
                 delayAndScheduleExecution("DB_CHANGED(${types.joinToString { it.simpleName ?: "?" }})")

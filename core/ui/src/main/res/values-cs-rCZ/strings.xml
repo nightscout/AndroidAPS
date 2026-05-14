@@ -810,7 +810,6 @@
     <string name="maintenance_export_csv_desc">Exportovat historii ošetření jako tabulku</string>
     <string name="maintenance_cleanup_db_desc">Odstranit staré záznamy z databáze</string>
     <string name="maintenance_reset_aps_results_desc">Vymazat uložené výsledky algoritmu</string>
-    <string name="maintenance_reset_db_desc">Smazat všechny databáze a restartovat</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Vybrat typ úložiště</string>
     <string name="clear_cloud_action">Vymazat nastavení</string>
@@ -828,6 +827,7 @@
     <string name="need_connect_permission">Aplikace potřebuje oprávnění bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Požadavek uživatele</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Spárovat</string>
     <string name="pump_unpair">Odpárovat</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárována</string>

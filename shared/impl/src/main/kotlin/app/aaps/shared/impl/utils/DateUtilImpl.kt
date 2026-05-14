@@ -218,6 +218,15 @@ class DateUtilImpl @Inject constructor(
         }
     }
 
+    override fun minOrSec(rh: ResourceHelper, durationMs: Long): String {
+        if (durationMs < 0) return ""
+        val duration = durationMs.milliseconds
+        return when {
+            duration.inWholeMinutes >= 2 -> rh.gs(R.string.min_plus, duration.inWholeMinutes.toInt())
+            else                         -> rh.gs(R.string.sec_plus, duration.inWholeSeconds.toInt())
+        }
+    }
+
     override fun minAgoShort(time: Long?): String {
         if (time == null) return ""
         val duration = (time - now()).milliseconds

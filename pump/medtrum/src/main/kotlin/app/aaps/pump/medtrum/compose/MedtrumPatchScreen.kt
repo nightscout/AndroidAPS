@@ -10,6 +10,7 @@ import app.aaps.pump.medtrum.R
 import app.aaps.pump.medtrum.code.PatchStep
 import app.aaps.pump.medtrum.compose.steps.ActivateStep
 import app.aaps.pump.medtrum.compose.steps.AttachStep
+import app.aaps.pump.medtrum.compose.steps.BleScanStepWrapper
 import app.aaps.pump.medtrum.compose.steps.CompleteStep
 import app.aaps.pump.medtrum.compose.steps.ConfirmDeactivateStep
 import app.aaps.pump.medtrum.compose.steps.DeactivateCompleteStep
@@ -44,6 +45,8 @@ fun MedtrumPatchScreen(
         setToolbarConfig = setToolbarConfig,
         stepContent = { step, onCancel ->
             when (step) {
+                PatchStep.BLE_SCAN                 -> BleScanStepWrapper(viewModel, onCancel)
+
                 PatchStep.PROFILE_GATE             -> ProfileGateWizardStep(viewModel)
 
                 PatchStep.PREPARE_PATCH,

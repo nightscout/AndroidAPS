@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">No se leyó una tasa basal válida de la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
+    <string name="loop_disabled_by_user">Lazo deshabilitado por el usuario</string>
     <string name="event_type">Tipo de evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -810,7 +811,7 @@
     <string name="maintenance_export_csv_desc">Exportar historial de tratamientos como hoja de cálculo</string>
     <string name="maintenance_cleanup_db_desc">Eliminar entradas antiguas de la base de datos</string>
     <string name="maintenance_reset_aps_results_desc">Borrar resultados de algoritmos almacenados</string>
-    <string name="maintenance_reset_db_desc">Borrar todas las bases de datos y reiniciar</string>
+    <string name="maintenance_reset_db_desc">Borrar todas las bases de datos y recargar</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Seleccionar tipo de almacenamiento</string>
     <string name="clear_cloud_action">Restablecer ajustes</string>
@@ -828,8 +829,10 @@
     <string name="need_connect_permission">La aplicación necesita permisos de bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Emparejar</string>
     <string name="pump_unpair">Desemparejar</string>
+    <string name="pump_unpair_confirm_title">¿Desvincular bomba?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baja energía no soportado.</string>
@@ -994,6 +997,7 @@
     <string name="database_cleanup">Limpieza de la base de datos</string>
     <string name="nav_resetdb">Restablecer bases de datos</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Buscar bomba</string>
     <string name="ble_scan_select_pump">Selecciona tu bomba de la lista de abajo</string>
     <string name="ble_scan_scanning">Buscando dispositivos…</string>
     <!-- Graph configuration -->

@@ -21,7 +21,6 @@
     <string name="equil_title_attach">安裝幫浦</string>
     <string name="equil_title_air">套管預充</string>
     <string name="equil_title_unpair_detach">移除幫浦</string>
-    <string name="equil_title_unpair_confirm">確認取消配對</string>
     <string name="equil_title_history_events">歷史事件</string>
     <string name="equil_tone">警報音</string>
     <string name="equil_tone_mode_mute">靜音</string>

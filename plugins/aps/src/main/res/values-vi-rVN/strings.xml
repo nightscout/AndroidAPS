@@ -25,7 +25,7 @@
     <string name="openapsma_profile_label">Cấu hình</string>
     <string name="openapsma_meal_data_label">Dữ liệu bữa ăn</string>
     <string name="openapsma_request_label">Yêu cầu</string>
-    <string name="constraints">Giới hạn</string>
+    <string name="constraints">Các điều kiện ràng buộc</string>
     <string name="openapsma_autosensdata_label">Dữ liệu Autosens</string>
     <string name="openapsma_script_debug_data_label">Gỡ lỗi script</string>
     <string name="openapsama_link_to_preference_json_doc_txt">Chú ý!\nThông thường bạn không cần thay đổi các giá trị bên dưới. Vui lòng BẤM VÀO ĐÂY và ĐỌC kỹ nội dung, đảm bảo bạn HIỂU trước khi thay đổi bất kỳ giá trị nào.</string>
@@ -44,7 +44,7 @@
     <!--    Loop -->
     <string name="smb_frequency_exceeded">Một liều bolus đã được bơm trong vòng 3 phút trước, bỏ qua SMB</string>
     <string name="pump_not_initialized">Bơm chưa được khởi tạo!</string>
-    <string name="loop_shortname">LOOP</string>
+    <string name="loop_shortname">VÒNG LẶP</string>
     <string name="description_loop">Bật hoặc tắt chức năng thực thi để kích hoạt vòng lặp.</string>
     <string name="no_aps_selected">KHÔNG CÓ APS ĐƯỢC CHỌN HOẶC CUNG CẤP KẾT QUẢ</string>
     <string name="ignore5m">Bỏ qua 5 phút</string>

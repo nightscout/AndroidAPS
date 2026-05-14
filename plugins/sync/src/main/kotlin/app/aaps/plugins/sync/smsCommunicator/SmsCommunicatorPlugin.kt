@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.smsCommunicator
 
 import android.Manifest
 import android.content.Context
+import android.os.Bundle
 import android.telephony.SmsManager
 import android.telephony.SmsMessage
 import androidx.work.WorkerParameters
@@ -60,7 +61,8 @@ import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.ComposeScreenContent
 import app.aaps.core.ui.compose.icons.IcPluginSms
 import app.aaps.core.ui.compose.preference.PreferenceSubScreenDef
-import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.smsCommunicator.actions.BasalCancelAction
 import app.aaps.plugins.sync.smsCommunicator.actions.BolusAction
@@ -212,19 +214,33 @@ class SmsCommunicatorPlugin @Inject constructor(
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+        @Inject lateinit var dataInbox: DataInbox
 
         override suspend fun doWorkAndLog(): Result {
-            val bundle = dataWorkerStorage.pickupBundle(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
-                ?: return Result.failure(workDataOf("Error" to "missing input data"))
-            val format = bundle.getString("format")
-                ?: return Result.failure(workDataOf("Error" to "missing format in input data"))
+            val bundles = dataInbox.drain(SmsInbox)
+            if (bundles.isEmpty()) return Result.success(workDataOf("Result" to "no data"))
+            var hadFailure = false
+            for (bundle in bundles) {
+                try {
+                    processBundle(bundle)
+                } catch (e: Exception) {
+                    aapsLogger.error(LTag.SMS, "Failed processing SMS bundle", e)
+                    hadFailure = true
+                }
+            }
+            return if (hadFailure) Result.failure(workDataOf("Error" to "one or more bundles failed")) else Result.success()
+        }
+
+        private suspend fun processBundle(bundle: Bundle) {
+            val format = bundle.getString("format") ?: run {
+                aapsLogger.warn(LTag.SMS, "Skipping SMS bundle: missing format")
+                return
+            }
             @Suppress("DEPRECATION") val pdus = bundle["pdus"] as Array<*>
             for (pdu in pdus) {
                 val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
                 smsCommunicatorPlugin.processSms(Sms(message))
             }
-            return Result.success()
         }
     }
 
@@ -1121,3 +1137,5 @@ class SmsCommunicatorPlugin @Inject constructor(
         icon = pluginDescription.icon
     )
 }
+
+object SmsInbox : Inbox<Bundle>("sms-received", SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)

@@ -47,6 +47,11 @@ class DetermineBasalSMB @Inject constructor(
     fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
     fun round(value: Double): Int = value.roundToInt()
 
+    // kotlin.math.max and Double.coerceAtLeast both propagate NaN. This variant pins
+    // NaN/±Infinity to `minimum` and otherwise behaves like coerceAtLeast.
+    private fun Double.coerceAtLeastFinite(minimum: Double): Double =
+        if (isFinite()) maxOf(this, minimum) else minimum
+
     // we expect BG to rise or fall at the rate of BGI,
     // adjusted by the rate at which BG would need to rise /
     // fall to get eventualBG to target over 2 hours
@@ -526,6 +531,24 @@ class DetermineBasalSMB @Inject constructor(
         var UAMpredBG: Double? = null
         var COBpredBG: Double? = null
         var aCOBpredBG: Double?
+
+        // Report once-per-call if any iob tick has non-finite activity (or sens is NaN) so
+        // Crashlytics groups these with a stack trace. Covers BOTH iobTick.activity (feeds
+        // predBGI/IOBpredBGI/predUAMBGI) and iobTick.iobWithZeroTemp.activity (feeds
+        // predZTBGI). NaN in either propagates through predictions → avgPredBG → minPredBG →
+        // insulinReq, and points to an upstream IOB/insulin-model bug worth investigating.
+        val firstBadIobTick = iobArray.firstOrNull {
+            it.activity.isNaN() || it.iobWithZeroTemp?.activity?.isNaN() == true
+        }
+        if (firstBadIobTick != null || sens.isNaN()) {
+            val msg = "OpenAPS SMB non-finite IOB inputs: " +
+                "activity=${firstBadIobTick?.activity} " +
+                "iobWithZeroTemp.activity=${firstBadIobTick?.iobWithZeroTemp?.activity} " +
+                "sens=$sens"
+            consoleError.add(msg)
+            fabricPrivacy.logException(IllegalStateException(msg))
+        }
+
         iobArray.forEach { iobTick ->
             //console.error(iobTick);
             val predBGI: Double = round((-iobTick.activity * sens * 5), 2)
@@ -533,9 +556,6 @@ class DetermineBasalSMB @Inject constructor(
                 if (dynIsfMode) round((-iobTick.activity * (1800 / (profile.TDD * (ln((max(IOBpredBGs[IOBpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
                 else predBGI
             iobTick.iobWithZeroTemp ?: error("iobTick.iobWithZeroTemp missing")
-            // try to find where is crashing https://console.firebase.google.com/u/0/project/androidaps-c34f8/crashlytics/app/android:info.nightscout.androidaps/issues/950cdbaf63d545afe6d680281bb141e5?versions=3.3.0-dev-d%20(1500)&time=last-thirty-days&types=crash&sessionEventKey=673BF7DD032300013D4704707A053273_2017608123846397475
-            if (iobTick.iobWithZeroTemp!!.activity.isNaN() || sens.isNaN())
-                fabricPrivacy.logCustom("iobTick.iobWithZeroTemp!!.activity=${iobTick.iobWithZeroTemp!!.activity} sens=$sens")
             val predZTBGI =
                 if (dynIsfMode) round((-iobTick.iobWithZeroTemp!!.activity * (1800 / (profile.TDD * (ln((max(ZTpredBGs[ZTpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
                 else round((-iobTick.iobWithZeroTemp!!.activity * sens * 5), 2)
@@ -666,9 +686,9 @@ class DetermineBasalSMB @Inject constructor(
         consoleError.add("UAM Impact: $uci mg/dL per 5m; UAM Duration: $UAMduration hours")
         consoleLog.add("EventualBG is $eventualBG ;")
 
-        minIOBPredBG = max(39.0, minIOBPredBG)
-        minCOBPredBG = max(39.0, minCOBPredBG)
-        minUAMPredBG = max(39.0, minUAMPredBG)
+        minIOBPredBG = minIOBPredBG.coerceAtLeastFinite(39.0)
+        minCOBPredBG = minCOBPredBG.coerceAtLeastFinite(39.0)
+        minUAMPredBG = minUAMPredBG.coerceAtLeastFinite(39.0)
         minPredBG = round(minIOBPredBG, 0)
 
         val fSensBG = min(minPredBG, bg)
@@ -772,6 +792,10 @@ class DetermineBasalSMB @Inject constructor(
         }
         // make sure minPredBG isn't higher than avgPredBG
         minPredBG = min(minPredBG, avgPredBG)
+        // Final defensive guard: minPredBG can still be NaN if minZTUAMPredBG/minGuardBG/avgPredBG
+        // poisoned the chain above — and min(...) propagates NaN. Pin to floor so downstream
+        // fSensBG / insulinReq / rT.insulinReq stay finite.
+        if (!minPredBG.isFinite()) minPredBG = 39.0
 
         consoleLog.add("minPredBG: $minPredBG minIOBPredBG: $minIOBPredBG minZTGuardBG: $minZTGuardBG")
         if (minCOBPredBG < 999) {

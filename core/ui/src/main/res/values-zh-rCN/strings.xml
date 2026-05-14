@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">从泵中无法读取有效的基础率</string>
     <string name="limiting_iob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
     <string name="loop_disabled">按约束条件禁用循环</string>
+    <string name="loop_disabled_by_user">用户禁用闭环</string>
     <string name="event_type">事件类型</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -176,6 +177,9 @@
     <string name="remove_label">删除</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="activate_insulin">启用胰岛素</string>
+    <string name="pump_wizard_profile_gate_title">需要配置文件</string>
+    <string name="pump_wizard_profile_gate_pick">选择激活时应用的配置文件。</string>
+    <string name="pump_wizard_profile_gate_no_store">未定义任何配置文件。请打开配置文件管理创建一个，然后重新开始激活。</string>
     <string name="reset">重置</string>
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
@@ -807,7 +811,7 @@
     <string name="maintenance_export_csv_desc">导出处理历史为电子表格</string>
     <string name="maintenance_cleanup_db_desc">从数据库中删除旧条目</string>
     <string name="maintenance_reset_aps_results_desc">清除已存储的算法结果</string>
-    <string name="maintenance_reset_db_desc">删除所有数据库并重启</string>
+    <string name="maintenance_reset_db_desc">删除所有数据库并重新加载</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">选择存储类型</string>
     <string name="clear_cloud_action">清除设置</string>
@@ -825,6 +829,7 @@
     <string name="need_connect_permission">应用程序需要蓝牙权限。</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">用户请求</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">配对</string>
     <string name="pump_unpair">取消配对</string>
     <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>

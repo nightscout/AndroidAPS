@@ -447,6 +447,7 @@
     <string name="need_connect_permission">어플리케이션에 블루투스 권한이 필요합니다</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">사용자 요청</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">펌프 연결됨</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE(블루투스 저전력) 지원되지 않음</string>

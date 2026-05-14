@@ -7,7 +7,7 @@
     <string name="treatments_history">Lịch sử điều trị</string>
     <string name="treatments_desc">Xem và quản lý lịch sử điều trị</string>
     <string name="nav_configuration">Thiết lập hệ thống</string>
-    <string name="nav_configuration_desc">Thiết lập cấu hình (CGM, bơm insulin, ...) và bật các tính năng</string>
+    <string name="nav_configuration_desc">Thiết lập cài đặt (CGM, bơm, ...) và bật các tính năng</string>
     <string name="count_selected">Đã chọn %1$d</string>
     <string name="delete">Xóa</string>
     <string name="show_invalidated">Hiển thị các mục không hợp lệ</string>
@@ -30,6 +30,7 @@
     <string name="no_valid_basal_rate">Không đọc được liều basal hợp lệ từ bơm</string>
     <string name="limiting_iob">Giới hạn IOB: %1$.1f U – Lý do: %2$s.</string>
     <string name="loop_disabled">VÒNG LẶP BỊ TẮT DO GIỚI HẠN AN TOÀN</string>
+    <string name="loop_disabled_by_user">Vòng lặp đã bị người dùng tắt</string>
     <string name="event_type">Loại sự kiện</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -41,7 +42,7 @@
     <string name="snooze_30m">Hoãn 30 phút</string>
     <string name="snooze_60m">Hoãn 60 phút</string>
     <string name="virtual_pump">Bơm mô phỏng</string>
-    <string name="constraints">Giới hạn</string>
+    <string name="constraints">Điều kiện ràng buộc</string>
     <string name="superbolus">Superbolus</string>
     <string name="pump_paused">Bơm đã tạm dừng</string>
     <string name="and">Và</string>
@@ -72,7 +73,7 @@
     <!-- master_password moved to core/keys/strings.xml -->
     <string name="ue_export_to_csv">Xuất dữ liệu sang Excel (csv)</string>
     <string name="confirm">Xác nhận</string>
-    <string name="pump">Bơm</string>
+    <string name="pump">Bơm Insulin</string>
     <string name="pump_management">Bơm Insulin</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
@@ -88,7 +89,7 @@
     <string name="extended_bolus">Liều Bolus kéo dài</string>
     <string name="paused">Đã tạm dừng</string>
     <string name="running">Đang chạy</string>
-    <string name="tdd_total">Tổng TDD</string>
+    <string name="tdd_total">TDD Total</string>
     <string name="tdd_old_data">Dữ liệu cũ</string>
     <string name="goingtodeliver">Đang tiêm %1$.2f U Insulin</string>
     <string name="androidaps_start">AAPS đã khởi động</string>
@@ -268,16 +269,16 @@
     <!--       Stats -->
     <string name="average">Trung bình</string>
     <string name="tir">Thời gian trong phạm vi</string>
-    <string name="below" comment="below &quot;in range&quot;">Bên dưới</string>
+    <string name="below" comment="below &quot;in range&quot;">Thấp</string>
     <string name="in_range">Trong phạm vi</string>
     <string name="veryLow" comment="below 3.1">Quá thấp</string>
     <string name="low" comment="3.1-3.9">Thấp</string>
     <string name="high" comment="10.0-13.9">Cao</string>
     <string name="veryHigh" comment="above 13.9">Quá cao</string>
-    <string name="above" comment="above &quot;in range&quot;">Bên trên</string>
+    <string name="above" comment="above &quot;in range&quot;">Cao</string>
     <string name="detailed_14_days">Chi tiết 14 ngày</string>
-    <string name="day_tir">TIR trong ngày</string>
-    <string name="night_tir">TIR ban đêm</string>
+    <string name="day_tir">Phạm vi mục tiêu ban ngày</string>
+    <string name="night_tir">Phạm vi mục tiêu ban đêm</string>
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">SD: %1$s</string>
     <string name="seven_days_short">7ngày</string>
@@ -287,7 +288,7 @@
     <string name="mins">%1$d phút</string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
-    <string name="careportal_bgcheck">BG Check</string>
+    <string name="careportal_bgcheck">Kiểm tra BG</string>
     <string name="careportal_mbg">Đường huyết nhập tay hoặc hiệu chuẩn</string>
     <string name="careportal_announcement">Thông báo</string>
     <string name="careportal_settings_export">Xuất cài đặt</string>
@@ -315,7 +316,7 @@
     <string name="careportal_tempbasalstart">Bắt đầu liều nền tạm thời</string>
     <string name="careportal_tempbasalend">Kết thúc liều nền tạm thời</string>
     <string name="careportal_carbscorrection">Điều chỉnh Carbs</string>
-    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="careportal_openapsoffline">OpenAPS ngoại tuyến</string>
     <string name="pump_battery_change">Thay pin Bơm</string>
     <string name="temporary_target">Mục tiêu Tạm thời</string>
     <string name="temporary_targets">Mục tiêu tạm thời</string>
@@ -375,7 +376,7 @@
     <string name="careportal_stress">Căng thẳng</string>
     <string name="careportal_pre_period">Trước kỳ kinh</string>
     <string name="careportal_alcohol">Rượu bia</string>
-    <string name="careportal_cortisone">Cortisone</string>
+    <string name="careportal_cortisone">Thuốc Cortisone</string>
     <string name="careportal_feeling_low">Cảm thấy hạ đường huyết</string>
     <string name="careportal_feeling_high">Cảm thấy đường huyết cao</string>
     <string name="careportal_falling_asleep">Buồn ngủ</string>
@@ -391,12 +392,12 @@
     <string name="manage_insulin_desc">Quản lý và kích hoạt các cấu hình insulin</string>
     <string name="concentration_disable_blocked">Không thể tắt hỗ trợ nồng độ khi vẫn còn insulin không phải U100. Hãy xóa tất cả các cấu hình insulin không phải U100 và chuyển sang cấu hình U100 trước.</string>
     <string name="simple_mode_blocked_by_concentration">Không thể bật chế độ đơn giản khi đang sử dụng insulin không phải U100. Hãy chuyển sang insulin U100 trước.</string>
-    <string name="manage_profile_desc">Quản lý và kích hoạt các cấu hình</string>
+    <string name="manage_profile_desc">Quản lý và kích hoạt các cấu hình điều trị</string>
     <string name="manage_temp_target_desc">Quản lý và đặt mục tiêu tạm thời</string>
     <string name="manage_temp_basal_desc">Bắt đầu liều nền tạm thời</string>
     <string name="manage_extended_bolus_desc">Bắt đầu liều bolus kéo dài</string>
     <string name="manage_site_rotation_desc">Theo dõi và luân chuyển vị trí truyền</string>
-    <string name="manage_quickwizard_desc">Quản lý preset Trình hướng dẫn nhanh</string>
+    <string name="manage_quickwizard_desc">Quản lý các thiết lập sẵn của hướng dẫn nhanh</string>
     <string name="treatment_note_desc">Thêm ghi chú vào hồ sơ</string>
     <string name="treatment_question_desc">Ghi lại câu hỏi cho nhóm chăm sóc của bạn</string>
     <string name="treatment_cgm_desc">Mở ứng dụng CGM</string>
@@ -427,7 +428,7 @@
     <string name="temp_target_management">Mục tiêu tạm thời</string>
     <string name="revert_to_defaults">Khôi phục về mặc định</string>
     <string name="confirm_cancel_temp_target">Hủy mục tiêu tạm thời đang hoạt động?</string>
-    <string name="loop">Loop</string>
+    <string name="loop">Vòng lặp</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
     <string name="location_front_right_upper_chest">Ngực phải</string>
@@ -465,7 +466,7 @@
     <string name="arrow_center">Ở giữa</string>
     <!--    Command-->
     <string name="connectiontimedout">Hết thời gian kết nối</string>
-    <string name="pump_not_configured">Boưm chưa được cấu hình</string>
+    <string name="pump_not_configured">Bơm chưa được cấu hình</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Đã kích hoạt</string>
     <string name="comment">Nhận xét</string>
@@ -517,7 +518,7 @@
     <string name="uel_sensor_location">VỊ TRÍ CẢM BIẾN</string>
     <string name="uel_site_change">THAY ĐIỂM GẮN</string>
     <string name="uel_site_location">SITE LOCATION</string>
-    <string name="uel_reservoir_change">THAY RESERVOIR</string>
+    <string name="uel_reservoir_change">THAY BÌNH CHỨA</string>
     <string name="uel_calibration">CALIBRATION</string>
     <string name="uel_prime_bolus">BOLUS MỒI</string>
     <string name="uel_treatment">ĐIỀU TRỊ</string>
@@ -656,7 +657,7 @@
     <string name="cobvsiob">COB với IOB</string>
     <string name="slowabsorptiondetected_plain">!!!!! Phát hiện hấp thu carb chậm trong %1$d%% thời gian. Hãy kiểm tra lại phép tính của bạn. COB có thể bị ước tính cao, do đó có thể dẫn đến việc cung cấp nhiều insulin hơn !!!!!</string>
     <string name="bolus_constraint_applied_warn">Giới hạn bolus đã áp dụng: %1$.2f U đến %2$.2f U</string>
-    <string name="bolus_recorded_only">Bolus chỉ được ghi lại (không tiêm qua pump)</string>
+    <string name="bolus_recorded_only">Liều Bolus chỉ được ghi lại (không tiêm qua Bơm)</string>
     <string name="advisoralarm">Chạy báo thức khi đến giờ ăn</string>
     <string name="wizard_bg_label">BG</string>
     <string name="wizard_correction">Hiệu chỉnh</string>
@@ -715,7 +716,7 @@
     <string name="unlock_settings">Mở khóa cài đặt</string>
     <!--    Pumps -->
     <string name="battery_label">Pin</string>
-    <string name="reservoir_label">Bình chứa insulin</string>
+    <string name="reservoir_label">Bình chứa</string>
     <string name="last_connection_label">Kết nối lần cuối</string>
     <string name="last_bolus_label">Liều bolus gần nhất</string>
     <string name="base_basal_rate_label">Tỷ lệ liều nền cơ bản</string>
@@ -800,7 +801,7 @@
     <string name="data_choices">Lựa chọn dữ liệu</string>
     <string name="unattended_settings_export">Xuất cài đặt tự động</string>
     <!-- Maintenance bottom sheet descriptions -->
-    <string name="maintenance_log_settings_desc">Cấu hình mức độ chi tiết của nhật ký</string>
+    <string name="maintenance_log_settings_desc">Thiết lập mức độ chi tiết của nhật ký</string>
     <string name="maintenance_send_logs_desc">Chia sẻ nhật ký để khắc phục sự cố</string>
     <string name="maintenance_delete_logs_desc">Xóa các tệp nhật ký cũ</string>
     <string name="maintenance_aaps_directory_desc">Chọn thư mục lưu trữ cục bộ</string>
@@ -808,9 +809,9 @@
     <string name="maintenance_export_desc">Lưu bản sao lưu cài đặt được mã hóa</string>
     <string name="maintenance_import_desc">Khôi phục cài đặt từ bản sao lưu</string>
     <string name="maintenance_export_csv_desc">Xuất lịch sử điều trị dưới dạng bảng tính</string>
-    <string name="maintenance_cleanup_db_desc">Xóa các mục cũ khỏi cơ sở dữ liệu</string>
+    <string name="maintenance_cleanup_db_desc">Xóa các bản ghi cũ khỏi cơ sở dữ liệu</string>
     <string name="maintenance_reset_aps_results_desc">Xóa kết quả thuật toán đã lưu</string>
-    <string name="maintenance_reset_db_desc">Xóa tất cả cơ sở dữ liệu và khởi động lại</string>
+    <string name="maintenance_reset_db_desc">Xóa toàn bộ cơ sở dữ liệu và tải lại</string>
     <!-- Cloud directory dialog (Compose) -->
     <string name="select_storage_type">Chọn loại lưu trữ</string>
     <string name="clear_cloud_action">Xóa cài đặt</string>
@@ -828,8 +829,10 @@
     <string name="need_connect_permission">Ứng dụng yêu cầu quyền Bluetooth</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Yêu cầu người dùng</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">Ghép nối</string>
     <string name="pump_unpair">Hủy ghép nối</string>
+    <string name="pump_unpair_confirm_title">Hủy ghép nối bơm?</string>
     <string name="pump_paired" comment="26 characters max for translation">Bơm đã ghép nối</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Thiết bị không hỗ trợ Bluetooth.</string>
@@ -852,8 +855,8 @@
     <string name="nav_setupwizard_desc">Cấu hình AAPS theo từng bước</string>
     <string name="statistics">Thống kê</string>
     <string name="statistics_desc">Xem thống kê và báo cáo</string>
-    <string name="tdd_cycle_pattern">Mẫu chu kỳ TDD</string>
-    <string name="tdd_cycle_pattern_desc">Gộp tổng liều insulin hàng ngày theo chu kỳ 28 ngày để nhận diện các mẫu lặp lại</string>
+    <string name="tdd_cycle_pattern">Mô hình chu kỳ tổng liều hàng ngày</string>
+    <string name="tdd_cycle_pattern_desc">Gộp tổng liều insulin hàng ngày theo chu kỳ 28 ngày để nhận diện các mô hình lặp lại</string>
     <string name="nav_profile_helper">Hỗ trợ cấu hình</string>
     <string name="nav_profile_helper_desc">Xây dựng cấu hình dựa trên cân nặng hoặc TDD</string>
     <string name="quick_launch_configure">Thiết lập Khởi chạy nhanh</string>
@@ -865,7 +868,7 @@
     <string name="remove">Loại bỏ</string>
     <string name="reorder">Sắp xếp lại</string>
     <string name="status">Trạng thái</string>
-    <string name="pump_actions">Các hành động bơm</string>
+    <string name="pump_actions">Các thao tác với bơm</string>
     <string name="tempbasal_button">Liều nền tạm thời</string>
     <string name="extended_bolus_button">Liều bolus kéo dài</string>
     <string name="device_maintenance">Bảo trì thiết bị</string>
@@ -991,6 +994,7 @@
     <string name="database_cleanup">Dọn dẹp cơ sở dữ liệu</string>
     <string name="nav_resetdb">Đặt lại cơ sở dữ liệu</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">Tìm bơm</string>
     <string name="ble_scan_select_pump">Chọn bơm của bạn từ danh sách bên dưới</string>
     <string name="ble_scan_scanning">Đang quét các thiết bị…</string>
     <!-- Graph configuration -->

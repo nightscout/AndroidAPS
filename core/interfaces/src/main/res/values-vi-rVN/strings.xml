@@ -70,7 +70,7 @@
     <string name="pref_show_detailed_delta">Hiển thị chi tiết độ lệch</string>
     <string name="pref_show_avgdelta">Hiển thị AvgDelta</string>
     <string name="pref_show_tempTarget">Hiển thị mục tiêu tạm thời</string>
-    <string name="pref_show_reservoir_level">Hiển thị mức ống chứa</string>
+    <string name="pref_show_reservoir_level">Hiển thị mức bình chứa</string>
     <string name="pref_show_phone_battery">Hiển thị pin điện thoại</string>
     <string name="pref_show_rig_battery">Hiển thị mức pin Rig</string>
     <string name="pref_show_basal_rate">Hiển thị liều nền</string>

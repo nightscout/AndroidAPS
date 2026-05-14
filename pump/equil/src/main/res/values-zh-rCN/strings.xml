@@ -21,7 +21,6 @@
     <string name="equil_title_attach">安装泵</string>
     <string name="equil_title_air">导管预充</string>
     <string name="equil_title_unpair_detach">移除泵</string>
-    <string name="equil_title_unpair_confirm">确认取消配对</string>
     <string name="equil_title_history_events">历史事件</string>
     <string name="equil_tone">警报铃声</string>
     <string name="equil_tone_mode_mute">静音</string>

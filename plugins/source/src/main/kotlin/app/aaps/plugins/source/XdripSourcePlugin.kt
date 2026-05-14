@@ -26,7 +26,8 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.compose.icons.IcXDrip
-import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.core.utils.receivers.DataInbox
+import app.aaps.core.utils.receivers.Inbox
 import app.aaps.plugins.source.compose.BgSourceComposeContent
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -69,7 +70,7 @@ class XdripSourcePlugin @Inject constructor(
         @Inject lateinit var persistenceLayer: PersistenceLayer
         @Inject lateinit var preferences: Preferences
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+        @Inject lateinit var dataInbox: DataInbox
 
         fun getSensorStartTime(bundle: Bundle): Long? {
             val now = dateUtil.now()
@@ -87,12 +88,26 @@ class XdripSourcePlugin @Inject constructor(
 
         @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
-            var ret = Result.success()
-
             if (!xdripSourcePlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
-            val bundle = dataWorkerStorage.pickupBundle(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
-                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            val bundles = dataInbox.drain(XdripInbox)
+            if (bundles.isEmpty()) return Result.success(workDataOf("Result" to "no data"))
 
+            var hadFailure = false
+            for (bundle in bundles) {
+                try {
+                    processBundle(bundle)
+                } catch (e: Exception) {
+                    // processBundle early-returns on malformed-bundle conditions; anything that
+                    // reaches the catch is a real exception (typically a DB write). Surface as
+                    // failure so WorkInfo reflects the truth.
+                    aapsLogger.error(LTag.BGSOURCE, "Failed processing xDrip bundle", e)
+                    hadFailure = true
+                }
+            }
+            return if (hadFailure) Result.failure(workDataOf("Error" to "one or more bundles failed")) else Result.success()
+        }
+
+        private suspend fun processBundle(bundle: Bundle) {
             aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
             val glucoseValues = mutableListOf<GV>()
             glucoseValues += GV(
@@ -125,14 +140,14 @@ class XdripSourcePlugin @Inject constructor(
             }
             // Always update glucoseValues, but use the decided sensorStartTime
             if (glucoseValues[0].timestamp > 0 && glucoseValues[0].value > 0.0) {
-                try {
-                    persistenceLayer.insertCgmSourceData(Sources.Xdrip, glucoseValues, emptyList(), finalSensorStartTime)
-                } catch (e: Exception) {
-                    ret = Result.failure(workDataOf("Error" to e.toString()))
-                }
-            } else return Result.failure(workDataOf("Error" to "missing glucoseValue"))
+                persistenceLayer.insertCgmSourceData(Sources.Xdrip, glucoseValues, emptyList(), finalSensorStartTime)
+            } else {
+                aapsLogger.warn(LTag.BGSOURCE, "Skipping xDrip bundle: missing glucoseValue")
+                return
+            }
             xdripSourcePlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
-            return ret
         }
     }
 }
+
+object XdripInbox : Inbox<Bundle>("xdrip-bg", XdripSourcePlugin.XdripSourceWorker::class.java)

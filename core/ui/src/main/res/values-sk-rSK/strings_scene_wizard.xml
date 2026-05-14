@@ -1,22 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Scene wizard: template picker intro -->
+    <string name="scene_wizard_choose_template">Vyberte si východiskový bod. Šablóny predvypĺňajú odporúčané akcie pre bežné situácie - všetko môžete upraviť v nasledujúcich krokoch.</string>
     <!-- Exercise: TT 140 (Activity), Profile 70%, SMB off, Exercise CP — 3h -->
+    <string name="scene_template_exercise">Cvičenie</string>
+    <string name="scene_wizard_exercise_desc">Zvýšte cieľ, znížte profil na 70 %, vypnite SMB, aby ste predišli poklesom pri cvičení.</string>
+    <string name="scene_wizard_info_exercise">Počas fyzickej aktivity svaly spotrebúvajú glukózu rýchlejšie a citlivosť na inzulín sa zvyšuje.
+Zvýšenie dočasného cieľa vopred dáva algoritmu náskok – začne včas znižovať podávanie inzulínu, čím si vytvorí rezervu proti poklesom vyvolaným cvičením. Odporúča sa tiež vypnúť SMB, pretože korekčné bolusy počas cvičenia môžu spôsobiť rýchle poklesy. Pre dosiahnutie najlepších výsledkov aktivujte túto scénu 1 – 2 hodiny pred začiatkom cvičenia, aby mal algoritmus čas znížiť hladinu inzulínu.</string>
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
+    <string name="scene_template_sick_day">Choroba</string>
+    <string name="scene_wizard_sick_day_desc">Silnejší profil (150 %) na zvládnutie zvýšenej inzulínovej rezistencie počas choroby.</string>
+    <string name="scene_wizard_info_sick_day">Choroba, horúčka a stresové hormóny môžu dramaticky zvýšiť inzulínovú rezistenciu, niekedy až o 50 % alebo viac. Silnejší profil (napr. 150 %) povie algoritmu, aby podával viac inzulínu vo všetkých výpočtoch – bazálne dávky, návrhy bolusu a korekčné faktory. Môžete tiež pridať dočasný cieľ alebo upraviť režim uzavretého okruhu v nasledujúcich krokoch. Pozorne sledujte a upravujte ho podľa toho, ako sa vaše telo zotavuje.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
+    <string name="scene_template_sick_day_vomiting">Choroba - Zvracanie</string>
+    <string name="scene_wizard_sick_day_vomiting_desc">Znížený profil s LGS - opak štandardného dňa choroby, keď nemôžete vstrebávať jedlo.</string>
+    <string name="scene_wizard_info_sick_day_vomiting">Keď nedokážete udržať jedlo v žalúdku, štandardný prístup zvyšovania inzulínu počas choroby môže byť nebezpečný. Zvracanie znamená, že sacharidy sa nevstrebávajú, takže hladina glukózy v krvi môže klesnúť, a nie stúpnuť. Znížený profil (60 %) znižuje podávanie inzulínu a režim LGS pridáva ďalšiu bezpečnostnú poistku tým, že pozastaví podávanie inzulínu, ak hladina glukózy klesne. Vypnutie SMB zabráni akýmkoľvek dodatočným bolusom. Často monitorujte – kontrolujte hladinu glukózy v krvi každé 1–2 hodiny a ketóny každé 2–4 hodiny. Vyhľadajte lekársku pomoc, ak zvracanie pretrváva dlhšie ako niekoľko hodín alebo ak ketóny stúpnu nad 1,5 mmol/L.</string>
     <!-- Sleep: no default actions — 8h -->
+    <string name="scene_template_sleep">Spánok</string>
+    <string name="scene_wizard_sleep_desc">Presnejší cieľ pre lepšiu kontrolu počas noci.</string>
+    <string name="scene_wizard_info_sleep">Počas noci veľa ľudí zažíva nezistené hyperglykémie alebo hypoglykémie. Mierne presnejší cieľ počas spánku umožňuje algoritmu vykonávať jemnejšie korekcie počas noci. Pre dosiahnutie najlepších výsledkov to skombinujte s profilom, ktorý zodpovedá vašej nočnej bazálnej potrebe.</string>
     <!-- Post-exercise Night: Profile 75%, TT 120 (Hypo), SMB off — 10h -->
+    <string name="scene_template_post_exercise_night">Noc po cvičení</string>
+    <string name="scene_wizard_post_exercise_night_desc">Znížený profil, vyšší cieľ, vypnuté SMB - chráni pred oneskorenými nočnými hypoglykémiami po aktivite.</string>
+    <string name="scene_wizard_info_post_exercise_night">Po fyzickej aktivite svaly dopĺňajú zásoby glykogénu ešte mnoho hodín – citlivosť na inzulín môže zostať zvýšená 24–48 hodín, s najvyšším rizikom nočnej hypoglykémie 6–12 hodín po cvičení. Znížený profil znižuje bazálne podávanie počas celej noci, vyšší dočasný cieľ poskytuje algoritmu bezpečnostnú rezervu a vypnutie SMB zabraňuje algoritmu v nadmernej korekcii krátkodobých nárastov.
+Aktivujte túto scénu pred spaním v dňoch, keď ste cvičili, najmä po dlhších tréningoch alebo keď ste pridali nové aktivity. Majte pri posteli rýchle sacharidy a zvážte nastavenie budíka na kontrolu uprostred noci.</string>
     <!-- Pre-meal: TT 90 (Eating Soon) — 30m -->
+    <string name="scene_template_pre_meal">Pred jedlom</string>
+    <string name="scene_wizard_pre_meal_desc">Nižší cieľ, aby ste predišli nárastu po jedle.</string>
+    <string name="scene_wizard_info_pre_meal">Nastavenie nižšieho cieľa 30–60 minút pred jedlom povie algoritmu, aby začal hromadiť inzulín skôr, ako dorazia sacharidy. To pomáha zmierniť nárast glykémie po jedle, ku ktorému dochádza, keď sa jedlo dostane do krvného obehu rýchlejšie, ako inzulín dokáže zapôsobiť. Najlepšie sa používa, keď viete, že budete čoskoro jesť.</string>
     <!-- Alcohol: TT 120 (Hypo), Profile 80%, Loop LGS, SMB off, Alcohol CP — 12h -->
+    <string name="scene_template_alcohol">Alkohol</string>
+    <string name="scene_wizard_alcohol_desc">Režim LGS, znížený profil, SMB vypnuté – chráni pred oneskorenou hypoglykémiou po alkohole.</string>
+    <string name="scene_wizard_info_alcohol">Alkohol je jednou z najnebezpečnejších situácií pre ľudí s diabetom 1. typu. Pečeň uprednostňuje spracovanie alkoholu pred uvoľňovaním glukózy, čo môže spôsobiť oneskorenú hypoglykémiu o 6–24 hodín neskôr – často cez noc, keď spíte. Režim LGS zabraňuje hromadeniu inzulínu tým, že znižuje jeho dodávanie iba vtedy, keď glykémia klesne. Znížený profil a vypnuté SMB ďalej obmedzujú aktívny inzulín. Vždy si skontrolujte glykémiu pred spaním a zvážte nastavenie budíka na kontrolu uprostred noci.</string>
     <!-- Driving: TT 108 (Hypo) — 1h -->
+    <string name="scene_template_driving">Šoférovanie</string>
+    <string name="scene_wizard_driving_desc">Mierne vyšší cieľ pre bezpečnosť za volantom.</string>
+    <string name="scene_wizard_info_driving">Bezpečné šoférovanie si vyžaduje stabilnú hladinu glukózy v krvi nad 5,0 mmol/L (90 mg/dL). V niektorých krajinách je kontrola pred a počas dlhých jázd povinná zo zákona. Mierne vyššia cieľová hodnota poskytuje algoritmu bezpečnostnú rezervu – bude sa snažiť udržať vás nad úrovňou, pri ktorej sa koncentrácia a reakčný čas začnú zhoršovať. Ak sa počas jazdy vyskytne hypoglykémia, okamžite zastavte, vyriešte ju a počkajte aspoň 45 minút po návrate glykémie do normálu, než budete pokračovať.</string>
     <!-- Bathing: Disconnected Pump — 1h (showering, swimming, baths, any water exposure) -->
+    <string name="scene_template_bathing">Kúpanie</string>
+    <string name="scene_wizard_bathing_desc">Odpojte pumpu pred sprchovaním, plávaním, kúpeľom alebo inou vodnou aktivitou.</string>
+    <string name="scene_wizard_info_bathing">Keď odpojíte pumpu, podávanie inzulínu sa úplne zastaví – žiadny bazálny inzulín, žiadne bolusy a žiadne korekcie. Algoritmus sa prepne do režimu odpojenia a prestane vykonávať úpravy. Toto je normálne na krátky časové úseky, ako je sprchovanie, kúpanie alebo plávanie. Keď sa scéna skončí, pumpa sa znova pripojí a algoritmus sa automaticky obnoví. Udržujte odpojenia krátke – bez bazálneho inzulínu začne glykémia stúpať do 1–2 hodín.</string>
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
+    <string name="scene_template_luteal_phase">Luteálna fáza</string>
+    <string name="scene_wizard_luteal_phase_desc">Zvýšený profil na zvládnutie inzulínovej rezistencie pred menštruáciou.</string>
+    <string name="scene_wizard_info_luteal_phase">Mnoho žien zažíva zvýšenú inzulínovú rezistenciu počas luteálnej fázy (približne 1–2 týždne pred menštruáciou). Je to spôsobené narastajúcou hladinou progesterónu, ktorá znižuje citlivosť na inzulín. Účinok sa u jednotlivých žien enormne líši – niektoré pozorujú 10–30 % zvýšenú potrebu inzulínu, iné vidia minimálnu zmenu. Začnite s opatrným zvýšením (115 %) a upravujte ho na základe vlastných pozorovaní počas niekoľkých cyklov. Sledovanie v portále Starostlivosti pomáha identifikovať váš osobný rytmus.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
+    <string name="scene_template_hot_weather">Horúce počasie</string>
+    <string name="scene_wizard_hot_weather_desc">Znížený profil – teplo urýchľuje vstrebávanie inzulínu.</string>
+    <string name="scene_wizard_info_hot_weather">Vysoké teploty spôsobujú rozširovanie ciev, čo urýchľuje vstrebávanie inzulínu - rovnaká dávka inzulínu účinkuje rýchlejšie a silnejšie. To môže viesť k neočakávaným hypoglykémiám, najmä počas vonkajších aktivít. Mierne zníženie profilu (85 %) kompenzuje rýchlejšiu absorpciu. Pite dostatok tekutín, častejšie monitorujte glykémiu a uvedomte si, že inzulín uložený v teplej pumpe alebo pere môže degradovať. Ak aj cvičíte v teple, zvážte kombináciu so scénou cvičenia pre dodatočnú ochranu.</string>
     <!-- Medical Procedure: Open Loop, SMB off — indefinite -->
+    <string name="scene_template_medical_procedure">Lekársky zákrok</string>
+    <string name="scene_wizard_medical_procedure_desc">Otvorený okruh s vypnutými SMB pre operácie alebo lekárske zákroky.</string>
+    <string name="scene_wizard_info_medical_procedure">Počas operácií alebo lekárskych zákrokov, anestézia a stresové hormóny spôsobujú, že glykémia je nepredvídateľná. Odporúča sa režim otvoreného okruhu, pretože algoritmus nedokáže spoľahlivo predpovedať, ako sa bude vaše telo za týchto podmienok správať. Vyššia cieľová hodnota (150 mg/dL) poskytuje bezpečnostnú rezervu proti hypoglykémii počas zákroku. Vypnutie SMB zabráni neočakávanému podávaniu inzulínu počas zákroku. Vždy informujte zdravotnícky personál, že máte nasadenú inzulínovú pumpu a systém CGM. Pri zákrokoch dlhších ako 3 hodiny, môže váš tím prejsť na intravenózny inzulín.</string>
     <!-- Blank: no actions — 1h -->
+    <string name="scene_template_blank">Prázdna</string>
+    <string name="scene_wizard_blank_desc">Začnite od nuly bez predvolených akcií.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info">Prepnutie profilu mení súčasne bazálne dávky, faktor citlivosti na inzulín (ISF) a pomery inzulínu k sacharidom (IC). Všetko môžete škálovať percentuálne – napríklad 110 % zvyšuje podávanie bazálnej dávky, výpočty bolusov a mieru absorpcie sacharidov o 10 %. Ak máte nejaký profil nastavený pre konkrétne situácie, môžete naň prepnúť.</string>
+    <string name="scene_wizard_tt_info">Dočasný cieľ povie algoritmu, aby sa na stanovený čas zameral na inú hodnotu glykémie. Pri vyššej cieľovej hodnote algoritmus reaguje na rastúcu glykémiu pomalšie a celkovo sa zameriava na vyššiu hodnotu – znižuje to podávanie inzulínu a pomáha predchádzať hypoglykémiám počas cvičenia. Pri nižšej cieľovej hodnote algoritmus reaguje skôr a dodáva viac inzulínu – čo je užitočné na situácie pred jedlom. Vyberte si jednu z predvolieb nižšie – cieľová hodnota a dôvod sú tam už nakonfigurované.</string>
+    <string name="scene_wizard_smb_info">Super mikro bolusy (SMB) umožňujú algoritmu podávať inzulín vopred v podobe malých bolusov, pričom dočasne zastaví podávanie bazálnych dávok, aby to kompenzoval – v podstate si požičiava inzulín z budúcnosti pre rýchlejšiu reakciu. Vypnutie SMB tomu zabráni a obmedzí algoritmus iba na úpravu bazálu. Reakcia sa spomalí a bude postupnejšia. Toto je často uprednostňované počas cvičenia alebo spánku.</string>
+    <string name="scene_wizard_loop_mode_info">Prevádzkový režim určuje mieru autonómie algoritmu. V uzavretom okruhu sa podávanie inzulínu upravuje automaticky. LGS (Low Glucose Suspend) znižuje alebo zastavuje podávanie inzulínu iba vtedy, keď glykémia klesá na nebezpečne nízku úroveň – podávanie sa ale nezvyšuje. Otvorený okruh vypočítava návrhy, ale čaká na potvrdenie každého z nich.</string>
+    <string name="scene_wizard_careportal_info">Udalosť portálu Starostlivosti je záznam v denníku – nemení podávanie inzulínu ani správanie algoritmu. Použite ju na označenie aktivít, situácií alebo poznámok v časovej osi vašej liečby. Tieto záznamy si môžete pozrieť v časti Ošetrenia – Starostlivosť a v Nightscoute, čo vám a vášmu lekárovi môže pomôže rozpoznať vzorce vo vašich údajoch.</string>
+    <string name="scene_wizard_duration_info">Doba trvania určuje, ako dlho zostane táto scéna aktívna. Keď čas vyprší, akcie závislé na čase trvania (dočasný cieľ, prepnutie profilu, prevádzkový režim) samy skončia, zatiaľ čo trvalé zmeny (ako napríklad prepínač SMB) sa automaticky vrátia na predchádzajúce hodnoty. Nastavenie doby trvania na 0 spôsobí, že scéna zostane trvalá – všetky akcie zostanú aktívne, kým scénu manuálne neukončíte.</string>
+    <string name="scene_wizard_name_info">Vyberte si názov a ikonu, vďaka ktorým bude táto scéna na prvý pohľad ľahko rozpoznateľná. Uvidíte ich na aktivačnom tlačítku a v banneri aktívnej scény na hlavnej obrazovke.</string>
     <!-- Scene wizard: UI labels -->
+    <string name="scene_wizard_include_action">Zahrnúť %1$s do scény</string>
+    <string name="scene_wizard_finish">Dokončiť</string>
     <!-- Scene wizard: chain step -->
+    <string name="scene_wizard_chain_title">Nadväzujúca scéna</string>
+    <string name="scene_wizard_chain_info">Voliteľne pripojiť ďalšiu scénu, ktorá sa automaticky aktivovuje po uplynutí tejto. Môžete na ňu tiež preskočiť pri predčasnom ukončení. Nasledujúca scéna sa spustí iba vtedy, ak je cieľ povolený a pumpa je dostupná; inak dostanete upozornenie.</string>
+    <string name="scene_chain_none">Žiadna</string>
+    <string name="scene_skip_to_format">Preskočiť na %1$s</string>
     <!-- Scene list: chain indicator -->
+    <string name="scene_chain_indicator">→ %1$s</string>
+    <string name="scene_chain_target_missing">Nadväzujúca scéna bola zmazaná</string>
     <!-- Scene expiry: chain result notifications -->
+    <string name="scene_ended_format">Scéna „%1$s“ skončila</string>
+    <string name="scene_chained_format">Nadviazaná scéna %1$s → %2$s</string>
+    <string name="scene_chain_ended_with_skip">%1$s skončila — nadväzujúca scéna preskočená: %2$s</string>
+    <string name="scene_chain_skipped_deleted">cieľová scéna bola zmazaná</string>
+    <string name="scene_chain_skipped_disabled">„%1$s“ je zakázaná</string>
+    <string name="scene_chain_error_summary">%1$s → %2$s: %3$d z %4$d akcií zlyhalo</string>
 </resources>

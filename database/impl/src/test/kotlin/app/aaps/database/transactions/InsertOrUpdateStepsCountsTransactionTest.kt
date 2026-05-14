@@ -13,7 +13,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
-class InsertOrUpdateStepsCountTransactionTest {
+class InsertOrUpdateStepsCountsTransactionTest {
 
     private lateinit var database: DelegatedAppDatabase
     private lateinit var stepsCountDao: StepsCountDao
@@ -29,7 +29,7 @@ class InsertOrUpdateStepsCountTransactionTest {
     fun `inserts new steps count when id is 0`() = runTest {
         val stepsCount = createStepsCount(id = 0, steps5min = 100, steps10min = 200)
 
-        val transaction = InsertOrUpdateStepsCountTransaction(stepsCount)
+        val transaction = InsertOrUpdateStepsCountsTransaction(listOf(stepsCount))
         transaction.database = database
         val result = transaction.run()
 
@@ -47,7 +47,7 @@ class InsertOrUpdateStepsCountTransactionTest {
 
         whenever(stepsCountDao.findById(1)).thenReturn(null)
 
-        val transaction = InsertOrUpdateStepsCountTransaction(stepsCount)
+        val transaction = InsertOrUpdateStepsCountsTransaction(listOf(stepsCount))
         transaction.database = database
         val result = transaction.run()
 
@@ -66,7 +66,7 @@ class InsertOrUpdateStepsCountTransactionTest {
 
         whenever(stepsCountDao.findById(1)).thenReturn(existing)
 
-        val transaction = InsertOrUpdateStepsCountTransaction(stepsCount)
+        val transaction = InsertOrUpdateStepsCountsTransaction(listOf(stepsCount))
         transaction.database = database
         val result = transaction.run()
 
@@ -85,13 +85,45 @@ class InsertOrUpdateStepsCountTransactionTest {
 
         whenever(stepsCountDao.findById(1)).thenReturn(existing)
 
-        val transaction = InsertOrUpdateStepsCountTransaction(updated)
+        val transaction = InsertOrUpdateStepsCountsTransaction(listOf(updated))
         transaction.database = database
         val result = transaction.run()
 
         assertThat(result.updated).hasSize(1)
         assertThat(result.updated[0].steps5min).isEqualTo(200)
         assertThat(result.updated[0].steps10min).isEqualTo(400)
+    }
+
+    @Test
+    fun `batch with mixed insert and update`() = runTest {
+        val toInsert = createStepsCount(id = 0, steps5min = 10, steps10min = 20)
+        val toUpdate = createStepsCount(id = 1, steps5min = 150, steps10min = 300)
+        val existing = createStepsCount(id = 1, steps5min = 100, steps10min = 200)
+
+        whenever(stepsCountDao.findById(1)).thenReturn(existing)
+
+        val transaction = InsertOrUpdateStepsCountsTransaction(listOf(toInsert, toUpdate))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.inserted).containsExactly(toInsert)
+        assertThat(result.updated).containsExactly(toUpdate)
+
+        verify(stepsCountDao).insertNewEntry(toInsert)
+        verify(stepsCountDao).updateExistingEntry(toUpdate)
+    }
+
+    @Test
+    fun `empty batch is a no-op`() = runTest {
+        val transaction = InsertOrUpdateStepsCountsTransaction(emptyList())
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.inserted).isEmpty()
+        assertThat(result.updated).isEmpty()
+
+        verify(stepsCountDao, never()).insertNewEntry(any())
+        verify(stepsCountDao, never()).updateExistingEntry(any())
     }
 
     private fun createStepsCount(

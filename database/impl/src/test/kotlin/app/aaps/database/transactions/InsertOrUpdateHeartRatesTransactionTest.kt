@@ -13,7 +13,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
-class InsertOrUpdateHeartRateTransactionTest {
+class InsertOrUpdateHeartRatesTransactionTest {
 
     private lateinit var database: DelegatedAppDatabase
     private lateinit var heartRateDao: HeartRateDao
@@ -29,7 +29,7 @@ class InsertOrUpdateHeartRateTransactionTest {
     fun `inserts new heart rate when id is 0`() = runTest {
         val heartRate = createHeartRate(id = 0, beatsPerMinute = 75.0)
 
-        val transaction = InsertOrUpdateHeartRateTransaction(heartRate)
+        val transaction = InsertOrUpdateHeartRatesTransaction(listOf(heartRate))
         transaction.database = database
         val result = transaction.run()
 
@@ -47,7 +47,7 @@ class InsertOrUpdateHeartRateTransactionTest {
 
         whenever(heartRateDao.findById(1)).thenReturn(null)
 
-        val transaction = InsertOrUpdateHeartRateTransaction(heartRate)
+        val transaction = InsertOrUpdateHeartRatesTransaction(listOf(heartRate))
         transaction.database = database
         val result = transaction.run()
 
@@ -66,7 +66,7 @@ class InsertOrUpdateHeartRateTransactionTest {
 
         whenever(heartRateDao.findById(1)).thenReturn(existing)
 
-        val transaction = InsertOrUpdateHeartRateTransaction(heartRate)
+        val transaction = InsertOrUpdateHeartRatesTransaction(listOf(heartRate))
         transaction.database = database
         val result = transaction.run()
 
@@ -85,12 +85,44 @@ class InsertOrUpdateHeartRateTransactionTest {
 
         whenever(heartRateDao.findById(1)).thenReturn(existing)
 
-        val transaction = InsertOrUpdateHeartRateTransaction(updated)
+        val transaction = InsertOrUpdateHeartRatesTransaction(listOf(updated))
         transaction.database = database
         val result = transaction.run()
 
         assertThat(result.updated).hasSize(1)
         assertThat(result.updated[0].beatsPerMinute).isEqualTo(90.0)
+    }
+
+    @Test
+    fun `batch with mixed insert and update`() = runTest {
+        val toInsert = createHeartRate(id = 0, beatsPerMinute = 60.0)
+        val toUpdate = createHeartRate(id = 1, beatsPerMinute = 80.0)
+        val existing = createHeartRate(id = 1, beatsPerMinute = 75.0)
+
+        whenever(heartRateDao.findById(1)).thenReturn(existing)
+
+        val transaction = InsertOrUpdateHeartRatesTransaction(listOf(toInsert, toUpdate))
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.inserted).containsExactly(toInsert)
+        assertThat(result.updated).containsExactly(toUpdate)
+
+        verify(heartRateDao).insertNewEntry(toInsert)
+        verify(heartRateDao).updateExistingEntry(toUpdate)
+    }
+
+    @Test
+    fun `empty batch is a no-op`() = runTest {
+        val transaction = InsertOrUpdateHeartRatesTransaction(emptyList())
+        transaction.database = database
+        val result = transaction.run()
+
+        assertThat(result.inserted).isEmpty()
+        assertThat(result.updated).isEmpty()
+
+        verify(heartRateDao, never()).insertNewEntry(any())
+        verify(heartRateDao, never()).updateExistingEntry(any())
     }
 
     private fun createHeartRate(

@@ -385,17 +385,6 @@ class ErosOverviewViewModel @Inject constructor(
 
     private fun onActivatePodClicked() {
         viewModelScope.launch {
-            val profile = profileFunction.getProfile()
-            if (profile == null) {
-                _events.tryEmit(
-                    OmnipodOverviewEvent.ShowDialog(
-                        rh.gs(CoreUiR.string.warning),
-                        rh.gs(CommonR.string.omnipod_common_error_failed_to_set_profile_empty_profile)
-                    )
-                )
-                return@launch
-            }
-
             val type = if (podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIMING_COMPLETED)) {
                 ActivationType.SHORT
             } else {

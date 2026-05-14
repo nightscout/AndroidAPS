@@ -458,6 +458,7 @@
     <string name="need_connect_permission">האפליקציה צריכה הרשאה לבלוטות\'</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">בקשת משתמש</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>

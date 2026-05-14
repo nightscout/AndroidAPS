@@ -529,6 +529,7 @@
     <string name="need_connect_permission">Applicatie heeft bluetooth toestemming nodig</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Gebruikers verzoek</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy wordt niet ondersteund.</string>

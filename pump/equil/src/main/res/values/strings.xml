@@ -25,7 +25,6 @@
     <string name="equil_title_attach">Attach pump</string>
     <string name="equil_title_air">Prime cannula</string>
     <string name="equil_title_unpair_detach">Detach pump</string>
-    <string name="equil_title_unpair_confirm">Confirm unpair</string>
     <string name="equil_title_history_events">History events</string>
     <string name="equil_tone">Alert tone</string>
     <string name="equil_tone_mode_mute">Mute</string>

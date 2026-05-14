@@ -59,7 +59,6 @@
     <string name="step_deactivate_complete">Patch 비활성화됨</string>
     <string name="step_retry_activation">활성화 진행 중</string>
     <string name="unexpected_state">예상치 못한 상태: %1$s</string>
-    <string name="no_profile_selected">프로파일이 선택되지 않았습니다. 프로파일을 선택하고 다시 시도하세요.</string>
     <string name="patch_begin_activation">활성화된 patch가 없습니다. 활성화 과정을 시작하려면 <b>다음</b>을 누르세요.</string>
     <string name="patch_not_active_note">다음 단계까지 펌프 베이스를 patch에 연결하면 안됩니다!</string>
     <string name="connect_pump_base">새로운 patch에 펌프 베이스를 연결한 뒤, 잔여 공기를 제거하고 인슐린을 채웁니다. 이후 <b>다음</b>을 누르세요.</string>
@@ -86,8 +85,6 @@
     <string name="press_retry_or_discard">활성화를 재시작하려면 <b>다음</b>을 누르거나, 활성화 상태를 재설정하려면 <b>폐기</b>를 누르세요.</string>
     <string name="reading_activation_status">펌프에서 활성화 상태를 읽어오는 중이므로 기다려주세요.</string>
     <!-- settings-->
-    <string name="sn_input_title">시리얼 넘버</string>
-    <string name="sn_input_invalid">유효하지 않은 시리얼 넘버!</string>
     <string name="alarm_setting_title">알람 설정</string>
     <string name="alarm_setting_summary">선호하는 펌프 알람 설정을 선택하세요.</string>
     <string name="patch_expiration_title">Patch 만료</string>

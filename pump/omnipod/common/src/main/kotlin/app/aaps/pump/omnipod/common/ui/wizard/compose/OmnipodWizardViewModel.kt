@@ -255,8 +255,8 @@ abstract class OmnipodWizardViewModel(
                 if (showInsulinStep) add(OmnipodWizardStep.SELECT_INSULIN)
                 add(OmnipodWizardStep.INITIALIZE_POD)
             }
-            add(OmnipodWizardStep.ATTACH_POD)
             if (showSiteLocationStep) add(OmnipodWizardStep.SITE_LOCATION)
+            add(OmnipodWizardStep.ATTACH_POD)
             add(OmnipodWizardStep.INSERT_CANNULA)
             add(OmnipodWizardStep.POD_ACTIVATED)
         }

@@ -13,10 +13,10 @@
     <string name="widget_bg_graph_description">Biểu đồ đường huyết AAPS</string>
     <string name="widget_compact_bg_description">AAPS BG + IOB + COB (thu gọn)</string>
     <!--     Activities-->
-    <string name="activity_monitor">Màn hình hoạt động</string>
+    <string name="activity_monitor">Theo dõi hoạt động</string>
     <string name="time_range">Khoảng thời gian</string>
-    <string name="dexcom_tir">Dexcom TIR</string>
-    <string name="cgp_title">Glucose Pentagon (CGP) — 14 days</string>
+    <string name="dexcom_tir">Phạm vi mục tiêu của Dexcom</string>
+    <string name="cgp_title">Ngũ giác đường huyết (CGP) — 14 ngày</string>
     <string name="cgp_tor" comment="Glucose Pentagon axis: Time out of Range">ToR</string>
     <string name="cgp_cv" comment="Glucose Pentagon axis: Coefficient of Variation">\%CV</string>
     <string name="cgp_hypo" comment="Glucose Pentagon axis: Hypoglycemia">Hypo</string>
@@ -57,7 +57,7 @@
     <!-- FillDialog -->
     <string name="fill_warning">Hãy chắc chắn rằng liều lượng phù hợp với thông số của bộ dây truyền!</string>
     <string name="record_pump_site_change">Ghi lại việc thay vị trí tiêm</string>
-    <string name="record_insulin_cartridge_change">Ghi lại việc thay ống insulin</string>
+    <string name="record_insulin_cartridge_change">Ghi lại việc thay bình chứa insulin</string>
     <string name="fill_prime_amount">Lượng insulin mồi</string>
     <string name="fill_pump_units_note">Lượng insulin mồi tính theo đơn vị của bơm</string>
     <string name="fill_insulin_change">Chuyển insulin sang: %1$s (sẽ áp dụng chuyển cấu hình)</string>
@@ -214,7 +214,7 @@
     <!-- Other dialogs -->
     <!--QuickWizard-->
     <string name="overview_edit_quickwizard_button_text">Nhãn nút</string>
-    <string name="quick_wizard_mode_wizard">Wizard</string>
+    <string name="quick_wizard_mode_wizard">Hướng dẫn</string>
     <string name="quick_wizard_mode_insulin">Insulin</string>
     <string name="quick_wizard_mode_carbs">Carbs</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Chỉ tính IOB &gt; 0</string>
@@ -281,11 +281,11 @@
     <string name="quick_launch_category_care">Care Portal</string>
     <string name="quick_launch_category_profile">Cấu hình</string>
     <string name="quick_launch_category_temp_target">Các cài đặt sẵn cho mục tiêu tạm thời</string>
-    <string name="quick_launch_category_quick_wizard">Quick Wizard</string>
+    <string name="quick_launch_category_quick_wizard">Hướng dẫn nhanh</string>
     <string name="quick_launch_category_automation">Tự động hóa</string>
     <string name="quick_launch_all_selected">Tất cả mục đã chọn</string>
-    <string name="quick_launch_no_quick_wizard">Thêm Quick Wizard để sử dụng tại đây</string>
-    <string name="quick_launch_no_automation">Tạo hành động tự động để dùng ở đây</string>
+    <string name="quick_launch_no_quick_wizard">Thêm hướng dẫn nhanh để sử dụng tại đây</string>
+    <string name="quick_launch_no_automation">Tạo các hành động tự động hóa người dùng để dùng tại đây</string>
     <string name="quick_launch_no_tt_presets">Thêm cài đặt sẵn Mục tiêu Tạm thời để sử dụng tại đây</string>
     <string name="quick_launch_no_profiles">Tạo Cấu hình trong Cấu hình Cục bộ để dùng ở đây</string>
     <string name="quick_launch_edit_profile_preset">Sửa Cấu hình Cài đặt sẵn</string>

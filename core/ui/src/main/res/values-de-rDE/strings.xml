@@ -448,6 +448,7 @@
     <string name="need_connect_permission">App benötigt Bluetooth-Berechtigung</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Benutzeranfrage</string>
+    <!--    Pump pair/unpair (shared) -->
     <string name="pump_paired" comment="26 characters max for translation">Pumpe gekoppelt</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth-Low-Energy nicht unterstützt.</string>

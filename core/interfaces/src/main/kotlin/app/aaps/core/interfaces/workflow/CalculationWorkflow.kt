@@ -59,10 +59,4 @@ interface CalculationWorkflow {
      * Update predictions in graph ofter new data from device status
      */
     fun runOnReceivedPredictions(overviewData: OverviewData)
-
-    /**
-     * Update graph ofter scale change
-     * There may be me necessary display larger time interval thus run new calculation
-     */
-    fun runOnScaleChanged(iobCobCalculator: IobCobCalculator, overviewData: OverviewData)
 }

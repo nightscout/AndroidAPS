@@ -66,7 +66,6 @@
     <string name="step_deactivate_complete">Patch deaktivert</string>
     <string name="step_retry_activation">Aktivering pågår</string>
     <string name="unexpected_state">Uventet status: %1$s</string>
-    <string name="no_profile_selected">Ingen profil er valgt. Velg en profil og prøv igjen.</string>
     <string name="patch_begin_activation">Ingen aktiv patch. Trykk <b>Neste</b> for å starte aktiveringsprosessen.</string>
     <string name="patch_not_active_note">Pumpebase skal ikke kobles til patch før neste steg!</string>
     <string name="connect_pump_base">Koble pumpebase til ny patch, fjern overflødig luft og full med insulin. Deretter trykk <b>Neste</b>.</string>
@@ -95,9 +94,6 @@
     <string name="press_retry_or_discard">Trykk <b>Neste</b> for å gjenoppta aktiveringen eller <b>Forkast</b> for å tilbakestille aktiveringsstatusen.</string>
     <string name="reading_activation_status">Vennligst vent, leser aktiveringsstatus fra pumpen.</string>
     <!-- settings-->
-    <string name="sn_input_title">Serienummer</string>
-    <string name="sn_input_invalid">Ugyldig serienummer!</string>
-    <string name="change_sn">Endre</string>
     <string name="alarm_setting_title">Alarminnstillinger</string>
     <string name="alarm_setting_summary">Velg dine foretrukne alarminnstillinger.</string>
     <string name="alarm_setting_light_vibrate_beep">Lys, vibrering og piping</string>

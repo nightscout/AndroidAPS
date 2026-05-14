@@ -365,6 +365,7 @@
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">L\'aplicació necessita el permís del bluethoot</string>
     <!--    Combo-->
+    <!--    Pump pair/unpair (shared) -->
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>

@@ -1341,12 +1341,14 @@ interface PersistenceLayer {
     suspend fun getHeartRatesFromTimeToTime(startTime: Long, endTime: Long): List<HR>
 
     /**
-     * Insert or update if exists record
+     * Insert or update multiple records in a single DB transaction. Emits one change event
+     * for the whole batch instead of one per row. Callers with a single row should pass
+     * `listOf(row)`.
      *
-     * @param heartRate record
+     * @param heartRates records
      * @return List of inserted/updated records
      */
-    suspend fun insertOrUpdateHeartRate(heartRate: HR): TransactionResult<HR>
+    suspend fun insertOrUpdateHeartRates(heartRates: List<HR>): TransactionResult<HR>
 
     // FD
     /**
@@ -1480,12 +1482,14 @@ interface PersistenceLayer {
     suspend fun getLastStepsCountFromTimeToTime(startTime: Long, endTime: Long): SC?
 
     /**
-     * Insert or update if exists record
+     * Insert or update multiple records in a single DB transaction. Emits one change event
+     * for the whole batch instead of one per row. Callers with a single row should pass
+     * `listOf(row)`.
      *
-     * @param stepsCount record
+     * @param stepsCounts records
      * @return List of inserted/updated records
      */
-    suspend fun insertOrUpdateStepsCount(stepsCount: SC): TransactionResult<SC>
+    suspend fun insertOrUpdateStepsCounts(stepsCounts: List<SC>): TransactionResult<SC>
 
     // VersionChange
 

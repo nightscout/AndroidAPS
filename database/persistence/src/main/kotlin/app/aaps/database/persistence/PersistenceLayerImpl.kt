@@ -68,10 +68,10 @@ import app.aaps.database.transactions.InsertOrUpdateCachedTotalDailyDoseTransact
 import app.aaps.database.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.transactions.InsertOrUpdateEffectiveProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateFoodTransaction
-import app.aaps.database.transactions.InsertOrUpdateHeartRateTransaction
+import app.aaps.database.transactions.InsertOrUpdateHeartRatesTransaction
 import app.aaps.database.transactions.InsertOrUpdateProfileSwitchTransaction
 import app.aaps.database.transactions.InsertOrUpdateRunningModeTransaction
-import app.aaps.database.transactions.InsertOrUpdateStepsCountTransaction
+import app.aaps.database.transactions.InsertOrUpdateStepsCountsTransaction
 import app.aaps.database.transactions.InsertOrUpdateTherapyEventTransaction
 import app.aaps.database.transactions.InsertTemporaryBasalWithTempIdTransaction
 import app.aaps.database.transactions.InvalidateBolusCalculatorResultTransaction
@@ -124,7 +124,6 @@ import app.aaps.database.transactions.UpdateNsIdTherapyEventTransaction
 import app.aaps.database.transactions.UserEntryTransaction
 import app.aaps.database.transactions.VersionChangeTransaction
 import dagger.Reusable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -147,7 +146,6 @@ class PersistenceLayerImpl @Inject constructor(
     private val fabricPrivacy: FabricPrivacy
 ) : PersistenceLayer {
 
-    private val compositeDisposable = CompositeDisposable()
     private suspend fun log(entries: List<UE>) {
         if (config.AAPSCLIENT.not())
             if (entries.isNotEmpty()) {
@@ -2195,9 +2193,10 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getHeartRatesFromTimeToTime(startTime, endTime).map { it.fromDb() }
     }
 
-    override suspend fun insertOrUpdateHeartRate(heartRate: HR): PersistenceLayer.TransactionResult<HR> = withContext(Dispatchers.IO) {
+    override suspend fun insertOrUpdateHeartRates(heartRates: List<HR>): PersistenceLayer.TransactionResult<HR> = withContext(Dispatchers.IO) {
+        if (heartRates.isEmpty()) return@withContext PersistenceLayer.TransactionResult<HR>()
         try {
-            val result = repository.runTransactionForResultSuspend(InsertOrUpdateHeartRateTransaction(heartRate.toDb()))
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateHeartRatesTransaction(heartRates.map { it.toDb() }))
             val transactionResult = PersistenceLayer.TransactionResult<HR>()
             result.inserted.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Inserted HeartRate $it")
@@ -2209,7 +2208,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
             transactionResult
         } catch (e: Exception) {
-            aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate", e)
+            aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate batch", e)
             throw e
         }
     }
@@ -2411,9 +2410,10 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getLastStepsCountFromTimeToTime(startTime, endTime)?.fromDb()
     }
 
-    override suspend fun insertOrUpdateStepsCount(stepsCount: SC): PersistenceLayer.TransactionResult<SC> = withContext(Dispatchers.IO) {
+    override suspend fun insertOrUpdateStepsCounts(stepsCounts: List<SC>): PersistenceLayer.TransactionResult<SC> = withContext(Dispatchers.IO) {
+        if (stepsCounts.isEmpty()) return@withContext PersistenceLayer.TransactionResult<SC>()
         try {
-            val result = repository.runTransactionForResultSuspend(InsertOrUpdateStepsCountTransaction(stepsCount.toDb()))
+            val result = repository.runTransactionForResultSuspend(InsertOrUpdateStepsCountsTransaction(stepsCounts.map { it.toDb() }))
             val transactionResult = PersistenceLayer.TransactionResult<SC>()
             result.inserted.forEach {
                 aapsLogger.debug(LTag.DATABASE, "Inserted StepsCount $it")
@@ -2425,7 +2425,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
             transactionResult
         } catch (e: Exception) {
-            aapsLogger.error(LTag.DATABASE, "Error while saving StepsCount $e")
+            aapsLogger.error(LTag.DATABASE, "Error while saving StepsCount batch $e")
             throw e
         }
     }
