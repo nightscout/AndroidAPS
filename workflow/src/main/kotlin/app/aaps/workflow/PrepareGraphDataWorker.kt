@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.calibration.CalibrationContext
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -115,7 +116,7 @@ class PrepareGraphDataWorker(
         // ===== Phase 1: Load BG into ads + smooth (was LoadBgDataWorker) =====
         if (data.bgDataReload) {
             data.iobCobCalculator.ads.loadBgData(data.end)
-            data.iobCobCalculator.ads.smoothData(data.iobCobCalculator)
+            data.iobCobCalculator.ads.processData(data.iobCobCalculator)
             rxBus.send(EventBucketedDataCreated())
             data.iobCobCalculator.clearCache()
         }
@@ -160,14 +161,16 @@ class PrepareGraphDataWorker(
         }
     }
 
-    private suspend fun AutosensDataStore.smoothData(iobCobCalculator: IobCobCalculator) {
+    private suspend fun AutosensDataStore.processData(iobCobCalculator: IobCobCalculator) {
         val bolusIob = iobCobCalculator.calculateIobFromBolus().iob
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().iob
         val smoothingContext = SmoothingContext(cachedTotalIobUnits = bolusIob + basalIob)
+        val calibrationContext = CalibrationContext.NONE
         val workingCopy: MutableList<InMemoryGlucoseValue> = synchronized(dataLock) {
-            bucketedData?.map { it.copy(smoothed = null) }?.toMutableList()
+            bucketedData?.map { it.copy(smoothed = null, calibrated = null) }?.toMutableList()
         } ?: return
-        val smoothed = activePlugin.activeSmoothing.smooth(workingCopy, smoothingContext)
+        val calibrated = activePlugin.activeCalibration.calibrate(workingCopy, calibrationContext)
+        val smoothed = activePlugin.activeSmoothing.smooth(calibrated, smoothingContext)
         synchronized(dataLock) {
             bucketedData = smoothed
         }

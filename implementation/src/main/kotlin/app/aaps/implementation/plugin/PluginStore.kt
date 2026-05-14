@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
+import app.aaps.core.interfaces.calibration.Calibration
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
@@ -104,6 +105,7 @@ class PluginStore @Inject constructor(
     private var activeAPSStore: APS? = null
     private var activeSensitivityStore: Sensitivity? = null
     private var activeSmoothingStore: Smoothing? = null
+    private var activeCalibrationStore: Calibration? = null
 
     private fun getDefaultPlugin(type: PluginType): PluginBase {
         for (p in plugins)
@@ -175,6 +177,15 @@ class PluginStore @Inject constructor(
             activeSmoothingStore = getDefaultPlugin(PluginType.SMOOTHING) as Smoothing
             (activeSmoothingStore as PluginBase).setPluginEnabled(PluginType.SMOOTHING, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SmoothingInterface")
+        }
+
+        // PluginType.CALIBRATION
+        pluginsInCategory = getSpecificPluginsList(PluginType.CALIBRATION)
+        activeCalibrationStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.CALIBRATION) as Calibration?
+        if (activeCalibrationStore == null) {
+            activeCalibrationStore = getDefaultPlugin(PluginType.CALIBRATION) as Calibration
+            (activeCalibrationStore as PluginBase).setPluginEnabled(PluginType.CALIBRATION, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting CalibrationInterface")
         }
 
         // PluginType.BGSOURCE
@@ -254,6 +265,9 @@ class PluginStore @Inject constructor(
 
     override val activeSmoothing: Smoothing
         get() = activeSmoothingStore ?: checkNotNull(activeSmoothingStore) { "No smoothing selected" }
+
+    override val activeCalibration: Calibration
+        get() = activeCalibrationStore ?: checkNotNull(activeCalibrationStore) { "No calibration selected" }
 
     override val activeSafety: Safety
         get() = getSpecificPluginsListByInterface(Safety::class.java).first() as Safety

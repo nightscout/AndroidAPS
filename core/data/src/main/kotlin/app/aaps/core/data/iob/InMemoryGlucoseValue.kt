@@ -21,6 +21,12 @@ data class InMemoryGlucoseValue(
      */
     var smoothed: Double? = null,
     /**
+     * Calibration-overridden value. Set by the active calibration plugin
+     * when a per-sensor correction is applied on top of the factory-calibrated
+     * sensor value. `null` when no override is in effect.
+     */
+    var calibrated: Double? = null,
+    /**
      * if true value is not corresponding to received value,
      * but it was recalculated to fill gap between BGs
      */
@@ -32,10 +38,17 @@ data class InMemoryGlucoseValue(
 ) {
 
     /**
-     * Provide smoothed value if available,
-     * non smoothed value as a fallback
+     * Preferred value for downstream consumers (loop, graph, status).
+     * Falls back through smoothed -> calibrated -> raw sensor value.
      */
-    val recalculated: Double get() = smoothed ?: value
+    val recalculated: Double get() = smoothed ?: calibrated ?: value
+
+    /**
+     * Value to feed into pipeline stages that run after calibration but before smoothing.
+     * Returns the calibration-corrected value when present, otherwise the raw sensor value.
+     * Smoothing plugins read this so their output already incorporates the calibration override.
+     */
+    val calibratedOrValue: Double get() = calibrated ?: value
 
     companion object
 }

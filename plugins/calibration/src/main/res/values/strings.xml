@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="calibration_shortname">CAL</string>
+    <string name="no_calibration_name">No calibration</string>
+    <string name="description_no_calibration">"No calibration override applied. Sensor values are used as-is. Use this when the sensor is already factory-calibrated and accurate."</string>
+</resources>
