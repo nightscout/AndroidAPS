@@ -49,6 +49,7 @@
     <string name="alarm_no_calibration">Brak kalibracji</string>
     <string name="pump_time_update_failed">Nie udało się zaktualizować strefy czasowej pompy, wycisz to powiadomienie i zaktualizuj ręcznie.</string>
     <string name="bolus_error">Błąd bolusa</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Spróbuj ponownie</string>
     <string name="step_prepare_patch">Aktywuj Patch</string>
