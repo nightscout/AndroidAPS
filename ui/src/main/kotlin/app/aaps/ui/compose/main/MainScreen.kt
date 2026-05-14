@@ -331,7 +331,12 @@ fun MainScreen(
                             onSearchQueryChange = onSearchQueryChange,
                             onSearchClear = onSearchClear,
                             onSearchActiveChange = onSearchActiveChange,
-                            modifier = Modifier.onSizeChanged { topBarHeightPx = it.height }
+                            // Guard against transient 0 heights during AnimatedVisibility exit:
+                            // the resulting contentPadding invalidation can schedule a remeasure
+                            // on a node that's losing its owner — crashes in dispatchDraw.
+                            modifier = Modifier.onSizeChanged {
+                                if (it.height > 0 && it.height != topBarHeightPx) topBarHeightPx = it.height
+                            }
                         )
                     }
 
@@ -369,7 +374,9 @@ fun MainScreen(
                             onPermissionsClick = onPermissionsClick,
                             loopActionAvailable = loopActionState.actionAvailable,
                             onLoopActionClick = { showLoopActionSheet = true },
-                            modifier = Modifier.onSizeChanged { bottomBarHeightPx = it.height }
+                            modifier = Modifier.onSizeChanged {
+                                if (it.height > 0 && it.height != bottomBarHeightPx) bottomBarHeightPx = it.height
+                            }
                         )
                     }
 
