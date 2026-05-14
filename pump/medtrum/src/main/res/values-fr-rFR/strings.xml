@@ -50,6 +50,7 @@
     <string name="alarm_no_calibration">Absence d\'étalonnage</string>
     <string name="pump_time_update_failed">Impossible de mettre à jour le fuseau horaire de la pompe, mettre en veille le message et rafraîchir manuellement.</string>
     <string name="bolus_error">Erreur de bolus</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Réessayer</string>
     <string name="step_prepare_patch">Activer le Patch</string>
