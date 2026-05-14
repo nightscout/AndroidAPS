@@ -50,6 +50,7 @@
     <string name="alarm_no_calibration">Žiadna kalibrácia</string>
     <string name="pump_time_update_failed">Nepodarilo sa aktualizovať časové pásmo pumpy, odložiť správu a aktualizovať ručne.</string>
     <string name="bolus_error">Chyba bolusu</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Opakovať</string>
     <string name="step_prepare_patch">Aktivovať Patch</string>
