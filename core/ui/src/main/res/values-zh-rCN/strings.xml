@@ -832,6 +832,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">配对</string>
     <string name="pump_unpair">取消配对</string>
+    <string name="pump_unpair_confirm_title">取消配对泵？</string>
     <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支持蓝牙低能量。</string>
@@ -993,6 +994,7 @@
     <string name="database_cleanup">数据库清理</string>
     <string name="nav_resetdb">重置数据库</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">查找泵</string>
     <string name="ble_scan_select_pump">从下面的列表中选择您的泵</string>
     <string name="ble_scan_scanning">正在扫描设备…</string>
     <!-- Graph configuration -->
