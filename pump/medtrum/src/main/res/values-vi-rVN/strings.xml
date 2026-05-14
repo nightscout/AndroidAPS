@@ -50,6 +50,7 @@
     <string name="alarm_no_calibration">Không hiệu chuẩn</string>
     <string name="pump_time_update_failed">Cập nhật múi giờ bơm thất bại, hoãn thông báo và làm mới thủ công.</string>
     <string name="bolus_error">Lỗi Bolus</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Thử lại</string>
     <string name="step_prepare_patch">Kích hoạt Patch</string>
