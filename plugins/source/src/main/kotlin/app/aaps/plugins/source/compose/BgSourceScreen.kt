@@ -134,6 +134,7 @@ internal fun BgSourceScreen(
                                 }
                             },
                             dateUtil = viewModel.dateUtil,
+                            rh = viewModel.rh,
                             formatGlucoseValue = viewModel::formatGlucoseValue
                         )
                     }
@@ -227,6 +228,7 @@ private fun GlucoseValueItem(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     dateUtil: DateUtil,
+    rh: ResourceHelper,
     formatGlucoseValue: (Double) -> String
 ) {
     val duplicateColor = AapsTheme.generalColors.invalidatedRecord
@@ -287,6 +289,18 @@ private fun GlucoseValueItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
             )
+
+            // Age at receive (dateCreated - timestamp)
+            val ageMs = glucoseValue.dateCreated - glucoseValue.timestamp
+            if (ageMs > 0) {
+                Text(
+                    text = dateUtil.minOrSec(rh, ageMs),
+                    modifier = Modifier.padding(start = AapsSpacing.small),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1
+                )
+            }
 
             // Spacer to push badges to the right
             Box(modifier = Modifier.weight(1f))

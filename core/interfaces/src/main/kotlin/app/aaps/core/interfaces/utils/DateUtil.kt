@@ -267,6 +267,15 @@ interface DateUtil {
     fun minOrSecAgo(rh: ResourceHelper, time: Long?): String
 
     /**
+     * Formats a duration into a short bracketed string with a leading '+', using seconds under
+     * 2 minutes and minutes otherwise. E.g., "(+30s)" or "(+5m)".
+     * @param rh Resource helper for localized strings.
+     * @param durationMs The duration in milliseconds. Negative values return an empty string.
+     * @return The formatted duration string, or empty if negative.
+     */
+    fun minOrSec(rh: ResourceHelper, durationMs: Long): String
+
+    /**
      * Returns a short string showing the difference in minutes between now and a given time, with a sign.
      * E.g., "(+5)" for 5 minutes in the future, "(-10)" for 10 minutes in the past.
      * @param time The timestamp in milliseconds. Can be null.
