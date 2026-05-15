@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">用户</string>
     <string name="result">结果</string>
     <string name="settings">设置</string>
+    <string name="open_plugin">打开插件</string>
+    <string name="configbuilder_pick_one_hint">请选择一个。一次只能激活一个。</string>
+    <string name="configbuilder_pick_many_hint">选择所有适用的项。</string>
+    <string name="configbuilder_no_selection_warning">此类别中未选择任何插件。</string>
     <string name="simple_mode">简单模式</string>
     <string name="expand">展开</string>
     <string name="collapse">收起</string>
