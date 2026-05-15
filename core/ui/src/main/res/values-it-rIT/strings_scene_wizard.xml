@@ -9,6 +9,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Giorno di malattia</string>
     <string name="scene_wizard_sick_day_desc">Profilo più forte (150%) per gestire un aumento della resistenza all’insulina durante la malattia.</string>
+    <string name="scene_wizard_info_sick_day" formatted="false">Malattia, febbre e ormoni da stress possono aumentare notevolmente la resistenza all\'insulina — a volte del 50% o più. Un profilo più forte (ad es. 150%) dice all\'algoritmo di fornire più insulina in tutti i calcoli — tassi basali, suggerimenti in bolo e fattori di correzione. È inoltre possibile aggiungere un obiettivo temporaneo o regolare la modalità in esecuzione nei seguenti passaggi. Monitorare attentamente e regolare come il vostro corpo si recupera.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Giorno di Malattia — Vomito</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Profilo ridotto con LGS — opposto del giorno di malattia standard quando non è possibile assorbire il cibo.</string>
@@ -40,6 +41,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Fase luteale</string>
     <string name="scene_wizard_luteal_phase_desc">Aumento del profilo per gestire la resistenza all’insulina pre-periodo.</string>
+    <string name="scene_wizard_info_luteal_phase" formatted="false">Molte donne manifestano un aumento della resistenza all’insulina durante la fase luteale (circa 1-2 settimane prima del loro periodo). Ciò è causato dall’aumento dei livelli di progesterone che riducono la sensibilità all’insulina. L\'effetto varia enormemente tra gli individui — alcuni notano un aumento del 10-30% del fabbisogno di insulina, altri vedono un cambiamento minimo. Inizia con un aumento conservativo (115%) e regolalo in base ai tuoi modelli su diversi cicli. Tracciandolo in CarePortal aiuta a identificare il tuo ritmo personale.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Meteo Caldo</string>
     <string name="scene_wizard_hot_weather_desc">Profilo ridotto: il calore accelera l\'assorbimento di insulina.</string>
@@ -52,6 +54,7 @@
     <string name="scene_template_blank">Vuoto</string>
     <string name="scene_wizard_blank_desc">Inizia da zero senza azioni pre-selezionate.</string>
     <!-- Scene wizard: action step education -->
+    <string name="scene_wizard_profile_info" formatted="false">Un interruttore di profilo cambia i tassi basali, il fattore di sensibilità all’insulina (ISF) e i rapporti tra insulina e carb (IC) tutti contemporaneamente. Puoi scalare tutto in percentuale — ad esempio, il 110% aumenta la consegna basale, i calcoli in bolo e i tassi di assorbimento del carb del 10%. È inoltre possibile passare a un profilo completamente diverso se si dispone di una configurazione per situazioni specifiche.</string>
     <string name="scene_wizard_tt_info">Un obiettivo temporaneo dice all\'algoritmo di mirare ad un livello diverso di glucosio nel sangue per un periodo determinato. Con un obiettivo più alto, l\'algoritmo reagisce più lentamente all\'aumento del glucosio e mira a un valore complessivo più elevato — questo riduce la somministrazione di insulina e aiuta a prevenire i bassi durante l\'esercizio. Con un obiettivo più basso, l\'algoritmo risponde prima e fornisce più insulina — utile per anticipare un pasto. Scegli uno dei tuoi preset qui sotto — il valore di destinazione e la ragione sono già configurati lì.</string>
     <string name="scene_wizard_smb_info">Super Micro Boli (SMB) lascia che l\'algoritmo eroghi insulina in anticipo come piccoli boli mentre temporaneamente ferma la somministrazione basale per compensare — efficacemente prendendo in prestito insulina dal futuro per una risposta più veloce. La disattivazione di SMB impedisce questo e limita l\'algoritmo a regolare solo le velocità basali. La risposta diventa più lenta e graduale, che è spesso preferita durante l\'esercizio fisico o il sonno.</string>
     <string name="scene_wizard_loop_mode_info">La modalità in esecuzione determina quanta autonomia ha l\'algoritmo. In Closed Loop, regola automaticamente la somministrazione di insulina. LGS (Low Glucosio Suspend) riduce o interrompe l\'insulina solo quando il glucosio sta cadendo verso un basso — non aumenterà l\'erogazione. Open Loop calcola i suggerimenti ma aspetta che tu confermi ognuno di essi.</string>
