@@ -81,6 +81,13 @@ class ProfileManagementViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileManagementUiState())
     val uiState: StateFlow<ProfileManagementUiState> = _uiState.asStateFlow()
 
+    private val _snackbarEvent = MutableStateFlow<String?>(null)
+    val snackbarEvent: StateFlow<String?> = _snackbarEvent.asStateFlow()
+
+    fun clearSnackbarEvent() {
+        _snackbarEvent.value = null
+    }
+
     fun setScreenMode(mode: ScreenMode) {
         _uiState.update { it.copy(screenMode = mode) }
     }
@@ -129,8 +136,9 @@ class ProfileManagementViewModel @Inject constructor(
                     } else null
                 }
 
-                // Build profile names list
-                val profileNames = profiles.map { it.name }
+                // Build profile names list from persisted store so they always match what can be activated
+                val profileNames = localProfileManager.profile?.getProfileList()?.map { it.toString() }
+                    ?: profiles.map { it.name }
 
                 // Calculate basal sum for each profile
                 val basalSums = profiles.mapIndexed { _, singleProfile ->
@@ -402,6 +410,7 @@ class ProfileManagementViewModel @Inject constructor(
 
         profileStore.getSpecificProfile(profileName) ?: run {
             aapsLogger.error(LTag.UI, "Profile not found in store: $profileName")
+            _snackbarEvent.value = rh.gs(R.string.profile_not_saved_activate)
             return false
         }
 
@@ -427,9 +436,8 @@ class ProfileManagementViewModel @Inject constructor(
 
         if (success == null) {
             aapsLogger.error(LTag.UI, "Profile activation failed (validation or DB write): $profileName")
-        }
-
-        if (success != null) {
+            _snackbarEvent.value = rh.gs(R.string.profile_activation_failed)
+        } else {
             // Track objectives progress
             if (percentage == 90 && durationMinutes == 10) {
                 preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)

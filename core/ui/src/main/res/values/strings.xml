@@ -631,6 +631,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">No profile selected</string>
     <string name="missing_profile_name">Missing profile name</string>
+    <string name="profile_not_saved_activate">Profile not saved. Please save the profile before activating.</string>
+    <string name="profile_activation_failed">Profile activation failed</string>
     <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
     <string name="error_in_basal_values">Error in basal values</string>

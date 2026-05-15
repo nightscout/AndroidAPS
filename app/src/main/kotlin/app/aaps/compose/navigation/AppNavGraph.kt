@@ -402,7 +402,7 @@ fun NavGraphBuilder.appNavGraph(
             onNavigateBack = { navController.safePopBackStack() },
             onActivate = { duration, percentage, timeshift, withTT, notes, timestamp, timeChanged ->
                 coroutineScope.launch {
-                    val success = profileManagementViewModel.activateProfile(
+                    profileManagementViewModel.activateProfile(
                         profileIndex = profileIndex,
                         durationMinutes = duration,
                         percentage = percentage,
@@ -412,9 +412,7 @@ fun NavGraphBuilder.appNavGraph(
                         timestamp = timestamp,
                         timeChanged = timeChanged
                     )
-                    if (success) {
-                        navController.popBackStack(AppRoute.Profile.route, inclusive = false)
-                    }
+                    navController.popBackStack(AppRoute.Profile.route, inclusive = false)
                 }
             }
         )
