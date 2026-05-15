@@ -39,9 +39,12 @@ fun GlobalDialogHost(rxBus: RxBus) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             rxBus.toFlow(EventShowDialog::class.java).collect { event ->
                 val completion = CompletableDeferred<Unit>()
-                current = event to completion
-                completion.await()
-                current = null
+                try {
+                    current = event to completion
+                    completion.await()
+                } finally {
+                    current = null
+                }
             }
         }
     }
