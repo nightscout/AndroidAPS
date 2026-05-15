@@ -9,7 +9,6 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Nemoc</string>
     <string name="scene_wizard_sick_day_desc">Silnější profil (150 %) pro zvládnutí zvýšené inzulínové rezistence během nemoci.</string>
-    <string name="scene_wizard_info_sick_day">Nemoc, horečka a stresové hormony mohou výrazně zvýšit inzulínovou rezistenci — někdy o 50 % i více. Silnější profil (např. 150 %) říká algoritmu, aby podával více inzulínu ve všech výpočtech — bazálu, návrzích bolusu i korekčních faktorech. V dalších krocích můžete také přidat dočasný cíl nebo upravit režim smyčky. Pozorně sledujte hodnoty a upravujte je podle toho, jak se vaše tělo zotavuje.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Nemoc — zvracení</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Snížený profil s LGS — opak standardní nemoci, když nemůžete vstřebávat jídlo.</string>
@@ -41,7 +40,6 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Luteální fáze</string>
     <string name="scene_wizard_luteal_phase_desc">Zvýšený profil pro zvládnutí inzulínové rezistence před menstruací.</string>
-    <string name="scene_wizard_info_luteal_phase">Mnoho žen zažívá zvýšenou inzulínovou rezistenci během luteální fáze (zhruba 1–2 týdny před menstruací). Je to způsobeno rostoucí hladinou progesteronu, která snižuje citlivost na inzulín. Účinek se mezi jednotlivkyněmi velmi liší — některé pozorují 10–30% nárůst potřeby inzulínu, jiné minimální změnu. Začněte s opatrným zvýšením (115 %) a upravujte podle vlastních pozorování během několika cyklů. Sledování v CarePortalu pomáhá identifikovat váš osobní rytmus.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Horké počasí</string>
     <string name="scene_wizard_hot_weather_desc">Snížený profil — teplo urychluje vstřebávání inzulínu.</string>
@@ -54,7 +52,7 @@
     <string name="scene_template_blank">Prázdná</string>
     <string name="scene_wizard_blank_desc">Začněte od nuly bez předvolených akcí.</string>
     <!-- Scene wizard: action step education -->
-    <string name="scene_wizard_profile_info">Přepnutí profilu mění najednou bazální dávky, faktor citlivosti na inzulín (ISF) a poměry inzulínu k sacharidům (IC). Vše lze škálovat procentem — například 110 % zvýší bazální dávkování, výpočty bolusu i rychlosti vstřebávání sacharidů o 10 %. Pokud máte profil nastavený pro konkrétní situace, můžete také přepnout na úplně jiný profil.</string>
+    <string name="scene_wizard_profile_info" formatted="false">Přepnutí profilu mění najednou bazální dávky, faktor citlivosti na inzulín (ISF) a poměry inzulínu k sacharidům (IC). Vše lze škálovat procentem — například 110 % zvýší bazální dávkování, výpočty bolusu i rychlosti vstřebávání sacharidů o 10 %. Pokud máte profil nastavený pro konkrétní situace, můžete také přepnout na úplně jiný profil.</string>
     <string name="scene_wizard_tt_info">Dočasný cíl říká algoritmu, aby po stanovenou dobu mířil na jinou hodnotu glykémie. S vyšším cílem algoritmus pomaleji reaguje na stoupající glykémii a celkově míří na vyšší hodnotu — snižuje to dávkování inzulínu a pomáhá předcházet hypoglykémiím při cvičení. S nižším cílem algoritmus reaguje dříve a podává více inzulínu — vhodné pro situace před jídlem. Vyberte níže jednu z předvoleb — cílová hodnota a důvod jsou tam již nakonfigurovány.</string>
     <string name="scene_wizard_smb_info">Super Micro Bolusy (SMB) umožňují algoritmu podat inzulín předem v podobě malých bolusů a dočasně zastavit bazální dávkování ke kompenzaci — v podstatě si půjčuje inzulín z budoucnosti pro rychlejší reakci. Vypnutí SMB tomu zabrání a omezí algoritmus pouze na úpravy bazálu. Reakce se stává pomalejší a postupnější, což je často preferováno při cvičení nebo spánku.</string>
     <string name="scene_wizard_loop_mode_info">Provozní režim určuje, jakou má algoritmus autonomii. V uzavřené smyčce upravuje dávkování inzulínu automaticky. LGS (Low Glucose Suspend) snižuje nebo zastavuje inzulín pouze tehdy, když glykémie klesá k hypoglykémii — dávkování nezvyšuje. Otevřená smyčka vypočítá návrhy, ale čeká, až každý sami potvrdíte.</string>
