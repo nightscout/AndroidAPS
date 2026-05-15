@@ -11,6 +11,8 @@
     <!--    DateUtil-->
     <string name="minago">%1$dm ago</string>
     <string name="secago">%1$ds ago</string>
+    <string name="min_plus">(+%1$dm)</string>
+    <string name="sec_plus">(+%1$ds)</string>
     <string name="minago_long">%1$d phút trước</string>
     <string name="hoursago">%1$.1fh ago</string>
     <string name="days_ago">%1$.1f ngày trước</string>
