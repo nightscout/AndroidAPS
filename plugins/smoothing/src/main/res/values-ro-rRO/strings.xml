@@ -6,4 +6,7 @@
     <string name="avg_smoothing_name">Netezire medie</string>
     <string name="description_avg_smoothing">"Medie algoritm de netezire, cea mai nouă valoare nu este afectată"</string>
     <string name="no_smoothing_name">Fără netezire</string>
+    <string name="description_no_smoothing">"Utilizați acest lucru atunci când aveți deja date filtrate, spre exemplu BYODA G6."</string>
+    <string name="UKF_name">Filtru Kalman Nescentrat</string>
+    <string name="description_UKF">"Algoritm avansat cu reglare automată a zgomotului și uniformizare RTS."</string>
 </resources>
