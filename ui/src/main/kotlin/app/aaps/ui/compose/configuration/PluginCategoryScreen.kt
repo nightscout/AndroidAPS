@@ -107,7 +107,6 @@ fun PluginCategoryScreen(
                 ConfigPluginCard(
                     plugin = plugin,
                     selectionMode = selectionMode,
-                    showOpenPlugin = true,
                     onCardClick = {
                         onPluginEnableToggle(plugin.id, category.type, !plugin.isEnabled)
                     },

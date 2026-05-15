@@ -127,7 +127,8 @@ class ConfigurationViewModel @Inject constructor(
                     composeIcon = plugin.pluginDescription.icon,
                     isEnabled = pluginEnabled,
                     canToggle = !plugin.pluginDescription.alwaysEnabled && (isMultiSelect || !pluginEnabled),
-                    showPreferences = hasPreferences && pluginEnabled && (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode)
+                    showPreferences = hasPreferences && pluginEnabled && (!isSimpleMode || plugin.pluginDescription.preferencesVisibleInSimpleMode),
+                    hasContent = plugin.hasComposeContent()
                 )
             }
 

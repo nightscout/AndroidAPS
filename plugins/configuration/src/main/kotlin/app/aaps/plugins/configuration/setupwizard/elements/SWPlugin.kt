@@ -79,12 +79,12 @@ class SWPlugin @Inject constructor(
                     composeIcon = plugin.pluginDescription.icon,
                     isEnabled = pluginEnabled,
                     canToggle = !plugin.pluginDescription.alwaysEnabled && (!pluginEnabled || isMultiSelect(pType)),
-                    showPreferences = plugin.hasPreferences() && pluginEnabled
+                    showPreferences = plugin.hasPreferences() && pluginEnabled,
+                    hasContent = plugin.hasComposeContent()
                 )
                 ConfigPluginCard(
                     plugin = model,
                     selectionMode = selectionMode,
-                    showOpenPlugin = true,
                     onCardClick = {
                         val message = configBuilder.requestPluginSwitch(plugin, !pluginEnabled, pType)
                         if (message != null) {

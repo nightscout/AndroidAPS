@@ -57,7 +57,8 @@ data class ConfigPluginUiModel(
     val composeIcon: ImageVector?,
     val isEnabled: Boolean,
     val canToggle: Boolean,
-    val showPreferences: Boolean
+    val showPreferences: Boolean,
+    val hasContent: Boolean
 )
 
 /**
@@ -75,7 +76,6 @@ data class ConfigPluginUiModel(
 fun ConfigPluginCard(
     plugin: ConfigPluginUiModel,
     selectionMode: SelectionMode,
-    showOpenPlugin: Boolean,
     onCardClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onOpenPluginClick: () -> Unit,
@@ -138,7 +138,7 @@ fun ConfigPluginCard(
             }
 
             val showSettings = selected && plugin.showPreferences
-            val showOpen = selected && showOpenPlugin
+            val showOpen = selected && plugin.hasContent
             if (showSettings || showOpen) {
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = AapsSpacing.large),
