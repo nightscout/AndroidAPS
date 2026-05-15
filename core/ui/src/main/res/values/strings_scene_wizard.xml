@@ -11,7 +11,7 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Sick Day</string>
     <string name="scene_wizard_sick_day_desc">Stronger profile (150%) to handle increased insulin resistance during illness.</string>
-    <string name="scene_wizard_info_sick_day" formatted="false">Illness, fever, and stress hormones can dramatically increase insulin resistance — sometimes by 50% or more. A stronger profile (e.g. 150%) tells the algorithm to deliver more insulin across all calculations — basal rates, bolus suggestions, and correction factors. You can also add a temporary target or adjust the running mode in the following steps. Monitor closely and adjust as your body recovers.</string>
+    <string name="scene_wizard_info_sick_day">Illness, fever, and stress hormones can dramatically increase insulin resistance — sometimes by 50% or more. A stronger profile (e.g. 150%) tells the algorithm to deliver more insulin across all calculations — basal rates, bolus suggestions, and correction factors. You can also add a temporary target or adjust the running mode in the following steps. Monitor closely and adjust as your body recovers.</string>
 
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Sick Day — Vomiting</string>
@@ -51,7 +51,7 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Luteal Phase</string>
     <string name="scene_wizard_luteal_phase_desc">Increased profile to handle pre-period insulin resistance.</string>
-    <string name="scene_wizard_info_luteal_phase" formatted="false">Many women experience increased insulin resistance during the luteal phase (roughly 1–2 weeks before their period). This is caused by rising progesterone levels that reduce insulin sensitivity. The effect varies enormously between individuals — some notice a 10–30% increase in insulin needs, others see minimal change. Start with a conservative increase (115%) and adjust based on your own patterns over several cycles. Tracking this in CarePortal helps identify your personal rhythm.</string>
+    <string name="scene_wizard_info_luteal_phase">Many women experience increased insulin resistance during the luteal phase (roughly 1–2 weeks before their period). This is caused by rising progesterone levels that reduce insulin sensitivity. The effect varies enormously between individuals — some notice a 10–30% increase in insulin needs, others see minimal change. Start with a conservative increase (115%) and adjust based on your own patterns over several cycles. Tracking this in CarePortal helps identify your personal rhythm.</string>
 
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Hot Weather</string>
@@ -69,7 +69,7 @@
     <string name="scene_wizard_blank_desc">Start from scratch with no pre-selected actions.</string>
 
     <!-- Scene wizard: action step education -->
-    <string name="scene_wizard_profile_info" formatted="false">A profile switch changes your basal rates, insulin sensitivity factor (ISF), and insulin-to-carb ratios (IC) all at once. You can scale everything by percentage — for example, 110% increases basal delivery, bolus calculations, and carb absorption rates by 10%. You can also switch to a different profile entirely if you have one set up for specific situations.</string>
+    <string name="scene_wizard_profile_info">A profile switch changes your basal rates, insulin sensitivity factor (ISF), and insulin-to-carb ratios (IC) all at once. You can scale everything by percentage — for example, 110% increases basal delivery, bolus calculations, and carb absorption rates by 10%. You can also switch to a different profile entirely if you have one set up for specific situations.</string>
     <string name="scene_wizard_tt_info">A temporary target tells the algorithm to aim for a different blood glucose level for a set period. With a higher target, the algorithm reacts more slowly to rising glucose and targets a higher value overall — this reduces insulin delivery and helps prevent lows during exercise. With a lower target, the algorithm responds sooner and delivers more insulin — useful for getting ahead of a meal. Pick one of your presets below — the target value and reason are already configured there.</string>
     <string name="scene_wizard_smb_info">Super Micro Boluses (SMB) let the algorithm deliver insulin upfront as small boluses while temporarily stopping basal delivery to compensate — effectively borrowing insulin from the future for a faster response. Disabling SMB prevents this and limits the algorithm to adjusting basal rates only. The response becomes slower and more gradual, which is often preferred during exercise or sleep.</string>
     <string name="scene_wizard_loop_mode_info">The running mode determines how much autonomy the algorithm has. In Closed Loop, it adjusts insulin delivery automatically. LGS (Low Glucose Suspend) only reduces or stops insulin when glucose is falling toward a low — it will not increase delivery. Open Loop calculates suggestions but waits for you to confirm each one.</string>
