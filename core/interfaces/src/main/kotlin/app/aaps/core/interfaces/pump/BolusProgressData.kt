@@ -62,10 +62,14 @@ class BolusProgressData @Inject constructor(
      * Purely informational — does not control dialog lifecycle.
      */
     fun updateProgress(percent: Int) {
-        _state.value?.insulin?.let { insulin ->
-            val delivered = PumpInsulin(insulin * percent / 100 )
-            val status = if (percent < 100) ch.bolusProgressString(delivered) else rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin)
-            val wearStatus = if (percent < 100) ch.bolusProgressString(delivered, insulin) else rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin)
+        _state.value?.let { state ->
+            val insulin = state.insulin
+            val delivered = if (state.isPriming) PumpInsulin(insulin * percent / 100)
+                            else PumpInsulin(insulin / ch.concentration * percent / 100)
+            val status = if (percent < 100) ch.bolusProgressString(delivered, state.isPriming)
+                         else rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin)
+            val wearStatus = if (percent < 100) ch.bolusProgressString(delivered, insulin, state.isPriming)
+                             else rh.gs(app.aaps.core.interfaces.R.string.bolus_delivered_successfully, insulin)
             _state.update { it?.copy(percent = percent, status = status, wearStatus = wearStatus, delivered = delivered) }
         }
     }
@@ -75,10 +79,11 @@ class BolusProgressData @Inject constructor(
      * Purely informational — does not control dialog lifecycle.
      */
     fun updateProgress(delivered: PumpInsulin) {
-        _state.value?.insulin?.let { insulin ->
-            val percent = (ch.fromPump(delivered) / insulin * 100).toInt().coerceAtMost(100)
-            val status = ch.bolusProgressString(delivered)
-            val wearStatus = ch.bolusProgressString(delivered,insulin)
+        _state.value?.let { state ->
+            val insulin = state.insulin
+            val percent = (ch.fromPump(delivered, state.isPriming) / insulin * 100).toInt().coerceAtMost(100)
+            val status = ch.bolusProgressString(delivered, state.isPriming)
+            val wearStatus = ch.bolusProgressString(delivered, insulin, state.isPriming)
             _state.update { it?.copy(percent = percent, status = status, wearStatus = wearStatus, delivered = delivered) }
         }
     }
