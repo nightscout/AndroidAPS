@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.runBlocking
 import app.aaps.core.ui.R as CoreUiR
 
 class VirtualPumpViewModel(
@@ -89,16 +88,36 @@ class VirtualPumpViewModel(
 
     private fun buildInitialState(): PumpOverviewUiState {
         val isSuspended = preferences.get(VirtualBooleanNonPreferenceKey.IsSuspended)
-        return buildUiState(isSuspended, virtualPumpPlugin.pumpTypeFlow.value)
+        return PumpOverviewUiState(
+            statusBanner = communicationStatus.statusBanner(),
+            queueStatus = communicationStatus.queueStatus(),
+            infoRows = emptyList(),
+            managementActions = listOf(
+                PumpAction(
+                    label = rh.gs(CoreUiR.string.pump_suspend),
+                    icon = IcLoopPaused,
+                    category = ActionCategory.MANAGEMENT,
+                    visible = !isSuspended,
+                    onClick = { onSuspendToggle(true) }
+                ),
+                PumpAction(
+                    label = rh.gs(CoreUiR.string.pump_resume),
+                    icon = Icons.Filled.PlayArrow,
+                    category = ActionCategory.MANAGEMENT,
+                    visible = isSuspended,
+                    onClick = { onSuspendToggle(false) }
+                )
+            )
+        )
     }
 
-    private fun buildUiState(isSuspended: Boolean, pumpType: PumpType?): PumpOverviewUiState {
+    private suspend fun buildUiState(isSuspended: Boolean, pumpType: PumpType?): PumpOverviewUiState {
         virtualPumpPlugin.refreshConfiguration()
-        val profile = runBlocking { pumpSync.expectedPumpState() }.profile
+        val profile = pumpSync.expectedPumpState().profile
         val now = dateUtil.now()
 
         val tempBasalText = profile?.let {
-            runBlocking { persistenceLayer.getTemporaryBasalActiveAt(now) }
+            persistenceLayer.getTemporaryBasalActiveAt(now)
                 ?.let { tempBasal ->
                     ch.basalTbrString(
                         rate = PumpRate(tempBasal.rate),
@@ -109,7 +128,7 @@ class VirtualPumpViewModel(
                 }
         } ?: ""
 
-        val extendedBolusText = runBlocking { persistenceLayer.getExtendedBolusActiveAt(now) }
+        val extendedBolusText = persistenceLayer.getExtendedBolusActiveAt(now)
             ?.let {
                 ch.basalTbrString(
                     rate = PumpRate(it.rate),

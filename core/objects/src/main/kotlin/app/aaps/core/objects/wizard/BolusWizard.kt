@@ -55,7 +55,6 @@ import app.aaps.core.objects.runningMode.RunningModeGuard
 import app.aaps.core.utils.JsonHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.abs
@@ -440,7 +439,7 @@ class BolusWizard @Inject constructor(
         }
     }
 
-    fun confirmAndExecute(quickWizardEntry: QuickWizardEntry? = null) {
+    suspend fun confirmAndExecute(quickWizardEntry: QuickWizardEntry? = null) {
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
             // Pre-check the running mode gate for the insulin path; if the mode forbids
             // a new bolus, show a snackbar and skip the confirmation flow entirely so the
@@ -463,7 +462,7 @@ class BolusWizard @Inject constructor(
                         title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor),
                         message = rh.gs(app.aaps.core.ui.R.string.bolus_advisor_message),
                         onYes = { bolusAdvisorProcessing() },
-                        onNo = { commonProcessing(quickWizardEntry) }
+                        onNo = { appScope.launch { commonProcessing(quickWizardEntry) } }
                     )
                 )
             else
@@ -532,8 +531,8 @@ class BolusWizard @Inject constructor(
     }
 
     @SuppressLint("CheckResult")
-    private fun commonProcessing(quickWizardEntry: QuickWizardEntry? = null) {
-        val profile = runBlocking { profileFunction.getProfile() } ?: return
+    private suspend fun commonProcessing(quickWizardEntry: QuickWizardEntry? = null) {
+        val profile = profileFunction.getProfile() ?: return
         val now = dateUtil.now()
 
         val confirmMessage = confirmMessageAfterConstraints(advisor = false, quickWizardEntry)
@@ -597,7 +596,7 @@ class BolusWizard @Inject constructor(
                             }
                         })
                     }
-                    bolusCalculatorResult?.let { runBlocking { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
+                    bolusCalculatorResult?.let { appScope.launch { persistenceLayer.insertOrUpdateBolusCalculatorResult(it) } }
                 }
             }
             if (quickWizardEntry != null) {
