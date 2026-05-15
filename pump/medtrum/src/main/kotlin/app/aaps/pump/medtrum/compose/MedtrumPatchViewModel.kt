@@ -654,7 +654,7 @@ class MedtrumPatchViewModel @Inject constructor(
 
     private fun prepareStep(newStep: PatchStep): PatchStep {
         // Rebuild only for workflow entry points or when pages have not been set yet
-        if (wizardPages.isEmpty() || newStep in listOf(PatchStep.START_DEACTIVATION, PatchStep.RETRY_ACTIVATION)) {
+        if (wizardPages.isEmpty() || newStep in listOf(PatchStep.START_DEACTIVATION, PatchStep.RETRY_ACTIVATION, PatchStep.PREPARE_PATCH)) {
             wizardPages = buildWizardPages(newStep)
         }
         val stringResId = when (newStep) {
