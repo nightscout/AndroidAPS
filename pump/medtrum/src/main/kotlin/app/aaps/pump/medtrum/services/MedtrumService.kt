@@ -730,6 +730,7 @@ class MedtrumService : DaggerService(), MedtrumBleCallback {
             MedtrumPumpState.ACTIVE_ALT           -> {
                 notificationManager.dismiss(NotificationId.PATCH_NOT_ACTIVE)
                 notificationManager.dismiss(NotificationId.PUMP_SUSPENDED)
+                medtrumPump.clearAlarmState()
             }
 
             MedtrumPumpState.LOW_BG_SUSPENDED,
