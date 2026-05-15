@@ -9,7 +9,6 @@
     <!-- Sick Day: Profile 150%, Sickness CP — 8h -->
     <string name="scene_template_sick_day">Journée de maladie</string>
     <string name="scene_wizard_sick_day_desc">Un profil plus fort (150%) pour gérer une résistance accrue à l\'insuline en cas de maladie.</string>
-    <string name="scene_wizard_info_sick_day">La maladie, la fièvre et les hormones de stress peuvent augmenter considérablement la résistance à l\'insuline, parfois de 50 % ou plus. Un profil plus fort (par ex. 150%) indique à l\'algorithme de fournir plus d\'insuline dans tous les calculs — débits de base, suggestions de bolus et facteurs de correction. Vous pouvez également ajouter une cible temporaire ou ajuster le mode de fonctionnement dans les étapes suivantes. Surveillez de près et ajustez au fur et à mesure que votre corps se rétablira.</string>
     <!-- Sick Day Vomiting: Profile 60%, Loop LGS, SMB off, Sickness CP — 8h -->
     <string name="scene_template_sick_day_vomiting">Journée de maladie avec vomissements</string>
     <string name="scene_wizard_sick_day_vomiting_desc">Profil réduit avec AGB — c\'est l\'opposé de la journée de maladie standard quand vous ne pouvez pas absorber de nourriture.</string>
@@ -41,7 +40,6 @@
     <!-- Luteal Phase: Profile 115%, Pre-period CP — 5 days -->
     <string name="scene_template_luteal_phase">Phase lutéale</string>
     <string name="scene_wizard_luteal_phase_desc">Profil augmenté pour gérer la résistance à l\'insuline prémenstruelle.</string>
-    <string name="scene_wizard_info_luteal_phase">De nombreuses femmes ont une résistance accrue à l\'insuline pendant la phase lutéale (environ 1 à 2 semaines avant leurs règles). Ceci est dû à la hausse des niveaux de progestérone qui réduisent la sensibilité à l\'insuline. L’effet varie énormément d’une personne à l’autre, certaines constatent une augmentation de 10 à 30 % des besoins en insuline, d’autres observent un minimum de changement. Commencez par une augmentation prudente (115 %) et ajustez en fonction de vos propres habitudes sur plusieurs cycles.</string>
     <!-- Hot Weather: Profile 85% — 8h -->
     <string name="scene_template_hot_weather">Météo chaude</string>
     <string name="scene_wizard_hot_weather_desc">Profil réduit — la chaleur accélère l\'absorption d\'insuline.</string>
@@ -54,7 +52,6 @@
     <string name="scene_template_blank">Vide</string>
     <string name="scene_wizard_blank_desc">Commencez à partir de zéro sans aucune action présélectionnée.</string>
     <!-- Scene wizard: action step education -->
-    <string name="scene_wizard_profile_info">Un changement de profil modifie les débits de base, la sensibilité à l\'insuline (SI) et les ratios Glucides/Insuline (G/I) en même temps. Vous pouvez tout mettre à l\'échelle par pourcentage. Par exemple, 110% augmente l\'injection de basale, les calculs de bolus et l\'absorption des glucides de 10%. Vous pouvez également passer à un autre profil entièrement si vous en avez un pour des situations spécifiques.</string>
     <string name="scene_wizard_tt_info">Une cible temporaire indique à l\'algorithme de viser un niveau de glycémie différent pour une période donnée. Avec une cible plus élevée, l\'algorithme réagit plus lentement à la hausse de la glycémie et cible une valeur globale plus élevée, ce qui réduit l\'injection d\'insuline et aide à prévenir des hypos pendant l\'exercice. Avec une cible plus basse, l\'algorithme répond plus rapidement et injecte plus d\'insuline — utile pour anticiper un repas. Choisissez l\'une de vos présélections ci-dessous — la valeur cible et la raison y sont déjà configurées.</string>
     <string name="scene_wizard_smb_info">Les Super Micro Bolus (SMB) permettent à l\'algorithme d\'injecter de l\'insuline à l\'avance sous forme de petits bolus tout en arrêtant temporairement l\'injection de basale pour compenser — cela revient à emprunter efficacement de l\'insuline à venir pour une réponse plus rapide. Désactiver les SMB empêche cela et limite l\'algorithme à l\'ajustement des débits de base uniquement. La réponse devient plus lente et plus graduelle, ce qui est souvent préféré pendant l\'exercice physique ou le sommeil.</string>
     <string name="scene_wizard_loop_mode_info">Le mode détermine le niveau d\'autonomie de l\'algorithme. Dans Boucle fermée, il ajuste l\'injection de l\'insuline automatiquement. L\'AGB (Arrêt Glycémie Basse) ne réduit ou arrête l\'insuline que lorsque la glycémie baisse vers une hypo — il n\'augmentera pas l\'injection. La Boucle Ouverte calcule des suggestions mais attend que vous confirmiez chacune d\'entre elles.</string>
