@@ -6,5 +6,4 @@
     <string name="avg_smoothing_name">Gjennomsnittlig utjevning</string>
     <string name="description_avg_smoothing">"Algoritme for gjennomsnittlig utjevning, nyeste BS-verdi påvirkes ikke. Kan minne om BYODA G6 sin utjevningsalgoritme"</string>
     <string name="no_smoothing_name">Ingen utjevning</string>
-    <string name="description_no_smoothing">"Ingen utjevning utføres på mottatte blodsukkerverdier. Bruk dette valget når du allerede har filtrerte data, f.eks. fra BYODA G6."</string>
 </resources>
