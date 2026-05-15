@@ -25,7 +25,7 @@ class UiInteractionImpl @Inject constructor(
         i.putExtra(AlarmSoundService.SOUND_ID, soundId)
         i.putExtra(AlarmSoundService.STATUS, status)
         i.putExtra(AlarmSoundService.TITLE, title)
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         context.startActivity(i)
     }
 
