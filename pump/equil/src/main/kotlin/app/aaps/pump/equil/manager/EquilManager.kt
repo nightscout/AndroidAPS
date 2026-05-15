@@ -528,6 +528,11 @@ class EquilManager @Inject constructor(
 
     fun getSerialNumber(): String = equilState?.serialNumber ?: "UNKNOWN"
 
+    fun getResistanceThreshold(): Int {
+        val firstChar = getSerialNumber().substringAfterLast(" - ").firstOrNull()?.uppercaseChar()
+        return if (firstChar in OLD_PUMP_SERIAL_PREFIXES) 500 else 220
+    }
+
     fun setBolusRecord(bolusRecord: EquilBolusRecord?) {
         equilState?.bolusRecord = bolusRecord
         storePodState()
@@ -776,6 +781,8 @@ class EquilManager @Inject constructor(
     }
 
     companion object {
+
+        val OLD_PUMP_SERIAL_PREFIXES = setOf('0', '1', '3', 'A', 'D')
 
         private fun createGson(): Gson {
             val gsonBuilder = GsonBuilder()

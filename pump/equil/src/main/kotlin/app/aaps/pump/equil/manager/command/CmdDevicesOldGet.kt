@@ -121,6 +121,7 @@ class CmdDevicesOldGet(
         val data = Utils.hexStringToBytes(reqModel.ciphertext!!)
         val fv = data[12].toString() + "." + data[13]
         firmwareVersion = fv.toFloat()
+        equilManager.setFirmwareVersion(fv)
         aapsLogger.debug(
             LTag.PUMPCOMM, "CmdDevicesOldGet====" +
                 Utils.bytesToHex(data) + "========" + firmwareVersion + "===" + (firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL)
@@ -163,6 +164,7 @@ class CmdDevicesOldGet(
         val value = Utils.bytesToInt(data[7], data[6])
         val fv = data[18].toString() + "." + data[19]
         firmwareVersion = fv.toFloat()
+        equilManager.setFirmwareVersion(fv)
         aapsLogger.debug(
             LTag.PUMPCOMM, ("CmdDevicesOldGet====" +
                 Utils.bytesToHex(data) + "=====" + value + "===" + firmwareVersion + "===="
