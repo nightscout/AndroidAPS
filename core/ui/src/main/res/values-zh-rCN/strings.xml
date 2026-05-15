@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">用户</string>
     <string name="result">结果</string>
     <string name="settings">设置</string>
+    <string name="open_plugin">打开插件</string>
+    <string name="configbuilder_pick_one_hint">请选择一个。一次只能激活一个。</string>
+    <string name="configbuilder_pick_many_hint">选择所有适用的项。</string>
+    <string name="configbuilder_no_selection_warning">此类别中未选择任何插件。</string>
     <string name="simple_mode">简单模式</string>
     <string name="expand">展开</string>
     <string name="collapse">收起</string>
@@ -832,6 +836,7 @@
     <!--    Pump pair/unpair (shared) -->
     <string name="pump_pair">配对</string>
     <string name="pump_unpair">取消配对</string>
+    <string name="pump_unpair_confirm_title">取消配对泵？</string>
     <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支持蓝牙低能量。</string>
@@ -993,6 +998,7 @@
     <string name="database_cleanup">数据库清理</string>
     <string name="nav_resetdb">重置数据库</string>
     <!--    BLE Scan Step (shared pump pairing) -->
+    <string name="step_ble_scan">查找泵</string>
     <string name="ble_scan_select_pump">从下面的列表中选择您的泵</string>
     <string name="ble_scan_scanning">正在扫描设备…</string>
     <!-- Graph configuration -->

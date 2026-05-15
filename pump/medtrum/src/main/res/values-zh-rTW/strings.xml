@@ -50,6 +50,7 @@
     <string name="alarm_no_calibration">無校準</string>
     <string name="pump_time_update_failed">更新幫浦時區失敗，請延後訊息並手動重新整理。</string>
     <string name="bolus_error">胰島素劑量錯誤</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">重試</string>
     <string name="step_prepare_patch">啟動貼片</string>

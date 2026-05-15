@@ -49,6 +49,7 @@
     <string name="alarm_no_calibration">Нет калибровки</string>
     <string name="pump_time_update_failed">Не удалось обновить часовой пояс помпы, закройте сообщение и обновите вручную.</string>
     <string name="bolus_error">Болюс - ошибка</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Повторить</string>
     <string name="step_prepare_patch">Активировать патч</string>

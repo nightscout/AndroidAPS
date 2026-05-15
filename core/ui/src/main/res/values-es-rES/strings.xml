@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="result">Resultado</string>
     <string name="settings">Ajustes</string>
+    <string name="open_plugin">Abrir complemento</string>
+    <string name="configbuilder_pick_one_hint">Elija uno. Solo puede haber uno activo a la vez</string>
+    <string name="configbuilder_pick_many_hint">Seleccione todas las opciones que correspondan</string>
+    <string name="configbuilder_no_selection_warning">No se ha seleccionado ningún complemento en esta categoría</string>
     <string name="simple_mode">Modo simple</string>
     <string name="expand">Expandir</string>
     <string name="collapse">Contraer</string>

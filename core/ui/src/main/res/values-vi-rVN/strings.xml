@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Người dùng</string>
     <string name="result">Kết quả</string>
     <string name="settings">Cài đặt</string>
+    <string name="open_plugin">Mở plugin</string>
+    <string name="configbuilder_pick_one_hint">Hãy chọn một. Chỉ một cái có thể hoạt động tại một thời điểm.</string>
+    <string name="configbuilder_pick_many_hint">Chọn tất cả mục phù hợp.</string>
+    <string name="configbuilder_no_selection_warning">Chưa có plugin nào được chọn trong danh mục này.</string>
     <string name="simple_mode">Chế độ đơn giản</string>
     <string name="expand">Mở rộng</string>
     <string name="collapse">Thu gọn</string>

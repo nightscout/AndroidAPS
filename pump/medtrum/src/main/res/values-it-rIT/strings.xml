@@ -50,6 +50,15 @@
     <string name="alarm_no_calibration">No calibrazione</string>
     <string name="pump_time_update_failed">Impossibile aggiornare il fuso orario del microinfusore, posticipare il messaggio e aggiornare manualmente.</string>
     <string name="bolus_error">Errore bolo</string>
+    <!-- Status strings -->
+    <string name="status_idle">Inattivo</string>
+    <string name="status_filled">Riempito</string>
+    <string name="status_priming">Inizializzazione</string>
+    <string name="status_primed">Inizializzato</string>
+    <string name="status_ejecting">Espulsione</string>
+    <string name="status_ejected">Espulso</string>
+    <string name="status_active">Attivo</string>
+    <string name="status_stopped">Fermato</string>
     <!-- wizard-->
     <string name="retry">Riprova</string>
     <string name="step_prepare_patch">Attiva patch</string>

@@ -43,6 +43,7 @@
     <string name="alarm_battery_out">Няма батерия</string>
     <string name="alarm_no_calibration">Няма калибрация</string>
     <string name="pump_time_update_failed">Неуспешно актуализиране на часова зона на помпата, отложете съобщението и актуализирайте ръчно.</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Повтори</string>
     <string name="step_prepare_patch">Активирай пач помпа</string>

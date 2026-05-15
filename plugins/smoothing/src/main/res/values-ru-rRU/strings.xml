@@ -6,5 +6,4 @@
     <string name="avg_smoothing_name">Среднее сглаживание</string>
     <string name="description_avg_smoothing">"Алгоритм среднего сглаживания, новейшее значение не затрагивается"</string>
     <string name="no_smoothing_name">Без сглаживания</string>
-    <string name="description_no_smoothing">"Сглаживание выходных данных ГК не выполняется. Используйте эту функцию, если имеются уже отфильтрованные данные, например, из самостоятельно собранного приложения BYODA G6."</string>
 </resources>

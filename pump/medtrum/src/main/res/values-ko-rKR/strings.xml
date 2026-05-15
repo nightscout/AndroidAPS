@@ -44,6 +44,7 @@
     <string name="alarm_battery_out">배터리 방전</string>
     <string name="alarm_no_calibration">보정 안됨</string>
     <string name="pump_time_update_failed">펌프 시간대 업데이트가 실패함, 메시지를 스누즈하고 수동으로 새로 고침하세요.</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">재시도</string>
     <string name="step_prepare_patch">Patch 활성화</string>

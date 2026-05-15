@@ -50,6 +50,7 @@
     <string name="alarm_no_calibration">Ingen kalibrering</string>
     <string name="pump_time_update_failed">Kunne ikke oppdatere tidssone på pumpen. Bekreft meldingen og oppdater manuelt.</string>
     <string name="bolus_error">Bolus feilet</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Prøv igjen</string>
     <string name="step_prepare_patch">Aktivere patch</string>

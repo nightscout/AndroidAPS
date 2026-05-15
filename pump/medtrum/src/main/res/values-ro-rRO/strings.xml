@@ -50,6 +50,10 @@
     <string name="alarm_no_calibration">Fără calibrare</string>
     <string name="pump_time_update_failed">Actualizarea fusului orar al pompei a eșuat, amânați mesajul și actualizați manual.</string>
     <string name="bolus_error">Eroare bolus</string>
+    <!-- Status strings -->
+    <string name="status_idle">Inactiv</string>
+    <string name="status_filled">Completat</string>
+    <string name="status_priming">Se amorsează</string>
     <!-- wizard-->
     <string name="retry">Reîncercați</string>
     <string name="step_prepare_patch">Activați plasturele</string>

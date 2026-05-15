@@ -45,6 +45,7 @@
     <string name="alarm_battery_out">Batteri udløbet</string>
     <string name="alarm_no_calibration">Ingen kalibrering</string>
     <string name="pump_time_update_failed">Mislykkedes i at opdatere pumpetidszone, udskyd beskeden og opdatér manuelt.</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Forsøg igen</string>
     <string name="step_prepare_patch">Aktivér Patch</string>

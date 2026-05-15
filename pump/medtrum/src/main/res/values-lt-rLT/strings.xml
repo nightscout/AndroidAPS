@@ -48,6 +48,7 @@
     <string name="alarm_no_calibration">Nėra kalibracijos</string>
     <string name="pump_time_update_failed">Laiko juosta pompoje neatnaujinta, nutildykite ir atnaujinkite rankiniu būdu.</string>
     <string name="bolus_error">Boluso klaida</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Kartoti</string>
     <string name="step_prepare_patch">Įjungti rezervuarą</string>

@@ -48,6 +48,7 @@
     <string name="alarm_no_calibration">Kalibrasyon yok</string>
     <string name="pump_time_update_failed">Pompa saat dilimi güncellenemedi, mesaj ertelendi ve manuel olarak yenilendi.</string>
     <string name="bolus_error">Bolus hatası</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Tekrar dene</string>
     <string name="step_prepare_patch">Pompa Etkinleştirme</string>

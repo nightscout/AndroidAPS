@@ -49,6 +49,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
     <string name="result">Rezultat</string>
     <string name="settings">Setări</string>
+    <string name="open_plugin">Deschideți modulul</string>
+    <string name="configbuilder_pick_one_hint">Alegeți unul. Doar unul poate fi activ odată.</string>
+    <string name="configbuilder_pick_many_hint">Alegeți oricare care se potrivește.</string>
+    <string name="configbuilder_no_selection_warning">Nu este selectat niciun modul în această categorie.</string>
     <string name="simple_mode">Mod simplu</string>
     <string name="expand">Extindeți</string>
     <string name="collapse">Restrângeți</string>
@@ -607,6 +611,8 @@
     <!-- Profile validation -->
     <string name="no_profile_selected">Niciun profil selectat</string>
     <string name="missing_profile_name">Lipsește numele profilului</string>
+    <string name="profile_not_saved_activate">Profilul nu a fost salvat. Vă rugăm să salvați profilul înainte de activare.</string>
+    <string name="profile_activation_failed">Activarea profilului a eşuat</string>
     <string name="error_in_ic_values">Eroare în valorile IC</string>
     <string name="error_in_isf_values">Eroare în valorile ISF</string>
     <string name="error_in_basal_values">Eroare în valorile ratei bazale</string>

@@ -45,6 +45,7 @@
     <string name="alarm_battery_out">Χωρίς μπαταρία</string>
     <string name="alarm_no_calibration">Χωρίς βαθμονόμηση</string>
     <string name="pump_time_update_failed">Αποτυχία ενημέρωσης της ζώνης ώρας της αντλίας, αναβολή μηνυμάτων και ανανεώστε με μη αυτόματο τρόπο.</string>
+    <!-- Status strings -->
     <!-- wizard-->
     <string name="retry">Επανάληψη</string>
     <string name="step_prepare_patch">Ενεργοποίηση Patch</string>
